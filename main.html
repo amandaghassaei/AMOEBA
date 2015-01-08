@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--UI-->
+    <script src="dependencies/jquery-2.1.3.js"></script>
+    <script src="dependencies/underscore.js"></script>
+    <script src="js/navbar.js"></script>
+
+    <!--flatUI bootstrap theme-->
+    <link href="dependencies/flatUI/css/vendor/bootstrap.min.css" rel="stylesheet"><!-- Loading Bootstrap -->
+    <link href="dependencies/flatUI/css/flat-ui.min.css" rel="stylesheet"><!-- Loading Flat UI -->
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
+    <!--[if lt IE 9]>
+      <script src="dependencies/flatUI/js/vendor/html5shiv.js"></script>
+      <script src="dependencies/flatUI/js/vendor/respond.min.js"></script>
+    <![endif]-->
+    <script src="dependencies/flatUI/js/flat-ui.min.js"></script>
+    <!--<script src="dependencies/flatUI/js/vendor/video.js"></script>-->
+
+    <!--threeJS-->
+    <script src="dependencies/three.js"></script>
+    <script src="dependencies/OrbitControls.js"></script>
+    <script src="js/threeSetup.js"></script>
+
+    <!--multi-threading-->
+    <script src="dependencies/parallel.js"></script>
+
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-embossed" role="navigation">
+    <div class="navbar-header">
+      <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">-->
+        <!--<span class="sr-only">Toggle navigation</span>-->
+      <!--</button>-->
+      <a id="mainNavLink" class="navbar-brand" href="#">Link</a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapse-01">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a data-menu-id="controls1Menu" class="menuHoverControls" href="#">Controls1</a></li>
+        <li><a data-menu-id="controls2Menu" class="menuHoverControls" href="#">Controls2</a></li>
+        <li><a data-menu-id="controls3Menu" class="menuHoverControls" href="#">Glyphs</a></li>
+        <li><a data-menu-id="controls4Menu" class="menuHoverControls" href="#">Buttons</a></li>
+        <li><a data-menu-id="controls5Menu" class="menuHoverControls" href="#">Inputs</a></li>
+        <li class="dropdown navDropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu Dropdown <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul class="dropdown-menu">
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+       </ul>
+       <form class="navbar-form navbar-right" action="#" role="search">
+        <div class="form-group">
+          <div class="input-group">
+            <input class="form-control" id="navbarInput-01" type="search" placeholder="Search">
+            <span class="input-group-btn">
+              <button type="submit" class="btn"><span class="fui-search"></span></button>
+            </span>
+          </div>
+        </div>
+      </form>
+    </div><!-- /.navbar-collapse -->
+  </nav>
+<div id="controls1Menu" class="row navMenu">
+    <div class="col-xs-5">
+      <h3 class="demo-panel-title">Progress bars &amp; Sliders</h3>
+      <div class="progress">
+        <div class="progress-bar" style="width: 45%;"></div>
+      </div>
+      <br>
+      <div class="progress">
+        <div class="progress-bar" style="width: 40%;"></div>
+        <div class="progress-bar progress-bar-warning" style="width: 10%;"></div>
+        <div class="progress-bar progress-bar-danger" style="width: 10%;"></div>
+        <div class="progress-bar progress-bar-success" style="width: 10%;"></div>
+        <div class="progress-bar progress-bar-info" style="width: 10%;"></div>
+      </div>
+      <br>
+      <div id="slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div>
+        <div class="ui-slider-segment"></div>
+        <div class="ui-slider-segment"></div>
+        <div class="ui-slider-segment"></div>
+      <div class="ui-slider-range ui-widget-header ui-corner-all ui-slider-range-min" style="width: 50%;"></div><a class="ui-slider-handle ui-state-default ui-corner-all" href="#" style="left: 50%;"></a></div>
+    </div> <!-- /sliders -->
+
+    <div class="col-xs-6 col-xs-offset-1">
+      <h3 class="demo-panel-title">Navigation</h3>
+      <div class="row demo-navigation">
+        <div class="col-xs-6">
+          <div class="btn-toolbar">
+            <div class="btn-group">
+              <a class="btn btn-primary" href="#fakelink"><span class="fui-time"></span></a>
+              <a class="btn btn-primary" href="#fakelink"><span class="fui-photo"></span></a>
+              <a class="btn btn-primary active" href="#fakelink"><span class="fui-heart"></span></a>
+              <a class="btn btn-primary" href="#fakelink"><span class="fui-eye"></span></a>
+            </div>
+          </div> <!-- /toolbar -->
+        </div>
+        <div class="col-xs-6 demo-pager">
+          <ul class="pager">
+            <li class="previous">
+              <a href="#fakelink">
+                <span class="fui-arrow-left"></span>
+                <span>All messages</span>
+              </a>
+            </li>
+            <li class="next">
+              <a href="#fakelink">
+                <span class="fui-arrow-right"></span>
+              </a>
+            </li>
+          </ul> <!-- /pager -->
+        </div>
+      </div> <!-- /demo-navigation -->
+
+      <div class="pagination">
+        <ul>
+          <li class="previous"><a href="#fakelink" class="fui-arrow-left"></a></li>
+          <li class="active"><a href="#fakelink">1</a></li>
+          <li><a href="#fakelink">2</a></li>
+          <li><a href="#fakelink">3</a></li>
+          <li><a href="#fakelink">4</a></li>
+          <li><a href="#fakelink">5</a></li>
+          <li><a href="#fakelink">6</a></li>
+          <li><a href="#fakelink">7</a></li>
+          <li><a href="#fakelink">8</a></li>
+          <li class="next"><a href="#fakelink" class="fui-arrow-right"></a></li>
+        </ul>
+      </div> <!-- /pagination -->
+    </div> <!-- /navigation -->
+</div>
+<div id="controls2Menu" class="row navMenu">
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Checkboxes</h3>
+          <label class="checkbox" for="checkbox1">
+            <input type="checkbox" value="" id="checkbox1" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Unchecked
+          </label>
+          <label class="checkbox" for="checkbox2">
+            <input type="checkbox" checked="checked" value="" id="checkbox2" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Checked
+          </label>
+          <label class="checkbox" for="checkbox3">
+            <input type="checkbox" value="" id="checkbox3" data-toggle="checkbox" disabled="" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Disabled unchecked
+          </label>
+          <label class="checkbox" for="checkbox4">
+            <input type="checkbox" checked="checked" value="" id="checkbox4" data-toggle="checkbox" disabled="" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Disabled checked
+          </label>
+        </div> <!-- /checkboxes col-xs-3 -->
+
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Radio Buttons</h3>
+          <label class="radio">
+            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" data-toggle="radio" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Radio is off
+          </label>
+          <label class="radio">
+            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option1" data-toggle="radio" checked="" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Radio is on
+          </label>
+
+          <label class="radio">
+            <input type="radio" name="optionsRadiosDisabled" id="optionsRadios3" value="option2" data-toggle="radio" disabled="" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Disabled radio is off
+          </label>
+          <label class="radio">
+            <input type="radio" name="optionsRadiosDisabled" id="optionsRadios4" value="option2" data-toggle="radio" checked="" disabled="" class="custom-radio"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Disabled radio is on
+          </label>
+        </div> <!-- /radios col-xs-3 -->
+
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Switches</h3>
+
+          <table width="100%">
+            <tbody><tr>
+              <td width="50%" class="pbm">
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate bootstrap-switch-id-custom-switch-01"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" checked="" data-toggle="switch" id="custom-switch-01"></div></div>
+              </td>
+              <td class="pbm">
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-id-custom-switch-02"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" data-toggle="switch" id="custom-switch-02"></div></div>
+              </td>
+            </tr>
+            <tr>
+              <td class="pbm">
+                <div class="bootstrap-switch-square">
+                  <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate bootstrap-switch-id-custom-switch-03"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary"><span class="fui-check"></span></span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default"><span class="fui-cross"></span></span><input type="checkbox" checked="" data-toggle="switch" id="custom-switch-03" data-on-text="<span class='fui-check'></span>" data-off-text="<span class='fui-cross'></span>"></div></div>
+                </div>
+              </td>
+              <td class="pbm">
+                <div class="bootstrap-switch-square">
+                  <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate bootstrap-switch-id-custom-switch-04"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" data-toggle="switch" id="custom-switch-04"></div></div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate bootstrap-switch-disabled bootstrap-switch-id-custom-switch-5"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" checked="" disabled="" data-toggle="switch" id="custom-switch-5"></div></div>
+              </td>
+              <td>
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate bootstrap-switch-disabled bootstrap-switch-id-custom-switch-6"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" checked="" disabled="" data-toggle="switch" id="custom-switch-6"></div></div>
+              </td>
+            </tr>
+          </tbody></table>
+        </div> <!-- /.col-xs-3 -->
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Share</h3>
+          <div class="share mrl">
+            <ul>
+              <li>
+                <label class="share-label" for="share-toggle2">Facebook</label>
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" data-toggle="switch"></div></div>
+              </li>
+              <li>
+                <label class="share-label" for="share-toggle4">Twitter</label>
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-on bootstrap-switch-animate"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" checked="" data-toggle="switch"></div></div>
+              </li>
+              <li>
+                <label class="share-label" for="share-toggle6">Pinterest</label>
+                <div class="bootstrap-switch bootstrap-switch-wrapper bootstrap-switch-off bootstrap-switch-animate"><div class="bootstrap-switch-container"><span class="bootstrap-switch-handle-on bootstrap-switch-primary">ON</span><label class="bootstrap-switch-label">&nbsp;</label><span class="bootstrap-switch-handle-off bootstrap-switch-default">OFF</span><input type="checkbox" data-toggle="switch"></div></div>
+              </li>
+            </ul>
+            <a href="#" class="btn btn-primary btn-block btn-large">Share</a>
+          </div> <!-- /share -->
+        </div><!-- /.col-xs-3 -->
+      </div>
+<div id="controls3Menu" class="row navMenu demo-row">
+     <div class="demo-icons">
+        <div class="demo-content">
+          <span class="fui-info-circle"></span>
+          <span class="fui-alert-circle"></span>
+          <span class="fui-question-circle"></span>
+          <span class="fui-check-circle"></span>
+          <span class="fui-cross-circle"></span>
+          <span class="fui-plus-circle"></span>
+          <span class="fui-window"></span>
+          <span class="fui-windows"></span>
+          <span class="fui-upload"></span>
+          <span class="fui-arrow-right"></span>
+          <span class="fui-arrow-left"></span>
+          <span class="fui-loop"></span>
+          <span class="fui-cmd"></span>
+          <span class="fui-mic"></span>
+          <span class="fui-export"></span>
+          <span class="fui-heart"></span>
+          <span class="fui-location"></span>
+          <span class="fui-plus"></span>
+          <span class="fui-check"></span>
+          <span class="fui-cross"></span>
+          <span class="fui-list"></span>
+          <span class="fui-new"></span>
+          <span class="fui-video"></span>
+          <span class="fui-photo"></span>
+          <span class="fui-time"></span>
+          <span class="fui-eye"></span>
+          <span class="fui-chat"></span>
+          <span class="fui-home"></span>
+          <span class="fui-search"></span>
+          <span class="fui-user"></span>
+          <span class="fui-mail"></span>
+          <span class="fui-lock"></span>
+          <span class="fui-power"></span>
+          <span class="fui-star"></span>
+          <span class="fui-calendar"></span>
+          <span class="fui-gear"></span>
+          <span class="fui-bookmark"></span>
+          <span class="fui-exit"></span>
+          <span class="fui-trash"></span>
+          <span class="fui-folder"></span>
+          <span class="fui-bubble"></span>
+          <span class="fui-calendar-solid"></span>
+          <span class="fui-star-2"></span>
+          <span class="fui-credit-card"></span>
+          <span class="fui-clip"></span>
+          <span class="fui-link"></span>
+          <span class="fui-pause"></span>
+          <span class="fui-play"></span>
+          <span class="fui-volume"></span>
+          <span class="fui-mute"></span>
+          <span class="fui-resize"></span>
+          <span class="fui-tag"></span>
+          <span class="fui-document"></span>
+          <span class="fui-image"></span>
+          <span class="fui-triangle-up"></span>
+          <span class="fui-triangle-up-small"></span>
+          <span class="fui-triangle-right-large"></span>
+          <span class="fui-triangle-left-large"></span>
+          <span class="fui-triangle-down"></span>
+          <span class="fui-triangle-down-small"></span>
+          <span class="fui-radio-unchecked"></span>
+          <span class="fui-radio-checked"></span>
+          <span class="fui-checkbox-unchecked"></span>
+          <span class="fui-checkbox-checked"></span>
+          <span class="fui-list-thumbnailed"></span>
+          <span class="fui-list-small-thumbnails"></span>
+          <span class="fui-list-numbered"></span>
+          <span class="fui-list-large-thumbnails"></span>
+          <span class="fui-list-columned"></span>
+          <span class="fui-list-bulleted"></span>
+        </div><!-- /.demo-content -->
+      </div>
+    <div class="demo-icons">
+        <div class="demo-content">
+          <span class="fui-facebook"></span>
+          <span class="fui-youtube"></span>
+          <span class="fui-vimeo"></span>
+          <span class="fui-twitter"></span>
+          <span class="fui-stumbleupon"></span>
+          <span class="fui-spotify"></span>
+          <span class="fui-skype"></span>
+          <span class="fui-pinterest"></span>
+          <span class="fui-path"></span>
+          <span class="fui-linkedin"></span>
+          <span class="fui-google-plus"></span>
+          <span class="fui-dribbble"></span>
+          <span class="fui-behance"></span>
+          <span class="fui-yelp"></span>
+          <span class="fui-wordpress"></span>
+          <span class="fui-windows-8"></span>
+          <span class="fui-vine"></span>
+          <span class="fui-tumblr"></span>
+          <span class="fui-paypal"></span>
+          <span class="fui-lastfm"></span>
+          <span class="fui-instagram"></span>
+          <span class="fui-html5"></span>
+          <span class="fui-github"></span>
+          <span class="fui-foursquare"></span>
+          <span class="fui-dropbox"></span>
+          <span class="fui-android"></span>
+          <span class="fui-apple"></span>
+        </div><!-- /.demo-content -->
+      </div>
+    </div>
+<div id="controls4Menu" class="row navMenu">
+    <div class="row demo-row">
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-primary">Primary Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-warning">Warning Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-default">Default Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-danger">Danger Button</a>
+        </div>
+      </div>
+    <div class="row demo-row">
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-success">Success Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-inverse">Inverse Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-info">Info Button</a>
+        </div>
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-default disabled">Disabled Button</a>
+        </div>
+      </div>
+</div>
+<div id="controls5Menu" class="row demo-row navMenu">
+    <div class="row">
+        <div class="col-xs-3">
+          <div class="form-group">
+            <input type="text" value="" placeholder="Inactive" class="form-control">
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="form-group has-error">
+            <input type="text" value="Error" class="form-control">
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="form-group has-success">
+            <input type="text" value="Success" class="form-control">
+            <span class="input-icon fui-check-inverted"></span>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="form-group">
+            <input type="text" value="Disabled" disabled="disabled" class="form-control">
+          </div>
+        </div>
+      </div>
+    <div class="row">
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Dropdown</h3>
+
+          <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">Default <span class="caret"></span></button>
+            <ul role="menu" class="dropdown-menu">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+            </ul>
+          </div><!-- /btn-group -->
+        </div> <!-- /.col-xs-3 -->
+        <div class="col-xs-3">
+          <h3 class="demo-panel-title">Select</h3>
+          <div class="select2-container form-control select select-primary" id="s2id_autogen1"><a href="javascript:void(0)" class="select2-choice" tabindex="-1">   <span class="select2-chosen" id="select2-chosen-2">X-Men</span><abbr class="select2-search-choice-close"></abbr>   <span class="select2-arrow" role="presentation"><b role="presentation"></b></span></a><label for="s2id_autogen2" class="select2-offscreen"></label><input class="select2-focusser select2-offscreen" type="text" aria-haspopup="true" role="button" aria-labelledby="select2-chosen-2" id="s2id_autogen2"></div><select class="form-control select select-primary select2-offscreen" data-toggle="select" tabindex="-1" title="">
+            <option value="0">Choose hero</option>
+            <option value="1">Spider Man</option>
+            <option value="2">Wolverine</option>
+            <option value="3">Captain America</option>
+            <option value="4" selected="">X-Men</option>
+            <option value="5">Crocodile</option>
+          </select>
+        </div> <!-- /.col-xs-3 -->
+        <div class="col-xs-6">
+          <h3 class="demo-panel-title">Tags input</h3>
+          <div class="tagsinput-primary">
+            <input name="tagsinput" class="tagsinput" data-role="tagsinput" value="School, Teacher, Colleague" style="display: none;"><div class="bootstrap-tagsinput"><span class="tag label label-info">School<span data-role="remove"></span></span> <span class="tag label label-info"> Teacher<span data-role="remove"></span></span> <span class="tag label label-info"> Colleague<span data-role="remove"></span></span> <input type="text" placeholder="" style="width: 3em !important;"></div>
+          </div>
+        </div> <!-- /.col-xs-6 -->
+      </div>
+</div>
+
+
+<div id="threeContainer"></div>
+
+</body>
+</html>

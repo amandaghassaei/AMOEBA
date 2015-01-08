@@ -1,0 +1,40 @@
+
+
+body {
+    overflow:hidden;/*hide scroll bar*/
+}
+
+.navbar {
+    margin-bottom:0;
+    z-index: 2;
+    border-radius: 0;
+}
+
+.navMenu {
+    display: none;
+    z-index: 1;
+    position:absolute;
+    /*opacity:0.8;*/
+    width: 100%;
+    left: 15px;
+    background-color: rgba(255,255,255,0.5);
+    padding-bottom: 20px;
+}
+
+.nav li a{
+    border-radius: 0!important;
+}
+
+.navbar-header {
+    padding-right: 20px;
+}
+
+.demo-row{
+    padding:30px;
+}
+
+.dropdown-menu {
+    margin-top: 0!important;
+    border-top-left-radius: 0!important;
+    border-top-right-radius: 0!important;
+}
