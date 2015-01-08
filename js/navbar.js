@@ -9,17 +9,10 @@ function setupNavBar(threeSpace){
     var allNavDropdownMenus = $(".navDropdown");
     var allNavTitles = $(".navbar-nav li a");
 
-    $("a[href='#']").click(function(e){
-        e.preventDefault();
-    });
-    $("a[href='#fakelink']").click(function(e){
-        e.preventDefault();
-    });
-
     allNavMenuLinks.mouseover(function(){
         hideAllMenus();
         $(this).parent().addClass("open");//highlight
-        var menuId = "#".concat($(this).data("menuId"));
+        var menuId = "#" + $(this).data("menuId");
         $(menuId).show();
     });
 

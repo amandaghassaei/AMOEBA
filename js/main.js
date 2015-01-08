@@ -7,7 +7,7 @@ var Parallel = Parallel || {};
 
 $(function(){
 
-    var threeMain = ThreeMain();
+    threeMain = ThreeMain();
     setupNavBar(threeMain);
 
 });

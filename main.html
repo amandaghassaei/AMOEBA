@@ -32,6 +32,8 @@
     <script src="dependencies/parallel.js"></script>
 
     <script src="js/main.js"></script>
+    <script src="dependencies/loaders/STLLoader.js"></script>
+    <script src="js/importSTL.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
 </head>
@@ -46,6 +48,7 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
+        <li><a data-menu-id="importGeometry" class="menuHoverControls" href="#">Import</a></li>
         <li><a data-menu-id="controls1Menu" class="menuHoverControls" href="#">Controls1</a></li>
         <li><a data-menu-id="controls2Menu" class="menuHoverControls" href="#">Controls2</a></li>
         <li><a data-menu-id="controls3Menu" class="menuHoverControls" href="#">Glyphs</a></li>
@@ -66,6 +69,24 @@
        <a href="#fakelink" id="clearAll" class="navbar-right btn btn-lg btn-primary">Clear All</a>
     </div><!-- /.navbar-collapse -->
   </nav>
+<div id="importGeometry" class="row navMenu">
+    <div class="row demo-row">
+        <div class="col-xs-3">
+          <a href="#fakelink" class="btn btn-block btn-lg btn-default">Upload STL</a>
+        </div>
+        <div class="col-xs-1">
+            OR
+        </div>
+        <div class="col-xs-3">
+          <div class="btn-group">
+            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">Select Model <span class="caret"></span></button>
+            <ul role="menu" class="dropdown-menu">
+              <li><a class="stlImport" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>
+            </ul>
+          </div><!-- /btn-group -->
+        </div> <!-- /.col-xs-3 -->
+    </div>
+</div>
 <div id="controls1Menu" class="row navMenu">
     <div class="col-xs-5">
       <h3 class="demo-panel-title">Progress bars &amp; Sliders</h3>
