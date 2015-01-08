@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/7/15.
  */
 
-$(function(){
+function setupNavBar(threeSpace){
 
     var allMenus = $(".navMenu");
     var allNavMenuLinks = $(".menuHoverControls");
@@ -47,4 +47,14 @@ $(function(){
         return false;
     });
 
-});
+    //clear canvas
+    $("#clearAll").click(function(){
+        _.each(threeSpace.scene.children, function(object) {
+          if (object instanceof THREE.Mesh){
+                threeSpace.scene.remove(object);
+            }
+        });
+        threeSpace.render();
+    });
+
+}
