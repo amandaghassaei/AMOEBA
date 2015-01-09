@@ -12,6 +12,7 @@ $(function(){
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
   		    threeMain.scene.add( new THREE.Mesh( geometry ) );
+            threeMain.render();
         });
 
   	    loader.load(file);

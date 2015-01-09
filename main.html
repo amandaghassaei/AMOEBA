@@ -44,18 +44,19 @@
       <!--<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-01">-->
         <!--<span class="sr-only">Toggle navigation</span>-->
       <!--</button>-->
-      <a id="mainNavLink" class="navbar-brand" href="#">Link</a>
+      <a id="mainNavLink" class="navbar-brand" href="http://cba.mit.edu">CBA.MIT.EDU</a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
         <li><a data-menu-id="importGeometry" class="menuHoverControls" href="#">Import</a></li>
-        <li><a data-menu-id="controls1Menu" class="menuHoverControls" href="#">Controls1</a></li>
-        <li><a data-menu-id="controls2Menu" class="menuHoverControls" href="#">Controls2</a></li>
-        <li><a data-menu-id="controls3Menu" class="menuHoverControls" href="#">Glyphs</a></li>
-        <li><a data-menu-id="controls4Menu" class="menuHoverControls" href="#">Buttons</a></li>
-        <li><a data-menu-id="controls5Menu" class="menuHoverControls" href="#">Inputs</a></li>
+        <li><a data-menu-id="about" class="menuHoverControls" href="#">About</a></li>
+        <!--<li><a data-menu-id="controls1Menu" class="menuHoverControls" href="#">Controls1</a></li>-->
+        <!--<li><a data-menu-id="controls2Menu" class="menuHoverControls" href="#">Controls2</a></li>-->
+        <!--<li><a data-menu-id="controls3Menu" class="menuHoverControls" href="#">Glyphs</a></li>-->
+        <!--<li><a data-menu-id="controls4Menu" class="menuHoverControls" href="#">Buttons</a></li>-->
+        <!--<li><a data-menu-id="controls5Menu" class="menuHoverControls" href="#">Inputs</a></li>-->
         <li class="dropdown navDropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Menu Dropdown <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
             <li><a href="#">Action</a></li>
@@ -72,22 +73,30 @@
 <div id="importGeometry" class="row navMenu">
     <div class="row demo-row">
         <div class="col-xs-3">
+        <div>
            <span class="btn btn-default btn-file">
                 Upload STL<input id="uploadSTL" type="file">
            </span>
-          <!--<a id="uploadSTL" href="#fakelink" class="btn btn-block btn-lg btn-default">Upload STL</a>-->
         </div>
-        <div class="col-xs-1">
+        <div>
             OR
         </div>
-        <div class="col-xs-3">
+        <div>
           <div class="btn-group">
             <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">Select Model <span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
               <li><a class="stlImport" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>
             </ul>
           </div><!-- /btn-group -->
+        </div>
         </div> <!-- /.col-xs-3 -->
+    </div>
+</div>
+<div id="about" class="row navMenu">
+    <div class="row demo-row">
+        <div class="col-xs-3">
+           Latest code available on github
+        </div>
     </div>
 </div>
 <div id="controls1Menu" class="row navMenu">
