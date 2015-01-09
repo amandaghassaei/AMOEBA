@@ -27,6 +27,9 @@
     <script src="dependencies/OrbitControls.js"></script>
     <script src="js/threeMain.js"></script>
 
+    <!--stl export-->
+    <script src="dependencies/THREE2STL.js"></script>
+
     <!--multi-threading-->
     <script src="dependencies/parallel.js"></script>
 
@@ -34,6 +37,7 @@
     <script src="dependencies/loaders/STLLoader.js"></script>
     <script src="js/importMenu.js"></script>
     <script src="js/elementMenu.js"></script>
+    <script src="js/exportMenu.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
 </head>
@@ -60,7 +64,7 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
+            <li><a id="exportSTL" href="#">Export STL</a></li>
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
             <li class="divider"></li>

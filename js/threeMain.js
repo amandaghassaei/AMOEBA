@@ -94,6 +94,7 @@ function Three(){
     
     return {//public properties
         scene:scene,
+
 //        camera:camera,
 //        controls:controls,
 //        renderer:renderer,
