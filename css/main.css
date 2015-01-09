@@ -63,3 +63,17 @@ nav .btn {
     position: relative;
     overflow: hidden;
 }
+
+.fullWidth {
+    width: 100%!important;
+}
+
+/*import menu*/
+
+#ex1Slider .slider-selection {
+	background: #BABABA;
+}
+
+#STLImportStats {
+    display: none;
+}

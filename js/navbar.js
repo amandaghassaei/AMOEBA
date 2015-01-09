@@ -2,7 +2,8 @@
  * Created by aghassaei on 1/7/15.
  */
 
-function setupNavBar(threeSpace){
+
+function setupNavBar(){
 
     var allMenus = $(".navMenu");
     var allNavMenuLinks = $(".menuHoverControls");
@@ -41,15 +42,6 @@ function setupNavBar(threeSpace){
     });
 
     //clear canvas
-    $("#clearAll").click(function(){
-        var children = threeSpace.scene.children;
-        for (var i=children.length;i>=0;i--){
-            var object = children[i];
-            if (object instanceof THREE.Mesh){
-                threeSpace.scene.remove(object);
-            }
-        }
-        threeSpace.render();
-    });
+    $("#clearAll").click(three.clearAll);
 
 }

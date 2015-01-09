@@ -14,14 +14,13 @@
 
     <!--flatUI bootstrap theme-->
     <link href="dependencies/flatUI/css/vendor/bootstrap.min.css" rel="stylesheet"><!-- Loading Bootstrap -->
-    <link href="dependencies/flatUI/css/flat-ui.min.css" rel="stylesheet"><!-- Loading Flat UI -->
-    <!-- HTML5 shim, for IE6-8 support of HTML5 elements. All other JS at the end of file. -->
-    <!--[if lt IE 9]>
-      <script src="dependencies/flatUI/js/vendor/html5shiv.js"></script>
-      <script src="dependencies/flatUI/js/vendor/respond.min.js"></script>
-    <![endif]-->
-    <script src="dependencies/flatUI/js/flat-ui.min.js"></script>
+    <link href="dependencies/flatUI/css/flat-ui.css" rel="stylesheet"><!-- Loading Flat UI -->
+    <script src="dependencies/flatUI/js/flat-ui.js"></script>
     <!--<script src="dependencies/flatUI/js/vendor/video.js"></script>-->
+
+    <!--bootstrap slider-->
+    <link href="dependencies/bootstrap-slider/bootstrap-slider.css" rel="stylesheet">
+    <script src="dependencies/bootstrap-slider/bootstrap-slider.js"></script>
 
     <!--threeJS-->
     <script src="dependencies/three.js"></script>
@@ -33,7 +32,7 @@
 
     <script src="js/main.js"></script>
     <script src="dependencies/loaders/STLLoader.js"></script>
-    <script src="js/importSTL.js"></script>
+    <script src="js/importMenu.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
 
 </head>
@@ -75,28 +74,33 @@
     <div class="row demo-row">
         <div class="col-xs-3">
         <div>
-           <span class="btn btn-default btn-file">
+           <span class="btn btn-default btn-file fullWidth">
                 Upload STL<input id="uploadSTL" type="file">
            </span>
         </div>
-        <div>
+        <div class="text-center">
             OR
         </div>
         <div>
-          <div class="btn-group">
-            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle" type="button">Select Model <span class="caret"></span></button>
+          <div class="btn-group fullWidth">
+            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
               <li><a class="stlImport" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>
             </ul>
           </div><!-- /btn-group -->
         </div>
         </div> <!-- /.col-xs-3 -->
+        <div id="STLImportStats" class="col-xs-8">
+            <div id="STLFilename"></div><br/>Dimensions:<br/>
+            Change model scale:
+            <input id="ex1" data-slider-id='ex1Slider' type="text" data-slider-min="0.0" data-slider-max="20" data-slider-step="0.1" data-slider-value="1"/>
+        </div>
     </div>
 </div>
 <div id="element" class="row navMenu">
     <div class="row demo-row">
         <div class="col-xs-3">
-           afsdf
+           <a id="elementCube" href="#">Cube</a>
         </div>
     </div>
 </div>
@@ -122,7 +126,7 @@
         <div class="progress-bar progress-bar-info" style="width: 10%;"></div>
       </div>
       <br>
-      <div id="slider" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div>
+      <div id="slider1" class="ui-slider ui-slider-horizontal ui-widget ui-widget-content ui-corner-all" aria-disabled="false"><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div><div class="ui-slider-segment" style="margin-left: 25%;"></div>
         <div class="ui-slider-segment"></div>
         <div class="ui-slider-segment"></div>
         <div class="ui-slider-segment"></div>

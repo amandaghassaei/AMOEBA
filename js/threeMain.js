@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/8/15.
  */
 
-function ThreeMain(){
+function Three(){
 
     var self = this;
 
@@ -80,12 +80,24 @@ function ThreeMain(){
         
       renderer.render( scene, camera );
     }
+
+    function clearAll(){
+        var children = scene.children;
+        for (var i=children.length;i>=0;i--){
+            var object = children[i];
+            if (object instanceof THREE.Mesh){
+                scene.remove(object);
+            }
+        }
+        render();
+    }
     
     return {//public properties
         scene:scene,
 //        camera:camera,
 //        controls:controls,
 //        renderer:renderer,
-        render:render
+        render:render,
+        clearAll:clearAll
     }
 }

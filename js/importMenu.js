@@ -6,15 +6,16 @@
 
 $(function(){
 
-    threeMain = threeMain || {};
+    three = three || {};
 
     function loadSTL(file){
-
         var loader = new THREE.STLLoader();
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
-  		    threeMain.scene.add( new THREE.Mesh( geometry ) );
-            threeMain.render();
+            three.clearAll();
+  		    three.scene.add( new THREE.Mesh( geometry ) );
+            three.render();
+            $("#STLImportStats").fadeIn();
         });
 
   	    loader.load(file);
@@ -39,9 +40,21 @@ $(function(){
          reader.onload = (function() {
             return function(e) {
                 loadSTL(e.target.result);
+                setFileName(label);
             }
         })();
-        console.log("loaded" + label);
+        console.log("loaded " + label);
      });
+
+    $('#ex1').slider({
+	    formatter: function(value) {
+		    return value;
+	    }
+    });
+
+    function setFileName(name){
+        $("#STLFilename").html("Current file loaded:&nbsp&nbsp"+name);
+    }
+
 
 });
