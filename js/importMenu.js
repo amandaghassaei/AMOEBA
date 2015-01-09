@@ -2,13 +2,13 @@
  * Created by aghassaei on 1/8/15.
  */
 
-//todo - put stl loading in background thread, allow scaling when loaded
+//todo - put stl loading in background thread
 
 $(function(){
 
     three = three || {};
 
-    var modelMesh;
+    var modelMesh = {};
     var modelScaleSlider = $('#stlModelScale');
 
     function loadSTL(file){
@@ -69,6 +69,4 @@ $(function(){
     function setFileName(name){
         $("#STLFilename").html("Current file loaded:&nbsp&nbsp"+name);
     }
-
-
 });
