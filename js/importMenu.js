@@ -8,17 +8,26 @@ $(function(){
 
     three = three || {};
 
+    var modelMesh;
+    var modelScaleSlider = $('#stlModelScale');
+
     function loadSTL(file){
         var loader = new THREE.STLLoader();
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
-            three.clearAll();
-  		    three.scene.add( new THREE.Mesh( geometry ) );
+            resetUI();
+            modelMesh = new THREE.Mesh(geometry);
+  		    three.scene.add(modelMesh);
             three.render();
             $("#STLImportStats").fadeIn();
         });
 
   	    loader.load(file);
+    }
+
+    function resetUI(){
+        three.clearAll();
+        modelScaleSlider.slider('setValue', 1);
     }
 
     $(".stlImport").click(function(e){
@@ -43,13 +52,18 @@ $(function(){
                 setFileName(label);
             }
         })();
-        console.log("loaded " + label);
      });
 
-    $('#ex1').slider({
+    modelScaleSlider.slider({
 	    formatter: function(value) {
 		    return value;
 	    }
+    });
+
+    modelScaleSlider.change(function(){
+        var value = $(this).slider('getValue');
+        modelMesh.scale.set(value,value,value);
+        three.render();
     });
 
     function setFileName(name){
