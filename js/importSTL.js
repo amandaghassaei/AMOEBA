@@ -2,6 +2,8 @@
  * Created by aghassaei on 1/8/15.
  */
 
+//todo - put stl loading in background thread, allow scaling when loaded
+
 $(function(){
 
     threeMain = threeMain || {};
@@ -24,10 +26,12 @@ $(function(){
     });
 
     $("#uploadSTL").change(function() {
+        console.log("here");
         var input = $(this),
         numFiles = input.get(0).files ? input.get(0).files.length : 1,
         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
         input.trigger('fileselect', [numFiles, label, input.get(0).files]);
+        input.val("");
     });
 
      $('.btn-file :file').on('fileselect', function(event, numFiles, label, files) {
