@@ -17,6 +17,14 @@ function setupNavBar(){
         $(menuId).show();
     });
 
+    var clearButton = $("#clearAll");
+    clearButton.mouseout(function(){
+        $(this).parent().removeClass("open");
+    });
+
+    //clear canvas
+    clearButton.click(three.clearAll);
+
     function hideAllMenus(){
         allMenus.hide();
         allNavMenuLinks.parent().removeClass("open");//no highlight
@@ -40,8 +48,5 @@ function setupNavBar(){
         e.preventDefault();
         return false;
     });
-
-    //clear canvas
-    $("#clearAll").click(three.clearAll);
 
 }
