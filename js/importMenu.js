@@ -19,6 +19,7 @@ $(function(){
             modelMesh = new THREE.Mesh(geometry);
   		    three.scene.add(modelMesh);
             three.render();
+            showDimensions(1);
             $("#STLImportStats").fadeIn();
         });
 
@@ -63,10 +64,35 @@ $(function(){
     modelScaleSlider.change(function(){
         var value = $(this).slider('getValue');
         modelMesh.scale.set(value,value,value);
+        showDimensions(value);
         three.render();
     });
 
     function setFileName(name){
         $("#STLFilename").html("Current file loaded:&nbsp&nbsp"+name);
     }
+
+    function showDimensions(scale){
+        var boundingBox = modelMesh.geometry.boundingBox;
+        $("#meshDimensions").html("Dimensions: " + ((boundingBox.max.x - boundingBox.min.x)*scale).toFixed(1) + " x " +
+            ((boundingBox.max.y - boundingBox.min.y)*scale).toFixed(1) + " x " + ((boundingBox.max.z - boundingBox.min.z)*scale).toFixed(1));
+    }
+
+    $("#stlRotateX").click(function(e){
+        e.preventDefault();
+        modelMesh.rotateX(Math.PI/2);
+        three.render();
+    });
+
+    $("#stlRotateY").click(function(e){
+        e.preventDefault();
+        modelMesh.rotateY(Math.PI/2);
+        three.render();
+    });
+
+    $("#stlRotateZ").click(function(e){
+        e.preventDefault();
+        modelMesh.rotateZ(Math.PI/2);
+        three.render();
+    });
 });
