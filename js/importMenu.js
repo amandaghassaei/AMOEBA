@@ -8,7 +8,7 @@ $(function(){
 
     three = three || {};
 
-    var modelMesh = {};
+    modelMesh = {};
     var modelScaleSlider = $('#stlModelScale');
 
     function loadSTL(file){
@@ -16,7 +16,8 @@ $(function(){
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
             resetUI();
-            modelMesh = new THREE.Mesh(geometry);
+            var material = new THREE.MeshLambertMaterial( { color:0xffa500, shading: THREE.FlatShading, transparent:true, opacity:0.5, side:THREE.DoubleSide} );
+            modelMesh = new THREE.Mesh(geometry, material);
   		    three.scene.add(modelMesh);
             three.render();
             showDimensions(1);
@@ -33,7 +34,9 @@ $(function(){
 
     $(".stlImport").click(function(e){
         e.preventDefault();
-        loadSTL('data/' + $(this).data("file"));
+        var fileName = $(this).data("file");
+        loadSTL('data/' + fileName);
+        setFileName(fileName);
     });
 
     $("#uploadSTL").change(function() {
