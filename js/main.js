@@ -2,12 +2,11 @@
  * Created by aghassaei on 1/7/15.
  */
 
-var Parallel = Parallel || {};
-
 
 $(function(){
 
     three = Three();
     setupNavBar();
+    workers = makeWorkers();
 
 });

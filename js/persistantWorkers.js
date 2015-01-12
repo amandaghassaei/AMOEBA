@@ -1,8 +1,13 @@
 //global workers so they do not have to be reinstantiated
 
+
+function browserSupportsWebWorkers() {
+  return typeof window.Worker === "function";
+}
+
 function makeWorkers(){
 
-    function makeURL(myWorkerFunction) {
+    function makeBlobURL(myWorkerFunction) {
         var URL = window.URL || window.webkitURL;
         var blob = new Blob([myWorkerFunction.toString()], { type: "text/javascript" });
         return URL.createObjectURL(blob);
@@ -23,5 +28,5 @@ function makeWorkers(){
             };
 //        }
     }
-    return new Parallel(null, {env:null, evalPath: "dependencies/eval.js"}).require('three.js');
+//    return new Parallel(null, {env:null, evalPath: "dependencies/eval.js"}).require('three.js');
 }
