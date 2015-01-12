@@ -2,8 +2,6 @@
  * Created by aghassaei on 1/8/15.
  */
 
-Parallel = Parallel || {};
-
 $(function(){
 
     three = three || {};
