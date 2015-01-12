@@ -7,12 +7,16 @@ $(function(){
 
     three = Three();
     setupNavBar();
-    workers = persistentWorkers(4);
+    workers = persistentWorkers(8);
 
-    workers.map([11,12,13,14,15, 18, 30], executable, {});
+    workers.map([11,12], executable, {}, incrCallback);
 
     function executable(){
         return arg*arg;
+    }
+
+    function incrCallback(result){
+        console.log(result);
     }
 
 });
