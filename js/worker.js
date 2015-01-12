@@ -3,6 +3,12 @@
  */
 
 function myWorker(){
+
+    //local variables
+    localEnv = null;//local variables passed in from outside
+    working = false;//boolean that says whether I'm busy or not
+    arg = null;//main data we are crunching
+
     self.onmessage = function(e) {
         var data = e.data;
 
@@ -15,13 +21,36 @@ function myWorker(){
         //load all scripts
         importScripts(url + 'dependencies/three.js');
     //    importScripts(url + 'js/element.js');
-            return;
+        }
+//
+//        if (data.id){
+//            id = data.id;
+//        }
+
+        if (data.executable){
+
+            if (data.localEnv){//be sure to get local environment vars before executable runs
+                localEnv = data.localEnv;
+            }
+            if (data.arg){//be sure to get arg before executable runs
+                arg = data.arg;
+            }
+
+            if (working) {
+                console.log("problem here, already working on something else");
+                return;
+            }
+            working = true;
+            eval(data.executable);
+            var result = executable();
+            working = false;
+            postMessage({result:result, isWorking:working});
         }
 
+        if (data.isWorking){
+            postMessage({isWorking:working});
+        }
 
-        console.log(new THREE.Vector3(0,3,4));
-        var workerResult = 'Result: ' + (e.data[0] * e.data[1]);
-        postMessage(workerResult);
 
     };
 }
