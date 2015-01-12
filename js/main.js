@@ -9,14 +9,6 @@ $(function(){
     setupNavBar();
     workers = persistentWorkers(8);
 
-    workers.map([11,12], executable, {}, incrCallback);
 
-    function executable(){
-        return arg*arg;
-    }
-
-    function incrCallback(result){
-        console.log(result);
-    }
 
 });

@@ -23,14 +23,30 @@ function persistentWorkers(numWorkers){
     }
     URL.revokeObjectURL(workerURL);
 
-    function map(data, executable, env, incrCallback){
+    function map(data, executable, env, incrCallback, finalCallback){
 
-        //save args in map queue
-        mapQueue.push({data:data, executable:executable, env:env, index:0, incrCallback:incrCallback, finished:false, activeThreads:0});
+        //save new task in map queue
+        mapQueue.push({data:data,
+            executable:prepareExeFunc(executable.toString()),
+            env:env,
+            index:0,
+            incrCallback:incrCallback,
+            finalCallback:finalCallback,
+            finished:false,
+            activeThreads:0});
 
         for (var i=0;i<allWorkers.length;i++){
             allWorkers[i].postMessage({isWorking:true});//ask workers if they are busy
         }
+    }
+
+    function prepareExeFunc(string){
+        var index = string.indexOf("(");//get index of first ( in function declaration
+        if (index == -1) {
+            console.log("exe function not formed properly for web workers " + string);
+            return null;
+        }
+        return "function executable" + string.substring(index);
     }
 
     function onMessage(e){
@@ -42,10 +58,10 @@ function persistentWorkers(numWorkers){
             var currentTask = mapQueue[0];
             currentTask.activeThreads--;//decrement active threads
 
-            currentTask.incrCallback(e.data.result);//incremental callback
+            if (currentTask.incrCallback) currentTask.incrCallback(e.data.result);//incremental callback
             if (currentTask.finished && currentTask.activeThreads == 0){
+                if (currentTask.finalCallback) currentTask.finalCallback();
                 mapQueue.shift();//remove first element
-                console.log("end of task");
             }
         }
 
@@ -67,8 +83,8 @@ function persistentWorkers(numWorkers){
             nextTask.activeThreads++;
             e.target.postMessage({
                 arg:nextTask.data[currentIndex],
-                localEnv:nextTask.env,
-                executable:nextTask.executable.toString()});
+                localEnv:JSON.stringify(nextTask.env),
+                executable:nextTask.executable});
         }
     }
 
@@ -81,11 +97,6 @@ function persistentWorkers(numWorkers){
         } else {
             return currentTask;
         }
-    }
-
-
-    function incrementalCallback(){
-
     }
 
     function makeBlobURL(URL, someFunction) {

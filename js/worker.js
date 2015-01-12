@@ -30,7 +30,7 @@ function myWorker(){
         if (data.executable){
 
             if (data.localEnv){//be sure to get local environment vars before executable runs
-                localEnv = data.localEnv;
+                localEnv = JSON.parse(data.localEnv);
             }
             if (data.arg){//be sure to get arg before executable runs
                 arg = data.arg;
@@ -42,7 +42,7 @@ function myWorker(){
             }
             working = true;
             eval(data.executable);
-            var result = executable();
+            var result = executable(arg);
             working = false;
             postMessage({result:result, isWorking:working});
         }
