@@ -7,6 +7,6 @@ $(function(){
 
     three = Three();
     setupNavBar();
-    workers = makeWorkers();
+    makeWorkers(4);
 
 });
