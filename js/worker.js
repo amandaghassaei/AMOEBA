@@ -8,6 +8,7 @@ function myWorker(){
     localEnv = null;//local variables passed in from outside
     working = false;//boolean that says whether I'm busy or not
     arg = null;//main data we are crunching
+    modelMesh = null;//hold on to this so we don't have to keep passing it in
 
     self.onmessage = function(e) {
         var data = e.data;
@@ -23,9 +24,10 @@ function myWorker(){
     //    importScripts(url + 'js/element.js');
         }
 //
-//        if (data.id){
-//            id = data.id;
-//        }
+        if (data.model){
+            var material = new THREE.MeshLambertMaterial({side:THREE.DoubleSide});
+            modelMesh = new THREE.Mesh(JSON.parse(data.model), material);
+        }
 
         if (data.executable){
 

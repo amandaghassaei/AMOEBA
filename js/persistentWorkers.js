@@ -104,6 +104,6 @@ function persistentWorkers(numWorkers){
         return URL.createObjectURL(blob);
     }
 
-    return {map:map};//return all public methods and vars
+    return {map:map, allWorkers:allWorkers};//return all public methods and vars
 
 }

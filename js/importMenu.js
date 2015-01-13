@@ -7,6 +7,7 @@
 $(function(){
 
     three = three || {};
+    workers = workers || {};
 
     modelMesh = {};
     var modelScaleSlider = $('#stlModelScale');
@@ -16,6 +17,9 @@ $(function(){
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
             resetUI();
+            _.each(workers.allWorkers, function(worker){
+                worker.postMessage({model: JSON.stringify(e.content)});
+            });
             var material = new THREE.MeshLambertMaterial( { color:0xffa500, shading: THREE.FlatShading, transparent:true, opacity:0.5, side:THREE.DoubleSide} );
             modelMesh = new THREE.Mesh(geometry, material);
   		    three.scene.add(modelMesh);
