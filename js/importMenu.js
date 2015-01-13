@@ -17,9 +17,9 @@ $(function(){
   	    loader.addEventListener( 'load', function (e) {
   		    var geometry = e.content;
             resetUI();
-            _.each(workers.allWorkers, function(worker){
-                worker.postMessage({model: JSON.stringify(e.content)});
-            });
+//            _.each(workers.allWorkers, function(worker){
+//                worker.postMessage({model: JSON.stringify(e.content)});
+//            });
             var material = new THREE.MeshLambertMaterial( { color:0xffa500, shading: THREE.FlatShading, transparent:true, opacity:0.5, side:THREE.DoubleSide} );
             modelMesh = new THREE.Mesh(geometry, material);
   		    three.scene.add(modelMesh);
@@ -36,6 +36,7 @@ $(function(){
         modelScaleSlider.slider('setValue', 1);
     }
 
+    //load file from data folder
     $(".stlImport").click(function(e){
         e.preventDefault();
         var fileName = $(this).data("file");
@@ -43,6 +44,7 @@ $(function(){
         setFileName(fileName);
     });
 
+    //upload from local filesystem
     $("#uploadSTL").change(function() {
         var input = $(this),
         numFiles = input.get(0).files ? input.get(0).files.length : 1,
