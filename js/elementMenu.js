@@ -52,12 +52,13 @@ $(function(){
             var meshesToAdd = [];
             var cubeDim = localEnv.cubeDim;
             var boundingBox = localEnv.boundingBox;
-//            for (var y=boundingBox.min.y;y<boundingBox.max.y;y+=cubeDim){
-////                if ()
-//                for (var z=boundingBox.min.z;z<boundingBox.max.z;z+=cubeDim){
-//                    var raycaster = new THREE.Raycaster(new THREE.Vector3(x+cubeDim/2, y+cubeDim/2, z+cubeDim/2),
-//                        new THREE.Vector3(0, 0, 1), 0, boundingBox.max.z-z+cubeDim/2);
-//                    var numIntersections = raycaster.intersectObject(localEnv.modelMesh).length;
+            var modelClone = new THREE.Mesh(localEnv.modelMesh.geometry, localEnv.modelMesh.material);//had to do this for some reason
+            for (var y=boundingBox.min.y;y<boundingBox.max.y;y+=cubeDim){
+                for (var z=boundingBox.min.z;z<boundingBox.max.z;z+=cubeDim){
+                    var raycaster = new THREE.Raycaster(new THREE.Vector3(x+cubeDim/2, y+cubeDim/2, z+cubeDim/2),
+                        new THREE.Vector3(0, 0, 1), 0, boundingBox.max.z-z+cubeDim/2);
+                    var numIntersections = raycaster.intersectObject(modelClone).length;
+//                    console.log(numIntersections);
 //                    if (numIntersections % 2 == 1) {
 //                        var mesh = createCubeGeometry(cubeDim);
 //                        mesh.position.set(x+cubeDim/2, y+cubeDim/2, z+cubeDim/2);
@@ -67,8 +68,8 @@ $(function(){
 ////                        global.env.three.scene.add(mesh);
 //                    } else if (numIntersections == 0){
 //                    }
-//                }
-//            }
+                }
+            }
             return x*x;
         }
     });
