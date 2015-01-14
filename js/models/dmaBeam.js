@@ -3,12 +3,12 @@
  */
 
 
-//a single beam
+//a single beam, made from two nodes
 
 function Beam(node1, node2) {
     this.nodes = [node1, node2];
     var self = this;
-    _.each(nodes, function(node){
+    _.each(nodes, function(node){//give each node a reference to the new beam it is connected to
         node.addBeam(self);
     });
 }

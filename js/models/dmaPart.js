@@ -3,9 +3,11 @@
  */
 
 
+//a part, element with a single material, handled by assembler
+
 function Part(nodes, config) {//list of nodes, config tells how nodes are connected
-    self.nodes = nodes;
-    self.beams = self._createBeams(nodes, config);
+    this.nodes = nodes;
+    this.beams = this._createBeams(nodes, config);
 };
 
 Part.prototype._createBeams = function(nodes, config){
@@ -25,3 +27,12 @@ Part.prototype.translate = function(dx, dy, dz){
 
 Part.prototype.rotate = function(rx, ry, rz){
 };
+
+
+
+
+//matt's part
+function PartTriangle(nodes){
+}
+
+PartTriangle.prototype = new Part(nodes, [[0,1],[1,2],[2,0]]);
