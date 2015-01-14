@@ -2,7 +2,6 @@
  * Created by aghassaei on 1/8/15.
  */
 
-//todo - put stl loading in background thread
 
 $(function(){
 

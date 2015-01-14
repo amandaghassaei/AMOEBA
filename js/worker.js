@@ -21,7 +21,7 @@ function myWorker(){
             }
         //load all scripts
         importScripts(url + 'dependencies/three.js');
-    //    importScripts(url + 'js/element.js');
+    //    importScripts(url + 'js/models/dmaBeam.js');
         }
 //
         if (data.model){
