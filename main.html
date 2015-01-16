@@ -2,7 +2,7 @@
 <html>
 <head>
 
-    <title>Title</title>
+    <title></title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="js/analytics.js"></script>
@@ -11,7 +11,7 @@
     <script src="dependencies/jquery-2.1.3.js"></script>
     <script src="dependencies/underscore.js"></script>
 
-    <!--backbone model view framework-->
+    <!--backbone model/view framework-->
     <script src="dependencies/backbone.js"></script>
 
     <!--flatUI bootstrap theme-->
@@ -40,9 +40,18 @@
     <script src="js/persistentWorkers.js"></script><!--global workers-->
 
     <script src="js/main.js"></script>
+
+    <!--models-->
+    <script src="js/models/fillGeometry.js"></script>
+
+    <!--views-->
+    <script src="js/views/importView.js"></script>
+
+
+
     <script src="dependencies/loaders/STLLoader.js"></script>
-    <script src="js/views/importMenu.js"></script>
-    <script src="js/views/elementMenu.js"></script>
+    <!--<script src="js/views/importMenu.js"></script>-->
+    <!--<script src="js/views/elementMenu.js"></script>-->
     <script src="js/views/exportMenu.js"></script>
     <script src="js/views/navbar.js"></script>
     <link rel="stylesheet" type="text/css" href="css/main.css">
@@ -87,40 +96,6 @@
     </div><!-- /.navbar-collapse -->
   </nav>
 <div id="importGeometry" class="row navMenu">
-    <div class="row demo-row">
-        <div class="col-xs-3">
-        <div>
-           <span class="btn btn-default btn-file fullWidth">
-                Upload STL<input id="uploadSTL" type="file">
-           </span>
-        </div>
-        <div class="text-center">
-            OR
-        </div>
-        <div>
-          <div class="btn-group fullWidth">
-            <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>
-            <ul role="menu" class="dropdown-menu">
-              <li><a class="stlImport" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>
-            </ul>
-          </div><!-- /btn-group -->
-        </div>
-        </div> <!-- /.col-xs-3 -->
-        <div id="STLImportStats" class="col-xs-9">
-            <div id="STLFilename"></div><br/><div id="meshDimensions"></div>
-            <div>Change model scale:</div>
-            <input id="stlModelScale" type="text" data-slider-min="0.0" data-slider-max="20" data-slider-step="0.1" data-slider-value="1"/>
-            <div class="col-xs-4">
-                <a href="#" id="stlRotateX" class="btn btn-block btn-lg btn-default">Rotate X</a>
-            </div>
-            <div class="col-xs-4">
-                <a href="#" id="stlRotateY" class="btn btn-block btn-lg btn-default">Rotate Y</a>
-            </div>
-            <div class="col-xs-4">
-                <a href="#" id="stlRotateZ" class="btn btn-block btn-lg btn-default">Rotate Z</a>
-            </div>
-        </div>
-    </div>
 </div>
 <div id="element" class="row navMenu">
     <div class="row demo-row">

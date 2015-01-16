@@ -77,7 +77,6 @@ function Three(){
     }
     
     function render(){
-        
       renderer.render( scene, camera );
     }
 
