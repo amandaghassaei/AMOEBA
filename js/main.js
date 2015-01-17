@@ -7,7 +7,8 @@ $(function(){
 
     window.workers = persistentWorkers(8);
 
-    var three = new ThreeView();//singleton, my threejs view
+    var threeModel = new ThreeModel();
+    var three = new ThreeView({model:threeModel});//singleton, my threejs view
 
     //init models and views
     var fillGeometry = new FillGeometry();//singleton, mesh to fill with lattice
