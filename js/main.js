@@ -5,7 +5,7 @@
 
 $(function(){
 
-    three = Three();
+    three = new ThreeView();
 
     //init models and views
     fillGeometry = new FillGeometry();//init a singleton, add to global scope
