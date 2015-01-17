@@ -12,18 +12,12 @@ $(function(){
 
     //init models and views
     var fillGeometry = new FillGeometry();//singleton, mesh to fill with lattice
-    three.setFillGeometry(fillGeometry);
     new ImportView({model: fillGeometry});
+    three.setFillGeometry(fillGeometry);
+
 
     lattice = new Lattice();
 
 
-
-
-
-    setupNavBar(three);
-
-
-
-
+    setupNavBar(threeModel);
 });
