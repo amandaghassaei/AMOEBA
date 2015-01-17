@@ -3,16 +3,14 @@
  */
 
 
-FillGeometryView = Backbone.View.extend({
+FillGeometryView = PushPullMeshView.extend({
 
     events: {
-
-
     },
 
     initialize: function(options){
 
-        this.three = options.three;
+        PushPullMeshView.prototype.initialize.apply(this, arguments);
 
         //bind events
         this.listenTo(this.model, "change:geometry", this.replaceFillGeometry);
