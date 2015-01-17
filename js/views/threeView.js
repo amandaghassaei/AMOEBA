@@ -20,19 +20,6 @@ ThreeView = Backbone.View.extend({
         this.animate();
     },
 
-    setFillGeometry: function(fillGeometry){//call this once
-        this.fillGeometry = fillGeometry;
-        this.listenTo(fillGeometry, "change:geometry", this.replaceFillGeometry);
-        this.listenTo(fillGeometry, "change:orientation", this.model.render);
-        this.replaceFillGeometry();
-    },
-
-    replaceFillGeometry: function(){
-        if (this.fillGeometry.previous("mesh")) this.model.sceneRemove(this.fillGeometry.previous("mesh"));
-        this.model.sceneAdd(this.fillGeometry.get("mesh"));
-        this.model.render();
-    },
-
     animate: function(){
         requestAnimationFrame(this.animate);
         this.controls.update();
