@@ -48,7 +48,7 @@ FillGeometry = Backbone.Model.extend({
         var helper = new THREE.BoundingBoxHelper(this.get("mesh"), 0x000000);
         this.set("boundingBoxHelper", helper);
         helper.update();
-        three.scene.add(helper.object);
+//        three.scene.add(helper.object);
         this.trigger("change:boundingBoxHelper");
     },
 

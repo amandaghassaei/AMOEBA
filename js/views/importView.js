@@ -17,7 +17,7 @@ ImportView = Backbone.View.extend({
     initialize: function(){
 
         _.bindAll(this, "render", "onMeshLoad");
-        this.model.bind("change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
+        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
 
         this.render();
     },

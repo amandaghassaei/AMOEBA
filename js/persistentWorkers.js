@@ -105,5 +105,4 @@ function persistentWorkers(numWorkers){
     }
 
     return {map:map, allWorkers:allWorkers};//return all public methods and vars
-
 }

@@ -1,4 +1,6 @@
-
+/**
+ * Created by aghassaei on 1/16/15.
+ */
 
 ThreeView = Backbone.View.extend({
 
@@ -10,7 +12,7 @@ ThreeView = Backbone.View.extend({
 
     initialize: function(){
 
-        _.bindAll(this, "render", "animate", "onWindowResize");
+        _.bindAll(this, "render", "animate", "onWindowResize", "clearAll");
 
         this.camera.position.z = 500;
         this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002);
@@ -55,14 +57,16 @@ ThreeView = Backbone.View.extend({
         }
     },
 
-    setFillGeometry: function(fillGeometry){
-        var self = this;
-        fillGeometry.bind("change:geometry", function(){
-            if (fillGeometry.previous("mesh")) self.scene.remove(fillGeometry.previous("mesh"));
-            self.render();
-        });
-        this.scene.add(fillGeometry.get("mesh"));
-        fillGeometry.bind("change:mesh change:orientation", this.render);
+    setFillGeometry: function(fillGeometry){//call this once
+        this.fillGeometry = fillGeometry;
+        this.listenTo(fillGeometry, "change:geometry", this.replaceFillGeometry);
+        this.listenTo(fillGeometry, "change:orientation", this.render);
+        this.replaceFillGeometry();
+    },
+
+    replaceFillGeometry: function(){
+        if (this.fillGeometry.previous("mesh")) this.scene.remove(this.fillGeometry.previous("mesh"));
+        this.scene.add(this.fillGeometry.get("mesh"));
         this.render();
     },
 
