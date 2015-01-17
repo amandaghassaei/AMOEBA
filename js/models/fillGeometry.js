@@ -24,17 +24,13 @@ FillGeometry = Backbone.Model.extend({
         this.on("change:mesh", this.makeBoundingBoxHelper);
         this.on("change:orientation", this.updateBoundingBox);
         this.on("change:geometry", this.buildNewMesh);
-        this.on("change:mesh change:orientation", this.render);
 
         this.buildNewMesh();
     },
 
     buildNewMesh:function(){
-
-        if (this.previous("mesh")) three.scene.remove(this.previous("mesh"));//remove current mesh from scene
         this.set({orientation:this.defaults.orientation}, {silent:true});//restore defaults
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
-        three.scene.add(mesh);
         this.set({mesh: mesh});
 
         //send new geometry out to workers
@@ -59,10 +55,6 @@ FillGeometry = Backbone.Model.extend({
     updateBoundingBox: function(){
         this.get("boundingBoxHelper").update();
         this.trigger("change:boundingBoxHelper");
-    },
-
-    render: function(){
-        three.render();
     },
 
     rotate: function(axis){

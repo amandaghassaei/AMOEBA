@@ -4,11 +4,6 @@ ThreeView = Backbone.View.extend({
 
     el: "#threeContainer",
 
-    events: {
-
-
-    },
-
     camera: new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000),
     scene: new THREE.Scene(),
     renderer: new THREE.WebGLRenderer({antialias:false}),
@@ -50,7 +45,6 @@ ThreeView = Backbone.View.extend({
         var material = new THREE.MeshLambertMaterial( { color:0xffffff, shading: THREE.FlatShading } );
 
         for ( var i = 0; i < 500; i ++ ) {
-
             var mesh = new THREE.Mesh( geometry, material );
             mesh.position.x = ( Math.random() - 0.5 ) * 1000;
             mesh.position.y = ( Math.random() - 0.5 ) * 1000;
@@ -58,8 +52,18 @@ ThreeView = Backbone.View.extend({
             mesh.updateMatrix();
             mesh.matrixAutoUpdate = false;
             this.scene.add(mesh);
-
         }
+    },
+
+    setFillGeometry: function(fillGeometry){
+        var self = this;
+        fillGeometry.bind("change:geometry", function(){
+            if (fillGeometry.previous("mesh")) self.scene.remove(fillGeometry.previous("mesh"));
+            self.render();
+        });
+        this.scene.add(fillGeometry.get("mesh"));
+        fillGeometry.bind("change:mesh change:orientation", this.render);
+        this.render();
     },
 
     onWindowResize: function(){

@@ -8,10 +8,13 @@ $(function(){
     three = new ThreeView();
 
     //init models and views
-    fillGeometry = new FillGeometry();//init a singleton, add to global scope
-    new ImportView({model: window.fillGeometry});
+    var fillGeometry = new FillGeometry();//singleton
+    new ImportView({model: fillGeometry});
 
     lattice = new Lattice();
+
+
+    three.setFillGeometry(fillGeometry);
 
 
     //window.fillGeometry.set({geometry:"stuff"});
