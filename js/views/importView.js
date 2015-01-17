@@ -12,13 +12,12 @@ ImportView = Backbone.View.extend({
         "click .selectMesh":                "selectMesh",
         "fileselect .btn-file :file":       "readDataURL",
         "click .stlRotate":                 "rotate",
-        "slide #modelScale":                "scale"
     },
 
     initialize: function(){
 
         _.bindAll(this, "render", "onMeshLoad");
-        this.model.bind("change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation/scale
+        this.model.bind("change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
 
         this.render();
     },
@@ -61,9 +60,9 @@ ImportView = Backbone.View.extend({
         this.model.set("geometry", e.content);
     },
 
-    scale: function(e){
-        this.model.set("scale", $(e.target).slider('getValue'));
-    },
+//    scale: function(e){
+//        this.model.set("scale", $(e.target).slider('getValue'));
+//    },
 
     makeDimensionString: function(){
         var bounds = this.model.get("boundingBoxHelper").box;
@@ -111,9 +110,9 @@ ImportView = Backbone.View.extend({
             </div>\
             </div> <!-- /.col-xs-3 -->\
             <div class="col-xs-9">\
-                Geometry:&nbsp;&nbsp;<%= filename %><br/>\
-                Dimensions:&nbsp;&nbsp;<%= dimensions %>\
-                <div>Change model scale:</div>\
+                <div>Geometry:&nbsp;&nbsp;<%= filename %><br/>\
+                Dimensions:&nbsp;&nbsp;<%= dimensions %><br/>\
+                Units:&nbsp;&nbsp;</div></br>\
                 <div class="col-xs-4">\
                     <a href="#" data-axis="z" class="stlRotate btn btn-block btn-lg btn-default">Rotate X</a>\
                 </div>\

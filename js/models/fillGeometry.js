@@ -6,7 +6,6 @@
 FillGeometry = Backbone.Model.extend({
 
     defaults: {
-        scale: 1.0,
         material: new THREE.MeshLambertMaterial(
             {color:0xffa500,
                 shading: THREE.FlatShading,
@@ -23,9 +22,9 @@ FillGeometry = Backbone.Model.extend({
         //bind events
         this.on("change:mesh", this.getBounds);
         this.on("change:mesh", this.makeBoundingBoxHelper);
-        this.on("change:scale change:orientation", this.updateBoundingBox);
+        this.on("change:orientation", this.updateBoundingBox);
         this.on("change:geometry", this.buildNewMesh);
-        this.on("change:mesh change:scale change:orientation", this.render);
+        this.on("change:mesh change:orientation", this.render);
 
         this.buildNewMesh();
     },
@@ -33,7 +32,7 @@ FillGeometry = Backbone.Model.extend({
     buildNewMesh:function(){
 
         if (this.previous("mesh")) three.scene.remove(this.previous("mesh"));//remove current mesh from scene
-        this.set({scale:this.defaults.scale, orientation:this.defaults.orientation}, {silent:true});//restore defaults
+        this.set({orientation:this.defaults.orientation}, {silent:true});//restore defaults
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
         three.scene.add(mesh);
         this.set({mesh: mesh});
