@@ -3,7 +3,7 @@
  */
 
 
-function setupNavBar(){
+function setupNavBar(three){
 
     var allMenus = $(".navMenu");
     var allNavMenuLinks = $(".menuHoverControls");

@@ -7,10 +7,10 @@ $(function(){
 
     window.workers = persistentWorkers(8);
 
-    three = new ThreeView();
+    var three = new ThreeView();//singleton, my threejs view
 
     //init models and views
-    var fillGeometry = new FillGeometry();//singleton
+    var fillGeometry = new FillGeometry();//singleton, mesh to fill with lattice
     three.setFillGeometry(fillGeometry);
     new ImportView({model: fillGeometry});
 
@@ -20,7 +20,7 @@ $(function(){
 
 
 
-    setupNavBar();
+    setupNavBar(three);
 
 
 

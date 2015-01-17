@@ -6,6 +6,7 @@ ThreeView = Backbone.View.extend({
 
     el: "#threeContainer",
 
+    //this could break off into a model
     camera: new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000),
     scene: new THREE.Scene(),
     renderer: new THREE.WebGLRenderer({antialias:false}),
@@ -90,7 +91,7 @@ ThreeView = Backbone.View.extend({
         var children = this.scene.children;
         for (var i=children.length;i>=0;i--){
             var object = children[i];
-            if (object instanceof THREE.Mesh){
+            if (object instanceof THREE.Mesh && object != this.fillGeometry.get("mesh")){
                 this.scene.remove(object);
             }
         }
