@@ -6,7 +6,9 @@
 Lattice = Backbone.Model.extend({
 
     defaults: {
-        scale: 1.0
+        scale: 1.0,
+        translation: new THREE.Vector3(0,0,0),
+        rotation: new THREE.Vector3(0,0,0)
     },
 
     initialize: function(){

@@ -62,7 +62,6 @@ FillGeometry = Backbone.Model.extend({
     },
 
     render: function(){
-        console.log("renderfillgeo");
         three.render();
     },
 
@@ -81,6 +80,5 @@ FillGeometry = Backbone.Model.extend({
         }
         this.trigger("change:orientation");
     }
-
 });
 

@@ -11,6 +11,8 @@ $(function(){
     fillGeometry = new FillGeometry();//init a singleton, add to global scope
     new ImportView({model: window.fillGeometry});
 
+    lattice = new Lattice();
+
 
     //window.fillGeometry.set({geometry:"stuff"});
 

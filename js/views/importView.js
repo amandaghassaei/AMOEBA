@@ -77,16 +77,7 @@ ImportView = Backbone.View.extend({
     },
 
     render: function(){
-
-        console.log("renderView");
         this.$el.html(this.template(_.extend(this.model.attributes, {dimensions:this.makeDimensionString()})));
-
-//        $(".slider").slider({//format slider
-//            formatter: function(value) {
-//                console.log(value);
-//                return value;
-//            }
-//        });
     },
 
     template: _.template(
@@ -124,6 +115,4 @@ ImportView = Backbone.View.extend({
                 </div>\
             </div>\
         </div>')
-
-
 });
