@@ -65,6 +65,12 @@ ImportView = Backbone.View.extend({
         this.model.set("scale", $(e.target).slider('getValue'));
     },
 
+    makeDimensionString: function(){
+//        var boundingBox = this.model.get("boundingBox");
+//        return ((boundingBox.max.x - boundingBox.min.x)*scale).toFixed(1) + " x " +
+//            ((boundingBox.max.y - boundingBox.min.y)*scale).toFixed(1) + " x " + ((boundingBox.max.z - boundingBox.min.z)*scale).toFixed(1);
+    },
+
     rotate: function(e){
         e.preventDefault();
         var axis = $(e.target).data("axis");
@@ -74,7 +80,7 @@ ImportView = Backbone.View.extend({
     render: function(){
 
         console.log("renderView");
-        this.$el.html(this.template(this.model.attributes));
+        this.$el.html(this.template(_.extend(this.model.attributes, {dimensions:this.makeDimensionString()})));
 
 //        $(".slider").slider({//format slider
 //            formatter: function(value) {
@@ -105,8 +111,8 @@ ImportView = Backbone.View.extend({
             </div>\
             </div> <!-- /.col-xs-3 -->\
             <div class="col-xs-9">\
-                Current File:&nbsp;&nbsp;<%= filename %><br/>\
-                <%= dimensions %>\
+                Geometry:&nbsp;&nbsp;<%= filename %><br/>\
+                Dimensions:&nbsp;&nbsp;<%= dimensions %>\
                 <div>Change model scale:</div>\
                 <div class="col-xs-4">\
                     <a href="#" data-axis="z" class="stlRotate btn btn-block btn-lg btn-default">Rotate X</a>\

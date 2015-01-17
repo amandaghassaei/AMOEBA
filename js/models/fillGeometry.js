@@ -14,36 +14,64 @@ FillGeometry = Backbone.Model.extend({
                 opacity:0.5,
                 side:THREE.DoubleSide}),
         geometry: new THREE.BoxGeometry(100, 100, 100),
-        filename: "no file loaded",
-        dimensions: "",
-        orientation: ""
+        filename: "Cube",
+        orientation: "",
     },
 
     initialize: function(){
 
-        this.buildNewMesh();
-        this.renderMesh();
-
         //bind events
-        this.on("change:mesh change:scale change:orientation", this.renderMesh);
+        this.on("change:mesh", this.getBounds);
+        this.on("change:mesh", this.makeBoundingBoxHelper);
+        this.on("change:scale change:orientation", this.updateBoundingBox);
         this.on("change:geometry", this.buildNewMesh);
+        this.on("change:mesh change:scale change:orientation", this.render);
+
+        this.buildNewMesh();
     },
 
     buildNewMesh:function(){
 
-        three.trigger("threeRemove", this.previous("mesh"));//remove current mesh from scene
+        if (this.previous("mesh")) three.scene.remove(this.previous("mesh"));//remove current mesh from scene
         this.set(_.omit(this.defaults, ["geometry", "material"]), {silent:true});//restore defaults
-        this.set(
-            {mesh: new THREE.Mesh(this.get("geometry"), this.get("material"))});
+        var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"))
+        three.scene.add(mesh);
+        this.set({mesh: mesh});
+
+        //send new geometry out to workers
 //            _.each(workers.allWorkers, function(worker){
-//                worker.postMessage({model: JSON.stringify(e.content)});
+//                worker.postMessage({model: this.toJSON});
 //            });
     },
 
-    renderMesh: function(){
+    getBounds: function(){//bounds is the bounding box of the mesh geometry (before scaling)
+//        this.get("bounds").setFromObject(this.get("mesh"));
+        this.get("mesh").geometry.computeBoundingBox();
+        this.set("bounds", this.get("geometry").boundingBox.clone());
+    },
+
+    makeBoundingBoxHelper: function(){
+        var helper = new THREE.BoundingBoxHelper(this.get("mesh"), 0x000000);
+        this.set("boundingBoxHelper", helper);
+        three.scene.add(helper.object);
+    },
+
+    updateBoundingBox: function(){
+        this.get("boundingBoxHelper").update();
+
+//        var boundingBox = this.get("geometry").boundingBox;
+//        if (!boundingBox){
+//            console.log("no bb");
+//        }
+    },
+
+    updateBoundingBox:function(){
+
+    },
+
+    render: function(){
         console.log("renderfillgeo");
-        three.trigger("threeAdd", this.get("mesh"));
-        three.trigger("threeRender");
+        three.render();
     },
 
     rotate: function(axis){
