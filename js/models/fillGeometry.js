@@ -33,8 +33,8 @@ FillGeometry = Backbone.Model.extend({
     buildNewMesh:function(){
 
         if (this.previous("mesh")) three.scene.remove(this.previous("mesh"));//remove current mesh from scene
-        this.set(_.omit(this.defaults, ["geometry", "material"]), {silent:true});//restore defaults
-        var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"))
+        this.set({scale:this.defaults.scale, orientation:this.defaults.orientation}, {silent:true});//restore defaults
+        var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
         three.scene.add(mesh);
         this.set({mesh: mesh});
 
@@ -45,7 +45,6 @@ FillGeometry = Backbone.Model.extend({
     },
 
     getBounds: function(){//bounds is the bounding box of the mesh geometry (before scaling)
-//        this.get("bounds").setFromObject(this.get("mesh"));
         this.get("mesh").geometry.computeBoundingBox();
         this.set("bounds", this.get("geometry").boundingBox.clone());
     },
@@ -55,21 +54,12 @@ FillGeometry = Backbone.Model.extend({
         this.set("boundingBoxHelper", helper);
         helper.update();
         three.scene.add(helper.object);
-        console.log(helper.box);
+        this.trigger("change:boundingBoxHelper");
     },
 
     updateBoundingBox: function(){
         this.get("boundingBoxHelper").update();
-        console.log(helper.box);
-
-//        var boundingBox = this.get("geometry").boundingBox;
-//        if (!boundingBox){
-//            console.log("no bb");
-//        }
-    },
-
-    updateBoundingBox:function(){
-
+        this.trigger("change:boundingBoxHelper");
     },
 
     render: function(){

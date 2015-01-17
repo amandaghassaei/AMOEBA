@@ -18,7 +18,7 @@ ImportView = Backbone.View.extend({
     initialize: function(){
 
         _.bindAll(this, "render", "onMeshLoad");
-        this.model.bind("change", this.render);
+        this.model.bind("change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation/scale
 
         this.render();
     },
@@ -66,11 +66,9 @@ ImportView = Backbone.View.extend({
     },
 
     makeDimensionString: function(){
-        //todo add in orientation effects
-        var scale = this.model.get("scale");
-        var bounds = this.model.get("bounds");
-        return ((bounds.max.x - bounds.min.x)*scale).toFixed(1) + " x " +
-            ((bounds.max.y - bounds.min.y)*scale).toFixed(1) + " x " + ((bounds.max.z - bounds.min.z)*scale).toFixed(1);
+        var bounds = this.model.get("boundingBoxHelper").box;
+        return (bounds.max.x - bounds.min.x).toFixed(1) + " x " +
+            (bounds.max.y - bounds.min.y).toFixed(1) + " x " + (bounds.max.z - bounds.min.z).toFixed(1);
     },
 
     rotate: function(e){
