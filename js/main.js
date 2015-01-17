@@ -8,7 +8,7 @@ $(function(){
     three = Three();
 
     //init models and views
-    window.fillGeometry = new FillGeometry();//init a singleton, add to global scope
+    fillGeometry = new FillGeometry();//init a singleton, add to global scope
     new ImportView({model: window.fillGeometry});
 
 

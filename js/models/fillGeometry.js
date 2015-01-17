@@ -15,7 +15,7 @@ FillGeometry = Backbone.Model.extend({
                 side:THREE.DoubleSide}),
         geometry: new THREE.BoxGeometry(100, 100, 100),
         filename: "Cube",
-        orientation: "",
+        orientation: [0,0,0]
     },
 
     initialize: function(){
@@ -53,11 +53,14 @@ FillGeometry = Backbone.Model.extend({
     makeBoundingBoxHelper: function(){
         var helper = new THREE.BoundingBoxHelper(this.get("mesh"), 0x000000);
         this.set("boundingBoxHelper", helper);
+        helper.update();
         three.scene.add(helper.object);
+        console.log(helper.box);
     },
 
     updateBoundingBox: function(){
         this.get("boundingBoxHelper").update();
+        console.log(helper.box);
 
 //        var boundingBox = this.get("geometry").boundingBox;
 //        if (!boundingBox){
@@ -75,14 +78,19 @@ FillGeometry = Backbone.Model.extend({
     },
 
     rotate: function(axis){
+        var orientation = this.get("orientation");
         var mesh = this.get("mesh");
         if (axis == "x"){
             mesh.rotateX(Math.PI/2);
+            orientation[0] += Math.PI/2;
         } else if (axis == "y"){
             mesh.rotateX(Math.PI/2);
+            orientation[1] += Math.PI/2;
         } else {
             mesh.rotateX(Math.PI/2);
+            orientation[2] += Math.PI/2;
         }
+        this.trigger("change:orientation");
     }
 
 });

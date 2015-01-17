@@ -66,9 +66,11 @@ ImportView = Backbone.View.extend({
     },
 
     makeDimensionString: function(){
-//        var boundingBox = this.model.get("boundingBox");
-//        return ((boundingBox.max.x - boundingBox.min.x)*scale).toFixed(1) + " x " +
-//            ((boundingBox.max.y - boundingBox.min.y)*scale).toFixed(1) + " x " + ((boundingBox.max.z - boundingBox.min.z)*scale).toFixed(1);
+        //todo add in orientation effects
+        var scale = this.model.get("scale");
+        var bounds = this.model.get("bounds");
+        return ((bounds.max.x - bounds.min.x)*scale).toFixed(1) + " x " +
+            ((bounds.max.y - bounds.min.y)*scale).toFixed(1) + " x " + ((bounds.max.z - bounds.min.z)*scale).toFixed(1);
     },
 
     rotate: function(e){

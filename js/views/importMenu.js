@@ -80,10 +80,11 @@ $(function(){
         $("#STLFilename").html("Current file loaded:&nbsp&nbsp"+name);
     }
 
-    function showDimensions(scale){
-        var boundingBox = modelMesh.geometry.boundingBox;
-        $("#meshDimensions").html("Dimensions: " + ((boundingBox.max.x - boundingBox.min.x)*scale).toFixed(1) + " x " +
-            ((boundingBox.max.y - boundingBox.min.y)*scale).toFixed(1) + " x " + ((boundingBox.max.z - boundingBox.min.z)*scale).toFixed(1));
+    function showDimensions(scale, orintation){
+        //todo add in orientation effects
+        var bounds = this.model.get("bounds");
+        $("#meshDimensions").html("Dimensions: " + ((bounds.max.x - bounds.min.x)*scale).toFixed(1) + " x " +
+            ((bounds.max.y - bounds.min.y)*scale).toFixed(1) + " x " + ((bounds.max.z - bounds.min.z)*scale).toFixed(1));
     }
 
     $("#stlRotateX").click(function(e){
