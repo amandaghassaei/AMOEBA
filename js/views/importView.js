@@ -11,7 +11,7 @@ ImportView = Backbone.View.extend({
         "change #uploadMesh":               "uploadMesh",
         "click .selectMesh":                "selectMesh",
         "fileselect .btn-file :file":       "readDataURL",
-        "click .stlRotate":                 "rotate",
+        "click .stlRotate":                 "rotate"
     },
 
     initialize: function(){
@@ -79,6 +79,8 @@ ImportView = Backbone.View.extend({
     render: function(){
         this.$el.html(this.template(_.extend(this.model.attributes, {dimensions:this.makeDimensionString()})));
     },
+
+
 
     template: _.template(
         '<div class="row demo-row">\

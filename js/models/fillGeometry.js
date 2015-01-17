@@ -68,15 +68,16 @@ FillGeometry = Backbone.Model.extend({
     rotate: function(axis){
         var orientation = this.get("orientation");
         var mesh = this.get("mesh");
+        var piOver2 = Math.Pi/2;
         if (axis == "x"){
-            mesh.rotateX(Math.PI/2);
-            orientation[0] += Math.PI/2;
+            mesh.rotateX(piOver2);
+            orientation[0] += piOver2;
         } else if (axis == "y"){
-            mesh.rotateX(Math.PI/2);
-            orientation[1] += Math.PI/2;
+            mesh.rotateX(piOver2);
+            orientation[1] += piOver2;
         } else {
-            mesh.rotateX(Math.PI/2);
-            orientation[2] += Math.PI/2;
+            mesh.rotateX(piOver2);
+            orientation[2] += piOver2;
         }
         this.trigger("change:orientation");
     }
