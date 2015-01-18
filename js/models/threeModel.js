@@ -16,8 +16,6 @@ function ThreeModel(){
         camera.position.z = 500;
         scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 
-        drawRandomStuff();
-
         // lights
         var light = new THREE.DirectionalLight(0xffffff);
         light.position.set(1, 1, 1);
@@ -35,20 +33,20 @@ function ThreeModel(){
         window.addEventListener('resize', onWindowResize, false);
     }
 
-    function drawRandomStuff(){
-        var geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
-        var material = new THREE.MeshLambertMaterial({color:0xffffff, shading: THREE.FlatShading});
-
-        for ( var i = 0; i < 500; i ++ ) {
-            var mesh = new THREE.Mesh( geometry, material );
-            mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-            mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-            mesh.position.z = ( Math.random() - 0.5 ) * 1000;
-            mesh.updateMatrix();
-            mesh.matrixAutoUpdate = false;
-            scene.add(mesh);
-        }
-    }
+//    function drawRandomStuff(){
+//        var geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
+//        var material = new THREE.MeshLambertMaterial({color:0xffffff, shading: THREE.FlatShading});
+//
+//        for ( var i = 0; i < 500; i ++ ) {
+//            var mesh = new THREE.Mesh( geometry, material );
+//            mesh.position.x = ( Math.random() - 0.5 ) * 1000;
+//            mesh.position.y = ( Math.random() - 0.5 ) * 1000;
+//            mesh.position.z = ( Math.random() - 0.5 ) * 1000;
+//            mesh.updateMatrix();
+//            mesh.matrixAutoUpdate = false;
+//            scene.add(mesh);
+//        }
+//    }
 
     function onWindowResize(){
         camera.aspect = window.innerWidth/window.innerHeight;

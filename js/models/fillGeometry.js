@@ -7,30 +7,31 @@ FillGeometry = Backbone.Model.extend({
 
     defaults: {
         material: new THREE.MeshLambertMaterial(
-            {color:0xffa500,
+            {color:0xf25536,
                 shading: THREE.FlatShading,
                 transparent:true,
                 opacity:0.5,
                 side:THREE.DoubleSide}),
         geometry: new THREE.BoxGeometry(100, 100, 100),
         filename: "Cube",
-        orientation: [0,0,0]
+        orientation: [0,0,0],
+        scale: [1.0,1.0,1.0]
     },
 
     initialize: function(){
 
         //bind events
         this.on("change:mesh", this.getBounds);
-        this.on("change:mesh", this.makeBoundingBoxHelper);
-        this.on("change:orientation", this.updateBoundingBox);
+        this.on("change:orientation change:scale", this.updateBoundingBox);
         this.on("change:geometry", this.buildNewMesh);
 
         this.buildNewMesh();
     },
 
     buildNewMesh:function(){
-        this.set({orientation:this.defaults.orientation}, {silent:true});//restore defaults
+        this.set({orientation:this.defaults.orientation, scale:this.defaults.scale}, {silent:true});//restore defaults
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
+        this.makeBoundingBoxHelper(mesh);
         this.set({mesh: mesh});
 
         //send new geometry out to workers
@@ -44,12 +45,10 @@ FillGeometry = Backbone.Model.extend({
         this.set("bounds", this.get("geometry").boundingBox.clone());
     },
 
-    makeBoundingBoxHelper: function(){
-        var helper = new THREE.BoundingBoxHelper(this.get("mesh"), 0x000000);
-        this.set("boundingBoxHelper", helper);
+    makeBoundingBoxHelper: function(mesh){
+        var helper = new THREE.BoundingBoxHelper(mesh, 0x000000);
         helper.update();
-//        three.scene.add(helper.object);
-        this.trigger("change:boundingBoxHelper");
+        this.set("boundingBoxHelper", helper);
     },
 
     updateBoundingBox: function(){
@@ -58,9 +57,9 @@ FillGeometry = Backbone.Model.extend({
     },
 
     rotate: function(axis){
-        var orientation = this.get("orientation");
+        var orientation = this.get("orientation").slice(0);//make a copy so that set triggers change event
         var mesh = this.get("mesh");
-        var piOver2 = Math.Pi/2;
+        var piOver2 = Math.PI/2;
         if (axis == "x"){
             mesh.rotateX(piOver2);
             orientation[0] += piOver2;
@@ -71,7 +70,7 @@ FillGeometry = Backbone.Model.extend({
             mesh.rotateX(piOver2);
             orientation[2] += piOver2;
         }
-        this.trigger("change:orientation");
+        this.set("orientation", orientation);
     }
 });
 
