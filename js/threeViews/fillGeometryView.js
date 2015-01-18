@@ -39,11 +39,11 @@ FillGeometryView = PushPullMeshView.extend({
     updateBounds: function(){
         var bounds = this.model.get("bounds");//this has not been scaled or rotated, as is when model was first imported
         var max = bounds.max.toArray();
-        var min = bounds.min.toArray()
+        var min = bounds.min.toArray();
         var size = numeric.sub(max, min);
         var translation = numeric.mul(numeric.add(max, min), 0.5);
         var geometry = new THREE.BoxGeometry(size[0], size[1], size[2]);
-        geometry.applyMatrix( new THREE.Matrix4().makeTranslation(translation[0], translation[1], translation[2]));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(translation[0], translation[1], translation[2]));
         this.boundsBox.geometry = geometry;
         this.boxHelper.update(this.boundsBox);
         this.render();

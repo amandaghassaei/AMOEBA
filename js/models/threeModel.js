@@ -13,7 +13,9 @@ function ThreeModel(){
 
     function initialize(){
 
-        camera.position.z = 500;
+        camera.position.x = 125;
+        camera.position.y = 100;
+        camera.position.z = 165;
         scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 
         // lights
