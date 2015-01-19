@@ -8,17 +8,20 @@ $(function(){
     window.workers = persistentWorkers(8);
 
 
-    //init threeJS view
+    //init threeJS
     var threeModel = new ThreeModel();
-    var three = new ThreeView({model:threeModel});
 
     //backbone models and views
     var fillGeometry = new FillGeometry();//singleton, mesh to fill with lattice
     new ImportView({model: fillGeometry});
-    new FillGeometryView({model: fillGeometry, three:threeModel});
+    var fillGeometryView = new FillGeometryView({model: fillGeometry, three:threeModel});
 
 
     lattice = new Lattice();
+
+    var highlightTargets = [fillGeometryView];
+
+    var threeView = new ThreeView({model:threeModel, highlightTargets:highlightTargets});
 
 
     setupNavBar(threeModel);
