@@ -7,7 +7,7 @@ ThreeView = Backbone.View.extend({
     events: {
         "mousemove":            "mouseMoved",
         "mousedown":            "mouseDown",
-        "mouseup":              "mouseUp",
+        "mouseup":              "mouseUp"
     },
 
     mouseIsDown: false,//store state of mouse click
