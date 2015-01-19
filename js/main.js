@@ -17,9 +17,10 @@ $(function(){
     var fillGeometryView = new FillGeometryView({model: fillGeometry, three:threeModel});
 
 
-    lattice = new Lattice();
+    var lattice = new Lattice();
+    var latticeView = new LatticeView({model:lattice, three:threeModel, fillGeometry:fillGeometry});
 
-    var highlightTargets = [fillGeometryView];
+    var highlightTargets = [latticeView];
 
     var threeView = new ThreeView({model:threeModel, highlightTargets:highlightTargets});
 

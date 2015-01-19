@@ -7,12 +7,15 @@ ThreeView = Backbone.View.extend({
     events: {
         "mousemove":            "mouseMoved",
         "mousedown":            "mouseDown",
-        "mouseup":              "mouseUp"
+        "mouseup":              "mouseUp",
     },
 
     mouseIsDown: false,//store state of mouse click
     mouseProjection: new THREE.Raycaster(),
+    projectionTargets: null,
     highlightTargets: null,
+    meshHandle: null,
+    cubeGeometry: new THREE.BoxGeometry(5,5,5),
 
     el: "#threeContainer",
 
@@ -21,10 +24,17 @@ ThreeView = Backbone.View.extend({
     initialize: function(options){
 
         this.highlightTargets = options.highlightTargets;
+        this.projectionTargets = [];
+        var self = this;
+        _.each(this.highlightTargets, function(target){
+            if (target.boundsBox) self.projectionTargets.push(target.boundsBox);
+        });
         _.bindAll(this, "animate", "mouseMoved");
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
+
+        this.meshHandle = new MeshHandle(this.model);
 
         this.$el.append(this.model.domElement);
 
@@ -35,25 +45,43 @@ ThreeView = Backbone.View.extend({
         this.mouseIsDown = false;
     },
 
-    mouseDown: function(){
+    mouseDown: function(e){
         this.mouseIsDown = true;
+
+        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
+        var camera = this.model.camera;
+        this.mouseProjection.setFromCamera(vector, camera);
+        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
+
+                console.log(intersections);
+
+        if (intersections.length>1){
+            var voxel = new THREE.Mesh(this.cubeGeometry);
+            voxel.position.copy(intersections[1].point);
+            voxel.position.divideScalar(5).floor().multiplyScalar(5).addScalar(2.5);
+            this.model.sceneAdd(voxel);
+            this.model.render();
+        }
     },
 
     mouseMoved: function(e){
         if (this.mouseIsDown) return;//in the middle of a drag event
-        var vector = new THREE.Vector2(2*e.pageX/window.innerWidth-1, 1-2*e.pageY/window.innerHeight);
+        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         var camera = this.model.camera;
         this.mouseProjection.setFromCamera(vector, camera);
-        var targets = [];
-        _.each(this.highlightTargets, function(target){
-            console.log(target.boundsBox);
-            if (target.boundsBox) target.push(target.boundsBox);
-        });
-        var intersections = this.mouseProjection.intersectObjects(targets);
-        _.each(this.highlightTargets, function(target){
-            target.checkHighlight(intersections);
-        });
+        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
+
+
+//        _.each(this.highlightTargets, function(target){
+//            target.checkHighlight(intersections);
+//        });
     },
+
+//    getTopObject: function(targets, intersections, index){
+//        if (intersections.length<index) return null;
+//        if (intersections.)
+//        this.getTopObject(targets, intersections, index+1);
+//    }
 
     animate: function(){
         requestAnimationFrame(this.animate);

@@ -8,6 +8,7 @@ function ThreeModel(){
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:false});
+    var objects = [];
 
     initialize();
 
@@ -58,11 +59,13 @@ function ThreeModel(){
     }
 
     function sceneAdd(object){
-        scene.add(object)
+        scene.add(object);
+        objects.push(object);
     }
 
     function sceneRemove(object){
         scene.remove(object);
+        objects.remove(object);
     }
 
     function render(){
@@ -86,6 +89,7 @@ function ThreeModel(){
         sceneRemove:sceneRemove,
         sceneAdd:sceneAdd,
         domElement:renderer.domElement,
-        camera:camera
+        camera:camera,
+        objects:objects
     }
 }

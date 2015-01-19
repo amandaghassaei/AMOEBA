@@ -11,7 +11,8 @@ ImportView = Backbone.View.extend({
         "change #uploadMesh":               "uploadMesh",
         "click .selectMesh":                "selectMesh",
         "fileselect .btn-file :file":       "readDataURL",
-        "click .stlRotate":                 "rotate"
+        "click .stlRotate":                 "rotate",
+        "change .dimension":                "scale"
     },
 
     initialize: function(){
@@ -60,14 +61,30 @@ ImportView = Backbone.View.extend({
         this.model.set("geometry", e.content);
     },
 
-//    scale: function(e){
-//        this.model.set("scale", $(e.target).slider('getValue'));
-//    },
-
     makeDimensionString: function(){
         var bounds = this.model.get("boundingBoxHelper").box;
         return (bounds.max.x - bounds.min.x).toFixed(1) + " x " +
             (bounds.max.y - bounds.min.y).toFixed(1) + " x " + (bounds.max.z - bounds.min.z).toFixed(1);
+    },
+
+    getScale: function(){
+        var scale = this.model.get("scale");
+        var dimensions = {};
+        dimensions.xScale = scale[0];
+        dimensions.yScale = scale[1];
+        dimensions.zScale = scale[2];
+        dimensions.dimensions = this.makeDimensionString();
+        return dimensions;
+    },
+
+    scale: function(e){
+
+        this.model.scale([this.getDimScale($(".xScale").val()), this.getDimScale($(".yScale").val()), this.getDimScale($(".zScale").val())]);
+    },
+
+    getDimScale: function(val){
+        if (val == "") return null;
+        return parseFloat(val);
     },
 
     rotate: function(e){
@@ -77,10 +94,8 @@ ImportView = Backbone.View.extend({
     },
 
     render: function(){
-        this.$el.html(this.template(_.extend(this.model.attributes, {dimensions:this.makeDimensionString()})));
+        this.$el.html(this.template(_.extend(this.model.attributes, this.getScale())));
     },
-
-
 
     template: _.template(
         '<div class="row demo-row">\
@@ -104,17 +119,28 @@ ImportView = Backbone.View.extend({
             </div> <!-- /.col-xs-3 -->\
             <div class="col-xs-9">\
                 <div>Geometry:&nbsp;&nbsp;<%= filename %><br/>\
-                Dimensions:&nbsp;&nbsp;<%= dimensions %><br/>\
+                <div>Dimensions:&nbsp;&nbsp;<%= dimensions %></div>\
+                <div class="col-xs-2">\
+                    <input type="text"  value placeholder="<%= xScale %>" class="xScale dimension form-control"></input>\
+                </div> \
+                <div class="col-xs-2">\
+                    <input type="text" value placeholder="<%= yScale %>" class="yScale dimension form-control"></input>\
+                </div>\
+                <div class="col-xs-2">\
+                    <input type="text" value placeholder="<%= zScale %>" class="zScale dimension form-control"></input>\
+                </div><br/><br/>\
                 Units:&nbsp;&nbsp;</div></br>\
-                <div class="col-xs-4">\
-                    <a href="#" data-axis="z" class="stlRotate btn btn-block btn-lg btn-default">Rotate X</a>\
-                </div>\
-                <div class="col-xs-4">\
-                    <a href="#" data-axis="y" class="stlRotate btn btn-block btn-lg btn-default">Rotate Y</a>\
-                </div>\
-                <div class="col-xs-4">\
-                    <a href="#" data-axis="x" class="stlRotate btn btn-block btn-lg btn-default">Rotate Z</a>\
-                </div>\
             </div>\
         </div>')
 });
+
+
+//              <div class="col-xs-4">\
+//                    <a href="#" data-axis="z" class="stlRotate btn btn-block btn-lg btn-default">Rotate X</a>\
+//                </div>\
+//                <div class="col-xs-4">\
+//                    <a href="#" data-axis="y" class="stlRotate btn btn-block btn-lg btn-default">Rotate Y</a>\
+//                </div>\
+//                <div class="col-xs-4">\
+//                    <a href="#" data-axis="x" class="stlRotate btn btn-block btn-lg btn-default">Rotate Z</a>\
+//                </div>\

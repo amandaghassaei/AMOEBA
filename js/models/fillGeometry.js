@@ -6,11 +6,11 @@
 FillGeometry = Backbone.Model.extend({
 
     defaults: {
-        material: new THREE.MeshLambertMaterial(
+        material: new THREE.MeshBasicMaterial(
             {color:0xf25536,
                 shading: THREE.FlatShading,
                 transparent:true,
-                opacity:0.5}),
+                opacity:0.2}),
         geometry: new THREE.BoxGeometry(100, 100, 100),
         filename: "Cube",
         orientation: [0,0,0],
@@ -55,21 +55,13 @@ FillGeometry = Backbone.Model.extend({
         this.trigger("change:boundingBoxHelper");
     },
 
-    rotate: function(axis){
-        var orientation = this.get("orientation").slice(0);//make a copy so that set triggers change event
-        var mesh = this.get("mesh");
-        var piOver2 = Math.PI/2;
-        if (axis == "x"){
-            mesh.rotateX(piOver2);
-            orientation[0] += piOver2;
-        } else if (axis == "y"){
-            mesh.rotateX(piOver2);
-            orientation[1] += piOver2;
-        } else {
-            mesh.rotateX(piOver2);
-            orientation[2] += piOver2;
+    scale: function(scale){
+        var currentScale = this.get("scale");
+        for (var i=0;i<currentScale.length;i++){
+            if (!scale[i]) scale[i] = currentScale[i];
         }
-        this.set("orientation", orientation);
+        this.get("mesh").scale.set(scale[0], scale[1], scale[2]);
+        this.set("scale", scale);
     }
 });
 
