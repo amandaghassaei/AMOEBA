@@ -16,6 +16,7 @@ ThreeView = Backbone.View.extend({
     highlightTargets: null,
     meshHandle: null,
     cubeGeometry: new THREE.BoxGeometry(5,5,5),
+    cubeMaterial: new THREE.MeshLambertMaterial({color:0x0000ff, shading:THREE.FlatShading, vertexColors:THREE.FaceColors}),
 
     el: "#threeContainer",
 
@@ -58,6 +59,7 @@ ThreeView = Backbone.View.extend({
         if (intersections.length>1){
             var voxel = new THREE.Mesh(this.cubeGeometry);
             voxel.position.copy(intersections[1].point);
+            if (intersections[1].face) voxel.position.add(intersections[1].face.normal);
             voxel.position.divideScalar(5).floor().multiplyScalar(5).addScalar(2.5);
             this.model.sceneAdd(voxel);
             this.model.render();

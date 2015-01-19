@@ -29,7 +29,8 @@ PushPullMeshView = Backbone.View.extend({
     },
 
     drawBounds: function(){
-        this.boundsBox = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100), new THREE.MeshLambertMaterial({color:0x0000ff, shading:THREE.FlatShading, transparent:true, opacity:0.0, vertexColors:THREE.FaceColors}));
+        this.boundsBox = new THREE.Mesh(new THREE.BoxGeometry(100, 100, 100),
+            new THREE.MeshLambertMaterial({color:0x0000ff, shading:THREE.FlatShading, transparent:true, opacity:0.0, vertexColors:THREE.FaceColors}));
         this.boxHelper = new THREE.BoxHelper(this.boundsBox);
 
         this.boxHelper.material.color.set(this.defaultColor);
