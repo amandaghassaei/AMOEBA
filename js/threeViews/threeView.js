@@ -48,32 +48,32 @@ ThreeView = Backbone.View.extend({
 
     mouseDown: function(e){
         this.mouseIsDown = true;
-
-        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-        var camera = this.model.camera;
-        this.mouseProjection.setFromCamera(vector, camera);
-        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
-
-                console.log(intersections);
-
-        if (intersections.length>1){
-            var voxel = new THREE.Mesh(this.cubeGeometry);
-            voxel.position.copy(intersections[1].point);
-            if (intersections[1].face) voxel.position.add(intersections[1].face.normal);
-            voxel.position.divideScalar(5).floor().multiplyScalar(5).addScalar(2.5);
-            this.model.sceneAdd(voxel);
-            this.model.render();
-        }
+//
+//        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
+//        var camera = this.model.camera;
+//        this.mouseProjection.setFromCamera(vector, camera);
+//        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
+//
+//                console.log(intersections);
+//
+//        if (intersections.length>1){
+//            var voxel = new THREE.Mesh(this.cubeGeometry);
+//            voxel.position.copy(intersections[1].point);
+//            if (intersections[1].face) voxel.position.add(intersections[1].face.normal);
+//            voxel.position.divideScalar(5).floor().multiplyScalar(5).addScalar(2.5);
+//            this.model.sceneAdd(voxel);
+//            this.model.render();
+//        }
     },
 
     mouseMoved: function(e){
-        if (this.mouseIsDown) return;//in the middle of a drag event
-        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-        var camera = this.model.camera;
-        this.mouseProjection.setFromCamera(vector, camera);
-        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
-
-
+//        if (this.mouseIsDown) return;//in the middle of a drag event
+//        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
+//        var camera = this.model.camera;
+//        this.mouseProjection.setFromCamera(vector, camera);
+//        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
+//
+//
 //        _.each(this.highlightTargets, function(target){
 //            target.checkHighlight(intersections);
 //        });
