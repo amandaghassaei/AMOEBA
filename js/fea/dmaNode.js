@@ -14,7 +14,7 @@ BeamNode.prototype.addBeam = function(beam){
 
 BeamNode.prototype.render = function(){
 
-    var geometry = new THREE.SphereGeometry(2);
+    var geometry = new THREE.BoxGeometry(2,2,2);
     geometry.applyMatrix( new THREE.Matrix4().makeTranslation(this.x, this.y, this.z) );
     var mesh = new THREE.Mesh(geometry);
 

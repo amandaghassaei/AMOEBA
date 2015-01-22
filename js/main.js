@@ -26,5 +26,18 @@ $(function(){
     var threeView = new ThreeView({model:threeModel, highlightTargets:highlightTargets});
 
 
+    //first, pre load the stl
+    part_loadSTL();
+
+    function part_loadSTL(){
+        var loader = new THREE.STLLoader();
+        loader.addEventListener('load', part_onMeshLoad);
+        loader.load('data/Airbus_A300-600.stl');
+    }
+
+    function part_onMeshLoad(e){
+        new DmaPart(e.content);
+    }
+
     setupNavBar(threeModel);
 });
