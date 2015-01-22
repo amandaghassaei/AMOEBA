@@ -70,6 +70,11 @@ Lattice = Backbone.Model.extend({
             }
         }
         return nodes;
+    },
+
+    fillWithParts: function(){
+
+
     }
 
 });

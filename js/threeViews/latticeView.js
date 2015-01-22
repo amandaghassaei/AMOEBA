@@ -35,20 +35,20 @@ LatticeView = Backbone.View.extend({
 
         var size=50, step = 5;
         for (var i=-size;i<=size;i+=step){
-            xyPlaneGeo.vertices.push(new THREE.Vector3(-size, -size, i));
-            xyPlaneGeo.vertices.push(new THREE.Vector3(size, -size, i));
+            xyPlaneGeo.vertices.push(new THREE.Vector3(-size, i, -size));
+            xyPlaneGeo.vertices.push(new THREE.Vector3(size, i, -size));
             xyPlaneGeo.vertices.push(new THREE.Vector3(i, -size, -size));
-            xyPlaneGeo.vertices.push(new THREE.Vector3(i, -size, size));
+            xyPlaneGeo.vertices.push(new THREE.Vector3(i, size, -size));
 
-            xzPlaneGeo.vertices.push(new THREE.Vector3(-size, -size, i));
-            xzPlaneGeo.vertices.push(new THREE.Vector3(-size, size, i));
             xzPlaneGeo.vertices.push(new THREE.Vector3(-size, i, -size));
             xzPlaneGeo.vertices.push(new THREE.Vector3(-size, i, size));
+            xzPlaneGeo.vertices.push(new THREE.Vector3(-size, -size, i));
+            xzPlaneGeo.vertices.push(new THREE.Vector3(-size, size, i));
 
-            yzPlaneGeo.vertices.push(new THREE.Vector3(-size, i, -size));
-            yzPlaneGeo.vertices.push(new THREE.Vector3(size, i, -size));
+            yzPlaneGeo.vertices.push(new THREE.Vector3(-size, -size, i));
+            yzPlaneGeo.vertices.push(new THREE.Vector3(size, -size, i));
             yzPlaneGeo.vertices.push(new THREE.Vector3(i, -size, -size));
-            yzPlaneGeo.vertices.push(new THREE.Vector3(i, size, -size));
+            yzPlaneGeo.vertices.push(new THREE.Vector3(i, -size, size));
         }
 
         this.addPlane(xyPlaneGeo);
