@@ -97,7 +97,7 @@ Lattice = Backbone.Model.extend({
 
 
 
-        for (var z=1;z<=nodes[0][0].length;z++){
+        for (var z=1;z<nodes[0][0].length;z++){
             for (var y= 0;y<nodes[0].length-1;y++){
                 for (var x=0;x<nodes.length-1;x++){
 
