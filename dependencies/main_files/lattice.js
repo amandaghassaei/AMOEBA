@@ -73,57 +73,24 @@ Lattice = Backbone.Model.extend({
     },
 
     fillWithParts: function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-2.3580117225646973,-0.32,0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-2.3580117225646973,-0.2165864259004593,0));
 //        var scale = this.scale*3;
 //        geometry.makeScale(scale, scale, scale);
 
         var nodes = this.get("nodes");
         if (!this.nodesFilled(nodes)) return;
 
-        var rot60 = geometry.clone();
-        rot60.applyMatrix(new THREE.Matrix4().makeRotationZ(2*Math.PI/3));
-
-        var rot120 = geometry.clone();
-        rot120.applyMatrix(new THREE.Matrix4().makeRotationZ(4*Math.PI/3));
-
-        var rot180 = geometry.clone();
-        rot180.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-
-        var rot240 = geometry.clone();
-        rot240.applyMatrix(new THREE.Matrix4().makeRotationZ(5*Math.PI/3));
-
-        var rot300 = geometry.clone();
-        rot300.applyMatrix(new THREE.Matrix4().makeRotationZ(1*Math.PI/3));
-
-
-
-        for (var z=1;z<=nodes[0][0].length;z++){
-            for (var y= 0;y<nodes[0].length-1;y++){
+        var y=0;
+        var z=1;
+//        for (var z=1;z<=nodes[0][0].length;z++){
+//            for (var y= 0;y<nodes[0].length;y++){
                 for (var x=0;x<nodes.length-1;x++){
+                    console.log("here");
+                    new DmaPart(geometry, [nodes[x][y][z], nodes[x+1][y][z], nodes[x][y][z-1]]);
 
-
-                    if (z%2==1){
-                        new DmaPart(geometry, [nodes[x][y][z], nodes[x+1][y][z], nodes[x][y+1][z-1]]);
-
-                        if (y%2 == 0) new DmaPart(rot60, [nodes[x][y][z], nodes[x+1][y+1][z], nodes[x][y+1][z-1]]);
-                        else new DmaPart(rot120, [nodes[x][y][z], nodes[x+1][y+1][z], nodes[x][y+1][z-1]]);
-
-                        if (y%2 == 0) new DmaPart(rot120, [nodes[x][y][z], nodes[x][y+1][z], nodes[x][y+1][z-1]]);
-                        else new DmaPart(rot60, [nodes[x][y][z], nodes[x][y+1][z], nodes[x][y+1][z-1]]);
-                    } else {
-
-                        new DmaPart(rot180, [nodes[x][y][z], nodes[x+1][y][z], nodes[x][y+1][z-1]]);
-
-                        if (y%2 == 0) new DmaPart(rot240, [nodes[x][y][z], nodes[x+1][y+1][z], nodes[x][y+1][z-1]]);
-                        else new DmaPart(rot300, [nodes[x][y][z], nodes[x+1][y+1][z], nodes[x][y+1][z-1]]);
-
-                        if (y%2 == 0) new DmaPart(rot300, [nodes[x][y][z], nodes[x][y+1][z], nodes[x][y+1][z-1]]);
-                        else new DmaPart(rot240, [nodes[x][y][z], nodes[x][y+1][z], nodes[x][y+1][z-1]]);
-
-                    }
                 }
-            }
-        }
+//            }
+//        }
 
 
 

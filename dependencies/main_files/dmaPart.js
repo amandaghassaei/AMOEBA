@@ -30,14 +30,13 @@ DmaPart.prototype.render = function(){
 
 
     var mesh = new THREE.Mesh(this.geometry);
-    var scale = this.scale*2.5;
+    var scale = this.scale*3;
     mesh.scale.set(scale, scale, scale);
 //    mesh.rotateZ(Math.PI);
 
     mesh.position.x = midpoint[0];
     mesh.position.y = midpoint[1];
     mesh.position.z = midpoint[2];
-    new BeamNode(0,0,0);
 
 
     window.three.sceneAdd(mesh);
