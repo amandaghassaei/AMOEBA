@@ -5,7 +5,7 @@
 
 function ThreeModel(){
 
-    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 2000);
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 4000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:false});
     var objects = [];

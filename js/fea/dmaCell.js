@@ -7,7 +7,7 @@
 
 (function () {
 
-    var octHeight = 3*30/8*Math.sqrt(5);
+    var octHeight = 3*30/8*Math.sqrt(5);//this isn't quite right
 
     var cellGeometry1 = new THREE.OctahedronGeometry(30/Math.sqrt(2));
     cellGeometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
@@ -23,7 +23,7 @@
 
     function Cell(position) {
 
-        if ((position.z/octHeight)%2==0){
+        if (Math.round(position.z/octHeight)%2==0){
             this.mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry1, cellMaterials);
         } else {
             this.mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry2, cellMaterials);
