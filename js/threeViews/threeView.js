@@ -76,6 +76,7 @@ ThreeView = Backbone.View.extend({
                 break;
             case 32://space bar
                 this.deleteMode = state;
+                this.controls.enabled = !state;
             default:
         }
     },
@@ -91,7 +92,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseMoved: function(e){
 
-        if (this.mouseIsDown && !this.shiftIsDown) {//in the middle of a camera move
+        if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
             this._hideHighlighter();
             return;
         }
@@ -111,7 +112,7 @@ ThreeView = Backbone.View.extend({
 
         this.currentIntersectedObject = intersections[0].object;
 
-        if (this.deleteMode && this.mouseIsDown && this.shiftIsDown){
+        if (this.deleteMode && this.mouseIsDown){
             this._addRemoveVoxel();
             return;
         }
