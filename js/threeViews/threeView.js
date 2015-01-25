@@ -11,10 +11,13 @@ ThreeView = Backbone.View.extend({
     },
 
     mouseIsDown: false,//store state of mouse click
-    shiftIsDown:false,//used to add many voxels at once
+    shiftIsDown: false,//used to add many voxels at once
+    deleteMode: false,//delete cells instead of adding (space bar)
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
     currentHighlightedFace: null,
+    currentIntersectedObject: null,
+    basePlane: null,
 
     el: "#threeContainer",
 
@@ -39,7 +42,7 @@ ThreeView = Backbone.View.extend({
 
         this._animate();
 
-        this.drawBasePlane();
+        this.basePlane = this.drawBasePlane();
 
         //init highlighter
         var highlightGeometry = new THREE.Geometry();
@@ -64,19 +67,22 @@ ThreeView = Backbone.View.extend({
 
 //        e.preventDefault();
         var state = e.data.state;
+        console.log(state);
 
         switch(e.keyCode){
             case 16://shift
                 this.shiftIsDown = state;
                 this.controls.enabled = !state;
                 break;
+            case 32://space bar
+                this.deleteMode = state;
             default:
         }
     },
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-        this._addVoxel();
+        this._addRemoveVoxel();
     },
 
     _mouseDown: function(){
@@ -98,7 +104,15 @@ ThreeView = Backbone.View.extend({
         //check if we're intersecting anything
         var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
         if (intersections.length == 0) {
+            this.currentIntersectedObject == null;
             this._hideHighlighter();
+            return;
+        }
+
+        this.currentIntersectedObject = intersections[0].object;
+
+        if (this.deleteMode && this.mouseIsDown && this.shiftIsDown){
+            this._addRemoveVoxel();
             return;
         }
 
@@ -109,9 +123,6 @@ ThreeView = Backbone.View.extend({
         if (intersection.normal.z<0.99){//only highlight horizontal faces
             this._hideHighlighter();
             return;
-
-            //delete cell if side clicked
-//            window.three.sceneRemove(intersection.object);
         }
 
         //update highlighter
@@ -126,14 +137,21 @@ ThreeView = Backbone.View.extend({
             (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
         this.highlighter.geometry.verticesNeedUpdate = true;
 
-        if (this.mouseIsDown && this.shiftIsDown) this._addVoxel();
+        if (this.mouseIsDown && this.shiftIsDown) this._addRemoveVoxel();
 
         window.three.render();
     },
 
-    _addVoxel: function(){
-        if (!this.highlighter.visible) return;
-        this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+    _addRemoveVoxel: function(){
+
+        if (this.deleteMode){
+            if (this.currentIntersectedObject === this.basePlane) return;
+            window.three.sceneRemove(this.currentIntersectedObject);
+            window.three.render();
+        } else {
+            if (!this.highlighter.visible) return;
+            this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+        }
         this._hideHighlighter();
     },
 
@@ -207,9 +225,10 @@ ThreeView = Backbone.View.extend({
 
         geometry.computeFaceNormals();
 
-        window.three.sceneAdd(new THREE.Mesh(geometry, planeMaterial));
+        var basePlane = new THREE.Mesh(geometry, planeMaterial);
+        window.three.sceneAdd(basePlane);
 
-        return vertices;
+        return basePlane;
     },
 
     scaleBasePlane: function(){

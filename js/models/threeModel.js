@@ -52,8 +52,13 @@ function ThreeModel(){
     }
 
     function sceneRemove(object){
-        scene.remove(object);
-        objects.remove(object);
+        console.log(object.parent);
+        var objectToRemove = object;
+        if (object.parent !== THREE.Scene) {
+            objectToRemove = object.parent;
+        }
+        scene.remove(objectToRemove);
+        objects.splice(objects.indexOf(objectToRemove), 1);
     }
 
     function render(){
@@ -61,7 +66,7 @@ function ThreeModel(){
         renderer.render(scene, camera);
     }
 
-    function clearAll(){
+    function clearAll(){x
         var children = scene.children;
         for (var i=children.length;i>=0;i--){
             var object = children[i];
