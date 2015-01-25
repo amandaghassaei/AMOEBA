@@ -65,9 +65,7 @@ ThreeView = Backbone.View.extend({
 
     _handleKeyStroke: function(e){//receives keyup and keydown
 
-//        e.preventDefault();
         var state = e.data.state;
-        console.log(state);
 
         switch(e.keyCode){
             case 16://shift
