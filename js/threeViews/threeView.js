@@ -59,29 +59,42 @@ ThreeView = Backbone.View.extend({
 
     mouseUp: function(){
         this.mouseIsDown = false;
-    },
-
-    mouseDown: function(e){
-        this.mouseIsDown = true;
 
         if (!this.highlighter.visible) return;
 
         var cell = new Cell(this.highlighter.geometry.vertices[0]);
         window.three.render();
+    },
+
+    mouseDown: function(e){
+        this.mouseIsDown = true;
+
+
 
 
     },
 
     mouseMoved: function(e){
 
-        if (this.mouseIsDown) return;//in the middle of a drag event
+        if (this.mouseIsDown) {
+            this.highlighter.visible = false;
+            window.three.render();
+            return;
+        }//in the middle of a drag event
 
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         var camera = this.model.camera;
         this.mouseProjection.setFromCamera(vector, camera);
         var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
 
-        if (intersections.length == 0) return;
+        //check if we're intersecting anything
+        if (intersections.length == 0) {
+            if (this.highlighter.visible) {
+                this.highlighter.visible = false;
+                window.three.render();
+            }
+            return;
+        }
 
         //check if we've moved to a new face
         var intersection = intersections[0].face;
