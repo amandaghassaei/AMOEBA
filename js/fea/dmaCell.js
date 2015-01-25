@@ -7,7 +7,13 @@
 
 (function () {
 
-    var cellGeometry = new THREE.OctahedronGeometry(30);
+    var cellGeometry = new THREE.OctahedronGeometry(30/Math.sqrt(2));
+    cellGeometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
+    cellGeometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
+    cellGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,-30/Math.sqrt(3)/2,30/2));
+
+
+
     var cellMaterials = [new THREE.MeshNormalMaterial(), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
     function Cell() {

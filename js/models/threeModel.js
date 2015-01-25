@@ -19,7 +19,7 @@ function ThreeModel(){
         camera.position.z = 165;
         camera.up.set(0,0,1);//set z axis as "up"
 
-        scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+        scene.fog = new THREE.FogExp2(0xcccccc, 0.001);
 
         // lights
         var light = new THREE.DirectionalLight(0xffffff);
