@@ -5,7 +5,7 @@
 
 function ThreeModel(){
 
-    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000);
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 2000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:false});
     var objects = [];
@@ -38,21 +38,6 @@ function ThreeModel(){
         window.addEventListener('resize', onWindowResize, false);
     }
 
-//    function drawRandomStuff(){
-//        var geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
-//        var material = new THREE.MeshLambertMaterial({color:0xffffff, shading: THREE.FlatShading});
-//
-//        for ( var i = 0; i < 500; i ++ ) {
-//            var mesh = new THREE.Mesh( geometry, material );
-//            mesh.position.x = ( Math.random() - 0.5 ) * 1000;
-//            mesh.position.y = ( Math.random() - 0.5 ) * 1000;
-//            mesh.position.z = ( Math.random() - 0.5 ) * 1000;
-//            mesh.updateMatrix();
-//            mesh.matrixAutoUpdate = false;
-//            scene.add(mesh);
-//        }
-//    }
-
     function onWindowResize(){
         camera.aspect = window.innerWidth/window.innerHeight;
         camera.updateProjectionMatrix();
@@ -60,9 +45,11 @@ function ThreeModel(){
         render();
     }
 
-    function sceneAdd(object){
+    function sceneAdd(object, noInteraction){
         scene.add(object);
+        if (noInteraction) return;
         objects.push(object);
+        console.log(objects)
     }
 
     function sceneRemove(object){
@@ -71,6 +58,7 @@ function ThreeModel(){
     }
 
     function render(){
+        console.log("render");
         renderer.render(scene, camera);
     }
 
