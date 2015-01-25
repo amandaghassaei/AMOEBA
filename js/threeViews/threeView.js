@@ -62,22 +62,11 @@ ThreeView = Backbone.View.extend({
 
     mouseDown: function(e){
         this.mouseIsDown = true;
-//
-//        var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-//        var camera = this.model.camera;
-//        this.mouseProjection.setFromCamera(vector, camera);
-//        var intersections = this.mouseProjection.intersectObjects(this.model.objects);
-//
-//                console.log(intersections);
-//
-//        if (intersections.length>1){
-//            var voxel = new THREE.Mesh(this.cubeGeometry);
-//            voxel.position.copy(intersections[1].point);
-//            if (intersections[1].face) voxel.position.add(intersections[1].face.normal);
-//            voxel.position.divideScalar(5).floor().multiplyScalar(5).addScalar(2.5);
-//            this.model.sceneAdd(voxel);
-//            this.model.render();
-//        }
+
+        if (!this.highlighter.visible) return;
+
+        
+
     },
 
     mouseMoved: function(e){
@@ -93,12 +82,18 @@ ThreeView = Backbone.View.extend({
 
         //check if we've moved to a new face
         var intersection = intersections[0].face;
-        if (this.currentHighlightedFace == intersection) return;
+        if (this.highlighter.visible && this.currentHighlightedFace == intersection) return;
 
-        this.currentHighlightedFace = intersection;
-        var vertices = intersections[0].object.geometry.vertices;
-        this.highlighter.geometry.vertices = [vertices[intersection.a], vertices[intersection.b], vertices[intersection.c]];
-        this.highlighter.geometry.verticesNeedUpdate = true;
+        if (intersection.normal.z<0.99){//only highlight horizontal faces
+            this.highlighter.visible = false;
+        } else {
+            this.highlighter.visible = true;
+            this.currentHighlightedFace = intersection;
+
+            var vertices = intersections[0].object.geometry.vertices;
+            this.highlighter.geometry.vertices = [vertices[intersection.a], vertices[intersection.b], vertices[intersection.c]];
+            this.highlighter.geometry.verticesNeedUpdate = true;
+        }
 
         window.three.render();
     },
@@ -164,11 +159,7 @@ ThreeView = Backbone.View.extend({
 //            }
         }
 
-        for (i = 0; i < geometry.faces.length; i ++ ) {
-            var face = geometry.faces[ i ];
-            face.color.setHex( Math.random() * 0xffffff );
-        }
-        geometry.colorsNeedUpdate = true;
+        geometry.computeFaceNormals();
 
         window.three.sceneAdd(new THREE.Mesh(geometry, planeMaterial));
 
