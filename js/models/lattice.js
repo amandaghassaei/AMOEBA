@@ -19,8 +19,8 @@ Lattice = Backbone.Model.extend({
         //bind events
     },
 
-    addCell: function(){
-        new Cell(new THREE.Vector3(0,0,0));
+    addCell: function(position){
+        new Cell(position);
         window.three.render();
     },
 

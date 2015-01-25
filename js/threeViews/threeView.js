@@ -5,12 +5,13 @@
 ThreeView = Backbone.View.extend({
 
     events: {
-        "mousemove":            "mouseMoved",
-        "mousedown":            "mouseDown",
-        "mouseup":              "mouseUp"
+        "mousemove":            "_mouseMoved",
+        "mousedown":            "_mouseDown",
+        "mouseup":              "_mouseUp"
     },
 
     mouseIsDown: false,//store state of mouse click
+    shiftIsDown:false,//used to add many voxels at once
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
     currentHighlightedFace: null,
@@ -23,9 +24,11 @@ ThreeView = Backbone.View.extend({
 
         this.lattice = options.lattice;
 
-        _.bindAll(this, "animate", "mouseMoved");
+        _.bindAll(this, "_animate", "_mouseMoved", "_handleKeyStroke");
 
         //bind events
+        $(document).bind('keydown', {state:true}, this._handleKeyStroke);
+        $(document).bind('keyup', {state:false}, this._handleKeyStroke);
         this.listenTo(this.lattice, "change:type", this.drawBasePlane);
         this.listenTo(this.lattice, "change:scale", this.scaleBasePlane);
 
@@ -34,7 +37,7 @@ ThreeView = Backbone.View.extend({
 
         this.$el.append(this.model.domElement);
 
-        this.animate();
+        this._animate();
 
         this.drawBasePlane();
 
@@ -52,47 +55,52 @@ ThreeView = Backbone.View.extend({
         this.model.render();
     },
 
-    animate: function(){
-        requestAnimationFrame(this.animate);
+    _animate: function(){
+        requestAnimationFrame(this._animate);
         this.controls.update();
     },
 
-    mouseUp: function(){
+    _handleKeyStroke: function(e){//receives keyup and keydown
+
+//        e.preventDefault();
+        var state = e.data.state;
+
+        switch(e.keyCode){
+            case 16://shift
+                this.shiftIsDown = state;
+                break;
+            default:
+        }
+    },
+
+    _mouseUp: function(){
         this.mouseIsDown = false;
 
         if (!this.highlighter.visible) return;
 
-        var cell = new Cell(this.highlighter.geometry.vertices[0]);
-        window.three.render();
+        this.lattice.addCell(this.highlighter.geometry.vertices[0]);
     },
 
-    mouseDown: function(e){
+    _mouseDown: function(){
         this.mouseIsDown = true;
-
-
-
-
     },
 
-    mouseMoved: function(e){
+    _mouseMoved: function(e){
 
-        if (this.mouseIsDown) {
-            this.highlighter.visible = false;
-            window.three.render();
+        if (this.mouseIsDown) {//in the middle of a camera move
+            this._hideHighlighter();
             return;
-        }//in the middle of a drag event
+        }
 
+        //make projection vector
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         var camera = this.model.camera;
         this.mouseProjection.setFromCamera(vector, camera);
-        var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
 
         //check if we're intersecting anything
+        var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
         if (intersections.length == 0) {
-            if (this.highlighter.visible) {
-                this.highlighter.visible = false;
-                window.three.render();
-            }
+            this._hideHighlighter();
             return;
         }
 
@@ -101,20 +109,33 @@ ThreeView = Backbone.View.extend({
         if (this.highlighter.visible && this.currentHighlightedFace == intersection) return;
 
         if (intersection.normal.z<0.99){//only highlight horizontal faces
-            this.highlighter.visible = false;
-        } else {
-            this.highlighter.visible = true;
-            this.currentHighlightedFace = intersection;
+            this._hideHighlighter();
+            return;
 
-
-            var vertices = intersections[0].object.geometry.vertices;
-            var position = (new THREE.Vector3()).setFromMatrixPosition(intersections[0].object.matrixWorld);
-            this.highlighter.geometry.vertices = [(new THREE.Vector3()).addVectors(vertices[intersection.a], position),
-                (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
-            this.highlighter.geometry.verticesNeedUpdate = true;
+            //delete cell if side clicked
+//            window.three.sceneRemove(intersection.object);
         }
 
+        //update highlighter
+
+        this.highlighter.visible = true;
+        this.currentHighlightedFace = intersection;
+
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var vertices = intersections[0].object.geometry.vertices;
+        var position = (new THREE.Vector3()).setFromMatrixPosition(intersections[0].object.matrixWorld);
+        this.highlighter.geometry.vertices = [(new THREE.Vector3()).addVectors(vertices[intersection.a], position),
+            (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
+        this.highlighter.geometry.verticesNeedUpdate = true;
+
         window.three.render();
+    },
+
+    _hideHighlighter: function(){
+        if (this.highlighter.visible){
+            this.highlighter.visible = false;
+            window.three.render();
+        }
     },
 
     drawBasePlane: function(){
@@ -133,7 +154,7 @@ ThreeView = Backbone.View.extend({
 
         if (type == "octagonFace" || type == "octagonEdge"){
 
-            this.lattice.addCell();
+            this.lattice.addCell(new THREE.Vector3(0,0,0));
             var triangleHeight = gridSize/2*Math.sqrt(3);
 
             for (var j=-baseDim;j<=baseDim;j++){
