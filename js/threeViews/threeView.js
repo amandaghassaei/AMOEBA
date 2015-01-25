@@ -68,6 +68,7 @@ ThreeView = Backbone.View.extend({
         switch(e.keyCode){
             case 16://shift
                 this.shiftIsDown = state;
+                this.controls.enabled = !state;
                 break;
             default:
         }
@@ -75,10 +76,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-
-        if (!this.highlighter.visible) return;
-
-        this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+        this._addVoxel();
     },
 
     _mouseDown: function(){
@@ -87,7 +85,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseMoved: function(e){
 
-        if (this.mouseIsDown) {//in the middle of a camera move
+        if (this.mouseIsDown && !this.shiftIsDown) {//in the middle of a camera move
             this._hideHighlighter();
             return;
         }
@@ -128,7 +126,15 @@ ThreeView = Backbone.View.extend({
             (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
         this.highlighter.geometry.verticesNeedUpdate = true;
 
+        if (this.mouseIsDown && this.shiftIsDown) this._addVoxel();
+
         window.three.render();
+    },
+
+    _addVoxel: function(){
+        if (!this.highlighter.visible) return;
+        this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+        this._hideHighlighter();
     },
 
     _hideHighlighter: function(){
