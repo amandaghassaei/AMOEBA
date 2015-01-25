@@ -7,21 +7,33 @@
 
 (function () {
 
+    var octHeight = 3*30/8*Math.sqrt(5);
+
     var cellGeometry1 = new THREE.OctahedronGeometry(30/Math.sqrt(2));
     cellGeometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     cellGeometry1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
     var cellGeometry2 = cellGeometry1.clone();
 
-    cellGeometry1.applyMatrix(new THREE.Matrix4().makeTranslation(0,-30/Math.sqrt(3),30/2.5));
+    cellGeometry1.applyMatrix(new THREE.Matrix4().makeTranslation(0,-30/Math.sqrt(3),octHeight/2));
     cellGeometry2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-    cellGeometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,-30/Math.sqrt(3),30/2.5));
+    cellGeometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,30/Math.sqrt(3),octHeight/2));
 
     var cellMaterials = [new THREE.MeshNormalMaterial(), new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    function Cell() {
+    function Cell(position) {
 
-        this.mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry1, cellMaterials);
+        if ((position.z/octHeight)%2==0){
+            this.mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry1, cellMaterials);
+        } else {
+            this.mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry2, cellMaterials);
+        }
+        this.mesh.position.x = position.x;
+        this.mesh.position.y = position.y;
+        this.mesh.position.z = position.z;
+
+        this._draw();
+
     //    this.parts = this._createParts(nodes, config);
     }
 
@@ -33,7 +45,7 @@
     //    return parts;
     //};
 
-    Cell.prototype.draw = function(){
+    Cell.prototype._draw = function(){
         window.three.sceneAdd(this.mesh);
     };
 

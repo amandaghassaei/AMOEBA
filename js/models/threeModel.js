@@ -49,7 +49,6 @@ function ThreeModel(){
         scene.add(object);
         if (noInteraction) return;
         objects.push(object);
-        console.log(objects)
     }
 
     function sceneRemove(object){

@@ -46,6 +46,7 @@ ThreeView = Backbone.View.extend({
         this.highlighter = new THREE.Mesh(highlightGeometry,
             new THREE.MeshBasicMaterial({side:THREE.DoubleSide, transparent:true, opacity:0.4, color:0xffffff, vertexColors:THREE.FaceColors}));
         this.highlighter.geometry.dynamic = true;
+        this.highlighter.visible = false;
         window.three.sceneAdd(this.highlighter, true);
 
         this.model.render();
@@ -65,7 +66,9 @@ ThreeView = Backbone.View.extend({
 
         if (!this.highlighter.visible) return;
 
-        
+        var cell = new Cell(this.highlighter.geometry.vertices[0]);
+        window.three.render();
+
 
     },
 
@@ -90,8 +93,11 @@ ThreeView = Backbone.View.extend({
             this.highlighter.visible = true;
             this.currentHighlightedFace = intersection;
 
+
             var vertices = intersections[0].object.geometry.vertices;
-            this.highlighter.geometry.vertices = [vertices[intersection.a], vertices[intersection.b], vertices[intersection.c]];
+            var position = (new THREE.Vector3()).setFromMatrixPosition(intersections[0].object.matrixWorld);
+            this.highlighter.geometry.vertices = [(new THREE.Vector3()).addVectors(vertices[intersection.a], position),
+                (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
             this.highlighter.geometry.verticesNeedUpdate = true;
         }
 
@@ -129,11 +135,11 @@ ThreeView = Backbone.View.extend({
                     var currentOffset = vertices.length;
 
                     if (Math.abs(j)%2==1){
-                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
+//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
                         faces.push(new THREE.Face3(currentOffset-2, currentOffset-3-2*baseDim, currentOffset-2-2*baseDim));
                     } else {
                         faces.push(new THREE.Face3(currentOffset-1, currentOffset-3-2*baseDim, currentOffset-2-2*baseDim));
-                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-3-2*baseDim));
+//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-3-2*baseDim));
                     }
 
                 }
