@@ -76,7 +76,7 @@ function ThreeModel(){
         render();
     }
 
-    return {//return public properties
+    return {//return public properties/methods
         render:render,
         clearAll: clearAll,
         sceneRemove:sceneRemove,

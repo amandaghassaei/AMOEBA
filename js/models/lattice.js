@@ -24,6 +24,11 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
+    removeCell: function(object){
+        window.three.sceneRemove(object);
+        window.three.render();
+    },
+
     clearCells: function(){
         _.each(this.get("cells"), function(cell){
             cell.remove();

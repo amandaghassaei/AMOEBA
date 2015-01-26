@@ -13,6 +13,8 @@ ThreeView = Backbone.View.extend({
     mouseIsDown: false,//store state of mouse click
     shiftIsDown: false,//used to add many voxels at once
     deleteMode: false,//delete cells instead of adding (space bar)
+    extrudeMode: false,//extrude a column of cells
+    extrudeVisualizer: ExtrudeVisualizer(),
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
     currentHighlightedFace: null,
@@ -75,7 +77,14 @@ ThreeView = Backbone.View.extend({
             case 32://space bar
                 this.deleteMode = state;
                 this.controls.enabled = !state;
+                break;
+            case 69://e
+                this.extrudeMode = state;
+                this.controls.enabled = !state;
+                break;
+
             default:
+                break;
         }
     },
 
@@ -95,10 +104,16 @@ ThreeView = Backbone.View.extend({
             return;
         }
 
+        if (this.extrudeMode && this.mouseIsDown && this.extrudeVisualizer.getMeshNum()>0){
+            this.extrudeVisualizer.dragHandle(1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
+            return;
+        }
+
         //make projection vector
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         var camera = this.model.camera;
         this.mouseProjection.setFromCamera(vector, camera);
+
 
         //check if we're intersecting anything
         var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
@@ -112,6 +127,12 @@ ThreeView = Backbone.View.extend({
 
         if (this.deleteMode && this.mouseIsDown){
             this._addRemoveVoxel();
+            return;
+        }
+
+        if (this.extrudeMode && this.mouseIsDown){
+            if (!this.highlighter.visible) return;
+            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
             return;
         }
 
@@ -145,8 +166,7 @@ ThreeView = Backbone.View.extend({
 
         if (this.deleteMode){
             if (this.currentIntersectedObject === this.basePlane) return;
-            window.three.sceneRemove(this.currentIntersectedObject);
-            window.three.render();
+            this.lattice.removeCell(this.currentIntersectedObject);
         } else {
             if (!this.highlighter.visible) return;
             this.lattice.addCell(this.highlighter.geometry.vertices[0]);
@@ -234,6 +254,6 @@ ThreeView = Backbone.View.extend({
 
         console.log("scale base plane");
 
-    },
+    }
 
 });
