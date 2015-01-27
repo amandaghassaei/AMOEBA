@@ -27,8 +27,6 @@
         this.position = position;
         this.drawForMode(mode, position);
 
-        this._draw();
-
     //    this.parts = this._createParts(nodes, config);
     }
 
@@ -38,6 +36,7 @@
 //            parts.push(new Part(nodes[i], config[i]));
 //        }
 //        return parts;
+        return null;
     };
 
     Cell.prototype._buildCellMesh = function(position){//abstract mesh representation of cell

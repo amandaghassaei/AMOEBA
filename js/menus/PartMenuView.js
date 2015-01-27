@@ -9,6 +9,8 @@ PartMenuView = Backbone.View.extend({
     events: {
     },
 
+    currentlySelected: false,
+
     initialize: function(){
 
         _.bindAll(this, "render");
@@ -16,7 +18,9 @@ PartMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        this.currentlySelected = true;//if this causes a change, render must have been called from menu wrapper
         this.$el.html(this.template(this.model.attributes));
+        this.model.set("cellMode", "parts");
     },
 
     template: _.template('\

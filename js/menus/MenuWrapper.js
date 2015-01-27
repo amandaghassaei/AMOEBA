@@ -26,6 +26,7 @@ function MenuWrapper(args){
         });
         $this.parent().addClass("active");
 
+        deselectAllMenus();
         var tabName = $this.parent().data('name');
         if (tabName == "lattice"){
             latticeMenu.render();
@@ -42,6 +43,14 @@ function MenuWrapper(args){
             $("menuContent").html('');//clear out content from menu
         }
     });
+
+    function deselectAllMenus(){
+        latticeMenu.currentlySelected = false;
+//        importMenu.currentlySelected = false;
+//        sketchMenu.currentlySelected = false;
+        partMenu.currentlySelected = false;
+//        scriptMenu.currentlySelected = false;
+    }
 
     function init(){
         latticeMenu.render();//init with lattice menu open
