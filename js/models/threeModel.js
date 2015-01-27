@@ -54,7 +54,7 @@ function ThreeModel(){
 
     function sceneRemove(object){
         var objectToRemove = object;
-        if (object.parent !== THREE.Scene) {
+        if (object.parent.type != "Scene") {
             objectToRemove = object.parent;
         }
         scene.remove(objectToRemove);
@@ -66,15 +66,16 @@ function ThreeModel(){
         renderer.render(scene, camera);
     }
 
-    function clearAll(){x
-        var children = scene.children;
-        for (var i=children.length;i>=0;i--){
-            var object = children[i];
-            if (object instanceof THREE.Mesh){// && object != this.fillGeometry.get("mesh")
-                scene.remove(object);
-            }
-        }
-        render();
+    function clearAll(){
+//        var children = objects.slice(0);
+//        for (var i=children.length;i>=0;i--){
+//            var object = children[i];
+//            if (!(object instanceof THREE.Mesh)){// && object != this.fillGeometry.get("mesh")
+//                scene.remove(object);
+//                objects.splice(objects.indexOf(object), 1);
+//            }
+//        }
+//        render();
     }
 
     return {//return public properties/methods

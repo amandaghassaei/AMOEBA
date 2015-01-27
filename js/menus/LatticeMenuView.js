@@ -8,12 +8,19 @@ LatticeMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "click #latticeMenuClearCells":                "_clearCells"
+
     },
 
     initialize: function(){
 
         _.bindAll(this, "render");
         this.listenTo(this.model, "change", this.render);
+    },
+
+    _clearCells: function(e){
+        e.preventDefault();
+        this.model.clearCells();
     },
 
     _formatData: function(){
@@ -32,7 +39,7 @@ LatticeMenuView = Backbone.View.extend({
         Scale:&nbsp;&nbsp;<%= scale %><br/>\
         Column Separation:<br/>\
         NumCells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
-        <a href="#" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
+        <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         ')
 
 });

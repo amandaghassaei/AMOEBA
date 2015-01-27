@@ -75,6 +75,7 @@ ThreeView = Backbone.View.extend({
                 this.controls.enabled = !state;
                 break;
             case 32://space bar
+                e.preventDefault();
                 this.deleteMode = state;
                 this.controls.enabled = !state;
                 break;

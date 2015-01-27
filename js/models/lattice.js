@@ -22,14 +22,16 @@ Lattice = Backbone.Model.extend({
     },
 
     addCell: function(position){
-        new Cell(position);
+        this.get("cells").push(new Cell(position));
         this.set("numCells", this.get("numCells")+1);
         window.three.render();
     },
 
     removeCell: function(object){
-        window.three.sceneRemove(object);
+        var cells = this.get("cells");
+        cells.splice(cells.indexOf(object), 1);
         this.set("numCells", this.get("numCells")-1);
+        window.three.sceneRemove(object);
         window.three.render();
     },
 
@@ -38,7 +40,8 @@ Lattice = Backbone.Model.extend({
             cell.remove();
         });
         this.set("cells", []);
-        this.set("numCells, 0");
+        this.set("numCells", 0);
+        window.three.render();
     }
 
 });
