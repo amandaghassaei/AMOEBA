@@ -31,8 +31,8 @@ Lattice = Backbone.Model.extend({
     removeCell: function(object){
         var cells = this.get("cells");
         var index = cells.indexOf(object.parent.myCell);
-        if (index == -1) {
-            console.warn("problem located cell in cell array");
+        if (index == -1) {//I think this is happening when two intersection/remove calls are done on the same cell before the next render loop finished
+            console.warn("problem locating cell in cell array");
             return;
         }
         cells.splice(index, 1);
