@@ -54,12 +54,10 @@
     <!--views-->
     <script src="js/menus/MenuWrapper.js"></script>
     <script src="js/menus/LatticeMenuView.js"></script>
-    <script src="js/threeViews/meshHandle.js"></script>
+    <script src="js/menus/PartMenuView.js"></script>
+    <script src="js/menus/SketchMenuView.js"></script>
+    <script src="js/menus/ScriptMenuView.js"></script>
     <script src="js/threeViews/threeView.js"></script>
-    <script src="js/threeViews/pushPullMeshView.js"></script>
-    <script src="js/menus/importView.js"></script>
-    <script src="js/threeViews/fillGeometryView.js"></script>
-    <script src="js/threeViews/latticeView.js"></script>
 
     <script src="js/main.js"></script>
 
@@ -81,14 +79,7 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
-        <li><a data-menu-id="importGeometry" class="menuHoverControls" href="#">Import</a></li>
-        <li><a data-menu-id="element" class="menuHoverControls" href="#">Element</a></li>
-
-        <!--<li><a data-menu-id="controls1Menu" class="menuHoverControls" href="#">Controls1</a></li>-->
-        <!--<li><a data-menu-id="controls2Menu" class="menuHoverControls" href="#">Controls2</a></li>-->
-        <!--<li><a data-menu-id="controls3Menu" class="menuHoverControls" href="#">Glyphs</a></li>-->
-        <!--<li><a data-menu-id="controls4Menu" class="menuHoverControls" href="#">Buttons</a></li>-->
-        <!--<li><a data-menu-id="controls5Menu" class="menuHoverControls" href="#">Inputs</a></li>-->
+        <li><a data-menu-id="file" class="menuHoverControls" href="#">File</a></li>
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
@@ -103,7 +94,7 @@
         <li><a data-menu-id="about" class="menuHoverControls" href="#">About</a></li>
        </ul>
         <ul class="nav navbar-nav navbar-right">
-            <li><a id="clearAll" class="menuHoverControls" href="#">Clear All</a></li>
+            <li><a id="clearAll" class="menuHoverControls" href="#">Show/Hide Menu >></a></li>
         </ul>
        <!--<a href="#fakelink" id="clearAll" class=" btn btn-lg btn-primary">Clear All</a>-->
     </div><!-- /.navbar-collapse -->
@@ -111,10 +102,13 @@
 
 <div id="menuWrapper">
     <ul class="nav nav-tabs nav-justified">
-      <li role="presentation" class="active"><a href="#">Cell</a></li>
-      <li role="presentation"><a href="#">Part</a></li>
-      <li role="presentation"><a href="#">Script</a></li>
+      <li role="presentation" class="active" data-name="lattice"><a href="#">Lattice</a></li>
+        <li role="presentation" data-name="sketch"><a href="#">Sketch</a></li>
+      <li role="presentation" data-name="part"><a href="#">Part</a></li>
+      <li role="presentation" data-name="script"><a href="#">Script</a></li>
     </ul>
+
+    <div id="menuContent"></div>
 </div>
 
 <div id="importGeometry" class="row navMenu">
