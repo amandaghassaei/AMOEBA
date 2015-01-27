@@ -11,7 +11,7 @@ function MenuWrapper(args){
     var latticeMenu = new LatticeMenuView({model:args.lattice});
     var importMenu = new ImportMenuView();
     var sketchMenu = new SketchMenuView();
-    var partMenu = new PartMenuView();
+    var partMenu = new PartMenuView({model:args.lattice});
     var scriptMenu = new ScriptMenuView();
 
     init();

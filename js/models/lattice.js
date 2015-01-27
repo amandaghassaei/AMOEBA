@@ -11,7 +11,8 @@ Lattice = Backbone.Model.extend({
         connectionType: "face",
         nodes: [],
         cells: [],
-        numCells: 0
+        numCells: 0,
+        partType: "triangle"
     },
 
     //pass in fillGeometry

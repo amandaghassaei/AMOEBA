@@ -12,14 +12,15 @@ PartMenuView = Backbone.View.extend({
     initialize: function(){
 
         _.bindAll(this, "render");
+        this.listenTo(this.model, "change:partType", this.render);
     },
 
     render: function(){
-        this.$el.html(this.template());
+        this.$el.html(this.template(this.model.attributes));
     },
 
     template: _.template('\
-        Part Type: <br/>\
+        Part Type: &nbsp;&nbsp;<%= partType %><br/>\
         ')
 
 });
