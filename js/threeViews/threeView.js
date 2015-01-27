@@ -185,7 +185,8 @@ ThreeView = Backbone.View.extend({
 
         this.lattice.clearCells();
 
-        var type = this.lattice.get("type");
+        var type = this.lattice.get("cellType");
+        var connectionType = this.lattice.get("connectionType");
 
         var baseDim = 100;
         var gridSize = this.lattice.get("scale");
@@ -195,7 +196,7 @@ ThreeView = Backbone.View.extend({
         var vertices = geometry.vertices;
         var faces = geometry.faces;
 
-        if (type == "octagonFace" || type == "octagonEdge"){
+        if (type == "octa" && (connectionType == "face" || connectionType == "edge")){
 
             this.lattice.addCell(new THREE.Vector3(0,0,0));
             var triangleHeight = gridSize/2*Math.sqrt(3);
@@ -224,7 +225,7 @@ ThreeView = Backbone.View.extend({
             }
 
 
-        } else if (type == "octagonVertex"){
+        } else if (type == "octa" && connectionType == "vertex"){
 
 //            geometry.vertices.push(new THREE.Vector3(-baseSize, 0, 0));
 //            geometry.vertices.push(new THREE.Vector3(baseSize, 0, 0));

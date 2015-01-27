@@ -3,12 +3,12 @@
  */
 
 
-function MenuWrapper(){
+function MenuWrapper(args){
 
     var $el = $("#menuWrapper");
 
     //init all tab view controllers
-    var latticeMenu = new LatticeMenuView();
+    var latticeMenu = new LatticeMenuView({model:args.lattice});
     var importMenu = new ImportMenuView();
     var sketchMenu = new SketchMenuView();
     var partMenu = new PartMenuView();

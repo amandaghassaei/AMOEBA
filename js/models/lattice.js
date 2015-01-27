@@ -7,9 +7,11 @@ Lattice = Backbone.Model.extend({
 
     defaults: {
         scale: 30.0,
-        type: "octagonFace",
+        cellType: "octa",
+        connectionType: "face",
         nodes: [],
-        cells: []
+        cells: [],
+        numCells: 0
     },
 
     //pass in fillGeometry
@@ -21,11 +23,13 @@ Lattice = Backbone.Model.extend({
 
     addCell: function(position){
         new Cell(position);
+        this.set("numCells", this.get("numCells")+1);
         window.three.render();
     },
 
     removeCell: function(object){
         window.three.sceneRemove(object);
+        this.set("numCells", this.get("numCells")-1);
         window.three.render();
     },
 
@@ -34,6 +38,7 @@ Lattice = Backbone.Model.extend({
             cell.remove();
         });
         this.set("cells", []);
+        this.set("numCells, 0");
     }
 
 });

@@ -9,20 +9,13 @@ $(function(){
 
 
     //init threeJS
-    var threeModel = new ThreeModel();
-    window.three = threeModel;
-
-    //backbone models and views
-//    var fillGeometry = new FillGeometry();//singleton, mesh to fill with lattice
-//    new ImportView({model: fillGeometry});
-//    var fillGeometryView = new FillGeometryView({model: fillGeometry, three:threeModel});
-
+    window.three = new ThreeModel();
 
     var lattice = new Lattice();
-    var threeView = new ThreeView({model:threeModel, lattice:lattice});
+    new ThreeView({model:window.three, lattice:lattice});
 
 
     //setup ui
-    var menu = MenuWrapper();
+    var menu = MenuWrapper({lattice:lattice});
     NavBar(menu);
 });
