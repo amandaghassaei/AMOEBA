@@ -19,6 +19,8 @@ ImportMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render", "_onMeshLoad");
         this.listenTo(this.model, "change", this.render);
+//        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
+
 
     },
 
@@ -67,6 +69,38 @@ ImportMenuView = Backbone.View.extend({
     render: function(){
         this.$el.html(this.template(this.model.attributes));
     },
+
+//    makeDimensionString: function(){
+//        var bounds = this.model.get("boundingBoxHelper").box;
+//        return (bounds.max.x - bounds.min.x).toFixed(1) + " x " +
+//            (bounds.max.y - bounds.min.y).toFixed(1) + " x " + (bounds.max.z - bounds.min.z).toFixed(1);
+//    },
+//
+//    getScale: function(){
+//        var scale = this.model.get("scale");
+//        var dimensions = {};
+//        dimensions.xScale = scale[0];
+//        dimensions.yScale = scale[1];
+//        dimensions.zScale = scale[2];
+//        dimensions.dimensions = this.makeDimensionString();
+//        return dimensions;
+//    },
+//
+//    scale: function(e){
+//
+//        this.model.scale([this.getDimScale($(".xScale").val()), this.getDimScale($(".yScale").val()), this.getDimScale($(".zScale").val())]);
+//    },
+//
+//    getDimScale: function(val){
+//        if (val == "") return null;
+//        return parseFloat(val);
+//    },
+//
+//    rotate: function(e){
+//        e.preventDefault();
+//        var axis = $(e.target).data("axis");
+//        this.model.rotate(axis);
+//    },
 
     template: _.template('\
         Filename:&nbsp;&nbsp;<%= filename %><br/>\
