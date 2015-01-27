@@ -25,6 +25,7 @@ Lattice = Backbone.Model.extend({
 
     addCell: function(position){
         var cells = this.get("cells");
+        if (this.get("cellMode")=="parts") return;//remove this eventually
         cells.push(new Cell(this.get("cellMode"), position));
         this.set("numCells", cells.length);
         window.three.render();
