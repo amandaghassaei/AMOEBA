@@ -23,16 +23,15 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     render: function(){
-        console.log("latticerender");
         this.$el.html(this.template(_.extend(this.model.attributes, this._formatData())));
     },
 
     template: _.template('\
-        Cell Type: <br/>\
-        Cell Connection:<br/>\
+        Cell Type: &nbsp;&nbsp;<%= formattedCellType %><br/>\
+        Cell Connection:&nbsp;&nbsp;<%= formattedConnectionType %><br/>\
         Scale:&nbsp;&nbsp;<%= scale %><br/>\
-        Column Separation:<br/><br/>\
-        NumCells:&nbsp;&nbsp;<%= numCells %><br/>\
+        Column Separation:<br/>\
+        NumCells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
         <a href="#" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         ')
 
