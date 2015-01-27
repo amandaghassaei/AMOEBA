@@ -12,7 +12,8 @@ Lattice = Backbone.Model.extend({
         nodes: [],
         cells: [],
         numCells: 0,
-        partType: "triangle"
+        partType: "triangle",
+        cellMode: "cell"
     },
 
     //pass in fillGeometry
@@ -24,7 +25,7 @@ Lattice = Backbone.Model.extend({
 
     addCell: function(position){
         var cells = this.get("cells");
-        cells.push(new Cell(position));
+        cells.push(new Cell(this.get("cellMode"), position));
         this.set("numCells", cells.length);
         window.three.render();
     },
