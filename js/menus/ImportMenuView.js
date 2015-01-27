@@ -15,10 +15,17 @@ ImportMenuView = Backbone.View.extend({
         "click #removeFillGeo":             "_removeMesh"
     },
 
-    initialize: function(){
+    currentlySelected: false,
+
+    initialize: function(options){
+
+        this.lattice = options.lattice;
 
         _.bindAll(this, "render", "_onMeshLoad");
-        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model, "change", function(){
+            if (!this.currentlySelected) return;
+            this.render();
+        });
 //        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
 
 
@@ -67,7 +74,9 @@ ImportMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        this.currentlySelected = true;
         this.$el.html(this.template(this.model.attributes));
+        this.lattice.set("cellMode", "cell");
     },
 
 //    makeDimensionString: function(){

@@ -10,13 +10,21 @@ SketchMenuView = Backbone.View.extend({
     events: {
     },
 
+    currentlySelected: false,
+
     initialize: function(){
 
         _.bindAll(this, "render");
+//        this.listenTo(this.model, "change", function(){
+//            if (!this.currentlySelected) return;
+//            this.render();
+//        });
     },
 
     render: function(){
+        this.currentlySelected = true;
         this.$el.html(this.template());
+        this.model.set("cellMode", "cell");
     },
 
     template: _.template('\

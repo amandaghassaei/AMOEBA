@@ -15,6 +15,10 @@ PartMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         this.listenTo(this.model, "change:partType", this.render);
+//        this.listenTo(this.model, "change", function(){
+//            if (!this.currentlySelected) return;
+//            this.render();
+//        });
     },
 
     render: function(){

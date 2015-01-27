@@ -9,8 +9,8 @@ function MenuWrapper(args){
 
     //init all tab view controllers
     var latticeMenu = new LatticeMenuView({model:args.lattice});
-    var importMenu = new ImportMenuView();
-    var sketchMenu = new SketchMenuView();
+    var importMenu = new ImportMenuView({lattice:args.lattice});
+    var sketchMenu = new SketchMenuView({model:args.lattice});
     var partMenu = new PartMenuView({model:args.lattice});
     var scriptMenu = new ScriptMenuView();
 
@@ -46,8 +46,8 @@ function MenuWrapper(args){
 
     function deselectAllMenus(){
         latticeMenu.currentlySelected = false;
-//        importMenu.currentlySelected = false;
-//        sketchMenu.currentlySelected = false;
+        importMenu.currentlySelected = false;
+        sketchMenu.currentlySelected = false;
         partMenu.currentlySelected = false;
 //        scriptMenu.currentlySelected = false;
     }
