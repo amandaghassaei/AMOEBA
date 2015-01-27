@@ -5,12 +5,15 @@
 
 function MenuWrapper(){
 
+    var $el = $("#menuWrapper");
+
     //init all tab view controllers
     var latticeMenu = new LatticeMenuView();
     var sketchMenu = new SketchMenuView();
     var partMenu = new PartMenuView();
     var scriptMenu = new ScriptMenuView();
 
+    init();
 
     var tabItems = $(".nav-tabs>li>a");
     tabItems.click(function(e){
@@ -37,6 +40,20 @@ function MenuWrapper(){
         }
     });
 
-    latticeMenu.render();//init with lattice menu open
+    function init(){
+        latticeMenu.render();//init with lattice menu open
+    }
 
+    function hide(){
+        $el.animate({right: "-400"});
+    }
+
+    function show(){
+        $el.animate({right: "0"});
+    }
+
+    return {//return public properties and methods
+        hide: hide,
+        show:show
+    };
 }

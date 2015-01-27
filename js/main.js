@@ -22,6 +22,7 @@ $(function(){
     var threeView = new ThreeView({model:threeModel, lattice:lattice});
 
 
-    MenuWrapper();
-    setupNavBar(threeModel);
+    //setup ui
+    var menu = MenuWrapper();
+    NavBar(menu);
 });

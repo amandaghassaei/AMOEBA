@@ -24,7 +24,7 @@ LatticeMenuView = Backbone.View.extend({
         Cell Connection:<br/>\
         Scale:<br/>\
         Column Separation:<br/><br/>\
-        <a href="#" class=" btn btn-block btn-lg btn-default">Clear All</a><br/>\
+        <a href="#" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         <span class="btn btn-default btn-file fullWidth">\
             Upload STL<input id="uploadMesh" type="file">\
        </span><br/><br/>\

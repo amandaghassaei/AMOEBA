@@ -3,7 +3,7 @@
  */
 
 
-function setupNavBar(three){
+function NavBar(menu){
 
     var allMenus = $(".navMenu");
     var allNavMenuLinks = $(".menuHoverControls");
@@ -17,13 +17,25 @@ function setupNavBar(three){
 //        $(menuId).show();
 //    });
 
-    var clearButton = $("#clearAll");
-    clearButton.mouseout(function(){
+    var showHideMenuBtn = $("#showHideMenu");
+    showHideMenuBtn.mouseout(function(){
         $(this).parent().removeClass("open");
     });
-
-    //clear canvas
-    clearButton.click(three.clearAll);
+    //show/hide menu
+    showHideMenuBtn.click(function(e){
+        e.preventDefault();
+        var $this = $(this);
+        var state = $this.data('state');
+        if(state){
+            $this.html("<< Show Menu");
+            menu.hide();
+        } else {
+            $this.html("Hide Menu >>");
+            menu.show();
+        }
+        $this.data('state', !state);
+        $this.blur();
+    });
 
     function hideAllMenus(){
         allMenus.hide();
