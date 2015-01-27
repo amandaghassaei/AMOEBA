@@ -54,7 +54,7 @@ function ThreeModel(){
 
     function sceneRemove(object){
         var objectToRemove = object;
-        if (object.parent.type != "Scene") {
+        if (object.parent && object.parent.type != "Scene") {
             objectToRemove = object.parent;
         }
         scene.remove(objectToRemove);

@@ -32,6 +32,8 @@
         this.mesh.position.y = position.y;
         this.mesh.position.z = position.z;
 
+        this.mesh.myCell = this;//we need a reference to this instance from the mesh for
+
         this._draw();
 
     //    this.parts = this._createParts(nodes, config);
@@ -59,6 +61,10 @@
 
     Cell.prototype.rotate = function(rx, ry, rz){
     };
+
+    Cell.prototype._destroy = function(){
+        this.mesh.myCell = null;
+    }
 
 
 

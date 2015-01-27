@@ -22,15 +22,21 @@ Lattice = Backbone.Model.extend({
     },
 
     addCell: function(position){
-        this.get("cells").push(new Cell(position));
-        this.set("numCells", this.get("numCells")+1);
+        var cells = this.get("cells");
+        cells.push(new Cell(position));
+        this.set("numCells", cells.length);
         window.three.render();
     },
 
     removeCell: function(object){
         var cells = this.get("cells");
-        cells.splice(cells.indexOf(object), 1);
-        this.set("numCells", this.get("numCells")-1);
+        var index = cells.indexOf(object.parent.myCell);
+        if (index == -1) {
+            console.warn("problem located cell in cell array");
+            return;
+        }
+        cells.splice(index, 1);
+        this.set("numCells", cells.length);
         window.three.sceneRemove(object);
         window.three.render();
     },
