@@ -8,6 +8,7 @@ body {
     margin-bottom:0;
     z-index: 2;
     border-radius: 0;
+    opacity:0.8;
 }
 
 .navMenu {
@@ -31,12 +32,6 @@ body {
 
 .demo-row{
     padding:30px;
-}
-
-.dropdown-menu {
-    margin-top: 0!important;
-    border-top-left-radius: 0!important;
-    border-top-right-radius: 0!important;
 }
 
 nav .btn {
@@ -68,7 +63,22 @@ nav .btn {
     width: 100%!important;
 }
 
-/*import menu*/
+#threeContainer {
+    top: 0px;
+    position: absolute;
+}
+
+#menuWrapper {
+    min-width: 400px;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    display: block;
+    background-color: rgba(255,255,255,0.8);
+    right: 0;
+}
+
+/*menus*/
 
 .slider-selection {
 	background: #BABABA;
@@ -77,3 +87,30 @@ nav .btn {
 #STLImportStats {
     display: none;
 }
+
+.dropdown-menu {
+    margin-top: 0!important;
+    border-top-left-radius: 0!important;
+    border-top-right-radius: 0!important;
+}
+
+.nav-tabs .active a{
+    background-color: transparent !important;
+    border-width:2px !important;
+    border-bottom-color: transparent!important;
+}
+
+.nav-tabs{
+    border-width: 0 !important;
+}
+
+.nav-tabs li a{
+    border-bottom: 2px solid #DDD!important;
+}
+
+.nav-tabs li{
+    /*width:100%;*/
+    margin-bottom: -2px;
+
+}
+

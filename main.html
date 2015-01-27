@@ -52,6 +52,8 @@
     <script src="js/models/extrudeVisualizer.js"></script>
 
     <!--views-->
+    <script src="js/menus/MenuWrapper.js"></script>
+    <script src="js/menus/LatticeMenuView.js"></script>
     <script src="js/threeViews/meshHandle.js"></script>
     <script src="js/threeViews/threeView.js"></script>
     <script src="js/threeViews/pushPullMeshView.js"></script>
@@ -105,7 +107,16 @@
         </ul>
        <!--<a href="#fakelink" id="clearAll" class=" btn btn-lg btn-primary">Clear All</a>-->
     </div><!-- /.navbar-collapse -->
-  </nav>
+</nav>
+
+<div id="menuWrapper">
+    <ul class="nav nav-tabs nav-justified">
+      <li role="presentation" class="active"><a href="#">Cell</a></li>
+      <li role="presentation"><a href="#">Part</a></li>
+      <li role="presentation"><a href="#">Script</a></li>
+    </ul>
+</div>
+
 <div id="importGeometry" class="row navMenu">
 </div>
 <div id="element" class="row navMenu">
@@ -122,8 +133,8 @@
         </div>
     </div>
 </div>
-
 <div id="threeContainer"></div>
+
 
 </body>
 </html>

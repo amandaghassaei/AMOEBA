@@ -10,12 +10,12 @@ function setupNavBar(three){
     var allNavDropdownMenus = $(".navDropdown");
     var allNavTitles = $(".navbar-nav li a");
 
-    allNavMenuLinks.mouseover(function(){
-        hideAllMenus();
-        $(this).parent().addClass("open");//highlight
-        var menuId = "#" + $(this).data("menuId");
-        $(menuId).show();
-    });
+//    allNavMenuLinks.mouseover(function(){
+//        hideAllMenus();
+//        $(this).parent().addClass("open");//highlight
+//        var menuId = "#" + $(this).data("menuId");
+//        $(menuId).show();
+//    });
 
     var clearButton = $("#clearAll");
     clearButton.mouseout(function(){
