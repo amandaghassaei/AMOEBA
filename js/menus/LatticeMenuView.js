@@ -46,7 +46,6 @@ LatticeMenuView = Backbone.View.extend({
         Cell Type: &nbsp;&nbsp;<%= formattedCellType %><br/>\
         Cell Connection:&nbsp;&nbsp;<%= formattedConnectionType %><br/>\
         Scale:&nbsp;&nbsp;<%= scale %><br/>\
-        Column Separation:<br/>\
         NumCells:&nbsp;&nbsp;<%= numCells %><br/>\
         Show Bounding Box:<br/><br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\

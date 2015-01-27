@@ -56,26 +56,35 @@
         return mesh;
     };
 
-    Cell.prototype._draw = function(){
-        window.three.sceneAdd(this.mesh);
-    };
-
     Cell.prototype.drawForMode = function(mode, position){
-        if (this.mesh) this.remove();
-        this.mesh = null;
         position = position || this.position;
         if (mode == "cell"){
-            this.mesh = this._buildCellMesh(position);
+            if (this.cellMesh) this._setCellMeshVisibility(true);
+            else {
+                this.cellMesh = this._buildCellMesh(position);
+                window.three.sceneAdd(this.cellMesh);
+            }
         } else if (mode == "parts"){
-            this.mesh = this._buildPartsMesh();
+            if (this.cellMesh) this._setCellMeshVisibility(false);
+            else {
+//                this.parts = this._buildPartsMesh();
+//                window.three.sceneAdd(this.parts);
+            }
         } else {
             console.warn("unrecognized draw mode for cell");
         }
-        if (this.mesh) this._draw();
+    };
+
+    Cell.prototype._setCellMeshVisibility = function(visibility){
+        if (!this.cellMesh) return;
+        this.cellMesh.visible = visibility;
+//        _.each(this.cellMesh.children, function(childMesh){
+//            childMesh.visible = visibility;
+//        });
     };
 
     Cell.prototype.remove = function(){
-        window.three.sceneRemove(this.mesh);
+        if (this.cellMesh) window.three.sceneRemove(this.cellMesh);
     };
 
 
@@ -86,9 +95,8 @@
     };
 
     Cell.prototype._destroy = function(){
-        this.mesh.myCell = null;
-    }
-
+        if (this.cellMesh) this.cellMesh.myCell = null;
+    };
 
 
     self.Cell =  Cell;

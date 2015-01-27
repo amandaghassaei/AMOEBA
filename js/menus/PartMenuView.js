@@ -25,6 +25,7 @@ PartMenuView = Backbone.View.extend({
 
     template: _.template('\
         Part Type: &nbsp;&nbsp;<%= partType %><br/>\
+        Column Separation:<br/>\
         ')
 
 });
