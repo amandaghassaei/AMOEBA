@@ -69,7 +69,7 @@ nav .btn {
 }
 
 #menuWrapper {
-    min-width: 400px;
+    width: 400px;
     height: 100%;
     z-index: 2;
     position: absolute;

@@ -9,6 +9,7 @@ function MenuWrapper(){
 
     //init all tab view controllers
     var latticeMenu = new LatticeMenuView();
+    var importMenu = new ImportMenuView();
     var sketchMenu = new SketchMenuView();
     var partMenu = new PartMenuView();
     var scriptMenu = new ScriptMenuView();
@@ -28,6 +29,8 @@ function MenuWrapper(){
         var tabName = $this.parent().data('name');
         if (tabName == "lattice"){
             latticeMenu.render();
+        } else if (tabName == "import"){
+            importMenu.render();
         } else if (tabName == "sketch"){
             sketchMenu.render();
         } else if (tabName == "part"){
