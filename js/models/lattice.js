@@ -55,7 +55,7 @@ Lattice = Backbone.Model.extend({
         }
 
         var index = this._subtract(position, this.get("cellsMin"));
-        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position);
+        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position, scale);
         this.set("numCells", this.get("numCells")+1);
         window.three.render();
     },
