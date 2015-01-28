@@ -51,8 +51,8 @@
         position.x = indices.x*scale;
         position.y = indices.y*triHeight;
         position.z = indices.z*octHeight;
-        if (indices.y%2 == 1) position.x -= scale/2;
-        if (indices.z%2 == 1) position.y -= triHeight*4/3;
+        if (Math.abs(indices.y%2) == 1) position.x -= scale/2;
+        if (Math.abs(indices.z%2) == 1) position.y -= triHeight*4/3;
         return position;
     };
 
