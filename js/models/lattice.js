@@ -55,7 +55,7 @@ Lattice = Backbone.Model.extend({
         }
 
         var index = this._subtract(position, this.get("cellsMin"));
-        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), absPosition);
+        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), absPosition, position);
         window.three.render();
     },
 
@@ -144,15 +144,15 @@ Lattice = Backbone.Model.extend({
     },
 
     removeCell: function(object){
-        var cells = this.get("cells");
+
         var cell = object.parent.myCell;
-        var index = cells.indexOf(cell);
-        if (index == -1) {//I think this is happening when two intersection/remove calls are done on the same cell before the next render loop finished
-            console.warn("problem locating cell in cell array");
-            return;
-        }
-        cells.splice(index, 1);
+        var relativeIndex = this._subtract(cell.indices, this.get("cellsMin"));
+        var cells = this.get("cells");
+        cells[relativeIndex.x][relativeIndex.y][relativeIndex.z] = null;
         cell.remove();
+
+        //todo shrink cells matrix if needed
+
         this.set("numCells", cells.length);
         window.three.render();
     },

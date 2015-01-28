@@ -23,9 +23,10 @@
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
 
-    function DMACell(mode, position) {
+    function DMACell(mode, position, indices) {
 
         this.position = position;
+        this.indices = indices;
         this.parts = this._initParts();
 
 
