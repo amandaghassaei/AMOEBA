@@ -37,18 +37,16 @@
     function DMACell(mode, indices, scale) {
 
         this.indices = indices;
-        this.position = this._calcPositionForScale(scale);
-
-        this.cellMesh = this._buildCellMesh(this.position);
+        var position = this._calcPosition(scale, indices);
+        this.cellMesh = this._buildCellMesh(position, indices.z);
         window.three.sceneAdd(this.cellMesh);
 
-        this.parts = this._initParts(this.position, indices.z);
+        this.parts = this._initParts(position, indices.z);
         this.drawForMode(mode);
     }
 
-    DMACell.prototype._calcPositionForScale = function(scale){
+    DMACell.prototype._calcPosition = function(scale, indices){
         var position = {};
-        var indices = this.indices;
         var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = scale/2*Math.sqrt(3);
         position.x = indices.x*scale;
@@ -67,11 +65,11 @@
         return parts;
     };
 
-    DMACell.prototype._buildCellMesh = function(position){//abstract mesh representation of cell
+    DMACell.prototype._buildCellMesh = function(position, zIndex){//abstract mesh representation of cell
 
         var mesh;
 
-        if (this.indices.z%2==0){
+        if (zIndex%2==0){
             mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry1, cellMaterials);
         } else {
             mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry2, cellMaterials);
@@ -85,7 +83,6 @@
     };
 
     DMACell.prototype.drawForMode = function(mode){
-        console.log(mode);
         if (mode == "cell"){
             this._setCellMeshVisibility(true);
             _.each(this.parts, function(part){
