@@ -71,8 +71,8 @@ Lattice = Backbone.Model.extend({
             if (expansion[key] == 0) return;//no expansion on this axis
 
             var cellsX = cells.length;
-            var cellsY = cellsX > 0 ? 1 : cells[0].length;
-            var cellsZ = cellsY > 0 ? 1 : cells[0][0].length;
+            var cellsY = cells[0].length;
+            var cellsZ = cells[0][0].length;
 
             if (key=="x"){
                 for (var x=0;x<expansion[key];x++){
