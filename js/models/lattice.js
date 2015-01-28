@@ -10,9 +10,9 @@ Lattice = Backbone.Model.extend({
         cellType: "octa",
         connectionType: "face",
         nodes: [],
-        cells: [[[null]]],//3D matrix containing all cells and null, dynamic
+        cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
-        cellsMax: {x:0, y:0, z:0},//min position of cells matrix
+        cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
         partType: "triangle",
         cellMode: "cell"
@@ -45,7 +45,6 @@ Lattice = Backbone.Model.extend({
         var lastMin = this.get("cellsMin");
         var newMax = this._updateCellsMax(position, lastMax);
         var newMin = this._updateCellsMin(position, lastMin);
-        console.log(position);
         if (newMax) {
             this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
             this.set("cellsMax", newMax);
@@ -55,17 +54,12 @@ Lattice = Backbone.Model.extend({
             this.set("cellsMin", newMin);
         }
 
-        console.log(cells);
-
-        cells[position.x][position.y][position.z] = new DMACell(this.get("cellMode"), absPosition);
-//        console.log(cells);
-//        this.set("numCells", cells.length);
+        var index = this._subtract(position, this.get("cellsMin"));
+        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), absPosition);
         window.three.render();
     },
 
     _expandCellsArray: function(cells, expansion, fromFront){
-
-        console.log(expansion);
 
         _.each(_.keys(expansion), function(key){
             if (expansion[key] == 0) return;//no expansion on this axis
@@ -94,8 +88,8 @@ Lattice = Backbone.Model.extend({
                         for (var z=0;z<cellsZ;z++){
                             newCol.push(null);
                         }
-                        if (fromFront) cells.unshift(newCol);
-                        else cells.push(newCol);
+                        if (fromFront) cells[x].unshift(newCol);
+                        else cells[x].push(newCol);
                     }
                 }
             } else if (key=="z"){
