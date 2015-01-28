@@ -91,11 +91,10 @@
     };
 
     DMACell.prototype.drawForMode = function(mode){
-        position = this.position;
         if (mode == "cell"){
             if (this.cellMesh) this._setCellMeshVisibility(true);
             else {
-                this.cellMesh = this._buildCellMesh(position);
+                this.cellMesh = this._buildCellMesh(this.position);
                 window.three.sceneAdd(this.cellMesh);
             }
         } else if (mode == "parts"){

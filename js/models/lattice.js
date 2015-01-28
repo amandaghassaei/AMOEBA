@@ -159,15 +159,8 @@ Lattice = Backbone.Model.extend({
     },
 
     clearCells: function(){
-        _.each(this.get("cells"), function(cellLayer){
-            _.each(cellLayer, function(cellCol){
-                _.each(cellCol, function(cell){
-                    if (cell) {
-                        cell.remove();
-                    }
-                });
-            });
-
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.remove();
         });
         this.set("cells", this.defaults.cells);
         this.set("numCells", 0);
@@ -176,10 +169,21 @@ Lattice = Backbone.Model.extend({
 
     _cellModeDidChange: function(){
         var mode = this.get("cellMode");
-        _.each(this.get("cells"), function(cell){
-            if (cell.drawForMode) cell.drawForMode(mode);
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell && cell.drawForMode) cell.drawForMode(mode);
         });
         window.three.render();
+    },
+
+    _iterCells: function(cells, callback, vars){
+        _.each(cells, function(cellLayer){
+            _.each(cellLayer, function(cellColumn){
+                _.each(cellColumn, function(cell){
+                    callback(cell);
+                });
+            });
+
+        });
     }
 
 });
