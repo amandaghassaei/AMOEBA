@@ -10,7 +10,9 @@ Lattice = Backbone.Model.extend({
         cellType: "octa",
         connectionType: "face",
         nodes: [],
-        cells: [],
+        cells: [[[]]],//3D matrix containing all cells and null, dynamic
+        cellsMin: {x:0, y:0, z:0},//min position of cells matrix
+        cellsMax: {x:0, y:0, z:0},//min position of cells matrix
         numCells: 0,
         partType: "triangle",
         cellMode: "cell"
@@ -24,12 +26,123 @@ Lattice = Backbone.Model.extend({
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
     },
 
-    addCell: function(position){
+    addCell: function(absPosition){
+
         var cells = this.get("cells");
-        if (this.get("cellMode")=="parts") return;//remove this eventually
-        cells.push(new Cell(this.get("cellMode"), position));
-        this.set("numCells", cells.length);
+
+        //calc indices in cell matrix
+        var scale = this.get("scale");
+        var octHeight = 3*scale/8*Math.sqrt(5);//this isn't quite right
+        var triHeight = scale/2*Math.sqrt(3);
+        var position = {};
+        position.x = Math.round(absPosition.x/scale);
+        position.y = Math.round(absPosition.y/triHeight);
+        position.z = Math.round(absPosition.z/octHeight);
+
+        //check for matrix expansion
+        var lastMax = this.get("cellsMax");
+        var lastMin = this.get("cellsMin");
+        var newMax = this._updateCellsMax(position, lastMax);
+        var newMin = this._updateCellsMin(position, lastMin);
+        if (newMax) {
+            this._expandCellsArray(cells, this._subtract(newMax, lastMin), false);
+            this.set("cellsMax", newMax);
+        }
+        if (newMin) {
+            this._expandCellsArray(cells, this._subtract(newMin, lastMin), true);
+            this.set("cellsMin", newMin);
+        }
+
+        console.log(cells);
+
+        cells[position.x][position.y][position.z] = new DMACell(this.get("cellMode"), absPosition);
+//        console.log(cells);
+//        this.set("numCells", cells.length);
         window.three.render();
+    },
+
+    _expandCellsArray: function(cells, expansion, fromFront){
+
+        _.each(_.keys(expansion), function(key){
+            if (expansion[key] == 0) return;//no expansion on this axis
+
+            var cellsX = cells.length;
+            var cellsY = cellsX > 0 ? 0 : cells[0].length;
+            var cellsZ = cellsY > 0 ? 0 : cells[0][0].length;
+
+            if (key=="x"){
+                for (var x=0;x<expansion[key];x++){
+                    var newLayer = [];
+                    for (var y=0;y<cellsY;y++){
+                        var newCol = [];
+                        for (var z=0;z<cellsZ;z++){
+                            newCol.push(null);
+                        }
+                        newLayer.push(newCol);
+                    }
+                    if (fromFront) cells.unshift(newLayer);
+                    else cells.push(newLayer);
+                }
+            } else if (key=="y"){
+                for (var x=0;x<cellsX;x++){
+                    for (var y=0;y<expansion[key];y++){
+                        var newCol = [];
+                        for (var z=0;z<cellsZ;z++){
+                            newCol.push(null);
+                        }
+                        if (fromFront) cells.unshift(newCol);
+                        else cells.push(newCol);
+                    }
+                }
+            } else if (key=="z"){
+                for (var x=0;x<cellsX;x++){
+                    for (var y=0;y<cellsY;y++){
+                        for (var z=0;z<expansion[key];z++){
+                            if (fromFront) cells[x][y].unshift(null);
+                            else cells[x][y].push(null);
+                        }
+                    }
+                }
+            }
+        });
+    },
+
+    _updateCellsMin: function(newPosition, currentMin){
+        var newMin = {};
+        var hasChanged = false;
+        _.each(_.keys(newPosition), function(key){
+            if (newPosition[key]<currentMin[key]){
+                hasChanged = true;
+                newMin[key] = newPosition[key];
+            } else {
+                newMin[key] = currentMin[key];
+            }
+        });
+        if (hasChanged) return newMin;
+        return false;
+    },
+
+    _updateCellsMax: function(newPosition, currentMax){
+        var newMax = {};
+        var hasChanged = false;
+        _.each(_.keys(newPosition), function(key){
+            if (newPosition[key]>currentMax[key]){
+                hasChanged = true;
+                newMax[key] = newPosition[key];
+            } else {
+                newMax[key] = currentMax[key];
+            }
+        });
+        if (hasChanged) return newMax;
+        return false;
+    },
+
+    _subtract: function(pos1, pos2){
+        return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
+    },
+
+    _add: function(pos1, pos2){
+        return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
     },
 
     removeCell: function(object){
@@ -48,9 +161,9 @@ Lattice = Backbone.Model.extend({
 
     clearCells: function(){
         _.each(this.get("cells"), function(cell){
-            cell.remove();
+            if (cell.remove) cell.remove();
         });
-        this.set("cells", []);
+        this.set("cells", this.defaults.cells);
         this.set("numCells", 0);
         window.three.render();
     },
@@ -58,7 +171,7 @@ Lattice = Backbone.Model.extend({
     _cellModeDidChange: function(){
         var mode = this.get("cellMode");
         _.each(this.get("cells"), function(cell){
-            cell.drawForMode(mode);
+            if (cell.drawForMode) cell.drawForMode(mode);
         });
         window.three.render();
     }

@@ -22,24 +22,33 @@
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    function Cell(mode, position) {
+
+    function DMACell(mode, position) {
 
         this.position = position;
-        this.drawForMode(mode, position);
+        this.parts = this._initParts();
 
-    //    this.parts = this._createParts(nodes, config);
+
+        this.drawForMode(mode);
     }
 
-    Cell.prototype._buildPartsMesh = function(){
-//        var parts  = [];
-//        for (var i=0;i<nodes.length;i++){
-//            parts.push(new Part(nodes[i], config[i]));
-//        }
-//        return parts;
-        return null;
+    DMACell.prototype._initParts = function(){
+        var parts  = [];
+        for (var i=0;i<3;i++){
+            parts.push(new DMAPart(i));
+        }
+        return parts;
     };
 
-    Cell.prototype._buildCellMesh = function(position){//abstract mesh representation of cell
+    DMACell.prototype._buildPartsMesh = function(position){
+        var parts  = [];
+        for (var i=0;i<nodes.length;i++){
+            parts.push(new Part(nodes[i], config[i]));
+        }
+        return parts;
+    };
+
+    DMACell.prototype._buildCellMesh = function(position){//abstract mesh representation of cell
 
         var mesh;
 
@@ -56,8 +65,8 @@
         return mesh;
     };
 
-    Cell.prototype.drawForMode = function(mode, position){
-        position = position || this.position;
+    DMACell.prototype.drawForMode = function(mode){
+        position = this.position;
         if (mode == "cell"){
             if (this.cellMesh) this._setCellMeshVisibility(true);
             else {
@@ -75,7 +84,7 @@
         }
     };
 
-    Cell.prototype._setCellMeshVisibility = function(visibility){
+    DMACell.prototype._setCellMeshVisibility = function(visibility){
         if (!this.cellMesh) return;
         this.cellMesh.visible = visibility;
 //        _.each(this.cellMesh.children, function(childMesh){
@@ -83,22 +92,14 @@
 //        });
     };
 
-    Cell.prototype.remove = function(){
+    DMACell.prototype.remove = function(){
         if (this.cellMesh) window.three.sceneRemove(this.cellMesh);
     };
 
-
-    Cell.prototype.translate = function(dx, dy, dz){
-    };
-
-    Cell.prototype.rotate = function(rx, ry, rz){
-    };
-
-    Cell.prototype._destroy = function(){
+    DMACell.prototype._destroy = function(){
         if (this.cellMesh) this.cellMesh.myCell = null;
     };
 
-
-    self.Cell =  Cell;
+    self.DMACell =  DMACell;
 
 })();

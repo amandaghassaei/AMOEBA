@@ -5,51 +5,32 @@
 
 //a part, element with a single material, handled by assembler
 
+(function () {
 
 
-function DmaPart(geometry, nodes) {//list of nodes, config tells how nodes are connected
-    this.nodes = nodes;
-//    this.beams = this._createBeams(nodes, config);
-    this.scale = 10;
-    this.geometry = geometry;
-    this.render();
-}
+    var partGeometry1;
 
-DmaPart.prototype._createBeams = function(nodes, config){
-    var beams = [];
-    _.each(config, function(pair){
-        beams.push(new Beam(nodes[pair[0]], nodes[pair[2]]));
-    });
-    return beams;
-};
+    function DMAPart(type) {
+    //    this.nodes = nodes;
+    //    this.beams = this._createBeams(nodes, config);
+        this.scale = 10;
+    //    this.geometry = geometry;
+    }
 
-DmaPart.prototype.render = function(){
-    //translate geo to nodes
-    var midpoint = this.nodes[0].getMidPoint(this.nodes[1]);
-//    this.geometry.applyMatrix(new THREE.Matrix4().makeTranslation());
+    DMAPart.prototype._createBeams = function(nodes, config){
+//        var beams = [];
+//        _.each(config, function(pair){
+//            beams.push(new Beam(nodes[pair[0]], nodes[pair[2]]));
+//        });
+//        return beams;
+    };
 
+    DMAPart.prototype.render = function(){
+    };
 
-    var mesh = new THREE.Mesh(this.geometry);
-    var scale = this.scale*2.5;
-    mesh.scale.set(scale, scale, scale);
-//    mesh.rotateZ(Math.PI);
+    self.DMAPart =  DMAPart;
 
-    mesh.position.x = midpoint[0];
-    mesh.position.y = midpoint[1];
-    mesh.position.z = midpoint[2];
-    new BeamNode(0,0,0);
-
-
-    window.three.sceneAdd(mesh);
-    window.three.render();
-};
-
-
-DmaPart.prototype.translate = function(dx, dy, dz){
-};
-
-DmaPart.prototype.rotate = function(rx, ry, rz){
-};
+})();
 
 //////////////////////////////////////////////////////////////
 /////////////////SUBCLASSES///////////////////////////////////
