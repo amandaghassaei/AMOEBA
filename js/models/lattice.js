@@ -175,7 +175,7 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
-    _iterCells: function(cells, callback, vars){
+    _iterCells: function(cells, callback){
         _.each(cells, function(cellLayer){
             _.each(cellLayer, function(cellColumn){
                 _.each(cellColumn, function(cell){
