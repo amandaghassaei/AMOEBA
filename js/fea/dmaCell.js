@@ -34,20 +34,8 @@
         globalCellScale = scale;
         cellGeometry1 = unitCellGeo1.clone();
         cellGeometry1.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
-        setFlags(cellGeometry1);
         cellGeometry2 = unitCellGeo2.clone();
         cellGeometry2.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
-        setFlags(cellGeometry2);
-    }
-
-    function setFlags(geometry){
-        geometry.verticesNeedUpdate = true;
-        geometry.elementsNeedUpdate = true;
-        geometry.morphTargetsNeedUpdate = true;
-        geometry.uvsNeedUpdate = true;
-        geometry.normalsNeedUpdate = true;
-        geometry.colorsNeedUpdate = true;
-        geometry.tangentsNeedUpdate = true;
     }
 
     function DMACell(mode, indices, scale) {
@@ -125,12 +113,29 @@
     };
 
     DMACell.prototype.changeScale = function(scale){
-        if (globalCellScale != scale) setGlobalCellScale(scale);
+
+        //update geometry
+        if (globalCellScale != scale) {
+            setGlobalCellScale(scale);
+        }
+        if (this.indices.z%2==0){
+            this._updateVertices(cellGeometry1.vertices);
+        } else {
+            this._updateVertices(cellGeometry2.vertices);
+        }
+
         var position = this._calcPosition(scale, this.indices);
         this._setMeshPosition(this.cellMesh, position);
         _.each(this.parts, function(part){
                 part.changeScale(scale, position);
          });
+    };
+
+    DMACell.prototype._updateVertices = function(vertices){
+        _.each(this.cellMesh.children, function(mesh){
+            mesh.geometry.vertices = vertices;
+            mesh.geometry.verticesNeedUpdate = true;
+        });
     };
 
     DMACell.prototype.remove = function(){

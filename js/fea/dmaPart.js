@@ -12,16 +12,25 @@
     loader.addEventListener('load', onMeshLoad);
     loader.load("data/trianglePart.stl");
 
+    var unitPartGeo;
     var partGeometry;
+    var globalPartScale = 30;
     function onMeshLoad(e){
         console.log("part loaded");
-        partGeometry = e.content;
-        partGeometry.computeBoundingBox();
-        var unitScale = 1/partGeometry.boundingBox.max.y;
-        partGeometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        partGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
-        partGeometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
-        partGeometry.applyMatrix(new THREE.Matrix4().makeScale(30,30,30));
+        unitPartGeo = e.content;
+        unitPartGeo.dynamic = true;
+        unitPartGeo.computeBoundingBox();
+        var unitScale = 1/unitPartGeo.boundingBox.max.y;
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
+        setGlobalPartScale(globalPartScale)
+    }
+
+    function setGlobalPartScale(scale){
+        globalPartScale = scale;
+        partGeometry = unitPartGeo.clone();
+        partGeometry.applyMatrix(new THREE.Matrix4().makeScale(scale,scale,scale));
     }
 
     function DMAPart(type, position, oddZFlag) {
@@ -65,8 +74,13 @@
     };
 
     DMAPart.prototype.changeScale = function(scale, position){
+        if (globalPartScale != scale) setGlobalPartScale(scale);
         this.position = position;
-        if (this.mesh) this._setMeshPosition(this.mesh, scale, position);
+        if (this.mesh) {
+            this._setMeshPosition(this.mesh, scale, position);
+            this.mesh.geometry.vertices = partGeometry.vertices;
+            this.mesh.geometry.verticesNeedUpdate = true;
+        }
     };
 
     DMAPart.prototype.show = function(){
