@@ -158,8 +158,15 @@ Lattice = Backbone.Model.extend({
     },
 
     clearCells: function(){
-        _.each(this.get("cells"), function(cell){
-            if (cell.remove) cell.remove();
+        _.each(this.get("cells"), function(cellLayer){
+            _.each(cellLayer, function(cellCol){
+                _.each(cellCol, function(cell){
+                    if (cell) {
+                        cell.remove();
+                    }
+                });
+            });
+
         });
         this.set("cells", this.defaults.cells);
         this.set("numCells", 0);
