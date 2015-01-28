@@ -10,7 +10,7 @@ Lattice = Backbone.Model.extend({
         cellType: "octa",
         connectionType: "face",
         nodes: [],
-        cells: [[[]]],//3D matrix containing all cells and null, dynamic
+        cells: [[[null]]],//3D matrix containing all cells and null, dynamic
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
         cellsMax: {x:0, y:0, z:0},//min position of cells matrix
         numCells: 0,
@@ -38,18 +38,20 @@ Lattice = Backbone.Model.extend({
         position.x = Math.round(absPosition.x/scale);
         position.y = Math.round(absPosition.y/triHeight);
         position.z = Math.round(absPosition.z/octHeight);
+        if (position.z%2 == 1) position.y += 1;
 
         //check for matrix expansion
         var lastMax = this.get("cellsMax");
         var lastMin = this.get("cellsMin");
         var newMax = this._updateCellsMax(position, lastMax);
         var newMin = this._updateCellsMin(position, lastMin);
+        console.log(position);
         if (newMax) {
-            this._expandCellsArray(cells, this._subtract(newMax, lastMin), false);
+            this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
             this.set("cellsMax", newMax);
         }
         if (newMin) {
-            this._expandCellsArray(cells, this._subtract(newMin, lastMin), true);
+            this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
             this.set("cellsMin", newMin);
         }
 
@@ -63,12 +65,14 @@ Lattice = Backbone.Model.extend({
 
     _expandCellsArray: function(cells, expansion, fromFront){
 
+        console.log(expansion);
+
         _.each(_.keys(expansion), function(key){
             if (expansion[key] == 0) return;//no expansion on this axis
 
             var cellsX = cells.length;
-            var cellsY = cellsX > 0 ? 0 : cells[0].length;
-            var cellsZ = cellsY > 0 ? 0 : cells[0][0].length;
+            var cellsY = cellsX > 0 ? 1 : cells[0].length;
+            var cellsZ = cellsY > 0 ? 1 : cells[0][0].length;
 
             if (key=="x"){
                 for (var x=0;x<expansion[key];x++){
