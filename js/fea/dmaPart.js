@@ -38,14 +38,7 @@
     DMAPart.prototype._makeMeshForType = function(type){
 
         var mesh = new THREE.Mesh(partGeometry);
-        mesh.position.x = this.position.x;
-        mesh.position.y = -30/3*Math.sqrt(3)+this.position.y;
-        mesh.position.z = this.position.z;
-
-        if (this.oddZFlag){//adjust some offsets for odd z layers
-            mesh.position.y += 30 + 30/6;
-            mesh.rotateZ(Math.PI);
-        }
+        mesh = this._setMeshPosition(mesh, 30);
 
         switch(type){
             case 1:
@@ -56,6 +49,24 @@
                 break;
         }
         return mesh;
+    };
+
+    DMAPart.prototype._setMeshPosition = function(mesh, scale, position){
+        position = position || this.position;
+        mesh.position.x = position.x;
+        mesh.position.y = -scale/3*Math.sqrt(3)+position.y;
+        mesh.position.z = position.z;
+
+        if (this.oddZFlag){//adjust some offsets for odd z layers
+            mesh.position.y += 7*scale/6;
+            mesh.rotateZ(Math.PI);
+        }
+        return mesh;
+    };
+
+    DMAPart.prototype.changeScale = function(scale, position){
+        this.position = position;
+        if (this.mesh) this._setMeshPosition(this.mesh, scale, position);
     };
 
     DMAPart.prototype.show = function(){

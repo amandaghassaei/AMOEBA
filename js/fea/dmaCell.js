@@ -10,6 +10,7 @@
     var unitOctHeight = 2/Math.sqrt(6);
 
     var unitCellGeo1 = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+    unitCellGeo1.dynamic = true;
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
@@ -25,13 +26,28 @@
     var cellGeometry1;
     var cellGeometry2;
 
-    setScale(30);
+    var globalCellScale = 30;
 
-    function setScale(scale){
+    setGlobalCellScale(globalCellScale);
+
+    function setGlobalCellScale(scale){
+        globalCellScale = scale;
         cellGeometry1 = unitCellGeo1.clone();
         cellGeometry1.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
+        setFlags(cellGeometry1);
         cellGeometry2 = unitCellGeo2.clone();
         cellGeometry2.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
+        setFlags(cellGeometry2);
+    }
+
+    function setFlags(geometry){
+        geometry.verticesNeedUpdate = true;
+        geometry.elementsNeedUpdate = true;
+        geometry.morphTargetsNeedUpdate = true;
+        geometry.uvsNeedUpdate = true;
+        geometry.normalsNeedUpdate = true;
+        geometry.colorsNeedUpdate = true;
+        geometry.tangentsNeedUpdate = true;
     }
 
     function DMACell(mode, indices, scale) {
@@ -74,11 +90,16 @@
         } else {
             mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry2, cellMaterials);
         }
+        mesh = this._setMeshPosition(mesh, position);
+
+        mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        return mesh;
+    };
+
+    DMACell.prototype._setMeshPosition = function(mesh, position){
         mesh.position.x = position.x;
         mesh.position.y = position.y;
         mesh.position.z = position.z;
-
-        mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
 
@@ -101,6 +122,15 @@
     DMACell.prototype._setCellMeshVisibility = function(visibility){
         if (!this.cellMesh) return;
         this.cellMesh.visible = visibility;
+    };
+
+    DMACell.prototype.changeScale = function(scale){
+        if (globalCellScale != scale) setGlobalCellScale(scale);
+        var position = this._calcPosition(scale, this.indices);
+        this._setMeshPosition(this.cellMesh, position);
+        _.each(this.parts, function(part){
+                part.changeScale(scale, position);
+         });
     };
 
     DMACell.prototype.remove = function(){
