@@ -42,7 +42,7 @@
         this.cellMesh = this._buildCellMesh(this.position);
         window.three.sceneAdd(this.cellMesh);
 
-        this.parts = this._initParts(this.position);
+        this.parts = this._initParts(this.position, indices.z);
         this.drawForMode(mode);
     }
 
@@ -59,10 +59,10 @@
         return position;
     };
 
-    DMACell.prototype._initParts = function(position){
+    DMACell.prototype._initParts = function(position, zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMAPart(i, position));
+            parts.push(new DMAPart(i, position, zIndex%2==1));
         }
         return parts;
     };

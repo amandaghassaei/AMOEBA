@@ -24,13 +24,10 @@
         partGeometry.applyMatrix(new THREE.Matrix4().makeScale(30,30,30));
     }
 
-    function DMAPart(type, position) {
-
+    function DMAPart(type, position, oddZFlag) {
         this.position = position;
+        this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
         this.type = type;
-    //    this.nodes = nodes;
-    //    this.beams = this._createBeams(nodes, config);
-    //    this.geometry = geometry;
     }
 
     DMAPart.prototype._draw = function(){
@@ -45,8 +42,7 @@
         mesh.position.y = -30/3*Math.sqrt(3)+this.position.y;
         mesh.position.z = this.position.z;
 
-        //todo this sucks, go back and fix the real problem
-        if (Math.round(mesh.position.z/(2*30/Math.sqrt(6)))%2 == 1){
+        if (this.oddZFlag){//adjust some offsets for odd z layers
             mesh.position.y += 30 + 30/6;
             mesh.rotateZ(Math.PI);
         }
@@ -60,14 +56,6 @@
                 break;
         }
         return mesh;
-    };
-
-    DMAPart.prototype._createBeams = function(nodes, config){
-//        var beams = [];
-//        _.each(config, function(pair){
-//            beams.push(new Beam(nodes[pair[0]], nodes[pair[2]]));
-//        });
-//        return beams;
     };
 
     DMAPart.prototype.show = function(){
