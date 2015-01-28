@@ -39,7 +39,7 @@
         this.indices = indices;
         this.position = this._calcPositionForScale(scale);
 
-        this.parts = this._initParts();
+        this.parts = this._initParts(this.position);
         this.drawForMode(mode);
     }
 
@@ -56,18 +56,10 @@
         return position;
     };
 
-    DMACell.prototype._initParts = function(){
+    DMACell.prototype._initParts = function(position){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMAPart(i));
-        }
-        return parts;
-    };
-
-    DMACell.prototype._buildPartsMesh = function(position){
-        var parts  = [];
-        for (var i=0;i<nodes.length;i++){
-            parts.push(new Part(nodes[i], config[i]));
+            parts.push(new DMAPart(i, position));
         }
         return parts;
     };
@@ -85,24 +77,26 @@
         mesh.position.y = position.y;
         mesh.position.z = position.z;
 
-
         mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
 
     DMACell.prototype.drawForMode = function(mode){
+        console.log(mode);
         if (mode == "cell"){
             if (this.cellMesh) this._setCellMeshVisibility(true);
             else {
                 this.cellMesh = this._buildCellMesh(this.position);
                 window.three.sceneAdd(this.cellMesh);
             }
+            _.each(this.parts, function(part){
+                part.hide();
+            });
         } else if (mode == "parts"){
-            if (this.cellMesh) this._setCellMeshVisibility(false);
-            else {
-//                this.parts = this._buildPartsMesh();
-//                window.three.sceneAdd(this.parts);
-            }
+            this._setCellMeshVisibility(false);
+            _.each(this.parts, function(part){
+                part.show();
+            });
         } else {
             console.warn("unrecognized draw mode for cell");
         }
@@ -111,9 +105,6 @@
     DMACell.prototype._setCellMeshVisibility = function(visibility){
         if (!this.cellMesh) return;
         this.cellMesh.visible = visibility;
-//        _.each(this.cellMesh.children, function(childMesh){
-//            childMesh.visible = visibility;
-//        });
     };
 
     DMACell.prototype.remove = function(){
