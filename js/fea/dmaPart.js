@@ -72,11 +72,11 @@
 
     DMAPart.prototype.show = function(){
         if (!this.mesh) this._draw();
-        this.mesh.visibility = true;
+        this.mesh.visible = true;
     };
 
     DMAPart.prototype.hide = function(){
-        if (this.mesh) this.mesh.visibility = false;
+        if (this.mesh) this.mesh.visible = false;
     };
 
     self.DMAPart =  DMAPart;
