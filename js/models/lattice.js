@@ -55,7 +55,8 @@ Lattice = Backbone.Model.extend({
         }
 
         var index = this._subtract(position, this.get("cellsMin"));
-        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), absPosition, position);
+        cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position);
+        this.set("numCells", this.get("numCells")+1);
         window.three.render();
     },
 
@@ -146,14 +147,14 @@ Lattice = Backbone.Model.extend({
     removeCell: function(object){
 
         var cell = object.parent.myCell;
-        var relativeIndex = this._subtract(cell.indices, this.get("cellsMin"));
+        var index = this._subtract(cell.indices, this.get("cellsMin"));
         var cells = this.get("cells");
-        cells[relativeIndex.x][relativeIndex.y][relativeIndex.z] = null;
+        cells[index.x][index.y][index.z] = null;
         cell.remove();
 
         //todo shrink cells matrix if needed
 
-        this.set("numCells", cells.length);
+        this.set("numCells", this.get("numCells")-1);
         window.three.render();
     },
 

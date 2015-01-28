@@ -23,15 +23,29 @@
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
 
-    function DMACell(mode, position, indices) {
+    function DMACell(mode, indices) {
 
-        this.position = position;
         this.indices = indices;
+        this.position = this._calcPositionForScale(30);
+
         this.parts = this._initParts();
 
 
         this.drawForMode(mode);
     }
+
+    DMACell.prototype._calcPositionForScale = function(scale){
+        var position = {};
+        var indices = this.indices;
+        var octHeight = 3*scale/8*Math.sqrt(5);//this isn't quite right
+        var triHeight = scale/2*Math.sqrt(3);
+        position.x = indices.x*scale;
+        position.y = indices.y*triHeight;
+        position.z = indices.z*octHeight;
+        if (indices.y%2 == 1) position.x -= scale/2;
+        if (indices.z%2 == 1) position.y -= triHeight*4/3;
+        return position;
+    };
 
     DMACell.prototype._initParts = function(){
         var parts  = [];
