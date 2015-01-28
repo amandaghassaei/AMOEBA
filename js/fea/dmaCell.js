@@ -39,6 +39,9 @@
         this.indices = indices;
         this.position = this._calcPositionForScale(scale);
 
+        this.cellMesh = this._buildCellMesh(this.position);
+        window.three.sceneAdd(this.cellMesh);
+
         this.parts = this._initParts(this.position);
         this.drawForMode(mode);
     }
@@ -84,11 +87,7 @@
     DMACell.prototype.drawForMode = function(mode){
         console.log(mode);
         if (mode == "cell"){
-            if (this.cellMesh) this._setCellMeshVisibility(true);
-            else {
-                this.cellMesh = this._buildCellMesh(this.position);
-                window.three.sceneAdd(this.cellMesh);
-            }
+            this._setCellMeshVisibility(true);
             _.each(this.parts, function(part){
                 part.hide();
             });
