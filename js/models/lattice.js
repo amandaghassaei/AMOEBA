@@ -32,7 +32,7 @@ Lattice = Backbone.Model.extend({
 
         //calc indices in cell matrix
         var scale = this.get("scale");
-        var octHeight = 3*scale/8*Math.sqrt(5);//this isn't quite right
+        var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = scale/2*Math.sqrt(3);
         var position = {};
         position.x = Math.round(absPosition.x/scale);

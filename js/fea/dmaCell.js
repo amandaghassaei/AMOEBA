@@ -7,7 +7,7 @@
 
 (function () {
 
-    var octHeight = 3*30/8*Math.sqrt(5);//this isn't quite right
+    var octHeight = 2*30/Math.sqrt(6);
 
     var cellGeometry1 = new THREE.OctahedronGeometry(30/Math.sqrt(2));
     cellGeometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
@@ -37,7 +37,7 @@
     DMACell.prototype._calcPositionForScale = function(scale){
         var position = {};
         var indices = this.indices;
-        var octHeight = 3*scale/8*Math.sqrt(5);//this isn't quite right
+        var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = scale/2*Math.sqrt(3);
         position.x = indices.x*scale;
         position.y = indices.y*triHeight;
