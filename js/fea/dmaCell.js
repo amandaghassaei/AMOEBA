@@ -147,6 +147,9 @@
 
     DMACell.prototype.remove = function(){
         if (this.cellMesh) window.three.sceneRemove(this.cellMesh);
+        _.each(this.parts, function(part){
+            part.remove();
+        });
     };
 
     DMACell.prototype._destroy = function(){

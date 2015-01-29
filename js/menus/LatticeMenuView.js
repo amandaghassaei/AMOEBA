@@ -38,7 +38,7 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _formatData: function(){
-        var formattedCellType = "Octagon";
+        var formattedCellType = "Octahedral";
         var formattedConnectionType = "Face-Connected";
         return {formattedCellType:formattedCellType, formattedConnectionType:formattedConnectionType};
     },

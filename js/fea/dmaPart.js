@@ -91,6 +91,10 @@
         if (this.mesh) this.mesh.visible = false;
     };
 
+    DMAPart.prototype.remove = function(){
+        if (this.mesh) window.three.sceneRemove(this.mesh);
+    };
+
     DMAPart.prototype._destroy = function(){
         this.parentCell = null;
     };
