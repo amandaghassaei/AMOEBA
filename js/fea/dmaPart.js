@@ -23,6 +23,9 @@
         unitPartGeo.dynamic = true;
     });
 
+    var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
+    partMaterial.color.setRGB( 0.9619657144369509, 0.6625466032079207, 0.20799727886007258 );
+
     function DMAPart(type, oddZFlag, parent) {
         this.parentCell = parent;//use this reference to get position and scale
         this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
@@ -36,7 +39,7 @@
 
     DMAPart.prototype._makeMeshForType = function(type){
 
-        var mesh = new THREE.Mesh(unitPartGeo);
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
         mesh = this._setMeshPosition(mesh);
         mesh = this._setMeshScale(mesh);
 
