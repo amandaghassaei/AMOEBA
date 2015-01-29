@@ -9,7 +9,8 @@ AppState = Backbone.Model.extend({
 
     defaults: {
         currentNav:"design",//design, sim, assemble
-        currentTab:"lattice"
+        currentTab:"lattice",
+        menuIsVisible: true
     },
 
     initialize: function(){

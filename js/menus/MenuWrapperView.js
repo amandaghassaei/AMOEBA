@@ -13,7 +13,7 @@ MenuWrapper = Backbone.View.extend({
 
     initialize: function(options){
 
-        _.bindAll(this, "render");
+        _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility");
 
         //init all tab view controllers
         this.latticeMenu = new LatticeMenuView({model:options.lattice});
@@ -28,9 +28,11 @@ MenuWrapper = Backbone.View.extend({
         this.assemMenuTabs = {assembler:"Assembler", animate:"Animate"};
 
         //bind events
+        this.listenTo(this.model, "change:currentNav", this.render);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
+        this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
-        this._populateAndShow();
+        if (this.model.get("menuIsVisible")) this._populateAndShow();
     },
 
     _tabWasSelected: function(e){
@@ -64,11 +66,12 @@ MenuWrapper = Backbone.View.extend({
             this.scriptMenu.render();
         } else {
             console.warn("no tab initialized!");
-            $("menuContent").html('');//clear out content from menu
+            $("#menuContent").html('');//clear out content from menu
         }
 
     },
 
+    //todo get rid of this!!
     _deselectAllMenus: function(){
         this.latticeMenu.currentlySelected = false;
         this.importMenu.currentlySelected = false;
@@ -79,7 +82,7 @@ MenuWrapper = Backbone.View.extend({
 
     render: function(){
         var self = this;
-        this.hide(function(){
+        this._hide(function(){
             self._populateAndShow();
         });
     },
@@ -90,14 +93,22 @@ MenuWrapper = Backbone.View.extend({
             simMenuTabs:this.simMenuTabs,
             assemMenuTabs:this.assemMenuTabs})));
         this._updateCurrentTab();
-        this.show();
+        this._show();
     },
 
-    hide: function(callback){
+    _setVisibility: function(){
+        if(this.model.get("menuIsVisible")){
+            this._populateAndShow();
+        } else {
+            this._hide();
+        }
+    },
+
+    _hide: function(callback){
         this.$el.parent().animate({right: "-400"}, {done: callback});
     },
 
-    show: function(){
+    _show: function(){
         this.$el.parent().animate({right: "0"});
     },
 

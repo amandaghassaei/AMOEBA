@@ -3,66 +3,62 @@
  */
 
 
-function NavBar(menu){
+//model is appState
+//not templating this view yet
 
-    var allMenus = $(".navMenu");
-    var allNavMenuLinks = $(".menuHoverControls");
-    var allNavDropdownMenus = $(".navDropdown");
-    var allNavTitles = $(".navbar-nav li a");
+NavBar = Backbone.View.extend({
 
-    allNavMenuLinks.mouseover(function(){
-        deselectAllNavItems();
-        $(this).parent().addClass("open");//highlight
-        var menuId = "#" + $(this).data("menuId");
-//        $(menuId).show();
-    });
+    el: "#globalNav",
 
-    var showHideMenuBtn = $("#showHideMenu");
-    showHideMenuBtn.mouseout(function(){
-        $(this).parent().removeClass("open");
-    });
-    //show/hide menu
-    showHideMenuBtn.click(function(e){
+    events: {
+        "click #showHideMenu":                          "_setMenuVis",
+        "click .menuHoverControls":                     "_setNavSelection",
+        "click .navDropdown":                           "_deselectAllNavItems"
+    },
+
+    initialize: function(){
+
+        _.bindAll(this, "_setMenuVis");
+
+        this._uiStuff();
+
+    },
+
+    _setMenuVis: function(e){
         e.preventDefault();
-        var $this = $(this);
-        var state = $this.data('state');
+        var $button = $(e.target);
+        var state = this.model.get("menuIsVisible");
         if(state){
-            $this.html("<< Show Menu");
-            menu.hide();
+            $button.html("<< Show Menu");
         } else {
-            $this.html("Hide Menu >>");
-            menu.show();
+            $button.html("Hide Menu >>");
         }
-        $this.data('state', !state);
-        $this.blur();
-    });
+        this.model.set("menuIsVisible", !state);
+        $button.blur();
+    },
 
-    function deselectAllNavItems(){
-        allNavMenuLinks.parent().removeClass("open");//no highlight
-        allNavDropdownMenus.removeClass("open");//no highlight
-        allNavTitles.blur();
+    _setNavSelection: function(e){
+        e.preventDefault();
+        var $link = $(e.target);
+        this._deselectAllNavItems();
+        $link.parent().addClass("open");//highlight
+        var navSelection = $link.data("menuId");
+        if (navSelection == "about") return;
+        if (navSelection) this.model.set("currentNav", navSelection);
+    },
+
+    _uiStuff: function(){
+        var $logo = $("#logo");
+        $logo.mouseover(function(){
+            $logo.attr("src","assets/logo-active.png");
+        });
+        $logo.mouseout(function(){
+            $logo.attr("src","assets/logo.png");
+        });
+    },
+
+    _deselectAllNavItems: function(){
+        $(".menuHoverControls").parent().removeClass("open");//no highlight
     }
 
-//    $("#threeContainer").mousedown(function(){
-//        hideAllMenus();
-//    });
-    allNavDropdownMenus.mouseover(function(){
-        deselectAllNavItems();
-        $(this).addClass("open");
-    });
-
-    //remove nav text coloring on click
-    allNavTitles.click(function(e){
-        e.preventDefault();
-        return false;
-    });
-
-    var $logo = $("#logo");
-    $logo.mouseover(function(){
-        $logo.attr("src","assets/logo-active.png");
-    });
-    $logo.mouseout(function(){
-        $logo.attr("src","assets/logo.png");
-    });
-
-}
+});
