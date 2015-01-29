@@ -29,13 +29,12 @@ ThreeView = Backbone.View.extend({
 
         this.lattice = options.lattice;
 
-        _.bindAll(this, "_animate", "_mouseMoved", "_handleKeyStroke");
+        _.bindAll(this, "_animate", "_mouseMoved", "_handleKeyStroke", "_drawBasePlane");
 
         //bind events
         $(document).bind('keydown', {state:true}, this._handleKeyStroke);
         $(document).bind('keyup', {state:false}, this._handleKeyStroke);
-        this.listenTo(this.lattice, "change:type", this.drawBasePlane);
-        this.listenTo(this.lattice, "change:scale", this.scaleBasePlane);
+        this.listenTo(this.lattice, "change:type, change:scale", this._drawBasePlane);
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
@@ -44,7 +43,7 @@ ThreeView = Backbone.View.extend({
 
         this._animate();
 
-        this.basePlane = this.drawBasePlane();
+        this.basePlane = this._drawBasePlane();
 
         //init highlighter
         var highlightGeometry = new THREE.Geometry();
@@ -182,9 +181,9 @@ ThreeView = Backbone.View.extend({
         }
     },
 
-    drawBasePlane: function(){
+    _drawBasePlane: function(){
 
-        this.lattice.clearCells();
+        if (this.basePlane) window.three.sceneRemove(this.basePlane);
 
         var type = this.lattice.get("cellType");
         var connectionType = this.lattice.get("connectionType");
@@ -248,14 +247,10 @@ ThreeView = Backbone.View.extend({
 
         var basePlane = new THREE.Mesh(geometry, planeMaterial);
         window.three.sceneAdd(basePlane);
+        window.three.render();
 
+        if (this.basePlane) this.basePlane = basePlane;
         return basePlane;
-    },
-
-    scaleBasePlane: function(){
-
-        console.log("scale base plane");
-
     }
 
 });
