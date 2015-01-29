@@ -66,6 +66,7 @@
     };
 
     DMAPart.prototype._setMeshScale = function(mesh, scale){
+        scale = scale || this.parentCell.getScale();
         mesh.scale.set(scale, scale, scale);
         return mesh;
     };
