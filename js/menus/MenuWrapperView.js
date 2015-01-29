@@ -8,7 +8,7 @@ MenuWrapper = Backbone.View.extend({
     el: "#menuHeader",
 
     events: {
-        "click .nav-tabs>li>a":                     "_tabWasSelected"
+        "click .menuWrapperTab>a":                     "_tabWasSelected"
     },
 
     initialize: function(options){
@@ -43,12 +43,12 @@ MenuWrapper = Backbone.View.extend({
 
     _updateCurrentTab: function(){
         var tabName = this.model.get("currentTab");
-        _.each($(".nav-tabs>li>a"), function(tab){
-            var parent = $(tab).parent();
-            if (parent.data('name') == tabName){
-                parent.addClass("active");
+        _.each($(".menuWrapperTab"), function(tab){
+            var $tab = $(tab);
+            if ($tab.data('name') == tabName){
+                $tab.addClass("active");
             } else {
-                parent.removeClass("active");
+                $tab.removeClass("active");
             }
         });
 
@@ -107,7 +107,7 @@ MenuWrapper = Backbone.View.extend({
         <ul class="nav nav-tabs nav-justified">\
         <% var dict = eval(currentNav);\
         _.each(_.keys(dict), function(key){%>\
-          <li role="presentation" data-name="<%= key %>"><a href="#"><%= dict[key] %></a></li>\
+          <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= dict[key] %></a></li>\
         <% }); %>\
         </ul>\
         ')
