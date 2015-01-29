@@ -30,6 +30,12 @@ body {
     padding-right: 20px;
 }
 
+#logo {
+    height:150%;
+    position:relative;
+    top:-7px;
+}
+
 .demo-row{
     padding:30px;
 }

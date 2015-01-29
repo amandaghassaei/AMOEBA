@@ -61,4 +61,12 @@ function NavBar(menu){
         return false;
     });
 
+    var $logo = $("#logo");
+    $logo.mouseover(function(){
+        $logo.attr("src","assets/logo-active.png");
+    });
+    $logo.mouseout(function(){
+        $logo.attr("src","assets/logo.png");
+    });
+
 }
