@@ -49,7 +49,12 @@ NavBar = Backbone.View.extend({
         $link.parent().addClass("open");//highlight
         var navSelection = $link.data("menuId");
         if (navSelection == "about") return;
-        if (navSelection) this.model.set("currentNav", navSelection);
+        if (navSelection) {
+            if (navSelection=="navDesign") this.model.set("currentTab", "lattice", {silent: true});
+            else if (navSelection=="navSim") this.model.set("currentTab", "physics", {silent: true});
+            else if (navSelection=="navAssemble") this.model.set("currentTab", "assembler", {silent: true});
+            this.model.set("currentNav", navSelection);
+        }
     },
 
     _uiStuff: function(){

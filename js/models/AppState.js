@@ -8,7 +8,7 @@
 AppState = Backbone.Model.extend({
 
     defaults: {
-        currentNav:"design",//design, sim, assemble
+        currentNav:"navDesign",//design, sim, assemble
         currentTab:"lattice",
         menuIsVisible: true
     },

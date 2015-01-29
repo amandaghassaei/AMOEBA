@@ -66,7 +66,7 @@ MenuWrapper = Backbone.View.extend({
             this.scriptMenu.render();
         } else {
             console.warn("no tab initialized!");
-            $("#menuContent").html('');//clear out content from menu
+            $("#menuContent").html('Something goes here eventually.');//clear out content from menu
         }
 
     },
@@ -89,9 +89,9 @@ MenuWrapper = Backbone.View.extend({
 
     _populateAndShow: function(){
         this.$el.html(this.template(_.extend(this.model.attributes,
-            {designMenuTabs:this.designMenuTabs,
-            simMenuTabs:this.simMenuTabs,
-            assemMenuTabs:this.assemMenuTabs})));
+            {navDesign:this.designMenuTabs,
+            navSim:this.simMenuTabs,
+            navAssemble:this.assemMenuTabs})));
         this._updateCurrentTab();
         this._show();
     },
@@ -116,8 +116,9 @@ MenuWrapper = Backbone.View.extend({
 
     template: _.template('\
         <ul class="nav nav-tabs nav-justified">\
-        <% _.each(_.keys(designMenuTabs), function(key){%>\
-          <li role="presentation" data-name="<%= key %>"><a href="#"><%= designMenuTabs[key] %></a></li>\
+        <% var dict = eval(currentNav);\
+        _.each(_.keys(dict), function(key){%>\
+          <li role="presentation" data-name="<%= key %>"><a href="#"><%= dict[key] %></a></li>\
         <% }); %>\
         </ul>\
         ')
