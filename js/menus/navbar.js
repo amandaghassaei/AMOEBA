@@ -12,17 +12,18 @@ NavBar = Backbone.View.extend({
 
     events: {
         "click #showHideMenu":                          "_setMenuVis",
-        "click .menuHoverControls":                     "_setNavSelection",
-        "click .navDropdown":                           "_deselectAllNavItems"
+        "click .menuHoverControls":                     "_setNavSelection"
     },
 
     initialize: function(){
 
-        _.bindAll(this, "_setMenuVis");
+        _.bindAll(this, "_setMenuVis", "_setNavSelection");
 
         this.listenTo(this.model, "change:menuIsVisible", this._updateShowHideButton);
+        this.listenTo(this.model, "change:currentNav", this._updateNavSelectionUI);
 
         this._uiStuff();
+        this._updateNavSelectionUI();
     },
 
     _setMenuVis: function(e){
@@ -44,17 +45,26 @@ NavBar = Backbone.View.extend({
 
     _setNavSelection: function(e){
         e.preventDefault();
-        var $link = $(e.target);
-        this._deselectAllNavItems();
-        $link.parent().addClass("open");//highlight
-        var navSelection = $link.data("menuId");
-        if (navSelection == "about") return;
+        var navSelection = $(e.target).data("menuId");
+        if (navSelection == "about") {
+            $(e.target).blur();
+            return;
+        }
         if (navSelection) {
             if (navSelection=="navDesign") this.model.set("currentTab", "lattice", {silent: true});
             else if (navSelection=="navSim") this.model.set("currentTab", "physics", {silent: true});
             else if (navSelection=="navAssemble") this.model.set("currentTab", "assembler", {silent: true});
             this.model.set("currentNav", navSelection);
         }
+    },
+
+    _updateNavSelectionUI: function(){
+        this._deselectAllNavItems();
+        var navSelection = this.model.get("currentNav");
+        _.each($(".menuHoverControls"), function(link){
+            var $link = $(link);
+            if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight
+        });
     },
 
     _uiStuff: function(){
