@@ -6,7 +6,7 @@
 Lattice = Backbone.Model.extend({
 
     defaults: {
-        scale: 30.0,
+        scale: window.defaultLatticeScale,
         cellType: "octa",
         connectionType: "face",
         nodes: [],

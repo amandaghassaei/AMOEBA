@@ -26,7 +26,7 @@
     var cellGeometry1;
     var cellGeometry2;
 
-    var globalCellScale = 30;
+    var globalCellScale = window.defaultLatticeScale;
 
     setGlobalCellScale(globalCellScale);
 
