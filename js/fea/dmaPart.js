@@ -48,6 +48,7 @@
                 mesh.rotateZ(-2*Math.PI/3);
                 break;
         }
+        if (this.oddZFlag) mesh.rotateZ(Math.PI);
         return mesh;
     };
 
@@ -60,7 +61,6 @@
 
         if (this.oddZFlag){//adjust some offsets for odd z layers
             mesh.position.y += 7*scale/6;
-            mesh.rotateZ(Math.PI);
         }
         return mesh;
     };
