@@ -13,7 +13,7 @@ MenuWrapper = Backbone.View.extend({
 
     initialize: function(options){
 
-        _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility");
+        _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
         //init all tab view controllers
         this.latticeMenu = new LatticeMenuView({model:options.lattice});
@@ -84,7 +84,7 @@ MenuWrapper = Backbone.View.extend({
         var self = this;
         this._hide(function(){
             self._populateAndShow();
-        });
+        }, true);
     },
 
     _populateAndShow: function(){
@@ -104,12 +104,14 @@ MenuWrapper = Backbone.View.extend({
         }
     },
 
-    _hide: function(callback){
+    _hide: function(callback, suppressModelUpdate){
         this.$el.parent().animate({right: "-400"}, {done: callback});
+        if (!suppressModelUpdate) this.model.set("menuIsVisible", false);
     },
 
     _show: function(){
         this.$el.parent().animate({right: "0"});
+        this.model.set("menuIsVisible", true);
     },
 
     template: _.template('\
