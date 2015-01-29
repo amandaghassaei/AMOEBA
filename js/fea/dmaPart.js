@@ -95,7 +95,7 @@
         if (this.mesh) window.three.sceneRemove(this.mesh);
     };
 
-    DMAPart.prototype._destroy = function(){
+    DMAPart.prototype.destroy = function(){
         this.parentCell = null;
     };
 

@@ -27,7 +27,8 @@ body {
 }
 
 .navbar-header {
-    padding-right: 20px;
+    padding-right: 0px;
+    width: 100px;
 }
 
 #logo {
@@ -83,7 +84,7 @@ nav .btn {
     position: absolute;
     display: block;
     background-color: rgba(255,255,255,0.7);
-    right: 0;
+    right: 0px;
     overflow:hidden;
 }
 

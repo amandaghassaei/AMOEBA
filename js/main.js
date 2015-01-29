@@ -16,7 +16,8 @@ $(function(){
 
 
     //setup ui
-    var menu = MenuWrapper({lattice:lattice});
+    var appState = new AppState();
+    var menu = new MenuWrapper({lattice:lattice, model:appState});
     NavBar(menu);
 
     lattice.addCell(new THREE.Vector3(0,0,0));

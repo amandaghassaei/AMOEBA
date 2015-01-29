@@ -10,12 +10,12 @@ function NavBar(menu){
     var allNavDropdownMenus = $(".navDropdown");
     var allNavTitles = $(".navbar-nav li a");
 
-//    allNavMenuLinks.mouseover(function(){
-//        hideAllMenus();
-//        $(this).parent().addClass("open");//highlight
-//        var menuId = "#" + $(this).data("menuId");
+    allNavMenuLinks.mouseover(function(){
+        deselectAllNavItems();
+        $(this).parent().addClass("open");//highlight
+        var menuId = "#" + $(this).data("menuId");
 //        $(menuId).show();
-//    });
+    });
 
     var showHideMenuBtn = $("#showHideMenu");
     showHideMenuBtn.mouseout(function(){
@@ -37,21 +37,17 @@ function NavBar(menu){
         $this.blur();
     });
 
-    function hideAllMenus(){
-        allMenus.hide();
+    function deselectAllNavItems(){
         allNavMenuLinks.parent().removeClass("open");//no highlight
         allNavDropdownMenus.removeClass("open");//no highlight
         allNavTitles.blur();
     }
 
-    $("#threeContainer").mousedown(function(){
-        hideAllMenus();
-    });
-    $("#mainNavLink").mouseover(function(){
-        hideAllMenus();
-    });
+//    $("#threeContainer").mousedown(function(){
+//        hideAllMenus();
+//    });
     allNavDropdownMenus.mouseover(function(){
-        hideAllMenus();
+        deselectAllNavItems();
         $(this).addClass("open");
     });
 

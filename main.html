@@ -51,6 +51,7 @@
     <script src="js/fea/dmaNode.js"></script>
 
     <!--models-->
+    <script src="js/models/AppState.js"></script>
     <script src="js/models/threeModel.js"></script>
     <script src="js/models/fillGeometry.js"></script>
     <script src="js/models/lattice.js"></script>
@@ -75,11 +76,13 @@
 
 <nav class="navbar navbar-inverse navbar-embossed" role="navigation">
     <div class="navbar-header">
-      <a id="mainNavLink" class="navbar-brand" href="http://cba.mit.edu"><img id="logo" src="assets/logo.png"></a>
+      <a id="mainNavLink" class="navbar-brand" target="_blank" href="http://cba.mit.edu"><img id="logo" src="assets/logo.png"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
-        <li><a data-menu-id="file" class="menuHoverControls" href="#">File</a></li>
+        <li><a data-menu-id="design" class="menuHoverControls" href="#">Design</a></li>
+        <li><a data-menu-id="sim" class="menuHoverControls" href="#">Simulate</a></li>
+        <li><a data-menu-id="assemble" class="menuHoverControls" href="#">Assemble</a></li>
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
@@ -94,24 +97,14 @@
         <li><a data-menu-id="about" class="menuHoverControls" href="#">About</a></li>
        </ul>
         <ul class="nav navbar-nav pull-right">
-            <li><a id="showHideMenu" data-state=true class="menuHoverControls" href="#">Hide Menu >></a></li>
+            <li><a id="showHideMenu" data-state=true href="#">Hide Menu >></a></li>
         </ul>
 
     </div><!-- /.navbar-collapse -->
 
 </nav>
 
-<div id="menuWrapper">
-    <ul class="nav nav-tabs nav-justified">
-      <li role="presentation" class="active" data-name="lattice"><a href="#">Lattice</a></li>
-      <li role="presentation" data-name="import"><a href="#">Import</a></li>
-      <li role="presentation" data-name="sketch"><a href="#">Sketch</a></li>
-      <li role="presentation" data-name="part"><a href="#">Part</a></li>
-      <li role="presentation" data-name="script"><a href="#">Script</a></li>
-    </ul>
-
-    <div id="menuContent"></div>
-</div>
+<div id="menuWrapper"><div id="menuHeader"></div><div id="menuContent"></div></div>
 
 <div id="importGeometry" class="row navMenu">
 </div>

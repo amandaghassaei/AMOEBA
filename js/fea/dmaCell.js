@@ -150,10 +150,15 @@
         _.each(this.parts, function(part){
             part.remove();
         });
+        this.destroy();
     };
 
-    DMACell.prototype._destroy = function(){
+    DMACell.prototype.destroy = function(){
         if (this.cellMesh) this.cellMesh.myCell = null;
+        _.each(this.parts, function(part){
+            part.destroy();
+        });
+        this.parts = null;
     };
 
     self.DMACell =  DMACell;

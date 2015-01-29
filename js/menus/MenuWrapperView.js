@@ -3,69 +3,102 @@
  */
 
 
-function MenuWrapper(args){
+MenuWrapper = Backbone.View.extend({
 
-    var $el = $("#menuWrapper");
+    el: "#menuHeader",
 
-    //init all tab view controllers
-    var latticeMenu = new LatticeMenuView({model:args.lattice});
-    var importMenu = new ImportMenuView({lattice:args.lattice});
-    var sketchMenu = new SketchMenuView({model:args.lattice});
-    var partMenu = new PartMenuView({model:args.lattice});
-    var scriptMenu = new ScriptMenuView();
+    events: {
+        "click .nav-tabs>li>a":                     "_tabWasSelected"
+    },
 
-    init();
+    initialize: function(options){
 
-    var tabItems = $(".nav-tabs>li>a");
-    tabItems.click(function(e){
+        _.bindAll(this, "render");
+
+        //init all tab view controllers
+        this.latticeMenu = new LatticeMenuView({model:options.lattice});
+        this.importMenu = new ImportMenuView({lattice:options.lattice});
+        this.sketchMenu = new SketchMenuView({model:options.lattice});
+        this.partMenu = new PartMenuView({model:options.lattice});
+        this.scriptMenu = new ScriptMenuView();
+
+        //data names and titles
+        this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
+        this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
+        this.assemMenuTabs = {assembler:"Assembler", animate:"Animate"};
+
+        //bind events
+        this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
+
+        this.render();
+    },
+
+    _tabWasSelected: function(e){
         e.preventDefault();
-        var $this = $(this);
+        var tabName = $(e.target).parent().data('name');
+        this.model.set("currentTab", tabName);
+    },
 
-        _.each(tabItems, function(tab){
-            $(tab).parent().removeClass("active");
+    _updateCurrentTab: function(){
+        var tabName = this.model.get("currentTab");
+        _.each($(".nav-tabs>li>a"), function(tab){
+            var parent = $(tab).parent();
+            if (parent.data('name') == tabName){
+                parent.addClass("active");
+            } else {
+                parent.removeClass("active");
+            }
         });
-        $this.parent().addClass("active");
 
-        deselectAllMenus();
-        var tabName = $this.parent().data('name');
+        this._deselectAllMenus();
+
         if (tabName == "lattice"){
-            latticeMenu.render();
+            this.latticeMenu.render();
         } else if (tabName == "import"){
-            importMenu.render();
+            this.importMenu.render();
         } else if (tabName == "sketch"){
-            sketchMenu.render();
+            this.sketchMenu.render();
         } else if (tabName == "part"){
-            partMenu.render();
+            this.partMenu.render();
         } else if (tabName == "script"){
-            scriptMenu.render();
+            this.scriptMenu.render();
         } else {
             console.warn("no tab initialized!");
             $("menuContent").html('');//clear out content from menu
         }
-    });
 
-    function deselectAllMenus(){
-        latticeMenu.currentlySelected = false;
-        importMenu.currentlySelected = false;
-        sketchMenu.currentlySelected = false;
-        partMenu.currentlySelected = false;
-//        scriptMenu.currentlySelected = false;
-    }
+    },
 
-    function init(){
-        latticeMenu.render();//init with lattice menu open
-    }
+    _deselectAllMenus: function(){
+        this.latticeMenu.currentlySelected = false;
+        this.importMenu.currentlySelected = false;
+        this.sketchMenu.currentlySelected = false;
+        this.partMenu.currentlySelected = false;
+//        this.scriptMenu.currentlySelected = false;
+    },
 
-    function hide(){
-        $el.animate({right: "-400"});
-    }
+    render: function(){
+        this.$el.html(this.template(_.extend(this.model.attributes,
+            {designMenuTabs:this.designMenuTabs,
+            simMenuTabs:this.simMenuTabs,
+            assemMenuTabs:this.assemMenuTabs})));
+        this._updateCurrentTab();
+        this.show();
+    },
 
-    function show(){
-        $el.animate({right: "0"});
-    }
+    hide: function(){
+        this.$el.parent().animate({right: "-400"});
+    },
 
-    return {//return public properties and methods
-        hide: hide,
-        show:show
-    };
-}
+    show: function(){
+        this.$el.parent().animate({right: "0"});
+    },
+
+    template: _.template('\
+        <ul class="nav nav-tabs nav-justified">\
+        <% _.each(_.keys(designMenuTabs), function(key){%>\
+          <li role="presentation" data-name="<%= key %>"><a href="#"><%= designMenuTabs[key] %></a></li>\
+        <% }); %>\
+        </ul>\
+        ')
+});
