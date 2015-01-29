@@ -41,11 +41,12 @@
     function DMACell(mode, indices, scale) {
 
         this.indices = indices;
-        var position = this._calcPosition(scale, indices);
-        this.cellMesh = this._buildCellMesh(position, indices.z);
+        this.scale = scale;
+        this.position = this._calcPosition(scale, indices);
+        this.cellMesh = this._buildCellMesh(this.position, indices.z);
         window.three.sceneAdd(this.cellMesh);
 
-        this.parts = this._initParts(position, indices.z);
+        this.parts = this._initParts(this.position, indices.z);
         this.drawForMode(mode);
     }
 
@@ -64,7 +65,7 @@
     DMACell.prototype._initParts = function(position, zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMAPart(i, position, zIndex%2==1));
+            parts.push(new DMAPart(i, zIndex%2==1, this));
         }
         return parts;
     };
@@ -114,6 +115,8 @@
 
     DMACell.prototype.changeScale = function(scale){
 
+        this.scale = scale;
+
         //update geometry
         if (globalCellScale != scale) {
             setGlobalCellScale(scale);
@@ -124,10 +127,10 @@
             this._updateVertices(cellGeometry2.vertices);
         }
 
-        var position = this._calcPosition(scale, this.indices);
-        this._setMeshPosition(this.cellMesh, position);
+        this.position = this._calcPosition(scale, this.indices);
+        this._setMeshPosition(this.cellMesh, this.position);
         _.each(this.parts, function(part){
-                part.changeScale(scale, position);
+                part.changeScale(scale, this.position);
          });
     };
 
@@ -137,6 +140,10 @@
             mesh.geometry.verticesNeedUpdate = true;
         });
     };
+
+    DMACell.prototype.getScale = function(){
+         return this.scale;//I don't like this stored here
+     };
 
     DMACell.prototype.remove = function(){
         if (this.cellMesh) window.three.sceneRemove(this.cellMesh);

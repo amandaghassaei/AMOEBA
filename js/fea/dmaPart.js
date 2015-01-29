@@ -7,34 +7,24 @@
 
 (function () {
 
+    var unitPartGeo;
+
     //import part geometry
     var loader = new THREE.STLLoader();
-    loader.addEventListener('load', onMeshLoad);
-    loader.load("data/trianglePart.stl");
-
-    var unitPartGeo;
-    var partGeometry;
-    var globalPartScale = 30;
-    function onMeshLoad(e){
+    loader.load("data/trianglePart.stl", function(geometry){
         console.log("part loaded");
-        unitPartGeo = e.content;
+        unitPartGeo = geometry
         unitPartGeo.dynamic = true;
         unitPartGeo.computeBoundingBox();
         var unitScale = 1/unitPartGeo.boundingBox.max.y;
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
-        setGlobalPartScale(globalPartScale)
-    }
+        unitPartGeo.dynamic = true;
+    });
 
-    function setGlobalPartScale(scale){
-        globalPartScale = scale;
-        partGeometry = unitPartGeo.clone();
-        partGeometry.applyMatrix(new THREE.Matrix4().makeScale(scale,scale,scale));
-    }
-
-    function DMAPart(type, position, oddZFlag) {
-        this.position = position;
+    function DMAPart(type, oddZFlag, parent) {
+        this.parentCell = parent;//use this reference to get position and scale
         this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
         this.type = type;
     }
@@ -46,8 +36,9 @@
 
     DMAPart.prototype._makeMeshForType = function(type){
 
-        var mesh = new THREE.Mesh(partGeometry);
-        mesh = this._setMeshPosition(mesh, 30);
+        var mesh = new THREE.Mesh(unitPartGeo);
+        mesh = this._setMeshPosition(mesh);
+        mesh = this._setMeshScale(mesh);
 
         switch(type){
             case 1:
@@ -61,7 +52,8 @@
     };
 
     DMAPart.prototype._setMeshPosition = function(mesh, scale, position){
-        position = position || this.position;
+        position = position || this.parentCell.position;
+        scale = scale || this.parentCell.getScale();
         mesh.position.x = position.x;
         mesh.position.y = -scale/3*Math.sqrt(3)+position.y;
         mesh.position.z = position.z;
@@ -73,13 +65,16 @@
         return mesh;
     };
 
+    DMAPart.prototype._setMeshScale = function(mesh, scale){
+        mesh.scale.set(scale, scale, scale);
+        return mesh;
+    };
+
     DMAPart.prototype.changeScale = function(scale, position){
-        if (globalPartScale != scale) setGlobalPartScale(scale);
         this.position = position;
         if (this.mesh) {
             this._setMeshPosition(this.mesh, scale, position);
-            this.mesh.geometry.vertices = partGeometry.vertices;
-            this.mesh.geometry.verticesNeedUpdate = true;
+            this._setMeshScale(this.mesh, scale);
         }
     };
 
@@ -90,6 +85,10 @@
 
     DMAPart.prototype.hide = function(){
         if (this.mesh) this.mesh.visible = false;
+    };
+
+    DMAPart.prototype._destroy = function(){
+        this.parentCell = null;
     };
 
     self.DMAPart =  DMAPart;
