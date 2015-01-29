@@ -18,4 +18,6 @@ $(function(){
     //setup ui
     var menu = MenuWrapper({lattice:lattice});
     NavBar(menu);
+
+    lattice.addCell(new THREE.Vector3(0,0,0));
 });

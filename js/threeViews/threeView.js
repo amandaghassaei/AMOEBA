@@ -198,7 +198,6 @@ ThreeView = Backbone.View.extend({
 
         if (type == "octa" && (connectionType == "face" || connectionType == "edge")){
 
-            this.lattice.addCell(new THREE.Vector3(0,0,0));
             var triangleHeight = gridSize/2*Math.sqrt(3);
 
             for (var j=-baseDim;j<=baseDim;j++){
