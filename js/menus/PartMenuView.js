@@ -9,20 +9,17 @@ PartMenuView = Backbone.View.extend({
     events: {
     },
 
-    currentlySelected: false,
-
     initialize: function(){
 
         _.bindAll(this, "render");
         this.listenTo(this.model, "change:partType", this.render);
 //        this.listenTo(this.model, "change", function(){
-//            if (!this.currentlySelected) return;
+//            if (options.appState.get("currentTab")!="part") return;
 //            this.render();
 //        });
     },
 
     render: function(){
-        this.currentlySelected = true;//if this causes a change, render must have been called from menu wrapper
         this.$el.html(this.template(this.model.attributes));
         this.model.set("cellMode", "parts");
     },

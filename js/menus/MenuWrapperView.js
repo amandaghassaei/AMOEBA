@@ -16,11 +16,11 @@ MenuWrapper = Backbone.View.extend({
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
         //init all tab view controllers
-        this.latticeMenu = new LatticeMenuView({model:options.lattice});
-        this.importMenu = new ImportMenuView({lattice:options.lattice});
-        this.sketchMenu = new SketchMenuView({model:options.lattice});
-        this.partMenu = new PartMenuView({model:options.lattice});
-        this.scriptMenu = new ScriptMenuView();
+        this.latticeMenu = new LatticeMenuView({model:options.lattice, appState:this.model});
+        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
+        this.sketchMenu = new SketchMenuView({model:options.lattice, appState:this.model});
+        this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
+        this.scriptMenu = new ScriptMenuView({appState:this.model});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
@@ -52,8 +52,6 @@ MenuWrapper = Backbone.View.extend({
             }
         });
 
-        this._deselectAllMenus();
-
         if (tabName == "lattice"){
             this.latticeMenu.render();
         } else if (tabName == "import"){
@@ -69,15 +67,6 @@ MenuWrapper = Backbone.View.extend({
             $("#menuContent").html('Something goes here eventually.');//clear out content from menu
         }
 
-    },
-
-    //todo get rid of this!!
-    _deselectAllMenus: function(){
-        this.latticeMenu.currentlySelected = false;
-        this.importMenu.currentlySelected = false;
-        this.sketchMenu.currentlySelected = false;
-        this.partMenu.currentlySelected = false;
-//        this.scriptMenu.currentlySelected = false;
     },
 
     render: function(){
