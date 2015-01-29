@@ -30,7 +30,7 @@ MenuWrapper = Backbone.View.extend({
         //bind events
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
 
-        this.render();
+        this._populateAndShow();
     },
 
     _tabWasSelected: function(e){
@@ -78,6 +78,13 @@ MenuWrapper = Backbone.View.extend({
     },
 
     render: function(){
+        var self = this;
+        this.hide(function(){
+            self._populateAndShow();
+        });
+    },
+
+    _populateAndShow: function(){
         this.$el.html(this.template(_.extend(this.model.attributes,
             {designMenuTabs:this.designMenuTabs,
             simMenuTabs:this.simMenuTabs,
@@ -86,8 +93,8 @@ MenuWrapper = Backbone.View.extend({
         this.show();
     },
 
-    hide: function(){
-        this.$el.parent().animate({right: "-400"});
+    hide: function(callback){
+        this.$el.parent().animate({right: "-400"}, {done: callback});
     },
 
     show: function(){
