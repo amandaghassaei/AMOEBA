@@ -91,12 +91,17 @@
         if (this.mesh) this.mesh.visible = false;
     };
 
-    DMAPart.prototype.remove = function(){
-        if (this.mesh) window.three.sceneRemove(this.mesh);
-    };
-
     DMAPart.prototype.destroy = function(){
+        if (this.mesh) {
+            window.three.sceneRemove(this.mesh);
+            this.mesh.dispose();
+//            geometry.dispose();
+//            material.dispose();
+            this.mesh = null;
+        }
         this.parentCell = null;
+        this.oddZFlag = null;
+        this.type = null;
     };
 
     self.DMAPart =  DMAPart;

@@ -154,8 +154,8 @@ Lattice = Backbone.Model.extend({
         var cell = object.parent.myCell;
         var index = this._subtract(cell.indices, this.get("cellsMin"));
         var cells = this.get("cells");
+        cell.destroy();
         cells[index.x][index.y][index.z] = null;
-        cell.remove();
 
         //todo shrink cells matrix if needed
 
@@ -165,9 +165,11 @@ Lattice = Backbone.Model.extend({
 
     clearCells: function(){
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.remove();
+            if (cell) cell.destroy();
         });
         this.set("cells", this.defaults.cells);
+        this.set("cellsMax", this.defaults.cellsMax);
+        this.set("cellsMin", this.defaults.cellsMin);
         this.set("numCells", 0);
         window.three.render();
     },

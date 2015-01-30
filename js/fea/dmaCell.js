@@ -145,19 +145,21 @@
          return this.scale;//I don't like this stored here
      };
 
-    DMACell.prototype.remove = function(){
-        if (this.cellMesh) window.three.sceneRemove(this.cellMesh);
-        _.each(this.parts, function(part){
-            part.remove();
-        });
-        this.destroy();
-    };
-
     DMACell.prototype.destroy = function(){
-        if (this.cellMesh) this.cellMesh.myCell = null;
+        if (this.cellMesh) {
+            window.three.sceneRemove(this.cellMesh);
+            this.cellMesh.myCell = null;
+            this.cellMesh.dispose();
+//            geometry.dispose();
+//            material.dispose();
+            this.cellMesh = null;
+        }
         _.each(this.parts, function(part){
             part.destroy();
         });
+        this.indices = null;
+        this.scale = null;
+        this.position = null;
         this.parts = null;
     };
 
