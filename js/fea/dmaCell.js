@@ -149,7 +149,7 @@
         if (this.cellMesh) {
             window.three.sceneRemove(this.cellMesh);
             this.cellMesh.myCell = null;
-            this.cellMesh.dispose();
+//            this.cellMesh.dispose();
 //            geometry.dispose();
 //            material.dispose();
             this.cellMesh = null;

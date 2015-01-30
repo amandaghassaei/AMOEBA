@@ -94,7 +94,7 @@
     DMAPart.prototype.destroy = function(){
         if (this.mesh) {
             window.three.sceneRemove(this.mesh);
-            this.mesh.dispose();
+//            this.mesh.dispose();
 //            geometry.dispose();
 //            material.dispose();
             this.mesh = null;

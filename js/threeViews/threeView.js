@@ -5,15 +5,12 @@
 ThreeView = Backbone.View.extend({
 
     events: {
-        "mousemove":            "_mouseMoved",
-        "mousedown":            "_mouseDown",
-        "mouseup":              "_mouseUp"
+        "mousemove":                            "_mouseMoved",
+        "mouseup":                              "_mouseUp",
+        "mousedown":                            "_mouseDown"
     },
 
-    mouseIsDown: false,//store state of mouse click
-    shiftIsDown: false,//used to add many voxels at once
-    deleteMode: false,//delete cells instead of adding (space bar)
-    extrudeMode: false,//extrude a column of cells
+    mouseIsDown: false,//store state of mouse click inside this el
     extrudeVisualizer: ExtrudeVisualizer(),
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
@@ -28,63 +25,55 @@ ThreeView = Backbone.View.extend({
     initialize: function(options){
 
         this.lattice = options.lattice;
+        this.appState = options.appState;
 
-        _.bindAll(this, "_animate", "_mouseMoved", "_handleKeyStroke", "_drawBasePlane");
+        _.bindAll(this, "_animate", "_mouseMoved", "_drawBasePlane");
 
         //bind events
-        $(document).bind('keydown', {state:true}, this._handleKeyStroke);
-        $(document).bind('keyup', {state:false}, this._handleKeyStroke);
-        this.listenTo(this.lattice, "change:type, change:scale", this._drawBasePlane);
+        this.listenTo(this.lattice, "change:type change:scale", this._drawBasePlane);
+        this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
 
-        this.$el.append(this.model.domElement);
-
-        this._animate();
+        this.$el.append(this.model.domElement);//render only once
 
         this.basePlane = this._drawBasePlane();
 
         //init highlighter
+        this.highlighter = this._initHighlighter();
+        window.three.sceneAdd(this.highlighter, true);
+
+        this.model.render();
+        this._animate();
+    },
+
+    _initHighlighter: function(){
         var highlightGeometry = new THREE.Geometry();
         //can't change size of faces or vertices buffers dynamically
         highlightGeometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
         highlightGeometry.faces = [new THREE.Face3(0,1,2)];
-        this.highlighter = new THREE.Mesh(highlightGeometry,
+        var highlighter = new THREE.Mesh(highlightGeometry,
             new THREE.MeshBasicMaterial({side:THREE.DoubleSide, transparent:true, opacity:0.4, color:0xffffff, vertexColors:THREE.FaceColors}));
-        this.highlighter.geometry.dynamic = true;
-        this.highlighter.visible = false;
-        window.three.sceneAdd(this.highlighter, true);
-
-        this.model.render();
+        highlighter.geometry.dynamic = true;
+        highlighter.visible = false;
+        return highlighter;
     },
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////CONTROLS/////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 
     _animate: function(){
         requestAnimationFrame(this._animate);
         this.controls.update();
     },
 
-    _handleKeyStroke: function(e){//receives keyup and keydown
-
-        var state = e.data.state;
-
-        switch(e.keyCode){
-            case 16://shift
-                this.shiftIsDown = state;
-                this.controls.enabled = !state;
-                break;
-            case 32://space bar
-                e.preventDefault();
-                this.deleteMode = state;
-                this.controls.enabled = !state;
-                break;
-            case 69://e
-                this.extrudeMode = state;
-                this.controls.enabled = !state;
-                break;
-
-            default:
-                break;
+    _setControlsEnabled: function(){
+        if (this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode")){
+            this.controls.enabled = false;
+        } else {
+            this.controls.enabled = true;
         }
     },
 
@@ -104,10 +93,10 @@ ThreeView = Backbone.View.extend({
             return;
         }
 
-        if (this.extrudeMode && this.mouseIsDown && this.extrudeVisualizer.getMeshNum()>0){
-            this.extrudeVisualizer.dragHandle(1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-            return;
-        }
+//        if (this.appState.get("extrudeMode") && this.mouseIsDown && this.extrudeVisualizer.getMeshNum()>0){
+//            this.extrudeVisualizer.dragHandle(1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
+//            return;
+//        }
 
         //make projection vector
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
@@ -118,19 +107,19 @@ ThreeView = Backbone.View.extend({
         //check if we're intersecting anything
         var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
         if (intersections.length == 0) {
-            this.currentIntersectedObject == null;
+            this.currentIntersectedObject = null;
             this._hideHighlighter();
             return;
         }
 
         this.currentIntersectedObject = intersections[0].object;
 
-        if (this.deleteMode && this.mouseIsDown){
+        if (this.appState.get("deleteMode") && this.mouseIsDown){
             this._addRemoveVoxel();
             return;
         }
 
-        if (this.extrudeMode && this.mouseIsDown){
+        if (this.appState.get("extrudeMode") && this.mouseIsDown){
             if (!this.highlighter.visible) return;
             this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
             return;
@@ -157,14 +146,14 @@ ThreeView = Backbone.View.extend({
             (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
         this.highlighter.geometry.verticesNeedUpdate = true;
 
-        if (this.mouseIsDown && this.shiftIsDown) this._addRemoveVoxel();
+        if (this.mouseIsDown && this.appState.get("shift")) this._addRemoveVoxel();
 
         window.three.render();
     },
 
     _addRemoveVoxel: function(){
 
-        if (this.deleteMode){
+        if (this.appState.get("deleteMode")){
             if (this.currentIntersectedObject === this.basePlane) return;
             this.lattice.removeCell(this.currentIntersectedObject);
         } else {

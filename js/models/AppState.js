@@ -16,11 +16,21 @@ AppState = Backbone.Model.extend({
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
-        menuIsVisible: true
+        menuIsVisible: true,
+
+        //key bindings
+        shift: false,
+        deleteMode: false,
+        extrudeMode: false
     },
 
     initialize: function(options){
 
+        _.bindAll(this, "_handleKeyStroke");
+
+        //bind events
+        $(document).bind('keydown', {state:true}, this._handleKeyStroke);
+        $(document).bind('keyup', {state:false}, this._handleKeyStroke);
         this.listenTo(this, "change:currentTab", this._storeTab);
         this.listenTo(this, "change:currentTab", this._updateLatticeMode);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
@@ -47,10 +57,40 @@ AppState = Backbone.Model.extend({
     //update to last tab open in that section
     _updateCurrentTabForNav: function(){
         var navSelection = this.get("currentNav");
-        if (navSelection=="navDesign") this.set("currentTab", this.get("lastDesignTab"), {silent:true});
-        else if (navSelection=="navSim") this.set("currentTab", this.get("lastSimulationTab"), {silent:true});
-        else if (navSelection=="navAssemble") this.set("currentTab", this.get("lastAssembleTab"), {silent:true});
+        if (navSelection == "navDesign") this.set("currentTab",
+            this.get("lastDesignTab"), {silent:true});
+        else if (navSelection == "navSim") this.set("currentTab",
+            this.get("lastSimulationTab"), {silent:true});
+        else if (navSelection == "navAssemble") this.set("currentTab",
+            this.get("lastAssembleTab"), {silent:true});
         this._updateLatticeMode();//a little bit hacky, this updates the lattice, but holds off on updating the menus til the animation has happened
+    },
+
+    ///////////////////////////////////////////////////////////////////////////////
+    ////////////////////KEYS AND MOUSE EVENTS//////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+
+    _handleKeyStroke: function(e){//receives keyup and keydown
+
+        var state = e.data.state;
+        var currentTab = this.get("currentTab");
+
+        switch(e.keyCode){
+            case 16://shift
+                this.set("shift", state);
+                break;
+            case 32://space bar
+                e.preventDefault();
+                this.set("deleteMode", state);
+                break;
+            case 69://e
+//                if (currentTab != "sketch") return;
+                this.set("extrudeMode", state);
+                break;
+
+            default:
+                break;
+        }
     }
 
 });
