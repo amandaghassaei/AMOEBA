@@ -33,7 +33,7 @@ FillGeometry = Backbone.Model.extend({
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
         this.makeBoundingBoxHelper(mesh);
         this.set({mesh: mesh});
-        window.three.sceneAdd(mesh);
+        window.three.sceneAdd(mesh, null);
         window.three.render();
 
         //send new geometry out to workers

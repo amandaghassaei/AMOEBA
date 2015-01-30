@@ -44,7 +44,7 @@
         this.scale = scale;
         this.position = this._calcPosition(scale, indices);
         this.cellMesh = this._buildCellMesh(this.position, indices.z);
-        window.three.sceneAdd(this.cellMesh);
+        window.three.sceneAdd(this.cellMesh, "cell");
 
         this.parts = this._initParts(this.position, indices.z);
         this.drawForMode(mode);

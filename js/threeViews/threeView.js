@@ -42,7 +42,7 @@ ThreeView = Backbone.View.extend({
 
         //init highlighter
         this.highlighter = this._initHighlighter();
-        window.three.sceneAdd(this.highlighter, true);
+        window.three.sceneAdd(this.highlighter, null);
 
         this.model.render();
         this._animate();
@@ -105,7 +105,7 @@ ThreeView = Backbone.View.extend({
 
 
         //check if we're intersecting anything
-        var intersections = this.mouseProjection.intersectObjects(this.model.objects, true);
+        var intersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
         if (intersections.length == 0) {
             this.currentIntersectedObject = null;
             this._hideHighlighter();
@@ -234,7 +234,7 @@ ThreeView = Backbone.View.extend({
         geometry.computeFaceNormals();
 
         var basePlane = new THREE.Mesh(geometry, planeMaterial);
-        window.three.sceneAdd(basePlane);
+        window.three.sceneAdd(basePlane, "basePlane");
         window.three.render();
 
         if (this.basePlane) this.basePlane = basePlane;

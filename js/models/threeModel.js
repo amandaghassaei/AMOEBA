@@ -8,7 +8,11 @@ function ThreeModel(){
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 4000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:false});
-    var objects = [];
+
+    //store all meshes to highlight
+    var cells = [];
+    var parts = [];
+    var basePlane = [];
 
     initialize();
 
@@ -45,19 +49,47 @@ function ThreeModel(){
         render();
     }
 
-    function sceneAdd(object, noInteraction){
+    function sceneAdd(object, type){
         scene.add(object);
-        if (noInteraction) return;
-        objects.push(object);
+
+        if (type == "cell"){
+            cells.push(object);
+        } else if (type == "part"){
+            parts.push(object);
+        } else if (type == "basePlane"){
+            basePlane.push(object);
+        }
+
     }
 
-    function sceneRemove(object){
+    function sceneRemove(object, type){
+
         var objectToRemove = object;
         if (object.parent && object.parent.type != "Scene") {
             objectToRemove = object.parent;
         }
+
+        if (type == "cell"){
+            cells.splice(cells.indexOf(objectToRemove), 1);
+        } else if (type == "part"){
+            parts.splice(parts.indexOf(objectToRemove), 1);
+        } else if (type == "basePlane"){
+            console.log("not sure if i should be hitting this")
+            basePlane.splice(basePlane.indexOf(objectToRemove), 1);
+        }
+
         scene.remove(objectToRemove);
-        objects.splice(objects.indexOf(objectToRemove), 1);
+    }
+
+    function removeAllCells(){
+        _.each(cells, function(cell){
+            sceneRemove(cell, "cell");
+        });
+        _.each(parts, function(part){
+            sceneRemove(part, "part");
+        });
+        cells = [];
+        parts = [];
     }
 
     function render(){
@@ -66,11 +98,14 @@ function ThreeModel(){
     }
 
     return {//return public properties/methods
-        render:render,
-        sceneRemove:sceneRemove,
-        sceneAdd:sceneAdd,
-        domElement:renderer.domElement,
-        camera:camera,
-        objects:objects
+        render: render,
+        sceneRemove: sceneRemove,
+        sceneAdd: sceneAdd,
+        domElement: renderer.domElement,
+        camera: camera,
+        cells: cells,
+        parts: parts,
+        basePlane: basePlane,
+        removeAllCells: removeAllCells
     }
 }

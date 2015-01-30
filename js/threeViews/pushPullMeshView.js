@@ -34,7 +34,7 @@ PushPullMeshView = Backbone.View.extend({
         this.boxHelper = new THREE.BoxHelper(this.boundsBox);
 
         this.boxHelper.material.color.set(this.defaultColor);
-        this.three.sceneAdd(this.boxHelper);
+//        this.three.sceneAdd(this.boxHelper);
 //        this.three.sceneAdd(this.boundsBox);
         this.updateBounds();
     },

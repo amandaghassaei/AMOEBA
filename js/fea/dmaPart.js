@@ -34,7 +34,7 @@
 
     DMAPart.prototype._draw = function(){
         this.mesh = this._makeMeshForType(this.type);
-        window.three.sceneAdd(this.mesh, false);
+        window.three.sceneAdd(this.mesh, "part");
     };
 
     DMAPart.prototype._makeMeshForType = function(type){

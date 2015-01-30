@@ -18,7 +18,7 @@ function ExtrudeVisualizer(){
             mesh.position.x = profilePos.x;
             mesh.position.y = profilePos.y;
             mesh.position.z = profilePos.z;
-            window.three.sceneAdd(mesh, false);
+//            window.three.sceneAdd(mesh, false);
             meshes.push(mesh);
         });
         window.three.render();
