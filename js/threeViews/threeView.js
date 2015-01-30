@@ -80,7 +80,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-        if (this.highlighter.visible) this._addRemoveVoxel(!this.appState.get("deleteMode"));
+        this._addRemoveVoxel(!this.appState.get("deleteMode"));
     },
 
     _mouseDown: function(){
@@ -179,7 +179,7 @@ ThreeView = Backbone.View.extend({
     _addRemoveVoxel: function(shouldAdd){
 
         if (shouldAdd){
-//            if (!this.highlighter.visible) return;
+            if (!this.highlighter.visible) return;
             this.lattice.addCell(this.highlighter.geometry.vertices[0]);
         } else {
             if (this.currentIntersectedCell === this.basePlane) return;
