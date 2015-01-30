@@ -117,7 +117,14 @@
     };
 
     DMAPart.prototype.unhighlight = function(){
-        this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
+        if (this.mesh) this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
+    };
+
+    DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
+        if (this.parentCell) {
+            this.parentCell.removePart(this.type);
+            window.three.render();
+        }
     };
 
     DMAPart.prototype.destroy = function(){

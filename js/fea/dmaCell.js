@@ -70,6 +70,11 @@
         return parts;
     };
 
+    DMACell.prototype.removePart = function(index){
+        this.parts[index].destroy();
+        this.parts[index] = null;
+    };
+
     DMACell.prototype._buildCellMesh = function(position, zIndex){//abstract mesh representation of cell
 
         var mesh;
@@ -96,12 +101,12 @@
         if (mode == "cell"){
             this._setCellMeshVisibility(true);
             _.each(this.parts, function(part){
-                part.hide();
+                if (part) part.hide();
             });
         } else if (mode == "part"){
             this._setCellMeshVisibility(false);
             _.each(this.parts, function(part){
-                part.show();
+                if (part) part.show();
             });
         } else {
             console.warn("unrecognized draw mode for cell");
@@ -130,7 +135,7 @@
         this.position = this._calcPosition(scale, this.indices);
         this._setMeshPosition(this.cellMesh, this.position);
         _.each(this.parts, function(part){
-                part.changeScale(scale, this.position);
+                if (part) part.changeScale(scale, this.position);
          });
     };
 
@@ -155,7 +160,7 @@
             this.cellMesh = null;
         }
         _.each(this.parts, function(part){
-            part.destroy();
+            if (part) part.destroy();
         });
         this.indices = null;
         this.scale = null;

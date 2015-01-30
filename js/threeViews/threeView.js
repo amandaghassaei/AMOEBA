@@ -90,7 +90,8 @@ ThreeView = Backbone.View.extend({
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-        this._addRemoveVoxel(!this.appState.get("deleteMode"));
+        if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
+        else this._addRemoveVoxel(!this.appState.get("deleteMode"));
     },
 
     _mouseDown: function(){
