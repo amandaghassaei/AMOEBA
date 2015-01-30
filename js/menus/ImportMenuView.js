@@ -20,7 +20,6 @@ ImportMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
         this.appState = options.appState;
 
-        _.bindAll(this, "render", "_onMeshLoad");
         this.listenTo(this.model, "change", this.render);
 //        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
 
@@ -35,6 +34,7 @@ ImportMenuView = Backbone.View.extend({
     },
 
     _uploadMesh: function(e){//select a mesh to upload
+        e.preventDefault();
         var input = $(e.target),
         numFiles = input.get(0).files ? input.get(0).files.length : 1,
         label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -56,16 +56,15 @@ ImportMenuView = Backbone.View.extend({
     },
 
     _loadMeshFromURL: function(url){
+        var self = this;
         var loader = new THREE.STLLoader();
-  	    loader.addEventListener('load', this._onMeshLoad);
-  	    loader.load(url);
+  	    loader.load(url, function(geometry){
+            self.model.set("geometry", geometry);
+        });
     },
 
-    _onMeshLoad: function(e){
-        this.model.set("geometry", e.content);
-    },
-
-    _removeMesh: function(){
+    _removeMesh: function(e){
+        e.preventDefault();
         this.model.remove();
     },
 
@@ -108,10 +107,14 @@ ImportMenuView = Backbone.View.extend({
 
     template: _.template('\
         Filename:&nbsp;&nbsp;<%= filename %><br/>\
+        <% if (mesh){ %>\
         Rotate:<br/>\
         Scale:<br/><br/>\
+        <a href="#" id="doFllGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
-        <span class="btn btn-default btn-file fullWidth">\
+        <hr>\
+        <% } %>\
+        <br/><span class="btn btn-default btn-file fullWidth">\
             Upload STL<input id="uploadMesh" type="file">\
        </span><br/>\
        <div class="text-center">OR</div>\

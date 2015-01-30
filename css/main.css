@@ -134,4 +134,8 @@ nav .btn {
     overflow-y: auto;
 }
 
+hr {
+  border-color: #888 -moz-use-text-color #888;
+}
+
 
