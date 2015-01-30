@@ -7,7 +7,8 @@ ThreeView = Backbone.View.extend({
     events: {
         "mousemove":                            "_mouseMoved",
         "mouseup":                              "_mouseUp",
-        "mousedown":                            "_mouseDown"
+        "mousedown":                            "_mouseDown",
+        "mouseout":                             "_mouseOut"
     },
 
     mouseIsDown: false,//store state of mouse click inside this el
@@ -76,6 +77,11 @@ ThreeView = Backbone.View.extend({
     _setControlsEnabled: function(){
         var state = this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode");
         this.controls.enabled = !state;
+    },
+
+    _mouseOut: function(){
+        this._setNoCellIntersections();
+        this._setNoPartIntersections();
     },
 
     _mouseUp: function(){
