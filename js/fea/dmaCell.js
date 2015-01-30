@@ -147,7 +147,7 @@
 
     DMACell.prototype.destroy = function(){
         if (this.cellMesh) {
-            window.three.sceneRemove(this.cellMesh);
+            window.three.sceneRemove(this.cellMesh, "cell");
             this.cellMesh.myCell = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();

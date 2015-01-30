@@ -172,7 +172,7 @@ ThreeView = Backbone.View.extend({
 
     _drawBasePlane: function(){
 
-        if (this.basePlane) window.three.sceneRemove(this.basePlane);
+        if (this.basePlane) window.three.sceneRemove(this.basePlane, "basePlane");
 
         var type = this.lattice.get("cellType");
         var connectionType = this.lattice.get("connectionType");

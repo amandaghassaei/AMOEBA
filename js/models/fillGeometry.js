@@ -60,7 +60,7 @@ FillGeometry = Backbone.Model.extend({
 
     remove: function(){
         if (!this.get("mesh")) return;
-        window.three.sceneRemove(this.get("mesh"));
+        window.three.sceneRemove(this.get("mesh"), null);
         this.set("mesh", null);
         window.three.render();
     },
