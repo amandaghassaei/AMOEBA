@@ -79,6 +79,10 @@ ThreeView = Backbone.View.extend({
         this.controls.enabled = !state;
     },
 
+    ////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////MOUSE EVENTS/////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
+
     _mouseOut: function(){
         this._setNoCellIntersections();
         this._setNoPartIntersections();
@@ -121,9 +125,13 @@ ThreeView = Backbone.View.extend({
                 this._setNoPartIntersections();
                 return;
             }
-            this._handlePartIntersections(partIntersections);
+            this._handlePartIntersections(partIntersections, cellIntersections[0].distance);
         }
     },
+
+    ////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////INTERSECTIONS////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////
 
     _setNoCellIntersections: function(){
         this.currentIntersectedCell = null;
@@ -138,8 +146,13 @@ ThreeView = Backbone.View.extend({
         }
     },
 
-    _handlePartIntersections: function(intersections){
+    _handlePartIntersections: function(intersections, distanceToNearestCell){
         var part = intersections[0].object.myPart;
+        if (this.highlighter.visible && intersections[0].distance > distanceToNearestCell){
+            this._setNoPartIntersections();
+            return;
+        }
+        this._setNoCellIntersections();
         if (part!= this.currentIntersectedPart){
             if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
             part.highlight();
