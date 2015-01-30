@@ -73,6 +73,12 @@
     DMACell.prototype.removePart = function(index){
         this.parts[index].destroy();
         this.parts[index] = null;
+        var hasAnyParts = false;
+        _.each(this.parts, function(part){
+            if (part) hasAnyParts = true;
+        });
+        console.log("amanda");
+        if (!hasAnyParts) window.lattice.removeCell(this);
     };
 
     DMACell.prototype._buildCellMesh = function(position, zIndex){//abstract mesh representation of cell

@@ -150,10 +150,14 @@ Lattice = Backbone.Model.extend({
         return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
     },
 
-    removeCell: function(object){
+    removeCellFromMesh: function(object){
 
         if (!object) return;
-        var cell = object.parent.myCell;
+        this.removeCell(object.parent.myCell);
+
+    },
+
+    removeCell: function(cell){
         var index = this._subtract(cell.indices, this.get("cellsMin"));
         var cells = this.get("cells");
         cell.destroy();
