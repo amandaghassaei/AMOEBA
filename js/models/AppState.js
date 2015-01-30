@@ -81,7 +81,8 @@ AppState = Backbone.Model.extend({
                 break;
             case 32://space bar
                 e.preventDefault();
-                this.set("deleteMode", state);
+                if (this.lattice.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
+                else this.set("deleteMode", false);
                 break;
             case 69://e
 //                if (currentTab != "sketch") return;

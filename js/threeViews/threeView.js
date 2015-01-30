@@ -12,11 +12,15 @@ ThreeView = Backbone.View.extend({
 
     mouseIsDown: false,//store state of mouse click inside this el
     extrudeVisualizer: ExtrudeVisualizer(),
+
+    //intersections/object highlighting
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
     currentHighlightedFace: null,
-    currentIntersectedObject: null,
-    basePlane: null,
+    currentIntersectedCell: null,
+    currentIntersectedPart:null,
+
+    basePlane: null,//plane to draw on
 
     el: "#threeContainer",
 
@@ -70,16 +74,13 @@ ThreeView = Backbone.View.extend({
     },
 
     _setControlsEnabled: function(){
-        if (this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode")){
-            this.controls.enabled = false;
-        } else {
-            this.controls.enabled = true;
-        }
+        var state = this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode");
+        this.controls.enabled = !state;
     },
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-        this._addRemoveVoxel();
+        if (this.highlighter.visible) this._addRemoveVoxel(!this.appState.get("deleteMode"));
     },
 
     _mouseDown: function(){
@@ -89,41 +90,63 @@ ThreeView = Backbone.View.extend({
     _mouseMoved: function(e){
 
         if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
-            this._hideHighlighter();
+            this._setNoCellIntersections();
+            this._setNoPartIntersections();
             return;
         }
-
-//        if (this.appState.get("extrudeMode") && this.mouseIsDown && this.extrudeVisualizer.getMeshNum()>0){
-//            this.extrudeVisualizer.dragHandle(1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-//            return;
-//        }
 
         //make projection vector
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         var camera = this.model.camera;
         this.mouseProjection.setFromCamera(vector, camera);
 
-
         //check if we're intersecting anything
-        var intersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
-        if (intersections.length == 0) {
-            this.currentIntersectedObject = null;
-            this._hideHighlighter();
+        var cellIntersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
+        if (cellIntersections.length == 0) {
+            this._setNoCellIntersections();
             return;
         }
+        this._handleCellIntersections(cellIntersections);
 
-        this.currentIntersectedObject = intersections[0].object;
+        if (this.lattice.get("cellMode") == "part"){//additionally check for part intersections in part mode
+            var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
+            if (partIntersections.length == 0) {
+                this._setNoPartIntersections();
+                return;
+            }
+            this._handlePartIntersections(partIntersections);
+        }
+    },
+
+    _setNoCellIntersections: function(){
+        this.currentIntersectedCell = null;
+        this.currentIntersectedPart = null;
+        this._hideHighlighter();
+    },
+
+    _setNoPartIntersections: function(){
+        this.currentIntersectedPart = null;
+    },
+
+    _handlePartIntersections: function(intersections){
+
+
+    },
+
+    _handleCellIntersections: function(intersections){
+
+        this.currentIntersectedCell = intersections[0].object;
 
         if (this.appState.get("deleteMode") && this.mouseIsDown){
-            this._addRemoveVoxel();
+            this._addRemoveVoxel(false);
             return;
         }
 
-        if (this.appState.get("extrudeMode") && this.mouseIsDown){
-            if (!this.highlighter.visible) return;
-            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
-            return;
-        }
+//        if (this.appState.get("extrudeMode") && this.mouseIsDown){
+//            if (!this.highlighter.visible) return;
+//            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
+//            return;
+//        }
 
         //check if we've moved to a new face
         var intersection = intersections[0].face;
@@ -135,30 +158,32 @@ ThreeView = Backbone.View.extend({
         }
 
         //update highlighter
-
         this.highlighter.visible = true;
         this.currentHighlightedFace = intersection;
-
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var vertices = intersections[0].object.geometry.vertices;
-        var position = (new THREE.Vector3()).setFromMatrixPosition(intersections[0].object.matrixWorld);
-        this.highlighter.geometry.vertices = [(new THREE.Vector3()).addVectors(vertices[intersection.a], position),
-            (new THREE.Vector3()).addVectors(vertices[intersection.b], position), (new THREE.Vector3()).addVectors(vertices[intersection.c], position)];
+        this.highlighter.geometry.vertices = this._calcNewHighlighterVertices(intersections[0].object, intersection);
         this.highlighter.geometry.verticesNeedUpdate = true;
 
-        if (this.mouseIsDown && this.appState.get("shift")) this._addRemoveVoxel();
+        if (this.mouseIsDown && this.appState.get("shift")) this._addRemoveVoxel(true);
 
         window.three.render();
     },
 
-    _addRemoveVoxel: function(){
+    _calcNewHighlighterVertices: function(object, face){
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var vertices = object.geometry.vertices;
+        var position = (new THREE.Vector3()).setFromMatrixPosition(object.matrixWorld);
+        return [(new THREE.Vector3()).addVectors(vertices[face.a], position),
+            (new THREE.Vector3()).addVectors(vertices[face.b], position), (new THREE.Vector3()).addVectors(vertices[face.c], position)];
+    },
 
-        if (this.appState.get("deleteMode")){
-            if (this.currentIntersectedObject === this.basePlane) return;
-            this.lattice.removeCell(this.currentIntersectedObject);
-        } else {
-            if (!this.highlighter.visible) return;
+    _addRemoveVoxel: function(shouldAdd){
+
+        if (shouldAdd){
+//            if (!this.highlighter.visible) return;
             this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+        } else {
+            if (this.currentIntersectedCell === this.basePlane) return;
+            this.lattice.removeCell(this.currentIntersectedCell);
         }
         this._hideHighlighter();
     },
