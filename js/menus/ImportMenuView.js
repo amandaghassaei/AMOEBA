@@ -22,8 +22,6 @@ ImportMenuView = Backbone.View.extend({
 
         this.listenTo(this.model, "change", this.render);
 //        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
-
-
     },
 
     _selectMesh: function(e){//select mesh from dropdown list
