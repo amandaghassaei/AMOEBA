@@ -18,12 +18,10 @@ ImportMenuView = Backbone.View.extend({
     initialize: function(options){
 
         this.lattice = options.lattice;
+        this.appState = options.appState;
 
         _.bindAll(this, "render", "_onMeshLoad");
-        this.listenTo(this.model, "change", function(){
-            if (options.appState.get("currentTab")!="import") return;
-            this.render();
-        });
+        this.listenTo(this.model, "change", this.render);
 //        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
 
 
@@ -72,8 +70,8 @@ ImportMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.appState.get("currentTab") != "import") return;
         this.$el.html(this.template(this.model.attributes));
-        this.lattice.set("cellMode", "cell");
     },
 
 //    makeDimensionString: function(){

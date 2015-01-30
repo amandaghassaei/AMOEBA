@@ -19,10 +19,12 @@ AppState = Backbone.Model.extend({
         menuIsVisible: true
     },
 
-    initialize: function(){
+    initialize: function(options){
 
-        this.listenTo(this, "change:currentTab", this._storeTab)
+        this.listenTo(this, "change:currentTab", this._storeTab);
+        this.listenTo(this, "change:currentTab", this._updateLatticeMode);
 
+        this.lattice = options.lattice;
     },
 
     _storeTab: function(){
@@ -31,5 +33,14 @@ AppState = Backbone.Model.extend({
         if (currentNav == "navDesign") this.set("lastDesignTab", currentTab);
         else if (currentNav == "navSim") this.set("lastSimulationTab", currentTab);
         else if (currentNav == "navAssemble") this.set("lastAssembleTab", currentTab);
+    },
+
+    _updateLatticeMode: function(){
+        var currentTab = this.get("currentTab");
+        if (currentTab == "lattice") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "import") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "part") this.lattice.set("cellMode", "parts");
     }
+
 });

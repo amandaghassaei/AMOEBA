@@ -14,7 +14,7 @@ $(function(){
     new ThreeView({model:window.three, lattice:lattice});
 
     //setup ui
-    var appState = new AppState();
+    var appState = new AppState({lattice:lattice});
     new MenuWrapper({lattice:lattice, model:appState});
     new NavBar({model:appState});
 

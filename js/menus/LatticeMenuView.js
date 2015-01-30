@@ -15,13 +15,10 @@ LatticeMenuView = Backbone.View.extend({
 
     initialize: function(options){
 
+        this.appState = options.appState;
+
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change", function(){
-            if (options.appState.get("currentTab")!="lattice") return;
-            if(!this.model.hasChanged('cellMode')){//I want to ignore cellMode changes and listen to everything else
-                this.render();
-            }
-        });
+        this.listenTo(this.model, "change", this.render);
     },
 
     _clearCells: function(e){
@@ -43,8 +40,8 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.appState.get("currentTab") != "lattice") return;
         this.$el.html(this.template(_.extend(this.model.attributes, this._formatData())));
-        this.model.set("cellMode", "cell");
     },
 
     template: _.template('\
