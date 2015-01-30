@@ -50,12 +50,7 @@ NavBar = Backbone.View.extend({
             $(e.target).blur();
             return;
         }
-        if (navSelection) {
-            if (navSelection=="navDesign") this.model.set("currentTab", this.model.get("lastDesignTab"), {silent: true});
-            else if (navSelection=="navSim") this.model.set("currentTab", this.model.get("lastSimulationTab"), {silent: true});
-            else if (navSelection=="navAssemble") this.model.set("currentTab", this.model.get("lastAssembleTab"), {silent: true});
-            this.model.set("currentNav", navSelection);
-        }
+        if (navSelection) this.model.set("currentNav", navSelection);
     },
 
     _updateNavSelectionUI: function(){

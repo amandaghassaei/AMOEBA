@@ -23,6 +23,7 @@ AppState = Backbone.Model.extend({
 
         this.listenTo(this, "change:currentTab", this._storeTab);
         this.listenTo(this, "change:currentTab", this._updateLatticeMode);
+        this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
 
         this.lattice = options.lattice;
     },
@@ -41,6 +42,15 @@ AppState = Backbone.Model.extend({
         else if (currentTab == "import") this.lattice.set("cellMode", "cell");
         else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
         else if (currentTab == "part") this.lattice.set("cellMode", "parts");
+    },
+
+    //update to last tab open in that section
+    _updateCurrentTabForNav: function(){
+        var navSelection = this.get("currentNav");
+        if (navSelection=="navDesign") this.set("currentTab", this.get("lastDesignTab"), {silent:true});
+        else if (navSelection=="navSim") this.set("currentTab", this.get("lastSimulationTab"), {silent:true});
+        else if (navSelection=="navAssemble") this.set("currentTab", this.get("lastAssembleTab"), {silent:true});
+        this._updateLatticeMode();//a little bit hacky, this updates the lattice, but holds off on updating the menus til the animation has happened
     }
 
 });

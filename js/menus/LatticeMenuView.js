@@ -18,7 +18,10 @@ LatticeMenuView = Backbone.View.extend({
         this.appState = options.appState;
 
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model, "change", function(){
+            if(!model.hasChanged('cellMode')) return;//ignore cell mode changes
+            this.render();
+        });
     },
 
     _clearCells: function(e){
