@@ -64,6 +64,7 @@ ImportMenuView = Backbone.View.extend({
     _removeMesh: function(e){
         e.preventDefault();
         this.model.remove();
+        this.model.set("filename", this.model.defaults.filename);
     },
 
     render: function(){
