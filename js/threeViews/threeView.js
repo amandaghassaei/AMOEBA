@@ -104,6 +104,7 @@ ThreeView = Backbone.View.extend({
         var cellIntersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
         if (cellIntersections.length == 0) {
             this._setNoCellIntersections();
+            this._setNoPartIntersections();
             return;
         }
         this._handleCellIntersections(cellIntersections);
@@ -120,17 +121,25 @@ ThreeView = Backbone.View.extend({
 
     _setNoCellIntersections: function(){
         this.currentIntersectedCell = null;
-        this.currentIntersectedPart = null;
         this._hideHighlighter();
     },
 
     _setNoPartIntersections: function(){
-        this.currentIntersectedPart = null;
+        if (this.currentIntersectedPart){
+            this.currentIntersectedPart.unhighlight();
+            this.currentIntersectedPart = null;
+            window.three.render();
+        }
     },
 
     _handlePartIntersections: function(intersections){
-
-
+        var part = intersections[0].object.myPart;
+        if (part!= this.currentIntersectedPart){
+            if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
+            part.highlight();
+            this.currentIntersectedPart = part;
+            window.three.render();
+        }
     },
 
     _handleCellIntersections: function(intersections){

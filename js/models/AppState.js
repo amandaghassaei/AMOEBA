@@ -51,7 +51,7 @@ AppState = Backbone.Model.extend({
         if (currentTab == "lattice") this.lattice.set("cellMode", "cell");
         else if (currentTab == "import") this.lattice.set("cellMode", "cell");
         else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "part") this.lattice.set("cellMode", "parts");
+        else if (currentTab == "part") this.lattice.set("cellMode", "part");
     },
 
     //update to last tab open in that section

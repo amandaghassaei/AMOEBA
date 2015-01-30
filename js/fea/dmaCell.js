@@ -98,7 +98,7 @@
             _.each(this.parts, function(part){
                 part.hide();
             });
-        } else if (mode == "parts"){
+        } else if (mode == "part"){
             this._setCellMeshVisibility(false);
             _.each(this.parts, function(part){
                 part.show();

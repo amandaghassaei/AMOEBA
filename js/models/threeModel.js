@@ -101,6 +101,7 @@ function ThreeModel(){
         render: render,
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
+//        scene: scene,
         domElement: renderer.domElement,
         camera: camera,
         cells: cells,

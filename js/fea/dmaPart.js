@@ -7,20 +7,35 @@
 
 (function () {
 
-    var unitPartGeo;
+    var unitPartGeo1, unitPartGeo2, unitPartGeo3, unitPartGeo4, unitPartGeo5,unitPartGeo6;
 
     //import part geometry
     var loader = new THREE.STLLoader();
     loader.load("data/trianglePart.stl", function(geometry){
         console.log("part loaded");
-        unitPartGeo = geometry
-        unitPartGeo.dynamic = true;
-        unitPartGeo.computeBoundingBox();
-        var unitScale = 1/unitPartGeo.boundingBox.max.y;
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
-        unitPartGeo.dynamic = true;
+        unitPartGeo1 = geometry
+        unitPartGeo1.dynamic = true;
+        unitPartGeo1.computeBoundingBox();
+        var unitScale = 1/unitPartGeo1.boundingBox.max.y;
+        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
+        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
+        unitPartGeo1.dynamic = true;
+        
+        unitPartGeo2 = unitPartGeo1.clone();
+        unitPartGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(2*Math.PI/3));
+
+        unitPartGeo3 = unitPartGeo1.clone();
+        unitPartGeo3.applyMatrix(new THREE.Matrix4().makeRotationZ(-2*Math.PI/3));
+        
+        unitPartGeo4 = unitPartGeo1.clone();
+        unitPartGeo4.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
+
+        unitPartGeo5 = unitPartGeo2.clone();
+        unitPartGeo5.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
+
+        unitPartGeo6 = unitPartGeo3.clone();
+        unitPartGeo6.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
     });
 
     var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
@@ -39,19 +54,24 @@
 
     DMAPart.prototype._makeMeshForType = function(type){
 
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
-        mesh = this._setMeshPosition(mesh);
-        mesh = this._setMeshScale(mesh);
-
+        var mesh;
         switch(type){
+            case 0:
+                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo4, partMaterial.clone());
+                else mesh = new THREE.Mesh(unitPartGeo1, partMaterial.clone());
+                break;
             case 1:
-                mesh.rotateZ(2*Math.PI/3);
+                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo5, partMaterial.clone());
+                else mesh = new THREE.Mesh(unitPartGeo2, partMaterial.clone());
                 break;
             case 2:
-                mesh.rotateZ(-2*Math.PI/3);
+                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo6, partMaterial.clone());
+                else mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
                 break;
         }
-        if (this.oddZFlag) mesh.rotateZ(Math.PI);
+
+        mesh = this._setMeshPosition(mesh);
+        mesh = this._setMeshScale(mesh);
         return mesh;
     };
 
@@ -65,6 +85,7 @@
         if (this.oddZFlag){//adjust some offsets for odd z layers
             mesh.position.y += 7*scale/6;
         }
+        mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
 
@@ -91,9 +112,18 @@
         if (this.mesh) this.mesh.visible = false;
     };
 
+    DMAPart.prototype.highlight = function(){
+        this.mesh.material.color.setRGB(1,0,0);
+    };
+
+    DMAPart.prototype.unhighlight = function(){
+        this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
+    };
+
     DMAPart.prototype.destroy = function(){
         if (this.mesh) {
             window.three.sceneRemove(this.mesh, "part");
+            this.mesh.myPart = null;
 //            this.mesh.dispose();
 //            geometry.dispose();
 //            material.dispose();
