@@ -5,7 +5,6 @@
 
 function ThreeModel(){
 
-    var $el = $("#threeContainer");
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 4000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:false});
@@ -66,21 +65,8 @@ function ThreeModel(){
         renderer.render(scene, camera);
     }
 
-    function clearAll(){
-//        var children = objects.slice(0);
-//        for (var i=children.length;i>=0;i--){
-//            var object = children[i];
-//            if (!(object instanceof THREE.Mesh)){// && object != this.fillGeometry.get("mesh")
-//                scene.remove(object);
-//                objects.splice(objects.indexOf(object), 1);
-//            }
-//        }
-//        render();
-    }
-
     return {//return public properties/methods
         render:render,
-        clearAll: clearAll,
         sceneRemove:sceneRemove,
         sceneAdd:sceneAdd,
         domElement:renderer.domElement,
