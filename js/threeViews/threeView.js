@@ -21,8 +21,6 @@ ThreeView = Backbone.View.extend({
     currentIntersectedCell: null,
     currentIntersectedPart:null,
 
-    basePlane: null,//plane to draw on
-
     el: "#threeContainer",
 
     controls: null,
@@ -32,18 +30,15 @@ ThreeView = Backbone.View.extend({
         this.lattice = options.lattice;
         this.appState = options.appState;
 
-        _.bindAll(this, "_animate", "_mouseMoved", "_drawBasePlane");
+        _.bindAll(this, "_animate", "_mouseMoved");
 
         //bind events
-        this.listenTo(this.lattice, "change:type change:scale", this._drawBasePlane);
         this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
 
         this.$el.append(this.model.domElement);//render only once
-
-        this.basePlane = this._drawBasePlane();
 
         //init highlighter
         this.highlighter = this._initHighlighter();
@@ -222,77 +217,6 @@ ThreeView = Backbone.View.extend({
             this.highlighter.visible = false;
             window.three.render();
         }
-    },
-
-    _drawBasePlane: function(){
-
-        if (this.basePlane) window.three.sceneRemove(this.basePlane, "basePlane");
-
-        var type = this.lattice.get("cellType");
-        var connectionType = this.lattice.get("connectionType");
-
-        var baseDim = 100;
-        var gridSize = this.lattice.get("scale");
-        var geometry = new THREE.Geometry();
-        var planeMaterial = new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide});
-
-        var vertices = geometry.vertices;
-        var faces = geometry.faces;
-
-        if (type == "octa" && (connectionType == "face" || connectionType == "edge")){
-
-            var triangleHeight = gridSize/2*Math.sqrt(3);
-
-            for (var j=-baseDim;j<=baseDim;j++){
-                for (var i=-baseDim;i<=baseDim;i++){
-
-                    var xOffset = 0;
-                    if (Math.abs(j)%2==1) xOffset = gridSize/2;
-                    vertices.push(new THREE.Vector3(i*gridSize + xOffset, j*triangleHeight, 0));
-
-                    if (j==-baseDim || i==-baseDim) continue;
-
-                    var currentOffset = vertices.length;
-
-                    if (Math.abs(j)%2==1){
-//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
-                        faces.push(new THREE.Face3(currentOffset-2, currentOffset-3-2*baseDim, currentOffset-2-2*baseDim));
-                    } else {
-                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-3-2*baseDim, currentOffset-2-2*baseDim));
-//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-3-2*baseDim));
-                    }
-
-                }
-
-            }
-
-
-        } else if (type == "octa" && connectionType == "vertex"){
-
-//            geometry.vertices.push(new THREE.Vector3(-baseSize, 0, 0));
-//            geometry.vertices.push(new THREE.Vector3(baseSize, 0, 0));
-//
-//            for ( var i = 0; i <= baseSize/gridSize; i ++ ) {
-//
-//                var line = new THREE.Line(geometry, linesMaterial);
-//                line.position.y = (i * gridSize) - baseSize;
-//                window.three.sceneAdd(line);
-//
-//                line = new THREE.Line(geometry, linesMaterial);
-//                line.position.x = (i * gridSize) - baseSize;
-//                line.rotation.z = 90 * Math.PI / 180;
-//                window.three.sceneAdd(line);
-//            }
-        }
-
-        geometry.computeFaceNormals();
-
-        var basePlane = new THREE.Mesh(geometry, planeMaterial);
-        window.three.sceneAdd(basePlane, "basePlane");
-        window.three.render();
-
-        if (this.basePlane) this.basePlane = basePlane;
-        return basePlane;
     }
 
 });

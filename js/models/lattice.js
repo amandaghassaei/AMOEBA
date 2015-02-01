@@ -15,7 +15,8 @@ Lattice = Backbone.Model.extend({
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
         partType: "triangle",
-        cellMode: "cell"
+        cellMode: "cell",
+        basePlane: null//plane to build from
     },
 
     //pass in fillGeometry
@@ -25,6 +26,11 @@ Lattice = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:scale", this._scaleDidChange);
+        this.listenTo(this, "change:cellType, change:connectionType", this._changeLatticeStructure);
+
+        this.set("basePlane", new BasePlane({cellType:this.get("cellType"),
+            connectionType:this.get("connectionType"),
+            scale:this.get("scale")}));
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +98,9 @@ Lattice = Backbone.Model.extend({
         this.set("cells", this.defaults.cells);
         this.set("cellsMax", this.defaults.cellsMax);
         this.set("cellsMin", this.defaults.cellsMin);
+        this.set("nodes", this.defaults.nodes);
         this.set("numCells", 0);
+        this.get("basePlane").set("zIndex", 0);
         window.three.render();
     },
 
@@ -202,6 +210,11 @@ Lattice = Backbone.Model.extend({
             if (cell) cell.changeScale(scale);
         });
         window.three.render();
+    },
+
+    _changeLatticeStructure: function(){
+        this.clearCells();
+        this.get("basePlane").updateGeometry(this.get("cellType"), this.get("connectionType"), this.get("scale"));
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
