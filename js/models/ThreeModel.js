@@ -74,8 +74,7 @@ function ThreeModel(){
         } else if (type == "part"){
             parts.splice(parts.indexOf(objectToRemove), 1);
         } else if (type == "basePlane"){
-            console.warn("something is wrong, deleting base plane");
-            basePlane.splice(basePlane.indexOf(objectToRemove), 1);
+            basePlane = [];
         }
 
         scene.remove(objectToRemove);

@@ -206,7 +206,7 @@ ThreeView = Backbone.View.extend({
             if (!this.highlighter.visible) return;
             this.lattice.addCell(this.highlighter.geometry.vertices[0]);
         } else {
-            if (this.currentIntersectedCell === this.basePlane) return;
+            if (this.currentIntersectedCell === this.model.basePlane[0]) return;
             this.lattice.removeCellFromMesh(this.currentIntersectedCell);
         }
         this._hideHighlighter();
