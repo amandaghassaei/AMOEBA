@@ -17,8 +17,8 @@ Lattice = Backbone.Model.extend({
         allPartTypes:{
             octa:{
                 face: {triangle:"Triangle"},
-                edge: {traingle:"Triangle"},
-                vertex:{square:"Square", x:"X"}
+                edge: {triangle:"Triangle"},
+                vertex:{square:"Square", xShape:"X"}
             },
             cube:{
                 face: null
@@ -229,6 +229,7 @@ Lattice = Backbone.Model.extend({
     },
 
     _changeLatticeStructure: function(){
+        console.log("amanda");
         this.clearCells();
         this.get("basePlane").updateGeometry(this.get("cellType"), this.get("connectionType"), this.get("scale"));
     },

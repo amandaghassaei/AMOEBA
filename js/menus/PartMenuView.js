@@ -24,7 +24,15 @@ PartMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        Part Type: &nbsp;&nbsp;<%= partType %><br/>\
+        Part Type: &nbsp;&nbsp;\
+        <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allPartTypes[cellType][connectionType][partType] %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allPartTypes[cellType][connectionType]), function(key){ %>\
+                        <li><a class="partType" data-type="<%= key %>" href="#"><%= allPartTypes[cellType][connectionType][key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
         Column Separation:<br/>\
         ')
 

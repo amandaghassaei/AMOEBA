@@ -42,17 +42,46 @@ LatticeMenuView = Backbone.View.extend({
     _changeCellType: function(e){
         e.preventDefault();
         var cellType = $(e.target).data("type");
-        var currentCellType = this.model.get("cellType");
-        if (cellType != currentCellType){
-            if (currentCellType == "cube") this.model.set("connectionType", "face", {silent:true});
-        else if (currentCellType == "octa") this.model.set("connectionType", "face", {silent:true});
+
+        //reset everything to defaults silently
+        if (cellType != this.model.get("cellType")){
+            this._setLatticeToDefaultsSilently(cellType);
         }
         this.model.set("cellType", cellType);
+    },
+
+    _setLatticeToDefaultsSilently: function(newCellType, newConnectionType){
+        if (newCellType == "cube") {
+            if (!newConnectionType){
+                newConnectionType = "face";
+                this.model.set("connectionType", newConnectionType, {silent:true});
+            }
+            this.model.set("connectionType", newConnectionType, {silent:true});
+            if (newConnectionType == "face"){
+                this.model.set("partType", null, {silent:true});
+            }
+        }
+        else if (newCellType == "octa") {
+            if (!newConnectionType){
+                newConnectionType = "face";
+                this.model.set("connectionType", newConnectionType, {silent:true});
+            }
+            if (newConnectionType == "face"){
+                this.model.set("partType", "triangle", {silent:true});
+            } else if (newConnectionType == "edge"){
+                this.model.set("partType", "triangle", {silent:true});
+            } else if (newConnectionType == "vertex"){
+                this.model.set("partType", "square", {silent:true});
+            }
+        }
     },
 
     _changeConnectionType: function(e){
         e.preventDefault();
         var connectionType = $(e.target).data("type");
+        if (connectionType != this.model.get("connectionType")){
+            this._setLatticeToDefaultsSilently(this.model.get("cellType"), connectionType);
+        }
         this.model.set("connectionType", connectionType);
     },
 
