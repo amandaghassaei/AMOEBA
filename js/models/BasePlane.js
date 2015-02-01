@@ -10,7 +10,8 @@ BasePlane = Backbone.Model.extend({
         mesh: null,
         dimX: 100,
         dimY: 100,
-        material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide})
+        material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
+        unitGeometry: null
     },
 
     //pass in fillGeometry
@@ -18,28 +19,35 @@ BasePlane = Backbone.Model.extend({
     initialize: function(options){
 
         //draw mesh
-        this.set("mesh", this._makeBasePlaneMesh(options.cellType, options.connectionType, options.scale));
+        this.set("mesh", this._makeBasePlaneMesh(options.cellType, options.connectionType));
+        this.updateScale(options.scale);
         this._showMesh();
 
     },
 
     updateGeometry: function(cellType, connectionType, scale){
         this._removeMesh();
-        this.set("mesh", this._makeBasePlaneMesh(cellType, connectionType, scale));
+        this.set("mesh", this._makeBasePlaneMesh(cellType, connectionType));
+        this.updateScale(scale);
         this._showMesh();
     },
 
     updateScale: function(scale){
-
+        var newGeometry = this.get("unitGeometry").clone();
+        newGeometry.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
+        var geometry = this.get("mesh").geometry;
+        geometry.vertices = newGeometry.vertices;
+        geometry.verticesNeedUpdate = true;
     },
 
-    _makeBasePlaneMesh: function(cellType, connectionType, scale){
+    _makeBasePlaneMesh: function(cellType, connectionType){
         if (cellType == "cube"){
             return this._createGridMesh();
         } else if (cellType == "octa"){
             if (connectionType == "face"){
-                return this._createOctaFaceMesh(scale);
+                return this._createOctaFaceMesh();
             } else if (connectionType == "edge"){
+                if (this.get("zIndex")%2 == 0) return this._createOctaFaceMesh();
 
             } else if (connectionType == "vertex"){
 
@@ -47,14 +55,14 @@ BasePlane = Backbone.Model.extend({
         }
     },
 
-    _createOctaFaceMesh: function(scale){
+    _createOctaFaceMesh: function(){
 
         var geometry = new THREE.Geometry();
 
         var vertices = geometry.vertices;
         var faces = geometry.faces;
 
-        var triangleHeight = scale/2*Math.sqrt(3);
+        var triangleHeight = 1/2*Math.sqrt(3);
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
@@ -62,8 +70,8 @@ BasePlane = Backbone.Model.extend({
             for (var i=-dimY;i<=dimY;i++){
 
                 var xOffset = 0;
-                if (Math.abs(j)%2==1) xOffset = scale/2;
-                vertices.push(new THREE.Vector3(i*scale + xOffset, j*triangleHeight, 0));
+                if (Math.abs(j)%2==1) xOffset = 1/2;
+                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight, 0));
 
                 if (j == -dimX || i == -dimY) continue;
 
@@ -81,6 +89,8 @@ BasePlane = Backbone.Model.extend({
 
         }
         geometry.computeFaceNormals();
+        geometry.dynamic = true;
+        this.set("unitGeometry", geometry.clone());
 
         return new THREE.Mesh(geometry, this.get("material"));
     },
@@ -102,7 +112,8 @@ BasePlane = Backbone.Model.extend({
     destroy: function(){
         this.set("zIndex", null);
         this.set("mesh", null);
-        this.set("material, null");
+        this.set("material", null);
+        this.set("unitGeometry", null);
     }
 
 });

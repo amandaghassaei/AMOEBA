@@ -206,6 +206,7 @@ Lattice = Backbone.Model.extend({
 
     _scaleDidChange: function(){
         var scale = this.get("scale");
+        this.get("basePlane").updateScale(scale);
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.changeScale(scale);
         });
