@@ -21,6 +21,12 @@ PartMenuView = Backbone.View.extend({
     render: function(){
         if (this.appState.get("currentTab") != "part") return;
         this.$el.html(this.template(this.model.attributes));
+
+        $('#columnSepSlider').slider({
+            formatter: function(value) {
+                return value + "%";
+            }
+        });
     },
 
     template: _.template('\
@@ -33,7 +39,8 @@ PartMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Column Separation:<br/>\
+        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="50" data-slider-step="1" data-slider-value="<%= scale %>"/>\
+        <br/><input id="columnSep" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\<br/>\
         ')
 
 });
