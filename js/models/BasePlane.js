@@ -31,6 +31,7 @@ BasePlane = Backbone.Model.extend({
     },
 
     updateScale: function(scale){
+        //todo this should work by mesh scaling, figure out what's up
         var newGeometry = this.get("unitGeometry").clone();
         newGeometry.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
         var geometry = this.get("mesh").geometry;

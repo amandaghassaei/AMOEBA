@@ -43,7 +43,9 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _sliderDidSlide: function(e){
-        this.model.previewScaleChange($(e.target)[0].value);
+        var scale = $(e.target)[0].value;
+        this.model.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
+        $("#latticeScale").val(scale);
         window.three.render();
     },
 
