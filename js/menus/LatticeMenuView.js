@@ -43,10 +43,11 @@ LatticeMenuView = Backbone.View.extend({
         e.preventDefault();
         var cellType = $(e.target).data("type");
         var currentCellType = this.model.get("cellType");
-        this.model.set("cellType", cellType, {silent:true});
-        if (currentCellType == cellType) return;
-        if (currentCellType == "cube") this.model.set("connectionType", "face");
-        else if (currentCellType == "octa") this.model.set("connectionType", "face");
+        if (cellType != currentCellType){
+            if (currentCellType == "cube") this.model.set("connectionType", "face", {silent:true});
+        else if (currentCellType == "octa") this.model.set("connectionType", "face", {silent:true});
+        }
+        this.model.set("cellType", cellType);
     },
 
     _changeConnectionType: function(e){
