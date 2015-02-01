@@ -11,15 +11,24 @@ BasePlane = Backbone.Model.extend({
         dimX: 100,
         dimY: 100,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
+        currentScene: "default",
+        allScenes: {default:"Default", "mars":"Mars"}
     },
 
     initialize: function(options){
+
+        //bind events
+        this.listenTo(this, "change:currentScene", this._renderForCurrentScene);
 
         //draw mesh
         this.set("mesh", this._makeBasePlaneMesh(options.cellType, options.connectionType));
         this.updateScale(options.scale);
         this._showMesh();
 
+    },
+
+    _renderForCurrentScene: function(){
+        console.log("amanda");
     },
 
     updateGeometry: function(cellType, connectionType, scale){

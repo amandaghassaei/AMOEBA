@@ -21,6 +21,7 @@ MenuWrapper = Backbone.View.extend({
         this.sketchMenu = new SketchMenuView({model:options.lattice, appState:this.model});
         this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
         this.scriptMenu = new ScriptMenuView({appState:this.model});
+        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
 
         this.lattice = options.lattice;
 
@@ -65,6 +66,8 @@ MenuWrapper = Backbone.View.extend({
             this.partMenu.render();
         } else if (tabName == "script"){
             this.scriptMenu.render();
+        } else if (tabName == "animate"){
+            this.animationMenu.render();
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Something goes here eventually.');//clear out content from menu
