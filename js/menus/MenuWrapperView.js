@@ -22,6 +22,8 @@ MenuWrapper = Backbone.View.extend({
         this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
         this.scriptMenu = new ScriptMenuView({appState:this.model});
 
+        this.lattice = options.lattice;
+
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
         this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
@@ -29,6 +31,7 @@ MenuWrapper = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
+        this.listenTo(options.lattice, "change:cellType change:connectionType", this._populateAndShow);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
         this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
@@ -80,7 +83,8 @@ MenuWrapper = Backbone.View.extend({
         this.$el.html(this.template(_.extend(this.model.attributes,
             {navDesign:this.designMenuTabs,
             navSim:this.simMenuTabs,
-            navAssemble:this.assemMenuTabs})));
+            navAssemble:this.assemMenuTabs,
+            }, this.lattice.attributes)));
         this._updateCurrentTab();
         this._show();
     },
@@ -106,7 +110,8 @@ MenuWrapper = Backbone.View.extend({
     template: _.template('\
         <ul class="nav nav-tabs nav-justified">\
         <% var dict = eval(currentNav);\
-        _.each(_.keys(dict), function(key){%>\
+        _.each(_.keys(dict), function(key){\
+            if (key == "part" && !(allPartTypes[cellType][connectionType])) return;  %>\
           <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= dict[key] %></a></li>\
         <% }); %>\
         </ul>\

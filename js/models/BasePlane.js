@@ -55,7 +55,6 @@ BasePlane = Backbone.Model.extend({
     _createOctaFaceMesh: function(){
 
         var geometry = new THREE.Geometry();
-
         var vertices = geometry.vertices;
         var faces = geometry.faces;
 

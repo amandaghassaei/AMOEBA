@@ -77,6 +77,7 @@ AppState = Backbone.Model.extend({
 
         switch(e.keyCode){
             case 16://shift
+                e.preventDefault();
                 this.set("shift", state);
                 break;
             case 32://space bar

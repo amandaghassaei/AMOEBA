@@ -8,9 +8,22 @@ Lattice = Backbone.Model.extend({
     defaults: {
         scale: window.defaultLatticeScale,
         cellType: "octa",
-        allCellTypes: {octa:"Octahedron", cube:"Cube"},
         connectionType: "face",
-        allConnectionTypes: {octa:{face:"Face", edge:"Edge", vertex:"Vertex"}, cube:{face:"Face"}},
+        allCellTypes: {octa:"Octahedron", cube:"Cube"},
+        allConnectionTypes: {
+            octa: {face:"Face", edge:"Edge", vertex:"Vertex"},
+            cube: {face:"Face"}
+        },
+        allPartTypes:{
+            octa:{
+                face: {triangle:"Triangle"},
+                edge: {traingle:"Triangle"},
+                vertex:{square:"Square", x:"X"}
+            },
+            cube:{
+                face: null
+            }
+        },
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
