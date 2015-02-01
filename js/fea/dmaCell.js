@@ -38,10 +38,11 @@
         cellGeometry2.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
     }
 
-    function DMACell(mode, indices, scale) {
+    function DMACell(mode, indices, scale, lattice) {
 
         this.indices = indices;
         this.scale = scale;
+        this.lattice = lattice;//need ref back to lattice
         this.position = this._calcPosition(scale, indices);
         this.cellMesh = this._buildCellMesh(this.position, indices.z);
         window.three.sceneAdd(this.cellMesh, "cell");
@@ -77,7 +78,7 @@
         _.each(this.parts, function(part){
             if (part) hasAnyParts = true;
         });
-        if (!hasAnyParts) window.lattice.removeCell(this);
+        if (!hasAnyParts) this.lattice.removeCell(this);
     };
 
     DMACell.prototype._buildCellMesh = function(position, zIndex){//abstract mesh representation of cell
@@ -170,6 +171,7 @@
         this.indices = null;
         this.scale = null;
         this.position = null;
+        this.lattice = null;
         this.parts = null;
     };
 

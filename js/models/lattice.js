@@ -60,11 +60,45 @@ Lattice = Backbone.Model.extend({
         }
 
         var index = this._subtract(position, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position, scale);
+        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position, scale, this);
         else console.warn("already a cell there");
         this.set("numCells", this.get("numCells")+1);
         window.three.render();
     },
+
+    removeCellFromMesh: function(object){
+
+        if (!object) return;
+        this.removeCell(object.parent.myCell);
+
+    },
+
+    removeCell: function(cell){
+        var index = this._subtract(cell.indices, this.get("cellsMin"));
+        var cells = this.get("cells");
+        cell.destroy();
+        cells[index.x][index.y][index.z] = null;
+
+        //todo shrink cells matrix if needed
+
+        this.set("numCells", this.get("numCells")-1);
+        window.three.render();
+    },
+
+    clearCells: function(){
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.destroy();
+        });
+        this.set("cells", this.defaults.cells);
+        this.set("cellsMax", this.defaults.cellsMax);
+        this.set("cellsMin", this.defaults.cellsMin);
+        this.set("numCells", 0);
+        window.three.render();
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
 
     _expandCellsArray: function(cells, expansion, fromFront){
 
@@ -148,36 +182,6 @@ Lattice = Backbone.Model.extend({
 
     _add: function(pos1, pos2){
         return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
-    },
-
-    removeCellFromMesh: function(object){
-
-        if (!object) return;
-        this.removeCell(object.parent.myCell);
-
-    },
-
-    removeCell: function(cell){
-        var index = this._subtract(cell.indices, this.get("cellsMin"));
-        var cells = this.get("cells");
-        cell.destroy();
-        cells[index.x][index.y][index.z] = null;
-
-        //todo shrink cells matrix if needed
-
-        this.set("numCells", this.get("numCells")-1);
-        window.three.render();
-    },
-
-    clearCells: function(){
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.destroy();
-        });
-        this.set("cells", this.defaults.cells);
-        this.set("cellsMax", this.defaults.cellsMax);
-        this.set("cellsMin", this.defaults.cellsMin);
-        this.set("numCells", 0);
-        window.three.render();
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
