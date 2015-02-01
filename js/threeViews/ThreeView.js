@@ -17,7 +17,6 @@ ThreeView = Backbone.View.extend({
     //intersections/object highlighting
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
-    currentHighlightedFace: null,
     currentIntersectedCell: null,
     currentIntersectedPart:null,
 
@@ -41,23 +40,10 @@ ThreeView = Backbone.View.extend({
         this.$el.append(this.model.domElement);//render only once
 
         //init highlighter
-        this.highlighter = this._initHighlighter();
-        window.three.sceneAdd(this.highlighter, null);
+        this.highlighter = new Highlighter({model:options.lattice});
 
         this.model.render();
         this._animate();
-    },
-
-    _initHighlighter: function(){
-        var highlightGeometry = new THREE.Geometry();
-        //can't change size of faces or vertices buffers dynamically
-        highlightGeometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
-        highlightGeometry.faces = [new THREE.Face3(0,1,2)];
-        var highlighter = new THREE.Mesh(highlightGeometry,
-            new THREE.MeshBasicMaterial({side:THREE.DoubleSide, transparent:true, opacity:0.4, color:0xffffff, vertexColors:THREE.FaceColors}));
-        highlighter.geometry.dynamic = true;
-        highlighter.visible = false;
-        return highlighter;
     },
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -131,7 +117,7 @@ ThreeView = Backbone.View.extend({
 
     _setNoCellIntersections: function(){
         this.currentIntersectedCell = null;
-        this._hideHighlighter();
+        this.highlighter.hide();
     },
 
     _setNoPartIntersections: function(){
@@ -144,7 +130,7 @@ ThreeView = Backbone.View.extend({
 
     _handlePartIntersections: function(intersections, distanceToNearestCell){
         var part = intersections[0].object.myPart;
-        if (this.highlighter.visible && intersections[0].distance > distanceToNearestCell){
+        if (this.highlighter.isVisible() && intersections[0].distance > distanceToNearestCell){
             this._setNoPartIntersections();
             return;
         }
@@ -167,56 +153,39 @@ ThreeView = Backbone.View.extend({
         }
 
 //        if (this.appState.get("extrudeMode") && this.mouseIsDown){
-//            if (!this.highlighter.visible) return;
+//            if (!this.highlighter.isVisible) return;
 //            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
 //            return;
 //        }
 
         //check if we've moved to a new face
         var intersection = intersections[0].face;
-        if (this.highlighter.visible && this.currentHighlightedFace == intersection) return;
+        if (this.highlighter.isVisible() && this.highlighter.isHighlighting(intersection)) return;
 
         if (intersection.normal.z<0.99){//only highlight horizontal faces
-            this._hideHighlighter();
+            this.highlighter.hide();
             return;
         }
 
         //update highlighter
-        this.highlighter.visible = true;
-        this.currentHighlightedFace = intersection;
-        this.highlighter.geometry.vertices = this._calcNewHighlighterVertices(intersections[0].object, intersection);
-        this.highlighter.geometry.verticesNeedUpdate = true;
+        this.highlighter.show(false);
+        this.highlighter.highlightFace(intersections[0]);
 
         if (this.mouseIsDown && this.appState.get("shift")) this._addRemoveVoxel(true);
 
         window.three.render();
     },
 
-    _calcNewHighlighterVertices: function(object, face){
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var vertices = object.geometry.vertices;
-        var position = (new THREE.Vector3()).setFromMatrixPosition(object.matrixWorld);
-        return [(new THREE.Vector3()).addVectors(vertices[face.a], position),
-            (new THREE.Vector3()).addVectors(vertices[face.b], position), (new THREE.Vector3()).addVectors(vertices[face.c], position)];
-    },
-
     _addRemoveVoxel: function(shouldAdd){
 
         if (shouldAdd){
-            if (!this.highlighter.visible) return;
-            this.lattice.addCell(this.highlighter.geometry.vertices[0]);
+            if (!this.highlighter.isVisible()) return;
+            this.lattice.addCell(this.highlighter.getNextCellPosition());
         } else {
             if (this.currentIntersectedCell === this.model.basePlane[0]) return;
             this.lattice.removeCellFromMesh(this.currentIntersectedCell);
         }
-        this._hideHighlighter();
-    },
-
-    _hideHighlighter: function(){
-        if (this.highlighter.visible){
-            this.highlighter.visible = false;
-            window.three.render();
-        }
+        this.highlighter.hide();
     }
 
 });
