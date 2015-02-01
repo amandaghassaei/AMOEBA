@@ -402,7 +402,7 @@
 				this.tooltip_max.style.left = '100%';
 			} else {
 				this._addClass(this.sliderElem, 'slider-horizontal');
-                this._addClass(this.sliderElem, 'fullWidth');
+//                this._addClass(this.sliderElem, 'fullWidth');
 				this.sliderElem.style.width = origWidth;
 
 				this.options.orientation = 'horizontal';

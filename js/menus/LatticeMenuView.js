@@ -11,7 +11,9 @@ LatticeMenuView = Backbone.View.extend({
         "click #latticeMenuClearCells":                 "_clearCells",
         "change #latticeScale":                         "_changeScale",
         "click .cellType":                              "_changeCellType",
-        "click .connectionType":                        "_changeConnectionType"
+        "click .connectionType":                        "_changeConnectionType",
+        "slide #scaleSlider":                           "_sliderDidSlide",
+        "slideStop #scaleSlider":                       "_changeScaleSlider"
     },
 
 
@@ -25,6 +27,7 @@ LatticeMenuView = Backbone.View.extend({
                 this.render();
             };
         });
+
     },
 
     _clearCells: function(e){
@@ -37,6 +40,15 @@ LatticeMenuView = Backbone.View.extend({
         var val = parseFloat($(e.target).val());
         if (isNaN(val)) return;
         this.model.set("scale", val);
+    },
+
+    _sliderDidSlide: function(e){
+        this.model.previewScaleChange($(e.target)[0].value);
+        window.three.render();
+    },
+
+    _changeScaleSlider: function(e){
+        this.model.set("scale", $(e.target)[0].value);
     },
 
     _changeCellType: function(e){
@@ -88,6 +100,12 @@ LatticeMenuView = Backbone.View.extend({
     render: function(){
         if (this.appState.get("currentTab") != "lattice") return;
         this.$el.html(this.template(this.model.attributes));
+
+        $('#scaleSlider').slider({
+            formatter: function(value) {
+                return value;
+            }
+        });
     },
 
     template: _.template('\
@@ -109,7 +127,8 @@ LatticeMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
+        Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="1" data-slider-value="<%= scale %>"/>\
+        <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\

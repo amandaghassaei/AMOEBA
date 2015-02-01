@@ -228,8 +228,11 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
+    previewScaleChange: function(scale){
+        this.get("basePlane").updateScale(scale);
+    },
+
     _changeLatticeStructure: function(){
-        console.log("amanda");
         this.clearCells();
         this.get("basePlane").updateGeometry(this.get("cellType"), this.get("connectionType"), this.get("scale"));
     },
