@@ -8,7 +8,9 @@ Lattice = Backbone.Model.extend({
     defaults: {
         scale: window.defaultLatticeScale,
         cellType: "octa",
+        allCellTypes: {octa:"Octahedron", cube:"Cube"},
         connectionType: "face",
+        allConnectionTypes: {octa:{face:"Face", edge:"Edge", vertex:"Vertex"}, cube:{face:"Face"}},
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
@@ -26,7 +28,7 @@ Lattice = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:scale", this._scaleDidChange);
-        this.listenTo(this, "change:cellType, change:connectionType", this._changeLatticeStructure);
+        this.listenTo(this, "change:cellType change:connectionType", this._changeLatticeStructure);
 
         this.set("basePlane", new BasePlane({cellType:this.get("cellType"),
             connectionType:this.get("connectionType"),

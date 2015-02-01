@@ -9,7 +9,9 @@ LatticeMenuView = Backbone.View.extend({
 
     events: {
         "click #latticeMenuClearCells":                 "_clearCells",
-        "change #latticeScale":                         "_changeScale"
+        "change #latticeScale":                         "_changeScale",
+        "click .cellType":                              "_changeCellType",
+        "click .connectionType":                        "_changeConnectionType"
     },
 
 
@@ -37,20 +39,46 @@ LatticeMenuView = Backbone.View.extend({
         this.model.set("scale", val);
     },
 
-    _formatData: function(){
-        var formattedCellType = "Octahedral";
-        var formattedConnectionType = "Face-Connected";
-        return {formattedCellType:formattedCellType, formattedConnectionType:formattedConnectionType};
+    _changeCellType: function(e){
+        e.preventDefault();
+        var cellType = $(e.target).data("type");
+        var currentCellType = this.model.get("cellType");
+        this.model.set("cellType", cellType, {silent:true});
+        if (currentCellType == cellType) return;
+        if (currentCellType == "cube") this.model.set("connectionType", "face");
+        else if (currentCellType == "octa") this.model.set("connectionType", "face");
+    },
+
+    _changeConnectionType: function(e){
+        e.preventDefault();
+        var connectionType = $(e.target).data("type");
+        this.model.set("connectionType", connectionType);
     },
 
     render: function(){
         if (this.appState.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(_.extend(this.model.attributes, this._formatData())));
+        this.$el.html(this.template(this.model.attributes));
     },
 
     template: _.template('\
-        Cell Type: &nbsp;&nbsp;<%= formattedCellType %><br/>\
-        Cell Connection:&nbsp;&nbsp;<%= formattedConnectionType %><br/>\
+        Cell Type: &nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCellTypes[cellType] %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allCellTypes), function(key){ %>\
+                        <li><a class="cellType" data-type="<%= key %>" href="#"><%= allCellTypes[key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
+        Cell Connection:&nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allConnectionTypes[cellType][connectionType] %>-Connected<span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allConnectionTypes[cellType]), function(key){ %>\
+                        <li><a class="connectionType" data-type="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/>\
         Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
         NumCells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\

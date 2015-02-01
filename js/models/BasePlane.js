@@ -45,10 +45,9 @@ BasePlane = Backbone.Model.extend({
             if (connectionType == "face"){
                 return this._createOctaFaceMesh();
             } else if (connectionType == "edge"){
-                if (this.get("zIndex")%2 == 0) return this._createOctaFaceMesh();
-
+                return this._createOctaFaceMesh();
             } else if (connectionType == "vertex"){
-
+                return this._createOctaFaceMesh();
             }
         }
     },
@@ -94,7 +93,7 @@ BasePlane = Backbone.Model.extend({
     },
 
     _createGridMesh: function(){
-
+        return this._createOctaFaceMesh();
     },
 
     _showMesh: function(){
