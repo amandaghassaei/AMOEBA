@@ -1,0 +1,141 @@
+
+
+body {
+    overflow:hidden;/*hide scroll bar*/
+}
+
+.navbar {
+    margin-bottom:0;
+    z-index: 2;
+    border-radius: 0;
+    opacity:0.8;
+}
+
+.navMenu {
+    display: none;
+    z-index: 1;
+    position:absolute;
+    /*opacity:0.8;*/
+    width: 100%;
+    left: 15px;
+    background-color: rgba(255,255,255,0.9);
+    padding-bottom: 20px;
+}
+
+.nav li a{
+    border-radius: 0!important;
+}
+
+.navbar-header {
+    padding-right: 0px;
+    width: 104px;
+}
+
+#logo {
+    height:150%;
+    position:relative;
+    top:-7px;
+}
+
+.demo-row{
+    padding:30px;
+}
+
+nav .btn {
+    margin-top: 5px;
+}
+
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+
+.fullWidth {
+    width: 100%!important;
+}
+
+#threeContainer {
+    top: 0px;
+    position: absolute;
+}
+
+/*menus*/
+
+#menuWrapper {
+    width: 400px;
+    height: 100%;
+    z-index: 2;
+    position: absolute;
+    display: block;
+    background-color: rgba(255,255,255,0.7);
+    right: 0px;
+    overflow:hidden;
+}
+
+.slider-selection {
+	background: #BABABA;
+}
+
+#STLImportStats {
+    display: none;
+}
+
+.dropdown-menu {
+    margin-top: 0!important;
+    border-top-left-radius: 0!important;
+    border-top-right-radius: 0!important;
+}
+
+.nav-tabs .active a{
+    background-color: transparent !important;
+    border-bottom-color: transparent!important;
+}
+
+.nav-tabs{
+    border-width: 0 !important;
+}
+
+.nav-tabs li a{
+    border-left-width: 1px;
+    border-right-width; 1px;
+    border-color: #DDD;
+    border-bottom: 2px solid #DDD!important;
+    color:#bebebe;
+    margin-left: -2px;
+    margin-right: -2px;
+    margin-top:-2px;
+    background-color: rgba(0,0,0,0.03);
+}
+
+.nav-tabs li a:hover{
+    color:#555;
+    background-color: transparent;
+}
+
+#menuContent{
+    padding: 30px;
+    /*min-height:100%;*/
+    overflow-y: auto;
+}
+
+hr {
+  border-color: #888 -moz-use-text-color #888;
+}
+
+

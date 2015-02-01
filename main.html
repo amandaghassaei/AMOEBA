@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/analytics.js"></script>
+
+    <!--UI-->
+    <script src="dependencies/jquery-2.1.3.js"></script>
+    <script src="dependencies/underscore.js"></script>
+
+    <!--backbone model/view framework-->
+    <script src="dependencies/backbone.js"></script>
+
+    <!--flatUI bootstrap theme-->
+    <link href="dependencies/flatUI/css/vendor/bootstrap.min.css" rel="stylesheet"><!-- Loading Bootstrap -->
+    <link href="dependencies/flatUI/css/flat-ui.css" rel="stylesheet"><!-- Loading Flat UI -->
+    <script src="dependencies/flatUI/js/flat-ui.js"></script>
+    <!--<script src="dependencies/flatUI/js/vendor/video.js"></script>-->
+
+    <!--bootstrap slider-->
+    <link href="dependencies/bootstrap-slider/bootstrap-slider.css" rel="stylesheet">
+    <script src="dependencies/bootstrap-slider/bootstrap-slider.js"></script>
+
+    <!--threeJS-->
+    <script src="dependencies/three.js"></script>
+    <script src="dependencies/OrbitControls.js"></script>
+
+    <!--stl import/export-->
+    <script src="dependencies/THREE2STL.js"></script>
+    <script src="dependencies/loaders/STLLoader.js"></script>
+
+    <!--numerical javascript-->
+    <script src="dependencies/numeric-1.2.6.js"></script>
+
+    <!--global variables-->
+    <script>
+        window.defaultLatticeScale = 20;
+    </script>
+
+    <!--multi-threading-->
+    <script src="js/worker.js"></script>
+    <script src="js/persistentWorkers.js"></script><!--global workers-->
+
+    <!--fea stuff-->
+    <script src="js/fea/DmaCell.js"></script>
+    <script src="js/fea/DmaPart.js"></script>
+    <!--<script src="js/fea/DmaBeam.js"></script>-->
+    <script src="js/fea/DmaNode.js"></script>
+
+    <!--models-->
+    <script src="js/models/AppState.js"></script>
+    <script src="js/models/ThreeModel.js"></script>
+    <script src="js/models/FillGeometry.js"></script>
+    <script src="js/models/BasePlane.js"></script>
+    <script src="js/models/Lattice.js"></script>
+    <script src="js/models/extrudeVisualizer.js"></script>
+
+    <!--views-->
+    <script src="js/menus/MenuWrapperView.js"></script>
+    <script src="js/menus/Navbar.js"></script>
+    <script src="js/menus/LatticeMenuView.js"></script>
+    <script src="js/menus/ImportMenuView.js"></script>
+    <script src="js/menus/PartMenuView.js"></script>
+    <script src="js/menus/SketchMenuView.js"></script>
+    <script src="js/menus/ScriptMenuView.js"></script>
+    <script src="js/threeViews/ThreeView.js"></script>
+    <script src="js/menus/exportMenu.js"></script>
+
+    <script src="js/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+</head>
+<body>
+
+<nav id="globalNav" class="navbar navbar-inverse navbar-embossed" role="navigation">
+    <div class="navbar-header">
+      <a id="mainNavLink" class="navbar-brand" target="_blank" href="http://cba.mit.edu"><img id="logo" src="assets/logo.png"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="navbar-collapse-01">
+      <ul class="nav navbar-nav navbar-left">
+        <li><a data-menu-id="navDesign" class="menuHoverControls" href="#">Design</a></li>
+        <li><a data-menu-id="navSim" class="menuHoverControls" href="#">Simulate</a></li>
+        <li><a data-menu-id="navAssemble" class="menuHoverControls" href="#">Assemble</a></li>
+        <li class="dropdown navDropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul class="dropdown-menu">
+            <li><a id="exportSTL" href="#">Export STL</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+        </li>
+        <li><a data-menu-id="about" class="menuHoverControls" href="#">About</a></li>
+       </ul>
+        <ul class="nav navbar-nav pull-right">
+            <li><a id="showHideMenu" href="#">Hide Menu >></a></li>
+        </ul>
+
+    </div><!-- /.navbar-collapse -->
+
+</nav>
+
+<div id="menuWrapper"><div id="menuHeader"></div><div id="menuContent"></div></div>
+
+<div id="importGeometry" class="row navMenu">
+</div>
+<div id="element" class="row navMenu">
+    <div class="row demo-row">
+        <div class="col-xs-3">
+           <a id="elementCube" href="#">Cube</a>
+        </div>
+    </div>
+</div>
+<div id="about" class="row navMenu">
+    <div class="row demo-row">
+        <div class="col-xs-3">
+           Latest code available on github
+        </div>
+    </div>
+</div>
+<div id="threeContainer"></div>
+
+
+</body>
+</html>
