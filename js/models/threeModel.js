@@ -74,7 +74,7 @@ function ThreeModel(){
         } else if (type == "part"){
             parts.splice(parts.indexOf(objectToRemove), 1);
         } else if (type == "basePlane"){
-            console.log("not sure if i should be hitting this")
+            console.log("not sure if i should be hitting this");
             basePlane.splice(basePlane.indexOf(objectToRemove), 1);
         }
 
