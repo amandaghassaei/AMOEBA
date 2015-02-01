@@ -97,10 +97,10 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.destroy();
         });
-        this.set("cells", this.defaults.cells);
-        this.set("cellsMax", this.defaults.cellsMax);
-        this.set("cellsMin", this.defaults.cellsMin);
-        this.set("nodes", this.defaults.nodes);
+        this.set("cells", [[[null]]]);
+        this.set("cellsMax", {x:0, y:0, z:0});
+        this.set("cellsMin", {x:0, y:0, z:0});
+        this.set("nodes", []);
         this.set("numCells", 0);
         this.get("basePlane").set("zIndex", 0);
         window.three.render();

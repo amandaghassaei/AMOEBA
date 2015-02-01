@@ -78,7 +78,7 @@ LatticeMenuView = Backbone.View.extend({
                         <li><a class="connectionType" data-type="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
-            </div><br/>\
+            </div><br/><br/>\
         Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
         NumCells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\
