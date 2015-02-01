@@ -14,8 +14,6 @@ BasePlane = Backbone.Model.extend({
         unitGeometry: null
     },
 
-    //pass in fillGeometry
-
     initialize: function(options){
 
         //draw mesh
