@@ -123,8 +123,9 @@
     DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
         if (this.parentCell) {
             this.parentCell.removePart(this.type);
+//            this.currentIntersectedPart = null;
             window.three.render();
-        }
+        } else console.warn("part has no parent cell");
     };
 
     DMAPart.prototype.destroy = function(){

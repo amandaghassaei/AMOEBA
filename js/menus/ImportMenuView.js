@@ -41,7 +41,7 @@ ImportMenuView = Backbone.View.extend({
     },
 
     _readDataURL: function(event, numFiles, filename, files){
-        if (files.length>1) console.log("too many files selected");
+        if (files.length>1) console.warn("too many files selected");
         var reader = new FileReader();
         reader.readAsDataURL(files[0]);
         var self = this;

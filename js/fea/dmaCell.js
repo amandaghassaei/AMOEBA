@@ -77,7 +77,6 @@
         _.each(this.parts, function(part){
             if (part) hasAnyParts = true;
         });
-        console.log("amanda");
         if (!hasAnyParts) window.lattice.removeCell(this);
     };
 
