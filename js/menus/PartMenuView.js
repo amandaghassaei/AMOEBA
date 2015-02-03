@@ -39,7 +39,7 @@ PartMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="50" data-slider-step="1" data-slider-value="<%= scale %>"/>\
+        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="50" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="columnSep" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\<br/>\
         ')
 

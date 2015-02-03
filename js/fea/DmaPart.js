@@ -42,18 +42,19 @@
     partMaterial.color.setRGB( 0.9619657144369509, 0.6625466032079207, 0.20799727886007258 );
 
     function DMAPart(type, oddZFlag, parent) {
+        //todo remove this?
         this.parentCell = parent;//use this reference to get position and scale
         this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
         this.type = type;
     }
 
     DMAPart.prototype._draw = function(){
+        if (this.mesh) console.warn("part mesh already in scene");
         this.mesh = this._makeMeshForType(this.type);
         window.three.sceneAdd(this.mesh, "part");
     };
 
     DMAPart.prototype._makeMeshForType = function(type){
-
         var mesh;
         switch(type){
             case 0:
@@ -69,37 +70,24 @@
                 else mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
                 break;
         }
-
-        mesh = this._setMeshPosition(mesh);
-        mesh = this._setMeshScale(mesh);
-        return mesh;
-    };
-
-    DMAPart.prototype._setMeshPosition = function(mesh, scale, position){
-        position = position || this.parentCell.position;
-        scale = scale || this.parentCell.getScale();
-        mesh.position.x = position.x;
-        mesh.position.y = -scale/3*Math.sqrt(3)+position.y;
-        mesh.position.z = position.z;
-
-        if (this.oddZFlag){//adjust some offsets for odd z layers
-            mesh.position.y += 7*scale/6;
-        }
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
 
-    DMAPart.prototype._setMeshScale = function(mesh, scale){
-        scale = scale || this.parentCell.getScale();
-        mesh.scale.set(scale, scale, scale);
+    DMAPart.prototype._setMeshPosition = function(mesh, scale, position){
+        mesh.position.x = position.x;
+        mesh.position.y = -scale/3*Math.sqrt(3)+position.y;
+        mesh.position.z = position.z;
+        if (this.oddZFlag){//adjust some offsets for odd z layers
+            mesh.position.y += 7*scale/6;
+        }
         return mesh;
     };
 
-    DMAPart.prototype.changeScale = function(scale, position){
-        this.position = position;
+    DMAPart.prototype.updateForScale = function(scale, position){
         if (this.mesh) {
+            this.mesh.scale.set(scale, scale, scale);
             this._setMeshPosition(this.mesh, scale, position);
-            this._setMeshScale(this.mesh, scale);
         }
     };
 
@@ -123,7 +111,6 @@
     DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
         if (this.parentCell) {
             this.parentCell.removePart(this.type);
-//            this.currentIntersectedPart = null;
             window.three.render();
         } else console.warn("part has no parent cell");
     };

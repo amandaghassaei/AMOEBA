@@ -17,7 +17,6 @@ ThreeView = Backbone.View.extend({
     //intersections/object highlighting
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
-    currentIntersectedCell: null,
     currentIntersectedPart:null,
 
     el: "#threeContainer",
@@ -65,14 +64,14 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _mouseOut: function(){
-        this._setNoCellIntersections();
+        this.highlighter.setNoCellIntersections();
         this._setNoPartIntersections();
     },
 
     _mouseUp: function(){
         this.mouseIsDown = false;
         if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
-        else this._addRemoveVoxel(!this.appState.get("deleteMode"));
+        else this.highlighter.addRemoveVoxel(!this.appState.get("deleteMode"));
     },
 
     _mouseDown: function(){
@@ -82,7 +81,7 @@ ThreeView = Backbone.View.extend({
     _mouseMoved: function(e){
 
         if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
-            this._setNoCellIntersections();
+            this.highlighter.setNoCellIntersections();
             this._setNoPartIntersections();
             return;
         }
@@ -95,11 +94,11 @@ ThreeView = Backbone.View.extend({
         //check if we're intersecting anything
         var cellIntersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
         if (cellIntersections.length == 0) {
-            this._setNoCellIntersections();
+            this.highlighter.setNoCellIntersections();
             this._setNoPartIntersections();
             return;
         }
-        this._handleCellIntersections(cellIntersections);
+        this._handleCellIntersections(cellIntersections[0]);
 
         if (this.lattice.get("cellMode") == "part"){//additionally check for part intersections in part mode
             var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
@@ -115,11 +114,6 @@ ThreeView = Backbone.View.extend({
     ///////////////////////////////INTERSECTIONS////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
 
-    _setNoCellIntersections: function(){
-        this.currentIntersectedCell = null;
-        this.highlighter.hide();
-    },
-
     _setNoPartIntersections: function(){
         if (this.currentIntersectedPart){
             this.currentIntersectedPart.unhighlight();
@@ -134,7 +128,7 @@ ThreeView = Backbone.View.extend({
             this._setNoPartIntersections();
             return;
         }
-        this._setNoCellIntersections();
+        this.highlighter.setNoCellIntersections();
         if (part!= this.currentIntersectedPart){
             if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
             part.highlight();
@@ -143,49 +137,21 @@ ThreeView = Backbone.View.extend({
         }
     },
 
-    _handleCellIntersections: function(intersections){
+    _handleCellIntersections: function(intersection){
 
-        this.currentIntersectedCell = intersections[0].object;
+        this.highlighter.highlightCell(intersection.object, intersection.face);
 
-        if (this.appState.get("deleteMode") && this.mouseIsDown){
-            this._addRemoveVoxel(false);
-            return;
-        }
-
+//        if (this.appState.get("deleteMode") && this.mouseIsDown){
+//            this.highlighter.addRemoveVoxel(false);
+//        } else if (this.mouseIsDown && this.appState.get("shift")){
+//            this.highlighter.addRemoveVoxel(true);
+//        }
 //        if (this.appState.get("extrudeMode") && this.mouseIsDown){
 //            if (!this.highlighter.isVisible) return;
 //            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
 //            return;
 //        }
 
-        //check if we've moved to a new face
-        var intersection = intersections[0].face;
-        if (this.highlighter.isVisible() && this.highlighter.isHighlighting(intersection)) return;
-
-        if (intersection.normal.z<0.99){//only highlight horizontal faces
-            this.highlighter.hide();
-            return;
-        }
-
-        //update highlighter
-        this.highlighter.show(false);
-        this.highlighter.highlightFace(intersections[0]);
-
-        if (this.mouseIsDown && this.appState.get("shift")) this._addRemoveVoxel(true);
-
-        window.three.render();
-    },
-
-    _addRemoveVoxel: function(shouldAdd){
-
-        if (shouldAdd){
-            if (!this.highlighter.isVisible()) return;
-            this.lattice.addCell(this.highlighter.getNextCellPosition());
-        } else {
-            if (this.currentIntersectedCell === this.model.basePlane[0]) return;
-            this.lattice.removeCellFromMesh(this.currentIntersectedCell);
-        }
-        this.highlighter.hide();
     }
 
 });

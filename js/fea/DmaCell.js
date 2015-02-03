@@ -23,31 +23,15 @@
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    var cellGeometry1;
-    var cellGeometry2;
-
-    var globalCellScale = window.defaultLatticeScale;
-
-    setGlobalCellScale(globalCellScale);
-
-    function setGlobalCellScale(scale){
-        globalCellScale = scale;
-        cellGeometry1 = unitCellGeo1.clone();
-        cellGeometry1.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
-        cellGeometry2 = unitCellGeo2.clone();
-        cellGeometry2.applyMatrix(new THREE.Matrix4().makeScale(scale, scale, scale));
-    }
-
     function DMACell(mode, indices, scale, lattice) {
 
         this.indices = indices;
-        this.scale = scale;
         this.lattice = lattice;//need ref back to lattice
-        this.position = this._calcPosition(scale, indices);
-        this.cellMesh = this._buildCellMesh(this.position, indices.z);
-        window.three.sceneAdd(this.cellMesh, "cell");
+        this.cellMesh = this._buildCellMesh(indices.z);
+        this.parts = this._initParts(indices.z);
+        this.updateForScale(scale);
 
-        this.parts = this._initParts(this.position, indices.z);
+        window.three.sceneAdd(this.cellMesh, "cell");
         this.drawForMode(mode);
     }
 
@@ -63,7 +47,7 @@
         return position;
     };
 
-    DMACell.prototype._initParts = function(position, zIndex){
+    DMACell.prototype._initParts = function(zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
             parts.push(new DMAPart(i, zIndex%2==1, this));
@@ -78,20 +62,16 @@
         _.each(this.parts, function(part){
             if (part) hasAnyParts = true;
         });
-        if (!hasAnyParts) this.lattice.removeCell(this);
+        if (!hasAnyParts) this.lattice.removeCell(this);//if all parts are gone, remove cell
     };
 
-    DMACell.prototype._buildCellMesh = function(position, zIndex){//abstract mesh representation of cell
-
+    DMACell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
-
         if (zIndex%2==0){
-            mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry1, cellMaterials);
+            mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo1, cellMaterials);
         } else {
-            mesh = THREE.SceneUtils.createMultiMaterialObject(cellGeometry2, cellMaterials);
+            mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo2, cellMaterials);
         }
-        mesh = this._setMeshPosition(mesh, position);
-
         mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
@@ -124,37 +104,14 @@
         this.cellMesh.visible = visibility;
     };
 
-    DMACell.prototype.changeScale = function(scale){
-
-        this.scale = scale;
-
-        //update geometry
-        if (globalCellScale != scale) {
-            setGlobalCellScale(scale);
-        }
-        if (this.indices.z%2==0){
-            this._updateVertices(cellGeometry1.vertices);
-        } else {
-            this._updateVertices(cellGeometry2.vertices);
-        }
-
-        this.position = this._calcPosition(scale, this.indices);
-        this._setMeshPosition(this.cellMesh, this.position);
+    DMACell.prototype.updateForScale = function(scale){
+        this.cellMesh.scale.set(scale, scale, scale);
+        var position = this._calcPosition(scale, this.indices);
+        this._setMeshPosition(this.cellMesh, position);
         _.each(this.parts, function(part){
-                if (part) part.changeScale(scale, this.position);
+                if (part) part.updateForScale(scale, position);
          });
     };
-
-    DMACell.prototype._updateVertices = function(vertices){
-        _.each(this.cellMesh.children, function(mesh){
-            mesh.geometry.vertices = vertices;
-            mesh.geometry.verticesNeedUpdate = true;
-        });
-    };
-
-    DMACell.prototype.getScale = function(){
-         return this.scale;//I don't like this stored here
-     };
 
     DMACell.prototype.destroy = function(){
         if (this.cellMesh) {
@@ -169,8 +126,6 @@
             if (part) part.destroy();
         });
         this.indices = null;
-        this.scale = null;
-        this.position = null;
         this.lattice = null;
         this.parts = null;
     };

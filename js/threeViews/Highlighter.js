@@ -5,7 +5,8 @@
 Highlighter = Backbone.View.extend({
 
     mesh: null,
-    currentHighlightedFace: null,
+    intersectedFace: null,
+    intersectedCell: null,//current cell we are intersecting
 
     initialize: function(){
 
@@ -33,24 +34,55 @@ Highlighter = Backbone.View.extend({
         }
     },
 
-    show: function(shouldRender){
+    show: function(){
         if (!this.mesh.visible){
             this.mesh.visible = true;
-            if (shouldRender) window.three.render();
+            window.three.render();
         }
+    },
+
+    highlightCell: function(object, face){
+
+        if (object.parent && object.parent.myCell) {
+            this.intersectedCell = object.parent.myCell;
+        } else {
+            this.intersectedCell = null;//we're on the base plane
+        }
+
+        if (this.isVisible() && this._isHighlighting(face)) return;//nothing has changed
+
+        this.currentHighlightedFace = face;
+
+        if (face.normal.z<0.99){//only highlight horizontal faces
+            this.hide();
+            return;
+        }
+
+        //update highlighter
+        this._highlightFace(object, face);
+        this.show();
+    },
+
+    _getCurrentIntersectedCell: function(){
+        return this.currentIntersectedCell;
+    },
+
+    setNoCellIntersections: function(){
+        this.intersectedCell = null;
+        this.currentIntersectedCell = null;
+        this.hide();
     },
 
     isVisible: function(){
         return this.mesh.visible;
     },
 
-    isHighlighting: function(face){
+    _isHighlighting: function(face){
         return this.currentHighlightedFace == face;
     },
 
-    highlightFace: function(intersection){
-        this.currentHighlightedFace = intersection.face;
-        this.mesh.geometry.vertices = this._calcNewHighlighterVertices(intersection.object, intersection.face);
+    _highlightFace: function(object, face){
+        this.mesh.geometry.vertices = this._calcNewHighlighterVertices(object, face);
         this.mesh.geometry.verticesNeedUpdate = true;
     },
 
@@ -69,6 +101,20 @@ Highlighter = Backbone.View.extend({
 
     getNextCellPosition: function(){
         return this.mesh.geometry.vertices[0];
+    },
+
+    addRemoveVoxel: function(shouldAdd){
+
+        if (shouldAdd){
+            if (!this.isVisible()) return;
+            this.model.addCell(this.highlighter.getNextCellPosition());
+        } else {
+            var currentIntersectedCell = this._getCurrentIntersectedCell();
+            if (currentIntersectedCell === this.model.basePlane[0]) return;
+            this.model.removeCellFromMesh(currentIntersectedCell);
+        }
+        this.highlighter.hide();
     }
+
 
 });
