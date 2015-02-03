@@ -107,13 +107,13 @@ Highlighter = Backbone.View.extend({
 
         if (shouldAdd){
             if (!this.isVisible()) return;
-            this.model.addCell(this.highlighter.getNextCellPosition());
+            this.model.addCell(this.getNextCellPosition());
         } else {
             var currentIntersectedCell = this._getCurrentIntersectedCell();
-            if (currentIntersectedCell === this.model.basePlane[0]) return;
+            if (currentIntersectedCell === this.model.get("basePlane").get("mesh")) return;
             this.model.removeCellFromMesh(currentIntersectedCell);
         }
-        this.highlighter.hide();
+        this.hide();
     }
 
 
