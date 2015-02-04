@@ -52,9 +52,7 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    addCell: function(absPosition){
-
-        var cells = this.get("cells");
+    addCellAtPosition: function(absPosition){
 
         //calc indices in cell matrix
         var scale = this.get("scale");
@@ -66,11 +64,19 @@ Lattice = Backbone.Model.extend({
         position.z = Math.round(absPosition.z/octHeight);
         if (position.z%2 == 1) position.y += 1;
 
+        this.addCellAtIndex(position);
+    },
+
+    addCellAtIndex: function(indices){
+
+        var cells = this.get("cells");
+        var scale = this.get("scale");
+
         //check for matrix expansion
         var lastMax = this.get("cellsMax");
         var lastMin = this.get("cellsMin");
-        var newMax = this._updateCellsMax(position, lastMax);
-        var newMin = this._updateCellsMin(position, lastMin);
+        var newMax = this._updateCellsMax(indices, lastMax);
+        var newMin = this._updateCellsMin(indices, lastMin);
         if (newMax) {
             this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
             this.set("cellsMax", newMax);
@@ -80,18 +86,11 @@ Lattice = Backbone.Model.extend({
             this.set("cellsMin", newMin);
         }
 
-        var index = this._subtract(position, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), position, scale, this);
+        var index = this._subtract(indices, this.get("cellsMin"));
+        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), indices, scale, this);
         else console.warn("already a cell there");
         this.set("numCells", this.get("numCells")+1);
         window.three.render();
-    },
-
-    removeCellFromMesh: function(object){
-
-        if (!object) return;
-        this.removeCell(object.parent.myCell);
-
     },
 
     removeCell: function(cell){

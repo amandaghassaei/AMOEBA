@@ -20,5 +20,5 @@ $(function(){
     //threeJS View
     new ThreeView({model:window.three, lattice:lattice, appState:appState});
 
-    lattice.addCell(new THREE.Vector3(0,0,0));
+    lattice.addCellAtIndex({x:0,y:0,z:0});
 });

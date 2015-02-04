@@ -51,7 +51,7 @@ Highlighter = Backbone.View.extend({
 
         if (this.isVisible() && this._isHighlighting(face)) return;//nothing has changed
 
-        this.currentHighlightedFace = face;
+        this.intersectedFace = face;
 
         if (face.normal.z<0.99){//only highlight horizontal faces
             this.hide();
@@ -63,13 +63,9 @@ Highlighter = Backbone.View.extend({
         this.show();
     },
 
-    _getCurrentIntersectedCell: function(){
-        return this.currentIntersectedCell;
-    },
 
     setNoCellIntersections: function(){
         this.intersectedCell = null;
-        this.currentIntersectedCell = null;
         this.hide();
     },
 
@@ -78,7 +74,7 @@ Highlighter = Backbone.View.extend({
     },
 
     _isHighlighting: function(face){
-        return this.currentHighlightedFace == face;
+        return this.intersectedFace == face;
     },
 
     _highlightFace: function(object, face){
@@ -99,19 +95,25 @@ Highlighter = Backbone.View.extend({
         return newVertices;
     },
 
-    getNextCellPosition: function(){
+    _getNextCellPosition: function(){
         return this.mesh.geometry.vertices[0];
+    },
+
+    _getNextCellVertices: function(){//offset vertices with +1 in z
+        var vertices = _.clone(this.intersectedCell.indices);
+        vertices.z += 1;
+        return vertices;
     },
 
     addRemoveVoxel: function(shouldAdd){
 
         if (shouldAdd){
             if (!this.isVisible()) return;
-            this.model.addCell(this.getNextCellPosition());
+            if (this.intersectedFace && !this.intersectedCell) this.model.addCellAtPosition(this._getNextCellPosition());
+            else this.model.addCellAtIndex(this._getNextCellVertices());
         } else {
-            var currentIntersectedCell = this._getCurrentIntersectedCell();
-            if (currentIntersectedCell === this.model.get("basePlane").get("mesh")) return;
-            this.model.removeCellFromMesh(currentIntersectedCell);
+            if (this.intersectedFace && !this.intersectedCell) return;//baseplane
+            this.model.removeCell(this.intersectedCell);
         }
         this.hide();
     }
