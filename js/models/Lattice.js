@@ -66,22 +66,6 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
-    _checkForMatrixExpansion: function(cells, indices){
-
-        var lastMax = this.get("cellsMax");
-        var lastMin = this.get("cellsMin");
-        var newMax = this._updateCellsMax(indices, lastMax);
-        var newMin = this._updateCellsMin(indices, lastMin);
-        if (newMax) {
-            this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
-            this.set("cellsMax", newMax);
-        }
-        if (newMin) {
-            this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
-            this.set("cellsMin", newMin);
-        }
-    },
-
     removeCell: function(cell){
         if (!cell) return;
         var index = this._subtract(cell.indices, this.get("cellsMin"));
@@ -111,6 +95,22 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
+
+    _checkForMatrixExpansion: function(cells, indices){
+
+        var lastMax = this.get("cellsMax");
+        var lastMin = this.get("cellsMin");
+        var newMax = this._updateCellsMax(indices, lastMax);
+        var newMin = this._updateCellsMin(indices, lastMin);
+        if (newMax) {
+            this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
+            this.set("cellsMax", newMax);
+        }
+        if (newMin) {
+            this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
+            this.set("cellsMin", newMin);
+        }
+    },
 
     _expandCellsArray: function(cells, expansion, fromFront){
 
