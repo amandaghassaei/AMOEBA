@@ -47,6 +47,8 @@ Lattice = Backbone.Model.extend({
         this.set("basePlane", new BasePlane({cellType:this.get("cellType"),
             connectionType:this.get("connectionType"),
             scale:this.get("scale")}));
+
+        this._initialize();//call subclass init
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -250,6 +252,24 @@ Lattice = Backbone.Model.extend({
 
 
 OctaFaceLattice = Lattice.extend({
+
+//    defaults: {
+//        columnSeparation: 0.2//% column separation
+//    },
+
+    _initialize: function(){
+
+        this.set("columnSeparation", 0.2);
+
+        //bind events
+        this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+    },
+
+    _changeColSeparation: function(){
+        var colSep = this.get("columnSeparation");
+        console.log(colSep);
+        this.get("basePlane").updateColSeparation(colSep);
+    },
 
     addCellAtPosition: function(absPosition){
 

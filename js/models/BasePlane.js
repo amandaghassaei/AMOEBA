@@ -28,6 +28,12 @@ BasePlane = Backbone.Model.extend({
 
     },
 
+    updateColSeparation: function(colSep){
+        var geometry = this.get("mesh").geometry;
+        geometry.vertices = this._calcOctaFaceVertices();
+        geometry.verticesNeedUpdate = true;
+    },
+
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
         var scale = this.get("mesh").scale.z;
@@ -66,23 +72,19 @@ BasePlane = Backbone.Model.extend({
     _createOctaFaceMesh: function(){
 
         var geometry = new THREE.Geometry();
-        var vertices = geometry.vertices;
+        geometry.dynamic = true;
+        geometry.vertices = this._calcOctaFaceVertices();
         var faces = geometry.faces;
 
-        var triangleHeight = 1/2*Math.sqrt(3);
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
+        var currentOffset = 0;
         for (var j=-dimX;j<=dimX;j++){
             for (var i=-dimY;i<=dimY;i++){
 
-                var xOffset = 0;
-                if (Math.abs(j)%2==1) xOffset = 1/2;
-                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight, 0));
-
+                currentOffset++;
                 if (j == -dimX || i == -dimY) continue;
-
-                var currentOffset = vertices.length;
 
                 if (Math.abs(j)%2==1){
 //                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
@@ -95,8 +97,32 @@ BasePlane = Backbone.Model.extend({
             }
 
         }
+
         geometry.computeFaceNormals();
         return new THREE.Mesh(geometry, this.get("material"));
+    },
+
+    _calcOctaFaceVertices: function(colSep){
+
+        var vertices = [];
+        var triangleHeight = 1/2*Math.sqrt(3);
+        var dimX = this.get("dimX");
+        var dimY = this.get("dimY");
+
+//        var pointVertOffset = triangleHeight*colSep;
+//        var baseVertOffset =
+
+        for (var j=-dimX;j<=dimX;j++){
+            for (var i=-dimY;i<=dimY;i++){
+
+                var xOffset = 0;
+                if (Math.abs(j)%2==1) xOffset = 1/2;
+                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight, 0));
+
+            }
+
+        }
+        return vertices;
     },
 
     _createGridMesh: function(){
