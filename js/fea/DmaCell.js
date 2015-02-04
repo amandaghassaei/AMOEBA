@@ -5,6 +5,96 @@
 
 //a Cell, a unit piece of the lattice
 
+function DMACell(mode, indices, scale, lattice) {
+
+    this.indices = indices;
+    this.lattice = lattice;//need ref back to lattice
+    this.cellMesh = this._buildCellMesh(indices.z);
+    this.parts = this._initParts(indices.z);
+    this.updateForScale(scale);
+
+    window.three.sceneAdd(this.cellMesh, "cell");
+    this.drawForMode(mode);
+}
+
+DMACell.prototype.removePart = function(index){
+    this.parts[index].destroy();
+    this.parts[index] = null;
+    var hasAnyParts = false;
+    _.each(this.parts, function(part){
+        if (part) hasAnyParts = true;
+    });
+    if (!hasAnyParts) this.lattice.removeCell(this);//if all parts are gone, remove cell
+};
+
+DMACell.prototype._setMeshPosition = function(mesh, position){
+    mesh.position.x = position.x;
+    mesh.position.y = position.y;
+    mesh.position.z = position.z;
+    return mesh;
+};
+
+DMACell.prototype.drawForMode = function(mode){
+    if (mode == "cell"){
+        this._setCellMeshVisibility(true);
+        _.each(this.parts, function(part){
+            if (part) part.hide();
+        });
+    } else if (mode == "part"){
+        this._setCellMeshVisibility(false);
+        _.each(this.parts, function(part){
+            if (part) part.show();
+        });
+    } else {
+        console.warn("unrecognized draw mode for cell");
+    }
+};
+
+DMACell.prototype._setCellMeshVisibility = function(visibility){
+    if (!this.cellMesh) return;
+    this.cellMesh.visible = visibility;
+};
+
+DMACell.prototype.updateForScale = function(scale){
+    this.cellMesh.scale.set(scale, scale, scale);
+    var position = this._calcPosition(scale, this.indices);
+    this._setMeshPosition(this.cellMesh, position);
+    _.each(this.parts, function(part){
+        if (part) part.updateForScale(scale, position);
+     });
+};
+
+DMACell.prototype.getScale = function(){//need for part relay
+    return this.lattice.get("scale");
+};
+
+DMACell.prototype.getPosition = function(){//need for part relay
+    return this._calcPosition(this.getScale(), this.indices);
+}
+
+DMACell.prototype.destroy = function(){
+    if (this.cellMesh) {
+        window.three.sceneRemove(this.cellMesh, "cell");
+        this.cellMesh.myCell = null;
+//            this.cellMesh.dispose();
+//            geometry.dispose();
+//            material.dispose();
+        this.cellMesh = null;
+    }
+    _.each(this.parts, function(part){
+        if (part) part.destroy();
+    });
+    this.indices = null;
+    this.lattice = null;
+    this.parts = null;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////OCTA FACE AND EDGE CLASS///////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
 (function () {
 
     var unitOctHeight = 2/Math.sqrt(6);
@@ -23,19 +113,13 @@
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    function DMACell(mode, indices, scale, lattice) {
 
-        this.indices = indices;
-        this.lattice = lattice;//need ref back to lattice
-        this.cellMesh = this._buildCellMesh(indices.z);
-        this.parts = this._initParts(indices.z);
-        this.updateForScale(scale);
-
-        window.three.sceneAdd(this.cellMesh, "cell");
-        this.drawForMode(mode);
+    function DMASideOctaCell(mode, indices, scale, lattice){
+        DMACell.call(this, mode, indices, scale, lattice);
     }
+    DMASideOctaCell.prototype = Object.create(DMACell.prototype);
 
-    DMACell.prototype._calcPosition = function(scale, indices){
+    DMASideOctaCell.prototype._calcPosition = function(scale, indices){
         var position = {};
         var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = scale/2*Math.sqrt(3);
@@ -47,7 +131,7 @@
         return position;
     };
 
-    DMACell.prototype._initParts = function(zIndex){
+    DMASideOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
             parts.push(new DMAPart(i, zIndex%2==1, this));
@@ -55,17 +139,7 @@
         return parts;
     };
 
-    DMACell.prototype.removePart = function(index){
-        this.parts[index].destroy();
-        this.parts[index] = null;
-        var hasAnyParts = false;
-        _.each(this.parts, function(part){
-            if (part) hasAnyParts = true;
-        });
-        if (!hasAnyParts) this.lattice.removeCell(this);//if all parts are gone, remove cell
-    };
-
-    DMACell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+    DMASideOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
         if (zIndex%2==0){
             mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo1, cellMaterials);
@@ -76,68 +150,6 @@
         return mesh;
     };
 
-    DMACell.prototype._setMeshPosition = function(mesh, position){
-        mesh.position.x = position.x;
-        mesh.position.y = position.y;
-        mesh.position.z = position.z;
-        return mesh;
-    };
-
-    DMACell.prototype.drawForMode = function(mode){
-        if (mode == "cell"){
-            this._setCellMeshVisibility(true);
-            _.each(this.parts, function(part){
-                if (part) part.hide();
-            });
-        } else if (mode == "part"){
-            this._setCellMeshVisibility(false);
-            _.each(this.parts, function(part){
-                if (part) part.show();
-            });
-        } else {
-            console.warn("unrecognized draw mode for cell");
-        }
-    };
-
-    DMACell.prototype._setCellMeshVisibility = function(visibility){
-        if (!this.cellMesh) return;
-        this.cellMesh.visible = visibility;
-    };
-
-    DMACell.prototype.updateForScale = function(scale){
-        this.cellMesh.scale.set(scale, scale, scale);
-        var position = this._calcPosition(scale, this.indices);
-        this._setMeshPosition(this.cellMesh, position);
-        _.each(this.parts, function(part){
-            if (part) part.updateForScale(scale, position);
-         });
-    };
-
-    DMACell.prototype.getScale = function(){//need for part relay
-        return this.lattice.get("scale");
-    };
-
-    DMACell.prototype.getPosition = function(){//need for part relay
-        return this._calcPosition(this.getScale(), this.indices);
-    }
-
-    DMACell.prototype.destroy = function(){
-        if (this.cellMesh) {
-            window.three.sceneRemove(this.cellMesh, "cell");
-            this.cellMesh.myCell = null;
-//            this.cellMesh.dispose();
-//            geometry.dispose();
-//            material.dispose();
-            this.cellMesh = null;
-        }
-        _.each(this.parts, function(part){
-            if (part) part.destroy();
-        });
-        this.indices = null;
-        this.lattice = null;
-        this.parts = null;
-    };
-
-    self.DMACell =  DMACell;
+    self.DMASideOctaCell = DMASideOctaCell;
 
 })();

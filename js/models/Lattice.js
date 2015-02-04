@@ -26,6 +26,7 @@ Lattice = Backbone.Model.extend({
         },
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
+        inverseCells: [[[null]]],//3d matrix containing all inverse cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
@@ -87,7 +88,7 @@ Lattice = Backbone.Model.extend({
         }
 
         var index = this._subtract(indices, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMACell(this.get("cellMode"), indices, scale, this);
+        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMASideOctaCell(this.get("cellMode"), indices, scale, this);
         else console.warn("already a cell there");
         this.set("numCells", this.get("numCells")+1);
         window.three.render();
