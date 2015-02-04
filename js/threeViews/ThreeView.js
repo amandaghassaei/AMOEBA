@@ -141,17 +141,12 @@ ThreeView = Backbone.View.extend({
 
         this.highlighter.highlightCell(intersection.object, intersection.face);
 
-        if (this.appState.get("deleteMode") && this.mouseIsDown){
+        if (!this.mouseIsDown) return;
+        if (this.appState.get("deleteMode")){
             this.highlighter.addRemoveVoxel(false);
-        } else if (this.mouseIsDown && this.appState.get("shift")){
+        } else if (this.appState.get("shift")){
             this.highlighter.addRemoveVoxel(true);
         }
-//        if (this.appState.get("extrudeMode") && this.mouseIsDown){
-//            if (!this.highlighter.isVisible) return;
-//            this.extrudeVisualizer.makeMeshFromProfile([this.highlighter]);
-//            return;
-//        }
-
     }
 
 });

@@ -112,7 +112,7 @@ Highlighter = Backbone.View.extend({
 
         if (shouldAdd){
             if (!this.isVisible()) return;
-            if (this.intersectedFace && !this.intersectedCell) this.model.addCellAtPosition(this._getNextCellPosition());
+            if (this.intersectedFace && !this.intersectedCell) this.model.addCellAtPosition(this._getNextCellPosition());//baseplane
             else this.model.addCellAtIndex(this._getNextCellVertices());
         } else {
             if (this.intersectedFace && !this.intersectedCell) return;//baseplane
@@ -120,6 +120,4 @@ Highlighter = Backbone.View.extend({
         }
         this._hide();
     }
-
-
 });
