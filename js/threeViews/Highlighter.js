@@ -24,14 +24,14 @@ Highlighter = Backbone.View.extend({
                 vertexColors:THREE.FaceColors
             }));
         window.three.sceneAdd(this.mesh, null);
-        this.hide();
+        this._hide();
     },
 
-    hide: function(){
+    _hide: function(){
         this._setVisibility(false);
     },
 
-    show: function(forceRender){
+    _show: function(forceRender){
         this._setVisibility(true, forceRender);
     },
 
@@ -57,19 +57,19 @@ Highlighter = Backbone.View.extend({
         this.intersectedFace = face;
 
         if (face.normal.z<0.99){//only highlight horizontal faces
-            this.hide();
+            this._hide();
             return;
         }
 
         //update highlighter
         this._highlightFace(object, face);
-        this.show(true);
+        this._show(true);
     },
 
 
     setNoCellIntersections: function(){
         this.intersectedCell = null;
-        this.hide();
+        this._hide();
     },
 
     isVisible: function(){
@@ -118,7 +118,7 @@ Highlighter = Backbone.View.extend({
             if (this.intersectedFace && !this.intersectedCell) return;//baseplane
             this.model.removeCell(this.intersectedCell);
         }
-        this.hide();
+        this._hide();
     }
 
 
