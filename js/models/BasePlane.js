@@ -8,8 +8,8 @@ BasePlane = Backbone.Model.extend({
     defaults: {
         zIndex: 0,
         mesh: null,
-        dimX: 100,
-        dimY: 100,
+        dimX: 10,
+        dimY: 10,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
         currentScene: "default",
         allScenes: {default:"Default", "mars":"Mars"}
@@ -69,11 +69,11 @@ BasePlane = Backbone.Model.extend({
         }
     },
 
-    _createOctaFaceMesh: function(){
+     _createOctaFaceMesh: function(){
 
         var geometry = new THREE.Geometry();
         geometry.dynamic = true;
-        geometry.vertices = this._calcOctaFaceVertices();
+        geometry.vertices = this._calcOctaFaceVertices(0.2);
         var faces = geometry.faces;
 
         var dimX = this.get("dimX");
@@ -88,9 +88,9 @@ BasePlane = Backbone.Model.extend({
 
                 if (Math.abs(j)%2==1){
 //                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
-                    faces.push(new THREE.Face3(currentOffset-2, currentOffset-3-2*dimX, currentOffset-2-2*dimY));
+                    faces.push(new THREE.Face3(3*currentOffset-4, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
                 } else {
-                    faces.push(new THREE.Face3(currentOffset-1, currentOffset-3-2*dimX, currentOffset-2-2*dimY));
+                    faces.push(new THREE.Face3(3*currentOffset-1, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
 //                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-3-2*baseDim));
                 }
 
@@ -109,15 +109,25 @@ BasePlane = Backbone.Model.extend({
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
-//        var pointVertOffset = triangleHeight*colSep;
-//        var baseVertOffset =
+        var baseVertOffset = colSep/Math.sqrt(3);
+        var pointVertOffset = 2*baseVertOffset;
+        var horizontalOffset = colSep;
 
         for (var j=-dimX;j<=dimX;j++){
             for (var i=-dimY;i<=dimY;i++){
 
                 var xOffset = 0;
-                if (Math.abs(j)%2==1) xOffset = 1/2;
-                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight, 0));
+                if (Math.abs(j)%2==0) {
+                } else {
+                    xOffset = 1/2;
+
+                }
+
+                vertices.push(new THREE.Vector3(i + xOffset - horizontalOffset, j*triangleHeight + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i + xOffset + horizontalOffset, j*triangleHeight + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight - pointVertOffset, 0));
+//                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight - pointVertOffset, 0));
+
 
             }
 
