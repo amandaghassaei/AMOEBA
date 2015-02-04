@@ -51,6 +51,7 @@
     DMAPart.prototype._draw = function(){
         if (this.mesh) console.warn("part mesh already in scene");
         this.mesh = this._makeMeshForType(this.type);
+        this.updateForScale(this.parentCell.getScale(), this.parentCell.getPosition());
         window.three.sceneAdd(this.mesh, "part");
     };
 
@@ -74,20 +75,20 @@
         return mesh;
     };
 
-    DMAPart.prototype._setMeshPosition = function(mesh, scale, position){
+    DMAPart.prototype._setMeshPosition = function(scale, position){
+        var mesh = this.mesh;
         mesh.position.x = position.x;
         mesh.position.y = -scale/3*Math.sqrt(3)+position.y;
         mesh.position.z = position.z;
         if (this.oddZFlag){//adjust some offsets for odd z layers
             mesh.position.y += 7*scale/6;
         }
-        return mesh;
     };
 
     DMAPart.prototype.updateForScale = function(scale, position){
         if (this.mesh) {
             this.mesh.scale.set(scale, scale, scale);
-            this._setMeshPosition(this.mesh, scale, position);
+            this._setMeshPosition(scale, position);
         }
     };
 

@@ -109,9 +109,17 @@
         var position = this._calcPosition(scale, this.indices);
         this._setMeshPosition(this.cellMesh, position);
         _.each(this.parts, function(part){
-                if (part) part.updateForScale(scale, position);
+            if (part) part.updateForScale(scale, position);
          });
     };
+
+    DMACell.prototype.getScale = function(){
+        return this.lattice.get("scale");
+    };
+
+    DMACell.prototype.getPosition = function(){
+        return this._calcPosition(this.getScale(), this.indices);
+    }
 
     DMACell.prototype.destroy = function(){
         if (this.cellMesh) {
