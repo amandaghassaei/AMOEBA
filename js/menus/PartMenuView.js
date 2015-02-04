@@ -20,7 +20,7 @@ PartMenuView = Backbone.View.extend({
     },
 
     _changeColSeparation: function(e){
-        this.model.set("columnSeparation", $(e.target).val());
+        this.model.set("columnSeparation", $(e.target).val()/100);
     },
 
     render: function(){
@@ -44,7 +44,7 @@ PartMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="50" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
+        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="35" data-slider-step="0.1" data-slider-value="<%= columnSeparation*100 %>"/>\
         ')
 
 });

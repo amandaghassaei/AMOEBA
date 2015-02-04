@@ -55,7 +55,8 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
     this.cellMesh.visible = visibility;
 };
 
-DMACell.prototype.updateForScale = function(scale){
+DMACell.prototype.updateForScale = function(){
+    var scale = this.getScale();
     this.cellMesh.scale.set(scale, scale, scale);
     var position = this._calcPosition(scale, this.indices);
     this._setMeshPosition(this.cellMesh, position);
@@ -114,7 +115,7 @@ DMACell.prototype.destroy = function(){
 
 
     function DMASideOctaCell(mode, indices, scale, lattice){
-        DMACell.call(this, mode, indices, scale, lattice);
+        DMACell.call(this, mode, indices, scale*(1-lattice.get("columnSeparation")), lattice);
     }
     DMASideOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -128,6 +129,10 @@ DMACell.prototype.destroy = function(){
         if (Math.abs(indices.y%2) == 1) position.x -= scale/2;
         if (Math.abs(indices.z%2) == 1) position.y -= triHeight*4/3;
         return position;
+    };
+
+    DMACell.prototype.getScale = function(){
+        return this.lattice.get("scale")*(1-this.lattice.get("columnSeparation"));
     };
 
     DMASideOctaCell.prototype._initParts = function(zIndex){

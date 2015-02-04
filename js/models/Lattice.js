@@ -214,7 +214,7 @@ Lattice = Backbone.Model.extend({
         var scale = this.get("scale");
         this.get("basePlane").updateScale(scale);
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale);
+            if (cell) cell.updateForScale();
         });
         window.three.render();
     },
@@ -259,16 +259,19 @@ OctaFaceLattice = Lattice.extend({
 
     _initialize: function(){
 
-        this.set("columnSeparation", 0.2);
-
         //bind events
         this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+
+        this.set("columnSeparation", 0.2);
     },
 
     _changeColSeparation: function(){
         var colSep = this.get("columnSeparation");
-        console.log(colSep);
         this.get("basePlane").updateColSeparation(colSep);
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.updateForScale();
+        });
+        window.three.render();
     },
 
     addCellAtPosition: function(absPosition){
@@ -287,7 +290,7 @@ OctaFaceLattice = Lattice.extend({
     },
 
     _makeCellForLatticeType: function(indices, scale){
-        return new DMASideOctaCell(this.get("cellMode"), indices, scale, this);
+        return new DMASideOctaCell(this.get("cellMode"), indices, scale*(1.0-this.get("columnSeparation")), this);
     }
 
 });

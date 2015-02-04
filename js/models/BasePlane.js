@@ -30,7 +30,7 @@ BasePlane = Backbone.Model.extend({
 
     updateColSeparation: function(colSep){
         var geometry = this.get("mesh").geometry;
-        geometry.vertices = this._calcOctaFaceVertices();
+        geometry.vertices = this._calcOctaFaceVertices(colSep);
         geometry.verticesNeedUpdate = true;
     },
 
@@ -69,11 +69,12 @@ BasePlane = Backbone.Model.extend({
         }
     },
 
-     _createOctaFaceMesh: function(){
+     _createOctaFaceMesh: function(colSep){
 
+        colSep = colSep || 0;
         var geometry = new THREE.Geometry();
         geometry.dynamic = true;
-        geometry.vertices = this._calcOctaFaceVertices(0.2);
+        geometry.vertices = this._calcOctaFaceVertices(colSep);
         var faces = geometry.faces;
 
         var dimX = this.get("dimX");
