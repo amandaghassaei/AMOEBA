@@ -53,27 +53,21 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    addCellAtPosition: function(absPosition){
-
-        //calc indices in cell matrix
-        var scale = this.get("scale");
-        var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = scale/2*Math.sqrt(3);
-        var position = {};
-        position.x = Math.round(absPosition.x/scale);
-        position.y = Math.round(absPosition.y/triHeight);
-        position.z = Math.round(absPosition.z/octHeight);
-        if (position.z%2 == 1) position.y += 1;
-
-        this.addCellAtIndex(position);
-    },
-
     addCellAtIndex: function(indices){
 
-        var cells = this.get("cells");
         var scale = this.get("scale");
+        var cells = this.get("cells");
+        this._checkForMatrixExpansion(cells, indices);
 
-        //check for matrix expansion
+        var index = this._subtract(indices, this.get("cellsMin"));
+        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = this._makeCellForLatticeType(indices, scale);
+        else console.warn("already a cell there");
+        this.set("numCells", this.get("numCells")+1);
+        window.three.render();
+    },
+
+    _checkForMatrixExpansion: function(cells, indices){
+
         var lastMax = this.get("cellsMax");
         var lastMin = this.get("cellsMin");
         var newMax = this._updateCellsMax(indices, lastMax);
@@ -86,12 +80,6 @@ Lattice = Backbone.Model.extend({
             this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
             this.set("cellsMin", newMin);
         }
-
-        var index = this._subtract(indices, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = new DMASideOctaCell(this.get("cellMode"), indices, scale, this);
-        else console.warn("already a cell there");
-        this.set("numCells", this.get("numCells")+1);
-        window.three.render();
     },
 
     removeCell: function(cell){
@@ -254,3 +242,46 @@ Lattice = Backbone.Model.extend({
     }
 
 });
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////FACE CONN OCTA LATTICE////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+OctaFaceLattice = Lattice.extend({
+
+    addCellAtPosition: function(absPosition){
+
+        //calc indices in cell matrix
+        var scale = this.get("scale");
+        var octHeight = 2*scale/Math.sqrt(6);
+        var triHeight = scale/2*Math.sqrt(3);
+        var position = {};
+        position.x = Math.round(absPosition.x/scale);
+        position.y = Math.round(absPosition.y/triHeight);
+        position.z = Math.round(absPosition.z/octHeight);
+        if (position.z%2 == 1) position.y += 1;
+
+        this.addCellAtIndex(position);
+    },
+
+    _makeCellForLatticeType: function(indices, scale){
+        return new DMASideOctaCell(this.get("cellMode"), indices, scale, this);
+    }
+
+});
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////EDGE CONN OCTA LATTICE////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////VERTEX CONN OCTA LATTICE//////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////CUBE LATTICE//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
