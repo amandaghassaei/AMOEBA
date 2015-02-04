@@ -35,7 +35,7 @@ SketchMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        Sketch Plane Height:&nbsp;&nbsp;<input id="zHeightSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="<%= zIndex %>"/>\
+        Sketch Plane Height:&nbsp;&nbsp;<input id="zHeightSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="2" data-slider-value="<%= zIndex %>"/>\
         ')
 
 });
