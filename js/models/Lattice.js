@@ -290,7 +290,7 @@ OctaFaceLattice = Lattice.extend({
     },
 
     _makeCellForLatticeType: function(indices, scale){
-        return new DMASideOctaCell(this.get("cellMode"), indices, scale*(1.0-this.get("columnSeparation")), this);
+        return new DMASideOctaCell(this.get("cellMode"), indices, scale*(1.0-2*this.get("columnSeparation")), this);
     }
 
 });

@@ -71,7 +71,7 @@ BasePlane = Backbone.Model.extend({
 
      _createOctaFaceMesh: function(colSep){
 
-        colSep = colSep || 0;
+        colSep = colSep || 0.2;
         var geometry = new THREE.Geometry();
         geometry.dynamic = true;
         geometry.vertices = this._calcOctaFaceVertices(colSep);
@@ -106,7 +106,8 @@ BasePlane = Backbone.Model.extend({
     _calcOctaFaceVertices: function(colSep){
 
         var vertices = [];
-        var triangleHeight = 1/2*Math.sqrt(3);
+        var latticeScale = 1+2*colSep;
+        var triangleHeight = latticeScale/2*Math.sqrt(3);
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
@@ -120,15 +121,12 @@ BasePlane = Backbone.Model.extend({
                 var xOffset = 0;
                 if (Math.abs(j)%2==0) {
                 } else {
-                    xOffset = 1/2;
-
+                    xOffset = 1/2*latticeScale;
                 }
 
-                vertices.push(new THREE.Vector3(i + xOffset - horizontalOffset, j*triangleHeight + baseVertOffset, 0));
-                vertices.push(new THREE.Vector3(i + xOffset + horizontalOffset, j*triangleHeight + baseVertOffset, 0));
-                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight - pointVertOffset, 0));
-//                vertices.push(new THREE.Vector3(i + xOffset, j*triangleHeight - pointVertOffset, 0));
-
+                vertices.push(new THREE.Vector3(i*latticeScale + xOffset - horizontalOffset, j*triangleHeight + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i*latticeScale + xOffset + horizontalOffset, j*triangleHeight + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i*latticeScale + xOffset, j*triangleHeight - pointVertOffset, 0));
 
             }
 

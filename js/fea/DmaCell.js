@@ -120,19 +120,20 @@ DMACell.prototype.destroy = function(){
     DMASideOctaCell.prototype = Object.create(DMACell.prototype);
 
     DMASideOctaCell.prototype._calcPosition = function(scale, indices){
+        var latticeScale = this.getLatticeScale();
         var position = {};
         var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = scale/2*Math.sqrt(3);
-        position.x = indices.x*scale;
+        var triHeight = latticeScale/2*Math.sqrt(3);
+        position.x = indices.x*latticeScale;
         position.y = indices.y*triHeight;
         position.z = indices.z*octHeight;
-        if (Math.abs(indices.y%2) == 1) position.x -= scale/2;
+        if (Math.abs(indices.y%2) == 1) position.x -= latticeScale/2;
         if (Math.abs(indices.z%2) == 1) position.y -= triHeight*4/3;
         return position;
     };
 
-    DMACell.prototype.getScale = function(){
-        return this.lattice.get("scale")*(1-this.lattice.get("columnSeparation"));
+    DMACell.prototype.getLatticeScale = function(){
+        return this.lattice.get("scale")*(1.0+2*this.lattice.get("columnSeparation"));
     };
 
     DMASideOctaCell.prototype._initParts = function(zIndex){
