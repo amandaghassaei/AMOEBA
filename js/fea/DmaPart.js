@@ -16,9 +16,9 @@
         unitPartGeo1 = geometry
         unitPartGeo1.dynamic = true;
         unitPartGeo1.computeBoundingBox();
-        var unitScale = 1/unitPartGeo1.boundingBox.max.y;
+        var unitScale = 1.2/unitPartGeo1.boundingBox.max.y;
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.2,-0.5, 0));
+        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.25,-0.6, -0.08));
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
         unitPartGeo1.dynamic = true;
         
