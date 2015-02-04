@@ -89,7 +89,12 @@ AppState = Backbone.Model.extend({
 //                if (currentTab != "sketch") return;
                 this.set("extrudeMode", state);
                 break;
-
+            case 76://l lattice mode
+                this.lattice.set("cellMode", "cell");
+                break;
+            case 80://p part mode
+                this.lattice.set("cellMode", "part");
+                break;
             default:
                 break;
         }

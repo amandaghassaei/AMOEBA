@@ -113,11 +113,11 @@
          });
     };
 
-    DMACell.prototype.getScale = function(){
+    DMACell.prototype.getScale = function(){//need for part relay
         return this.lattice.get("scale");
     };
 
-    DMACell.prototype.getPosition = function(){
+    DMACell.prototype.getPosition = function(){//need for part relay
         return this._calcPosition(this.getScale(), this.indices);
     }
 
