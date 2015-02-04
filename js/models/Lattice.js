@@ -94,6 +94,7 @@ Lattice = Backbone.Model.extend({
     },
 
     removeCell: function(cell){
+        if (!cell) return;
         var index = this._subtract(cell.indices, this.get("cellsMin"));
         var cells = this.get("cells");
         cell.destroy();

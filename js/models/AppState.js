@@ -8,7 +8,7 @@
 AppState = Backbone.Model.extend({
 
     defaults: {
-        currentNav:"navDesign",//design, sim, assemble
+        currentNav:"navDesign",// design, sim, assemble
         currentTab:"lattice",
 
         //last tab that one open in each of the main menus
