@@ -28,15 +28,18 @@ Highlighter = Backbone.View.extend({
     },
 
     hide: function(){
-        if (this.mesh.visible){
-            this.mesh.visible = false;
-            window.three.render();
-        }
+        this._setVisibility(false);
     },
 
-    show: function(){
-        if (!this.mesh.visible){
-            this.mesh.visible = true;
+    show: function(forceRender){
+        this._setVisibility(true, forceRender);
+    },
+
+    _setVisibility: function(visible, forceRender){
+        if (this.isVisible() != visible){
+            this.mesh.visible = visible;
+            window.three.render();
+        } else if (forceRender){
             window.three.render();
         }
     },
@@ -60,7 +63,7 @@ Highlighter = Backbone.View.extend({
 
         //update highlighter
         this._highlightFace(object, face);
-        this.show();
+        this.show(true);
     },
 
 
@@ -85,12 +88,12 @@ Highlighter = Backbone.View.extend({
     _calcNewHighlighterVertices: function(object, face){
         //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
         var vertices = object.geometry.vertices;
-        var position = (new THREE.Vector3()).setFromMatrixPosition(object.matrixWorld);
-        var newVertices =  [(new THREE.Vector3()).addVectors(vertices[face.a], position),
-            (new THREE.Vector3()).addVectors(vertices[face.b], position), (new THREE.Vector3()).addVectors(vertices[face.c], position)];
+        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
         var scale = this.model.get("scale");
+        var position = (new THREE.Vector3()).setFromMatrixPosition(object.matrixWorld);
         _.each(newVertices, function(vertex){//apply scale
             vertex.multiplyScalar(scale);
+            vertex.add(position);
         });
         return newVertices;
     },
