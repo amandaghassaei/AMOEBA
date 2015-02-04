@@ -12,7 +12,7 @@
     //import part geometry
     var loader = new THREE.STLLoader();
     loader.load("data/trianglePart.stl", function(geometry){
-        console.log("part loaded");
+
         unitPartGeo1 = geometry
         unitPartGeo1.dynamic = true;
         unitPartGeo1.computeBoundingBox();

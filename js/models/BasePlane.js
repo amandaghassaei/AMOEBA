@@ -19,6 +19,7 @@ BasePlane = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:currentScene", this._renderForCurrentScene);
+        this.listenTo(this, "change:zIndex", this._renderZIndexChange);
 
         //draw mesh
         this.set("mesh", this._makeBasePlaneMesh(options.cellType, options.connectionType));
@@ -27,8 +28,14 @@ BasePlane = Backbone.Model.extend({
 
     },
 
+    _renderZIndexChange: function(){
+        var zIndex = this.get("zIndex");
+        var scale = this.get("mesh").scale.z;
+        this.get("mesh").position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+        window.three.render();
+    },
+
     _renderForCurrentScene: function(){
-        console.log("amanda");
     },
 
     updateGeometry: function(cellType, connectionType, scale){
