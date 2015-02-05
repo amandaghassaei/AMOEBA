@@ -34,7 +34,7 @@ ImportMenuView = Backbone.View.extend({
 
     _buildWall: function(e){
         e.preventDefault();
-        this.lattice.addCellsInRange({min:{x:-50,y:-2,z:0}, max:{x:50,y:2,z:15}});
+        this.lattice.addCellsInRange({min:{x:-100,y:-1,z:0}, max:{x:100,y:2,z:18}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -128,7 +128,8 @@ ImportMenuView = Backbone.View.extend({
             <ul role="menu" class="dropdown-menu">\
               <!--<li><a class="selectMesh fillGeo" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>-->\
               <li><a id="selectWall" href="#">Wall</a></li>\
-              <li><a class="selectMesh cutTerrain" data-file="Airbus_A300-600.stl" href="#">Landscape</a></li>\
+              <li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>\
+              \<li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\
             </ul>\
         </div><!-- /btn-group -->')
 

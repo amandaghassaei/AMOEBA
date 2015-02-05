@@ -6,7 +6,7 @@
 FillGeometry = Backbone.Model.extend({
 
     defaults: {
-        material: new THREE.MeshBasicMaterial(
+        material: new THREE.MeshLambertMaterial(
             {color:0xf25536,
                 shading: THREE.FlatShading,
                 transparent:true,
@@ -29,6 +29,12 @@ FillGeometry = Backbone.Model.extend({
 
     buildNewMesh:function(){
         this.remove();
+
+        //center geometry in x and y
+        var geometry = this.get("geometry");
+        geometry.computeBoundingBox();
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x/2,-geometry.boundingBox.max.y/2,0));
+
         this.set({orientation:this.defaults.orientation, scale:this.defaults.scale}, {silent:true});//restore defaults
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
         this.makeBoundingBoxHelper(mesh);
