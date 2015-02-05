@@ -22,14 +22,21 @@
     DMAPart.prototype.updateForScale = function(scale, position){
         if (this.mesh) {
             this.mesh.scale.set(scale, scale, scale);
-            this._setMeshPosition(scale, position);
+            this._setMeshPosition(position);
         }
+    };
+
+    DMAPart.prototype._setMeshPosition = function(position){
+        var mesh = this.mesh;
+        mesh.position.x = position.x;
+        mesh.position.y = position.y;
+        mesh.position.z = position.z;
     };
 
     DMAPart.prototype.updateForScale = function(scale, position){
         if (this.mesh) {
             this.mesh.scale.set(scale, scale, scale);
-            this._setMeshPosition(scale, position);
+            this._setMeshPosition(position);
         }
     };
 
@@ -118,7 +125,7 @@
     }
     DMATrianglePart.prototype = Object.create(DMAPart.prototype);
 
-    DMAPart.prototype._makeMeshForType = function(type){
+    DMATrianglePart.prototype._makeMeshForType = function(type){
         var mesh;
         switch(type){
             case 0:
@@ -136,13 +143,6 @@
         }
         mesh.myPart = this;//need a ref back to this part
         return mesh;
-    };
-
-    DMATrianglePart.prototype._setMeshPosition = function(scale, position){
-        var mesh = this.mesh;
-        mesh.position.x = position.x;
-        mesh.position.y = position.y;
-        mesh.position.z = position.z;
     };
 
     self.DMATrianglePart = DMATrianglePart;
