@@ -8,8 +8,8 @@ BasePlane = Backbone.Model.extend({
     defaults: {
         zIndex: 0,
         mesh: null,
-        dimX: 10,
-        dimY: 10,
+        dimX: 100,
+        dimY: 100,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
         currentScene: "default",
         allScenes: {default:"Default", "mars":"Mars"}

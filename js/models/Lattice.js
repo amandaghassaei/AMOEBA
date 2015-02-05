@@ -219,9 +219,9 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
-    previewScaleChange: function(scale){
-        this.get("basePlane").updateScale(scale);
-    },
+//    previewScaleChange: function(scale){
+//        this.get("basePlane").updateScale(scale);
+//    },
 
     _changeLatticeStructure: function(){
         this.clearCells();
@@ -262,7 +262,7 @@ OctaFaceLattice = Lattice.extend({
         //bind events
         this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-        this.set("columnSeparation", 0.2);
+        this.set("columnSeparation", 0.1);
     },
 
     _changeColSeparation: function(){
@@ -279,10 +279,12 @@ OctaFaceLattice = Lattice.extend({
 
         //calc indices in cell matrix
         var scale = this.get("scale");
+        var colSep = this.get("columnSeparation");
+        var latticeScale = scale*(1+2*colSep);
         var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = scale/2*Math.sqrt(3);
+        var triHeight = latticeScale/2*Math.sqrt(3);
         var position = {};
-        position.x = Math.round(absPosition.x/scale);
+        position.x = Math.round(absPosition.x/latticeScale);
         position.y = Math.round(absPosition.y/triHeight);
         position.z = Math.round(absPosition.z/octHeight);
         if (position.z%2 == 1) position.y += 1;

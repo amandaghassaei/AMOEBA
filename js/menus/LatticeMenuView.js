@@ -13,7 +13,7 @@ LatticeMenuView = Backbone.View.extend({
         "click .cellType":                              "_changeCellType",
         "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
-        "slideStop #scaleSlider":                       "_changeScaleSlider"
+//        "slideStop #scaleSlider":                       "_changeScaleSlider"
     },
 
 
@@ -23,7 +23,7 @@ LatticeMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         this.listenTo(this.model, "change", function(){
-            if(!this.model.hasChanged('cellMode')){//ignore cell mode changes
+            if(!this.model.hasChanged('cellMode') && !(this.model.hasChanged('scale'))){//ignore cell mode changes
                 this.render();
             };
         });
@@ -44,14 +44,15 @@ LatticeMenuView = Backbone.View.extend({
 
     _sliderDidSlide: function(e){
         var scale = $(e.target)[0].value;
-        this.model.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
+        this.model.set("scale", $(e.target)[0].value);
+//        this.model.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
         $("#latticeScale").val(scale);
         window.three.render();
     },
 
-    _changeScaleSlider: function(e){
-        this.model.set("scale", $(e.target)[0].value);
-    },
+//    _changeScaleSlider: function(e){
+//        this.model.set("scale", $(e.target)[0].value);
+//    },
 
     _changeCellType: function(e){
         e.preventDefault();
