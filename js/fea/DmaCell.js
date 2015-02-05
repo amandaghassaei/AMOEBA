@@ -102,12 +102,11 @@ DMACell.prototype.destroy = function(){
     var unitCellGeo1 = new THREE.OctahedronGeometry(1/Math.sqrt(2));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
+    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,unitOctHeight/2));
 
     var unitCellGeo2 = unitCellGeo1.clone();
 
-    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,-1/Math.sqrt(3),unitOctHeight/2));
     unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeTranslation(0,1/Math.sqrt(3),unitOctHeight/2));
 
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
@@ -124,10 +123,9 @@ DMACell.prototype.destroy = function(){
         var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = latticeScale/2*Math.sqrt(3);
         position.x = indices.x*latticeScale;
-        position.y = indices.y*triHeight;
+        position.y = indices.y*triHeight-latticeScale/Math.sqrt(3);
         position.z = indices.z*octHeight;
         if (Math.abs(indices.y%2) == 1) position.x -= latticeScale/2;
-        if (Math.abs(indices.z%2) == 1) position.y -= triHeight*4/3;
         return position;
     };
 
@@ -138,7 +136,7 @@ DMACell.prototype.destroy = function(){
     DMASideOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMAPart(i, zIndex%2==1, this));
+            parts.push(new DMATrianglePart(i, zIndex%2==1, this));
         }
         return parts;
     };

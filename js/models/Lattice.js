@@ -262,7 +262,7 @@ OctaFaceLattice = Lattice.extend({
         //bind events
         this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-        this.set("columnSeparation", 0.1);
+        this.set("columnSeparation", 0.0);
     },
 
     _changeColSeparation: function(){
