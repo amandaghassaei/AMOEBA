@@ -132,6 +132,10 @@ LatticeMenuView = Backbone.View.extend({
             </div><br/><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
+        <label class="checkbox" for="invertGeo">\
+            <input type="checkbox" checked="checked" value="" id="invertGeo" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Show Inverse Geometry\
+        </label>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\

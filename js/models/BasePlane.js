@@ -28,12 +28,6 @@ BasePlane = Backbone.Model.extend({
 
     },
 
-    updateColSeparation: function(colSep){
-        var geometry = this.get("mesh").geometry;
-        geometry.vertices = this._calcOctaFaceVertices(colSep);
-        geometry.verticesNeedUpdate = true;
-    },
-
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
         var scale = this.get("mesh").scale.z;
@@ -55,26 +49,39 @@ BasePlane = Backbone.Model.extend({
         this.get("mesh").scale.set(scale, scale, scale);
     },
 
-    _makeBasePlaneMesh: function(cellType, connectionType){
-        if (cellType == "cube"){
-            return this._createGridMesh();
-        } else if (cellType == "octa"){
-            if (connectionType == "face"){
-                return this._createOctaFaceMesh();
-            } else if (connectionType == "edge"){
-                return this._createOctaFaceMesh();
-            } else if (connectionType == "vertex"){
-                return this._createOctaFaceMesh();
-            }
-        }
+    _showMesh: function(){
+        window.three.sceneAdd(this.get("mesh"), "basePlane");
+        window.three.render();
     },
 
-     _createOctaFaceMesh: function(colSep){
+    _removeMesh: function(){
+        window.three.sceneRemove(this.get("mesh"), "basePlane");
+    },
 
-        colSep = colSep || 0.2;
+    destroy: function(){
+        this.set("zIndex", null);
+        this.set("mesh", null);
+        this.set("material", null);
+        this.set("unitGeometry", null);
+        this.set("dimX", null);
+        this.set("dimY", null);
+    }
+
+});
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////OCTA FACE/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+OctaBasePlane = BasePlane.extend({
+
+    _makeBasePlaneMesh: function(){
+
         var geometry = new THREE.Geometry();
         geometry.dynamic = true;
-        geometry.vertices = this._calcOctaFaceVertices(colSep);
+        geometry.vertices = this._calcOctaFaceVertices(0.0);
         var faces = geometry.faces;
 
         var dimX = this.get("dimX");
@@ -134,26 +141,60 @@ BasePlane = Backbone.Model.extend({
         return vertices;
     },
 
-    _createGridMesh: function(){
-        return this._createOctaFaceMesh();
+    updateColSeparation: function(colSep){
+        var geometry = this.get("mesh").geometry;
+        geometry.vertices = this._calcOctaFaceVertices(colSep);
+        geometry.verticesNeedUpdate = true;
+    }
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////CUBE GRID/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+SquareBasePlane = BasePlane.extend({
+
+    _makeBasePlaneMesh: function(){
+
+        var geometry = new THREE.Geometry();
+        geometry.vertices = this._calcVertices();
+        var faces = geometry.faces;
+
+        var dimX = this.get("dimX");
+        var dimY = this.get("dimY");
+
+        var currentOffset = 0;
+        for (var j=-dimX;j<=dimX;j++){
+            for (var i=-dimY;i<=dimY;i++){
+
+                currentOffset++;
+                if (j == -dimX || i == -dimY) continue;
+
+//                faces.push(new THREE.Face3(currentOffset, currentOffset-1, currentOffset-dimY));
+
+            }
+
+        }
+
+        geometry.computeFaceNormals();
+        return new THREE.Mesh(geometry, this.get("material"));
     },
 
-    _showMesh: function(){
-        window.three.sceneAdd(this.get("mesh"), "basePlane");
-        window.three.render();
-    },
+    _calcVertices: function(){
 
-    _removeMesh: function(){
-        window.three.sceneRemove(this.get("mesh"), "basePlane");
-    },
+        var vertices = [];
+        var dimX = this.get("dimX");
+        var dimY = this.get("dimY");
 
-    destroy: function(){
-        this.set("zIndex", null);
-        this.set("mesh", null);
-        this.set("material", null);
-        this.set("unitGeometry", null);
-        this.set("dimX", null);
-        this.set("dimY", null);
+        for (var j=-dimX;j<=dimX;j++){
+            for (var i=-dimY;i<=dimY;i++){
+
+                vertices.push(new THREE.Vector3(i,j,0));
+            }
+
+        }
+        return vertices;
     }
 
 });

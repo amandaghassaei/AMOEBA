@@ -44,10 +44,6 @@ Lattice = Backbone.Model.extend({
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:cellType change:connectionType", this._changeLatticeStructure);
 
-        this.set("basePlane", new BasePlane({cellType:this.get("cellType"),
-            connectionType:this.get("connectionType"),
-            scale:this.get("scale")}));
-
         this._initialize();//call subclass init
     },
 
@@ -262,6 +258,9 @@ OctaFaceLattice = Lattice.extend({
         //bind events
         this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
+        this.set("basePlane", new OctaBasePlane({cellType:this.get("cellType"),
+            connectionType:this.get("connectionType"),
+            scale:this.get("scale")}));
         this.set("columnSeparation", 0.0);
     },
 
