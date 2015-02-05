@@ -51,17 +51,40 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
+    addCellsInRange: function(range){//add a block of cells
+        var scale = this.get("scale");
+        var cells = this.get("cells");
+        this._checkForMatrixExpansion(cells, range.max, range.min);
+
+        var relativeMin = this._subtract(range.min, this.get("cellsMin"));
+        var relativeMax = this._subtract(range.max, this.get("cellsMin"));
+
+        for (var x=relativeMin.x;x<relativeMax.x;x++){
+            for (var y=relativeMin.y;y<relativeMax.y;y++){
+                for (var z=relativeMin.z;z<relativeMax.z;z++){
+                    if (!cells[x][y][z]) {
+                        cells[x][y][z] = this._makeCellForLatticeType(this._add({x:x, y:y, z:z}, range.min), scale);
+                        this.set("numCells", this.get("numCells")+1);
+                    } else console.warn("already a cell there");
+                }
+            }
+        }
+        window.three.render();
+    },
+
     addCellAtIndex: function(indices){
 
         var scale = this.get("scale");
         var cells = this.get("cells");
-        this._checkForMatrixExpansion(cells, indices);
+        this._checkForMatrixExpansion(cells, indices, indices);
 
         var index = this._subtract(indices, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) cells[index.x][index.y][index.z] = this._makeCellForLatticeType(indices, scale);
-        else console.warn("already a cell there");
-        this.set("numCells", this.get("numCells")+1);
-        window.three.render();
+        if (!cells[index.x][index.y][index.z]) {
+            cells[index.x][index.y][index.z] = this._makeCellForLatticeType(indices, scale);
+            this.set("numCells", this.get("numCells")+1);
+            window.three.render();
+        } else console.warn("already a cell there");
+
     },
 
     removeCell: function(cell){
@@ -94,12 +117,12 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    _checkForMatrixExpansion: function(cells, indices){
+    _checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
 
         var lastMax = this.get("cellsMax");
         var lastMin = this.get("cellsMin");
-        var newMax = this._updateCellsMax(indices, lastMax);
-        var newMin = this._updateCellsMin(indices, lastMin);
+        var newMax = this._updateCellsMax(indicesMax, lastMax);
+        var newMin = this._updateCellsMin(indicesMin, lastMin);
         if (newMax) {
             this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
             this.set("cellsMax", newMax);
@@ -215,9 +238,9 @@ Lattice = Backbone.Model.extend({
         window.three.render();
     },
 
-//    previewScaleChange: function(scale){
-//        this.get("basePlane").updateScale(scale);
-//    },
+    previewScaleChange: function(scale){
+        this.get("basePlane").updateScale(scale);
+    },
 
     _changeLatticeStructure: function(){
         this.clearCells();

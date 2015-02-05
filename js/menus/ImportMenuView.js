@@ -12,7 +12,8 @@ ImportMenuView = Backbone.View.extend({
         "change #uploadMesh":               "_uploadMesh",
         "click .selectMesh":                "_selectMesh",
         "fileselect .btn-file :file":       "_readDataURL",
-        "click #removeFillGeo":             "_removeMesh"
+        "click #removeFillGeo":             "_removeMesh",
+        "click #selectWall":                "_buildWall"
     },
 
     initialize: function(options){
@@ -29,6 +30,11 @@ ImportMenuView = Backbone.View.extend({
         var filename = $(e.target).data("file");
         this._loadMeshFromURL('data/' + filename);
         this.model.set("filename", filename);
+    },
+
+    _buildWall: function(e){
+        e.preventDefault();
+        this.lattice.addCellsInRange({min:{x:-50,y:-2,z:0}, max:{x:50,y:2,z:15}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -120,7 +126,9 @@ ImportMenuView = Backbone.View.extend({
         <div class="btn-group fullWidth">\
             <button data-toggle="dropdown" class="btn btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>\
             <ul role="menu" class="dropdown-menu">\
-              <li><a class="selectMesh" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>\
+              <!--<li><a class="selectMesh fillGeo" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>-->\
+              <li><a id="selectWall" href="#">Wall</a></li>\
+              <li><a class="selectMesh cutTerrain" data-file="Airbus_A300-600.stl" href="#">Landscape</a></li>\
             </ul>\
         </div><!-- /btn-group -->')
 
