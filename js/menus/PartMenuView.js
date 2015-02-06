@@ -12,7 +12,7 @@ PartMenuView = Backbone.View.extend({
 
     initialize: function(options){
 
-        this.appState = options.appState;
+        this.lattice = options.lattice;
 
         _.bindAll(this, "render");
         this.listenTo(this.model, "change:partType", this.render);
@@ -20,11 +20,11 @@ PartMenuView = Backbone.View.extend({
     },
 
     _changeColSeparation: function(e){
-        this.model.set("columnSeparation", $(e.target).val()/100);
+        this.lattice.set("columnSeparation", $(e.target).val()/100);
     },
 
     render: function(){
-        if (this.appState.get("currentTab") != "part") return;
+        if (this.model.get("currentTab") != "part") return;
         this.$el.html(this.template(this.model.attributes));
 
         $('#columnSepSlider').slider({

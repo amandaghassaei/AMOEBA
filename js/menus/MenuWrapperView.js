@@ -17,10 +17,10 @@ MenuWrapper = Backbone.View.extend({
 
         //init all tab view controllers
         this.latticeMenu = new LatticeMenuView({model:this.model, lattice:options.lattice});
-//        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
-//        this.sketchMenu = new SketchMenuView({model:options.lattice.get("basePlane"), appState:this.model});
-//        this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
-//        this.scriptMenu = new ScriptMenuView({appState:this.model});
+        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
+        this.sketchMenu = new SketchMenuView({model:options.lattice.get("basePlane"), appState:this.model});
+        this.partMenu = new PartMenuView({model:this.model, lattice:options.lattice});
+        this.scriptMenu = new ScriptMenuView({model:this.model});
 //        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
 
         this.lattice = options.lattice;
