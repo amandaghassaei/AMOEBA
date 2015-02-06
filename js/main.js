@@ -10,15 +10,12 @@ $(function(){
 
     //init threeJS and geometry models
     window.three = new ThreeModel();
-    window.lattice = new OctaFaceLattice();
 
     //setup ui
-    var appState = new AppState({lattice:window.lattice});
-    new MenuWrapper({lattice:window.lattice, model:appState});
-    new NavBar({model:appState});
+    window.appState = new AppState();
+    var highlighter = new Highlighter({model:window.appState.get("lattice")});
+    new NavBar({model:window.appState});
 
     //threeJS View
-    new ThreeView({model:window.three, lattice:window.lattice, appState:appState});
-
-    window.lattice.addCellAtIndex({x:0,y:0,z:0});
+    new ThreeView({model:window.three, appState:window.appState, highlighter:highlighter});
 });

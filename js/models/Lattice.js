@@ -11,13 +11,14 @@ Lattice = Backbone.Model.extend({
         connectionType: "face",
         allCellTypes: {octa:"Octahedron", cube:"Cube"},
         allConnectionTypes: {
-            octa: {face:"Face", edge:"Edge", vertex:"Vertex"},
+            octa: {face:"Face", edge:"Edge", edgeRot:"Rotated Edge", vertex:"Vertex"},
             cube: {face:"Face"}
         },
         allPartTypes:{
             octa:{
                 face: {triangle:"Triangle"},
                 edge: {triangle:"Triangle"},
+                edgeRot: {triangle:"Triangle"},
                 vertex:{square:"Square", xShape:"X"}
             },
             cube:{
@@ -31,19 +32,18 @@ Lattice = Backbone.Model.extend({
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
         partType: "triangle",
-        cellMode: "cell",
         basePlane: null//plane to build from
     },
 
     //pass in fillGeometry
 
-    initialize: function(){
+    initialize: function(options){
 
         //bind events
-        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:cellType change:connectionType", this._changeLatticeStructure);
 
+        this.appState = options.appState;
         this._initialize();//call subclass init
     },
 
@@ -273,8 +273,7 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////EVENTS//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    _cellModeDidChange: function(){
-        var mode = this.get("cellMode");
+    cellModeDidChange: function(mode){
         this._iterCells(this.get("cells"), function(cell){
             if (cell && cell.drawForMode) cell.drawForMode(mode);
         });
@@ -312,6 +311,10 @@ Lattice = Backbone.Model.extend({
             });
 
         });
+    },
+
+    getScale: function(){
+        return this.get("scale");
     }
 
 });
@@ -333,10 +336,6 @@ OctaFaceLattice = Lattice.extend({
             connectionType:this.get("connectionType"),
             scale:this.get("scale")}));
         this.set("columnSeparation", 0.0);
-    },
-
-    getScale: function(){
-        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
     },
 
     _changeColSeparation: function(){
@@ -366,8 +365,12 @@ OctaFaceLattice = Lattice.extend({
         this.addCellAtIndex(position);
     },
 
+    getScale: function(){
+        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
+    },
+
     _makeCellForLatticeType: function(indices, scale){
-        return new DMASideOctaCell(this.get("cellMode"), indices, scale, this);
+        return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
     }
 
 });

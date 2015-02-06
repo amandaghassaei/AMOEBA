@@ -3,7 +3,7 @@
  */
 
 //a class to store global app state, model for navbar and menu wrapper
-//maybe other things eventually
+//never deallocated
 
 AppState = Backbone.Model.extend({
 
@@ -16,6 +16,10 @@ AppState = Backbone.Model.extend({
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
+        lattice: null,
+        menuWrapper: null,
+        cellMode: "cell",
+
         menuIsVisible: true,
 
         //key bindings
@@ -24,7 +28,7 @@ AppState = Backbone.Model.extend({
         extrudeMode: false
     },
 
-    initialize: function(options){
+    initialize: function(){
 
         _.bindAll(this, "_handleKeyStroke");
 
@@ -33,10 +37,19 @@ AppState = Backbone.Model.extend({
         $(document).bind('keyup', {state:false}, this._handleKeyStroke);
         this.listenTo(this, "change:currentTab", this._storeTab);
         this.listenTo(this, "change:currentTab", this._updateLatticeMode);
+        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
+        this.listenTo(this, "change:lattice", this._renderNewLattice);
 
-        this.lattice = options.lattice;
+        this.set("lattice", new OctaFaceLattice({appState:this}));
+        this.get("lattice").addCellAtIndex({x:0,y:0,z:0});
     },
+
+
+    ///////////////////////////////////////////////////////////////////////////////
+    /////////////////////EVENTS////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+
 
     _storeTab: function(){
         var currentNav = this.get("currentNav");
@@ -48,10 +61,10 @@ AppState = Backbone.Model.extend({
 
     _updateLatticeMode: function(){
         var currentTab = this.get("currentTab");
-        if (currentTab == "lattice") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "import") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "part") this.lattice.set("cellMode", "part");
+        if (currentTab == "lattice") this.set("cellMode", "cell");
+        else if (currentTab == "import") this.set("cellMode", "cell");
+        else if (currentTab == "sketch") this.set("cellMode", "cell");
+        else if (currentTab == "part") this.set("cellMode", "part");
     },
 
     //update to last tab open in that section
@@ -64,6 +77,14 @@ AppState = Backbone.Model.extend({
         else if (navSelection == "navAssemble") this.set("currentTab",
             this.get("lastAssembleTab"), {silent:true});
         this._updateLatticeMode();//a little bit hacky, this updates the lattice, but holds off on updating the menus til the animation has happened
+    },
+
+    _cellModeDidChange: function(){
+        this.get("lattice").cellModeDidChange(this.get("cellMode"));
+    },
+
+    _renderNewLattice: function(){
+        this.set("menuWrapper", new MenuWrapper({lattice:this.get("lattice"), model:this}));
     },
 
     ///////////////////////////////////////////////////////////////////////////////
@@ -82,7 +103,7 @@ AppState = Backbone.Model.extend({
                 break;
             case 32://space bar
                 e.preventDefault();
-                if (this.lattice.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
+                if (this.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);
                 break;
             case 69://e
@@ -90,10 +111,10 @@ AppState = Backbone.Model.extend({
                 this.set("extrudeMode", state);
                 break;
             case 76://l lattice mode
-                this.lattice.set("cellMode", "cell");
+                this.set("cellMode", "cell");
                 break;
             case 80://p part mode
-                this.lattice.set("cellMode", "part");
+                this.set("cellMode", "part");
                 break;
             default:
                 break;

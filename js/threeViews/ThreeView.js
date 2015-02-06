@@ -25,7 +25,6 @@ ThreeView = Backbone.View.extend({
 
     initialize: function(options){
 
-        this.lattice = options.lattice;
         this.appState = options.appState;
 
         _.bindAll(this, "_animate", "_mouseMoved");
@@ -39,7 +38,7 @@ ThreeView = Backbone.View.extend({
         this.$el.append(this.model.domElement);//render only once
 
         //init highlighter
-        this.highlighter = new Highlighter({model:options.lattice});
+        this.highlighter = options.highlighter;
 
         this.model.render();
         this._animate();
@@ -100,7 +99,7 @@ ThreeView = Backbone.View.extend({
         }
         this._handleCellIntersections(cellIntersections[0]);
 
-        if (this.lattice.get("cellMode") == "part"){//additionally check for part intersections in part mode
+        if (this.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
             var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
             if (partIntersections.length == 0) {
                 this._setNoPartIntersections();
