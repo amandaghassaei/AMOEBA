@@ -49,10 +49,12 @@ BasePlane = Backbone.Model.extend({
 
     _removeMesh: function(){
         window.three.sceneRemove(this.get("mesh"), "basePlane");
+        window.three.render();
     },
 
     destroy: function(){
         this.set("zIndex", null, {silent:true});
+        this._removeMesh();
         this.set("mesh", null, {silent:true});
         this.set("material", null, {silent:true});
         this.set("unitGeometry", null, {silent:true});
