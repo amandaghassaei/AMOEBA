@@ -65,7 +65,7 @@ DMACell.prototype.updateForScale = function(scale){
 };
 
 DMACell.prototype.getScale = function(){//need for part relay
-    return this.lattice.get("scale");
+    return this.lattice.getScale();
 };
 
 DMACell.prototype.getPosition = function(){//need for part relay
@@ -118,7 +118,7 @@ DMACell.prototype.destroy = function(){
     DMASideOctaCell.prototype = Object.create(DMACell.prototype);
 
     DMASideOctaCell.prototype._calcPosition = function(scale, indices){
-        var latticeScale = this.getLatticeScale();
+        var latticeScale = this.lattice.getScale();
         var position = {};
         var octHeight = 2*scale/Math.sqrt(6);
         var triHeight = latticeScale/2*Math.sqrt(3);
@@ -127,10 +127,6 @@ DMACell.prototype.destroy = function(){
         position.z = indices.z*octHeight;
         if (Math.abs(indices.y%2) == 1) position.x -= latticeScale/2;
         return position;
-    };
-
-    DMACell.prototype.getLatticeScale = function(){
-        return this.lattice.get("scale")*(1.0+2*this.lattice.get("columnSeparation"));
     };
 
     DMASideOctaCell.prototype._initParts = function(zIndex){

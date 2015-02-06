@@ -56,14 +56,15 @@ Lattice = Backbone.Model.extend({
         var cells = this.get("cells");
         this._checkForMatrixExpansion(cells, range.max, range.min);
 
-        var relativeMin = this._subtract(range.min, this.get("cellsMin"));
+        var cellsMin = this.get("cellsMin");
+        var relativeMin = this._subtract(range.min, cellsMin);
         var relativeMax = this._subtract(range.max, this.get("cellsMin"));
 
-        for (var x=relativeMin.x;x<relativeMax.x;x++){
-            for (var y=relativeMin.y;y<relativeMax.y;y++){
-                for (var z=relativeMin.z;z<relativeMax.z;z++){
+        for (var x=relativeMin.x;x<=relativeMax.x;x++){
+            for (var y=relativeMin.y;y<=relativeMax.y;y++){
+                for (var z=relativeMin.z;z<=relativeMax.z;z++){
                     if (!cells[x][y][z]) {
-                        cells[x][y][z] = this._makeCellForLatticeType(this._add({x:x, y:y, z:z}, range.min), scale);
+                        cells[x][y][z] = this._makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
                         this.set("numCells", this.get("numCells")+1);
                     } else console.warn("already a cell there");
                 }
@@ -112,6 +113,60 @@ Lattice = Backbone.Model.extend({
         this.get("basePlane").set("zIndex", 0);
         window.three.render();
     },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////FILL GEOMETRY////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    subtractMesh: function(mesh){
+
+        var scale = this.getScale();
+        var yscale = scale/2*Math.sqrt(3);
+        var zScale = this.get("scale")*2/Math.sqrt(6);
+
+        var cells = this.get("cells");
+        var cellsMin = this.get("cellsMin");
+
+        var allVertexPos = mesh.geometry.attributes.position.array;
+
+        var zHeight;
+        for (var x=0;x<cells.length;x++){
+            for (var y=0;y<cells[0].length;y++){
+                var firstCell = null;
+                for (var z=0;z<cells[0][0].length;z++){
+                    firstCell = cells[x][y][z];
+                    if (firstCell) break;
+                }
+                if (!firstCell) continue;//nothing in col
+
+                var origin = firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
+                zHeight = this._findIntersectionsInWindow(scale/2, yscale/2, origin, allVertexPos) || zHeight;
+
+//                if (!zHeight) zHeight = this._findIntersectionsInWindow(scale, yscale, origin, allVertexPos);
+//                if (!zHeight) zHeight = this._findIntersectionsInWindow(scale, 4*yscale, 4*origin, allVertexPos);
+
+                zHeight = Math.floor(zHeight/zScale);
+                for (var z=0;z<zHeight;z++){
+                    cells[x][y][z].destroy();
+                    cells[x][y][z] = null;
+                }
+            }
+
+        }
+        console.log("done");
+        window.three.render();
+    },
+
+    _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
+        for (var i=0;i<allVertexPos.length;i+=3){
+            if (allVertexPos[i] > origin.x-windowX && allVertexPos[i] < origin.x+windowX
+                && allVertexPos[i+1] > origin.y-windowY && allVertexPos[i+1] < origin.y+windowY){
+                return allVertexPos[i+2];
+            }
+        }
+        return null
+    },
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
@@ -285,6 +340,10 @@ OctaFaceLattice = Lattice.extend({
             connectionType:this.get("connectionType"),
             scale:this.get("scale")}));
         this.set("columnSeparation", 0.0);
+    },
+
+    getScale: function(){
+        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
     },
 
     _changeColSeparation: function(){

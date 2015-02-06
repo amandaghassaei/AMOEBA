@@ -10,15 +10,19 @@ FillGeometry = Backbone.Model.extend({
             {color:0xf25536,
                 shading: THREE.FlatShading,
                 transparent:true,
-                opacity:0.2}),
+                opacity:0.4,
+                side:THREE.DoubleSide}),
         geometry: null,
         filename: "No File Loaded",
         orientation: [0,0,0],
         scale: [1.0,1.0,1.0],
-        mesh: null
+        mesh: null,
+        isLandscape: true
     },
 
-    initialize: function(){
+    initialize: function(options){
+
+        this.lattice = options.lattice;
 
         //bind events
         this.on("change:mesh", this.getBounds);
@@ -62,6 +66,10 @@ FillGeometry = Backbone.Model.extend({
     updateBoundingBox: function(){
 //        this.get("boundingBoxHelper").update();
 //        this.trigger("change:boundingBoxHelper");
+    },
+
+    subtractGeo: function(){
+        this.lattice.subtractMesh(this.get("mesh"));
     },
 
     remove: function(){

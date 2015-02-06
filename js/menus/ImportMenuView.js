@@ -6,18 +6,21 @@
 ImportMenuView = Backbone.View.extend({
 
     el: "#menuContent",
-    model: new FillGeometry(),
+    model: null,
 
     events: {
         "change #uploadMesh":               "_uploadMesh",
         "click .selectMesh":                "_selectMesh",
         "fileselect .btn-file :file":       "_readDataURL",
         "click #removeFillGeo":             "_removeMesh",
-        "click #selectWall":                "_buildWall"
+        "click #selectWall":                "_buildWall",
+        "click #doSubtractGeo":             "_subtractGeo",
+        "click #doFillGeo":                 "_fillGeo"
     },
 
     initialize: function(options){
 
+        this.model = new FillGeometry({lattice:options.lattice}),
         this.lattice = options.lattice;
         this.appState = options.appState;
 
@@ -34,7 +37,7 @@ ImportMenuView = Backbone.View.extend({
 
     _buildWall: function(e){
         e.preventDefault();
-        this.lattice.addCellsInRange({min:{x:-100,y:-1,z:0}, max:{x:100,y:2,z:18}});
+        this.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:2,z:18}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -65,6 +68,16 @@ ImportMenuView = Backbone.View.extend({
   	    loader.load(url, function(geometry){
             self.model.set("geometry", geometry);
         });
+    },
+
+    _subtractGeo: function(e){
+        e.preventDefault();
+        this.model.subtractGeo();
+    },
+
+    _fillGeo: function(e){
+        e.preventDefault();
+
     },
 
     _removeMesh: function(e){
@@ -115,7 +128,11 @@ ImportMenuView = Backbone.View.extend({
         <% if (mesh){ %>\
         Rotate:<br/>\
         Scale:<br/><br/>\
+        <% if (isLandscape){ %>\
+        <a href="#" id="doSubtractGeo" class=" btn btn-block btn-lg btn-default">Subtract Mesh</a><br/>\
+        <% } else { %>\
         <a href="#" id="doFllGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
+        <% } %>\
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
         <hr>\
         <% } %>\
