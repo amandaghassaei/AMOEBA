@@ -147,7 +147,8 @@ Lattice = Backbone.Model.extend({
 
                 zHeight = Math.floor(zHeight/zScale);
                 for (var z=0;z<zHeight;z++){
-                    cells[x][y][z].destroy();
+                    var cell = cells[x][y][z];
+                    if (cell) cell.destroy();
                     cells[x][y][z] = null;
                 }
             }
