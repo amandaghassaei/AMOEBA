@@ -129,7 +129,7 @@ Lattice = Backbone.Model.extend({
 
         var allVertexPos = mesh.geometry.attributes.position.array;
 
-        var zHeight;
+        var zHeight = 0;
         for (var x=0;x<cells.length;x++){
             for (var y=0;y<cells[0].length;y++){
                 var firstCell = null;
@@ -142,9 +142,6 @@ Lattice = Backbone.Model.extend({
                 var origin = firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
                 zHeight = this._findIntersectionsInWindow(scale/2, yscale/2, origin, allVertexPos) || zHeight;
 
-//                if (!zHeight) zHeight = this._findIntersectionsInWindow(scale, yscale, origin, allVertexPos);
-//                if (!zHeight) zHeight = this._findIntersectionsInWindow(scale, 4*yscale, 4*origin, allVertexPos);
-
                 zHeight = Math.floor(zHeight/zScale);
                 for (var z=0;z<zHeight;z++){
                     var cell = cells[x][y][z];
@@ -154,7 +151,6 @@ Lattice = Backbone.Model.extend({
             }
 
         }
-        console.log("done");
         window.three.render();
     },
 
@@ -328,10 +324,6 @@ Lattice = Backbone.Model.extend({
 
 OctaFaceLattice = Lattice.extend({
 
-//    defaults: {
-//        columnSeparation: 0.2//% column separation
-//    },
-
     _initialize: function(){
 
         //bind events
@@ -388,6 +380,8 @@ OctaFaceLattice = Lattice.extend({
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////VERTEX CONN OCTA LATTICE//////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
