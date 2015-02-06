@@ -290,6 +290,19 @@ Lattice = Backbone.Model.extend({
 
     getScale: function(){
         return this.get("scale");
+    },
+
+    destroy: function(){
+        this.set("scale", null, {silent:true});
+        this.set("nodes", null, {silent:true});
+        this.clearCells();
+        this.set("cells", null, {silent:true});
+        this.set("inverseCells", null, {silent:true});
+        this.set("cellsMin", null, {silent:true});
+        this.set("cellsMax", null, {silent:true});
+        this.set("numCells", null, {silent:true});
+        this.get("basePlane").destroy();
+        this.set("basePlane", null, {silent:true});
     }
 
 });

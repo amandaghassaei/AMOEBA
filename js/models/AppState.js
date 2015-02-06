@@ -62,6 +62,7 @@ AppState = Backbone.Model.extend({
 
         this.listenTo(this, "change:currentTab", this._updateCellMode);
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
+        this.listenTo(this, "change:cellType change:connectionType", this._buildNewLattice);
 
         this.listenTo(this, "change:lattice", this._buildLatticeMenu);
 
@@ -109,6 +110,11 @@ AppState = Backbone.Model.extend({
 
     _buildLatticeMenu: function(){
         this.set("menuWrapper", new MenuWrapper({lattice:this.get("lattice"), model:this}));
+    },
+
+    _buildNewLattice: function(){
+        this.get("lattice").destroy();
+//        var mode =
     },
 
     ///////////////////////////////////////////////////////////////////////////////

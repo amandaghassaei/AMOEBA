@@ -52,12 +52,12 @@ BasePlane = Backbone.Model.extend({
     },
 
     destroy: function(){
-        this.set("zIndex", null);
-        this.set("mesh", null);
-        this.set("material", null);
-        this.set("unitGeometry", null);
-        this.set("dimX", null);
-        this.set("dimY", null);
+        this.set("zIndex", null, {silent:true});
+        this.set("mesh", null, {silent:true});
+        this.set("material", null, {silent:true});
+        this.set("unitGeometry", null, {silent:true});
+        this.set("dimX", null, {silent:true});
+        this.set("dimY", null, {silent:true});
     }
 
 });
