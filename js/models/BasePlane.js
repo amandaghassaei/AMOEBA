@@ -22,7 +22,7 @@ BasePlane = Backbone.Model.extend({
         this.listenTo(this, "change:zIndex", this._renderZIndexChange);
 
         //draw mesh
-        this.set("mesh", this._makeBasePlaneMesh(options.cellType, options.connectionType));
+        this.set("mesh", this._makeBasePlaneMesh());
         this.updateScale(options.scale);
         this._showMesh();
 
@@ -36,13 +36,6 @@ BasePlane = Backbone.Model.extend({
     },
 
     _renderForCurrentScene: function(){
-    },
-
-    updateGeometry: function(cellType, connectionType, scale){
-        this._removeMesh();
-        this.set("mesh", this._makeBasePlaneMesh(cellType, connectionType));
-        this.updateScale(scale);
-        this._showMesh();
     },
 
     updateScale: function(scale){

@@ -16,12 +16,12 @@ MenuWrapper = Backbone.View.extend({
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
         //init all tab view controllers
-        this.latticeMenu = new LatticeMenuView({model:options.lattice, appState:this.model});
-        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
-        this.sketchMenu = new SketchMenuView({model:options.lattice.get("basePlane"), appState:this.model});
-        this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
-        this.scriptMenu = new ScriptMenuView({appState:this.model});
-        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
+        this.latticeMenu = new LatticeMenuView({model:this.model, lattice:options.lattice});
+//        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
+//        this.sketchMenu = new SketchMenuView({model:options.lattice.get("basePlane"), appState:this.model});
+//        this.partMenu = new PartMenuView({model:options.lattice, appState:this.model});
+//        this.scriptMenu = new ScriptMenuView({appState:this.model});
+//        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
 
         this.lattice = options.lattice;
 
@@ -32,7 +32,7 @@ MenuWrapper = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
-        this.listenTo(options.lattice, "change:cellType change:connectionType", this._populateAndShow);
+        this.listenTo(this.model, "change:cellType change:connectionType", this._populateAndShow);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
         this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 

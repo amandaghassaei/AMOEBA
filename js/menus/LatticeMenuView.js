@@ -19,39 +19,35 @@ LatticeMenuView = Backbone.View.extend({
 
     initialize: function(options){
 
-        this.appState = options.appState;
+        this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change", function(){
-            if(!(this.model.hasChanged('scale'))){//ignore scale mode changes
-                this.render();
-            };
-        });
-
+        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.lattice, "change:numCells", this.render)
     },
 
     _clearCells: function(e){
         e.preventDefault();
-        this.model.clearCells();
+        this.lattice.clearCells();
     },
 
     _changeScale: function(e){
         e.preventDefault();
         var val = parseFloat($(e.target).val());
         if (isNaN(val)) return;
-        this.model.set("scale", val);
+        this.lattice.set("scale", val);
     },
 
     _sliderDidSlide: function(e){
         var scale = $(e.target)[0].value;
-//        this.model.set("scale", $(e.target)[0].value);
-        this.model.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
+//        this.lattice.set("scale", $(e.target)[0].value);
+        this.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
         $("#latticeScale").val(scale);
         window.three.render();
     },
 
     _changeScaleSlider: function(e){
-        this.model.set("scale", $(e.target)[0].value);
+        this.lattice.set("scale", $(e.target)[0].value);
     },
 
     _changeCellType: function(e){
@@ -101,8 +97,8 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     render: function(){
-        if (this.appState.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(this.model.attributes));
+        if (this.model.get("currentTab") != "lattice") return;
+        this.$el.html(this.template(_.extend(this.model.attributes, this.lattice.attributes)));
 
         $('#scaleSlider').slider({
             formatter: function(value) {

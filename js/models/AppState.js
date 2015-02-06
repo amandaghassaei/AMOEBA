@@ -18,7 +18,28 @@ AppState = Backbone.Model.extend({
 
         lattice: null,
         menuWrapper: null,
+
         cellMode: "cell",
+        cellType: "octa",
+        connectionType: "face",
+        partType: "triangle",
+
+        allCellTypes: {octa:"Octahedron", cube:"Cube"},
+        allConnectionTypes: {
+            octa: {face:"Face", edge:"Edge", edgeRot:"Rotated Edge", vertex:"Vertex"},
+            cube: {face:"Face"}
+        },
+        allPartTypes:{
+            octa:{
+                face: {triangle:"Triangle"},
+                edge: {triangle:"Triangle"},
+                edgeRot: {triangle:"Triangle"},
+                vertex:{square:"Square", xShape:"X"}
+            },
+            cube:{
+                face: null
+            }
+        },
 
         menuIsVisible: true,
 
@@ -35,11 +56,14 @@ AppState = Backbone.Model.extend({
         //bind events
         $(document).bind('keydown', {state:true}, this._handleKeyStroke);
         $(document).bind('keyup', {state:false}, this._handleKeyStroke);
+
         this.listenTo(this, "change:currentTab", this._storeTab);
-        this.listenTo(this, "change:currentTab", this._updateLatticeMode);
-        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
-        this.listenTo(this, "change:lattice", this._renderNewLattice);
+
+        this.listenTo(this, "change:currentTab", this._updateCellMode);
+        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
+
+        this.listenTo(this, "change:lattice", this._buildLatticeMenu);
 
         this.set("lattice", new OctaFaceLattice({appState:this}));
         this.get("lattice").addCellAtIndex({x:0,y:0,z:0});
@@ -59,7 +83,7 @@ AppState = Backbone.Model.extend({
         else if (currentNav == "navAssemble") this.set("lastAssembleTab", currentTab);
     },
 
-    _updateLatticeMode: function(){
+    _updateCellMode: function(){
         var currentTab = this.get("currentTab");
         if (currentTab == "lattice") this.set("cellMode", "cell");
         else if (currentTab == "import") this.set("cellMode", "cell");
@@ -76,14 +100,14 @@ AppState = Backbone.Model.extend({
             this.get("lastSimulationTab"), {silent:true});
         else if (navSelection == "navAssemble") this.set("currentTab",
             this.get("lastAssembleTab"), {silent:true});
-        this._updateLatticeMode();//a little bit hacky, this updates the lattice, but holds off on updating the menus til the animation has happened
+        this._updateCellMode();//a little bit hacky, this updates the cell mode, but holds off on updating the menus til the animation has happened
     },
 
     _cellModeDidChange: function(){
         this.get("lattice").cellModeDidChange(this.get("cellMode"));
     },
 
-    _renderNewLattice: function(){
+    _buildLatticeMenu: function(){
         this.set("menuWrapper", new MenuWrapper({lattice:this.get("lattice"), model:this}));
     },
 
