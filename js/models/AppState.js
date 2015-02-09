@@ -142,12 +142,14 @@ AppState = Backbone.Model.extend({
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
+        console.log(e.keyCode);
+
         switch(e.keyCode){
             case 16://shift
                 e.preventDefault();
                 this.set("shift", state);
                 break;
-            case 32://space bar
+            case 68://d delete mode
                 e.preventDefault();
                 if (this.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);

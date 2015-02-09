@@ -10,8 +10,8 @@ LatticeMenuView = Backbone.View.extend({
     events: {
         "click #latticeMenuClearCells":                 "_clearCells",
         "change #latticeScale":                         "_changeScale",
-        "click .cellType":                              "_changeCellType",
-        "click .connectionType":                        "_changeConnectionType",
+//        "click .cellType":                              "_changeCellType",
+//        "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider"
     },
@@ -137,6 +137,7 @@ LatticeMenuView = Backbone.View.extend({
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
+        hint: click to create cells, shift+drag to create a lot of cells, d+click to delete cells\
         ')
 
 //    <label class="checkbox" for="invertGeo">\
