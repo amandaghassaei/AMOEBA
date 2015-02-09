@@ -142,8 +142,6 @@ AppState = Backbone.Model.extend({
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
-        console.log(e.keyCode);
-
         switch(e.keyCode){
             case 16://shift
                 e.preventDefault();
