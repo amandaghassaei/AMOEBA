@@ -53,6 +53,7 @@ BasePlane = Backbone.Model.extend({
     },
 
     destroy: function(){
+//        this.stopListening();
         this.set("zIndex", null, {silent:true});
         this._removeMesh();
         this.set("mesh", null, {silent:true});

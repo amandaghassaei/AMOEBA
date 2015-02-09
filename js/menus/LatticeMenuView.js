@@ -107,6 +107,12 @@ LatticeMenuView = Backbone.View.extend({
         });
     },
 
+    destroy: function(){
+        this.stopListening();
+        this.model = null;
+        this.lattice = null;
+    },
+
     template: _.template('\
         Cell Type: &nbsp;&nbsp;\
             <div class="btn-group">\

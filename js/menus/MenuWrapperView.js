@@ -110,6 +110,22 @@ MenuWrapper = Backbone.View.extend({
         this.model.set("menuIsVisible", true);
     },
 
+    destroy: function(){
+        this.stopListening();
+        this.lattice = null;
+        this.template = null;
+        this._dealloc(this.latticeMenu);
+        this._dealloc(this.importMenu);
+        this._dealloc(this.sketchMenu);
+        this._dealloc(this.partMenu);
+        this._dealloc(this.scriptMenu);
+    },
+
+    _dealloc: function(object){
+        object.destroy();
+        object = null;
+    },
+
     template: _.template('\
         <ul class="nav nav-tabs nav-justified">\
         <% var dict = eval(currentNav);\

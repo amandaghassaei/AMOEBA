@@ -293,9 +293,13 @@ Lattice = Backbone.Model.extend({
     },
 
     destroy: function(){
+        this.stopListening();
         this.set("scale", null, {silent:true});
         this.set("nodes", null, {silent:true});
         this.clearCells();
+//        this._iterCells(this.get("cells"), function(cell){
+//            if (cell) cell.destroy();
+//        });
         this.set("cells", null, {silent:true});
         this.set("inverseCells", null, {silent:true});
         this.set("cellsMin", null, {silent:true});
@@ -364,6 +368,54 @@ OctaFaceLattice = Lattice.extend({
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////EDGE CONN OCTA LATTICE////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
+
+OctaEdgeLattice = Lattice.extend({
+
+    _initialize: function(){
+
+        //bind events
+        this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+
+        this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+        this.set("columnSeparation", 0.0);
+    },
+
+    _changeColSeparation: function(){
+        var colSep = this.get("columnSeparation");
+        var scale = this.get("scale");
+        this.get("basePlane").updateColSeparation(colSep);
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.updateForScale(scale);
+        });
+        window.three.render();
+    },
+
+    addCellAtPosition: function(absPosition){
+
+        //calc indices in cell matrix
+        var scale = this.get("scale");
+        var colSep = this.get("columnSeparation");
+        var latticeScale = scale*(1+2*colSep);
+        var octHeight = 2*scale/Math.sqrt(6);
+        var triHeight = latticeScale/2*Math.sqrt(3);
+        var position = {};
+        position.x = Math.round(absPosition.x/latticeScale);
+        position.y = Math.round(absPosition.y/triHeight);
+        position.z = Math.round(absPosition.z/octHeight);
+        if (position.z%2 == 1) position.y += 1;
+
+        this.addCellAtIndex(position);
+    },
+
+    getScale: function(){
+        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
+    },
+
+    _makeCellForLatticeType: function(indices, scale){
+        return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+    }
+
+});
 
 
 ////////////////////////////////////////////////////////////////////////////////////////

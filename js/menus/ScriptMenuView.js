@@ -19,6 +19,11 @@ ScriptMenuView = Backbone.View.extend({
         this.$el.html(this.template());
     },
 
+    destroy: function(){
+        this.stopListening();
+        this.model = null;
+    },
+
     template: _.template('\
         some kind of scripting functionality?\
         ')
