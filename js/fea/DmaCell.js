@@ -65,7 +65,7 @@ DMACell.prototype.updateForScale = function(scale){
 };
 
 DMACell.prototype.getScale = function(){//need for part relay
-    return this.lattice.getScale();
+    return this.lattice.get("scale");
 };
 
 DMACell.prototype.getPosition = function(){//need for part relay

@@ -33,13 +33,6 @@
         mesh.position.z = position.z;
     };
 
-    DMAPart.prototype.updateForScale = function(scale, position){
-        if (this.mesh) {
-            this.mesh.scale.set(scale, scale, scale);
-            this._setMeshPosition(position);
-        }
-    };
-
     DMAPart.prototype.show = function(){
         if (!this.mesh) this._draw();
         this.mesh.visible = true;
