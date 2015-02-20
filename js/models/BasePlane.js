@@ -7,7 +7,7 @@ BasePlane = Backbone.Model.extend({
 
     defaults: {
         zIndex: 0,
-        mesh: null,
+        mesh: [],
         dimX: 100,
         dimY: 100,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
@@ -31,7 +31,9 @@ BasePlane = Backbone.Model.extend({
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
         var scale = this.get("mesh").scale.z;
-        this.get("mesh").position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+        _.each(this.get("mesh"), function(mesh){
+            mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+        });
         window.three.render();
     },
 
@@ -39,16 +41,22 @@ BasePlane = Backbone.Model.extend({
     },
 
     updateScale: function(scale){
-        this.get("mesh").scale.set(scale, scale, scale);
+        _.each(this.get("mesh"), function(mesh){
+            mesh.scale.set(scale, scale, scale);
+        });
     },
 
     _showMesh: function(){
-        window.three.sceneAdd(this.get("mesh"), "basePlane");
+        _.each(this.get("mesh"), function(mesh){
+            window.three.sceneAdd(mesh, "basePlane");
+        });
         window.three.render();
     },
 
     _removeMesh: function(){
-        window.three.sceneRemove(this.get("mesh"), "basePlane");
+        _.each(this.get("mesh"), function(mesh){
+            window.three.sceneRemove(mesh, "basePlane");
+        });
         window.three.render();
     },
 
@@ -103,7 +111,7 @@ OctaBasePlane = BasePlane.extend({
         }
 
         geometry.computeFaceNormals();
-        return new THREE.Mesh(geometry, this.get("material"));
+        return [new THREE.Mesh(geometry, this.get("material"))];
     },
 
     _calcOctaFaceVertices: function(colSep){
@@ -138,7 +146,7 @@ OctaBasePlane = BasePlane.extend({
     },
 
     updateColSeparation: function(colSep){
-        var geometry = this.get("mesh").geometry;
+        var geometry = this.get("mesh")[0].geometry;
         geometry.vertices = this._calcOctaFaceVertices(colSep);
         geometry.verticesNeedUpdate = true;
     }
@@ -153,28 +161,29 @@ SquareBasePlane = BasePlane.extend({
 
     _makeBasePlaneMesh: function(){
 
-        var geometry = new THREE.Geometry();
-        geometry.vertices = this._calcVertices();
-        var faces = geometry.faces;
-
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
-        var currentOffset = 0;
-        for (var j=-dimX;j<=dimX;j++){
-            for (var i=-dimY;i<=dimY;i++){
+        var geometry = new THREE.Geometry();
 
-                currentOffset++;
-                if (j == -dimX || i == -dimY) continue;
-
-//                faces.push(new THREE.Face3(currentOffset, currentOffset-1, currentOffset-dimY));
-
-            }
+        for ( var i = - dimX; i <= dimX; i += 1 ) {
+            geometry.vertices.push( new THREE.Vector3(-dimX, i, 0));
+            geometry.vertices.push( new THREE.Vector3(dimX, i, 0));
+            geometry.vertices.push( new THREE.Vector3(i, -dimX, 0));
+            geometry.vertices.push( new THREE.Vector3(i, dimX, 0));
 
         }
 
-        geometry.computeFaceNormals();
-        return new THREE.Mesh(geometry, this.get("material"));
+        var planeGeometry = new THREE.Geometry();
+        planeGeometry.vertices.push( new THREE.Vector3(-dimX, -dimX, 0));
+        planeGeometry.vertices.push( new THREE.Vector3(dimX, -dimX, 0));
+        planeGeometry.vertices.push( new THREE.Vector3(-dimX, dimX, 0));
+        planeGeometry.vertices.push( new THREE.Vector3(dimX, dimX, 0));
+        planeGeometry.faces.push(new THREE.Face3(0, 1, 3));
+        planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
+
+        return [new THREE.Line(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide})),
+            new THREE.Line(geometry, this.get("material"), THREE.LinePieces)];
     },
 
     _calcVertices: function(){

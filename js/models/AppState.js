@@ -22,7 +22,7 @@ AppState = Backbone.Model.extend({
         cellMode: "cell",//show cells vs parts
         inverseMode: false,//show negative space
         cellType: "octa",
-        connectionType: "face",
+        connectionType: "vertex",
         partType: "triangle",
 
         allCellTypes: {octa:"Octahedron", cube:"Cube"},
