@@ -23,8 +23,6 @@ MenuWrapper = Backbone.View.extend({
         this.scriptMenu = new ScriptMenuView({model:this.model});
 //        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
 
-        this.lattice = options.lattice;
-
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
         this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
@@ -87,7 +85,7 @@ MenuWrapper = Backbone.View.extend({
             {navDesign:this.designMenuTabs,
             navSim:this.simMenuTabs,
             navAssemble:this.assemMenuTabs,
-            }, this.lattice.attributes)));
+            })));
         this._updateCurrentTab();
         this._show();
     },
@@ -108,22 +106,6 @@ MenuWrapper = Backbone.View.extend({
     _show: function(){
         this.$el.parent().animate({right: "0"});
         this.model.set("menuIsVisible", true);
-    },
-
-    destroy: function(){
-        this.stopListening();
-        this.lattice = null;
-        this.template = null;
-        this._dealloc(this.latticeMenu);
-        this._dealloc(this.importMenu);
-        this._dealloc(this.sketchMenu);
-        this._dealloc(this.partMenu);
-        this._dealloc(this.scriptMenu);
-    },
-
-    _dealloc: function(object){
-        object.destroy();
-        object = null;
     },
 
     template: _.template('\

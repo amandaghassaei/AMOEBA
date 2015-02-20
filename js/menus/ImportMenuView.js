@@ -91,13 +91,6 @@ ImportMenuView = Backbone.View.extend({
         this.$el.html(this.template(this.model.attributes));
     },
 
-    destroy: function(){
-        this.stopListening();
-        this.model = null;
-        this.lattice = null;
-        this.appState = null;
-    },
-
 //    makeDimensionString: function(){
 //        var bounds = this.model.get("boundingBoxHelper").box;
 //        return (bounds.max.x - bounds.min.x).toFixed(1) + " x " +

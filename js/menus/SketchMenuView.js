@@ -34,12 +34,6 @@ SketchMenuView = Backbone.View.extend({
         });
     },
 
-    destroy: function(){
-        this.stopListening();
-        this.model = null;
-        this.appState = null;
-    },
-
     template: _.template('\
         Sketch Plane Height:&nbsp;&nbsp;<input id="zHeightSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="2" data-slider-value="<%= zIndex %>"/>\
         ')

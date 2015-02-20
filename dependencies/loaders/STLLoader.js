@@ -18,6 +18,8 @@
 * scene.add( new THREE.Mesh( geometry ) );
 * });
 *
+* python -m SimpleHTTPServer
+*
 * For binary STLs geometry might contain colors for vertices. To use it:
 * // use the same code to load STL as above
 * if (geometry.hasColors) {

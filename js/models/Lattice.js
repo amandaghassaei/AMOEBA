@@ -24,7 +24,6 @@ Lattice = Backbone.Model.extend({
         this.listenTo(this, "change:scale", this._scaleDidChange);
 
         this.appState = options.appState;
-        this._initialize();//call subclass init
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +89,7 @@ Lattice = Backbone.Model.extend({
         this.set("cellsMin", {x:0, y:0, z:0});
         this.set("nodes", []);
         this.set("numCells", 0);
-        this.get("basePlane").set("zIndex", 0);
+        if (this.get("basePlane")) this.get("basePlane").set("zIndex", 0);
         window.three.render();
     },
 
@@ -274,6 +273,29 @@ Lattice = Backbone.Model.extend({
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    updateLatticeType: function(cellType, connectionType){
+        this.clearCells();
+        if (this._undo) this._undo();
+        if (cellType == "octa"){
+            if (connectionType == "face"){
+                _.extend(this, this.OctaFaceLattice);
+            } else if (connectionType == "edge"){
+                _.extend(this, this.OctaEdgeLattice);
+            } else if (connectionType == "edgeRot"){
+
+            } else if (connectionType == "vertex"){
+
+            }
+        } else if (cellType == "cube"){
+
+        }
+        this._initLatticeType();
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////UTILS///////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
@@ -292,130 +314,134 @@ Lattice = Backbone.Model.extend({
         return this.get("scale");
     },
 
-    destroy: function(){
-        this.stopListening();
-        this.set("scale", null, {silent:true});
-        this.set("nodes", null, {silent:true});
-        this.clearCells();
-//        this._iterCells(this.get("cells"), function(cell){
-//            if (cell) cell.destroy();
-//        });
-        this.set("cells", null, {silent:true});
-        this.set("inverseCells", null, {silent:true});
-        this.set("cellsMin", null, {silent:true});
-        this.set("cellsMax", null, {silent:true});
-        this.set("numCells", null, {silent:true});
-        this.get("basePlane").destroy();
-        this.set("basePlane", null, {silent:true});
-    }
-
-});
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////FACE CONN OCTA LATTICE////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
 
-OctaFaceLattice = Lattice.extend({
+    OctaFaceLattice: {
 
-    _initialize: function(){
+        _initLatticeType: function(){
 
-        //bind events
-        this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+            //bind events
+            this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-        this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
-        this.set("columnSeparation", 0.0);
+            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("columnSeparation", 0.0);
+        },
+
+        _changeColSeparation: function(){
+            var colSep = this.get("columnSeparation");
+            var scale = this.get("scale");
+            this.get("basePlane").updateColSeparation(colSep);
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.updateForScale(scale);
+            });
+            window.three.render();
+        },
+
+        addCellAtPosition: function(absPosition){
+
+            //calc indices in cell matrix
+            var scale = this.get("scale");
+            var colSep = this.get("columnSeparation");
+            var latticeScale = scale*(1+2*colSep);
+            var octHeight = 2*scale/Math.sqrt(6);
+            var triHeight = latticeScale/2*Math.sqrt(3);
+            var position = {};
+            position.x = Math.round(absPosition.x/latticeScale);
+            position.y = Math.round(absPosition.y/triHeight);
+            position.z = Math.round(absPosition.z/octHeight);
+            if (position.z%2 == 1) position.y += 1;
+
+            this.addCellAtIndex(position);
+        },
+
+        getScale: function(){
+            return this.get("scale")*(1.0+2*this.get("columnSeparation"));
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            this._initLatticeType = null;
+            this._changeColSeparation = null;
+            this.addCellAtPosition = null;
+            this.getScale = null;
+            this._makeCellForLatticeType = null;
+            this.stopListening(this, "columnSeparation");
+            this.set("columnSeparation", null);
+            this._undo = null;
+        }
+
     },
-
-    _changeColSeparation: function(){
-        var colSep = this.get("columnSeparation");
-        var scale = this.get("scale");
-        this.get("basePlane").updateColSeparation(colSep);
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale);
-        });
-        window.three.render();
-    },
-
-    addCellAtPosition: function(absPosition){
-
-        //calc indices in cell matrix
-        var scale = this.get("scale");
-        var colSep = this.get("columnSeparation");
-        var latticeScale = scale*(1+2*colSep);
-        var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = latticeScale/2*Math.sqrt(3);
-        var position = {};
-        position.x = Math.round(absPosition.x/latticeScale);
-        position.y = Math.round(absPosition.y/triHeight);
-        position.z = Math.round(absPosition.z/octHeight);
-        if (position.z%2 == 1) position.y += 1;
-
-        this.addCellAtIndex(position);
-    },
-
-    getScale: function(){
-        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
-    },
-
-    _makeCellForLatticeType: function(indices, scale){
-        return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
-    }
-
-});
 
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////EDGE CONN OCTA LATTICE////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 
-OctaEdgeLattice = Lattice.extend({
+    OctaEdgeLattice: {
 
-    _initialize: function(){
+        _initLatticeType: function(){
 
-        //bind events
-        this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+            //bind events
+            this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-        this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
-        this.set("columnSeparation", 0.0);
-    },
+            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("columnSeparation", 0.0);
+        },
 
-    _changeColSeparation: function(){
-        var colSep = this.get("columnSeparation");
-        var scale = this.get("scale");
-        this.get("basePlane").updateColSeparation(colSep);
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale);
-        });
-        window.three.render();
-    },
+        _changeColSeparation: function(){
+            var colSep = this.get("columnSeparation");
+            var scale = this.get("scale");
+            this.get("basePlane").updateColSeparation(colSep);
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.updateForScale(scale);
+            });
+            window.three.render();
+        },
 
-    addCellAtPosition: function(absPosition){
+        addCellAtPosition: function(absPosition){
 
-        //calc indices in cell matrix
-        var scale = this.get("scale");
-        var colSep = this.get("columnSeparation");
-        var latticeScale = scale*(1+2*colSep);
-        var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = latticeScale/2*Math.sqrt(3);
-        var position = {};
-        position.x = Math.round(absPosition.x/latticeScale);
-        position.y = Math.round(absPosition.y/triHeight);
-        position.z = Math.round(absPosition.z/octHeight);
-        if (position.z%2 == 1) position.y += 1;
+            //calc indices in cell matrix
+            var scale = this.get("scale");
+            var colSep = this.get("columnSeparation");
+            var latticeScale = scale*(1+2*colSep);
+            var octHeight = 2*scale/Math.sqrt(6);
+            var triHeight = latticeScale/2*Math.sqrt(3);
+            var position = {};
+            position.x = Math.round(absPosition.x/latticeScale);
+            position.y = Math.round(absPosition.y/triHeight);
+            position.z = Math.round(absPosition.z/octHeight);
+            if (position.z%2 == 1) position.y += 1;
 
-        this.addCellAtIndex(position);
-    },
+            this.addCellAtIndex(position);
+        },
 
-    getScale: function(){
-        return this.get("scale")*(1.0+2*this.get("columnSeparation"));
-    },
+        getScale: function(){
+            return this.get("scale")*(1.0+2*this.get("columnSeparation"));
+        },
 
-    _makeCellForLatticeType: function(indices, scale){
-        return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            this._initLatticeType = null;
+            this._changeColSeparation = null;
+            this.addCellAtPosition = null;
+            this.getScale = null;
+            this._makeCellForLatticeType = null;
+            this.stopListening(this, "columnSeparation");
+            this.set("columnSeparation", null);
+            this._undo = null;
+        }
+
     }
 
-});
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -428,3 +454,7 @@ OctaEdgeLattice = Lattice.extend({
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////CUBE LATTICE//////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+});

@@ -62,10 +62,13 @@ AppState = Backbone.Model.extend({
 
         this.listenTo(this, "change:currentTab", this._updateCellMode);
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
-        this.listenTo(this, "change:cellType change:connectionType", this._buildNewLattice);
+        this.listenTo(this, "change:cellType change:connectionType", this._updateLatticetype);
 
-        this._buildNewLattice();
+        this.set("lattice", new Lattice({appState:this}));
+        this.get("lattice").updateLatticeType(this.get("cellType"), this.get("connectionType"));
         this.get("lattice").addCellAtIndex({x:0,y:0,z:0});
+
+        this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.get("lattice")}));
     },
 
 
@@ -106,31 +109,10 @@ AppState = Backbone.Model.extend({
         this.get("lattice").cellModeDidChange(this.get("cellMode"));
     },
 
-    _buildNewLattice: function(){
-        var currentLattice = this.get("lattice");
-        if (currentLattice) {
-            currentLattice.destroy();
-        }
+    _updateLatticetype: function(){
         var type = this.get("cellType");
         var connectionType = this.get("connectionType");
-        if (type == "octa"){
-            if (connectionType == "face"){
-                this.set("lattice", new OctaFaceLattice({appState:this}));
-            } else if (connectionType == "edge"){
-                this.set("lattice", new OctaEdgeLattice({appState:this}));
-            } else if (connectionType == "edgeRot"){
-
-            } else if (connectionType == "vertex"){
-
-            }
-        } else if (type == "cube"){
-
-        }
-        var currentMenu = this.get("menuWrapper");
-        if (currentMenu) {
-            currentMenu.destroy();
-        }
-        this.set("menuWrapper", new MenuWrapper({lattice:this.get("lattice"), model:this}));
+        this.get("lattice").updateLatticeType(type, connectionType);
     },
 
     ///////////////////////////////////////////////////////////////////////////////

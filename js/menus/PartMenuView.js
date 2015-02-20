@@ -34,12 +34,6 @@ PartMenuView = Backbone.View.extend({
         });
     },
 
-    destroy: function(){
-        this.stopListening();
-        this.model = null;
-        this.lattice = null;
-    },
-
     template: _.template('\
         Part Type: &nbsp;&nbsp;\
         <div class="btn-group">\

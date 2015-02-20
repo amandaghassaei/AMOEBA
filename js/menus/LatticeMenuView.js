@@ -10,8 +10,8 @@ LatticeMenuView = Backbone.View.extend({
     events: {
         "click #latticeMenuClearCells":                 "_clearCells",
         "change #latticeScale":                         "_changeScale",
-//        "click .cellType":                              "_changeCellType",
-//        "click .connectionType":                        "_changeConnectionType",
+        "click .cellType":                              "_changeCellType",
+        "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider"
     },
@@ -56,12 +56,21 @@ LatticeMenuView = Backbone.View.extend({
 
         //reset everything to defaults silently
         if (cellType != this.model.get("cellType")){
-            this._setLatticeToDefaultsSilently(cellType);
+            this._setAppStateToDefaultsSilently(cellType);
         }
         this.model.set("cellType", cellType);
     },
 
-    _setLatticeToDefaultsSilently: function(newCellType, newConnectionType){
+    _changeConnectionType: function(e){
+        e.preventDefault();
+        var connectionType = $(e.target).data("type");
+        if (connectionType != this.model.get("connectionType")){
+            this._setAppStateToDefaultsSilently(this.model.get("cellType"), connectionType);
+        }
+        this.model.set("connectionType", connectionType);
+    },
+
+    _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
         if (newCellType == "cube") {
             if (!newConnectionType){
                 newConnectionType = "face";
@@ -87,15 +96,6 @@ LatticeMenuView = Backbone.View.extend({
         }
     },
 
-    _changeConnectionType: function(e){
-        e.preventDefault();
-        var connectionType = $(e.target).data("type");
-        if (connectionType != this.model.get("connectionType")){
-            this._setLatticeToDefaultsSilently(this.model.get("cellType"), connectionType);
-        }
-        this.model.set("connectionType", connectionType);
-    },
-
     render: function(){
         if (this.model.get("currentTab") != "lattice") return;
         this.$el.html(this.template(_.extend(this.model.attributes, this.lattice.attributes)));
@@ -105,12 +105,6 @@ LatticeMenuView = Backbone.View.extend({
                 return value;
             }
         });
-    },
-
-    destroy: function(){
-        this.stopListening();
-        this.model = null;
-        this.lattice = null;
     },
 
     template: _.template('\
