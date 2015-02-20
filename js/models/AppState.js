@@ -19,7 +19,8 @@ AppState = Backbone.Model.extend({
         lattice: null,
         menuWrapper: null,
 
-        cellMode: "cell",
+        cellMode: "cell",//show cells vs parts
+        inverseMode: false,//show negative space
         cellType: "octa",
         connectionType: "face",
         partType: "triangle",
