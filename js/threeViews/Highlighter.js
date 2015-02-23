@@ -80,7 +80,11 @@ Highlighter = Backbone.View.extend({
             window.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
         } else {
             if (!this.highlightedObject || !this.highlightedObject.canRemove()) return;
-            window.lattice.removeCellAtIndex(this.highlightedObject.getIndex(this.mesh));
+            if (this.highlightedObject instanceof DMACell){
+                window.lattice.removeCell(this.highlightedObject);
+                return;
+            }
+//            window.lattice.removeCellAtIndex(this.highlightedObject.getIndex(this.mesh));
         }
         this.hide();
         this.highlightedObject = null;
