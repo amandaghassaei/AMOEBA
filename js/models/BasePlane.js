@@ -57,6 +57,7 @@ BasePlane = Backbone.Model.extend({
     _removeMesh: function(){
         var self = this;
         _.each(this.get("mesh"), function(mesh){
+            if (mesh.myParent) mesh.myParent = null;
             window.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
         });
         window.three.render();
@@ -65,6 +66,10 @@ BasePlane = Backbone.Model.extend({
     _checkIsHighlightable: function(mesh){
         if (mesh.type == "Mesh") return "basePlane";
         return null;
+    },
+
+    canRemove: function(){
+        return false;//tells highlighter that the baseplane is not something to be deleted
     },
 
     destroy: function(){
@@ -118,7 +123,9 @@ OctaBasePlane = BasePlane.extend({
         }
 
         geometry.computeFaceNormals();
-        return [new THREE.Mesh(geometry, this.get("material"))];
+        var mesh = new THREE.Mesh(geometry, this.get("material"));
+        mesh.myParent = this;//reference used for intersection highlighting
+        return [mesh];
     },
 
     _calcOctaFaceVertices: function(colSep){
@@ -156,6 +163,24 @@ OctaBasePlane = BasePlane.extend({
         var geometry = this.get("mesh")[0].geometry;
         geometry.vertices = this._calcOctaFaceVertices(colSep);
         geometry.verticesNeedUpdate = true;
+    },
+
+    getHighlighterVertices: function(face){
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var mesh = this.get("mesh")[0];
+        var vertices = mesh.geometry.vertices;
+        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
+        var scale = mesh.scale.x;
+        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
+        _.each(newVertices, function(vertex){//apply scale
+            vertex.multiplyScalar(scale);
+            vertex.add(position);
+        });
+        return newVertices;
+    },
+
+    getIndex: function(face){
+        return window.lattice.getIndexForPosition(face.geometry.vertices[0]);
     }
 
 });
@@ -190,8 +215,9 @@ SquareBasePlane = BasePlane.extend({
         planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
         planeGeometry.computeFaceNormals();
 
-        return [new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide})),
-            new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:1, opacity:this.get("material").opacity}), THREE.LinePieces)];
+        var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide}));
+        mesh.myParent = this;//reference used for intersection highlighting
+        return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:1, opacity:this.get("material").opacity}), THREE.LinePieces)];
     }
 
 });

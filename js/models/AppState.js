@@ -50,7 +50,7 @@ AppState = Backbone.Model.extend({
         extrudeMode: false
     },
 
-    initialize: function(){
+    initialize: function(options){
 
         _.bindAll(this, "_handleKeyStroke");
 
@@ -65,9 +65,8 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:cellMode", this._cellModeDidChange);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticetype);
 
-        this.set("lattice", new Lattice({appState:this}));
+        this.set("lattice", options.lattice);
         this.get("lattice").updateLatticeType(this.get("cellType"), this.get("connectionType"));
-        this.get("lattice").addCellAtIndex({x:0,y:0,z:0});
 
         this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.get("lattice")}));
     },

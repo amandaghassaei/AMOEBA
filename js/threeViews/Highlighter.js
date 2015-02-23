@@ -5,8 +5,7 @@
 Highlighter = Backbone.View.extend({
 
     mesh: null,
-    intersectedFace: null,
-    intersectedCell: null,//current cell we are intersecting
+    highlightedObject: null,
 
     initialize: function(){
 
@@ -24,100 +23,66 @@ Highlighter = Backbone.View.extend({
                 vertexColors:THREE.FaceColors
             }));
         window.three.sceneAdd(this.mesh, null);
-        this._hide();
+        this.hide();
     },
 
-    _hide: function(){
+    hide: function(){
         this._setVisibility(false);
     },
 
-    _show: function(forceRender){
+    show: function(forceRender){
         this._setVisibility(true, forceRender);
     },
 
     _setVisibility: function(visible, forceRender){
-        if (this.isVisible() != visible){
+        if (forceRender || this.isVisible() != visible){
             this.mesh.visible = visible;
             window.three.render();
-        } else if (forceRender){
-            window.three.render();
         }
+        this.mesh.visible = visible;
     },
 
-    highlightCell: function(object, face){
+    highlight: function(intersection){
+        if (!intersection.object) return;
+        var highlightable = intersection.object;
+        if (!(highlightable.parent instanceof THREE.Scene)) highlightable = highlightable.parent;//cell mesh parent is object3d
+        if (!highlightable.myParent) console.warn("no parent for highlightable object");
 
-        if (object.parent && object.parent.myParent) {
-            this.intersectedCell = object.parent.myParent;
-        } else {
-            this.intersectedCell = null;//we're on the base plane
-        }
-
-//        if (this.isVisible() && this._isHighlighting(face)) return;//nothing has changed
-
-        this.intersectedFace = face;
-
-        if (face.normal.z<0.99){//only highlight horizontal faces
-            this._hide();
+        this.highlightedObject = highlightable.myParent;
+        this.highlightedFace = intersection.face;
+        var newVertices = highlightable.myParent.getHighlighterVertices(intersection.face);
+        if (!newVertices) {
+            this.hide();
             return;
         }
-
-        //update highlighter
-        this._highlightFace(object, face);
-        this._show(true);
-    },
-
-
-    setNoCellIntersections: function(){
-        this.intersectedCell = null;
-        this._hide();
+        this.mesh.geometry.vertices = newVertices;
+        this.mesh.geometry.verticesNeedUpdate = true;
+//        this.mesh.geometry.normalsNeedUpdate = true;
+//        this.mesh.geometry.computeFaceNormals();
+//        this.mesh.geometry.computeVertexNormals();
+        this.mesh.geometry.computeBoundingSphere();
+        this.show(true);
     },
 
     isVisible: function(){
         return this.mesh.visible;
     },
 
-    _isHighlighting: function(face){
-        return this.intersectedFace == face;
-    },
-
-    _highlightFace: function(object, face){
-        this.mesh.geometry.vertices = this._calcNewHighlighterVertices(object, face);
-        this.mesh.geometry.verticesNeedUpdate = true;
-    },
-
-    _calcNewHighlighterVertices: function(object, face){
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var vertices = object.geometry.vertices;
-        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
-        var scale = this.model.get("scale");
-        var position = (new THREE.Vector3()).setFromMatrixPosition(object.matrixWorld);
-        _.each(newVertices, function(vertex){//apply scale
-            vertex.multiplyScalar(scale);
-            vertex.add(position);
-        });
-        return newVertices;
-    },
-
-    _getNextCellPosition: function(){
-        return this.mesh.geometry.vertices[0];
-    },
-
-    _getNextCellVertices: function(){//offset vertices with +1 in z
-        var vertices = _.clone(this.intersectedCell.indices);
-        vertices.z += 1;
-        return vertices;
+    _getNextCellPosition: function(indices){//add one to z index
+        indices.z += 1;
+        return indices;
     },
 
     addRemoveVoxel: function(shouldAdd){
 
         if (shouldAdd){
-            if (!this.isVisible()) return;
-            if (this.intersectedFace && !this.intersectedCell) this.model.addCellAtPosition(this._getNextCellPosition());//baseplane
-            else this.model.addCellAtIndex(this._getNextCellVertices());
+            if (!this.isVisible() || !this.highlightedObject) return;
+            window.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
         } else {
-            if (this.intersectedFace && !this.intersectedCell) return;//baseplane
-            this.model.removeCell(this.intersectedCell);
+            if (!this.highlightedObject || !this.highlightedObject.canRemove()) return;
+            window.lattice.removeCellAtIndex(this.highlightedObject.getIndex(this.mesh));
         }
-        this._hide();
+        this.hide();
+        this.highlightedObject = null;
     }
 });

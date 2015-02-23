@@ -5,7 +5,7 @@
 
 //a Cell, a unit piece of the lattice
 
-function DMACell(mode, indices, scale, lattice) {
+function DMACell(indices, scale, lattice) {
 
     this.indices = indices;
     this.lattice = lattice;//need ref back to lattice
@@ -14,7 +14,7 @@ function DMACell(mode, indices, scale, lattice) {
     this.updateForScale(scale);
 
     window.three.sceneAdd(this.cellMesh, "cell");
-    this.drawForMode(mode);
+    this.drawForMode(window.appState.get("cellMode"));
 }
 
 DMACell.prototype.removePart = function(index){
@@ -70,7 +70,15 @@ DMACell.prototype.getScale = function(){//need for part relay
 
 DMACell.prototype.getPosition = function(){//need for part relay
     return this._calcPosition(this.getScale(), this.indices);
-}
+};
+
+DMACell.prototype.getIndex = function(){
+    return _.clone(this.indices);
+};
+
+DMACell.prototype.canRemove = function(){
+    return true;//tells highlighter that a cell is something that can be deleted
+};
 
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
@@ -147,6 +155,22 @@ DMACell.prototype.destroy = function(){
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
+
+    DMASideOctaCell.prototype.getHighlighterVertices = function(face){
+        if (face.normal.z<0.99) return null;//only highlight horizontal faces
+
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var mesh = this.cellMesh.children[0];
+        var vertices = mesh.geometry.vertices;
+        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
+        var scale = this.cellMesh.scale.x;
+        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
+        _.each(newVertices, function(vertex){//apply scale
+            vertex.multiplyScalar(scale);
+            vertex.add(position);
+        });
+        return newVertices;
+    }
 
     self.DMASideOctaCell = DMASideOctaCell;
 

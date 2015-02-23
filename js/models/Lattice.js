@@ -22,8 +22,6 @@ Lattice = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
-
-        this.appState = options.appState;
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -65,6 +63,15 @@ Lattice = Backbone.Model.extend({
             window.three.render();
         } else console.warn("already a cell there");
 
+    },
+
+    removeCellAtIndex: function(indices){
+
+        var index = this._subtract(indices, this.get("cellsMin"));
+        var cells = this.get("cells");
+        if (index.x<cells.length && index.y<cells[0].length && index.z<cells[0][0].length){
+            this.removeCell(cells[index.x][index.y][index.z]);
+        }
     },
 
     removeCell: function(cell){
@@ -341,7 +348,7 @@ Lattice = Backbone.Model.extend({
             window.three.render();
         },
 
-        addCellAtPosition: function(absPosition){
+        getIndexForPosition: function(absPosition){
 
             //calc indices in cell matrix
             var scale = this.get("scale");
@@ -352,10 +359,10 @@ Lattice = Backbone.Model.extend({
             var position = {};
             position.x = Math.round(absPosition.x/latticeScale);
             position.y = Math.round(absPosition.y/triHeight);
-            position.z = Math.round(absPosition.z/octHeight);
+            position.z = Math.round(absPosition.z/octHeight)-1;
             if (position.z%2 == 1) position.y += 1;
 
-            this.addCellAtIndex(position);
+            return position;
         },
 
         getScale: function(){
@@ -363,7 +370,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+            return new DMASideOctaCell(indices, scale, this);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -427,7 +434,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+            return new DMASideOctaCell(indices, scale, this);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -480,7 +487,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            return new DMASideOctaCell(this.appState.get("cellMode"), indices, scale, this);
+            return new DMASideOctaCell(indices, scale, this);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

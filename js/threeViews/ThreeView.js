@@ -12,12 +12,11 @@ ThreeView = Backbone.View.extend({
     },
 
     mouseIsDown: false,//store state of mouse click inside this el
-    extrudeVisualizer: ExtrudeVisualizer(),
 
     //intersections/object highlighting
     mouseProjection: new THREE.Raycaster(),
     highlighter: null,
-    currentIntersectedPart:null,
+    currentIntersectedPart: null,
 
     el: "#threeContainer",
 
@@ -38,7 +37,7 @@ ThreeView = Backbone.View.extend({
         this.$el.append(this.model.domElement);//render only once
 
         //init highlighter
-        this.highlighter = options.highlighter;
+        this.highlighter = new Highlighter();
 
         this.model.render();
         this._animate();
@@ -63,7 +62,7 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _mouseOut: function(){
-        this.highlighter.setNoCellIntersections();
+        this.highlighter.hide();
         this._setNoPartIntersections();
     },
 
@@ -80,25 +79,36 @@ ThreeView = Backbone.View.extend({
     _mouseMoved: function(e){
 
         if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
-            this.highlighter.setNoCellIntersections();
+            this.highlighter.hide();
             this._setNoPartIntersections();
             return;
         }
 
         //make projection vector
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
-        var camera = this.model.camera;
-        this.mouseProjection.setFromCamera(vector, camera);
+        this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-        //check if we're intersecting anything
-        var cellIntersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
-        console.log(this.model.basePlane);
-        if (cellIntersections.length == 0) {//no intersections
-            this.highlighter.setNoCellIntersections();
+        //check if we're in the same spot
+        if (this.highlighter.isVisible()){
+            if(this.mouseProjection.intersectObject(this.highlighter.mesh, false).length > 0) return;
+        }
+
+        var intersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
+        if (intersections.length == 0) {//no intersections
+            this.highlighter.hide();
             this._setNoPartIntersections();
             return;
         }
-        this._handleCellIntersections(cellIntersections[0]);
+
+        this.highlighter.highlight(intersections[0]);
+
+        if (this.mouseIsDown) {
+            if (this.appState.get("deleteMode")){
+                this.highlighter.addRemoveVoxel(false);
+            } else if (this.appState.get("shift")){
+                this.highlighter.addRemoveVoxel(true);
+            }
+        }
 
         if (this.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
             var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
@@ -106,7 +116,7 @@ ThreeView = Backbone.View.extend({
                 this._setNoPartIntersections();
                 return;
             }
-            this._handlePartIntersections(partIntersections, cellIntersections[0].distance);
+            this._handlePartIntersections(partIntersections, intersections[0].distance);
         }
     },
 
@@ -128,24 +138,12 @@ ThreeView = Backbone.View.extend({
             this._setNoPartIntersections();
             return;
         }
-        this.highlighter.setNoCellIntersections();
+        this.highlighter.hide();
         if (part!= this.currentIntersectedPart){
             if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
             part.highlight();
             this.currentIntersectedPart = part;
             window.three.render();
-        }
-    },
-
-    _handleCellIntersections: function(intersection){
-
-        this.highlighter.highlightCell(intersection.object, intersection.face);
-
-        if (!this.mouseIsDown) return;
-        if (this.appState.get("deleteMode")){
-            this.highlighter.addRemoveVoxel(false);
-        } else if (this.appState.get("shift")){
-            this.highlighter.addRemoveVoxel(true);
         }
     }
 
