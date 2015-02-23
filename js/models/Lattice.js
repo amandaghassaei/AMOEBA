@@ -521,7 +521,7 @@ Lattice = Backbone.Model.extend({
             var index = {};
             index.x = Math.round((absPosition.x-scale/2)/scale);
             index.y = Math.round((absPosition.y-scale/2)/scale);
-            index.z = Math.round(absPosition.z/scale);
+            index.z = Math.round(absPosition.z/scale)-1;
 
             return index;
         },

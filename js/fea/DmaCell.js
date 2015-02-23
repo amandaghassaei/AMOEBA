@@ -247,7 +247,7 @@ DMACell.prototype.destroy = function(){
     DMACubeCell.prototype._calcPosition = function(scale, indices){
         var position = _.clone(indices);
         _.each(_.keys(position), function(key){
-            position.key *= scale;
+            position[key] *= scale;
         });
         return position;
     };
@@ -266,6 +266,22 @@ DMACell.prototype.destroy = function(){
         return mesh;
     };
 
-    self.DMAVertexOctaCell = DMACubeCell;
+    DMACubeCell.prototype.getHighlighterVertices = function(face){
+        if (face.normal.z<0.99) return null;//only highlight horizontal faces
+
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var mesh = this.cellMesh.children[0];
+        var vertices = mesh.geometry.vertices;
+        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone(), new THREE.Vector3(0,0,0)];
+        var scale = this.cellMesh.scale.x;
+        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
+        _.each(newVertices, function(vertex){//apply scale
+            vertex.multiplyScalar(scale);
+            vertex.add(position);
+        });
+        return newVertices;
+    }
+
+    self.DMACubeCell = DMACubeCell;
 
 })();

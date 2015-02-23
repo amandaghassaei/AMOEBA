@@ -237,6 +237,7 @@ SquareBasePlane = BasePlane.extend({
     getHighlighterVertices: function(face, position){
         //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
         var index = window.lattice.getIndexForPosition(position);
+        index.z += 1;
         var scale = this.get("mesh")[0].scale.x;
         var vertices = [];
         vertices.push(new THREE.Vector3(index.x*scale, index.y*scale, index.z*scale));
