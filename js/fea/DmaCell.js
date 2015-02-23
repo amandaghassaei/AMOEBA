@@ -267,7 +267,7 @@ DMACell.prototype.destroy = function(){
     };
 
     DMACubeCell.prototype.getHighlighterVertices = function(face){
-        if (face.normal.z<0.99) return null;//only highlight horizontal faces
+//        if (face.normal.z<0.99) return null;//only highlight horizontal faces
 
         //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
         var mesh = this.cellMesh.children[0];

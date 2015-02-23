@@ -42,15 +42,6 @@ BasePlane = Backbone.Model.extend({
         window.three.render();
     },
 
-    _renderZIndexChange: function(){
-        var zIndex = this.get("zIndex");
-        var scale = this.get("mesh").scale.z;
-        _.each(this.get("mesh"), function(mesh){
-            mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
-        });
-        window.three.render();
-    },
-
 //    _renderForCurrentScene: function(){
 //    },
 
@@ -142,6 +133,15 @@ OctaBasePlane = BasePlane.extend({
         return [mesh];
     },
 
+    _renderZIndexChange: function(){
+        var zIndex = this.get("zIndex");
+        var scale = this.get("mesh")[0].scale.z;
+        _.each(this.get("mesh"), function(mesh){
+            mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+        });
+        window.three.render();
+    },
+
     _calcOctaFaceVertices: function(colSep){
 
         var vertices = [];
@@ -231,7 +231,16 @@ SquareBasePlane = BasePlane.extend({
 
         var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide}));
         mesh.myParent = this;//reference used for intersection highlighting
-        return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:1, opacity:this.get("material").opacity}), THREE.LinePieces)];
+        return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}), THREE.LinePieces)];
+    },
+
+    _renderZIndexChange: function(){
+        var zIndex = this.get("zIndex");
+        var scale = this.get("mesh")[0].scale.z;
+        _.each(this.get("mesh"), function(mesh){
+            mesh.position.set(0, 0, zIndex*scale);
+        });
+        window.three.render();
     },
 
     getHighlighterVertices: function(face, position){
