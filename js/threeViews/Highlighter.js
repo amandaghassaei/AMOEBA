@@ -46,13 +46,13 @@ Highlighter = Backbone.View.extend({
 
     highlightCell: function(object, face){
 
-        if (object.parent && object.parent.myCell) {
-            this.intersectedCell = object.parent.myCell;
+        if (object.parent && object.parent.myParent) {
+            this.intersectedCell = object.parent.myParent;
         } else {
             this.intersectedCell = null;//we're on the base plane
         }
 
-        if (this.isVisible() && this._isHighlighting(face)) return;//nothing has changed
+//        if (this.isVisible() && this._isHighlighting(face)) return;//nothing has changed
 
         this.intersectedFace = face;
 

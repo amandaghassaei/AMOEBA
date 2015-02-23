@@ -92,6 +92,7 @@ ThreeView = Backbone.View.extend({
 
         //check if we're intersecting anything
         var cellIntersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
+        console.log(this.model.basePlane);
         if (cellIntersections.length == 0) {//no intersections
             this.highlighter.setNoCellIntersections();
             this._setNoPartIntersections();

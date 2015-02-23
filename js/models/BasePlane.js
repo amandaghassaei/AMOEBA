@@ -47,21 +47,28 @@ BasePlane = Backbone.Model.extend({
     },
 
     _showMesh: function(){
+        var self = this;
         _.each(this.get("mesh"), function(mesh){
-            window.three.sceneAdd(mesh, "basePlane");
+            window.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
         });
         window.three.render();
     },
 
     _removeMesh: function(){
+        var self = this;
         _.each(this.get("mesh"), function(mesh){
-            window.three.sceneRemove(mesh, "basePlane");
+            window.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
         });
         window.three.render();
     },
 
+    _checkIsHighlightable: function(mesh){
+        if (mesh.type == "Mesh") return "basePlane";
+        return null;
+    },
+
     destroy: function(){
-//        this.stopListening();
+        this.stopListening();
         this.set("zIndex", null, {silent:true});
         this._removeMesh();
         this.set("mesh", null, {silent:true});
@@ -181,25 +188,10 @@ SquareBasePlane = BasePlane.extend({
         planeGeometry.vertices.push( new THREE.Vector3(dimX, dimX, 0));
         planeGeometry.faces.push(new THREE.Face3(0, 1, 3));
         planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
+        planeGeometry.computeFaceNormals();
 
-        return [new THREE.Line(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide})),
-            new THREE.Line(geometry, this.get("material"), THREE.LinePieces)];
-    },
-
-    _calcVertices: function(){
-
-        var vertices = [];
-        var dimX = this.get("dimX");
-        var dimY = this.get("dimY");
-
-        for (var j=-dimX;j<=dimX;j++){
-            for (var i=-dimY;i<=dimY;i++){
-
-                vertices.push(new THREE.Vector3(i,j,0));
-            }
-
-        }
-        return vertices;
+        return [new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide})),
+            new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:1, opacity:this.get("material").opacity}), THREE.LinePieces)];
     }
 
 });

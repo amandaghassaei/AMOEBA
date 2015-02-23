@@ -7,7 +7,7 @@ function ThreeModel(){
 
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 10000);
     var scene = new THREE.Scene();
-    var renderer = new THREE.WebGLRenderer({antialias:false});
+    var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 
     //store all meshes to highlight
     var cells = [];
@@ -59,7 +59,6 @@ function ThreeModel(){
         } else if (type == "basePlane"){
             basePlane.push(object);
         }
-
     }
 
     function sceneRemove(object, type){
@@ -74,9 +73,8 @@ function ThreeModel(){
         } else if (type == "part"){
             parts.splice(parts.indexOf(objectToRemove), 1);
         } else if (type == "basePlane"){
-            basePlane = [];
+            basePlane.splice(0, basePlane.length);//delete array without removing reference
         }
-
         scene.remove(objectToRemove);
     }
 
@@ -87,8 +85,8 @@ function ThreeModel(){
         _.each(parts, function(part){
             sceneRemove(part, "part");
         });
-        cells = [];
-        parts = [];
+        cells.splice(0, cells.length);;
+        parts.splice(0, parts.length);
     }
 
     function render(){

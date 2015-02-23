@@ -75,7 +75,7 @@ DMACell.prototype.getPosition = function(){//need for part relay
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
         window.three.sceneRemove(this.cellMesh, "cell");
-        this.cellMesh.myCell = null;
+        this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();
 //            material.dispose();
@@ -144,7 +144,7 @@ DMACell.prototype.destroy = function(){
         } else {
             mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo2, cellMaterials);
         }
-        mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
 
@@ -192,7 +192,7 @@ DMACell.prototype.destroy = function(){
 
     DMAVertexOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
-        mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
 
@@ -238,7 +238,7 @@ DMACell.prototype.destroy = function(){
 
     DMACubeCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
-        mesh.myCell = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         return mesh;
     };
 
