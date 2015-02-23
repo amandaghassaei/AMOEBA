@@ -11,33 +11,21 @@ BasePlane = Backbone.Model.extend({
         dimX: 100,
         dimY: 100,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
-        currentScene: "default",
-        allScenes: {default:"Default", "mars":"Mars"}
+//        currentScene: "default",
+//        allScenes: {default:"Default", "mars":"Mars"}
     },
 
     initialize: function(options){
 
         //bind events
-        this.listenTo(this, "change:currentScene", this._renderForCurrentScene);
+//        this.listenTo(this, "change:currentScene", this._renderForCurrentScene);
         this.listenTo(this, "change:zIndex", this._renderZIndexChange);
 
         //draw mesh
         this.set("mesh", this._makeBasePlaneMesh());
         this.updateScale(options.scale);
-        this._showMesh();
+        this._showMesh();//do this once
 
-    },
-
-    _renderZIndexChange: function(){
-        var zIndex = this.get("zIndex");
-        var scale = this.get("mesh").scale.z;
-        _.each(this.get("mesh"), function(mesh){
-            mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
-        });
-        window.three.render();
-    },
-
-    _renderForCurrentScene: function(){
     },
 
     updateScale: function(scale){
@@ -54,6 +42,41 @@ BasePlane = Backbone.Model.extend({
         window.three.render();
     },
 
+    _renderZIndexChange: function(){
+        var zIndex = this.get("zIndex");
+        var scale = this.get("mesh").scale.z;
+        _.each(this.get("mesh"), function(mesh){
+            mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+        });
+        window.three.render();
+    },
+
+//    _renderForCurrentScene: function(){
+//    },
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    //////////////////////HIGHLIGHTER FUNCTIONALITY////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    _checkIsHighlightable: function(mesh){
+        if (mesh.type == "Mesh") return "basePlane";
+        return null;
+    },
+
+    getIndex: function(face){
+        return window.lattice.getIndexForPosition(face.geometry.vertices[0]);
+    },
+
+    canRemove: function(){
+        return false;//tells highlighter that the baseplane is not something to be deleted
+    },
+
+    //subclasses handle getHighlighterVertices
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////DEALLOC////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+
     _removeMesh: function(){
         var self = this;
         _.each(this.get("mesh"), function(mesh){
@@ -61,15 +84,6 @@ BasePlane = Backbone.Model.extend({
             window.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
         });
         window.three.render();
-    },
-
-    _checkIsHighlightable: function(mesh){
-        if (mesh.type == "Mesh") return "basePlane";
-        return null;
-    },
-
-    canRemove: function(){
-        return false;//tells highlighter that the baseplane is not something to be deleted
     },
 
     destroy: function(){
@@ -179,8 +193,8 @@ OctaBasePlane = BasePlane.extend({
         return newVertices;
     },
 
-    getIndex: function(face){
-        return window.lattice.getIndexForPosition(face.geometry.vertices[0]);
+    highlighterFaces: function(){
+        return [new THREE.Face3(0,1,2), new THREE.Face3(0,0,0)];
     }
 
 });
@@ -218,6 +232,24 @@ SquareBasePlane = BasePlane.extend({
         var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide}));
         mesh.myParent = this;//reference used for intersection highlighting
         return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:1, opacity:this.get("material").opacity}), THREE.LinePieces)];
+    },
+
+    getHighlighterVertices: function(face, position){
+        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+        var index = window.lattice.getIndexForPosition(position);
+        var scale = this.get("mesh")[0].scale.x;
+        var vertices = [];
+        vertices.push(new THREE.Vector3(index.x*scale, index.y*scale, index.z*scale));
+        vertices.push(new THREE.Vector3((index.x+1)*scale, index.y*scale, index.z*scale));
+        vertices.push(new THREE.Vector3((index.x+1)*scale, (index.y+1)*scale, index.z*scale));
+        vertices.push(new THREE.Vector3(index.x*scale, (index.y+1)*scale, index.z*scale));
+
+        return vertices;
+    },
+
+    highlighterFaces: function(){
+        return [new THREE.Face3(0,1,2), new THREE.Face3(0,2,3)];
     }
+
 
 });

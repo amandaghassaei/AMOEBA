@@ -11,8 +11,8 @@ Highlighter = Backbone.View.extend({
 
         var geometry = new THREE.Geometry();
         //can't change size of faces or vertices buffers dynamically
-        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
-        geometry.faces = [new THREE.Face3(0,1,2)];
+        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
+        geometry.faces = this._getFacesArray();
         geometry.dynamic = true;
         this.mesh = new THREE.Mesh(geometry,
             new THREE.MeshBasicMaterial({
@@ -24,6 +24,17 @@ Highlighter = Backbone.View.extend({
             }));
         window.three.sceneAdd(this.mesh, null);
         this.hide();
+
+        //bind events
+        this.listenTo(window.appState, "change:cellType change:connectionType", this.updateHighlighterFaces);
+    },
+
+    _getFacesArray: function(){
+        return window.lattice.get("basePlane").highlighterFaces();
+    },
+
+    updateHighlighterFaces: function(){
+        this.mesh.geometry.faces = this._getFacesArray();
     },
 
     hide: function(){
@@ -49,13 +60,15 @@ Highlighter = Backbone.View.extend({
         if (!highlightable.myParent) console.warn("no parent for highlightable object");
 
         this.highlightedObject = highlightable.myParent;
-        this.highlightedFace = intersection.face;
-        var newVertices = highlightable.myParent.getHighlighterVertices(intersection.face);
+        var newVertices = highlightable.myParent.getHighlighterVertices(intersection.face, intersection.point);
         if (!newVertices) {
             this.hide();
             return;
         }
-        this.mesh.geometry.vertices = newVertices;
+
+        for (var i=0;i<newVertices.length;i++){
+            this.mesh.geometry.vertices[i] = newVertices[i];
+        }
         this.mesh.geometry.verticesNeedUpdate = true;
 //        this.mesh.geometry.normalsNeedUpdate = true;
 //        this.mesh.geometry.computeFaceNormals();
@@ -68,9 +81,9 @@ Highlighter = Backbone.View.extend({
         return this.mesh.visible;
     },
 
-    _getNextCellPosition: function(indices){//add one to z index
-        indices.z += 1;
-        return indices;
+    _getNextCellPosition: function(index){//add one to z index
+        index.z += 1;
+        return index;
     },
 
     addRemoveVoxel: function(shouldAdd){

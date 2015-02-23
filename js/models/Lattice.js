@@ -286,6 +286,7 @@ Lattice = Backbone.Model.extend({
     updateLatticeType: function(cellType, connectionType){
         this.clearCells();
         if (this._undo) this._undo();
+        if (this.get("basePlane")) this.get("basePlane").destroy();
         if (cellType == "octa"){
             if (connectionType == "face"){
                 _.extend(this, this.OctaFaceLattice);
@@ -297,7 +298,7 @@ Lattice = Backbone.Model.extend({
                 _.extend(this, this.OctaVertexLattice);
             }
         } else if (cellType == "cube"){
-
+            _.extend(this, this.CubeLattice);
         }
         this._initLatticeType();
     },
@@ -333,7 +334,6 @@ Lattice = Backbone.Model.extend({
             //bind events
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-            if (this.get("basePlane")) this.get("basePlane").destroy();
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("columnSeparation", 0.0);
         },
@@ -376,7 +376,7 @@ Lattice = Backbone.Model.extend({
         _undo: function(){//remove all the mixins, this will help with debugging later
             this._initLatticeType = null;
             this._changeColSeparation = null;
-            this.addCellAtPosition = null;
+            this.getIndexForPosition = null;
             this.getScale = null;
             this._makeCellForLatticeType = null;
             this.stopListening(this, "columnSeparation");
@@ -397,7 +397,6 @@ Lattice = Backbone.Model.extend({
             //bind events
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
-            if (this.get("basePlane")) this.get("basePlane").destroy();
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("columnSeparation", 0.0);
         },
@@ -412,7 +411,7 @@ Lattice = Backbone.Model.extend({
             window.three.render();
         },
 
-        addCellAtPosition: function(absPosition){
+        getIndexForPosition: function(absPosition){
 
             //calc indices in cell matrix
             var scale = this.get("scale");
@@ -426,7 +425,7 @@ Lattice = Backbone.Model.extend({
             position.z = Math.round(absPosition.z/octHeight);
             if (position.z%2 == 1) position.y += 1;
 
-            this.addCellAtIndex(position);
+            return position;
         },
 
         getScale: function(){
@@ -440,7 +439,7 @@ Lattice = Backbone.Model.extend({
         _undo: function(){//remove all the mixins, this will help with debugging later
             this._initLatticeType = null;
             this._changeColSeparation = null;
-            this.addCellAtPosition = null;
+            this.getIndexForPosition = null;
             this.getScale = null;
             this._makeCellForLatticeType = null;
             this.stopListening(this, "columnSeparation");
@@ -461,26 +460,24 @@ Lattice = Backbone.Model.extend({
 
             //bind events
 
-            if (this.get("basePlane")) this.get("basePlane").destroy();
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
         },
 
-        addCellAtPosition: function(absPosition){
+        getIndexForPosition: function(absPosition){
 
             //calc indices in cell matrix
             var scale = this.get("scale");
-            var colSep = this.get("columnSeparation");
-            var latticeScale = scale*(1+2*colSep);
             var octHeight = 2*scale/Math.sqrt(6);
-            var triHeight = latticeScale/2*Math.sqrt(3);
+            var triHeight = scale/2*Math.sqrt(3);
             var position = {};
             position.x = Math.round(absPosition.x/latticeScale);
             position.y = Math.round(absPosition.y/triHeight);
-            position.z = Math.round(absPosition.z/octHeight);
+            position.z = Math.round(absPosition.z/octHeight)-1;
             if (position.z%2 == 1) position.y += 1;
 
-            this.addCellAtIndex(position);
+            return position;
         },
+
 
         getScale: function(){
             return this.get("scale");
@@ -492,7 +489,55 @@ Lattice = Backbone.Model.extend({
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             this._initLatticeType = null;
-            this.addCellAtPosition = null;
+            this.getIndexForPosition = null;
+            this.getScale = null;
+            this._makeCellForLatticeType = null;
+            this.stopListening(this, "columnSeparation");
+            this.set("columnSeparation", null);
+            this._undo = null;
+        }
+
+    },
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////CUBE LATTICE//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+    CubeLattice: {
+
+        _initLatticeType: function(){
+
+            //bind events
+
+            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+        },
+
+        getIndexForPosition: function(absPosition){
+
+            //calc indices in cell matrix
+            var scale = this.get("scale");
+            var index = {};
+            index.x = Math.round((absPosition.x-scale/2)/scale);
+            index.y = Math.round((absPosition.y-scale/2)/scale);
+            index.z = Math.round(absPosition.z/scale);
+
+            return index;
+        },
+
+
+        getScale: function(){
+            return this.get("scale");
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMACubeCell(indices, scale, this);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            this._initLatticeType = null;
+            this.getIndexForPosition = null;
             this.getScale = null;
             this._makeCellForLatticeType = null;
             this.stopListening(this, "columnSeparation");
@@ -501,13 +546,5 @@ Lattice = Backbone.Model.extend({
         }
 
     }
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////CUBE LATTICE//////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////
-
-
 
 });
