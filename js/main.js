@@ -7,22 +7,24 @@ $(function(){
 
     //setup persistent global variables
 
+    dmaGlobals = {};
+
     //init web workers
     window.workers = persistentWorkers(8);
 
     //init threeJS and geometry models
-    window.three = new ThreeModel();
+    dmaGlobals.three = new ThreeModel();
 
-    window.lattice = new Lattice();
-    window.appState = new AppState({lattice:window.lattice});
+    dmaGlobals.lattice = new Lattice();
+    dmaGlobals.appState = new AppState({lattice:dmaGlobals.lattice});
 
 
 
     //ui
-    new NavBar({model:appState});
+    new NavBar({model:dmaGlobals.appState});
 
     //threeJS View
-    new ThreeView({model:window.three, appState:appState});
+    new ThreeView({model:dmaGlobals.three, appState:dmaGlobals.appState});
 
-    window.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
+    dmaGlobals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
 });

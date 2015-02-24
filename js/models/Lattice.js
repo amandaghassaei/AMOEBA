@@ -48,7 +48,7 @@ Lattice = Backbone.Model.extend({
                 }
             }
         }
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     addCellAtIndex: function(indices){
@@ -61,7 +61,7 @@ Lattice = Backbone.Model.extend({
         if (!cells[index.x][index.y][index.z]) {
             cells[index.x][index.y][index.z] = this._makeCellForLatticeType(indices, scale);
             this.set("numCells", this.get("numCells")+1);
-            window.three.render();
+            dmaGlobals.three.render();
         } else console.warn("already a cell there");
 
     },
@@ -85,7 +85,7 @@ Lattice = Backbone.Model.extend({
         //todo shrink cells matrix if needed
 
         this.set("numCells", this.get("numCells")-1);
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     clearCells: function(){
@@ -98,7 +98,7 @@ Lattice = Backbone.Model.extend({
         this.set("nodes", []);
         this.set("numCells", 0);
         if (this.get("basePlane")) this.get("basePlane").set("zIndex", 0);
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -138,7 +138,7 @@ Lattice = Backbone.Model.extend({
             }
 
         }
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
@@ -264,7 +264,7 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell && cell.drawForMode) cell.drawForMode(mode);
         });
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     _scaleDidChange: function(){
@@ -273,7 +273,7 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale);
         });
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     previewScaleChange: function(scale){
@@ -348,7 +348,7 @@ Lattice = Backbone.Model.extend({
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.updateForScale(scale);
             });
-            window.three.render();
+            dmaGlobals.three.render();
         },
 
         getIndexForPosition: function(absPosition){
@@ -412,7 +412,7 @@ Lattice = Backbone.Model.extend({
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.updateForScale(scale);
             });
-            window.three.render();
+            dmaGlobals.three.render();
         },
 
         getIndexForPosition: function(absPosition){

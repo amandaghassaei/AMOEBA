@@ -18,10 +18,10 @@ function ExtrudeVisualizer(){
             mesh.position.x = profilePos.x;
             mesh.position.y = profilePos.y;
             mesh.position.z = profilePos.z;
-//            window.three.sceneAdd(mesh, false);
+//            dmaGlobals.three.sceneAdd(mesh, false);
             meshes.push(mesh);
         });
-        window.three.render();
+        dmaGlobals.three.render();
     }
 
     function makeHandle(){
@@ -36,7 +36,7 @@ function ExtrudeVisualizer(){
         _.each(meshes, function(mesh){
             mesh.scale.z = height;
         })
-        window.three.render();
+        dmaGlobals.three.render();
     }
 
     function renderIntoCells(){

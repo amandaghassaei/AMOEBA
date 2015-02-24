@@ -20,7 +20,7 @@ Highlighter = Backbone.View.extend({
                 vertexColors:THREE.FaceColors
             }));
 
-        window.three.sceneAdd(this.mesh, null);
+        dmaGlobals.three.sceneAdd(this.mesh, null);
         this.hide();
 
         //bind events
@@ -41,7 +41,7 @@ Highlighter = Backbone.View.extend({
     _setVisibility: function(visible, forceRender){
         if (forceRender || this.isVisible() != visible){
             this.mesh.visible = visible;
-            window.three.render();
+            dmaGlobals.three.render();
         }
         this.mesh.visible = visible;
     },
@@ -88,18 +88,18 @@ Highlighter = Backbone.View.extend({
 
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
-            window.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
+            dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;
-            window.lattice.removeCell(this.highlightedObject);
+            dmaGlobals.lattice.removeCell(this.highlightedObject);
         }
         this.hide();
         this.highlightedObject = null;
     },
 
     destroy: function(){
-        window.three.sceneRemove(this.mesh, null);
+        dmaGlobals.three.sceneRemove(this.mesh, null);
         this.mesh = null;
         this.highlightedObject = null;
         this.stopListening();

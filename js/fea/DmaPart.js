@@ -16,7 +16,7 @@
         if (this.mesh) console.warn("part mesh already in scene");
         this.mesh = this._makeMeshForType(this.type);
         this.updateForScale(this.parentCell.getScale(), this.parentCell.getPosition());
-        window.three.sceneAdd(this.mesh, "part");
+        dmaGlobals.three.sceneAdd(this.mesh, "part");
     };
 
     DMAPart.prototype.updateForScale = function(scale, position){
@@ -53,13 +53,13 @@
     DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
         if (this.parentCell) {
             this.parentCell.removePart(this.type);
-            window.three.render();
+            dmaGlobals.three.render();
         } else console.warn("part has no parent cell");
     };
 
     DMAPart.prototype.destroy = function(){
         if (this.mesh) {
-            window.three.sceneRemove(this.mesh, "part");
+            dmaGlobals.three.sceneRemove(this.mesh, "part");
             this.mesh.myPart = null;
 //            this.mesh.dispose();
 //            geometry.dispose();

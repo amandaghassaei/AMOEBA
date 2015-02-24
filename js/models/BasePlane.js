@@ -27,9 +27,9 @@ BasePlane = Backbone.Model.extend({
 
         var self = this;
         _.each(this.get("mesh"), function(mesh){
-            window.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
+            dmaGlobals.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
         });
-        window.three.render();
+        dmaGlobals.three.render();
 
     },
 
@@ -52,7 +52,7 @@ BasePlane = Backbone.Model.extend({
     },
 
     getIndex: function(face){
-        return window.lattice.getIndexForPosition(face.geometry.vertices[0]);
+        return dmaGlobals.lattice.getIndexForPosition(face.geometry.vertices[0]);
     },
 
     //subclasses handle getHighlighterVertices
@@ -65,9 +65,9 @@ BasePlane = Backbone.Model.extend({
         var self = this;
         _.each(this.get("mesh"), function(mesh){
             if (mesh.myParent) mesh.myParent = null;
-            window.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
+            dmaGlobals.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
         });
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     destroy: function(){
@@ -128,11 +128,11 @@ OctaBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var scale = this.get("mesh")[0].scale.z;
+        var scale = dmaGlobals.lattice.get("scale");
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
         });
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     _calcOctaFaceVertices: function(colSep){
@@ -177,7 +177,7 @@ OctaBasePlane = BasePlane.extend({
         var mesh = this.get("mesh")[0];
         var vertices = mesh.geometry.vertices;
         var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
-        var scale = mesh.scale.x;
+        var scale = dmaGlobals.lattice.get("scale");
         var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
         _.each(newVertices, function(vertex){//apply scale
             vertex.multiplyScalar(scale);
@@ -225,18 +225,18 @@ SquareBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var scale = this.get("mesh")[0].scale.z;
+        var scale = dmaGlobals.lattice.get("scale");
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(0, 0, zIndex*scale);
         });
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     getHighlighterVertices: function(face, position){
         //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var index = window.lattice.getIndexForPosition(position);
+        var index = dmaGlobals.lattice.getIndexForPosition(position);
         index.z += 1;
-        var scale = this.get("mesh")[0].scale.x;
+        var scale = dmaGlobals.lattice.get("scale");
         var vertices = [];
         vertices.push(new THREE.Vector3(index.x*scale, index.y*scale, index.z*scale));
         vertices.push(new THREE.Vector3((index.x+1)*scale, index.y*scale, index.z*scale));

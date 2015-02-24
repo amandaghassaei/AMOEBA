@@ -13,8 +13,8 @@ function DMACell(indices, scale, lattice) {
     this.parts = this._initParts(indices.z);
     this.updateForScale(scale);
 
-    window.three.sceneAdd(this.cellMesh, "cell");
-    this.drawForMode(window.appState.get("cellMode"));
+    dmaGlobals.three.sceneAdd(this.cellMesh, "cell");
+    this.drawForMode(dmaGlobals.appState.get("cellMode"));
 }
 
 DMACell.prototype.removePart = function(index){
@@ -78,7 +78,7 @@ DMACell.prototype.getIndex = function(){
 
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
-        window.three.sceneRemove(this.cellMesh, "cell");
+        dmaGlobals.three.sceneRemove(this.cellMesh, "cell");
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();

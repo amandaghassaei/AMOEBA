@@ -18,7 +18,7 @@ BeamNode.prototype.render = function(){
     geometry.applyMatrix( new THREE.Matrix4().makeTranslation(this.x, this.y, this.z) );
     var mesh = new THREE.Mesh(geometry);
 
-//    window.three.sceneAdd(mesh);
+//    dmaGlobals.three.sceneAdd(mesh);
 };
 
 

@@ -43,8 +43,8 @@ FillGeometry = Backbone.Model.extend({
         var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
         this.makeBoundingBoxHelper(mesh);
         this.set({mesh: mesh});
-        window.three.sceneAdd(mesh, null);
-        window.three.render();
+        dmaGlobals.three.sceneAdd(mesh, null);
+        dmaGlobals.three.render();
 
         //send new geometry out to workers
 //            _.each(workers.allWorkers, function(worker){
@@ -74,9 +74,9 @@ FillGeometry = Backbone.Model.extend({
 
     remove: function(){
         if (!this.get("mesh")) return;
-        window.three.sceneRemove(this.get("mesh"), null);
+        dmaGlobals.three.sceneRemove(this.get("mesh"), null);
         this.set("mesh", null);
-        window.three.render();
+        dmaGlobals.three.render();
     },
 
     scale: function(scale){

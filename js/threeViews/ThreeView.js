@@ -30,7 +30,7 @@ ThreeView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
-        this.listenTo(window.lattice, "change:highlighter", this._saveHighlighter);
+        this.listenTo(dmaGlobals.lattice, "change:highlighter", this._saveHighlighter);
 
         this._saveHighlighter();//need a reference to the highlighter
 
@@ -125,14 +125,14 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _saveHighlighter: function(){
-        this.highlighter = window.lattice.get("highlighter");
+        this.highlighter = dmaGlobals.lattice.get("highlighter");
     },
 
     _setNoPartIntersections: function(){
         if (this.currentIntersectedPart){
             this.currentIntersectedPart.unhighlight();
             this.currentIntersectedPart = null;
-            window.three.render();
+            dmaGlobals.three.render();
         }
     },
 
@@ -147,7 +147,7 @@ ThreeView = Backbone.View.extend({
             if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
             part.highlight();
             this.currentIntersectedPart = part;
-            window.three.render();
+            dmaGlobals.three.render();
         }
     }
 
