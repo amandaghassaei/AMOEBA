@@ -24,7 +24,12 @@ BasePlane = Backbone.Model.extend({
         //draw mesh
         this.set("mesh", this._makeBasePlaneMesh());
         this.updateScale(options.scale);
-        this._showMesh();//do this once
+
+        var self = this;
+        _.each(this.get("mesh"), function(mesh){
+            window.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
+        });
+        window.three.render();
 
     },
 
@@ -32,14 +37,6 @@ BasePlane = Backbone.Model.extend({
         _.each(this.get("mesh"), function(mesh){
             mesh.scale.set(scale, scale, scale);
         });
-    },
-
-    _showMesh: function(){
-        var self = this;
-        _.each(this.get("mesh"), function(mesh){
-            window.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
-        });
-        window.three.render();
     },
 
 //    _renderForCurrentScene: function(){

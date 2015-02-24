@@ -7,8 +7,9 @@ Highlighter = Backbone.View.extend({
     mesh: null,
     highlightedObject: null,
 
-    commonInit: function(geometry){
+    initialize: function(){
 
+        var geometry = this._makeGeometry();
         geometry.dynamic = true;
         this.mesh = new THREE.Mesh(geometry,
             new THREE.MeshBasicMaterial({
@@ -111,14 +112,14 @@ Highlighter = Backbone.View.extend({
 
 OctaFaceHighlighter = Highlighter.extend({
 
-    initialize: function(){
+    _makeGeometry: function(){
 
         var geometry = new THREE.Geometry();
         //can't change size of faces or vertices buffers dynamically
         geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
         geometry.faces = [new THREE.Face3(0,1,2)];
 
-        this.commonInit(geometry);
+        return geometry;
     }
 
 });
@@ -129,14 +130,14 @@ OctaFaceHighlighter = Highlighter.extend({
 
 CubeHighlighter = Highlighter.extend({
 
-    initialize: function(){
+    _makeGeometry: function(){
 
         var geometry = new THREE.Geometry();
         //can't change size of faces or vertices buffers dynamically
         geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
         geometry.faces = [new THREE.Face3(0,1,2), new THREE.Face3(0,2,3)];
 
-        this.commonInit(geometry);
+        return geometry;
     }
 
 });
