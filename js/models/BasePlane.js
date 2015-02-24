@@ -58,10 +58,6 @@ BasePlane = Backbone.Model.extend({
         return window.lattice.getIndexForPosition(face.geometry.vertices[0]);
     },
 
-    canRemove: function(){
-        return false;//tells highlighter that the baseplane is not something to be deleted
-    },
-
     //subclasses handle getHighlighterVertices
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -191,10 +187,6 @@ OctaBasePlane = BasePlane.extend({
             vertex.add(position);
         });
         return newVertices;
-    },
-
-    highlighterFaces: function(){
-        return [new THREE.Face3(0,1,2), new THREE.Face3(0,0,0)];
     }
 
 });
@@ -255,10 +247,6 @@ SquareBasePlane = BasePlane.extend({
         vertices.push(new THREE.Vector3(index.x*scale, (index.y+1)*scale, index.z*scale));
 
         return vertices;
-    },
-
-    highlighterFaces: function(){
-        return [new THREE.Face3(0,1,2), new THREE.Face3(0,2,3)];
     }
 
 

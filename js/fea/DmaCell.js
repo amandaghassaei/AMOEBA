@@ -76,10 +76,6 @@ DMACell.prototype.getIndex = function(){
     return _.clone(this.indices);
 };
 
-DMACell.prototype.canRemove = function(){
-    return true;//tells highlighter that a cell is something that can be deleted
-};
-
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
         window.three.sceneRemove(this.cellMesh, "cell");

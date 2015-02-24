@@ -30,14 +30,14 @@ ThreeView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
+        this.listenTo(window.lattice, "change:highlighter", this._saveHighlighter);
+
+        this._saveHighlighter();//need a reference to the highlighter
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
 
         this.$el.append(this.model.domElement);//render only once
-
-        //init highlighter
-        this.highlighter = new Highlighter();
 
         this.model.render();
         this._animate();
@@ -123,6 +123,10 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////INTERSECTIONS////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
+
+    _saveHighlighter: function(){
+        this.highlighter = window.lattice.get("highlighter");
+    },
 
     _setNoPartIntersections: function(){
         if (this.currentIntersectedPart){

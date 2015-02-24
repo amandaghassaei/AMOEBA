@@ -13,7 +13,8 @@ Lattice = Backbone.Model.extend({
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
-        basePlane: null//plane to build from
+        basePlane: null,//plane to build from
+        highlighter: null//highlights buildable surfaces
     },
 
     //pass in fillGeometry
@@ -287,6 +288,7 @@ Lattice = Backbone.Model.extend({
         this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();
+        if (this.get("highlighter")) this.get("highlighter").destroy();
         if (cellType == "octa"){
             if (connectionType == "face"){
                 _.extend(this, this.OctaFaceLattice);
@@ -335,6 +337,7 @@ Lattice = Backbone.Model.extend({
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaFaceHighlighter());
             this.set("columnSeparation", 0.0);
         },
 
@@ -398,6 +401,7 @@ Lattice = Backbone.Model.extend({
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaFaceHighlighter());
             this.set("columnSeparation", 0.0);
         },
 
@@ -461,6 +465,7 @@ Lattice = Backbone.Model.extend({
             //bind events
 
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new CubeHighlighter());
         },
 
         getIndexForPosition: function(absPosition){
@@ -512,6 +517,7 @@ Lattice = Backbone.Model.extend({
             //bind events
 
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new CubeHighlighter());
         },
 
         getIndexForPosition: function(absPosition){

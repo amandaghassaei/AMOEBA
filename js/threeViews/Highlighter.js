@@ -7,12 +7,8 @@ Highlighter = Backbone.View.extend({
     mesh: null,
     highlightedObject: null,
 
-    initialize: function(){
+    commonInit: function(geometry){
 
-        var geometry = new THREE.Geometry();
-        //can't change size of faces or vertices buffers dynamically
-        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
-        geometry.faces = this._getFacesArray();
         geometry.dynamic = true;
         this.mesh = new THREE.Mesh(geometry,
             new THREE.MeshBasicMaterial({
@@ -22,20 +18,16 @@ Highlighter = Backbone.View.extend({
                 color:0xffffff,
                 vertexColors:THREE.FaceColors
             }));
+
         window.three.sceneAdd(this.mesh, null);
         this.hide();
 
         //bind events
-        this.listenTo(window.appState, "change:cellType change:connectionType", this.updateHighlighterFaces);
     },
 
-    _getFacesArray: function(){
-        return window.lattice.get("basePlane").highlighterFaces();
-    },
-
-    updateHighlighterFaces: function(){
-        this.mesh.geometry.faces = this._getFacesArray();
-    },
+    ///////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////VISIBILITY////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
 
     hide: function(){
         this._setVisibility(false);
@@ -53,6 +45,10 @@ Highlighter = Backbone.View.extend({
         this.mesh.visible = visible;
     },
 
+    isVisible: function(){
+        return this.mesh.visible;
+    },
+
     highlight: function(intersection){
         if (!intersection.object) return;
         var highlightable = intersection.object;
@@ -66,21 +62,22 @@ Highlighter = Backbone.View.extend({
             return;
         }
 
-        for (var i=0;i<newVertices.length;i++){
-            this.mesh.geometry.vertices[i] = newVertices[i];
-        }
-        this.mesh.geometry.verticesNeedUpdate = true;
+        var geometry = this.mesh.geometry;
+        if (geometry.vertices.length != newVertices.length) console.warn("vertices array is changing size");
+        geometry.vertices = newVertices;
+        geometry.verticesNeedUpdate = true;
 //        this.mesh.geometry.normalsNeedUpdate = true;
 //        this.mesh.geometry.computeFaceNormals();
 //        this.mesh.geometry.computeVertexNormals();
-        this.mesh.geometry.computeBoundingSphere();
+        geometry.computeBoundingSphere();
         this.show(true);
     },
 
-    isVisible: function(){
-        return this.mesh.visible;
-    },
+    ///////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////ADD REMOVE////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
 
+    //todo this could be more than just z additions
     _getNextCellPosition: function(index){//add one to z index
         index.z += 1;
         return index;
@@ -92,14 +89,54 @@ Highlighter = Backbone.View.extend({
             if (!this.isVisible() || !this.highlightedObject) return;
             window.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
         } else {
-            if (!this.highlightedObject || !this.highlightedObject.canRemove()) return;
-            if (this.highlightedObject instanceof DMACell){
-                window.lattice.removeCell(this.highlightedObject);
-                return;
-            }
-//            window.lattice.removeCellAtIndex(this.highlightedObject.getIndex(this.mesh));
+            if (!this.highlightedObject) return;
+            if (!(this.highlightedObject instanceof DMACell)) return;
+            window.lattice.removeCell(this.highlightedObject);
         }
         this.hide();
         this.highlightedObject = null;
+    },
+
+    destroy: function(){
+        window.three.sceneRemove(this.mesh, null);
+        this.mesh = null;
+        this.highlightedObject = null;
+        this.stopListening();
     }
+});
+
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////OCTA FACE/////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+OctaFaceHighlighter = Highlighter.extend({
+
+    initialize: function(){
+
+        var geometry = new THREE.Geometry();
+        //can't change size of faces or vertices buffers dynamically
+        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
+        geometry.faces = [new THREE.Face3(0,1,2)];
+
+        this.commonInit(geometry);
+    }
+
+});
+
+///////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////CUBE /////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////
+
+CubeHighlighter = Highlighter.extend({
+
+    initialize: function(){
+
+        var geometry = new THREE.Geometry();
+        //can't change size of faces or vertices buffers dynamically
+        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
+        geometry.faces = [new THREE.Face3(0,1,2), new THREE.Face3(0,2,3)];
+
+        this.commonInit(geometry);
+    }
+
 });
