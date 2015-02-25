@@ -101,11 +101,10 @@ DMACell.prototype.destroy = function(){
 
 (function () {
 
-    var unitOctHeight = 2/Math.sqrt(6);
-
     var unitCellGeo1 = new THREE.OctahedronGeometry(1/Math.sqrt(2));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
+//    var unitOctHeight = 2/Math.sqrt(6);
 //    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,unitOctHeight/2));
 
     var unitCellGeo2 = unitCellGeo1.clone();
@@ -156,10 +155,7 @@ DMACell.prototype.destroy = function(){
 //        });
 
         var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
-//        var scale = dmaGlobals.lattice.xScale();
-//        _.each(_.keys(position), function(key){
-//            position[key] += direction[key]*scale/2;
-//        });
+        position.z += dmaGlobals.lattice.zScale()/2;
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
 

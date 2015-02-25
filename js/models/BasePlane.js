@@ -130,6 +130,7 @@ OctaBasePlane = BasePlane.extend({
         var scale = dmaGlobals.lattice.get("scale");
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(0, 0, zIndex*scale*2/Math.sqrt(6));
+            mesh.rotation.set(Math.PI*(zIndex%2),0,0)
         });
         dmaGlobals.three.render();
     },
