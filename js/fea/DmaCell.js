@@ -13,7 +13,6 @@ function DMACell(indices, scale, lattice) {
     this.parts = this._initParts(indices.z);
     this.updateForScale(scale);
 
-    dmaGlobals.three.sceneAdd(this.cellMesh, "cell");
     this.drawForMode(dmaGlobals.appState.get("cellMode"));
 }
 
@@ -101,21 +100,15 @@ DMACell.prototype.destroy = function(){
 
 (function () {
 
-    var unitCellGeo1 = new THREE.OctahedronGeometry(1/Math.sqrt(2));
-    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
-    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
-//    var unitOctHeight = 2/Math.sqrt(6);
-//    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,unitOctHeight/2));
-
-    var unitCellGeo2 = unitCellGeo1.clone();
-
-    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
+    var unitCellGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
+    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    function DMASideOctaCell(mode, indices, scale, lattice){
-        DMACell.call(this, mode, indices, scale, lattice);
+    function DMASideOctaCell(indices, scale, lattice){
+        DMACell.call(this, indices, scale, lattice);
     }
     DMASideOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -129,12 +122,10 @@ DMACell.prototype.destroy = function(){
 
     DMASideOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
-        if (zIndex%2==0){
-            mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo1, cellMaterials);
-        } else {
-            mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo2, cellMaterials);
-        }
+        mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
+        if (zIndex%2!=0) mesh.rotation.set(0, 0, Math.PI);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
     };
 
@@ -149,6 +140,49 @@ DMACell.prototype.destroy = function(){
     }
 
     self.DMASideOctaCell = DMASideOctaCell;
+
+    /////////////////////////////////////////////////TETRA CELL////////////////////////////////////
+
+    var unitTetraCellGeo = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
+    unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
+    unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
+    unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,1/Math.sqrt(8)/2));
+
+    function DMATetraCell(indices, scale, lattice){
+        DMACell.call(this, indices, scale, lattice);
+    }
+    DMATetraCell.prototype = Object.create(DMACell.prototype);
+
+    DMATetraCell.prototype._initParts = function(){
+        return [];
+    };
+
+    DMATetraCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+        var mesh;
+        mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
+        if (zIndex%2!=0) mesh.rotation.set(Math.PI,0,0);
+
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "inverseCell");
+        mesh.visible = false;
+        return mesh;
+    };
+
+    DMATetraCell.prototype.calcHighlighterPosition = function(face){
+
+        var direction = face.normal;
+        if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
+
+        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+        position.z += dmaGlobals.lattice.zScale()/2;
+        return {index: _.clone(this.indices), direction:direction, position:position};
+    };
+
+    DMATetraCell.prototype.getPosition = function(){//need for part relay
+        return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
+    };
+
+    self.DMATetraCell = DMATetraCell;
 
 })();
 
@@ -165,8 +199,8 @@ DMACell.prototype.destroy = function(){
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
 
-    function DMAVertexOctaCell(mode, indices, scale, lattice){
-        DMACell.call(this, mode, indices, scale, lattice);
+    function DMAVertexOctaCell(indices, scale, lattice){
+        DMACell.call(this, indices, scale, lattice);
     }
     DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -181,6 +215,7 @@ DMACell.prototype.destroy = function(){
     DMAVertexOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
     };
 
@@ -202,8 +237,8 @@ DMACell.prototype.destroy = function(){
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
 
-    function DMACubeCell(mode, indices, scale, lattice){
-        DMACell.call(this, mode, indices, scale, lattice);
+    function DMACubeCell(indices, scale, lattice){
+        DMACell.call(this, indices, scale, lattice);
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -221,6 +256,7 @@ DMACell.prototype.destroy = function(){
 //        var wireframe = new THREE.BoxHelper(mesh);
 //        wireframe.material.color.set(0x000000);
 //        mesh.add(wireframe);
+        dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
     };
 
