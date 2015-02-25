@@ -67,12 +67,22 @@ Lattice = Backbone.Model.extend({
     },
 
     _indexForPosition: function(absPosition){
-            var position = {};
-            position.x = Math.floor(absPosition.x/this.xScale());
-            position.y = Math.floor(absPosition.y/this.yScale());
-            position.z = Math.floor(absPosition.z/this.zScale());
-            return position;
-        },
+        var position = {};
+        var scale = this.get("scale");
+        position.x = Math.floor(absPosition.x/this.xScale(scale));
+        position.y = Math.floor(absPosition.y/this.yScale(scale));
+        position.z = Math.floor(absPosition.z/this.zScale(scale));
+        return position;
+    },
+
+    _positionForIndex: function(index){
+        var scale = this.get("scale");
+        var position = _.clone(index);
+        position.x = (position.x+0.5)*this.xScale(scale);
+        position.y = (position.y+0.5)*this.yScale(scale);
+        position.z = (position.z+0.5)*this.zScale(scale);
+        return position;
+    },
 
     removeCellAtIndex: function(indices){
 
@@ -116,9 +126,10 @@ Lattice = Backbone.Model.extend({
     subtractMesh: function(mesh){
         //todo this is specific to octa face
 
-        var scale = this.getScale();
-        var yscale = scale/2*Math.sqrt(3);
-        var zScale = this.get("scale")*2/Math.sqrt(6);
+        var scale = this.get("scale");
+        var xScale = this.xScale(scale);
+        var yScale = this.yScale(scale);
+        var zScale = this.zScale(scale);
 
         var cells = this.get("cells");
         var cellsMin = this.get("cellsMin");
@@ -136,7 +147,7 @@ Lattice = Backbone.Model.extend({
                 if (!firstCell) continue;//nothing in col
 
                 var origin = firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
-                zHeight = this._findIntersectionsInWindow(scale/2, yscale/2, origin, allVertexPos) || zHeight;
+                zHeight = this._findIntersectionsInWindow(xScale/2, yScale/2, origin, allVertexPos) || zHeight;
 
                 zHeight = Math.floor(zHeight/zScale);
                 for (var z=0;z<zHeight;z++){
@@ -363,22 +374,30 @@ Lattice = Backbone.Model.extend({
             return position;
         },
 
-        getScale: function(){//todo get rid of this
-            return this.get("scale")*(1.0+2*this.get("columnSeparation"));
+        getPositionForIndex: function(index){
+
+            var position = this._positionForIndex(index);
+//            var octHeight = 2*scale/Math.sqrt(6);
+//            var triHeight = latticeScale/2*Math.sqrt(3);
+//            position.x = indices.x*latticeScale;
+//            position.y = indices.y*triHeight-latticeScale/Math.sqrt(3);
+//            position.z = indices.z*octHeight;
+            if (Math.abs(index.y%2) == 1) position.x -= this.xScale()/2;
+            return position;
         },
 
-        xScale: function(){
-            var scale = this.get("scale");
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
             var colSep = this.get("columnSeparation");
             return scale*(1+2*colSep);
         },
 
-        yScale: function(){
-            return this.xScale()/2*Math.sqrt(3);
+        yScale: function(scale){
+            return this.xScale(scale)/2*Math.sqrt(3);
         },
 
-        zScale: function(){
-            var scale = this.get("scale");
+        zScale: function(scale){
+            if (!scale) scale = this.get("scale");
             return 2*scale/Math.sqrt(6);
         },
 
@@ -429,22 +448,18 @@ Lattice = Backbone.Model.extend({
             return position;
         },
 
-        getScale: function(){
-            return this.get("scale")*(1.0+2*this.get("columnSeparation"));
-        },
-
-        xScale: function(){
-            var scale = this.get("scale");
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
             var colSep = this.get("columnSeparation");
             return scale*(1+2*colSep);
         },
 
-        yScale: function(){
-            return this.xScale()/2*Math.sqrt(3);
+        yScale: function(scale){
+            return this.xScale(scale)/2*Math.sqrt(3);
         },
 
-        zScale: function(){
-            var scale = this.get("scale");
+        zScale: function(scale){
+            if (!scale) scale = this.get("scale");
             return 2*scale/Math.sqrt(6);
         },
 
@@ -482,21 +497,17 @@ Lattice = Backbone.Model.extend({
             return this._indexForPosition(absPosition);
         },
 
-
-        getScale: function(){
-            return this.get("scale");
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale;
         },
 
-        xScale: function(){
-            return this.get("scale");
+        yScale: function(scale){
+            return this.xScale(scale);
         },
 
-        yScale: function(){
-            return this.xScale();
-        },
-
-        zScale: function(){
-            return this.xScale();
+        zScale: function(scale){
+            return this.xScale(scale);
         },
 
         _makeCellForLatticeType: function(indices, scale){
@@ -533,28 +544,20 @@ Lattice = Backbone.Model.extend({
         },
 
         getPositionForIndex: function(index){
-            var scale = this.xScale();
-            var position = _.clone(index);
-            _.each(_.keys(position), function(key){
-                position[key] = (position[key]+0.5)*scale;
-            })
-            return position;
+            return this._positionForIndex(index);
         },
 
-        getScale: function(){
-            return this.get("scale");
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale")
+            return scale;
         },
 
-        xScale: function(){
-            return this.get("scale");
+        yScale: function(scale){
+            return this.xScale(scale);
         },
 
-        yScale: function(){
-            return this.xScale();
-        },
-
-        zScale: function(){
-            return this.xScale();
+        zScale: function(scale){
+            return this.xScale(scale);
         },
 
         _makeCellForLatticeType: function(indices, scale){

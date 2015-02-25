@@ -57,7 +57,7 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
 
 DMACell.prototype.updateForScale = function(scale){
     this.cellMesh.scale.set(scale, scale, scale);
-    var position = this._calcPosition(scale, this.indices);
+    var position = this.getPosition();
     this._setMeshPosition(this.cellMesh, position);
     _.each(this.parts, function(part){
         if (part) part.updateForScale(scale, position);
@@ -69,7 +69,7 @@ DMACell.prototype.getScale = function(){//need for part relay
 };
 
 DMACell.prototype.getPosition = function(){//need for part relay
-    return this._calcPosition(this.getScale(), this.indices);
+    return dmaGlobals.lattice.getPositionForIndex(this.indices);
 };
 
 DMACell.prototype.getIndex = function(){
@@ -106,7 +106,7 @@ DMACell.prototype.destroy = function(){
     var unitCellGeo1 = new THREE.OctahedronGeometry(1/Math.sqrt(2));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitCellGeo1.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
-    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,unitOctHeight/2));
+//    unitCellGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,unitOctHeight/2));
 
     var unitCellGeo2 = unitCellGeo1.clone();
 
@@ -120,18 +120,6 @@ DMACell.prototype.destroy = function(){
         DMACell.call(this, mode, indices, scale, lattice);
     }
     DMASideOctaCell.prototype = Object.create(DMACell.prototype);
-
-    DMASideOctaCell.prototype._calcPosition = function(scale, indices){
-        var latticeScale = this.lattice.getScale();
-        var position = {};
-        var octHeight = 2*scale/Math.sqrt(6);
-        var triHeight = latticeScale/2*Math.sqrt(3);
-        position.x = indices.x*latticeScale;
-        position.y = indices.y*triHeight-latticeScale/Math.sqrt(3);
-        position.z = indices.z*octHeight;
-        if (Math.abs(indices.y%2) == 1) position.x -= latticeScale/2;
-        return position;
-    };
 
     DMASideOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
@@ -190,18 +178,6 @@ DMACell.prototype.destroy = function(){
     }
     DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 
-    DMAVertexOctaCell.prototype._calcPosition = function(scale, indices){
-        var position = {};
-//        var octHeight = 2*scale/Math.sqrt(6);
-//        var triHeight = scale/2*Math.sqrt(3);
-//        position.x = indices.x*scale;
-//        position.y = indices.y*triHeight;
-//        position.z = indices.z*octHeight;
-//        if (Math.abs(indices.y%2) == 1) position.x -= scale/2;
-//        if (Math.abs(indices.z%2) == 1) position.y -= triHeight*4/3;
-        return position;
-    };
-
     DMAVertexOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
@@ -229,7 +205,6 @@ DMACell.prototype.destroy = function(){
 (function () {
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(1/2,1/2,1/2));
 
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
@@ -239,14 +214,6 @@ DMACell.prototype.destroy = function(){
         DMACell.call(this, mode, indices, scale, lattice);
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
-
-    DMACubeCell.prototype._calcPosition = function(scale, indices){
-        var position = _.clone(indices);
-        _.each(_.keys(position), function(key){
-            position[key] *= scale;
-        });
-        return position;
-    };
 
     DMACubeCell.prototype._initParts = function(zIndex){
         var parts  = [];

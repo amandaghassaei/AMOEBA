@@ -12,7 +12,6 @@ Highlighter = Backbone.View.extend({
     initialize: function(options){
 
         var geometry = this._makeGeometry();
-        geometry.dynamic = true;
         this.mesh = new THREE.Mesh(geometry,
             new THREE.MeshBasicMaterial({
                 side:THREE.DoubleSide,

@@ -94,7 +94,6 @@ OctaBasePlane = BasePlane.extend({
     _makeBasePlaneMesh: function(){
 
         var geometry = new THREE.Geometry();
-        geometry.dynamic = true;
         geometry.vertices = this._calcOctaFaceVertices(0.0);
         var faces = geometry.faces;
 
