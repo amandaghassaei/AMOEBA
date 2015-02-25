@@ -14,7 +14,8 @@ Lattice = Backbone.Model.extend({
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
         basePlane: null,//plane to build from
-        highlighter: null//highlights buildable surfaces
+        highlighter: null,//highlights buildable surfaces
+        shouldPreserveCells: true//preserve cells when changing lattice type
     },
 
     //pass in fillGeometry
@@ -306,7 +307,7 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
 
     updateLatticeType: function(cellType, connectionType){
-        this.clearCells();
+        if (!this.get("shouldPreserveCells")) this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();
         if (this.get("highlighter")) this.get("highlighter").destroy();
@@ -324,6 +325,18 @@ Lattice = Backbone.Model.extend({
             _.extend(this, this.CubeLattice);
         }
         this._initLatticeType();
+        if (this.get("shouldPreserveCells")){
+            var self = this;
+            var scale = this.get("scale");
+            var cells = this.get("cells");
+            this._loopCells(cells, function(cell, x, y, z){
+                if (!cell) return;
+                var index = cell.indices;
+                cell.destroy();
+                cells[x][y][z] = self._makeCellForLatticeType(index, scale)
+            });
+            dmaGlobals.three.render();
+        }
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -339,6 +352,16 @@ Lattice = Backbone.Model.extend({
             });
 
         });
+    },
+
+    _loopCells: function(cells, callback){
+        for (var x=0;x<cells.length;x++){
+            for (var y=0;y<cells[0].length;y++){
+                for (var z=0;z<cells[0][0].length;z++){
+                    callback(cells[x][y][z], x, y, z);
+                }
+            }
+        }
     },
 
 ////////////////////////////////////////////////////////////////////////////////////////
