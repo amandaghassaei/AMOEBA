@@ -181,6 +181,7 @@ OctaBasePlane = BasePlane.extend({
     calcHighlighterPosition: function(face, position){
 
         var index = dmaGlobals.lattice.getIndexForPosition(position);
+        if (index.z%2 != 0) index.x -= 1;
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var position = dmaGlobals.lattice.getPositionForIndex(index);
         position.z += dmaGlobals.lattice.zScale()/2;
