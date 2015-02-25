@@ -143,17 +143,6 @@ DMACell.prototype.destroy = function(){
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
 
-//        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-//        var mesh = this.cellMesh.children[0];
-//        var vertices = mesh.geometry.vertices;
-//        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
-//        var scale = this.cellMesh.scale.x;
-//        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
-//        _.each(newVertices, function(vertex){//apply scale
-//            vertex.multiplyScalar(scale);
-//            vertex.add(position);
-//        });
-
         var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
         position.z += dmaGlobals.lattice.zScale()/2;
         return {index: _.clone(this.indices), direction:direction, position:position};
@@ -209,7 +198,8 @@ DMACell.prototype.destroy = function(){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    var cellMaterial = new THREE.MeshNormalMaterial();
+    var cellMaterials = [new THREE.MeshNormalMaterial(),
+        new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
 
     function DMACubeCell(mode, indices, scale, lattice){
@@ -225,11 +215,11 @@ DMACell.prototype.destroy = function(){
         return parts;
     };
 
-    DMACubeCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
-        var mesh = new THREE.Mesh(unitCellGeo, cellMaterial);
+    DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        var mesh = new THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-        var wireframe = new THREE.BoxHelper(mesh);
-        wireframe.material.color.set(0x000000);
+//        var wireframe = new THREE.BoxHelper(mesh);
+//        wireframe.material.color.set(0x000000);
 //        mesh.add(wireframe);
         return mesh;
     };
@@ -237,8 +227,6 @@ DMACell.prototype.destroy = function(){
     DMACubeCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
-//        if (direction.z<0.99) direction = null;//only highlight horizontal faces
-
         var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
         var scale = dmaGlobals.lattice.xScale();
         _.each(_.keys(position), function(key){
