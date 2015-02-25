@@ -142,8 +142,10 @@ OctaBasePlane = BasePlane.extend({
     _calcOctaFaceVertices: function(colSep){
 
         var vertices = [];
-        var latticeScale = 1+2*colSep;
-        var triangleHeight = latticeScale/2*Math.sqrt(3);
+
+        var xScale = dmaGlobals.lattice.xScale(1);
+        var yScale = dmaGlobals.lattice.yScale(1);
+
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
@@ -157,12 +159,12 @@ OctaBasePlane = BasePlane.extend({
                 var xOffset = 0;
                 if (Math.abs(j)%2==0) {
                 } else {
-                    xOffset = 1/2*latticeScale;
+                    xOffset = 1/2*xScale;
                 }
 
-                vertices.push(new THREE.Vector3(i*latticeScale + xOffset - horizontalOffset, j*triangleHeight + baseVertOffset, 0));
-                vertices.push(new THREE.Vector3(i*latticeScale + xOffset + horizontalOffset, j*triangleHeight + baseVertOffset, 0));
-                vertices.push(new THREE.Vector3(i*latticeScale + xOffset, j*triangleHeight - pointVertOffset, 0));
+                vertices.push(new THREE.Vector3(i*xScale + xOffset - horizontalOffset, j*yScale + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i*xScale + xOffset + horizontalOffset, j*yScale + baseVertOffset, 0));
+                vertices.push(new THREE.Vector3(i*xScale + xOffset, j*yScale - pointVertOffset, 0));
 
             }
 

@@ -375,11 +375,11 @@ Lattice = Backbone.Model.extend({
         _initLatticeType: function(){
 
             //bind events
+            this.set("columnSeparation", 0.0);
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFaceHighlighter({scale:this.get("scale")}));
-            this.set("columnSeparation", 0.0);
         },
 
         _changeColSeparation: function(){
@@ -452,11 +452,11 @@ Lattice = Backbone.Model.extend({
         _initLatticeType: function(){
 
             //bind events
+            this.set("columnSeparation", 0.0);
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFaceHighlighter({scale:this.get("scale")}));
-            this.set("columnSeparation", 0.0);
         },
 
         _changeColSeparation: function(){
