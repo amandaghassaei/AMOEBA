@@ -115,7 +115,6 @@ DMACell.prototype.destroy = function(){
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-
     function DMASideOctaCell(mode, indices, scale, lattice){
         DMACell.call(this, mode, indices, scale, lattice);
     }
@@ -141,19 +140,27 @@ DMACell.prototype.destroy = function(){
     };
 
     DMASideOctaCell.prototype.calcHighlighterPosition = function(face){
-        if (face.normal.z<0.99) return null;//only highlight horizontal faces
 
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var mesh = this.cellMesh.children[0];
-        var vertices = mesh.geometry.vertices;
-        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
-        var scale = this.cellMesh.scale.x;
-        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
-        _.each(newVertices, function(vertex){//apply scale
-            vertex.multiplyScalar(scale);
-            vertex.add(position);
-        });
-        return newVertices;
+        var direction = face.normal;
+        if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
+
+//        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+//        var mesh = this.cellMesh.children[0];
+//        var vertices = mesh.geometry.vertices;
+//        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
+//        var scale = this.cellMesh.scale.x;
+//        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
+//        _.each(newVertices, function(vertex){//apply scale
+//            vertex.multiplyScalar(scale);
+//            vertex.add(position);
+//        });
+
+        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+//        var scale = dmaGlobals.lattice.xScale();
+//        _.each(_.keys(position), function(key){
+//            position[key] += direction[key]*scale/2;
+//        });
+        return {index: _.clone(this.indices), direction:direction, position:position};
     }
 
     self.DMASideOctaCell = DMASideOctaCell;

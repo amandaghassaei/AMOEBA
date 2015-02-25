@@ -172,17 +172,12 @@ OctaBasePlane = BasePlane.extend({
     },
 
     calcHighlighterPosition: function(face, position){
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
-        var mesh = this.get("mesh")[0];
-        var vertices = mesh.geometry.vertices;
-        var newVertices = [vertices[face.a].clone(), vertices[face.b].clone(), vertices[face.c].clone()];
-        var scale = dmaGlobals.lattice.get("scale");
-        var position = (new THREE.Vector3()).setFromMatrixPosition(mesh.matrixWorld);
-        _.each(newVertices, function(vertex){//apply scale
-            vertex.multiplyScalar(scale);
-            vertex.add(position);
-        });
-        return {index: {}, direction: new THREE.Vector3(0,0,1), position:position};
+
+        var index = dmaGlobals.lattice.getIndexForPosition(position);
+        index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
+        var position = dmaGlobals.lattice.getPositionForIndex(index);
+        position.z += dmaGlobals.lattice.zScale()/2;
+        return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
 });

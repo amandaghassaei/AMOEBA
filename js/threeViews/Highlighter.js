@@ -89,7 +89,7 @@ Highlighter = Backbone.View.extend({
 
     _setPosition: function(position, direction){
         this.mesh.position.set(position.x, position.y, position.z);
-        this.mesh.rotation.set(direction.y*Math.PI, direction.x*Math.PI, 0);
+//        this.mesh.rotation.set(direction.y*Math.PI, direction.x*Math.PI, 0);
 //        this.mesh.updateMatrix();
     },
 
@@ -101,7 +101,7 @@ Highlighter = Backbone.View.extend({
         var newIndex = _.clone(this.index);
         var direction = this.direction;
         _.each(_.keys(newIndex), function(key){
-            newIndex[key] += direction[key];
+            newIndex[key] = Math.round(newIndex[key] + direction[key]);
         });
         return newIndex;
     },
@@ -135,11 +135,9 @@ OctaFaceHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
 
-        var geometry = new THREE.Geometry();
-        //can't change size of faces or vertices buffers dynamically
-        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
-        geometry.faces = [new THREE.Face3(0,1,2)];
-
+        var rad = 1/Math.sqrt(3);
+        var geometry = new THREE.CylinderGeometry(rad, rad, 0.01, 3);//short triangular prism
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
         return geometry;
     }
 
@@ -160,7 +158,6 @@ OctaVertexHighlighter = Highlighter.extend({
 CubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-
         var geometry = new THREE.BoxGeometry(1,1,0.01);
         return geometry;
     }

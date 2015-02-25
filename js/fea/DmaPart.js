@@ -6,7 +6,6 @@
 //a part, element with a single material, handled by assembler
 
     function DMAPart(type, oddZFlag, parent) {
-        //todo remove this?
         this.parentCell = parent;//use this reference to get position and scale
         this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
         this.type = type;
@@ -90,7 +89,7 @@
         unitPartGeo1.computeBoundingBox();
         var unitScale = 1.2/unitPartGeo1.boundingBox.max.y;
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.25,-0.6, -0.08));
+        unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.25,-0.6, -0.45));
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
         unitPartGeo1.dynamic = true;
 
