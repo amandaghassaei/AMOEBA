@@ -369,9 +369,12 @@ Lattice = Backbone.Model.extend({
         },
 
         getIndexForPosition: function(absPosition){
-            var position = this._indexForPosition(absPosition);
-            if (position.z%2 == 1) position.y += 1;
-            return position;
+            var scale = this.get("scale");
+            var yIndex = Math.floor(absPosition.y/this.yScale(scale));
+            if (Math.abs(yIndex%2) == 1) absPosition.x += this.xScale(scale)/2;
+            var index = this._indexForPosition(absPosition);
+            if (index.z%2 == 1) index.y += 1;
+            return index;
         },
 
         getPositionForIndex: function(index){
@@ -379,8 +382,8 @@ Lattice = Backbone.Model.extend({
             var scale = this.get("scale");
             var position = _.clone(index);
             var xScale = this.xScale(scale);
-            position.x = position.x*xScale;
-            position.y = position.y*this.yScale(scale)-xScale/Math.sqrt(3);
+            position.x = (position.x+1/2)*xScale;
+            position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
             position.z = (position.z+0.5)*this.zScale(scale);
             if (Math.abs(index.y%2) == 1) position.x -= this.xScale()/2;
             return position;
