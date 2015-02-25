@@ -6,8 +6,10 @@ Highlighter = Backbone.View.extend({
 
     mesh: null,
     highlightedObject: null,
+    index: null,
+    direction: null,
 
-    initialize: function(){
+    initialize: function(options){
 
         var geometry = this._makeGeometry();
         geometry.dynamic = true;
@@ -21,6 +23,7 @@ Highlighter = Backbone.View.extend({
             }));
 
         dmaGlobals.three.sceneAdd(this.mesh, null);
+        this.updateScale(options.scale);
         this.hide();
 
         //bind events
@@ -50,64 +53,83 @@ Highlighter = Backbone.View.extend({
         return this.mesh.visible;
     },
 
+    setNothingHighlighted: function(){
+        this.highlightedObject = null;
+        this.index = null;
+        this.direction = null;
+        this.hide();
+    },
+
     highlight: function(intersection){
         if (!intersection.object) return;
-        var highlightable = intersection.object;
-        if (!(highlightable.parent instanceof THREE.Scene)) highlightable = highlightable.parent;//cell mesh parent is object3d
-        if (!highlightable.myParent) console.warn("no parent for highlightable object");
+        var highlighted = intersection.object;
+        if (!(highlighted.parent instanceof THREE.Scene)) highlighted = highlighted.parent;//cell mesh parent is object3d
+        if (!highlighted.myParent) console.warn("no parent for highlighted object");
 
-        this.highlightedObject = highlightable.myParent;
-        var newVertices = highlightable.myParent.getHighlighterVertices(intersection.face, intersection.point);
-        if (!newVertices) {
+        this.highlightedObject = highlighted.myParent;
+
+        var highlightedPos = highlighted.myParent.calcHighlighterPosition(intersection.face, intersection.point);
+        this.index = highlightedPos.index;
+        if (!highlightedPos.direction) {//may be hovering over a face that we shouldn't highlight
             this.hide();
             return;
         }
+        this.direction = highlightedPos.direction;
+        this._setPosition(highlightedPos.position, this.direction);//position of center point
 
-        var geometry = this.mesh.geometry;
-        if (geometry.vertices.length != newVertices.length) console.warn("vertices array is changing size");
-        geometry.vertices = newVertices;
-        geometry.verticesNeedUpdate = true;
-//        this.mesh.geometry.normalsNeedUpdate = true;
-//        this.mesh.geometry.computeFaceNormals();
-//        this.mesh.geometry.computeVertexNormals();
-        geometry.computeBoundingSphere();
         this.show(true);
+    },
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////POSITION/SCALE////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
+
+    updateScale: function(scale){
+        this.mesh.scale.set(scale, scale, scale);
+    },
+
+    _setPosition: function(position, direction){
+        this.mesh.position.set(position.x, position.y, position.z);
+        this.mesh.rotation.set(direction.y*Math.PI, direction.x*Math.PI, 0);
+//        this.mesh.updateMatrix();
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////ADD REMOVE////////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
-    //todo this could be more than just z additions
-    _getNextCellPosition: function(index){//add one to z index
-        index.z += 1;
-        return index;
+    _getNextCellPosition: function(){//add direction vector to current index
+        var newIndex = _.clone(this.index);
+        var direction = this.direction;
+        _.each(_.keys(newIndex), function(key){
+            newIndex[key] += direction[key];
+        });
+        return newIndex;
     },
 
     addRemoveVoxel: function(shouldAdd){
 
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
-            dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition(this.highlightedObject.getIndex(this.mesh)));
+            dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition());
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;
             dmaGlobals.lattice.removeCell(this.highlightedObject);
         }
-        this.hide();
-        this.highlightedObject = null;
+        this.setNothingHighlighted();
     },
 
     destroy: function(){
+        this.setNothingHighlighted();
         dmaGlobals.three.sceneRemove(this.mesh, null);
         this.mesh = null;
-        this.highlightedObject = null;
         this.stopListening();
     }
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////OCTA FACE/////////////////////////////////////////////
+/////////////////////////////////OCTA//////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 
 OctaFaceHighlighter = Highlighter.extend({
@@ -124,6 +146,14 @@ OctaFaceHighlighter = Highlighter.extend({
 
 });
 
+OctaVertexHighlighter = Highlighter.extend({
+
+    _makeGeometry: function(){
+        return new THREE.SphereGeometry(1);
+    }
+
+});
+
 ///////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////CUBE /////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
@@ -132,11 +162,7 @@ CubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
 
-        var geometry = new THREE.Geometry();
-        //can't change size of faces or vertices buffers dynamically
-        geometry.vertices = [new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0), new THREE.Vector3(0,0,0)];
-        geometry.faces = [new THREE.Face3(0,1,2), new THREE.Face3(0,2,3)];
-
+        var geometry = new THREE.BoxGeometry(1,1,0.01);
         return geometry;
     }
 

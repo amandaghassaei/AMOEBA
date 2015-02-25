@@ -172,7 +172,7 @@ OctaBasePlane = BasePlane.extend({
         geometry.verticesNeedUpdate = true;
     },
 
-    getHighlighterVertices: function(face){
+    calcHighlighterPosition: function(face, position){
         //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
         var mesh = this.get("mesh")[0];
         var vertices = mesh.geometry.vertices;
@@ -183,7 +183,7 @@ OctaBasePlane = BasePlane.extend({
             vertex.multiplyScalar(scale);
             vertex.add(position);
         });
-        return newVertices;
+        return {index: {}, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
 });
@@ -232,18 +232,12 @@ SquareBasePlane = BasePlane.extend({
         dmaGlobals.three.render();
     },
 
-    getHighlighterVertices: function(face, position){
-        //the vertices don't include the position transformation applied to cell.  Add these to create highlighter vertices
+    calcHighlighterPosition: function(face, position){
         var index = dmaGlobals.lattice.getIndexForPosition(position);
-        index.z += 1;
-        var scale = dmaGlobals.lattice.get("scale");
-        var vertices = [];
-        vertices.push(new THREE.Vector3(index.x*scale, index.y*scale, index.z*scale));
-        vertices.push(new THREE.Vector3((index.x+1)*scale, index.y*scale, index.z*scale));
-        vertices.push(new THREE.Vector3((index.x+1)*scale, (index.y+1)*scale, index.z*scale));
-        vertices.push(new THREE.Vector3(index.x*scale, (index.y+1)*scale, index.z*scale));
-
-        return vertices;
+        index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
+        var position = dmaGlobals.lattice.getPositionForIndex(index);
+        position.z += dmaGlobals.lattice.zScale()/2;
+        return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
 

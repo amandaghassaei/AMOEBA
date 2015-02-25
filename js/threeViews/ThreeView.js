@@ -62,7 +62,7 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _mouseOut: function(){
-        this.highlighter.hide();
+        this.highlighter.setNothingHighlighted();
         this._setNoPartIntersections();
     },
 
@@ -79,7 +79,7 @@ ThreeView = Backbone.View.extend({
     _mouseMoved: function(e){
 
         if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
-            this.highlighter.hide();
+            this.highlighter.setNothingHighlighted();
             this._setNoPartIntersections();
             return;
         }
@@ -95,7 +95,7 @@ ThreeView = Backbone.View.extend({
 
         var intersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), true);
         if (intersections.length == 0) {//no intersections
-            this.highlighter.hide();
+            this.highlighter.setNothingHighlighted();
             this._setNoPartIntersections();
             return;
         }
