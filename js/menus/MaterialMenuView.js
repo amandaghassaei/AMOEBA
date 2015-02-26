@@ -22,7 +22,7 @@ MaterialMenuView = Backbone.View.extend({
     template: _.template('\
         create materials and assign them to parts in the model\
         <br/><br/>\
-        stiffness, elasticity\
+        stiffness, elastic modulus\
         ')
 
 });

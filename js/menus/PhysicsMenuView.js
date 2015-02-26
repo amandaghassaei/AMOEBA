@@ -22,9 +22,9 @@ PhysicsMenuView = Backbone.View.extend({
     template: _.template('\
         world physics: gravity, global forces\
         <br/><br/>\
-        part coneection stiffness\
+        part connection stiffness\
         <br/><br/>\
-        ground/fixed/boundary conditions selection\
+        ground/fixed/boundary conditions definition\
         ')
 
 });
