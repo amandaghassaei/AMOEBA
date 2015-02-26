@@ -23,8 +23,15 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change", this.render);
-        this.listenTo(this.lattice, "change", this.render)
+        var self = this;
+        this.listenTo(this.model, "change", function(){
+            var change = false;
+            _.each(_.keys(self.model.changedAttributes()), function(attribute){
+                if (attribute != "currentNav" && attribute != "currentTab") change = true;
+            });
+            if (change) this.render();
+        });
+        this.listenTo(this.lattice, "change", this.render());
     },
 
     _clearCells: function(e){
@@ -134,6 +141,10 @@ LatticeMenuView = Backbone.View.extend({
         <label class="checkbox">\
             <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Preserve cells on lattice change\
+        </label><br/><br/>\
+        <label class="checkbox">\
+            <input type="checkbox"  value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Show Inverse Geometry\
         </label><br/><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\

@@ -151,7 +151,8 @@ Lattice = Backbone.Model.extend({
                 }
                 if (!firstCell) continue;//nothing in col
 
-                var origin = firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
+                var origin = this._positionForIndex(firstCell.indices);
+//                    firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
                 zHeight = this._findIntersectionsInWindow(xScale/2, yScale/2, origin, allVertexPos) || zHeight;
 
                 zHeight = Math.floor(zHeight/zScale);

@@ -26,19 +26,21 @@ AnimationMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.appState.get("currentTab") != "animate") return;
-//        this.$el.html(this.template(this.model.attributes));
+        this.$el.html(this.template(this.model.attributes));
     },
 
     template: _.template('\
-        Scene: &nbsp;&nbsp;\
-        <div class="btn-group">\
-            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allScenes[currentScene] %><span class="caret"></span></button>\
-            <ul role="menu" class="dropdown-menu">\
-                <% _.each(_.keys(allScenes), function(key){ %>\
-                    <li><a class="sceneType" data-type="<%= key %>" href="#"><%= allScenes[key] %></a></li>\
-                <% }); %>\
-            </ul>\
-        </div><br/><br/>\
+        animation settings\
         ')
 
 });
+
+//        Scene: &nbsp;&nbsp;\
+//        <div class="btn-group">\
+//            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allScenes[currentScene] %><span class="caret"></span></button>\
+//            <ul role="menu" class="dropdown-menu">\
+//                <% _.each(_.keys(allScenes), function(key){ %>\
+//                    <li><a class="sceneType" data-type="<%= key %>" href="#"><%= allScenes[key] %></a></li>\
+//                <% }); %>\
+//            </ul>\
+//        </div><br/><br/>\

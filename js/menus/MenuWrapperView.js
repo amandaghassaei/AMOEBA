@@ -21,7 +21,11 @@ MenuWrapper = Backbone.View.extend({
         this.sketchMenu = new SketchMenuView({model:options.lattice, appState:this.model});
         this.partMenu = new PartMenuView({model:this.model, lattice:options.lattice});
         this.scriptMenu = new ScriptMenuView({model:this.model});
-//        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
+        this.physicsMenu = new PhysicsMenuView({model:this.model});
+        this.materialMenu = new MaterialMenuView({model:this.model});
+        this.optimizeMenu = new OptimizationMenuView({model:this.model});
+        this.assemblerMenu = new AssemblerMenuView({model:this.model});
+        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
@@ -64,6 +68,14 @@ MenuWrapper = Backbone.View.extend({
             this.partMenu.render();
         } else if (tabName == "script"){
             this.scriptMenu.render();
+        } else if (tabName == "physics"){
+            this.physicsMenu.render();
+        } else if (tabName == "material"){
+            this.materialMenu.render();
+        } else if (tabName == "optimize"){
+            this.optimizeMenu.render();
+        } else if (tabName == "assembler"){
+            this.assemblerMenu.render();
         } else if (tabName == "animate"){
             this.animationMenu.render();
         } else {

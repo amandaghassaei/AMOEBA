@@ -146,8 +146,9 @@ ImportMenuView = Backbone.View.extend({
               <!--<li><a class="selectMesh fillGeo" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>-->\
               <li><a id="selectWall" href="#">Wall</a></li>\
               <li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>\
-              \<li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\
+              <li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\
             </ul>\
+        <br/><br/> todo: fill geometry - move/rotate/scale mesh\
         </div><!-- /btn-group -->')
 
 });

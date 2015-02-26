@@ -45,6 +45,8 @@ PartMenuView = Backbone.View.extend({
                 </ul>\
             </div><br/><br/>\
         Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="35" data-slider-step="0.1" data-slider-value="<%= columnSeparation*100 %>"/>\
+        <br/><br/>\
+        todo: generic beam part type, part types for new lattice configurations\
         ')
 
 });
