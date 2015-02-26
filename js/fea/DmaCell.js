@@ -160,10 +160,10 @@ DMACell.prototype.destroy = function(){
     DMATetraCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
         mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
-        if (zIndex%2!=0) mesh.rotation.set(Math.PI,0,0);
+        if (Math.abs(zIndex%4) == 1 || Math.abs(zIndex%4) == 2) mesh.rotation.set(Math.PI,0,0);
 
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-//        dmaGlobals.three.sceneAdd(mesh, "inverseCell");
+        dmaGlobals.three.sceneAdd(mesh, "inverseCell");
         mesh.visible = false;
         return mesh;
     };

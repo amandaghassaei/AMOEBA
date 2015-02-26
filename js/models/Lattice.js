@@ -424,26 +424,26 @@ Lattice = Backbone.Model.extend({
             var position = _.clone(index);
 
             var oddZ = (position.z%2 != 0);
-            position.z /= 2;
-            var xScale = this.xScale(scale);
+            position.z = Math.floor(position.z/2);
+
             if (oddZ){
-                position.x = (position.x)*xScale;
+                position.x = (position.x)*this.xScale(scale);
                 position.y = position.y*this.yScale(scale);
-                position.z = (position.z+0.5)*this.zScale(scale);
             } else {
-                position.x = (position.x+0.5)*xScale;
+                position.x = (position.x+0.5)*this.xScale(scale);
                 position.y = (position.y)*this.yScale(scale)-scale/Math.sqrt(3)/2;
-                position.z = (position.z)*this.zScale(scale);
             }
+            position.z = (position.z)*this.zScale(scale);
+            if (Math.abs(index.z%4) == 1 || Math.abs(index.z%4) == 2) position.z += this.zScale(scale);
+
             if ((index.y%2) != 0) {
-                if (Math.round((index.y/2)%2) != 0) {
-                    position.x -= this.xScale()/2;
-                }
-            } else {
-                if (Math.round((index.y/2)%2) != 0) {
-                    position.x -= this.xScale();
+                if (oddZ){
+                    position.x += this.xScale(scale)/2;
+                } else {
+                    position.x -= this.xScale(scale)/2;
                 }
             }
+
             return position;
         },
 
@@ -478,15 +478,28 @@ Lattice = Backbone.Model.extend({
 
             index = _.clone(index);
             index.z*=2;
-            var inverseIndicesToAdd = [
-                this._add(index, {x:0,y:0,z:0}),
-                this._add(index, {x:0,y:1,z:0}),
-                this._add(index, {x:1,y:1,z:0}),
+            var inverseIndicesToAdd;
+            if (index.y%2 == 0){
+                inverseIndicesToAdd = [
+                    this._add(index, {x:0,y:0,z:0}),
+                    this._add(index, {x:0,y:1,z:0}),
+                    this._add(index, {x:1,y:1,z:0}),
 
-                this._add(index, {x:0,y:0,z:1}),
-                this._add(index, {x:1,y:0,z:1}),
-                this._add(index, {x:1,y:1,z:1})
-            ];
+                    this._add(index, {x:0,y:0,z:1}),
+                    this._add(index, {x:0,y:1,z:1}),
+                    this._add(index, {x:1,y:0,z:1})
+                ];
+            } else {
+                inverseIndicesToAdd = [
+                    this._add(index, {x:0,y:0,z:0}),
+                    this._add(index, {x:-1,y:1,z:0}),
+                    this._add(index, {x:0,y:1,z:0}),
+
+                    this._add(index, {x:-1,y:0,z:1}),
+                    this._add(index, {x:0,y:1,z:1}),
+                    this._add(index, {x:0,y:0,z:1})
+                ];
+            }
 
             var invCells = this.get("inverseCells");
             var scale = this.get("scale");
