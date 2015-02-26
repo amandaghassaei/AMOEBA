@@ -326,6 +326,9 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale);
         });
+        this._iterCells(this.get("inverseCells"), function(cell){
+            if (cell) cell.updateForScale(scale);
+        });
         dmaGlobals.three.render();
     },
 
@@ -591,6 +594,43 @@ Lattice = Backbone.Model.extend({
 
     OctaVertexLattice: {
 
+        _initLatticeType: function(){
+
+            //bind events
+
+            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
+        },
+
+        getIndexForPosition: function(absPosition){
+            return this._indexForPosition(absPosition);
+        },
+
+        getPositionForIndex: function(index){
+            return this._positionForIndex(index);
+        },
+
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale*Math.sqrt(2);
+        },
+
+        yScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        zScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMAVertexOctaCell(indices, scale, this);
+        },
+
+        _shouldHaveInverseCells: function(){
+            return false;
+        },
+
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
             _.each(_.keys(this.OctaVertexLattice), function(key){
@@ -625,7 +665,7 @@ Lattice = Backbone.Model.extend({
         },
 
         xScale: function(scale){
-            if (!scale) scale = this.get("scale")
+            if (!scale) scale = this.get("scale");
             return scale;
         },
 

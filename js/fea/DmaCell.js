@@ -217,9 +217,9 @@ DMACell.prototype.destroy = function(){
 
     DMAVertexOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
-        for (var i=0;i<3;i++){
-            parts.push(new DMAPart(i, zIndex%2==1, this));
-        }
+//        for (var i=0;i<3;i++){
+//            parts.push(new DMAPart(i, zIndex%2==1, this));
+//        }
         return parts;
     };
 
@@ -228,6 +228,16 @@ DMACell.prototype.destroy = function(){
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
+    };
+
+    DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face){
+
+        var direction = new THREE.Vector3(0,0,1);
+        if (face.normal.z<0) direction = null;
+
+        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+        position.z += dmaGlobals.lattice.zScale()/2;
+        return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
     self.DMAVertexOctaCell = DMAVertexOctaCell;

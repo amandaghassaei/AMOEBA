@@ -151,7 +151,7 @@ OctaFaceHighlighter = Highlighter.extend({
 OctaVertexHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        return new THREE.SphereGeometry(1);
+        return new THREE.SphereGeometry(0.2);
     }
 
 });
