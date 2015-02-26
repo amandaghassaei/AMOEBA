@@ -254,8 +254,7 @@ DMACell.prototype.destroy = function(){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    var cellMaterials = [new THREE.MeshNormalMaterial(),
-        new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
+    var cellMaterials = [new THREE.MeshNormalMaterial()];//new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})
 
 
     function DMACubeCell(indices, scale, lattice){
@@ -274,9 +273,9 @@ DMACell.prototype.destroy = function(){
     DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
         var mesh = new THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-//        var wireframe = new THREE.BoxHelper(mesh);
-//        wireframe.material.color.set(0x000000);
-//        mesh.add(wireframe);
+        var wireframe = new THREE.BoxHelper(mesh.children[0]);
+        wireframe.material.color.set(0x000000);
+        mesh.children.push(wireframe);
         dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
     };

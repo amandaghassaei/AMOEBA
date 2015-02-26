@@ -11,6 +11,7 @@ function ThreeModel(){
 
     //store all meshes to highlight
     var cells = [];
+    var highlightableCells = [];//may be able to get rid of this eventually
     var invCells = [];
     var parts = [];
     var basePlane = [];
@@ -55,6 +56,7 @@ function ThreeModel(){
 
         if (type == "cell"){
             cells.push(object);
+            highlightableCells.push(object.children[0]);
         } else if (type == "inverseCell"){
             invCells.push(object);
         } else if (type == "part"){
@@ -73,6 +75,7 @@ function ThreeModel(){
 
         if (type == "cell"){
             cells.splice(cells.indexOf(objectToRemove), 1);
+            highlightableCells.splice(highlightableCells.indexOf(objectToRemove.children[0]), 1);
         } else if (type == "inverseCell"){
             invCells.splice(invCells.indexOf(objectToRemove), 1);
         } else if (type == "part"){
@@ -108,7 +111,7 @@ function ThreeModel(){
 //        scene: scene,
         domElement: renderer.domElement,
         camera: camera,
-        cells: cells,
+        cells: highlightableCells,
         invCells: invCells,
         parts: parts,
         basePlane: basePlane,

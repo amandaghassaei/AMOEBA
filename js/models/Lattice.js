@@ -326,9 +326,11 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale);
         });
-        this._iterCells(this.get("inverseCells"), function(cell){
-            if (cell) cell.updateForScale(scale);
-        });
+        if (this.get("shouldShowInverseCells")){
+            this._iterCells(this.get("inverseCells"), function(cell){
+                if (cell) cell.updateForScale(scale);
+            });
+        }
         dmaGlobals.three.render();
     },
 
