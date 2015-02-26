@@ -49,6 +49,17 @@ DMACell.prototype.drawForMode = function(mode){
     }
 };
 
+DMACell.prototype.hide = function(){
+    this._setCellMeshVisibility(false);
+    _.each(this.parts, function(part){
+        if (part) part.hide();
+    });
+};
+
+DMACell.prototype.show = function(){
+    this._setCellMeshVisibility(true);
+};
+
 DMACell.prototype._setCellMeshVisibility = function(visibility){
     if (!this.cellMesh) return;
     this.cellMesh.visible = visibility;
@@ -146,7 +157,7 @@ DMACell.prototype.destroy = function(){
     var unitTetraCellGeo = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
-    unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,1/Math.sqrt(8)/2));
+    unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1/Math.sqrt(6)));
 
     function DMATetraCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice);
@@ -160,11 +171,11 @@ DMACell.prototype.destroy = function(){
     DMATetraCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
         mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
-        if (Math.abs(zIndex%4) == 1 || Math.abs(zIndex%4) == 2) mesh.rotation.set(Math.PI,0,0);
+        if (zIndex%2 !=0) mesh.rotateX(Math.PI);
+        if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
 
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         dmaGlobals.three.sceneAdd(mesh, "inverseCell");
-        mesh.visible = false;
         return mesh;
     };
 

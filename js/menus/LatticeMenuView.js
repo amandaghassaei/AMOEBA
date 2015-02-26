@@ -14,7 +14,8 @@ LatticeMenuView = Backbone.View.extend({
         "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider",
-        "change #preserveCells":                        "_changePreserveCells"
+        "change #preserveCells":                        "_changePreserveCells",
+        "change #showInverse":                          "_showInverseCells"
     },
 
 
@@ -108,6 +109,10 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("shouldPreserveCells", $(e.target).prop("checked"));
     },
 
+    _showInverseCells: function(e){
+        this.lattice.set("shouldShowInverseCells", $(e.target).prop("checked"));
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "lattice") return;
         this.$el.html(this.template(_.extend(this.model.attributes, this.lattice.attributes)));
@@ -143,7 +148,7 @@ LatticeMenuView = Backbone.View.extend({
             Preserve cells on lattice change\
         </label><br/><br/>\
         <label class="checkbox">\
-            <input type="checkbox"  value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            <input type="checkbox"  <% if (shouldShowInverseCells) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show Inverse Geometry\
         </label><br/><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
