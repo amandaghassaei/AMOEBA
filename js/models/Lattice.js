@@ -17,6 +17,7 @@ Lattice = Backbone.Model.extend({
         numCells: 0,
         numInvCells: 0,
         basePlane: null,//plane to build from
+        columnSeparation: 0.0,
         highlighter: null,//highlights build-able surfaces
         shouldPreserveCells: true,//preserve cells when changing lattice type
         shouldShowInverseCells: false
@@ -29,6 +30,7 @@ Lattice = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:shouldShowInverseCells", this._showInverseCells);
+
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -411,11 +413,12 @@ Lattice = Backbone.Model.extend({
         _initLatticeType: function(){
 
             //bind events
-            this.set("columnSeparation", 0.0, {silent:true});
+            this.set("columnSeparation", 0.0);
             this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFaceHighlighter({scale:this.get("scale")}));
+
         },
 
         _changeColSeparation: function(){
@@ -562,8 +565,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
-            this.stopListening(this, "columnSeparation");
-            this.set("columnSeparation", null);
+            this.stopListening(this, "change:columnSeparation");
             var self = this;
             _.each(_.keys(this.OctaFaceLattice), function(key){
                 self[key] = null;
@@ -579,8 +581,6 @@ Lattice = Backbone.Model.extend({
     OctaEdgeLattice: {
 
         _undo: function(){//remove all the mixins, this will help with debugging later
-            this.stopListening(this, "columnSeparation");
-            this.set("columnSeparation", null);
             var self = this;
             _.each(_.keys(this.OctaEdgeLattice), function(key){
                 self[key] = null;

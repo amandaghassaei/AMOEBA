@@ -35,7 +35,7 @@ AppState = Backbone.Model.extend({
                 face: {triangle:"Triangle"},
                 edge: {triangle:"Triangle"},
                 edgeRot: {triangle:"Triangle"},
-                vertex: null//{square:"Square", xShape:"X"}
+                vertex: {square:"Square", xShape:"X"}
             },
             cube:{
                 face: null
