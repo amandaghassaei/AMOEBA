@@ -16,7 +16,6 @@ AppState = Backbone.Model.extend({
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
-        lattice: null,
         menuWrapper: null,
 
         allCellTypes: {octa:"Octahedron", cube:"Cube"},
@@ -56,9 +55,9 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
         this.listenTo(this, "change:currentTab", this._updateCellMode);
 
-        this.set("lattice", options.lattice);
+        this.lattice = options.lattice;//this doesn't need to be tracked for changes
 
-        this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.get("lattice")}));
+        this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.lattice}));
     },
 
 
