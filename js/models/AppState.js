@@ -19,12 +19,6 @@ AppState = Backbone.Model.extend({
         lattice: null,
         menuWrapper: null,
 
-        cellMode: "cell",//show cells vs parts
-        inverseMode: false,//show negative space
-        cellType: "octa",
-        connectionType: "face",
-        partType: "triangle",
-
         allCellTypes: {octa:"Octahedron", cube:"Cube"},
         allConnectionTypes: {
             octa: {face:"Face", edge:"Edge", edgeRot:"Rotated Edge", vertex:"Vertex"},
@@ -60,13 +54,9 @@ AppState = Backbone.Model.extend({
 
         this.listenTo(this, "change:currentTab", this._storeTab);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
-
         this.listenTo(this, "change:currentTab", this._updateCellMode);
-        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
-        this.listenTo(this, "change:cellType change:connectionType", this._updateLatticetype);
 
         this.set("lattice", options.lattice);
-        this.get("lattice").updateLatticeType(this.get("cellType"), this.get("connectionType"));
 
         this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.get("lattice")}));
     },
@@ -87,10 +77,10 @@ AppState = Backbone.Model.extend({
 
     _updateCellMode: function(){
         var currentTab = this.get("currentTab");
-        if (currentTab == "lattice") this.set("cellMode", "cell");
-        else if (currentTab == "import") this.set("cellMode", "cell");
-        else if (currentTab == "sketch") this.set("cellMode", "cell");
-        else if (currentTab == "part") this.set("cellMode", "part");
+        if (currentTab == "lattice") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "import") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
+        else if (currentTab == "part") this.lattice.set("cellMode", "part");
     },
 
     //update to last tab open in that section
@@ -103,16 +93,6 @@ AppState = Backbone.Model.extend({
         else if (navSelection == "navAssemble") this.set("currentTab",
             this.get("lastAssembleTab"), {silent:true});
         this._updateCellMode();//a little bit hacky, this updates the cell mode, but holds off on updating the menus til the animation has happened
-    },
-
-    _cellModeDidChange: function(){
-        this.get("lattice").cellModeDidChange(this.get("cellMode"));
-    },
-
-    _updateLatticetype: function(){
-        var type = this.get("cellType");
-        var connectionType = this.get("connectionType");
-        this.get("lattice").updateLatticeType(type, connectionType);
     },
 
     ///////////////////////////////////////////////////////////////////////////////

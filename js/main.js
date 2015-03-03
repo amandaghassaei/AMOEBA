@@ -16,6 +16,7 @@ $(function(){
     dmaGlobals.three = new ThreeModel();
 
     dmaGlobals.lattice = new Lattice();
+    dmaGlobals.lattice._updateLatticeType();//todo get rid of this
     dmaGlobals.appState = new AppState({lattice:dmaGlobals.lattice});
 
 

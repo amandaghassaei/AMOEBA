@@ -34,7 +34,7 @@ MenuWrapper = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
-        this.listenTo(this.model, "change:cellType change:connectionType", this._populateAndShow);
+        this.listenTo(options.lattice, "change:cellType change:connectionType", this._populateAndShow);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
         this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
@@ -97,7 +97,7 @@ MenuWrapper = Backbone.View.extend({
             {navDesign:this.designMenuTabs,
             navSim:this.simMenuTabs,
             navAssemble:this.assemMenuTabs,
-            })));
+            }, dmaGlobals.lattice.attributes)));
         this._updateCurrentTab();
         this._show();
     },

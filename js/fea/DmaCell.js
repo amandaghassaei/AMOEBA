@@ -5,9 +5,11 @@
 
 //a Cell, a unit piece of the lattice
 
-function DMACell(indices, scale, lattice) {
+function DMACell(indices, scale, lattice, inverse) {
 
     this.indices = indices;
+    if (!inverse) inverse = false;
+    this.isInverse = inverse;
     this.lattice = lattice;//need ref back to lattice
     this.cellMesh = this._buildCellMesh(indices.z);
     this.parts = this._initParts(indices.z);
@@ -160,7 +162,7 @@ DMACell.prototype.destroy = function(){
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1/Math.sqrt(6)));
 
     function DMATetraCell(indices, scale, lattice){
-        DMACell.call(this, indices, scale, lattice);
+        DMACell.call(this, indices, scale, lattice, true);
     }
     DMATetraCell.prototype = Object.create(DMACell.prototype);
 

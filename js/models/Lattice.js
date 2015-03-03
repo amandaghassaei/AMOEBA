@@ -6,7 +6,7 @@
 Lattice = Backbone.Model.extend({
 
     defaults: {
-        scale: window.defaultLatticeScale,
+
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
@@ -16,20 +16,29 @@ Lattice = Backbone.Model.extend({
         inverseCellsMax: {x:0, y:0, z:0},//max position of inverse cells matrix
         numCells: 0,
         numInvCells: 0,
+
         basePlane: null,//plane to build from
+        scale: window.defaultLatticeScale,
         columnSeparation: 0.0,
         highlighter: null,//highlights build-able surfaces
         shouldPreserveCells: true,//preserve cells when changing lattice type
-        shouldShowInverseCells: false
+
+        cellMode: "cell",//show cells vs parts
+        inverseMode: false,//show negative space
+        cellType: "octa",
+        connectionType: "face",
+        partType: "triangle"
     },
 
     //pass in fillGeometry
 
-    initialize: function(options){
+    initialize: function(){
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
-        this.listenTo(this, "change:shouldShowInverseCells", this._showInverseCells);
+        this.listenTo(this, "change:inverseMode", this._showInverseCells);
+        this.listenTo(this, "change:cellMode", this._cellModeDidChange);
+        this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
 
     },
 
@@ -290,8 +299,10 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////EVENTS//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    cellModeDidChange: function(mode){
-        if (mode == "part" || !this.get("shouldShowInverseCells")){
+    _cellModeDidChange: function(){
+        var mode = this.get("cellMode");
+        var inverseMode = this.get("inverseMode");
+        if (mode == "part" || !inverseMode){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell && cell.drawForMode) cell.drawForMode(mode);
             });
@@ -305,16 +316,16 @@ Lattice = Backbone.Model.extend({
     },
 
     _showInverseCells: function(){
-        var shouldShow = this.get("shouldShowInverseCells");
+        var inverseMode = this.get("inverseMode");
         this._iterCells(this.get("cells"), function(cell){
             if (cell) {
-                if (shouldShow) cell.hide();
+                if (inverseMode) cell.hide();
                 else cell.show();
             }
         });
         this._iterCells(this.get("inverseCells"), function(cell){
             if (cell) {
-                if (shouldShow) cell.show();
+                if (inverseMode) cell.show();
                 else cell.hide();
             }
         });
@@ -328,7 +339,7 @@ Lattice = Backbone.Model.extend({
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale);
         });
-        if (this.get("shouldShowInverseCells")){
+        if (this.get("inverseMode")){
             this._iterCells(this.get("inverseCells"), function(cell){
                 if (cell) cell.updateForScale(scale);
             });
@@ -344,7 +355,9 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    updateLatticeType: function(cellType, connectionType){
+    _updateLatticeType: function(){
+        var cellType = this.get("cellType");
+        var connectionType = this.get("connectionType");
         if (!this.get("shouldPreserveCells")) this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();

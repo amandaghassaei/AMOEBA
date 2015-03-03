@@ -24,15 +24,15 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-        var self = this;
-        this.listenTo(this.model, "change", function(){
-            var change = false;
-            _.each(_.keys(self.model.changedAttributes()), function(attribute){
-                if (attribute != "currentNav" && attribute != "currentTab") change = true;
-            });
-            if (change) this.render();
-        });
-        this.listenTo(this.lattice, "change", this.render());
+//        var self = this;
+//        this.listenTo(this.model, "change", function(){
+//            var change = false;
+//            _.each(_.keys(self.model.changedAttributes()), function(attribute){
+//                if (attribute != "currentNav" && attribute != "currentTab") change = true;
+//            });
+//            if (change) this.render();
+//        });
+        this.listenTo(this.lattice, "change", this.render);
     },
 
     _clearCells: function(e){
@@ -49,7 +49,6 @@ LatticeMenuView = Backbone.View.extend({
 
     _sliderDidSlide: function(e){
         var scale = $(e.target)[0].value;
-//        this.lattice.set("scale", $(e.target)[0].value);
         this.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
         $("#latticeScale").val(scale);
         dmaGlobals.three.render();
@@ -64,43 +63,43 @@ LatticeMenuView = Backbone.View.extend({
         var cellType = $(e.target).data("type");
 
         //reset everything to defaults silently
-        if (cellType != this.model.get("cellType")){
+        if (cellType != this.lattice.get("cellType")){
             this._setAppStateToDefaultsSilently(cellType);
         }
-        this.model.set("cellType", cellType);
+        this.lattice.set("cellType", cellType);
     },
 
     _changeConnectionType: function(e){
         e.preventDefault();
         var connectionType = $(e.target).data("type");
-        if (connectionType != this.model.get("connectionType")){
-            this._setAppStateToDefaultsSilently(this.model.get("cellType"), connectionType);
+        if (connectionType != this.lattice.get("connectionType")){
+            this._setAppStateToDefaultsSilently(this.lattice.get("cellType"), connectionType);
         }
-        this.model.set("connectionType", connectionType);
+        this.lattice.set("connectionType", connectionType);
     },
 
     _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
         if (newCellType == "cube") {
             if (!newConnectionType){
                 newConnectionType = "face";
-                this.model.set("connectionType", newConnectionType, {silent:true});
+                this.lattice.set("connectionType", newConnectionType, {silent:true});
             }
             this.model.set("connectionType", newConnectionType, {silent:true});
             if (newConnectionType == "face"){
-                this.model.set("partType", null, {silent:true});
+                this.lattice.set("partType", null, {silent:true});
             }
         }
         else if (newCellType == "octa") {
             if (!newConnectionType){
                 newConnectionType = "face";
-                this.model.set("connectionType", newConnectionType, {silent:true});
+                this.lattice.set("connectionType", newConnectionType, {silent:true});
             }
             if (newConnectionType == "face"){
-                this.model.set("partType", "triangle", {silent:true});
+                this.lattice.set("partType", "triangle", {silent:true});
             } else if (newConnectionType == "edge"){
-                this.model.set("partType", "triangle", {silent:true});
+                this.lattice.set("partType", "triangle", {silent:true});
             } else if (newConnectionType == "vertex"){
-                this.model.set("partType", "square", {silent:true});
+                this.lattice.set("partType", "square", {silent:true});
             }
         }
     },
@@ -110,7 +109,7 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _showInverseCells: function(e){
-        this.lattice.set("shouldShowInverseCells", $(e.target).prop("checked"));
+        this.lattice.set("inverseMode", $(e.target).prop("checked"));
     },
 
     render: function(){
@@ -148,7 +147,7 @@ LatticeMenuView = Backbone.View.extend({
             Preserve cells on lattice change\
         </label><br/><br/>\
         <label class="checkbox">\
-            <input type="checkbox"  <% if (shouldShowInverseCells) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            <input type="checkbox"  <% if (inverseMode) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show Inverse Geometry\
         </label><br/><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
