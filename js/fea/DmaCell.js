@@ -13,9 +13,11 @@ function DMACell(indices, scale, lattice, inverse) {
     this.lattice = lattice;//need ref back to lattice
     this.cellMesh = this._buildCellMesh(indices.z);
     this.parts = this._initParts(indices.z);
-    this.updateForScale(scale);
 
-    this.drawForMode(dmaGlobals.appState.get("cellMode"), dmaGlobals.appState.get("inverseMode"));
+    var cellMode = dmaGlobals.appState.get("cellMode");
+    var inverseMode = dmaGlobals.appState.get("inverseMode");
+
+    this.drawForMode(scale, cellMode, inverseMode);
 }
 
 DMACell.prototype.removePart = function(index){
@@ -34,7 +36,8 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.z = position.z;
 };
 
-DMACell.prototype.drawForMode = function(cellMode, inverseMode){
+DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode){
+    this.updateForScale(scale, cellMode);
     this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
     _.each(this.parts, function(part){
         if (part) part.setVisibility(cellMode == "part");
@@ -46,13 +49,17 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
     this.cellMesh.visible = visibility;
 };
 
-DMACell.prototype.updateForScale = function(scale){
-    this.cellMesh.scale.set(scale, scale, scale);
+DMACell.prototype.updateForScale = function(scale, cellMode){
+    //only update visible object to scale
     var position = this.getPosition();
-    this._setMeshPosition(this.cellMesh, position);
-    _.each(this.parts, function(part){
-        if (part) part.updateForScale(scale, position);
-     });
+    if (cellMode == "cell"){
+        this.cellMesh.scale.set(scale, scale, scale);
+        this._setMeshPosition(this.cellMesh, position);
+    } else if (cellMode == "part"){
+        _.each(this.parts, function(part){
+            if (part) part.updateForScale(scale, position);
+         });
+    }
 };
 
 DMACell.prototype.getScale = function(){//need for part relay

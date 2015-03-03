@@ -311,11 +311,12 @@ Lattice = Backbone.Model.extend({
     _updateForMode: function(){
         var cellMode = this.get("cellMode");
         var inverseMode = this.get("inverseMode");
+        var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.drawForMode(cellMode, inverseMode);
+            if (cell) cell.drawForMode(scale, cellMode, inverseMode);
         });
         this._iterCells(this.get("inverseCells"), function(cell){
-            if (cell) cell.drawForMode(cellMode, inverseMode);
+            if (cell) cell.drawForMode(scale, cellMode, inverseMode);
         });
         dmaGlobals.three.render();
     },
@@ -326,12 +327,14 @@ Lattice = Backbone.Model.extend({
         this.get("highlighter").updateScale(scale);
 
         //only update visible cells
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale);
-        });
+        var cellMode = this.get("cellMode");
         if (this.get("inverseMode")){
             this._iterCells(this.get("inverseCells"), function(cell){
-                if (cell) cell.updateForScale(scale);
+                if (cell) cell.updateForScale(scale, cellMode);
+            });
+        } else {
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.updateForScale(scale, cellMode);
             });
         }
         dmaGlobals.three.render();
@@ -428,9 +431,10 @@ Lattice = Backbone.Model.extend({
         _changeColSeparation: function(){
             var colSep = this.get("columnSeparation");
             var scale = this.get("scale");
+            var cellMode = this.get("cellMode");
             this.get("basePlane").updateColSeparation(colSep);
             this._iterCells(this.get("cells"), function(cell){
-                if (cell) cell.updateForScale(scale);
+                if (cell) cell.updateForScale(scale, cellMode);
             });
             dmaGlobals.three.render();
         },
