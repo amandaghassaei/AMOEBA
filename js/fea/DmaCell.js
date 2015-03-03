@@ -15,7 +15,7 @@ function DMACell(indices, scale, lattice, inverse) {
     this.parts = this._initParts(indices.z);
     this.updateForScale(scale);
 
-    this.drawForMode(dmaGlobals.appState.get("cellMode"));
+    this.drawForMode(dmaGlobals.appState.get("cellMode"), dmaGlobals.appState.get("inverseMode"));
 }
 
 DMACell.prototype.removePart = function(index){
@@ -35,31 +35,11 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
     return mesh;
 };
 
-DMACell.prototype.drawForMode = function(mode){
-    if (mode == "cell"){
-        this._setCellMeshVisibility(true);
-        _.each(this.parts, function(part){
-            if (part) part.hide();
-        });
-    } else if (mode == "part"){
-        this._setCellMeshVisibility(false);
-        _.each(this.parts, function(part){
-            if (part) part.show();
-        });
-    } else {
-        console.warn("unrecognized draw mode for cell");
-    }
-};
-
-DMACell.prototype.hide = function(){
-    this._setCellMeshVisibility(false);
+DMACell.prototype.drawForMode = function(cellMode, inverseMode){
+    this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
     _.each(this.parts, function(part){
-        if (part) part.hide();
+        if (part) part.setVisibility(cellMode == "part");
     });
-};
-
-DMACell.prototype.show = function(){
-    this._setCellMeshVisibility(true);
 };
 
 DMACell.prototype._setCellMeshVisibility = function(visibility){

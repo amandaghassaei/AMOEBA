@@ -32,12 +32,17 @@
         mesh.position.z = position.z;
     };
 
-    DMAPart.prototype.show = function(){
+    DMAPart.prototype.setVisibility = function(visibility){
+        if (visibility) this._show();
+        else this._hide();
+    };
+
+    DMAPart.prototype._show = function(){
         if (!this.mesh) this._draw();
         this.mesh.visible = true;
     };
 
-    DMAPart.prototype.hide = function(){
+    DMAPart.prototype._hide = function(){
         if (this.mesh) this.mesh.visible = false;
     };
 
