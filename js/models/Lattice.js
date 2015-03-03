@@ -143,6 +143,7 @@ Lattice = Backbone.Model.extend({
         this.set("inverseCells", [[[null]]]);
         this.set("inverseCellsMin", {x:0, y:0, z:0});
         this.set("inverseCellsMax", {x:0, y:0, z:0});
+        this.set("numInvCells", 0);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -556,8 +557,7 @@ Lattice = Backbone.Model.extend({
                 self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
                 var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
                 if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    var cell = self._makeInvCellForLatticeType(invIndex, scale);
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = cell;
+                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
                     self.set("numInvCells", self.get("numInvCells")+1);
                 }
             });

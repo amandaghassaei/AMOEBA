@@ -56,7 +56,7 @@ function ThreeModel(){
         if (type == "cell"){
             cells.push(object.children[0]);
         } else if (type == "inverseCell"){
-            invCells.push(object);
+            invCells.push(object.children[0]);
         } else if (type == "part"){
             parts.push(object);
         } else if (type == "basePlane"){
@@ -71,7 +71,7 @@ function ThreeModel(){
         if (type == "cell"){
             cells.splice(cells.indexOf(objectToRemove.children[0]), 1);
         } else if (type == "inverseCell"){
-            invCells.splice(invCells.indexOf(objectToRemove), 1);
+            invCells.splice(invCells.indexOf(objectToRemove.children[0]), 1);
         } else if (type == "part"){
             parts.splice(parts.indexOf(objectToRemove), 1);
         } else if (type == "basePlane"){

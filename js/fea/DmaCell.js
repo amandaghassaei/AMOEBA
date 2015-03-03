@@ -69,7 +69,9 @@ DMACell.prototype.getIndex = function(){
 
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
-        dmaGlobals.three.sceneRemove(this.cellMesh, "cell");
+        var type = "cell";
+        if (this.isInverse) type = "inverseCell"
+        dmaGlobals.three.sceneRemove(this.cellMesh, type);
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();
