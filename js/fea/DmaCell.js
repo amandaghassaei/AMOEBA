@@ -21,7 +21,7 @@ function DMACell(indices, scale, lattice, inverse) {
 DMACell.prototype.removePart = function(index){
     this.parts[index].destroy();
     this.parts[index] = null;
-    var hasAnyParts = false;
+    var hasAnyParts = false;//check if all parts have been deleted
     _.each(this.parts, function(part){
         if (part) hasAnyParts = true;
     });
@@ -32,7 +32,6 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.x = position.x;
     mesh.position.y = position.y;
     mesh.position.z = position.z;
-    return mesh;
 };
 
 DMACell.prototype.drawForMode = function(cellMode, inverseMode){
