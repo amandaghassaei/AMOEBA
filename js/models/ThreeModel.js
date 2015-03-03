@@ -66,10 +66,7 @@ function ThreeModel(){
 
     function sceneRemove(object, type){
 
-        var objectToRemove = object;
-        if (object.parent && object.parent.type != "Scene") {
-            objectToRemove = object.parent;
-        }
+        var objectToRemove = getParentObject(object);
 
         if (type == "cell"){
             cells.splice(cells.indexOf(objectToRemove.children[0]), 1);
@@ -85,16 +82,26 @@ function ThreeModel(){
 
     function removeAllCells(){
         _.each(cells, function(cell){
-            sceneRemove(cell, "cell");
+            var objectToRemove = getParentObject(cell);
+            scene.remove(objectToRemove);
         });
         _.each(parts, function(part){
-            sceneRemove(part, "part");
+            scene.remove(part);
         });
         _.each(invCells, function(cell){
-            sceneRemove(cell, "inverseCell");
+            scene.remove(cell);
         });
         cells.splice(0, cells.length);
+        invCells.splice(0, invCells.length);
         parts.splice(0, parts.length);
+    }
+
+    function getParentObject(object){
+        var objectToRemove = object;
+        if (object.parent && object.parent.type != "Scene") {
+            objectToRemove = object.parent;
+        }
+        return objectToRemove;
     }
 
     function render(){
