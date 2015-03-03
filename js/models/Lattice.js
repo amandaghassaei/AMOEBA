@@ -328,15 +328,15 @@ Lattice = Backbone.Model.extend({
 
         //only update visible cells
         var cellMode = this.get("cellMode");
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.updateForScale(scale, cellMode);
+        });
         if (this.get("inverseMode")){
             this._iterCells(this.get("inverseCells"), function(cell){
                 if (cell) cell.updateForScale(scale, cellMode);
             });
-        } else {
-            this._iterCells(this.get("cells"), function(cell){
-                if (cell) cell.updateForScale(scale, cellMode);
-            });
         }
+
         dmaGlobals.three.render();
     },
 
