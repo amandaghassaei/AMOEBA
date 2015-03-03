@@ -26,7 +26,7 @@ OptimizationMenuView = Backbone.View.extend({
         <br/><br/>\
         optimization parameters representation may depend on application: <a href="http://en.wikipedia.org/wiki/Evolved_antenna">antenna</a>, <a href="http://2.bp.blogspot.com/-4o29mAWZjag/UURyXoraMKI/AAAAAAAAHyM/HnevUeJ68Sw/s400/yyy.bmp">nike</a>, airbus, assembler/declarative design\
         <br/><br/>\
-        active components/structures: <a href="https://www.youtube.com/watch?v=z9ptOeByLA4">voxcad</a>, <a href="http://arxiv.org/pdf/cs/0004003v2.pdf">conway</a>\
+        active components/structures: <a href="https://www.youtube.com/watch?v=z9ptOeByLA4">voxcad</a>, <a href="http://arxiv.org/pdf/cs/0004003v2.pdf">conway</a> (<a href="http://www.instructables.com/id/OTCA-Metapixel-Conways-Game-of-Life/">instructable</a>)\
         <br/><br/>\
         ')
 
