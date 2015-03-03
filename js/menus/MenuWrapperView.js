@@ -11,21 +11,23 @@ MenuWrapper = Backbone.View.extend({
         "click .menuWrapperTab>a":                     "_tabWasSelected"
     },
 
-    initialize: function(options){
+    initialize: function(){
 
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
+        var lattice = dmaGlobals.lattice;
+
         //init all tab view controllers
-        this.latticeMenu = new LatticeMenuView({model:this.model, lattice:options.lattice});
-        this.importMenu = new ImportMenuView({lattice:options.lattice, appState:this.model});
-        this.sketchMenu = new SketchMenuView({model:options.lattice, appState:this.model});
-        this.partMenu = new PartMenuView({model:this.model, lattice:options.lattice});
+        this.latticeMenu = new LatticeMenuView({model:this.model, lattice:lattice});
+        this.importMenu = new ImportMenuView({lattice:lattice, appState:this.model});
+        this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
+        this.partMenu = new PartMenuView({model:this.model, lattice:lattice});
         this.scriptMenu = new ScriptMenuView({model:this.model});
         this.physicsMenu = new PhysicsMenuView({model:this.model});
         this.materialMenu = new MaterialMenuView({model:this.model});
         this.optimizeMenu = new OptimizationMenuView({model:this.model});
         this.assemblerMenu = new AssemblerMenuView({model:this.model});
-        this.animationMenu = new AnimationMenuView({model:options.lattice.get("basePlane"), appState:this.model});
+        this.animationMenu = new AnimationMenuView({model:lattice.get("basePlane"), appState:this.model});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
@@ -34,7 +36,7 @@ MenuWrapper = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
-        this.listenTo(options.lattice, "change:cellType change:connectionType", this._populateAndShow);
+        this.listenTo(lattice, "change:cellType change:connectionType", this._populateAndShow);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
         this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 

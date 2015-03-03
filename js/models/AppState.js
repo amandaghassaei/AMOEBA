@@ -57,7 +57,7 @@ AppState = Backbone.Model.extend({
 
         this.lattice = options.lattice;//this doesn't need to be tracked for changes
 
-        this.set("menuWrapper", new MenuWrapper({model: this, lattice:this.lattice}));
+        this.set("menuWrapper", new MenuWrapper({model: this}));
     },
 
 
