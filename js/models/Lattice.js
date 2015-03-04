@@ -723,6 +723,17 @@ Lattice = Backbone.Model.extend({
             return this._positionForIndex(index);
         },
 
+        getInvCellPositionForIndex: function(index){
+
+            var position = this._positionForIndex(index);
+
+            var scale = this.get("scale");
+            position.x -= this.xScale(scale)/2;
+            position.y -= this.yScale(scale)/2;
+            position.z -= this.zScale(scale)/2;
+            return position;
+        },
+
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
             return scale*Math.sqrt(2);
@@ -737,7 +748,41 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(indices, scale){
+            this._addInverseCellsForIndex(indices);
             return new DMAVertexOctaCell(indices, scale, this);
+        },
+
+        _makeInvCellForLatticeType: function(indices, scale){
+            return new DMATruncCubeCell(indices, scale, this);
+        },
+
+        _addInverseCellsForIndex: function(index){
+
+            index = _.clone(index);
+
+            var inverseIndicesToAdd = [
+                    this._add(index, {x:0,y:0,z:0}),
+                    this._add(index, {x:0,y:1,z:0}),
+                    this._add(index, {x:1,y:0,z:0}),
+                    this._add(index, {x:1,y:1,z:0}),
+
+                    this._add(index, {x:0,y:0,z:1}),
+                    this._add(index, {x:0,y:1,z:1}),
+                    this._add(index, {x:1,y:0,z:1}),
+                    this._add(index, {x:1,y:1,z:1})
+                ];
+
+            var invCells = this.get("inverseCells");
+            var scale = this.get("scale");
+            var self = this;
+            _.each(inverseIndicesToAdd, function(invIndex){
+                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
+                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
+                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
+                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
+                    self.set("numInvCells", self.get("numInvCells")+1);
+                }
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

@@ -66,6 +66,7 @@ DMACell.prototype.getScale = function(){//need for part relay
 };
 
 DMACell.prototype.getPosition = function(){//need for part relay
+    if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
 };
 
@@ -231,27 +232,22 @@ DMACell.prototype.destroy = function(){
 
 (function () {
 
-    var unitCellGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+    var vertexOctaGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
-
 
     function DMAVertexOctaCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice);
     }
     DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 
-    DMAVertexOctaCell.prototype._initParts = function(zIndex){
-        var parts  = [];
-//        for (var i=0;i<3;i++){
-//            parts.push(new DMAPart(i, zIndex%2==1, this));
-//        }
-        return parts;
+    DMAVertexOctaCell.prototype._initParts = function(){
+        return [];
     };
 
-    DMAVertexOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
-        var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
+    DMAVertexOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        var mesh = THREE.SceneUtils.createMultiMaterialObject(vertexOctaGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
@@ -271,7 +267,25 @@ DMACell.prototype.destroy = function(){
 
     /////////////////////////////////////////TRUNCATED CUBE////////////////////////////////////
 
+    var truncCubeGeo = new THREE.BoxGeometry(Math.sqrt(2), Math.sqrt(2), Math.sqrt(2));
 
+    function DMATruncCubeCell(indices, scale, lattice){
+        DMACell.call(this, indices, scale, lattice, true);
+    }
+    DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
+
+    DMATruncCubeCell.prototype._initParts = function(){
+        return [];
+    };
+
+    DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        var mesh = THREE.SceneUtils.createMultiMaterialObject(truncCubeGeo, cellMaterials);
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "inverseCell");
+        return mesh;
+    };
+
+    self.DMATruncCubeCell = DMATruncCubeCell;
 
 })();
 
