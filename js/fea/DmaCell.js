@@ -363,7 +363,7 @@ DMACell.prototype.destroy = function(){
         var mesh = new THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         var wireframe = new THREE.BoxHelper(mesh.children[0]);
-        wireframe.material.color.set();
+        wireframe.material.color.set(0x000000);
         mesh.children.push(wireframe);
         dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;

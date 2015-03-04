@@ -82,6 +82,25 @@ Lattice = Backbone.Model.extend({
 
     },
 
+    _addInverseCellsForIndex: function(index){
+
+            index = _.clone(index);
+
+            var inverseIndicesToAdd = this._inverseIndicesToAdd(index);
+
+            var invCells = this.get("inverseCells");
+            var scale = this.get("scale");
+            var self = this;
+            _.each(inverseIndicesToAdd, function(invIndex){
+                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
+                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
+                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
+                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
+                    self.set("numInvCells", self.get("numInvCells")+1);
+                }
+            });
+        },
+
     _indexForPosition: function(absPosition){
         var position = {};
         var scale = this.get("scale");
@@ -518,7 +537,7 @@ Lattice = Backbone.Model.extend({
             return new DMATetraFaceCell(indices, scale, this);
         },
 
-        _addInverseCellsForIndex: function(index){
+        _inverseIndicesToAdd: function(index){
 
             var oddZ = index.z%2 != 0;
 
@@ -527,23 +546,6 @@ Lattice = Backbone.Model.extend({
 
             var z0 = 0;
             if (oddZ) z0 = 1;
-
-            var inverseIndicesToAdd = this._getInverseIndicesToAdd(index, z0);
-
-            var invCells = this.get("inverseCells");
-            var scale = this.get("scale");
-            var self = this;
-            _.each(inverseIndicesToAdd, function(invIndex){
-                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-                    self.set("numInvCells", self.get("numInvCells")+1);
-                }
-            });
-        },
-
-        _getInverseIndicesToAdd: function(index, z0){
 
             if (this.get("connectionType") == "edge") z0 = 0;
             var z1 = Math.abs(z0-1);
@@ -734,6 +736,21 @@ Lattice = Backbone.Model.extend({
             return position;
         },
 
+        _inverseIndicesToAdd: function(index){
+            var inverseIndicesToAdd = [
+                this._add(index, {x:0,y:0,z:0}),
+                this._add(index, {x:0,y:1,z:0}),
+                this._add(index, {x:1,y:0,z:0}),
+                this._add(index, {x:1,y:1,z:0}),
+
+                this._add(index, {x:0,y:0,z:1}),
+                this._add(index, {x:0,y:1,z:1}),
+                this._add(index, {x:1,y:0,z:1}),
+                this._add(index, {x:1,y:1,z:1})
+            ];
+            return inverseIndicesToAdd;
+        },
+
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
             return scale*Math.sqrt(2);
@@ -754,35 +771,6 @@ Lattice = Backbone.Model.extend({
 
         _makeInvCellForLatticeType: function(indices, scale){
             return new DMATruncCubeCell(indices, scale, this);
-        },
-
-        _addInverseCellsForIndex: function(index){
-
-            index = _.clone(index);
-
-            var inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:0}),
-                    this._add(index, {x:0,y:1,z:0}),
-                    this._add(index, {x:1,y:0,z:0}),
-                    this._add(index, {x:1,y:1,z:0}),
-
-                    this._add(index, {x:0,y:0,z:1}),
-                    this._add(index, {x:0,y:1,z:1}),
-                    this._add(index, {x:1,y:0,z:1}),
-                    this._add(index, {x:1,y:1,z:1})
-                ];
-
-            var invCells = this.get("inverseCells");
-            var scale = this.get("scale");
-            var self = this;
-            _.each(inverseIndicesToAdd, function(invIndex){
-                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-                    self.set("numInvCells", self.get("numInvCells")+1);
-                }
-            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
