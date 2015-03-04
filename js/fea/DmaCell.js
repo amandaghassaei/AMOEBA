@@ -69,6 +69,7 @@ DMACell.prototype.getScale = function(){//need for part relay
     return dmaGlobals.lattice.get("scale");
 };
 
+//todo maybe this should be stored instead of recalc?
 DMACell.prototype.getPosition = function(){//need for part relay
     if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
