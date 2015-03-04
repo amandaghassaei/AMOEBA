@@ -108,12 +108,12 @@ DMACell.prototype.destroy = function(){
     var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-    function DMASideOctaCell(indices, scale, lattice){
+    function DMAFaceOctaCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice);
     }
-    DMASideOctaCell.prototype = Object.create(DMACell.prototype);
+    DMAFaceOctaCell.prototype = Object.create(DMACell.prototype);
 
-    DMASideOctaCell.prototype._initParts = function(zIndex){
+    DMAFaceOctaCell.prototype._initParts = function(zIndex){
         var parts  = [];
         for (var i=0;i<3;i++){
             parts.push(new DMATrianglePart(i, zIndex%2==1, this));
@@ -121,7 +121,7 @@ DMACell.prototype.destroy = function(){
         return parts;
     };
 
-    DMASideOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+    DMAFaceOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
         mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         if (zIndex%2!=0) mesh.rotation.set(0, 0, Math.PI);
@@ -130,7 +130,7 @@ DMACell.prototype.destroy = function(){
         return mesh;
     };
 
-    DMASideOctaCell.prototype.calcHighlighterPosition = function(face){
+    DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
@@ -140,7 +140,23 @@ DMACell.prototype.destroy = function(){
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
 
-    self.DMASideOctaCell = DMASideOctaCell;
+    self.DMAFaceOctaCell = DMAFaceOctaCell;
+
+
+    function DMAEdgeOctaCell(indices, scale, lattice){
+        DMAFaceOctaCell.call(this, indices, scale, lattice);
+    }
+    DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
+
+    DMAEdgeOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+        var mesh;
+        mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "cell");
+        return mesh;
+    };
+
+    self.DMAEdgeOctaCell = DMAEdgeOctaCell;
 
     /////////////////////////////////////////////////TETRA CELL////////////////////////////////////
 
