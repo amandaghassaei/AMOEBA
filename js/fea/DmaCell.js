@@ -253,13 +253,41 @@ DMACell.prototype.destroy = function(){
         return mesh;
     };
 
-    DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = new THREE.Vector3(0,0,1);
-        if (face.normal.z<0) direction = null;
+    DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
 
         var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
-        position.z += dmaGlobals.lattice.zScale()/2;
+        var direction = null;
+
+        var xScale = dmaGlobals.lattice.xScale();
+        if (point.x < position.x+xScale/4 && point.x > position.x-xScale/4){
+            if (point.y > position.y-xScale/4 && point.y < position.y+xScale/4){
+                if (face.normal.z > 0) {
+                    direction = new THREE.Vector3(0,0,1);
+                    position.z += dmaGlobals.lattice.zScale()/2;
+                }
+                else {
+                    direction = new THREE.Vector3(0,0,-1);
+                    position.z -= dmaGlobals.lattice.zScale()/2;
+                }
+            } else {
+                if (point.y < position.y-xScale/4){
+                    direction = new THREE.Vector3(0,-1,0);
+                    position.y -= xScale/2;
+                } else {
+                    direction = new THREE.Vector3(0,1,0);
+                    position.y += xScale/2;
+                }
+            }
+        } else {
+            if (point.x < position.x-xScale/4){
+                direction = new THREE.Vector3(-1,0,0);
+                position.x -= xScale/2;
+            } else {
+                direction = new THREE.Vector3(1,0,0);
+                position.x += xScale/2;
+            }
+        }
+
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
