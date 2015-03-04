@@ -200,8 +200,19 @@ DMACell.prototype.destroy = function(){
         if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
     };
 
-    DMATetraFaceCell.prototype.calcHighlighterPosition = function(face){
+    self.DMATetraFaceCell = DMATetraFaceCell;
 
+
+    function DMATetraEdgeCell(indices, scale){
+        DMATetraFaceCell.call(this, indices, scale, true);
+    }
+    DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
+
+    DMATetraEdgeCell.prototype._doMeshTransformations = function(){};
+
+    DMATetraEdgeCell.prototype.calcHighlighterPosition = function(face){
+
+        //todo finish this
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
         var index = _.clone(this.indices);
@@ -212,15 +223,6 @@ DMACell.prototype.destroy = function(){
         position.z += dmaGlobals.lattice.zScale();
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
-
-    self.DMATetraFaceCell = DMATetraFaceCell;
-
-    function DMATetraEdgeCell(indices, scale){
-        DMATetraFaceCell.call(this, indices, scale, true);
-    }
-    DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
-
-    DMATetraEdgeCell.prototype._doMeshTransformations = function(){};
 
     self.DMATetraEdgeCell = DMATetraEdgeCell;
 
