@@ -530,11 +530,11 @@ Lattice = Backbone.Model.extend({
 
         _makeCellForLatticeType: function(indices, scale){
             this._addInverseCellsForIndex(indices);
-            return new DMAFaceOctaCell(indices, scale, this);
+            return new DMAFaceOctaCell(indices, scale);
         },
 
         _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraFaceCell(indices, scale, this);
+            return new DMATetraFaceCell(indices, scale);
         },
 
         _inverseIndicesToAdd: function(index){
@@ -641,11 +641,11 @@ Lattice = Backbone.Model.extend({
 
         _makeCellForLatticeType: function(indices, scale){
             this._addInverseCellsForIndex(indices);
-            return new DMAEdgeOctaCell(indices, scale, this);
+            return new DMAEdgeOctaCell(indices, scale);
         },
 
         _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraEdgeCell(indices, scale, this);
+            return new DMATetraEdgeCell(indices, scale);
         },
 
         getInvCellPositionForIndex: function(index){
@@ -766,11 +766,11 @@ Lattice = Backbone.Model.extend({
 
         _makeCellForLatticeType: function(indices, scale){
             this._addInverseCellsForIndex(indices);
-            return new DMAVertexOctaCell(indices, scale, this);
+            return new DMAVertexOctaCell(indices, scale);
         },
 
         _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATruncCubeCell(indices, scale, this);
+            return new DMATruncCubeCell(indices, scale);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -820,7 +820,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            return new DMACubeCell(indices, scale, this);
+            return new DMACubeCell(indices, scale);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

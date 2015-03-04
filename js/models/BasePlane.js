@@ -51,10 +51,6 @@ BasePlane = Backbone.Model.extend({
         return null;
     },
 
-    getIndex: function(face){
-        return dmaGlobals.lattice.getIndexForPosition(face.geometry.vertices[0]);
-    },
-
     //subclasses handle getHighlighterVertices
 
     ///////////////////////////////////////////////////////////////////////////////////
