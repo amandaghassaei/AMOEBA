@@ -90,7 +90,6 @@ Highlighter = Backbone.View.extend({
     _setPosition: function(position, direction){
         this.mesh.position.set(position.x, position.y, position.z);
         this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, 0);
-//        this.mesh.updateMatrix();
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -148,15 +147,7 @@ OctaFaceHighlighter = Highlighter.extend({
 
 });
 
-OctaEdgeHighlighter = Highlighter.extend({
-
-    _makeGeometry: function(){
-
-        var rad = 1/Math.sqrt(3);
-        var geometry = new THREE.CylinderGeometry(rad, rad, 0.01, 3);//short triangular prism
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
-        return geometry;
-    },
+OctaEdgeHighlighter = OctaFaceHighlighter.extend({
 
     _setPosition: function(position){
         this.mesh.position.set(position.x, position.y, position.z);
@@ -179,8 +170,7 @@ OctaVertexHighlighter = Highlighter.extend({
 CubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        var geometry = new THREE.BoxGeometry(1,1,0.01);
-        return geometry;
+        return new THREE.BoxGeometry(1,1,0.01);;
     }
 
 });

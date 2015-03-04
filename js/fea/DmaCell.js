@@ -30,7 +30,7 @@ DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode){
     });
 };
 
-DMACell.prototype._superBuildCellMesh = function(unitCellGeo, material){//abstract mesh representation of cell
+DMACell.prototype._superBuildCellMesh = function(unitCellGeo, material){//called from every subclass
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
     this._doMeshTransformations(mesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
@@ -48,7 +48,7 @@ DMACell.prototype._doMeshTransformations = function(mesh){};//by defualt, no mes
 
 DMACell.prototype.updateForScale = function(scale, cellMode){
     //only update visible object to scale
-    var position = this.getPosition();
+    var position = this._calcPosition();
     this.cellMesh.scale.set(scale, scale, scale);
     this._setMeshPosition(this.cellMesh, position);
     if (cellMode == "part"){
@@ -68,8 +68,11 @@ DMACell.prototype.getScale = function(){//need for part relay
     return dmaGlobals.lattice.get("scale");
 };
 
-//todo maybe this should be stored instead of recalc?
 DMACell.prototype.getPosition = function(){//need for part relay
+    return this.cellMesh.position.clone();
+};
+
+DMACell.prototype._calcPosition = function(){//need for part relay
     if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
 };
@@ -150,7 +153,7 @@ DMACell.prototype.destroy = function(){
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
 
-        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+        var position = this.getPosition();
         position.z += dmaGlobals.lattice.zScale()/2;
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
@@ -253,7 +256,7 @@ DMACell.prototype.destroy = function(){
 
     DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
 
-        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+        var position = this.getPosition();
         var direction = null;
 
         var xScale = dmaGlobals.lattice.xScale();
@@ -390,7 +393,7 @@ DMACell.prototype.destroy = function(){
     DMACubeCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
-        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
+        var position = this.getPosition();
         var scale = dmaGlobals.lattice.xScale();
         _.each(_.keys(position), function(key){
             position[key] += direction[key]*scale/2;
