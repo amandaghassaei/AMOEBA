@@ -33,14 +33,14 @@ DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode){
 DMACell.prototype._superBuildCellMesh = function(unitCellGeo, material){//abstract mesh representation of cell
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
-    this._doMeshTransformations(mesh);
+    this._doMeshTransformations(mesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
     mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
     if (this.isInverse) dmaGlobals.three.sceneAdd(mesh, "inverseCell");
     else dmaGlobals.three.sceneAdd(mesh, "cell");
     return mesh;
 };
 
-DMACell.prototype._doMeshTransformations = function(mesh){};
+DMACell.prototype._doMeshTransformations = function(mesh){};//by defualt, no mesh transformations
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
@@ -75,7 +75,6 @@ DMACell.prototype.getPosition = function(){//need for part relay
 };
 
 DMACell.prototype._setCellMeshVisibility = function(visibility){
-    if (!this.cellMesh) return;
     this.cellMesh.visible = visibility;
 };
 
