@@ -524,7 +524,11 @@ Lattice = Backbone.Model.extend({
 
             index = _.clone(index);
             index.z*=2;
-            var inverseIndicesToAdd = this._getInverseIndicesToAdd(index, oddZ);
+
+            var z0 = 0;
+            if (oddZ) z0 = 1;
+
+            var inverseIndicesToAdd = this._getInverseIndicesToAdd(index, z0);
 
             var invCells = this.get("inverseCells");
             var scale = this.get("scale");
@@ -539,10 +543,9 @@ Lattice = Backbone.Model.extend({
             });
         },
 
-        _getInverseIndicesToAdd: function(index, oddZ){
+        _getInverseIndicesToAdd: function(index, z0){
 
-            var z0 = 0;
-            if (oddZ) z0 = 1;
+            if (this.get("connectionType") == "edge") z0 = 0;
             var z1 = Math.abs(z0-1);
 
             var inverseIndicesToAdd;
@@ -603,8 +606,15 @@ Lattice = Backbone.Model.extend({
             var scale = this.get("scale");
             var yIndex = Math.floor(absPosition.y/this.yScale(scale));
             if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
+            var yScale = scale/Math.sqrt(3);
             var index = this._indexForPosition(absPosition);
-            if (index.z%2 == 1) index.y += 1;
+            if (index.z%3 == 1) {
+                absPosition.x -= this.xScale(scale)/2;
+                absPosition.y += yScale/2;
+            } else if (index.z%3 == 2){
+                absPosition.y += yScale;
+            }
+            var index = this._indexForPosition(absPosition);
             return index;
         },
 
@@ -634,33 +644,6 @@ Lattice = Backbone.Model.extend({
 
         _makeInvCellForLatticeType: function(indices, scale){
             return new DMATetraEdgeCell(indices, scale, this);
-        },
-
-        _getInverseIndicesToAdd: function(index){
-            var inverseIndicesToAdd;
-            if (index.y%2 == 0){
-
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:0}),
-                    this._add(index, {x:0,y:1,z:0}),
-                    this._add(index, {x:1,y:1,z:0}),
-
-                    this._add(index, {x:0,y:0,z:1}),
-                    this._add(index, {x:0,y:1,z:1}),
-                    this._add(index, {x:1,y:0,z:1})
-                ];
-            } else {
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:0}),
-                    this._add(index, {x:-1,y:1,z:0}),
-                    this._add(index, {x:0,y:1,z:0}),
-
-                    this._add(index, {x:-1,y:0,z:1}),
-                    this._add(index, {x:0,y:1,z:1}),
-                    this._add(index, {x:0,y:0,z:1})
-                ];
-            }
-            return inverseIndicesToAdd;
         },
 
         getInvCellPositionForIndex: function(index){

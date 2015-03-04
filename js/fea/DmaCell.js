@@ -165,6 +165,9 @@ DMACell.prototype.destroy = function(){
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1/Math.sqrt(6)));
 
+    var unitTetraCellGeoUpsideDown = unitTetraCellGeo.clone();
+    unitTetraCellGeoUpsideDown.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
+
     function DMATetraFaceCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice, true);
     }
@@ -176,8 +179,8 @@ DMACell.prototype.destroy = function(){
 
     DMATetraFaceCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
-        mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
-        if (zIndex%2 !=0) mesh.rotateX(Math.PI);
+        if (zIndex%2 ==0) mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
+        else mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeoUpsideDown, cellMaterials);
         if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
 
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
@@ -189,9 +192,12 @@ DMACell.prototype.destroy = function(){
 
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
-
-        var position = dmaGlobals.lattice.getPositionForIndex(this.indices);
-        position.z += dmaGlobals.lattice.zScale()/2;
+        var index = _.clone(this.indices);
+        index.z = Math.floor(index.z/2);
+        index.x = Math.floor(index.x/3);
+        index.y = Math.floor(index.y/2);
+        var position = dmaGlobals.lattice.getInvCellPositionForIndex(index);
+        position.z += dmaGlobals.lattice.zScale();
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
@@ -208,8 +214,8 @@ DMACell.prototype.destroy = function(){
 
     DMATetraEdgeCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
-        mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
-        if (zIndex%2 !=0) mesh.rotateX(Math.PI);
+        if (zIndex%2 ==0) mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
+        else mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeoUpsideDown, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         dmaGlobals.three.sceneAdd(mesh, "inverseCell");
         return mesh;

@@ -56,6 +56,7 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:currentTab", this._updateCellMode);
 
         this.lattice = options.lattice;//this doesn't need to be tracked for changes
+        this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
         this.set("menuWrapper", new MenuWrapper({model: this}));
     },
@@ -103,6 +104,12 @@ AppState = Backbone.Model.extend({
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
+        if (state) {
+            if (this.downKeys[e.keyCode]) return;
+            this.downKeys[e.keyCode] = true;
+        } else this.downKeys[e.keyCode] = null;
+
+//        console.log(e.keyCode);
         switch(e.keyCode){
             case 16://shift
                 e.preventDefault();
@@ -117,11 +124,13 @@ AppState = Backbone.Model.extend({
 //                if (currentTab != "sketch") return;
                 this.set("extrudeMode", state);
                 break;
-            case 76://l lattice mode
-                this.set("cellMode", "cell");
-                break;
             case 80://p part mode
-                this.set("cellMode", "part");
+                var cellMode = this.lattice.get("cellMode");
+                if (cellMode == "part") this.lattice.set("cellMode", "cell");
+                else if (cellMode == "cell") this.lattice.set("cellMode", "part");
+                break;
+            case 73://i inverse mode
+                this.lattice.set("inverseMode", !this.lattice.get("inverseMode"));
                 break;
             default:
                 break;
