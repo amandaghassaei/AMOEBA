@@ -148,6 +148,22 @@ OctaFaceHighlighter = Highlighter.extend({
 
 });
 
+OctaEdgeHighlighter = Highlighter.extend({
+
+    _makeGeometry: function(){
+
+        var rad = 1/Math.sqrt(3);
+        var geometry = new THREE.CylinderGeometry(rad, rad, 0.01, 3);//short triangular prism
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(-Math.PI/2));
+        return geometry;
+    },
+
+    _setPosition: function(position){
+        this.mesh.position.set(position.x, position.y, position.z);
+    }
+
+});
+
 OctaVertexHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){

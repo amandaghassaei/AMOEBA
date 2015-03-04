@@ -454,7 +454,7 @@ Lattice = Backbone.Model.extend({
             position.x = (position.x+1/2)*xScale;
             position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
             position.z = (position.z+0.5)*this.zScale(scale);
-            if ((index.y%2) != 0) position.x -= this.xScale()/2;
+            if ((index.y%2) != 0) position.x -= this.xScale(scale)/2;
             return position;
         },
 
@@ -515,19 +515,36 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraCell(indices, scale, this);
+            return new DMATetraFaceCell(indices, scale, this);
         },
 
         _addInverseCellsForIndex: function(index){
 
-            index = _.clone(index);
-
             var oddZ = index.z%2 != 0;
+
+            index = _.clone(index);
+            index.z*=2;
+            var inverseIndicesToAdd = this._getInverseIndicesToAdd(index, oddZ);
+
+            var invCells = this.get("inverseCells");
+            var scale = this.get("scale");
+            var self = this;
+            _.each(inverseIndicesToAdd, function(invIndex){
+                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
+                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
+                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
+                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
+                    self.set("numInvCells", self.get("numInvCells")+1);
+                }
+            });
+        },
+
+        _getInverseIndicesToAdd: function(index, oddZ){
+
             var z0 = 0;
             if (oddZ) z0 = 1;
             var z1 = Math.abs(z0-1);
 
-            index.z*=2;
             var inverseIndicesToAdd;
             if (index.y%2 == 0){
 
@@ -551,18 +568,7 @@ Lattice = Backbone.Model.extend({
                     this._add(index, {x:0,y:0,z:z1})
                 ];
             }
-
-            var invCells = this.get("inverseCells");
-            var scale = this.get("scale");
-            var self = this;
-            _.each(inverseIndicesToAdd, function(invIndex){
-                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-                    self.set("numInvCells", self.get("numInvCells")+1);
-                }
-            });
+            return inverseIndicesToAdd;
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -581,7 +587,19 @@ Lattice = Backbone.Model.extend({
 
     OctaEdgeLattice: {
 
+        _initLatticeType: function(){
+
+            //bind events
+            this.set("columnSeparation", 0.0);
+//            this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
+
+            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaEdgeHighlighter({scale:this.get("scale")}));
+
+        },
+
         getIndexForPosition: function(absPosition){
+            //todo finish this
             var scale = this.get("scale");
             var yIndex = Math.floor(absPosition.y/this.yScale(scale));
             if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
@@ -595,10 +613,17 @@ Lattice = Backbone.Model.extend({
             var scale = this.get("scale");
             var position = _.clone(index);
             var xScale = this.xScale(scale);
+            var yScale = scale/Math.sqrt(3);
             position.x = (position.x+1/2)*xScale;
-            position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
+            position.y = position.y*this.yScale(scale)+yScale/2;
             position.z = (position.z+0.5)*this.zScale(scale);
-            if ((index.y%2) != 0) position.x -= this.xScale()/2;
+            if (index.y%2 != 0) position.x -= this.xScale(scale)/2;
+            if (index.z%3 == 1) {
+                position.x += this.xScale(scale)/2;
+                position.y -= yScale/2;
+            } else if (index.z%3 == 2){
+                position.y -= yScale;
+            }
             return position;
         },
 
@@ -607,21 +632,52 @@ Lattice = Backbone.Model.extend({
             return new DMAEdgeOctaCell(indices, scale, this);
         },
 
+        _makeInvCellForLatticeType: function(indices, scale){
+            return new DMATetraEdgeCell(indices, scale, this);
+        },
+
+        _getInverseIndicesToAdd: function(index){
+            var inverseIndicesToAdd;
+            if (index.y%2 == 0){
+
+                inverseIndicesToAdd = [
+                    this._add(index, {x:0,y:0,z:0}),
+                    this._add(index, {x:0,y:1,z:0}),
+                    this._add(index, {x:1,y:1,z:0}),
+
+                    this._add(index, {x:0,y:0,z:1}),
+                    this._add(index, {x:0,y:1,z:1}),
+                    this._add(index, {x:1,y:0,z:1})
+                ];
+            } else {
+                inverseIndicesToAdd = [
+                    this._add(index, {x:0,y:0,z:0}),
+                    this._add(index, {x:-1,y:1,z:0}),
+                    this._add(index, {x:0,y:1,z:0}),
+
+                    this._add(index, {x:-1,y:0,z:1}),
+                    this._add(index, {x:0,y:1,z:1}),
+                    this._add(index, {x:0,y:0,z:1})
+                ];
+            }
+            return inverseIndicesToAdd;
+        },
+
         getInvCellPositionForIndex: function(index){
 
             var scale = this.get("scale");
             var position = _.clone(index);
 
             var oddZ = position.z%2 != 0;
-            var upPoint = (position.z%4 == 0 || Math.abs(position.z%4) == 3);
             position.z = Math.floor(position.z/2);
+            var yScale = scale/Math.sqrt(3);
 
-            if (!upPoint){
+            if (oddZ){
                 position.x = (position.x)*this.xScale(scale);
                 position.y = position.y*this.yScale(scale);
             } else {
                 position.x = (position.x+0.5)*this.xScale(scale);
-                position.y = (position.y)*this.yScale(scale)-scale/Math.sqrt(3)/2;
+                position.y = (position.y)*this.yScale(scale)-yScale/2;
             }
 
             if (oddZ){
@@ -630,64 +686,23 @@ Lattice = Backbone.Model.extend({
                 position.z = (position.z)*this.zScale(scale);
             }
 
-//            if (Math.abs(index.z%4) == 1 || Math.abs(index.z%4) == 2) position.z += this.zScale(scale);
-
             if ((index.y%2) != 0) {
-                if (!upPoint){
+                if (oddZ){
                     position.x += this.xScale(scale)/2;
                 } else {
                     position.x -= this.xScale(scale)/2;
                 }
             }
 
-            return position;
-        },
-
-        _addInverseCellsForIndex: function(index){
-
-            index = _.clone(index);
-
-            var oddZ = index.z%2 != 0;
-            var z0 = 0;
-            if (oddZ) z0 = 1;
-            var z1 = Math.abs(z0-1);
-
-            index.z*=2;
-            var inverseIndicesToAdd;
-            if (index.y%2 == 0){
-
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:z0}),
-                    this._add(index, {x:0,y:1,z:z0}),
-                    this._add(index, {x:1,y:1,z:z0}),
-
-                    this._add(index, {x:0,y:0,z:z1}),
-                    this._add(index, {x:0,y:1,z:z1}),
-                    this._add(index, {x:1,y:0,z:z1})
-                ];
-            } else {
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:z0}),
-                    this._add(index, {x:-1,y:1,z:z0}),
-                    this._add(index, {x:0,y:1,z:z0}),
-
-                    this._add(index, {x:-1,y:0,z:z1}),
-                    this._add(index, {x:0,y:1,z:z1}),
-                    this._add(index, {x:0,y:0,z:z1})
-                ];
+            var zLayer = Math.floor(index.z/2)%3;
+            if (zLayer == 1) {
+                position.x += this.xScale(scale)/2;
+                position.y -= yScale/2;
+            } else if (zLayer == 2){
+                position.y -= yScale;
             }
 
-            var invCells = this.get("inverseCells");
-            var scale = this.get("scale");
-            var self = this;
-            _.each(inverseIndicesToAdd, function(invIndex){
-                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-                    self.set("numInvCells", self.get("numInvCells")+1);
-                }
-            });
+            return position;
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -695,7 +710,9 @@ Lattice = Backbone.Model.extend({
             _.each(_.keys(this.OctaEdgeLattice), function(key){
                 self[key] = null;
             });
-            this.OctaFaceLattice._undo();
+            _.each(_.keys(this.OctaFaceLattice), function(key){
+                self[key] = null;
+            });
         }
 
     },

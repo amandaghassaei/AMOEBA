@@ -165,16 +165,16 @@ DMACell.prototype.destroy = function(){
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
     unitTetraCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1/Math.sqrt(6)));
 
-    function DMATetraCell(indices, scale, lattice){
+    function DMATetraFaceCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice, true);
     }
-    DMATetraCell.prototype = Object.create(DMACell.prototype);
+    DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
-    DMATetraCell.prototype._initParts = function(){
+    DMATetraFaceCell.prototype._initParts = function(){
         return [];
     };
 
-    DMATetraCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+    DMATetraFaceCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
         var mesh;
         mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
         if (zIndex%2 !=0) mesh.rotateX(Math.PI);
@@ -185,7 +185,7 @@ DMACell.prototype.destroy = function(){
         return mesh;
     };
 
-    DMATetraCell.prototype.calcHighlighterPosition = function(face){
+    DMATetraFaceCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
@@ -195,11 +195,27 @@ DMACell.prototype.destroy = function(){
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
-    DMATetraCell.prototype.getPosition = function(){//need for part relay
+    DMATetraFaceCell.prototype.getPosition = function(){//need for part relay
         return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     };
 
-    self.DMATetraCell = DMATetraCell;
+    self.DMATetraFaceCell = DMATetraFaceCell;
+
+    function DMATetraEdgeCell(indices, scale, lattice){
+        DMATetraFaceCell.call(this, indices, scale, lattice, true);
+    }
+    DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
+
+    DMATetraEdgeCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
+        var mesh;
+        mesh = THREE.SceneUtils.createMultiMaterialObject(unitTetraCellGeo, cellMaterials);
+        if (zIndex%2 !=0) mesh.rotateX(Math.PI);
+        mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        dmaGlobals.three.sceneAdd(mesh, "inverseCell");
+        return mesh;
+    };
+
+    self.DMATetraEdgeCell = DMATetraEdgeCell;
 
 })();
 
