@@ -14,34 +14,33 @@ function DMACell(indices, scale, inverse) {
     this.indices = indices;
     if (!inverse) inverse = false;
     this.isInverse = inverse;
-    this.cellMesh = this._buildCellMesh(indices.z);
+    this.cellMesh = this._buildCellMesh();
 
     var cellMode = dmaGlobals.lattice.get("cellMode");
     var inverseMode = dmaGlobals.lattice.get("inverseMode");
-
     this.drawForMode(scale, cellMode, inverseMode);
 }
 
 DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode){
     this.updateForScale(scale, cellMode);
     this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
-    if (cellMode == "part" && !this.parts) this.parts = this._initParts(this.indices.z);
+    if (cellMode == "part" && !this.parts) this.parts = this._initParts();
     _.each(this.parts, function(part){
         if (part) part.setVisibility(cellMode == "part");
     });
 };
 
-DMACell.prototype._superBuildCellMesh = function(zIndex, unitCellGeo, material){//abstract mesh representation of cell
+DMACell.prototype._superBuildCellMesh = function(unitCellGeo, material){//abstract mesh representation of cell
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
-    this._doMeshTransformations(zIndex, mesh);
+    this._doMeshTransformations(mesh);
     mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
     if (this.isInverse) dmaGlobals.three.sceneAdd(mesh, "inverseCell");
     else dmaGlobals.three.sceneAdd(mesh, "cell");
     return mesh;
 };
 
-DMACell.prototype._doMeshTransformations = function(zIndex, mesh){};
+DMACell.prototype._doMeshTransformations = function(mesh){};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
@@ -131,20 +130,20 @@ DMACell.prototype.destroy = function(){
     }
     DMAFaceOctaCell.prototype = Object.create(DMACell.prototype);
 
-    DMAFaceOctaCell.prototype._initParts = function(zIndex){
+    DMAFaceOctaCell.prototype._initParts = function(){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMATrianglePart(i, zIndex%2==1, this));
+            parts.push(new DMATrianglePart(i, this.indices.z%2==1, this));
         }
         return parts;
     };
 
-    DMAFaceOctaCell.prototype._buildCellMesh = function(zIndex){
-        return this._superBuildCellMesh(zIndex, unitCellGeo);
+    DMAFaceOctaCell.prototype._buildCellMesh = function(){
+        return this._superBuildCellMesh(unitCellGeo);
     };
 
-    DMAFaceOctaCell.prototype._doMeshTransformations = function(zIndex, mesh){
-        if (zIndex%2!=0) mesh.rotation.set(0, 0, Math.PI);
+    DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
+        if (this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
     };
 
     DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
@@ -192,12 +191,14 @@ DMACell.prototype.destroy = function(){
         return [];
     };
 
-    DMATetraFaceCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
-        if (zIndex%2 ==0) return this._superBuildCellMesh(zIndex, unitCellGeo);
-        return this._superBuildCellMesh(zIndex, unitCellGeoUpsideDown);
+    DMATetraFaceCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        var zIndex = this.indices.z;
+        if (zIndex%2 ==0) return this._superBuildCellMesh(unitCellGeo);
+        return this._superBuildCellMesh(unitCellGeoUpsideDown);
     };
 
-    DMATetraFaceCell.prototype._doMeshTransformations = function(zIndex, mesh){
+    DMATetraFaceCell.prototype._doMeshTransformations = function(mesh){
+        var zIndex = this.indices.z;
         if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
     };
 
@@ -247,8 +248,8 @@ DMACell.prototype.destroy = function(){
         return [];
     };
 
-    DMAVertexOctaCell.prototype._buildCellMesh = function(zIndex){//abstract mesh representation of cell
-        return this._superBuildCellMesh(zIndex, unitCellGeo);
+    DMAVertexOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        return this._superBuildCellMesh(unitCellGeo);
     };
 
     DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
@@ -351,7 +352,7 @@ DMACell.prototype.destroy = function(){
     };
 
     DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = this._superBuildCellMesh(null, unitCellGeo, cellMaterial);
+        var mesh = this._superBuildCellMesh(unitCellGeo, cellMaterial);
         mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
     };
@@ -375,16 +376,12 @@ DMACell.prototype.destroy = function(){
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
-    DMACubeCell.prototype._initParts = function(zIndex){
-        var parts  = [];
-        for (var i=0;i<4;i++){
-            parts.push(new DMAPart(0, zIndex%2==1, this));
-        }
-        return parts;
+    DMACubeCell.prototype._initParts = function(){
+        return [];
     };
 
     DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = this._superBuildCellMesh(null, unitCellGeo, cellMaterial);
+        var mesh = this._superBuildCellMesh(unitCellGeo, cellMaterial);
         var wireframe = new THREE.BoxHelper(mesh.children[0]);
         wireframe.material.color.set(0x000000);
         mesh.children.push(wireframe);
