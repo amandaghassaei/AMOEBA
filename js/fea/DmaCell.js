@@ -267,7 +267,49 @@ DMACell.prototype.destroy = function(){
 
     /////////////////////////////////////////TRUNCATED CUBE////////////////////////////////////
 
-    var truncCubeGeo = new THREE.BoxGeometry(Math.sqrt(2), Math.sqrt(2), Math.sqrt(2));
+    var truncCubeRad = Math.sqrt(2)/2;
+    var truncCubeGeo = new THREE.Geometry();
+    truncCubeGeo.vertices = [
+        new THREE.Vector3(truncCubeRad, 0, truncCubeRad),
+        new THREE.Vector3(0, truncCubeRad, truncCubeRad),
+        new THREE.Vector3(-truncCubeRad, 0, truncCubeRad),
+        new THREE.Vector3(0, -truncCubeRad, truncCubeRad),
+
+        new THREE.Vector3(truncCubeRad, truncCubeRad, 0),
+        new THREE.Vector3(-truncCubeRad, truncCubeRad, 0),
+        new THREE.Vector3(-truncCubeRad, -truncCubeRad, 0),
+        new THREE.Vector3(truncCubeRad, -truncCubeRad, 0),
+
+        new THREE.Vector3(truncCubeRad, 0, -truncCubeRad),
+        new THREE.Vector3(0, truncCubeRad, -truncCubeRad),
+        new THREE.Vector3(-truncCubeRad, 0, -truncCubeRad),
+        new THREE.Vector3(0, -truncCubeRad, -truncCubeRad)
+    ];
+    truncCubeGeo.faces = [
+        new THREE.Face3(1,0,4),
+        new THREE.Face3(2,1,5),
+        new THREE.Face3(3,2,6),
+        new THREE.Face3(0,3,7),
+
+        new THREE.Face3(8,9,4),
+        new THREE.Face3(9,10,5),
+        new THREE.Face3(10,11,6),
+        new THREE.Face3(11,8,7),
+
+        new THREE.Face3(0,1,3),
+        new THREE.Face3(2,3,1),
+        new THREE.Face3(8,11,9),
+        new THREE.Face3(11,10,9),
+        new THREE.Face3(0,8,4),
+        new THREE.Face3(0,7,8),
+        new THREE.Face3(1,9,5),
+        new THREE.Face3(1,4,9),
+        new THREE.Face3(2,10,6),
+        new THREE.Face3(2,5,10),
+        new THREE.Face3(3,11,7),
+        new THREE.Face3(3,6,11)
+    ];
+    truncCubeGeo.computeFaceNormals();
 
     function DMATruncCubeCell(indices, scale, lattice){
         DMACell.call(this, indices, scale, lattice, true);
@@ -279,8 +321,10 @@ DMACell.prototype.destroy = function(){
     };
 
     DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = THREE.SceneUtils.createMultiMaterialObject(truncCubeGeo, cellMaterials);
+        var mesh = THREE.SceneUtils.createMultiMaterialObject(truncCubeGeo, [new THREE.MeshNormalMaterial()]);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+        var wireframe = new THREE.EdgesHelper(mesh.children[0], 0x000000);
+        mesh.children.push(wireframe);
         dmaGlobals.three.sceneAdd(mesh, "inverseCell");
         return mesh;
     };
@@ -299,7 +343,7 @@ DMACell.prototype.destroy = function(){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    var cellMaterials = [new THREE.MeshNormalMaterial()];//new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})
+    var cellMaterials = [new THREE.MeshNormalMaterial()];
 
 
     function DMACubeCell(indices, scale, lattice){
@@ -319,7 +363,7 @@ DMACell.prototype.destroy = function(){
         var mesh = new THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, cellMaterials);
         mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
         var wireframe = new THREE.BoxHelper(mesh.children[0]);
-        wireframe.material.color.set(0x000000);
+        wireframe.material.color.set();
         mesh.children.push(wireframe);
         dmaGlobals.three.sceneAdd(mesh, "cell");
         return mesh;
