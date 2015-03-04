@@ -14,8 +14,8 @@ function DMACell(indices, scale, lattice, inverse) {
     this.cellMesh = this._buildCellMesh(indices.z);
     this.parts = this._initParts(indices.z);
 
-    var cellMode = dmaGlobals.appState.get("cellMode");
-    var inverseMode = dmaGlobals.appState.get("inverseMode");
+    var cellMode = dmaGlobals.lattice.get("cellMode");
+    var inverseMode = dmaGlobals.lattice.get("inverseMode");
 
     this.drawForMode(scale, cellMode, inverseMode);
 }
@@ -52,10 +52,9 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
 DMACell.prototype.updateForScale = function(scale, cellMode){
     //only update visible object to scale
     var position = this.getPosition();
-    if (cellMode == "cell"){
-        this.cellMesh.scale.set(scale, scale, scale);
-        this._setMeshPosition(this.cellMesh, position);
-    } else if (cellMode == "part"){
+    this.cellMesh.scale.set(scale, scale, scale);
+    this._setMeshPosition(this.cellMesh, position);
+    if (cellMode == "part"){
         _.each(this.parts, function(part){
             if (part) part.updateForScale(scale, position);
          });
@@ -269,6 +268,10 @@ DMACell.prototype.destroy = function(){
     };
 
     self.DMAVertexOctaCell = DMAVertexOctaCell;
+
+    /////////////////////////////////////////TRUNCATED CUBE////////////////////////////////////
+
+
 
 })();
 
