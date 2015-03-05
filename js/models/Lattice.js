@@ -19,9 +19,14 @@ Lattice = Backbone.Model.extend({
 
         basePlane: null,//plane to build from
         scale: window.defaultLatticeScale,
-        columnSeparation: 0.0,
         highlighter: null,//highlights build-able surfaces
         shouldPreserveCells: true,//preserve cells when changing lattice type
+
+        //spacing for connectors/joints
+        columnSeparation: 0.0,//todo get rid of this
+        xSeparation: 0.0,
+        ySeparation: 0.0,
+        zSeparation: 0.0,
 
         cellMode: "cell",//show cells vs parts
         inverseMode: false,//show negative space
@@ -45,7 +50,7 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    addCellsInRange: function(range){//add a block of cells
+    addCellsInRange: function(range){//add a block of cells (extrude)
         var scale = this.get("scale");
         var cells = this.get("cells");
         this._checkForMatrixExpansion(cells, range.max, range.min, "cellsMax", "cellsMin");
@@ -84,9 +89,7 @@ Lattice = Backbone.Model.extend({
 
     _addInverseCellsForIndex: function(index){
 
-            index = _.clone(index);
-
-            var inverseIndicesToAdd = this._inverseIndicesToAdd(index);
+            var inverseIndicesToAdd = this._inverseIndicesToAdd(_.clone(index));
 
             var invCells = this.get("inverseCells");
             var scale = this.get("scale");
@@ -119,14 +122,14 @@ Lattice = Backbone.Model.extend({
         return position;
     },
 
-    removeCellAtIndex: function(indices){
-
-        var index = this._subtract(indices, this.get("cellsMin"));
-        var cells = this.get("cells");
-        if (index.x<cells.length && index.y<cells[0].length && index.z<cells[0][0].length){
-            this.removeCell(cells[index.x][index.y][index.z]);
-        }
-    },
+//    removeCellAtIndex: function(indices){
+//
+//        var index = this._subtract(indices, this.get("cellsMin"));
+//        var cells = this.get("cells");
+//        if (index.x<cells.length && index.y<cells[0].length && index.z<cells[0][0].length){
+//            this.removeCell(cells[index.x][index.y][index.z]);
+//        }
+//    },
 
     removeCell: function(cell){
         if (!cell) return;
@@ -141,6 +144,7 @@ Lattice = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
+    //todo send clear all to three anddestroy without sceneRemove to cell
     clearCells: function(){
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.destroy();
@@ -378,7 +382,7 @@ Lattice = Backbone.Model.extend({
                 _.extend(this, this.OctaFaceLattice);
                 _.extend(this, this.OctaEdgeLattice);
             } else if (connectionType == "edgeRot"){
-
+                _.extend(this, this.OctaRotEdgeLattice);
             } else if (connectionType == "vertex"){
                 _.extend(this, this.OctaVertexLattice);
             }
@@ -696,6 +700,52 @@ Lattice = Backbone.Model.extend({
                 self[key] = null;
             });
             _.each(_.keys(this.OctaFaceLattice), function(key){
+                self[key] = null;
+            });
+        }
+
+    },
+
+    OctaRotEdgeLattice: {
+
+        _initLatticeType: function(){
+
+            //bind events
+
+            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
+
+        },
+
+        getIndexForPosition: function(absPosition){
+            return this._indexForPosition(absPosition);
+        },
+
+        getPositionForIndex: function(index){
+            return this._positionForIndex(index);
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+//            this._addInverseCellsForIndex(indices);
+            return new DMAVertexOctaCell(indices, scale);
+        },
+
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale*Math.sqrt(2);
+        },
+
+        yScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        zScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            var self = this;
+            _.each(_.keys(this.OctaRotEdgeLattice), function(key){
                 self[key] = null;
             });
         }
