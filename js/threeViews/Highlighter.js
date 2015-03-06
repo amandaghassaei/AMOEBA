@@ -109,6 +109,11 @@ Highlighter = Backbone.View.extend({
 
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
+            if (dmaGlobals.lattice.get("connectionType") == "freeformFace"){
+                //todo make this work for baseplane
+                dmaGlobals.lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction);
+                return;
+            }
             dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition());
         } else {
             if (!this.highlightedObject) return;
@@ -161,6 +166,17 @@ OctaVertexHighlighter = Highlighter.extend({
         return new THREE.SphereGeometry(0.2);
     }
 
+});
+
+OctaFreeFormHighlighter = Highlighter.extend({
+
+    _makeGeometry: function(){
+        return new THREE.SphereGeometry(0.2);
+    },
+
+    _setPosition: function(position, direction){
+        this.mesh.position.set(position.x, position.y, position.z);
+    }
 });
 
 ///////////////////////////////////////////////////////////////////////////////////

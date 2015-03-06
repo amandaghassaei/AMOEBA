@@ -371,13 +371,16 @@ Lattice = Backbone.Model.extend({
     _updateLatticeType: function(){
         var cellType = this.get("cellType");
         var connectionType = this.get("connectionType");
-        if (!this.get("shouldPreserveCells")) this.clearCells();
+        if (!this.get("shouldPreserveCells") || this.previous("connectionType") == "freeformFace") this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();
         if (this.get("highlighter")) this.get("highlighter").destroy();
         if (cellType == "octa"){
             if (connectionType == "face"){
                 _.extend(this, this.OctaFaceLattice);
+            } else if (connectionType == "freeformFace"){
+                this.clearCells();
+                _.extend(this, this.OctaFreeFormFaceLattice);
             } else if (connectionType == "edge"){
                 _.extend(this, this.OctaFaceLattice);
                 _.extend(this, this.OctaEdgeLattice);
@@ -584,6 +587,78 @@ Lattice = Backbone.Model.extend({
             this.stopListening(this, "change:columnSeparation");
             var self = this;
             _.each(_.keys(this.OctaFaceLattice), function(key){
+                self[key] = null;
+            });
+        }
+
+    },
+
+
+////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////FACE CONN OCTA FREEFORM////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+
+    OctaFreeFormFaceLattice: {
+
+        _initLatticeType: function(){
+
+            //bind events
+
+            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new OctaFreeFormHighlighter({scale:this.get("scale")}));
+
+        },
+
+        addFreeFormCell: function(parentCellPos, parentCellOrient, direction){
+            var scale = this.get("scale");
+            var cells = this.get("cells");
+//            console.log(parentCellPos);
+//            console.log(parentCellOrient);
+//            console.log(direction);
+            cells[0][0].push(new DMAFreeFormOctaCell({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction));
+            this.set("numCells", this.get("numCells")+1);
+            dmaGlobals.three.render();
+        },
+
+        getIndexForPosition: function(absPosition){//only used by baseplane
+            var scale = this.get("scale");
+            var yIndex = Math.floor(absPosition.y/this.yScale(scale));
+            if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
+            var index = this._indexForPosition(absPosition);
+            if (index.z%2 == 1) index.y += 1;
+            return index;
+        },
+
+        getPositionForIndex: function(index){//only used by baseplane
+            var scale = this.get("scale");
+            var position = _.clone(index);
+            var xScale = this.xScale(scale);
+            position.x = (position.x+1/2)*xScale;
+            position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
+            position.z = (position.z+0.5)*this.zScale(scale);
+            if ((index.y%2) != 0) position.x -= this.xScale(scale)/2;
+            return position;
+        },
+
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            var colSep = this.get("columnSeparation");
+            return scale*(1+2*colSep);
+        },
+
+        yScale: function(scale){
+            return this.xScale(scale)/2*Math.sqrt(3);
+        },
+
+        zScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return 2*scale/Math.sqrt(6);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            var self = this;
+            _.each(_.keys(this.OctaFreeFormFaceLattice), function(key){
                 self[key] = null;
             });
         }

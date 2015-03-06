@@ -20,7 +20,7 @@ AppState = Backbone.Model.extend({
 
         allCellTypes: {octa:"Octahedron", cube:"Cube"},
         allConnectionTypes: {
-            octa: {face:"Face", edge:"Edge", edgeRot:"Rotated Edge", vertex:"Vertex"},
+            octa: {face:"Face", freeformFace:"Freeform Face", edge:"Edge", edgeRot:"Rotated Edge", vertex:"Vertex"},
             cube: {face:"Face"}
         },
         allPartTypes:{

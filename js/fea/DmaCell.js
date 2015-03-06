@@ -72,6 +72,10 @@ DMACell.prototype.getPosition = function(){//need for part relay
     return this.cellMesh.position.clone();
 };
 
+DMACell.prototype.getOrientation = function(){//need for part relay
+    return this.cellMesh.rotation.clone();
+};
+
 DMACell.prototype._calcPosition = function(){//need for part relay
     if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
@@ -154,7 +158,7 @@ DMACell.prototype.destroy = function(){
         if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
 
         var position = this.getPosition();
-        position.z += dmaGlobals.lattice.zScale()/2;
+        position.z += face.normal.z*dmaGlobals.lattice.zScale()/2;
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
 
@@ -169,6 +173,44 @@ DMACell.prototype.destroy = function(){
     DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
 
     self.DMAEdgeOctaCell = DMAEdgeOctaCell;
+
+
+    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellOrient, direction){
+        this.parentPos = parentCellPos;
+        this.parentOrient = parentCellOrient;
+        this.parentDirection = direction;
+        DMAFaceOctaCell.call(this, indices, scale);
+    }
+    DMAFreeFormOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
+
+    DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
+
+//        console.log(this.parentPos);
+//        console.log(this.parentDirection);
+//        console.log(position);
+//        mesh.position.set(position);
+
+    };
+
+    DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
+        var direction = face.normal;
+        var position = this.getPosition();
+        position.x += direction.x*dmaGlobals.lattice.xScale()/2;
+        position.y += direction.y*dmaGlobals.lattice.yScale()/2;
+        position.z += direction.z*dmaGlobals.lattice.zScale()/2;
+        return {index: _.clone(this.indices), direction:direction, position:position};
+    }
+
+    DMAFreeFormOctaCell.prototype._calcPosition = function(){
+        var position = {};
+        var zScale = dmaGlobals.lattice.zScale();
+        position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
+        position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
+        position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
+        return position;
+    };
+
+    self.DMAFreeFormOctaCell = DMAFreeFormOctaCell;
 
 })();
 
