@@ -185,19 +185,23 @@ DMACell.prototype.destroy = function(){
 
     DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
-//        console.log(this.parentPos);
-//        console.log(this.parentDirection);
-//        console.log(position);
-//        mesh.position.set(position);
+        var quaternion = new THREE.Quaternion();
+        quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), this.parentDirection);
 
+        var rotation = this.parentOrient;
+//        rotation.z += Math.PI;
+
+//        mesh.quaternion = quaternion;
+//        mesh.updateMatrix();
     };
 
     DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
         var direction = face.normal;
         var position = this.getPosition();
-        position.x += direction.x*dmaGlobals.lattice.xScale()/2;
-        position.y += direction.y*dmaGlobals.lattice.yScale()/2;
-        position.z += direction.z*dmaGlobals.lattice.zScale()/2;
+        var zScale = dmaGlobals.lattice.zScale();
+        position.x += direction.x*zScale/2;
+        position.y += direction.y*zScale/2;
+        position.z += direction.z*zScale/2;
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
 
