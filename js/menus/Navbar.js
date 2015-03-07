@@ -13,7 +13,9 @@ NavBar = Backbone.View.extend({
     events: {
         "click #showHideMenu":                          "_setMenuVis",
         "click .menuHoverControls":                     "_setNavSelection",
-        "click #saveAs":                                "_saveAs"
+        "click #saveAs":                                "_saveAs",
+        "click #importJSON":                            "_importJSON",
+        "change #jsonInput":                            "_selectJSONFiles",
     },
 
     initialize: function(){
@@ -61,6 +63,31 @@ NavBar = Backbone.View.extend({
             var $link = $(link);
             if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight
         });
+    },
+
+    _importJSON: function(e){
+        e.preventDefault();
+        $("#jsonInput").click();
+    },
+
+    _selectJSONFiles: function(e){
+        e.preventDefault();
+        var input = $(e.target),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        this._readDataURL(numFiles, label, input.get(0).files);
+        input.val("");
+    },
+
+    _readDataURL: function(numFiles, filename, files){
+        if (numFiles>1) console.warn("too many files selected");
+        var reader = new FileReader();
+        reader.readAsText(files[0]);
+        reader.onload = (function() {
+            return function(e) {
+                dmaGlobals.lattice.loadFromJSON(e.target.result);
+            }
+        })();
     },
 
     _saveAs: function(e){

@@ -161,7 +161,7 @@ Lattice = Backbone.Model.extend({
 
     _clearInverseCells: function(){
         this._iterCells(this.get("inverseCells"), function(cell){
-            if (cell) cell.destroy();
+            if (cell && cell.destroy) cell.destroy();
         });
         this.set("inverseCells", [[[null]]]);
         this.set("inverseCellsMin", {x:0, y:0, z:0});
@@ -368,10 +368,12 @@ Lattice = Backbone.Model.extend({
     ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
-    _updateLatticeType: function(){
+    _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
+        if (typeof loadingFromFile == "undefined") loadingFromFile = false;
+//        console.log(this.previous("connectionType"));
         var cellType = this.get("cellType");
         var connectionType = this.get("connectionType");
-        if (!this.get("shouldPreserveCells") || this.previous("connectionType") == "freeformFace") this.clearCells();
+        if (!loadingFromFile && (!this.get("shouldPreserveCells") || this.previous("connectionType") == "freeformFace")) this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();
         if (this.get("highlighter")) this.get("highlighter").destroy();
@@ -379,7 +381,7 @@ Lattice = Backbone.Model.extend({
             if (connectionType == "face"){
                 _.extend(this, this.OctaFaceLattice);
             } else if (connectionType == "freeformFace"){
-                this.clearCells();
+                if (!loadingFromFile) this.clearCells();
                 _.extend(this, this.OctaFreeFormFaceLattice);
             } else if (connectionType == "edge"){
                 _.extend(this, this.OctaFaceLattice);
@@ -394,16 +396,27 @@ Lattice = Backbone.Model.extend({
         }
         this._initLatticeType();
 
-        if (this.get("shouldPreserveCells")){
+        if (loadingFromFile || this.get("shouldPreserveCells")){
             var self = this;
             var scale = this.get("scale");
             var cells = this.get("cells");
             this._clearInverseCells();
             this._loopCells(cells, function(cell, x, y, z){
                 if (!cell) return;
-                var index = cell.indices;
-                cell.destroy();
-                cells[x][y][z] = self._makeCellForLatticeType(index, scale)
+                var index = _.clone(cell.indices);
+                var parts = _.clone(cell.parts);
+//                if (cell.orientation) orientation
+                if (cell.destroy) cell.destroy();
+                var newCell = self._makeCellForLatticeType(index, scale);
+                if (parts) {
+                    //todo make this better
+                    newCell.parts = newCell._initParts();
+                    for (var i=0;i<newCell.parts.length;i++){
+                        if (!parts[i]) newCell.parts[i].destroy();
+                    }
+                }
+                cells[x][y][z] = newCell;
+
             });
             dmaGlobals.three.render();
         }
@@ -440,8 +453,15 @@ Lattice = Backbone.Model.extend({
         saveAs(blob, "lattice.json");
     },
 
-    loadFromJSON: function(){
-        
+    loadFromJSON: function(data){
+        this.clearCells();
+        var data = JSON.parse(data);
+        var self = this;
+        _.each(_.keys(data), function(key){
+            self.set(key, data[key], {silent:true});
+        });
+        this.set("shouldPreserveCells", true, {silent:true});
+        this._updateLatticeType(null, null, null, true);
     },
 
 ////////////////////////////////////////////////////////////////////////////////////////

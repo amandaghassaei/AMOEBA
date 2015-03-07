@@ -121,9 +121,7 @@ DMACell.prototype.toJSON = function(){
     if (!this.parts) this.parts = this._initParts();
     return {
         indices:this.indices,
-        parts: this.parts,
-//        position: this.getPosition(),
-//        orientation: this.getOrientation()
+        parts: this.parts
     };
 };
 
@@ -232,6 +230,15 @@ DMACell.prototype.toJSON = function(){
         position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
         return position;
     };
+
+    DMAFreeFormOctaCell.prototype.toJSON = function(){
+        var json = DMACell.prototype.toJSON.call(this);
+        _.extend(json, {
+            position: this.getPosition(),
+            orientation: this.getOrientation()
+        });
+        return json;
+    }
 
     self.DMAFreeFormOctaCell = DMAFreeFormOctaCell;
 
