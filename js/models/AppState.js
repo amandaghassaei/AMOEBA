@@ -101,6 +101,8 @@ AppState = Backbone.Model.extend({
 
     _handleKeyStroke: function(e){//receives keyup and keydown
 
+        if ($("input").is(':focus')) return;//we are typing in an input
+
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
@@ -111,6 +113,7 @@ AppState = Backbone.Model.extend({
             this.downKeys[e.keyCode] = true;
         } else this.downKeys[e.keyCode] = false;
 
+//        console.log(e);
 //        console.log(e.keyCode);
         switch(e.keyCode){
             case 16://shift
@@ -135,7 +138,11 @@ AppState = Backbone.Model.extend({
             case 83://s save
                 if (e.ctrlKey || e.metaKey){//command
                     e.preventDefault();
-                    dmaGlobals.lattice.saveAsJSON();
+                    if (e.shiftKey){
+                        $("#saveAsModel").modal("show");
+                    } else {
+                        dmaGlobals.lattice.saveAsJSON();
+                    }
                 }
                 break;
             case 79://o open

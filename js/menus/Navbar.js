@@ -15,8 +15,11 @@ NavBar = Backbone.View.extend({
         "click .menuHoverControls":                     "_setNavSelection",
         "click #saveJSON":                              "_save",
         "click #saveAsJSON":                            "_saveAs",
+        "shown.bs.modal #saveAsModel":                  "_showSaveAsModal",
+        "hide.bs.modal #saveAsModel":                   "_hideSaveAsModal",
+        "change #saveAsModel":                          "_saveAs",
         "click #importJSON":                            "_importJSON",
-        "change #jsonInput":                            "_selectJSONFiles",
+        "change #jsonInput":                            "_selectJSONFiles"
     },
 
     initialize: function(){
@@ -100,6 +103,17 @@ NavBar = Backbone.View.extend({
         e.preventDefault();
         var fileName = $("#saveAsFileName").val();
         dmaGlobals.lattice.saveAsJSON(fileName);
+        $('#saveAsModel').modal('hide');
+    },
+
+    _showSaveAsModal: function(){
+        var input = $("#saveAsFileName");
+        input.focus();
+        input.select();
+    },
+
+    _hideSaveAsModal: function(){
+        $("#saveAsFileName").blur();
     },
 
     _uiStuff: function(){
