@@ -29,6 +29,7 @@
     <script src="dependencies/OrbitControls.js"></script>
 
     <!--stl import/export-->
+    <script src="dependencies/loaders/FileSaver.min.js"></script>
     <script src="dependencies/THREE2STL.js"></script>
     <script src="dependencies/loaders/STLLoader.js"></script>
 
@@ -37,7 +38,7 @@
 
     <!--global variables-->
     <script>
-        window.defaultLatticeScale = 20;
+
     </script>
 
     <!--multi-threading-->
@@ -92,11 +93,11 @@
         <li><a data-menu-id="navSim" class="menuHoverControls" href="#">Simulate</a></li>
         <li><a data-menu-id="navAssemble" class="menuHoverControls" href="#">Assemble</a></li>
         <li class="dropdown navDropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Export <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
-            <li><a id="exportSTL" href="#">Export STL</a></li>
-            <li><a href="#">Another action</a></li>
+            <li><a id="exportSTL" href="#">Import Lattice</a></li>
+            <li><a id="saveAs" href="#">Save Lattice JSON</a></li>
             <li><a href="#">Something else here</a></li>
             <li class="divider"></li>
             <li><a href="#">Separated link</a></li>
@@ -114,15 +115,6 @@
 
 <div id="menuWrapper"><div id="menuHeader"></div><div id="menuContent"></div></div>
 
-<div id="importGeometry" class="row navMenu">
-</div>
-<div id="element" class="row navMenu">
-    <div class="row demo-row">
-        <div class="col-xs-3">
-           <a id="elementCube" href="#">Cube</a>
-        </div>
-    </div>
-</div>
 <div id="about" class="row navMenu">
     <div class="row demo-row">
         <div class="col-xs-3">
@@ -130,6 +122,7 @@
         </div>
     </div>
 </div>
+
 <div id="threeContainer"></div>
 
 

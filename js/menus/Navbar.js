@@ -12,7 +12,8 @@ NavBar = Backbone.View.extend({
 
     events: {
         "click #showHideMenu":                          "_setMenuVis",
-        "click .menuHoverControls":                     "_setNavSelection"
+        "click .menuHoverControls":                     "_setNavSelection",
+        "click #saveAs":                                "_saveAs"
     },
 
     initialize: function(){
@@ -60,6 +61,11 @@ NavBar = Backbone.View.extend({
             var $link = $(link);
             if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight
         });
+    },
+
+    _saveAs: function(e){
+        e.preventDefault();
+        dmaGlobals.lattice.saveAsJSON();
     },
 
     _uiStuff: function(){

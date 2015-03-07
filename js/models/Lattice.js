@@ -18,7 +18,7 @@ Lattice = Backbone.Model.extend({
         numInvCells: 0,
 
         basePlane: null,//plane to build from
-        scale: window.defaultLatticeScale,
+        scale: 20,
         highlighter: null,//highlights build-able surfaces
         shouldPreserveCells: true,//preserve cells when changing lattice type
 
@@ -434,6 +434,16 @@ Lattice = Backbone.Model.extend({
         }
     },
 
+    saveAsJSON: function(){
+        var data = JSON.stringify(_.omit(this.toJSON(), ["highlighter", "basePlane"]));
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "lattice.json");
+    },
+
+    loadFromJSON: function(){
+        
+    },
+
 ////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////FACE CONN OCTA LATTICE////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -613,9 +623,6 @@ Lattice = Backbone.Model.extend({
         addFreeFormCell: function(parentCellPos, parentCellOrient, direction){
             var scale = this.get("scale");
             var cells = this.get("cells");
-//            console.log(parentCellPos);
-//            console.log(parentCellOrient);
-//            console.log(direction);
             cells[0][0].push(new DMAFreeFormOctaCell({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction));
             this.set("numCells", this.get("numCells")+1);
             dmaGlobals.three.render();
@@ -862,7 +869,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _inverseIndicesToAdd: function(index){
-            var inverseIndicesToAdd = [
+            return [
                 this._add(index, {x:0,y:0,z:0}),
                 this._add(index, {x:0,y:1,z:0}),
                 this._add(index, {x:1,y:0,z:0}),
@@ -873,7 +880,6 @@ Lattice = Backbone.Model.extend({
                 this._add(index, {x:1,y:0,z:1}),
                 this._add(index, {x:1,y:1,z:1})
             ];
-            return inverseIndicesToAdd;
         },
 
         xScale: function(scale){
