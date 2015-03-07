@@ -40,7 +40,7 @@ BasePlane = Backbone.Model.extend({
     },
 
     getOrientation: function(){
-        return {x:0, y:0, z:0};
+        return new THREE.Quaternion();
     },
 
 //    _renderForCurrentScene: function(){

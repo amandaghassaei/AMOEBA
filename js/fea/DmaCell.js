@@ -68,12 +68,12 @@ DMACell.prototype.getScale = function(){//need for part relay
     return dmaGlobals.lattice.get("scale");
 };
 
-DMACell.prototype.getPosition = function(){//need for part relay
+DMACell.prototype.getPosition = function(){
     return this.cellMesh.position.clone();
 };
 
-DMACell.prototype.getOrientation = function(){//need for part relay
-    return this.cellMesh.rotation.clone();
+DMACell.prototype.getOrientation = function(){
+    return this.cellMesh.quaternion.clone();
 };
 
 DMACell.prototype._calcPosition = function(){//need for part relay
@@ -175,9 +175,9 @@ DMACell.prototype.destroy = function(){
     self.DMAEdgeOctaCell = DMAEdgeOctaCell;
 
 
-    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellOrient, direction){
+    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction){
         this.parentPos = parentCellPos;
-        this.parentOrient = parentCellOrient;
+        this.parentQuaternion = parentCellQuat;
         this.parentDirection = direction;
         DMAFaceOctaCell.call(this, indices, scale);
     }
@@ -186,22 +186,35 @@ DMACell.prototype.destroy = function(){
     DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
         var quaternion = new THREE.Quaternion();
-        quaternion.setFromUnitVectors(new THREE.Vector3(0,0,1), this.parentDirection);
+        var direction = this.parentDirection.clone();
+        var zAxis = new THREE.Vector3(0,0,1);
+        quaternion.setFromUnitVectors(zAxis, direction);
 
-        var rotation = this.parentOrient;
-//        rotation.z += Math.PI;
 
-//        mesh.quaternion = quaternion;
-//        mesh.updateMatrix();
+//        direction.sub(zAxis);
+//        if (direction.length() < 0.1){
+//            console.log("here");
+//        zAxis.applyQuaternion(this.parentQuaternion);
+//            var zRot = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
+//            quaternion = new THREE.Quaternion().multiplyQuaternions(quaternion, zRot);
+//        }
+
+
+//        mesh.rotation.order = 'YZX';
+        var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
+        mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
     };
 
     DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
-        var direction = face.normal;
+        var direction = face.normal.clone();
+        direction.applyQuaternion(this.cellMesh.quaternion);
+
         var position = this.getPosition();
         var zScale = dmaGlobals.lattice.zScale();
         position.x += direction.x*zScale/2;
         position.y += direction.y*zScale/2;
         position.z += direction.z*zScale/2;
+
         return {index: _.clone(this.indices), direction:direction, position:position};
     }
 
