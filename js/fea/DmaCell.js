@@ -76,6 +76,10 @@ DMACell.prototype.getOrientation = function(){
     return this.cellMesh.quaternion.clone();
 };
 
+DMACell.prototype.getEulerRotation = function(){
+    return this.cellMesh.rotation.clone();
+};
+
 DMACell.prototype._calcPosition = function(){//need for part relay
     if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
@@ -147,7 +151,7 @@ DMACell.prototype.toJSON = function(){
     DMAFaceOctaCell.prototype._initParts = function(){
         var parts  = [];
         for (var i=0;i<3;i++){
-            parts.push(new DMATrianglePart(i, this.indices.z%2==1, this));
+            parts.push(new DMATrianglePart(i, this));
         }
         return parts;
     };

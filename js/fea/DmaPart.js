@@ -5,9 +5,8 @@
 
 //a part, element with a single material, handled by assembler
 
-    function DMAPart(type, oddZFlag, parent) {
+    function DMAPart(type, parent) {
         this.parentCell = parent;//use this reference to get position and scale
-        this.oddZFlag = oddZFlag;//this tells me if cell is at an odd z height in lattice, everything needs to rotate 180
         this.type = type;
     }
 
@@ -71,7 +70,6 @@
             this.mesh = null;
         }
         this.parentCell = null;
-        this.oddZFlag = null;
         this.type = null;
     };
 
@@ -122,8 +120,8 @@
     var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
     partMaterial.color.setRGB( 0.9619657144369509, 0.6625466032079207, 0.20799727886007258 );
 
-    function DMATrianglePart(type, oddZFlag, parent){
-        DMAPart.call(this, type, oddZFlag, parent);
+    function DMATrianglePart(type, parent){
+        DMAPart.call(this, type, parent);
     }
     DMATrianglePart.prototype = Object.create(DMAPart.prototype);
 
@@ -131,19 +129,21 @@
         var mesh;
         switch(type){
             case 0:
-                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo4, partMaterial.clone());
-                else mesh = new THREE.Mesh(unitPartGeo1, partMaterial.clone());
+//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo4, partMaterial.clone());
+                mesh = new THREE.Mesh(unitPartGeo1, partMaterial.clone());
                 break;
             case 1:
-                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo5, partMaterial.clone());
-                else mesh = new THREE.Mesh(unitPartGeo2, partMaterial.clone());
+//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo5, partMaterial.clone());
+                mesh = new THREE.Mesh(unitPartGeo2, partMaterial.clone());
                 break;
             case 2:
-                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo6, partMaterial.clone());
-                else mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
+//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo6, partMaterial.clone());
+                 mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
                 break;
         }
         mesh.myPart = this;//need a ref back to this part
+        var rotation = this.parentCell.getEulerRotation();
+        mesh.rotation.set(rotation.x, rotation.y, rotation.z);
         return mesh;
     };
 
