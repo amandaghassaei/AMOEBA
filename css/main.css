@@ -113,8 +113,8 @@ nav .btn {
 
 .nav-tabs li a{
     border-left-width: 1px;
-    border-right-width; 1px;
-    border-color: #DDD;
+    border-right-width: 1px;
+    /*border-color: #DDD;*/
     border-bottom: 2px solid #DDD!important;
     color:#bebebe;
     margin-left: -2px;

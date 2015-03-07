@@ -89,20 +89,20 @@ Lattice = Backbone.Model.extend({
 
     _addInverseCellsForIndex: function(index){
 
-            var inverseIndicesToAdd = this._inverseIndicesToAdd(_.clone(index));
+        var inverseIndicesToAdd = this._inverseIndicesToAdd(_.clone(index));
 
-            var invCells = this.get("inverseCells");
-            var scale = this.get("scale");
-            var self = this;
-            _.each(inverseIndicesToAdd, function(invIndex){
-                self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-                var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-                if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-                    invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-                    self.set("numInvCells", self.get("numInvCells")+1);
-                }
-            });
-        },
+        var invCells = this.get("inverseCells");
+        var scale = this.get("scale");
+        var self = this;
+        _.each(inverseIndicesToAdd, function(invIndex){
+            self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
+            var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
+            if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
+                invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
+                self.set("numInvCells", self.get("numInvCells")+1);
+            }
+        });
+    },
 
     _indexForPosition: function(absPosition){
         var position = {};
@@ -416,7 +416,11 @@ Lattice = Backbone.Model.extend({
                     //todo make this better
                     newCell.parts = newCell._initParts();
                     for (var i=0;i<newCell.parts.length;i++){
-                        if (!parts[i]) newCell.parts[i].destroy();
+                        if (!parts[i]) {
+                            newCell.parts[i].destroy();
+                            newCell.parts[i] = null;
+                        }
+
                     }
                 }
                 cells[x][y][z] = newCell;
