@@ -147,7 +147,7 @@ Lattice = Backbone.Model.extend({
     //todo send clear all to three anddestroy without sceneRemove to cell
     clearCells: function(){
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.destroy();
+            if (cell && cell.destroy) cell.destroy();
         });
         this.set("cells", [[[null]]]);
         this._clearInverseCells();

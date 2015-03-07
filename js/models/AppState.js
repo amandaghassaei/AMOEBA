@@ -111,8 +111,7 @@ AppState = Backbone.Model.extend({
             this.downKeys[e.keyCode] = true;
         } else this.downKeys[e.keyCode] = false;
 
-
-        console.log(e.keyCode);
+//        console.log(e.keyCode);
         switch(e.keyCode){
             case 16://shift
                 e.preventDefault();
@@ -136,11 +135,16 @@ AppState = Backbone.Model.extend({
                 this.lattice.set("inverseMode", !this.lattice.get("inverseMode"));
                 break;
             case 83://s save
-//                e.preventDefault();
-//                if (e.ctrlKey || e.metaKey){//command
-//                    console.log("here");
-//                    dmaGlobals.lattice.saveAsJSON();
-//                }
+                e.preventDefault();
+                if (e.ctrlKey || e.metaKey){//command
+                    dmaGlobals.lattice.saveAsJSON();
+                }
+                break;
+            case 79://o open
+                e.preventDefault();
+                if (e.ctrlKey || e.metaKey){//command
+                    $("#jsonInput").click();
+                }
                 break;
             default:
                 break;
