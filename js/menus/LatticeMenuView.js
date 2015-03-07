@@ -142,10 +142,13 @@ LatticeMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/>\
+        <% if (connectionType != "freeformFace") { %>\
         <label class="checkbox">\
             <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Preserve cells on lattice change\
-        </label><br/><br/>\
+        </label>\
+        <% } %>\
+        <br/><br/>\
         <label class="checkbox">\
             <input type="checkbox"  <% if (inverseMode) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show Inverse Geometry (hold "i" key)\
