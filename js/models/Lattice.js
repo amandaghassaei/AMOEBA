@@ -370,10 +370,9 @@ Lattice = Backbone.Model.extend({
 
     _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
         if (typeof loadingFromFile == "undefined") loadingFromFile = false;
-//        console.log(this.previous("connectionType"));
         var cellType = this.get("cellType");
         var connectionType = this.get("connectionType");
-        if (!loadingFromFile && (!this.get("shouldPreserveCells") || this.previous("connectionType") == "freeformFace")) this.clearCells();
+        if (!loadingFromFile && !this.get("shouldPreserveCells")) this.clearCells();
         if (this._undo) this._undo();
         if (this.get("basePlane")) this.get("basePlane").destroy();
         if (this.get("highlighter")) this.get("highlighter").destroy();
@@ -693,6 +692,7 @@ Lattice = Backbone.Model.extend({
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
+            this.clearCells();
             _.each(_.keys(this.OctaFreeFormFaceLattice), function(key){
                 self[key] = null;
             });
