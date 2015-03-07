@@ -234,8 +234,11 @@ DMACell.prototype.toJSON = function(){
     DMAFreeFormOctaCell.prototype.toJSON = function(){
         var json = DMACell.prototype.toJSON.call(this);
         _.extend(json, {
-            position: this.getPosition(),
-            orientation: this.getOrientation()
+            parentPosition: this.parentPos,
+            parentOrientation: this.parentQuaternion,
+            direction: this.parentDirection
+//            position: this.getPosition(),
+//            orientation: this.getOrientation()
         });
         return json;
     }

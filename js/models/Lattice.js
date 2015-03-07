@@ -403,11 +403,16 @@ Lattice = Backbone.Model.extend({
             this._clearInverseCells();
             this._loopCells(cells, function(cell, x, y, z){
                 if (!cell) return;
+
                 var index = _.clone(cell.indices);
                 var parts = _.clone(cell.parts);
-//                if (cell.orientation) orientation
+                if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
+                if (cell.parentPosition) var parentPos = cell.parentPosition;
+                if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
+
                 if (cell.destroy) cell.destroy();
-                var newCell = self._makeCellForLatticeType(index, scale);
+                var newCell = self._makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction);
+
                 if (parts) {
                     //todo make this better
                     newCell.parts = newCell._initParts();
@@ -416,7 +421,6 @@ Lattice = Backbone.Model.extend({
                     }
                 }
                 cells[x][y][z] = newCell;
-
             });
             dmaGlobals.three.render();
         }
@@ -643,9 +647,13 @@ Lattice = Backbone.Model.extend({
         addFreeFormCell: function(parentCellPos, parentCellOrient, direction){
             var scale = this.get("scale");
             var cells = this.get("cells");
-            cells[0][0].push(new DMAFreeFormOctaCell({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction));
+            cells[0][0].push(this._makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction));
             this.set("numCells", this.get("numCells")+1);
             dmaGlobals.three.render();
+        },
+
+        _makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction){
+            return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction);
         },
 
         getIndexForPosition: function(absPosition){//only used by baseplane
