@@ -185,22 +185,18 @@ DMACell.prototype.destroy = function(){
 
     DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
-        var quaternion = new THREE.Quaternion();
         var direction = this.parentDirection.clone();
         var zAxis = new THREE.Vector3(0,0,1);
-        quaternion.setFromUnitVectors(zAxis, direction);
+        zAxis.applyQuaternion(this.parentQuaternion);
+        var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
+        quaternion.multiply(this.parentQuaternion);
 
+        if (direction.sub(zAxis).length() < 0.1){
+            var zRot = new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI);
+            zRot.multiply(quaternion);
+            quaternion = zRot;
+        }
 
-//        direction.sub(zAxis);
-//        if (direction.length() < 0.1){
-//            console.log("here");
-//        zAxis.applyQuaternion(this.parentQuaternion);
-//            var zRot = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
-//            quaternion = new THREE.Quaternion().multiplyQuaternions(quaternion, zRot);
-//        }
-
-
-//        mesh.rotation.order = 'YZX';
         var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
         mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
     };
