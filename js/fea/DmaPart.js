@@ -129,15 +129,12 @@
         var mesh;
         switch(type){
             case 0:
-//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo4, partMaterial.clone());
                 mesh = new THREE.Mesh(unitPartGeo1, partMaterial.clone());
                 break;
             case 1:
-//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo5, partMaterial.clone());
                 mesh = new THREE.Mesh(unitPartGeo2, partMaterial.clone());
                 break;
             case 2:
-//                if (this.oddZFlag) mesh = new THREE.Mesh(unitPartGeo6, partMaterial.clone());
                  mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
                 break;
         }
