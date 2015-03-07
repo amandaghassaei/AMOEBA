@@ -8,12 +8,13 @@
 
 NavBar = Backbone.View.extend({
 
-    el: "#globalNav",
+    el: "body",
 
     events: {
         "click #showHideMenu":                          "_setMenuVis",
         "click .menuHoverControls":                     "_setNavSelection",
-        "click #saveAsJSON":                                "_saveAs",
+        "click #saveJSON":                              "_save",
+        "click #saveAsJSON":                            "_saveAs",
         "click #importJSON":                            "_importJSON",
         "change #jsonInput":                            "_selectJSONFiles",
     },
@@ -90,9 +91,15 @@ NavBar = Backbone.View.extend({
         })();
     },
 
-    _saveAs: function(e){
+    _save: function(e){
         e.preventDefault();
         dmaGlobals.lattice.saveAsJSON();
+    },
+
+    _saveAs: function(e){
+        e.preventDefault();
+        var fileName = $("#saveAsFileName").val();
+        dmaGlobals.lattice.saveAsJSON(fileName);
     },
 
     _uiStuff: function(){

@@ -114,11 +114,9 @@ AppState = Backbone.Model.extend({
 //        console.log(e.keyCode);
         switch(e.keyCode){
             case 16://shift
-                e.preventDefault();
                 this.set("shift", state);
                 break;
             case 68://d delete mode
-                e.preventDefault();
                 if (this.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);
                 break;
@@ -135,14 +133,14 @@ AppState = Backbone.Model.extend({
                 this.lattice.set("inverseMode", !this.lattice.get("inverseMode"));
                 break;
             case 83://s save
-                e.preventDefault();
                 if (e.ctrlKey || e.metaKey){//command
+                    e.preventDefault();
                     dmaGlobals.lattice.saveAsJSON();
                 }
                 break;
             case 79://o open
-                e.preventDefault();
                 if (e.ctrlKey || e.metaKey){//command
+                    e.preventDefault();
                     $("#jsonInput").click();
                 }
                 break;
