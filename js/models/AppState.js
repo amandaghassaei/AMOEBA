@@ -104,12 +104,15 @@ AppState = Backbone.Model.extend({
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
-        if (state) {
+        if (e.ctrlKey || e.metaKey){
+
+        }else if (state) {
             if (this.downKeys[e.keyCode]) return;
             this.downKeys[e.keyCode] = true;
-        } else this.downKeys[e.keyCode] = null;
+        } else this.downKeys[e.keyCode] = false;
 
-//        console.log(e.keyCode);
+
+        console.log(e.keyCode);
         switch(e.keyCode){
             case 16://shift
                 e.preventDefault();
@@ -131,6 +134,13 @@ AppState = Backbone.Model.extend({
                 break;
             case 73://i inverse mode
                 this.lattice.set("inverseMode", !this.lattice.get("inverseMode"));
+                break;
+            case 83://s save
+//                e.preventDefault();
+//                if (e.ctrlKey || e.metaKey){//command
+//                    console.log("here");
+//                    dmaGlobals.lattice.saveAsJSON();
+//                }
                 break;
             default:
                 break;

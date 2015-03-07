@@ -13,7 +13,7 @@ NavBar = Backbone.View.extend({
     events: {
         "click #showHideMenu":                          "_setMenuVis",
         "click .menuHoverControls":                     "_setNavSelection",
-        "click #saveAs":                                "_saveAs",
+        "click #saveAsJSON":                                "_saveAs",
         "click #importJSON":                            "_importJSON",
         "change #jsonInput":                            "_selectJSONFiles",
     },
