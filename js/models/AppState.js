@@ -108,7 +108,6 @@ AppState = Backbone.Model.extend({
         var currentTab = this.get("currentTab");
 
         if (e.ctrlKey || e.metaKey){
-
         }else if (state) {
             if (this.downKeys[e.keyCode]) return;
             this.downKeys[e.keyCode] = true;
@@ -142,7 +141,7 @@ AppState = Backbone.Model.extend({
                     if (e.shiftKey){
                         $("#saveAsModel").modal("show");
                     } else {
-                        dmaGlobals.lattice.saveAsJSON();
+                        dmaGlobals.lattice.saveJSON();
                     }
                 }
                 break;

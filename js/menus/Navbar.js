@@ -96,13 +96,13 @@ NavBar = Backbone.View.extend({
 
     _save: function(e){
         e.preventDefault();
-        dmaGlobals.lattice.saveAsJSON();
+        dmaGlobals.lattice.saveJSON();
     },
 
     _saveAs: function(e){
         e.preventDefault();
         var fileName = $("#saveAsFileName").val();
-        dmaGlobals.lattice.saveAsJSON(fileName);
+        dmaGlobals.lattice.saveJSON(fileName);
         $('#saveAsModel').modal('hide');
     },
 

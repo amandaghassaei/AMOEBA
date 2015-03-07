@@ -454,7 +454,7 @@ Lattice = Backbone.Model.extend({
         }
     },
 
-    saveAsJSON: function(name){
+    saveJSON: function(name){
         if (!name) name = "lattice";
         var data = JSON.stringify(_.omit(this.toJSON(), ["highlighter", "basePlane"]));
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
