@@ -15,7 +15,9 @@ LatticeMenuView = Backbone.View.extend({
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider",
         "change #preserveCells":                        "_changePreserveCells",
-        "change #showInverse":                          "_showInverseCells"
+        "change #showInverse":                          "_showInverseCells",
+        "click #freeformTetraCell":                     "_setTetraCell",
+        "click #freeformOctaCell":                      "_setOctaCell"
     },
 
 
@@ -112,6 +114,16 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("inverseMode", $(e.target).prop("checked"));
     },
 
+    _setTetraCell: function(e){
+        e.preventDefault();
+        this.lattice.set("freeformCellType", "tetra");
+    },
+
+    _setOctaCell: function(e){
+        e.preventDefault();
+        this.lattice.set("freeformCellType", "octa");
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "lattice") return;
         this.$el.html(this.template(_.extend(this.model.attributes, this.lattice.attributes)));
@@ -142,7 +154,10 @@ LatticeMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/>\
-        <% if (connectionType != "freeformFace") { %>\
+        <% if (connectionType == "freeformFace") { %>\
+        <a id="freeformOctaCell" href="#">draw with octa</a><br/>\
+        <a id="freeformTetraCell" href="#">draw with tetra</a>\
+        <% } else { %>\
         <label class="checkbox">\
             <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Preserve cells on lattice change\

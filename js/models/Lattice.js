@@ -579,7 +579,7 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraFaceCell(indices, scale);
+            return new DMATetraFaceCell(indices, scale, true);
         },
 
         _inverseIndicesToAdd: function(index){
@@ -646,6 +646,8 @@ Lattice = Backbone.Model.extend({
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFreeFormHighlighter({scale:this.get("scale")}));
 
+            this.set("freeformCellType", "octa");
+
         },
 
         addFreeFormCell: function(parentCellPos, parentCellOrient, direction){
@@ -657,7 +659,8 @@ Lattice = Backbone.Model.extend({
         },
 
         _makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction){
-            return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction);
+            if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction);
+            return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction);
         },
 
         getIndexForPosition: function(absPosition){//only used by baseplane
@@ -692,11 +695,13 @@ Lattice = Backbone.Model.extend({
 
         zScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return 2*scale/Math.sqrt(6);
+            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
+            return 2*scale/Math.sqrt(24);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
+            this.set("freeformCellType", null);
             this.clearCells();
             _.each(_.keys(this.OctaFreeFormFaceLattice), function(key){
                 self[key] = null;

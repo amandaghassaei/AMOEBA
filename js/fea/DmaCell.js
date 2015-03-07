@@ -218,7 +218,7 @@ DMACell.prototype.toJSON = function(){
         direction.applyQuaternion(this.cellMesh.quaternion);
 
         var position = this.getPosition();
-        var zScale = dmaGlobals.lattice.zScale();
+        var zScale = this.zScale();
         position.x += direction.x*zScale/2;
         position.y += direction.y*zScale/2;
         position.z += direction.z*zScale/2;
@@ -228,11 +228,16 @@ DMACell.prototype.toJSON = function(){
 
     DMAFreeFormOctaCell.prototype._calcPosition = function(){
         var position = {};
-        var zScale = dmaGlobals.lattice.zScale();
+        var zScale = this.zScale();
         position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
         position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
         position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
         return position;
+    };
+
+    DMAFreeFormOctaCell.prototype.zScale = function(scale){
+        if (!scale) scale = dmaGlobals.lattice.get("scale");
+        return 2*scale/Math.sqrt(6);
     };
 
     DMAFreeFormOctaCell.prototype.toJSON = function(){
@@ -263,8 +268,8 @@ DMACell.prototype.toJSON = function(){
     var unitCellGeoUpsideDown = unitCellGeo.clone();
     unitCellGeoUpsideDown.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
 
-    function DMATetraFaceCell(indices, scale){
-        DMACell.call(this, indices, scale, true);
+    function DMATetraFaceCell(indices, scale, inverse){
+        DMACell.call(this, indices, scale, inverse);
     }
     DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
@@ -284,6 +289,65 @@ DMACell.prototype.toJSON = function(){
     };
 
     self.DMATetraFaceCell = DMATetraFaceCell;
+
+
+    var unitCellGeo2 = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
+    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
+    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
+
+    function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, direction){
+        this.parentPos = parentCellPos;
+        this.parentQuaternion = parentCellQuat;
+        this.parentDirection = direction;
+        DMATetraFaceCell.call(this, indices, scale);
+    }
+    DMAFreeFormTetraCell.prototype = Object.create(DMATetraFaceCell.prototype);
+
+    DMAFreeFormTetraCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        return this._superBuildCellMesh(unitCellGeo2);
+    };
+
+    DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
+        var direction = this.parentDirection.clone();
+        var zAxis = new THREE.Vector3(0,0,1);
+        zAxis.applyQuaternion(this.parentQuaternion);
+        var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
+        quaternion.multiply(this.parentQuaternion);
+
+        var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
+        mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
+    };
+
+    DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
+
+        var direction = face.normal.clone();
+        direction.applyQuaternion(this.cellMesh.quaternion);
+
+        var position = this.getPosition();
+        var zScale = this.zScale();
+        position.x += direction.x*zScale/2;
+        position.y += direction.y*zScale/2;
+        position.z += direction.z*zScale/2;
+
+        return {index: _.clone(this.indices), direction:direction, position:position};
+    };
+
+    DMAFreeFormTetraCell.prototype._calcPosition = function(){
+        var position = {};
+        var zScale = this.zScale();
+        position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
+        position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
+        position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
+        return position;
+    };
+
+    DMAFreeFormTetraCell.prototype.zScale = function(scale){
+        if (!scale) scale = dmaGlobals.lattice.get("scale");
+        return 2*scale/Math.sqrt(24);
+    };
+
+    self.DMAFreeFormTetraCell = DMAFreeFormTetraCell;
+
 
 
     function DMATetraEdgeCell(indices, scale){
