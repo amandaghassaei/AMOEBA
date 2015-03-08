@@ -408,9 +408,11 @@ Lattice = Backbone.Model.extend({
                 if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
                 if (cell.parentPosition) var parentPos = cell.parentPosition;
                 if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
+                if (cell.parentType) var parentType = cell.parentType;
+                if (cell.type) var type = cell.type;
 
                 if (cell.destroy) cell.destroy();
-                var newCell = self._makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction);
+                var newCell = self._makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction, parentType, type);
 
                 if (parts) {
                     //todo make this better
@@ -650,17 +652,21 @@ Lattice = Backbone.Model.extend({
 
         },
 
-        addFreeFormCell: function(parentCellPos, parentCellOrient, direction){
+        addFreeFormCell: function(parentCellPos, parentCellOrient, direction, parentType, type){
             var scale = this.get("scale");
             var cells = this.get("cells");
-            cells[0][0].push(this._makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction));
+            cells[0][0].push(this._makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction, parentType, type));
             this.set("numCells", this.get("numCells")+1);
             dmaGlobals.three.render();
         },
 
-        _makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction){
-            if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction);
-            return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction);
+        _makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction, parentType, type){
+            if (type){
+                if (type == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+                return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+            }
+            if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+            return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
         },
 
         getIndexForPosition: function(absPosition){//only used by baseplane

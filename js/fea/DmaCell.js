@@ -64,6 +64,10 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.z = position.z;
 };
 
+DMACell.prototype.getType = function(){
+    return null;//only used in freeform layout
+}
+
 DMACell.prototype.getScale = function(){//need for part relay
     return dmaGlobals.lattice.get("scale");
 };
@@ -187,10 +191,11 @@ DMACell.prototype.toJSON = function(){
     self.DMAEdgeOctaCell = DMAEdgeOctaCell;
 
 
-    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction){
+    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
         this.parentPos = parentCellPos;
         this.parentQuaternion = parentCellQuat;
         this.parentDirection = direction;
+        this.parentType = parentType;
         DMAFaceOctaCell.call(this, indices, scale);
     }
     DMAFreeFormOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
@@ -203,14 +208,18 @@ DMACell.prototype.toJSON = function(){
         var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
         quaternion.multiply(this.parentQuaternion);
 
-        if (direction.sub(zAxis).length() < 0.1){
-            var zRot = new THREE.Quaternion().setFromAxisAngle(zAxis, Math.PI);
+        if ((this.parentType == "octa" && direction.sub(zAxis).length() < 0.1) || this.parentType == "tetra"){
+            var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
             zRot.multiply(quaternion);
             quaternion = zRot;
         }
 
         var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
         mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
+    };
+
+    DMAFreeFormOctaCell.prototype.getType = function(){
+        return "octa";
     };
 
     DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
@@ -245,9 +254,9 @@ DMACell.prototype.toJSON = function(){
         _.extend(json, {
             parentPosition: this.parentPos,
             parentOrientation: this.parentQuaternion,
-            direction: this.parentDirection
-//            position: this.getPosition(),
-//            orientation: this.getOrientation()
+            direction: this.parentDirection,
+            parentType: this.parentType,
+            type: "octa"
         });
         return json;
     }
@@ -295,10 +304,11 @@ DMACell.prototype.toJSON = function(){
     unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
     unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
 
-    function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, direction){
+    function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
         this.parentPos = parentCellPos;
         this.parentQuaternion = parentCellQuat;
         this.parentDirection = direction;
+        this.parentType = parentType;
         DMATetraFaceCell.call(this, indices, scale);
     }
     DMAFreeFormTetraCell.prototype = Object.create(DMATetraFaceCell.prototype);
@@ -307,12 +317,22 @@ DMACell.prototype.toJSON = function(){
         return this._superBuildCellMesh(unitCellGeo2);
     };
 
+    DMAFreeFormTetraCell.prototype.getType = function(){
+        return "tetra";
+    };
+
     DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
         var direction = this.parentDirection.clone();
         var zAxis = new THREE.Vector3(0,0,1);
         zAxis.applyQuaternion(this.parentQuaternion);
         var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
         quaternion.multiply(this.parentQuaternion);
+
+        if (this.parentType == "octa" && direction.sub(zAxis).length() > 0.1){//only do this if connecting to octa
+            var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
+            zRot.multiply(quaternion);
+            quaternion = zRot;
+        }
 
         var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
         mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
@@ -345,6 +365,18 @@ DMACell.prototype.toJSON = function(){
         if (!scale) scale = dmaGlobals.lattice.get("scale");
         return 2*scale/Math.sqrt(24);
     };
+
+    DMAFreeFormTetraCell.prototype.toJSON = function(){
+        var json = DMACell.prototype.toJSON.call(this);
+        _.extend(json, {
+            parentPosition: this.parentPos,
+            parentOrientation: this.parentQuaternion,
+            direction: this.parentDirection,
+            parentType: this.parentType,
+            type: "tetra"
+        });
+        return json;
+    }
 
     self.DMAFreeFormTetraCell = DMAFreeFormTetraCell;
 

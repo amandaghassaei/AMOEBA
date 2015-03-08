@@ -111,7 +111,7 @@ Highlighter = Backbone.View.extend({
             if (!this.isVisible() || !this.highlightedObject) return;
             if (dmaGlobals.lattice.get("connectionType") == "freeformFace"){
                 //todo make this work for baseplane
-                dmaGlobals.lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction);
+                dmaGlobals.lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction, this.highlightedObject.getType());
                 return;
             }
             dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition());

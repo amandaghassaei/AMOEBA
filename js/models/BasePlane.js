@@ -40,7 +40,11 @@ BasePlane = Backbone.Model.extend({
     },
 
     getOrientation: function(){
-        return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);;
+        return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
+    },
+
+    getType: function(){
+        return "octa";
     },
 
 //    _renderForCurrentScene: function(){
