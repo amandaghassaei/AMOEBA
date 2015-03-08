@@ -664,9 +664,11 @@ Lattice = Backbone.Model.extend({
             if (type){
                 if (type == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
                 return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+//                return new DMAFreeFormSquashedTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
             }
             if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
             return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+//            return new DMAFreeFormSquashedTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
         },
 
         getIndexForPosition: function(absPosition){//only used by baseplane
@@ -701,7 +703,7 @@ Lattice = Backbone.Model.extend({
 
         zScale: function(scale){
             if (!scale) scale = this.get("scale");
-            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
+//            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
             return 2*scale/Math.sqrt(24);
         },
 

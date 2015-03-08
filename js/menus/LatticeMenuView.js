@@ -17,7 +17,8 @@ LatticeMenuView = Backbone.View.extend({
         "change #preserveCells":                        "_changePreserveCells",
         "change #showInverse":                          "_showInverseCells",
         "click #freeformTetraCell":                     "_setTetraCell",
-        "click #freeformOctaCell":                      "_setOctaCell"
+        "click #freeformOctaCell":                      "_setOctaCell",
+        "click #freeformSquasehdTetraCell":             "_setSquashedTetraCell"
     },
 
 
@@ -119,6 +120,11 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("freeformCellType", "tetra");
     },
 
+    _setSquashedTetraCell: function(e){
+        e.preventDefault();
+        this.lattice.set("freeformCellType", "squashedTetra");
+    },
+
     _setOctaCell: function(e){
         e.preventDefault();
         this.lattice.set("freeformCellType", "octa");
@@ -161,6 +167,7 @@ LatticeMenuView = Backbone.View.extend({
                 <ul role="menu" class="dropdown-menu">\
                     <li><a id="freeformOctaCell" href="#">octa</a></li>\
                     <li><a id="freeformTetraCell" href="#">tetra</a></li>\
+                    <li><a id="freeformSquasehdTetraCell" href="#">squashedTetra</a></li>\
                 </ul>\
             </div><br/>\
         <% } else { %>\
