@@ -153,10 +153,16 @@ LatticeMenuView = Backbone.View.extend({
                         <li><a class="connectionType" data-type="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
-            </div><br/>\
+            </div><br/><br/>\
         <% if (connectionType == "freeformFace") { %>\
-        <a id="freeformOctaCell" href="#">draw with octa</a><br/>\
-        <a id="freeformTetraCell" href="#">draw with tetra</a>\
+        Current Draw Shape:&nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= freeformCellType %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <li><a id="freeformOctaCell" href="#">octa</a></li>\
+                    <li><a id="freeformTetraCell" href="#">tetra</a></li>\
+                </ul>\
+            </div><br/>\
         <% } else { %>\
         <label class="checkbox">\
             <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
