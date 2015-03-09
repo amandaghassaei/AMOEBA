@@ -393,6 +393,8 @@ Lattice = Backbone.Model.extend({
             }
         } else if (cellType == "cube"){
             _.extend(this, this.CubeLattice);
+        } else if (cellType == "kelvin"){
+            _.extend(this, this.CubeLattice);
         }
         this._initLatticeType();
 
