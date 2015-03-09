@@ -153,7 +153,7 @@ LatticeMenuView = Backbone.View.extend({
                         <li><a class="connectionType" data-type="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
-            </div><br/>\
+            </div><br/><br/>\
         <% if (connectionType == "freeformFace") { %>\
         Current Draw Shape:&nbsp;&nbsp;\
             <div class="btn-group">\
