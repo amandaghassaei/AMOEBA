@@ -5,7 +5,7 @@ function persistentWorkers(numWorkers){
     //check compatibility
     if (!(typeof window.Worker === "function")){
         console.log("workers not supported");
-        return nil;
+        return null;
     }
 
     //local variables
