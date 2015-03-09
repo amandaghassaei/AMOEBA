@@ -37,7 +37,7 @@ ImportMenuView = Backbone.View.extend({
 
     _buildWall: function(e){
         e.preventDefault();
-        this.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:2,z:18}});
+        this.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:1,z:18}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
