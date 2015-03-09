@@ -81,29 +81,14 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
-        if (newCellType == "cube") {
-            if (!newConnectionType){
-                newConnectionType = "face";
-                this.lattice.set("connectionType", newConnectionType, {silent:true});
-            }
-            this.model.set("connectionType", newConnectionType, {silent:true});
-            if (newConnectionType == "face"){
-                this.lattice.set("partType", null, {silent:true});
-            }
+        if (!newConnectionType){
+            newConnectionType = "face";
+            this.lattice.set("connectionType", newConnectionType, {silent:true});
         }
-        else if (newCellType == "octa") {
-            if (!newConnectionType){
-                newConnectionType = "face";
-                this.lattice.set("connectionType", newConnectionType, {silent:true});
-            }
-            if (newConnectionType == "face"){
-                this.lattice.set("partType", "triangle", {silent:true});
-            } else if (newConnectionType == "edge"){
-                this.lattice.set("partType", "triangle", {silent:true});
-            } else if (newConnectionType == "vertex"){
-                this.lattice.set("partType", "square", {silent:true});
-            }
-        }
+        this.model.set("connectionType", newConnectionType, {silent:true});
+
+        var partType = _.keys(dmaGlobals.appState.get("allPartTypes")[newCellType][newConnectionType])[0];
+        this.lattice.set("partType", partType, {silent:true});
     },
 
     _changePreserveCells: function(e){
