@@ -5,11 +5,12 @@ Created by aghassaei on 1/13/15.
 
 //a single beam, made from two nodes
 
-var unitGeo = new THREE.CylinderGeometry(0.1, 0.1, 1, 6);
+var unitGeo = new THREE.CylinderGeometry(0.05, 0.05, 1, 6);
 
 
-function DmaBeam(node1, node2) {
+function DmaBeam(node1, node2, parent) {
     this.nodes = [node1, node2];
+    this.parentCell = parent;
     var self = this;
     _.each(this.nodes, function(node){//give each node a reference to the new beam it is connected to
         node.addBeam(self);
@@ -30,12 +31,28 @@ DmaBeam.prototype._buildBeamMesh = function(){
     var position = this.nodes[0].getPosition();
     position.sub(this.nodes[1].getPosition());
     position.multiplyScalar(0.5);
-    mesh.position.set(position);
+    mesh.position.set(position.x, position.y, position.z);
+    var scale = this.parentCell.getScale();
+    mesh.scale.set(scale, scale, scale);
+    dmaGlobals.three.sceneAdd(mesh, "part");
     return mesh;
 };
 
-DmaBeam.prototype.render = function(scene){
-    if (!this.mesh) this.mesh = this._buildBeamMesh();
+DmaBeam.prototype.setVisibility = function(visible){
+    if (visible && !this.mesh) this.mesh = this._buildBeamMesh();
+    else if (!this.mesh) return;
+    this.mesh.visible = visible;
+};
+
+DmaBeam.prototype.destroy = function(){
+    dmaGlobals.three.sceneRemove(this.mesh, "part");
+    this.mesh = null;
+    var self = this;
+    _.each(this.nodes, function(node){
+        node.removeBeam(self);
+    });
+    this.nodes = null;
+    this.parentCell = null;
 };
 
 DmaBeam.prototype.calcStiffnessMatrix = function(){

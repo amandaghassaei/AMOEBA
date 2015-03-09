@@ -15,20 +15,24 @@ function DMACell(indices, scale, inverse) {
     if (!inverse) inverse = false;
     this.isInverse = inverse;
     this.cellMesh = this._buildCellMesh();
-    this.nodes = this._initNodes(_.clone(this.cellMesh.children[0].geometry.vertices));
+    this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
     var cellMode = dmaGlobals.lattice.get("cellMode");
     var inverseMode = dmaGlobals.lattice.get("inverseMode");
-    this.drawForMode(scale, cellMode, inverseMode);
+    var beamMode = dmaGlobals.lattice.get("partType") == "beam";
+    this.drawForMode(scale, cellMode, inverseMode, beamMode);
 }
 
-DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode){
+DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode, beamMode){
     this.updateForScale(scale, cellMode);
     this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
-    if (cellMode == "part" && !this.parts) this.parts = this._initParts();
+    if (!beamMode && cellMode == "part" && !this.parts) this.parts = this._initParts();
     _.each(this.parts, function(part){
-        if (part) part.setVisibility(cellMode == "part");
+        if (part) part.setVisibility(cellMode == "part" && !beamMode);
+    });
+    _.each(this.beams, function(beam){
+        beam.setVisibility(beamMode);
     });
 };
 
@@ -107,10 +111,12 @@ DMACell.prototype._initNodes = function(vertices){
     var position = this.getPosition();
     var orientation = this.getOrientation();
     var nodes = [];
+    var scale = this.getScale();
     for (var i=0;i<vertices.length;i++){
-        var vertex = vertices[i];
+        var vertex = vertices[i].clone();
         vertex.applyQuaternion(orientation);
         vertex.add(position);
+        vertex.multiplyScalar(scale);
         nodes.push(new DmaNode(vertex, i));
     }
     return nodes;
@@ -187,6 +193,7 @@ DMACell.prototype.toJSON = function(){
 
     DMAFaceOctaCell.prototype._initBeams = function(nodes, faces){
         var beams = [];
+        var self = this;
         var addBeamFunc = function(index1, index2){
             var duplicate = false;
             _.each(beams, function(beam){
@@ -195,7 +202,7 @@ DMACell.prototype.toJSON = function(){
             });
             if (duplicate) return;
             if (index2>index1) {
-                beams.push(new DmaBeam(nodes[index1], nodes[index2]));
+                beams.push(new DmaBeam(nodes[index1], nodes[index2], self));
             }
         };
         for (var i=0;i<nodes.length;i++){

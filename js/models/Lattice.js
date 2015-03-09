@@ -41,7 +41,7 @@ Lattice = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
-        this.listenTo(this, "change:inverseMode change:cellMode", this._updateForMode);
+        this.listenTo(this, "change:inverseMode change:cellMode change:partType", this._updateForMode);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
 
     },
@@ -334,12 +334,13 @@ Lattice = Backbone.Model.extend({
     _updateForMode: function(){
         var cellMode = this.get("cellMode");
         var inverseMode = this.get("inverseMode");
+        var beamMode =  this.get("partType") == "beam";
         var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.drawForMode(scale, cellMode, inverseMode);
+            if (cell) cell.drawForMode(scale, cellMode, inverseMode, beamMode);
         });
         this._iterCells(this.get("inverseCells"), function(cell){
-            if (cell) cell.drawForMode(scale, cellMode, inverseMode);
+            if (cell) cell.drawForMode(scale, cellMode, inverseMode, beamMode);
         });
         dmaGlobals.three.render();
     },

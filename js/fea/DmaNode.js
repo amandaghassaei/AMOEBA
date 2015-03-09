@@ -18,6 +18,10 @@ DmaNode.prototype.addBeam = function(beam){
     this._beams.push(beam);
 };
 
+DmaNode.prototype.removeBeam = function(beam){
+//    this._beams.push(beam);
+};
+
 DmaNode.prototype.destroy = function(){
     this._beams = null;//be sure to remove cyclic reference
     this.position = null;
