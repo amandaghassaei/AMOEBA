@@ -7,7 +7,6 @@
 
 var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
-var cellMaterial = [new THREE.MeshNormalMaterial()];
 
 function DMACell(indices, scale, inverse) {
 
@@ -24,6 +23,7 @@ function DMACell(indices, scale, inverse) {
     this.drawForMode(scale, cellMode, inverseMode, beamMode);
 }
 
+//todo this is a mess
 DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode, beamMode){
     this.updateForScale(scale, cellMode);
     this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
@@ -47,7 +47,7 @@ DMACell.prototype._superBuildCellMesh = function(unitCellGeo, material){//called
     return mesh;
 };
 
-DMACell.prototype._doMeshTransformations = function(mesh){};//by defualt, no mesh transformations
+DMACell.prototype._doMeshTransformations = function(mesh){};//by default, no mesh transformations
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
@@ -106,7 +106,7 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
 
 DMACell.prototype_initParts = function(){
     return [];//override in subclasses
-}
+};
 
 DMACell.prototype._initNodes = function(vertices){
     var position = this.getPosition();
@@ -170,7 +170,7 @@ DMACell.prototype.removePart = function(index){
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
         var type = "cell";
-        if (this.isInverse) type = "inverseCell"
+        if (this.isInverse) type = "inverseCell";
         dmaGlobals.three.sceneRemove(this.cellMesh, type);
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
@@ -195,448 +195,47 @@ DMACell.prototype.toJSON = function(){
     };
 };
 
-
-
-
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////OCTA FACE AND EDGE CLASS///////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-(function () {
-
-    var unitCellGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
-
-    function DMAFaceOctaCell(indices, scale){
-        DMACell.call(this, indices, scale);
-    }
-    DMAFaceOctaCell.prototype = Object.create(DMACell.prototype);
-
-    DMAFaceOctaCell.prototype._initParts = function(){
-        var parts  = [];
-        for (var i=0;i<3;i++){
-            parts.push(new DMATrianglePart(i, this));
-        }
-        return parts;
-    };
-
-    DMAFaceOctaCell.prototype._buildCellMesh = function(){
-        return this._superBuildCellMesh(unitCellGeo);
-    };
-
-    DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
-        if (this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
-    };
-
-    DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = face.normal;
-        if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
-
-        var position = this.getPosition();
-        position.z += face.normal.z*dmaGlobals.lattice.zScale()/2;
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    }
-
-    self.DMAFaceOctaCell = DMAFaceOctaCell;
-
-
-    function DMAEdgeOctaCell(indices, scale){
-        DMAFaceOctaCell.call(this, indices, scale);
-    }
-    DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
-
-    DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
-
-    self.DMAEdgeOctaCell = DMAEdgeOctaCell;
-
-
-    function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-        this.parentPos = parentCellPos;
-        this.parentQuaternion = parentCellQuat;
-        this.parentDirection = direction;
-        this.parentType = parentType;
-        DMAFaceOctaCell.call(this, indices, scale);
-    }
-    DMAFreeFormOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
-
-    DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
-
-        var direction = this.parentDirection.clone();
-        var zAxis = new THREE.Vector3(0,0,1);
-        zAxis.applyQuaternion(this.parentQuaternion);
-        var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
-        quaternion.multiply(this.parentQuaternion);
-
-        if ((this.parentType == "octa" && direction.sub(zAxis).length() < 0.1) || this.parentType == "tetra"){
-            var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
-            zRot.multiply(quaternion);
-            quaternion = zRot;
-        }
-
-        var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
-        mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
-    };
-
-    DMAFreeFormOctaCell.prototype.getType = function(){
-        return "octa";
-    };
-
-    DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
-        var direction = face.normal.clone();
-        direction.applyQuaternion(this.cellMesh.quaternion);
-
-        var position = this.getPosition();
-        var zScale = this.zScale();
-        position.x += direction.x*zScale/2;
-        position.y += direction.y*zScale/2;
-        position.z += direction.z*zScale/2;
-
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    }
-
-    DMAFreeFormOctaCell.prototype._calcPosition = function(){
-        var position = {};
-        var zScale = this.zScale();
-        position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
-        position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
-        position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
-        return position;
-    };
-
-    DMAFreeFormOctaCell.prototype.zScale = function(scale){
-        if (!scale) scale = dmaGlobals.lattice.get("scale");
-        return 2*scale/Math.sqrt(6);
-    };
-
-    DMAFreeFormOctaCell.prototype.toJSON = function(){
-        var json = DMACell.prototype.toJSON.call(this);
-        _.extend(json, {
-            parentPosition: this.parentPos,
-            parentOrientation: this.parentQuaternion,
-            direction: this.parentDirection,
-            parentType: this.parentType,
-            type: "octa"
-        });
-        return json;
-    }
-
-    self.DMAFreeFormOctaCell = DMAFreeFormOctaCell;
-
-})();
-
-    /////////////////////////////////////////////////TETRA CELL////////////////////////////////////
-
-(function () {
-
-    var unitCellGeo = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
-    unitCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1/Math.sqrt(6)));
-
-    var unitCellGeoUpsideDown = unitCellGeo.clone();
-    unitCellGeoUpsideDown.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
-
-    function DMATetraFaceCell(indices, scale, inverse){
-        DMACell.call(this, indices, scale, inverse);
-    }
-    DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
-
-    DMATetraFaceCell.prototype._initParts = function(){
-        return [];
-    };
-
-    DMATetraFaceCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var zIndex = this.indices.z;
-        if (zIndex%2 ==0) return this._superBuildCellMesh(unitCellGeo);
-        return this._superBuildCellMesh(unitCellGeoUpsideDown);
-    };
-
-    DMATetraFaceCell.prototype._doMeshTransformations = function(mesh){
-        var zIndex = this.indices.z;
-        if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
-    };
-
-    self.DMATetraFaceCell = DMATetraFaceCell;
-
-
-    var unitCellGeo2 = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
-    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
-    unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
-
-    function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-        this.parentPos = parentCellPos;
-        this.parentQuaternion = parentCellQuat;
-        this.parentDirection = direction;
-        this.parentType = parentType;
-        DMATetraFaceCell.call(this, indices, scale);
-    }
-    DMAFreeFormTetraCell.prototype = Object.create(DMATetraFaceCell.prototype);
-
-    DMAFreeFormTetraCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        return this._superBuildCellMesh(unitCellGeo2);
-    };
-
-    DMAFreeFormTetraCell.prototype.getType = function(){
-        return "tetra";
-    };
-
-    DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
-        var direction = this.parentDirection.clone();
-        var zAxis = new THREE.Vector3(0,0,1);
-        zAxis.applyQuaternion(this.parentQuaternion);
-        var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
-        quaternion.multiply(this.parentQuaternion);
-
-        if (this.parentType == "octa" && direction.sub(zAxis).length() > 0.1){//only do this if connecting to octa
-            var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
-            zRot.multiply(quaternion);
-            quaternion = zRot;
-        }
-
-        var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
-        mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
-    };
-
-    DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = face.normal.clone();
-        direction.applyQuaternion(this.cellMesh.quaternion);
-
-        var position = this.getPosition();
-        var zScale = this.zScale();
-        position.x += direction.x*zScale/2;
-        position.y += direction.y*zScale/2;
-        position.z += direction.z*zScale/2;
-
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    };
-
-    DMAFreeFormTetraCell.prototype._calcPosition = function(){
-        var position = {};
-        var zScale = this.zScale();
-        position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
-        position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
-        position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
-        return position;
-    };
-
-    DMAFreeFormTetraCell.prototype.zScale = function(scale){
-        if (!scale) scale = dmaGlobals.lattice.get("scale");
-        return 2*scale/Math.sqrt(24);
-    };
-
-    DMAFreeFormTetraCell.prototype.toJSON = function(){
-        var json = DMACell.prototype.toJSON.call(this);
-        _.extend(json, {
-            parentPosition: this.parentPos,
-            parentOrientation: this.parentQuaternion,
-            direction: this.parentDirection,
-            parentType: this.parentType,
-            type: "tetra"
-        });
-        return json;
-    }
-
-    self.DMAFreeFormTetraCell = DMAFreeFormTetraCell;
-
-
-    function DMATetraEdgeCell(indices, scale){
-        DMATetraFaceCell.call(this, indices, scale, true);
-    }
-    DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
-
-    DMATetraEdgeCell.prototype._doMeshTransformations = function(){};
-
-    DMATetraEdgeCell.prototype.calcHighlighterPosition = function(face){
-
-        //todo finish this
-        var direction = face.normal;
-        if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
-        var index = _.clone(this.indices);
-        index.z = Math.floor(index.z/2);
-        index.x = Math.floor(index.x/3);
-        index.y = Math.floor(index.y/2);
-        var position = dmaGlobals.lattice.getInvCellPositionForIndex(index);
-        position.z += dmaGlobals.lattice.zScale();
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    };
-
-    self.DMATetraEdgeCell = DMATetraEdgeCell;
-
-})();
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////OCTA VERTEX CLASS//////////////////////////////////////////////////////
+////////////////////////FREEFORM SUPERCLASS////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-(function () {
+function DMAFreeFormCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){//no rigid lattice structure for cells
+    this.parentPos = parentCellPos;
+    this.parentQuaternion = parentCellQuat;
+    this.parentDirection = direction;
+    this.parentType = parentType;
+    DMACell.call(this, indices, scale);
+}
+DMAFreeFormCell.prototype = Object.create(DMACell.prototype);
 
-    var unitCellGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+DMAFreeFormCell.prototype._calcPosition = function(){
+    var position = {};
+    var zScale = this.zScale();
+    position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
+    position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
+    position.z = this.parentPos.z+this.parentDirection.z*zScale/2;
+    return position;
+};
 
-    function DMAVertexOctaCell(indices, scale){
-        DMACell.call(this, indices, scale);
-    }
-    DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
-
-    DMAVertexOctaCell.prototype._initParts = function(){
-        return [];
-    };
-
-    DMAVertexOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        return this._superBuildCellMesh(unitCellGeo);
-    };
-
-    DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
-
-        var position = this.getPosition();
-        var direction = null;
-
-        var xScale = dmaGlobals.lattice.xScale();
-        if (point.x < position.x+xScale/4 && point.x > position.x-xScale/4){
-            if (point.y > position.y-xScale/4 && point.y < position.y+xScale/4){
-                if (face.normal.z > 0) {
-                    direction = new THREE.Vector3(0,0,1);
-                    position.z += dmaGlobals.lattice.zScale()/2;
-                }
-                else {
-                    direction = new THREE.Vector3(0,0,-1);
-                    position.z -= dmaGlobals.lattice.zScale()/2;
-                }
-            } else {
-                if (point.y < position.y-xScale/4){
-                    direction = new THREE.Vector3(0,-1,0);
-                    position.y -= xScale/2;
-                } else {
-                    direction = new THREE.Vector3(0,1,0);
-                    position.y += xScale/2;
-                }
-            }
-        } else {
-            if (point.x < position.x-xScale/4){
-                direction = new THREE.Vector3(-1,0,0);
-                position.x -= xScale/2;
-            } else {
-                direction = new THREE.Vector3(1,0,0);
-                position.x += xScale/2;
-            }
-        }
-
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    };
-
-    self.DMAVertexOctaCell = DMAVertexOctaCell;
-
-})();
-
-    /////////////////////////////////////////TRUNCATED CUBE////////////////////////////////////
-
-(function(){
-
-    var truncCubeRad = Math.sqrt(2)/2;
-    var unitCellGeo = new THREE.Geometry();
-    unitCellGeo.vertices = [
-        new THREE.Vector3(truncCubeRad, 0, truncCubeRad),
-        new THREE.Vector3(0, truncCubeRad, truncCubeRad),
-        new THREE.Vector3(-truncCubeRad, 0, truncCubeRad),
-        new THREE.Vector3(0, -truncCubeRad, truncCubeRad),
-
-        new THREE.Vector3(truncCubeRad, truncCubeRad, 0),
-        new THREE.Vector3(-truncCubeRad, truncCubeRad, 0),
-        new THREE.Vector3(-truncCubeRad, -truncCubeRad, 0),
-        new THREE.Vector3(truncCubeRad, -truncCubeRad, 0),
-
-        new THREE.Vector3(truncCubeRad, 0, -truncCubeRad),
-        new THREE.Vector3(0, truncCubeRad, -truncCubeRad),
-        new THREE.Vector3(-truncCubeRad, 0, -truncCubeRad),
-        new THREE.Vector3(0, -truncCubeRad, -truncCubeRad)
-    ];
-    unitCellGeo.faces = [
-        new THREE.Face3(1,0,4),
-        new THREE.Face3(2,1,5),
-        new THREE.Face3(3,2,6),
-        new THREE.Face3(0,3,7),
-
-        new THREE.Face3(8,9,4),
-        new THREE.Face3(9,10,5),
-        new THREE.Face3(10,11,6),
-        new THREE.Face3(11,8,7),
-
-        new THREE.Face3(0,1,3),
-        new THREE.Face3(2,3,1),
-        new THREE.Face3(8,11,9),
-        new THREE.Face3(11,10,9),
-        new THREE.Face3(0,8,4),
-        new THREE.Face3(0,7,8),
-        new THREE.Face3(1,9,5),
-        new THREE.Face3(1,4,9),
-        new THREE.Face3(2,10,6),
-        new THREE.Face3(2,5,10),
-        new THREE.Face3(3,11,7),
-        new THREE.Face3(3,6,11)
-    ];
-    unitCellGeo.computeFaceNormals();
-
-    function DMATruncCubeCell(indices, scale){
-        DMACell.call(this, indices, scale, true);
-    }
-    DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
-
-    DMATruncCubeCell.prototype._initParts = function(){
-        return [];
-    };
-
-    DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = this._superBuildCellMesh(unitCellGeo, cellMaterial);
-        mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
-        return mesh;
-    };
-
-    self.DMATruncCubeCell = DMATruncCubeCell;
-
-})();
+DMAFreeFormCell.prototype.toJSON = function(){
+    var json = DMACell.prototype.toJSON.call(this);
+    _.extend(json, {
+        parentPosition: this.parentPos,
+        parentOrientation: this.parentQuaternion,
+        direction: this.parentDirection,
+        parentType: this.parentType,
+        type: this.getType()
+    });
+    return json;
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////CUBE CELL CLASS////////////////////////////////////////////////////////
+////////////////////////INVERSE SUPERCLASS/////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-
-(function () {
-
-    var unitCellGeo = new THREE.BoxGeometry(1,1,1);
-
-    function DMACubeCell(indices, scale){
-        DMACell.call(this, indices, scale);
-    }
-    DMACubeCell.prototype = Object.create(DMACell.prototype);
-
-    DMACubeCell.prototype._initParts = function(){
-        return [];
-    };
-
-    DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = this._superBuildCellMesh(unitCellGeo, cellMaterial);
-        var wireframe = new THREE.BoxHelper(mesh.children[0]);
-        wireframe.material.color.set(0x000000);
-        mesh.children.push(wireframe);
-        return mesh;
-    };
-
-    DMACubeCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = face.normal;
-        var position = this.getPosition();
-        var scale = dmaGlobals.lattice.xScale();
-        _.each(_.keys(position), function(key){
-            position[key] += direction[key]*scale/2;
-        });
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    }
-
-    self.DMACubeCell = DMACubeCell;
-
-})();
+function DMAInverseCell(indices, scale){//no rigid lattice structure for cells
+    DMACell.call(this, indices, scale, true);
+}
+DMAInverseCell.prototype = Object.create(DMACell.prototype);

@@ -26,7 +26,7 @@ AppState = Backbone.Model.extend({
         },
         allPartTypes:{
             octa:{
-                face: {triangle:"Triangle", beam:"Beam"},
+                face: {triangle:"Triangle", beam:"Beam", truss:"Truss"},
                 freeformFace: {triangle:"Triangle", beam:"Beam"},
                 edge: {beam:"Beam", triangle:"Triangle"},
                 edgeRot: {beam:"Beam"},
