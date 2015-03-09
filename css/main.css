@@ -84,7 +84,7 @@ nav .btn {
     position: absolute;
     display: block;
     background-color: rgba(255,255,255,0.8);
-    right: 0px;
+    right: -400px;/*initially hidden*/
     overflow:hidden;
 }
 

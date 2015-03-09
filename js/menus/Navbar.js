@@ -30,6 +30,7 @@ NavBar = Backbone.View.extend({
         this.listenTo(this.model, "change:currentNav", this._updateNavSelectionUI);
 
         this._uiStuff();
+        this._updateShowHideButton();
         this._updateNavSelectionUI();
     },
 
