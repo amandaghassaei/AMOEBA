@@ -32,7 +32,7 @@ MenuWrapper = Backbone.View.extend({
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
         this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
-        this.assemMenuTabs = {assembler:"Assembler", animate:"Animate"};
+        this.assemMenuTabs = {assembler:"Assembler", animate:"Animate", cam: "CAM"};
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -82,7 +82,7 @@ MenuWrapper = Backbone.View.extend({
             this.animationMenu.render();
         } else {
             console.warn("no tab initialized!");
-            $("#menuContent").html('Something goes here eventually.');//clear out content from menu
+            $("#menuContent").html('Coming Soon.');//clear out content from menu
         }
 
     },

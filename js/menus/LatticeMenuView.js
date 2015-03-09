@@ -153,7 +153,7 @@ LatticeMenuView = Backbone.View.extend({
                         <li><a class="connectionType" data-type="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
-            </div><br/><br/>\
+            </div><br/>\
         <% if (connectionType == "freeformFace") { %>\
         Current Draw Shape:&nbsp;&nbsp;\
             <div class="btn-group">\
@@ -162,18 +162,18 @@ LatticeMenuView = Backbone.View.extend({
                     <li><a id="freeformOctaCell" href="#">octa</a></li>\
                     <li><a id="freeformTetraCell" href="#">tetra</a></li>\
                 </ul>\
-            </div><br/>\
+            </div>\
         <% } else { %>\
         <label class="checkbox">\
             <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Preserve cells on lattice change\
         </label>\
         <% } %>\
-        <br/><br/>\
+        <br/>\
         <label class="checkbox">\
             <input type="checkbox"  <% if (inverseMode) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Show Inverse Geometry (hold "i" key)\
-        </label><br/><br/>\
+        </label><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
