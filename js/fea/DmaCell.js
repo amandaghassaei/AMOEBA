@@ -32,7 +32,7 @@ DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode, beamMode)
         if (part) part.setVisibility(cellMode == "part" && !beamMode);
     });
     _.each(this.beams, function(beam){
-        beam.setVisibility(beamMode);
+        beam.setVisibility(beamMode && cellMode == "part");
     });
 };
 

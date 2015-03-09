@@ -31,6 +31,7 @@ DmaBeam.prototype._buildBeamMesh = function(){
     var position = this.nodes[0].getPosition();
     position.sub(this.nodes[1].getPosition());
     position.multiplyScalar(0.5);
+    position.add(this.parentCell.getPosition());
     mesh.position.set(position.x, position.y, position.z);
     var scale = this.parentCell.getScale();
     mesh.scale.set(scale, scale, scale);
