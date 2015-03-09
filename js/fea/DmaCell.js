@@ -15,6 +15,8 @@ function DMACell(indices, scale, inverse) {
     if (!inverse) inverse = false;
     this.isInverse = inverse;
     this.cellMesh = this._buildCellMesh();
+    this.nodes = this._initNodes(_.clone(this.cellMesh.children[0].geometry.vertices));
+    this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
     var cellMode = dmaGlobals.lattice.get("cellMode");
     var inverseMode = dmaGlobals.lattice.get("inverseMode");
@@ -97,6 +99,27 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
 /////////////////////////////////META//////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+DMACell.prototype_initParts = function(){
+    return [];//override in subclasses
+}
+
+DMACell.prototype._initNodes = function(vertices){
+    var position = this.getPosition();
+    var orientation = this.getOrientation();
+    var nodes = [];
+    for (var i=0;i<vertices.length;i++){
+        var vertex = vertices[i];
+        vertex.applyQuaternion(orientation);
+        vertex.add(position);
+        nodes.push(new DmaNode(vertex, i));
+    }
+    return nodes;
+};
+
+DMACell.prototype._initBeams = function(){
+    return [];
+};
+
 DMACell.prototype.removePart = function(index){
     this.parts[index].destroy();
     this.parts[index] = null;
@@ -123,6 +146,8 @@ DMACell.prototype.destroy = function(){
     });
     this.indices = null;
     this.parts = null;
+    this.nodes = null;
+    this.beams = null;
 };
 
 DMACell.prototype.toJSON = function(){
@@ -158,6 +183,36 @@ DMACell.prototype.toJSON = function(){
             parts.push(new DMATrianglePart(i, this));
         }
         return parts;
+    };
+
+    DMAFaceOctaCell.prototype._initBeams = function(nodes, faces){
+        var beams = [];
+        var addBeamFunc = function(index1, index2){
+            var duplicate = false;
+            _.each(beams, function(beam){
+                var index = beam.getIndex();
+                if (index[0] == index1 && index[1] == index2) duplicate = true;
+            });
+            if (duplicate) return;
+            if (index2>index1) {
+                beams.push(new DmaBeam(nodes[index1], nodes[index2]));
+            }
+        };
+        for (var i=0;i<nodes.length;i++){
+            _.each(faces, function(face){
+                if (face.a == i) {
+                    addBeamFunc(i, face.b);
+                    addBeamFunc(i, face.c);
+                } else if (face.b == i){
+                    addBeamFunc(i, face.a);
+                    addBeamFunc(i, face.c);
+                } else if (face.c == i){
+                    addBeamFunc(i, face.a);
+                    addBeamFunc(i, face.b);
+                }
+            })
+        }
+        return beams;
     };
 
     DMAFaceOctaCell.prototype._buildCellMesh = function(){

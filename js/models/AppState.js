@@ -25,11 +25,11 @@ AppState = Backbone.Model.extend({
         },
         allPartTypes:{
             octa:{
-                face: {triangle:"Triangle", default:"Default"},
-                freeformFace: {triangle:"Triangle", default:"Default"},
-                edge: {triangle:"Triangle", default:"Default"},
-                edgeRot: {triangle:"Triangle", default:"Default"},
-                vertex: {square:"Square", xShape:"X", default:"Default"}
+                face: {triangle:"Triangle", beam:"DmaBeam"},
+                freeformFace: {triangle:"Triangle", beam:"DmaBeam"},
+                edge: {triangle:"Triangle", beam:"DmaBeam"},
+                edgeRot: {beam:"DmaBeam"},
+                vertex: {square:"Square", xShape:"X", beam:"DmaBeam"}
             },
             cube:{
                 face: null

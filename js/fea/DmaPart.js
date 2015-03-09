@@ -13,6 +13,8 @@
     DMAPart.prototype._draw = function(){
         if (this.mesh) console.warn("part mesh already in scene");
         this.mesh = this._makeMeshForType(this.type);
+        var rotation = this.parentCell.getEulerRotation();
+        this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
         this.updateForScale(this.parentCell.getScale(), this.parentCell.getPosition());
         dmaGlobals.three.sceneAdd(this.mesh, "part");
     };
@@ -93,7 +95,6 @@
     loader.load("data/trianglePart.stl", function(geometry){
 
         unitPartGeo1 = geometry
-        unitPartGeo1.dynamic = true;
         unitPartGeo1.computeBoundingBox();
         var unitScale = 1.2/unitPartGeo1.boundingBox.max.y;
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
@@ -106,15 +107,6 @@
 
         unitPartGeo3 = unitPartGeo1.clone();
         unitPartGeo3.applyMatrix(new THREE.Matrix4().makeRotationZ(-2*Math.PI/3));
-
-        unitPartGeo4 = unitPartGeo1.clone();
-        unitPartGeo4.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-
-        unitPartGeo5 = unitPartGeo2.clone();
-        unitPartGeo5.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-
-        unitPartGeo6 = unitPartGeo3.clone();
-        unitPartGeo6.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
     });
 
     var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
@@ -139,8 +131,6 @@
                 break;
         }
         mesh.myPart = this;//need a ref back to this part
-        var rotation = this.parentCell.getEulerRotation();
-        mesh.rotation.set(rotation.x, rotation.y, rotation.z);
         return mesh;
     };
 
