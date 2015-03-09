@@ -381,64 +381,6 @@ DMACell.prototype.toJSON = function(){
     self.DMAFreeFormTetraCell = DMAFreeFormTetraCell;
 
 
-
-//    var unitCellGeo3 = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
-//    unitCellGeo3.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
-//    unitCellGeo3.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
-//    unitCellGeo3.applyMatrix(new THREE.Matrix4().makeScale(1,1,2/3));
-//
-//    function DMAFreeFormSquashedTetraCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-//        DMAFreeFormTetraCell.call(this, indices, scale, parentCellPos, parentCellQuat, direction, parentType);
-//    }
-//    DMAFreeFormSquashedTetraCell.prototype = Object.create(DMAFreeFormTetraCell.prototype);
-//
-//    DMAFreeFormSquashedTetraCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-//        return this._superBuildCellMesh(unitCellGeo3);
-//    };
-//
-//    DMAFreeFormSquashedTetraCell.prototype._doMeshTransformations = function(mesh){
-//        var direction = this.parentDirection.clone();
-//        var zAxis = new THREE.Vector3(0,0,1);
-//        zAxis.applyQuaternion(this.parentQuaternion);
-//        var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
-//        quaternion.multiply(this.parentQuaternion);
-//
-//        if (this.parentType == "octa" && direction.sub(zAxis).length() > 0.1){//only do this if connecting to octa
-//            var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
-//            zRot.multiply(quaternion);
-//            quaternion = zRot;
-//        }
-//
-//        var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
-//        mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
-//    };
-//
-//    DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
-//
-//        var direction = face.normal.clone();
-//        direction.applyQuaternion(this.cellMesh.quaternion);
-//
-//        var position = this.getPosition();
-//        var zScale = this.zScale()*3/2;
-//        position.x += direction.x*zScale/2;
-//        position.y += direction.y*zScale/2;
-//        position.z += direction.z*zScale/2;
-//
-//        return {index: _.clone(this.indices), direction:direction, position:position};
-//    };
-//
-//    DMAFreeFormSquashedTetraCell.prototype.zScale = function(scale){
-//        if (!scale) scale = dmaGlobals.lattice.get("scale");
-//        return 2*scale/Math.sqrt(24)*2/3;
-//    };
-//
-//    DMAFreeFormSquashedTetraCell.prototype.getType = function(){
-//        return "squashedTetra";
-//    };
-//    self.DMAFreeFormSquashedTetraCell = DMAFreeFormSquashedTetraCell;
-
-
-
     function DMATetraEdgeCell(indices, scale){
         DMATetraFaceCell.call(this, indices, scale, true);
     }
