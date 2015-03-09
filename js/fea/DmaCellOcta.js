@@ -76,10 +76,6 @@ DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
     mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 };
 
-DMAFreeFormOctaCell.prototype.getType = function(){
-    return "octa";
-};
-
 DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
     var direction = face.normal.clone();
     direction.applyQuaternion(this.cellMesh.quaternion);
@@ -91,6 +87,10 @@ DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
     position.z += direction.z*zScale/2;
 
     return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
+DMAFreeFormOctaCell.prototype.getType = function(){
+    return "octa";
 };
 
 DMAFreeFormOctaCell.prototype.zScale = function(scale){

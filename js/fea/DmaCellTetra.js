@@ -43,21 +43,6 @@ DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
 
 DMATetraEdgeCell.prototype._doMeshTransformations = function(){};
 
-DMATetraEdgeCell.prototype.calcHighlighterPosition = function(face){
-
-    //todo finish this
-    var direction = face.normal;
-    if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
-    var index = _.clone(this.indices);
-    index.z = Math.floor(index.z/2);
-    index.x = Math.floor(index.x/3);
-    index.y = Math.floor(index.y/2);
-    var position = dmaGlobals.lattice.getInvCellPositionForIndex(index);
-    position.z += dmaGlobals.lattice.zScale();
-    return {index: _.clone(this.indices), direction:direction, position:position};
-};
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////FREEFORM CONNECTED/////////////////////////////////////////////////////
@@ -75,10 +60,6 @@ DMAFreeFormTetraCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
 DMAFreeFormTetraCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
     return this._superBuildCellMesh(unitCellGeo2);
-};
-
-DMAFreeFormTetraCell.prototype.getType = function(){
-    return "tetra";
 };
 
 DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
@@ -110,6 +91,10 @@ DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
     position.z += direction.z*zScale/2;
 
     return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
+DMAFreeFormTetraCell.prototype.getType = function(){
+    return "tetra";
 };
 
 DMAFreeFormTetraCell.prototype.zScale = function(scale){
