@@ -5,6 +5,8 @@ Created by aghassaei on 1/13/15.
 
 //a single beam, made from two nodes
 
+var unitGeo = new THREE.CylinderGeometry(0.1, 0.1, 1, 6);
+
 
 function DmaBeam(node1, node2) {
     this.nodes = [node1, node2];
@@ -23,11 +25,17 @@ DmaBeam.prototype.getIndex = function(){
 };
 
 DmaBeam.prototype._buildBeamMesh = function(){
+    var mesh = new THREE.Mesh(unitGeo);
 
+    var position = this.nodes[0].getPosition();
+    position.sub(this.nodes[1].getPosition());
+    position.multiplyScalar(0.5);
+    mesh.position.set(position);
+    return mesh;
 };
 
 DmaBeam.prototype.render = function(scene){
-
+    if (!this.mesh) this.mesh = this._buildBeamMesh();
 };
 
 DmaBeam.prototype.calcStiffnessMatrix = function(){

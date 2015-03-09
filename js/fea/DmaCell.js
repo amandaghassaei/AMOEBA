@@ -116,7 +116,7 @@ DMACell.prototype._initNodes = function(vertices){
     return nodes;
 };
 
-DMACell.prototype._initBeams = function(){
+DMACell.prototype._initBeams = function(nodes, faces){
     return [];
 };
 

@@ -10,6 +10,10 @@ DmaNode.prototype.getIndex = function(){
     return this.index;
 };
 
+DmaNode.prototype.getPosition = function(){
+    return this.position.clone();
+};
+
 DmaNode.prototype.addBeam = function(beam){
     this._beams.push(beam);
 };
