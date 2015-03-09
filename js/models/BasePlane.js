@@ -10,7 +10,7 @@ BasePlane = Backbone.Model.extend({
         mesh: [],
         dimX: 100,
         dimY: 100,
-        material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true, side:THREE.DoubleSide}),
+        material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true})
 //        currentScene: "default",
 //        allScenes: {default:"Default", "mars":"Mars"}
     },
@@ -225,7 +225,7 @@ SquareBasePlane = BasePlane.extend({
         planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
         planeGeometry.computeFaceNormals();
 
-        var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide}));
+        var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0}));
         mesh.myParent = this;//reference used for intersection highlighting
         return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}), THREE.LinePieces)];
     },
