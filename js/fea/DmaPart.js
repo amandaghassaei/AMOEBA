@@ -88,7 +88,7 @@
 
 (function () {
 
-    var unitPartGeo1, unitPartGeo2, unitPartGeo3, unitPartGeo4, unitPartGeo5,unitPartGeo6;
+    var unitPartGeo1, unitPartGeo2, unitPartGeo3;
 
     //import part geometry
     var loader = new THREE.STLLoader();
@@ -100,7 +100,6 @@
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeTranslation(0.25,-0.6, -0.45));
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/6));
-        unitPartGeo1.dynamic = true;
 
         unitPartGeo2 = unitPartGeo1.clone();
         unitPartGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(2*Math.PI/3));

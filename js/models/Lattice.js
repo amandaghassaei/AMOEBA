@@ -388,7 +388,6 @@ Lattice = Backbone.Model.extend({
                             newCell.parts[i].destroy();
                             newCell.parts[i] = null;
                         }
-
                     }
                 }
                 cells[x][y][z] = newCell;
