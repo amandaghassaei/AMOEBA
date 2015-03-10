@@ -89,6 +89,14 @@ DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
+DMAFreeFormOctaCell.prototype._initParts = function(){
+    var parts  = [];
+    for (var i=0;i<3;i++){
+        parts.push(new DMATrianglePart(i, this));
+    }
+    return parts;
+};
+
 DMAFreeFormOctaCell.prototype.getType = function(){
     return "octa";
 };
