@@ -125,7 +125,7 @@ OtherLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*(3+Math.sqrt(3));
+            return scale*2*Math.sqrt(2);
         },
 
         yScale: function(scale){
