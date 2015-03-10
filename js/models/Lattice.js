@@ -39,8 +39,7 @@ Lattice = Backbone.Model.extend({
 
     initialize: function(){
 
-        _.extend(this, dmaGlobals.OctaLatticeSubclasses);
-        _.extend(this, dmaGlobals.OtherLatticeSubclasses);
+        _.extend(this, OctaLatticeSubclasses, OtherLatticeSubclasses);
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
