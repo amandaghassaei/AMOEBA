@@ -2,12 +2,11 @@
  * Created by aghassaei on 1/7/15.
  */
 
+//setup persistent global variables
+if (typeof dmaGlobals === "undefined") dmaGlobals = {};
+
 
 $(function(){
-
-    //setup persistent global variables
-
-    dmaGlobals = {};
 
     //init web workers
     window.workers = persistentWorkers(8);
@@ -18,8 +17,6 @@ $(function(){
     dmaGlobals.lattice = new Lattice();
     dmaGlobals.lattice._updateLatticeType();//todo get rid of this
     dmaGlobals.appState = new AppState({lattice:dmaGlobals.lattice});
-
-
 
     //ui
     new NavBar({model:dmaGlobals.appState});

@@ -111,8 +111,18 @@ DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
 
 DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
 
-//todo highlighter pos
+DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
+    var direction = face.normal.clone();
+    direction.applyQuaternion(this.cellMesh.quaternion);
 
+    var position = this.getPosition();
+    var zScale = this.zScale();
+    position.x += direction.x*zScale/2;
+    position.y += direction.y*zScale/2;
+    position.z += direction.z*zScale/2;
+
+    return {index: _.clone(this.indices), direction:direction, position:position};
+};
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////

@@ -152,7 +152,11 @@ OctaFaceHighlighter = Highlighter.extend({
 
 });
 
-OctaEdgeHighlighter = OctaFaceHighlighter.extend({
+OctaEdgeHighlighter = Highlighter.extend({
+
+    _makeGeometry: function(){
+        return new THREE.SphereGeometry(0.2);
+    },
 
     _setPosition: function(position){
         this.mesh.position.set(position.x, position.y, position.z);
