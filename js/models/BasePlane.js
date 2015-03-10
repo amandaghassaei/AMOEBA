@@ -242,9 +242,9 @@ SquareBasePlane = BasePlane.extend({
     calcHighlighterPosition: function(face, position){
         var index = dmaGlobals.lattice.getIndexForPosition(position);
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-        var position = dmaGlobals.lattice.getPositionForIndex(index);
-        position.z += dmaGlobals.lattice.zScale()/2;
-        return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
+        var latticePosition = dmaGlobals.lattice.getPositionForIndex(index);
+        latticePosition.z += dmaGlobals.lattice.zScale()/2;
+        return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 
 });

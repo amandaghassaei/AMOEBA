@@ -66,6 +66,19 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return mesh;
     };
 
+    DMATruncCubeCell.prototype.calcHighlighterPosition = function(face){
+
+        var direction = face.normal;
+        if (!(direction.x>0.9 || direction.y>0.9 || direction.z>0.9)) return {index: _.clone(this.indices)};
+
+        var position = this.getPosition();
+        var scale = dmaGlobals.lattice.zScale();
+        _.each(_.keys(position), function(key){
+            position[key] += direction[key]*scale/2;
+        });
+        return {index: _.clone(this.indices), direction:direction, position:position};
+    }
+
     self.DMATruncCubeCell = DMATruncCubeCell;
 
 })();

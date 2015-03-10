@@ -108,45 +108,6 @@ OctaLatticeSubclasses = {
             return new DMAFaceOctaCell(indices, scale);
         },
 
-//        _inverseIndicesToAdd: function(index){
-//
-//            var oddZ = index.z%2 != 0;
-//
-//            index = _.clone(index);
-//            index.z*=2;
-//
-//            var z0 = 0;
-//            if (oddZ) z0 = 1;
-//
-//            if (this.get("connectionType") == "edge") z0 = 0;
-//            var z1 = Math.abs(z0-1);
-//
-//            var inverseIndicesToAdd;
-//            if (index.y%2 == 0){
-//
-//                inverseIndicesToAdd = [
-//                    this._add(index, {x:0,y:0,z:z0}),
-//                    this._add(index, {x:0,y:1,z:z0}),
-//                    this._add(index, {x:1,y:1,z:z0}),
-//
-//                    this._add(index, {x:0,y:0,z:z1}),
-//                    this._add(index, {x:0,y:1,z:z1}),
-//                    this._add(index, {x:1,y:0,z:z1})
-//                ];
-//            } else {
-//                inverseIndicesToAdd = [
-//                    this._add(index, {x:0,y:0,z:z0}),
-//                    this._add(index, {x:-1,y:1,z:z0}),
-//                    this._add(index, {x:0,y:1,z:z0}),
-//
-//                    this._add(index, {x:-1,y:0,z:z1}),
-//                    this._add(index, {x:0,y:1,z:z1}),
-//                    this._add(index, {x:0,y:0,z:z1})
-//                ];
-//            }
-//            return inverseIndicesToAdd;
-//        },
-
         _undo: function(){//remove all the mixins, this will help with debugging later
             this.stopListening(this, "change:columnSeparation");
             var self = this;
@@ -418,31 +379,6 @@ OctaLatticeSubclasses = {
         getPositionForIndex: function(index){
             return this._positionForIndex(index);
         },
-
-//        getInvCellPositionForIndex: function(index){
-//
-//            var position = this._positionForIndex(index);
-//
-//            var scale = this.get("scale");
-//            position.x -= this.xScale(scale)/2;
-//            position.y -= this.yScale(scale)/2;
-//            position.z -= this.zScale(scale)/2;
-//            return position;
-//        },
-
-//        _inverseIndicesToAdd: function(index){
-//            return [
-//                this._add(index, {x:0,y:0,z:0}),
-//                this._add(index, {x:0,y:1,z:0}),
-//                this._add(index, {x:1,y:0,z:0}),
-//                this._add(index, {x:1,y:1,z:0}),
-//
-//                this._add(index, {x:0,y:0,z:1}),
-//                this._add(index, {x:0,y:1,z:1}),
-//                this._add(index, {x:1,y:0,z:1}),
-//                this._add(index, {x:1,y:1,z:1})
-//            ];
-//        },
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");

@@ -35,9 +35,9 @@ DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
 
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
 
-    var direction = face.normal;
-    if (face.normal.z<0.99) direction = null;//only highlight horizontal faces
+    if (face.normal.z<0.99) return {index: _.clone(this.indices)};//only highlight horizontal faces
 
+    var direction = face.normal;
     var position = this.getPosition();
     position.z += face.normal.z*dmaGlobals.lattice.zScale()/2;
     return {index: _.clone(this.indices), direction:direction, position:position};

@@ -74,7 +74,8 @@ Highlighter = Backbone.View.extend({
             return;
         }
         this.direction = highlightedPos.direction;
-        this._setPosition(highlightedPos.position, this.direction);//position of center point
+        this._setPosition(highlightedPos.position);//position of center point
+        this._setRotation(this.direction);
 
         this.show(true);
     },
@@ -87,8 +88,11 @@ Highlighter = Backbone.View.extend({
         this.mesh.scale.set(scale, scale, scale);
     },
 
-    _setPosition: function(position, direction){
+    _setPosition: function(position){
         this.mesh.position.set(position.x, position.y, position.z);
+    },
+
+    _setRotation: function(direction){
         this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, 0);
     },
 
@@ -145,8 +149,7 @@ OctaFaceHighlighter = Highlighter.extend({
         return geometry;
     },
 
-    _setPosition: function(position){
-        this.mesh.position.set(position.x, position.y, position.z);
+    _setRotation: function(){
         this.mesh.rotation.set(0,0,(this.index.z+1)%2*Math.PI);
     }
 
@@ -158,9 +161,7 @@ OctaEdgeHighlighter = Highlighter.extend({
         return new THREE.SphereGeometry(0.2);
     },
 
-    _setPosition: function(position){
-        this.mesh.position.set(position.x, position.y, position.z);
-    }
+    _setRotation: function(){}
 
 });
 
@@ -178,9 +179,7 @@ OctaFreeFormHighlighter = Highlighter.extend({
         return new THREE.SphereGeometry(0.2);
     },
 
-    _setPosition: function(position, direction){
-        this.mesh.position.set(position.x, position.y, position.z);
-    }
+    _setRotation: function(){}
 });
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -191,6 +190,19 @@ CubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
         return new THREE.BoxGeometry(1,1,0.01);;
+    }
+
+});
+
+TruncatedCubeHighlighter = Highlighter.extend({
+
+    _makeGeometry: function(){
+        return new THREE.BoxGeometry(1,1,0.01);;
+    },
+
+    _setRotation: function(direction){
+        this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, Math.PI/4);
+//        this.mesh.rotation.set(0,0,Math.PI/4);
     }
 
 });

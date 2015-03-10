@@ -84,23 +84,6 @@ Lattice = Backbone.Model.extend({
 
     },
 
-//    _addInverseCellsForIndex: function(index){
-//
-//        var inverseIndicesToAdd = this._inverseIndicesToAdd(_.clone(index));
-//
-//        var invCells = this.get("inverseCells");
-//        var scale = this.get("scale");
-//        var self = this;
-//        _.each(inverseIndicesToAdd, function(invIndex){
-//            self._checkForMatrixExpansion(invCells, invIndex, invIndex, "inverseCellsMax", "inverseCellsMin");
-//            var indexRel = self._subtract(invIndex, self.get("inverseCellsMin"));
-//            if (!invCells[indexRel.x][indexRel.y][indexRel.z]) {
-//                invCells[indexRel.x][indexRel.y][indexRel.z] = self._makeInvCellForLatticeType(invIndex, scale);
-//                self.set("numInvCells", self.get("numInvCells")+1);
-//            }
-//        });
-//    },
-
     _indexForPosition: function(absPosition){
         var position = {};
         var scale = this.get("scale");
@@ -372,6 +355,8 @@ Lattice = Backbone.Model.extend({
             }
         } else if (cellType == "cube"){
             _.extend(this, this.CubeLattice);
+        } else if (cellType == "truncatedCube"){
+            _.extend(this, this.TruncatedCubeLattice);
         } else if (cellType == "kelvin"){
             _.extend(this, this.CubeLattice);
         }
