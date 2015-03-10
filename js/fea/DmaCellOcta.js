@@ -26,7 +26,7 @@ DMAFaceOctaCell.prototype._initParts = function(){
 };
 
 DMAFaceOctaCell.prototype._buildCellMesh = function(){
-    return this._superBuildCellMesh(unitFaceOctaGeo);
+    return DMACell.prototype._buildCellMesh.call(this, unitFaceOctaGeo);
 };
 
 DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
@@ -55,7 +55,7 @@ function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, dire
 DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
 DMAFreeFormOctaCell.prototype._buildCellMesh = function(){
-    return this._superBuildCellMesh(unitFaceOctaGeo);
+    return DMACell.prototype._buildCellMesh.call(this, unitFaceOctaGeo);
 };
 
 DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
@@ -128,7 +128,7 @@ function DMAVertexOctaCell(indices, scale){
 DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 
 DMAVertexOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-    return this._superBuildCellMesh(unitVertexOcta);
+    return DMACell.prototype._buildCellMesh.call(this, unitVertexOcta);
 };
 
 DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
