@@ -98,6 +98,55 @@ OtherLatticeSubclasses = {
             });
         }
 
+    },
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////TRUNCATED CUBE LATTICE////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+    KelvinLattice: {
+
+        _initLatticeType: function(){
+
+            //bind events
+
+            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new TruncatedCubeHighlighter({scale:this.get("scale")}));
+        },
+
+        getIndexForPosition: function(absPosition){
+            return this._indexForPosition(absPosition);
+        },
+
+        getPositionForIndex: function(index){
+            return this._positionForIndex(index);
+        },
+
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale*(3+Math.sqrt(3));
+        },
+
+        yScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        zScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMATruncOctaCell(indices, scale);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            var self = this;
+            _.each(_.keys(this.KelvinLattice), function(key){
+                self[key] = null;
+            });
+        }
+
     }
 
 };

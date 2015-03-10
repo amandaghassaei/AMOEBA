@@ -18,9 +18,10 @@ AppState = Backbone.Model.extend({
 
         menuWrapper: null,
 
-        allCellTypes: {octa:"Octahedron", cube:"Cube", truncatedCube:"Truncated Cube", kelvin:"Kelvin (coming soon)"},
+        allCellTypes: {octa:"Octahedron", tetra: "Tetrahedron (Coming Soon)", cube:"Cube", truncatedCube:"Cuboctahedron", kelvin:"Truncated Octahedron"},
         allConnectionTypes: {
             octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
+            tetra: {vertex: "Vertex"},
             cube: {face:"Face"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"}
@@ -32,6 +33,9 @@ AppState = Backbone.Model.extend({
                 edge: {beam:"Beam", triangle:"Triangle"},
                 edgeRot: {beam:"Beam"},
                 vertex: {beam:"Beam", square:"Square", xShape:"X"}
+            },
+            tetra: {
+                vertex: {beam: "Beam"}
             },
             cube:{
                 face: {beam:"Beam"}

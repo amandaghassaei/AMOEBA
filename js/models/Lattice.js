@@ -353,12 +353,14 @@ Lattice = Backbone.Model.extend({
             } else if (connectionType == "vertex"){
                 _.extend(this, this.OctaVertexLattice);
             }
+        } else if (cellType == "tetra"){
+            _.extend(this, this.CubeLattice);
         } else if (cellType == "cube"){
             _.extend(this, this.CubeLattice);
         } else if (cellType == "truncatedCube"){
             _.extend(this, this.TruncatedCubeLattice);
         } else if (cellType == "kelvin"){
-            _.extend(this, this.CubeLattice);
+            _.extend(this, this.KelvinLattice);
         }
         this._initLatticeType();
 

@@ -202,7 +202,6 @@ TruncatedCubeHighlighter = Highlighter.extend({
 
     _setRotation: function(direction){
         this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, Math.PI/4);
-//        this.mesh.rotation.set(0,0,Math.PI/4);
     }
 
 });

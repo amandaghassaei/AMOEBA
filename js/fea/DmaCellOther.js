@@ -5,6 +5,45 @@
 
 var cellMaterial = [new THREE.MeshNormalMaterial()];
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////CUBE CELL CLASS////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+(function () {
+
+    var unitCellGeo = new THREE.BoxGeometry(1,1,1);
+
+    function DMACubeCell(indices, scale){
+        DMACell.call(this, indices, scale);
+    }
+    DMACubeCell.prototype = Object.create(DMACell.prototype);
+
+    DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+        var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);
+        var wireframe = new THREE.BoxHelper(mesh.children[0]);
+        wireframe.material.color.set(0x000000);
+        mesh.children.push(wireframe);
+        return mesh;
+    };
+
+    DMACubeCell.prototype.calcHighlighterPosition = function(face){
+
+        var direction = face.normal;
+        var position = this.getPosition();
+        var scale = this.xScale();
+        _.each(_.keys(position), function(key){
+            position[key] += direction[key]*scale/2;
+        });
+        return {index: _.clone(this.indices), direction:direction, position:position};
+    }
+
+    self.DMACubeCell = DMACubeCell;
+
+})();
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////TRUNCATED CUBE CLASS///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,10 +108,10 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     DMATruncCubeCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
-        if (!(direction.x>0.9 || direction.y>0.9 || direction.z>0.9)) return {index: _.clone(this.indices)};
+        if (!(Math.abs(direction.x)>0.9 || Math.abs(direction.y)>0.9 || Math.abs(direction.z)>0.9)) return {index: _.clone(this.indices)};
 
         var position = this.getPosition();
-        var scale = dmaGlobals.lattice.zScale();
+        var scale = this.zScale();
         _.each(_.keys(position), function(key){
             position[key] += direction[key]*scale/2;
         });
@@ -83,40 +122,77 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
 })();
 
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////CUBE CELL CLASS////////////////////////////////////////////////////////
+////////////////////////TRUNCATED OCTA CLASS///////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+(function(){
 
-(function () {
+    var truncOctaRad = Math.sqrt(3)/2;
+    var pyrRad = 1/Math.sqrt(2);
+    var unitCellGeo = new THREE.Geometry();
+    unitCellGeo.vertices = [
+        new THREE.Vector3(pyrRad, 0, truncOctaRad),
+        new THREE.Vector3(0, pyrRad, truncOctaRad),
+        new THREE.Vector3(-pyrRad, 0, truncOctaRad),
+        new THREE.Vector3(0, -pyrRad, truncOctaRad),
 
-    var unitCellGeo = new THREE.BoxGeometry(1,1,1);
+        new THREE.Vector3(pyrRad, 0, -truncOctaRad),
+        new THREE.Vector3(0, pyrRad, -truncOctaRad),
+        new THREE.Vector3(-pyrRad, 0, -truncOctaRad),
+        new THREE.Vector3(0, -pyrRad, -truncOctaRad),
 
-    function DMACubeCell(indices, scale){
-        DMACell.call(this, indices, scale);
+        new THREE.Vector3(truncOctaRad, 0, pyrRad),
+        new THREE.Vector3(truncOctaRad, pyrRad, 0),
+        new THREE.Vector3(truncOctaRad, 0, -pyrRad),
+        new THREE.Vector3(truncOctaRad, -pyrRad, 0),
+
+        new THREE.Vector3(-truncOctaRad, 0, pyrRad),
+        new THREE.Vector3(-truncOctaRad, pyrRad, 0),
+        new THREE.Vector3(-truncOctaRad, 0, -pyrRad),
+        new THREE.Vector3(-truncOctaRad, -pyrRad, 0),
+
+        new THREE.Vector3(pyrRad, truncOctaRad, 0),
+        new THREE.Vector3(0, truncOctaRad, pyrRad),
+        new THREE.Vector3(-pyrRad, truncOctaRad, 0),
+        new THREE.Vector3(0, truncOctaRad, -pyrRad),
+
+        new THREE.Vector3(pyrRad, -truncOctaRad, 0),
+        new THREE.Vector3(0, -truncOctaRad, pyrRad),
+        new THREE.Vector3(-pyrRad, -truncOctaRad, 0),
+        new THREE.Vector3(0, -truncOctaRad, -pyrRad)
+    ];
+    unitCellGeo.faces = [
+        new THREE.Face3(0,1,3),
+        new THREE.Face3(2,3,1),
+        new THREE.Face3(4,7,5),
+        new THREE.Face3(7,6,5),
+
+        new THREE.Face3(8,11,9),
+        new THREE.Face3(10,9,11),
+        new THREE.Face3(12,13,15),
+        new THREE.Face3(15,13,14),
+
+        new THREE.Face3(16,19,17),
+        new THREE.Face3(18,17,19),
+        new THREE.Face3(20,21,23),
+        new THREE.Face3(23,21,22),
+
+
+    ];
+    unitCellGeo.computeFaceNormals();
+
+    function DMATruncOctaCell(indices, scale){
+        DMATruncCubeCell.call(this, indices, scale);
     }
-    DMACubeCell.prototype = Object.create(DMACell.prototype);
+    DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
-    DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+    DMATruncOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
         var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);
-        var wireframe = new THREE.BoxHelper(mesh.children[0]);
-        wireframe.material.color.set(0x000000);
-        mesh.children.push(wireframe);
+        mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
     };
 
-    DMACubeCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = face.normal;
-        var position = this.getPosition();
-        var scale = dmaGlobals.lattice.xScale();
-        _.each(_.keys(position), function(key){
-            position[key] += direction[key]*scale/2;
-        });
-        return {index: _.clone(this.indices), direction:direction, position:position};
-    }
-
-    self.DMACubeCell = DMACubeCell;
+    self.DMATruncOctaCell = DMATruncOctaCell;
 
 })();
