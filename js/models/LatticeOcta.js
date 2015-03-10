@@ -184,7 +184,7 @@ OctaLatticeSubclasses = {
             return this.xScale(scale)/2*Math.sqrt(3);
         },
 
-        zScale: function(scale){
+        zScale: function(scale){//base plane calls this, need it
             if (!scale) scale = this.get("scale");
             if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
             return 2*scale/Math.sqrt(24);
@@ -318,22 +318,35 @@ OctaLatticeSubclasses = {
 
             //bind events
 
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("basePlane", new RotEdgeOctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
-
         },
 
         getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
+            var position = {};
+            var scale = this.get("scale");
+            position.x = Math.floor(absPosition.x/this.xScale(scale)+0.5);
+            position.y = Math.floor(absPosition.y/this.yScale(scale)+0.5);
+            position.z = Math.floor(absPosition.z/this.zScale(scale)+0.5);
+            return position;
         },
 
         getPositionForIndex: function(index){
-            return this._positionForIndex(index);
+            var scale = this.get("scale");
+            var position = _.clone(index);
+            if (index.z %2 != 0){
+                position.x += 0.5;
+                position.y += 0.5;
+            }
+            position.x = (position.x)*this.xScale(scale);
+            position.y = (position.y)*this.yScale(scale);
+            position.z = (position.z+1)*this.zScale(scale);
+            return position;
         },
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*Math.sqrt(2);
+            return scale;
         },
 
         yScale: function(scale){
@@ -341,7 +354,7 @@ OctaLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale);
+            return this.xScale(scale)*Math.sqrt(2)/2;
         },
 
         _makeCellForLatticeType: function(indices, scale){
@@ -373,11 +386,21 @@ OctaLatticeSubclasses = {
         },
 
         getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
+            var position = {};
+            var scale = this.get("scale");
+            position.x = Math.floor(absPosition.x/this.xScale(scale)+0.5);
+            position.y = Math.floor(absPosition.y/this.yScale(scale)+0.5);
+            position.z = Math.floor(absPosition.z/this.zScale(scale)+0.5);
+            return position;
         },
 
         getPositionForIndex: function(index){
-            return this._positionForIndex(index);
+            var scale = this.get("scale");
+            var position = _.clone(index);
+            position.x = (position.x)*this.xScale(scale);
+            position.y = (position.y)*this.yScale(scale);
+            position.z = (position.z+0.5)*this.zScale(scale);
+            return position;
         },
 
         xScale: function(scale){

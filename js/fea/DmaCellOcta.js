@@ -39,7 +39,7 @@ DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
 
     var direction = face.normal;
     var position = this.getPosition();
-    position.z += face.normal.z*dmaGlobals.lattice.zScale()/2;
+    position.z += face.normal.z*this.zScale()/2;
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
@@ -119,12 +119,13 @@ DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
 
 DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
 
+//todo fix this
 DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
     var direction = face.normal.clone();
     direction.applyQuaternion(this.cellMesh.quaternion);
 
     var position = this.getPosition();
-    var zScale = dmaGlobals.lattice.zScale();
+    var zScale = this.zScale();
     position.x += direction.x*zScale/2;
     position.y += direction.y*zScale/2;
     position.z += direction.z*zScale/2;
@@ -145,46 +146,24 @@ function DMARotatedEdgeCell(indices, scale){
 }
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
-DMARotatedEdgeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+DMARotatedEdgeCell.prototype._buildCellMesh = function(){
     return DMACell.prototype._buildCellMesh.call(this, unitVertexOcta);
+};
+
+DMARotatedEdgeCell.prototype._doMeshTransformations = function(mesh){
+    mesh.rotation.set(0, 0, Math.PI/4);
 };
 
 DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
 
     var position = this.getPosition();
-    var direction = null;
-
-    var xScale = dmaGlobals.lattice.xScale();
-    if (point.x < position.x+xScale/4 && point.x > position.x-xScale/4){
-        if (point.y > position.y-xScale/4 && point.y < position.y+xScale/4){
-            if (face.normal.z > 0) {
-                direction = new THREE.Vector3(0,0,1);
-                position.z += dmaGlobals.lattice.zScale()/2;
-            }
-            else {
-                direction = new THREE.Vector3(0,0,-1);
-                position.z -= dmaGlobals.lattice.zScale()/2;
-            }
-        } else {
-            if (point.y < position.y-xScale/4){
-                direction = new THREE.Vector3(0,-1,0);
-                position.y -= xScale/2;
-            } else {
-                direction = new THREE.Vector3(0,1,0);
-                position.y += xScale/2;
-            }
-        }
-    } else {
-        if (point.x < position.x-xScale/4){
-            direction = new THREE.Vector3(-1,0,0);
-            position.x -= xScale/2;
-        } else {
-            direction = new THREE.Vector3(1,0,0);
-            position.x += xScale/2;
-        }
-    }
-
+    var direction = new THREE.Vector3(0,0,1);
+    position.z += this.zScale()/2;
     return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
+DMARotatedEdgeCell.prototype.zScale = function(scale){
+    return this.xScale(scale)*Math.sqrt(2);
 };
 
 
@@ -207,16 +186,16 @@ DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
     var position = this.getPosition();
     var direction = null;
 
-    var xScale = dmaGlobals.lattice.xScale();
+    var xScale = this.xScale();
     if (point.x < position.x+xScale/4 && point.x > position.x-xScale/4){
         if (point.y > position.y-xScale/4 && point.y < position.y+xScale/4){
             if (face.normal.z > 0) {
                 direction = new THREE.Vector3(0,0,1);
-                position.z += dmaGlobals.lattice.zScale()/2;
+                position.z += this.zScale()/2;
             }
             else {
                 direction = new THREE.Vector3(0,0,-1);
-                position.z -= dmaGlobals.lattice.zScale()/2;
+                position.z -= this.zScale()/2;
             }
         } else {
             if (point.y < position.y-xScale/4){

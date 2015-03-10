@@ -95,6 +95,19 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
     this.cellMesh.visible = visibility;
 };
 
+DMACell.prototype.xScale = function(scale){
+    return dmaGlobals.lattice.xScale(scale);
+};
+
+DMACell.prototype.yScale = function(scale){
+    return dmaGlobals.lattice.yScale(scale);
+};
+
+DMACell.prototype.zScale = function(scale){
+    return dmaGlobals.lattice.zScale(scale);
+};
+
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////META//////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
