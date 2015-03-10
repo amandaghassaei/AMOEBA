@@ -56,9 +56,9 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     unitCellGeo.computeFaceNormals();
 
     function DMATruncCubeCell(indices, scale){
-        DMAInverseCell.call(this, indices, scale);
+        DMACell.call(this, indices, scale);
     }
-    DMATruncCubeCell.prototype = Object.create(DMAInverseCell.prototype);
+    DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
 
     DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
         var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);

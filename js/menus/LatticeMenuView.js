@@ -15,9 +15,8 @@ LatticeMenuView = Backbone.View.extend({
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider",
         "change #preserveCells":                        "_changePreserveCells",
-        "change #showInverse":                          "_showInverseCells",
         "click #freeformTetraCell":                     "_setTetraCell",
-        "click #freeformOctaCell":                      "_setOctaCell",
+        "click #freeformOctaCell":                      "_setOctaCell"
     },
 
 
@@ -95,10 +94,6 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("shouldPreserveCells", $(e.target).prop("checked"));
     },
 
-    _showInverseCells: function(e){
-        this.lattice.set("inverseMode", $(e.target).prop("checked"));
-    },
-
     _setTetraCell: function(e){
         e.preventDefault();
         this.lattice.set("freeformCellType", "tetra");
@@ -155,10 +150,6 @@ LatticeMenuView = Backbone.View.extend({
         </label>\
         <% } %>\
         <br/>\
-        <label class="checkbox">\
-            <input type="checkbox"  <% if (inverseMode) { %> checked="checked" <% } %> value="" id="showInverse" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Show Inverse Geometry (hold "i" key)\
-        </label><br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
@@ -167,10 +158,5 @@ LatticeMenuView = Backbone.View.extend({
         hint: click to create cells, shift+drag to create a lot of cells, d+click to delete cells<br/>\
         hold "p" key to see parts\
         ')
-
-//    <label class="checkbox" for="invertGeo">\
-//            <input type="checkbox" checked="checked" value="" id="invertGeo" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-//            Show Inverse Geometry\
-//        </label>\
 
 });

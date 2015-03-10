@@ -15,9 +15,9 @@ var unitCellGeoUpsideDown = unitCellGeo.clone();
 unitCellGeoUpsideDown.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
 
 function DMATetraFaceCell(indices, scale){
-    DMAInverseCell.call(this, indices, scale);
+    DMACell.call(this, indices, scale);
 }
-DMATetraFaceCell.prototype = Object.create(DMAInverseCell.prototype);
+DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
 DMATetraFaceCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
     var zIndex = this.indices.z;

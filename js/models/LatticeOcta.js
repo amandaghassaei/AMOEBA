@@ -53,41 +53,41 @@ OctaLatticeSubclasses = {
             return position;
         },
 
-        getInvCellPositionForIndex: function(index){
-
-            var scale = this.get("scale");
-            var position = _.clone(index);
-
-            var oddZ = position.z%2 != 0;
-            var upPoint = (position.z%4 == 0 || Math.abs(position.z%4) == 3);
-            position.z = Math.floor(position.z/2);
-
-            if (!upPoint){
-                position.x = (position.x)*this.xScale(scale);
-                position.y = position.y*this.yScale(scale);
-            } else {
-                position.x = (position.x+0.5)*this.xScale(scale);
-                position.y = (position.y)*this.yScale(scale)-scale/Math.sqrt(3)/2;
-            }
-
-            if (oddZ){
-                position.z = (position.z + 1)*this.zScale(scale);
-            } else {
-                position.z = (position.z)*this.zScale(scale);
-            }
-
-//            if (Math.abs(index.z%4) == 1 || Math.abs(index.z%4) == 2) position.z += this.zScale(scale);
-
-            if ((index.y%2) != 0) {
-                if (!upPoint){
-                    position.x += this.xScale(scale)/2;
-                } else {
-                    position.x -= this.xScale(scale)/2;
-                }
-            }
-
-            return position;
-        },
+//        getInvCellPositionForIndex: function(index){
+//
+//            var scale = this.get("scale");
+//            var position = _.clone(index);
+//
+//            var oddZ = position.z%2 != 0;
+//            var upPoint = (position.z%4 == 0 || Math.abs(position.z%4) == 3);
+//            position.z = Math.floor(position.z/2);
+//
+//            if (!upPoint){
+//                position.x = (position.x)*this.xScale(scale);
+//                position.y = position.y*this.yScale(scale);
+//            } else {
+//                position.x = (position.x+0.5)*this.xScale(scale);
+//                position.y = (position.y)*this.yScale(scale)-scale/Math.sqrt(3)/2;
+//            }
+//
+//            if (oddZ){
+//                position.z = (position.z + 1)*this.zScale(scale);
+//            } else {
+//                position.z = (position.z)*this.zScale(scale);
+//            }
+//
+////            if (Math.abs(index.z%4) == 1 || Math.abs(index.z%4) == 2) position.z += this.zScale(scale);
+//
+//            if ((index.y%2) != 0) {
+//                if (!upPoint){
+//                    position.x += this.xScale(scale)/2;
+//                } else {
+//                    position.x -= this.xScale(scale)/2;
+//                }
+//            }
+//
+//            return position;
+//        },
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
@@ -105,52 +105,47 @@ OctaLatticeSubclasses = {
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            this._addInverseCellsForIndex(indices);
             return new DMAFaceOctaCell(indices, scale);
         },
 
-        _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraFaceCell(indices, scale, true);
-        },
-
-        _inverseIndicesToAdd: function(index){
-
-            var oddZ = index.z%2 != 0;
-
-            index = _.clone(index);
-            index.z*=2;
-
-            var z0 = 0;
-            if (oddZ) z0 = 1;
-
-            if (this.get("connectionType") == "edge") z0 = 0;
-            var z1 = Math.abs(z0-1);
-
-            var inverseIndicesToAdd;
-            if (index.y%2 == 0){
-
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:z0}),
-                    this._add(index, {x:0,y:1,z:z0}),
-                    this._add(index, {x:1,y:1,z:z0}),
-
-                    this._add(index, {x:0,y:0,z:z1}),
-                    this._add(index, {x:0,y:1,z:z1}),
-                    this._add(index, {x:1,y:0,z:z1})
-                ];
-            } else {
-                inverseIndicesToAdd = [
-                    this._add(index, {x:0,y:0,z:z0}),
-                    this._add(index, {x:-1,y:1,z:z0}),
-                    this._add(index, {x:0,y:1,z:z0}),
-
-                    this._add(index, {x:-1,y:0,z:z1}),
-                    this._add(index, {x:0,y:1,z:z1}),
-                    this._add(index, {x:0,y:0,z:z1})
-                ];
-            }
-            return inverseIndicesToAdd;
-        },
+//        _inverseIndicesToAdd: function(index){
+//
+//            var oddZ = index.z%2 != 0;
+//
+//            index = _.clone(index);
+//            index.z*=2;
+//
+//            var z0 = 0;
+//            if (oddZ) z0 = 1;
+//
+//            if (this.get("connectionType") == "edge") z0 = 0;
+//            var z1 = Math.abs(z0-1);
+//
+//            var inverseIndicesToAdd;
+//            if (index.y%2 == 0){
+//
+//                inverseIndicesToAdd = [
+//                    this._add(index, {x:0,y:0,z:z0}),
+//                    this._add(index, {x:0,y:1,z:z0}),
+//                    this._add(index, {x:1,y:1,z:z0}),
+//
+//                    this._add(index, {x:0,y:0,z:z1}),
+//                    this._add(index, {x:0,y:1,z:z1}),
+//                    this._add(index, {x:1,y:0,z:z1})
+//                ];
+//            } else {
+//                inverseIndicesToAdd = [
+//                    this._add(index, {x:0,y:0,z:z0}),
+//                    this._add(index, {x:-1,y:1,z:z0}),
+//                    this._add(index, {x:0,y:1,z:z0}),
+//
+//                    this._add(index, {x:-1,y:0,z:z1}),
+//                    this._add(index, {x:0,y:1,z:z1}),
+//                    this._add(index, {x:0,y:0,z:z1})
+//                ];
+//            }
+//            return inverseIndicesToAdd;
+//        },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             this.stopListening(this, "change:columnSeparation");
@@ -300,55 +295,50 @@ OctaLatticeSubclasses = {
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            this._addInverseCellsForIndex(indices);
             return new DMAEdgeOctaCell(indices, scale);
         },
 
-        _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATetraEdgeCell(indices, scale);
-        },
-
-        getInvCellPositionForIndex: function(index){
-
-            var scale = this.get("scale");
-            var position = _.clone(index);
-
-            var oddZ = position.z%2 != 0;
-            position.z = Math.floor(position.z/2);
-            var yScale = scale/Math.sqrt(3);
-
-            if (oddZ){
-                position.x = (position.x)*this.xScale(scale);
-                position.y = position.y*this.yScale(scale);
-            } else {
-                position.x = (position.x+0.5)*this.xScale(scale);
-                position.y = (position.y)*this.yScale(scale)-yScale/2;
-            }
-
-            if (oddZ){
-                position.z = (position.z + 1)*this.zScale(scale);
-            } else {
-                position.z = (position.z)*this.zScale(scale);
-            }
-
-            if ((index.y%2) != 0) {
-                if (oddZ){
-                    position.x += this.xScale(scale)/2;
-                } else {
-                    position.x -= this.xScale(scale)/2;
-                }
-            }
-
-            var zLayer = Math.floor(index.z/2)%3;
-            if (zLayer == 1) {
-                position.x += this.xScale(scale)/2;
-                position.y -= yScale/2;
-            } else if (zLayer == 2){
-                position.y -= yScale;
-            }
-
-            return position;
-        },
+//        getInvCellPositionForIndex: function(index){
+//
+//            var scale = this.get("scale");
+//            var position = _.clone(index);
+//
+//            var oddZ = position.z%2 != 0;
+//            position.z = Math.floor(position.z/2);
+//            var yScale = scale/Math.sqrt(3);
+//
+//            if (oddZ){
+//                position.x = (position.x)*this.xScale(scale);
+//                position.y = position.y*this.yScale(scale);
+//            } else {
+//                position.x = (position.x+0.5)*this.xScale(scale);
+//                position.y = (position.y)*this.yScale(scale)-yScale/2;
+//            }
+//
+//            if (oddZ){
+//                position.z = (position.z + 1)*this.zScale(scale);
+//            } else {
+//                position.z = (position.z)*this.zScale(scale);
+//            }
+//
+//            if ((index.y%2) != 0) {
+//                if (oddZ){
+//                    position.x += this.xScale(scale)/2;
+//                } else {
+//                    position.x -= this.xScale(scale)/2;
+//                }
+//            }
+//
+//            var zLayer = Math.floor(index.z/2)%3;
+//            if (zLayer == 1) {
+//                position.x += this.xScale(scale)/2;
+//                position.y -= yScale/2;
+//            } else if (zLayer == 2){
+//                position.y -= yScale;
+//            }
+//
+//            return position;
+//        },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
@@ -381,7 +371,6 @@ OctaLatticeSubclasses = {
         },
 
         _makeCellForLatticeType: function(indices, scale){
-//            this._addInverseCellsForIndex(indices);
             return new DMAVertexOctaCell(indices, scale);
         },
 
@@ -430,30 +419,30 @@ OctaLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        getInvCellPositionForIndex: function(index){
+//        getInvCellPositionForIndex: function(index){
+//
+//            var position = this._positionForIndex(index);
+//
+//            var scale = this.get("scale");
+//            position.x -= this.xScale(scale)/2;
+//            position.y -= this.yScale(scale)/2;
+//            position.z -= this.zScale(scale)/2;
+//            return position;
+//        },
 
-            var position = this._positionForIndex(index);
-
-            var scale = this.get("scale");
-            position.x -= this.xScale(scale)/2;
-            position.y -= this.yScale(scale)/2;
-            position.z -= this.zScale(scale)/2;
-            return position;
-        },
-
-        _inverseIndicesToAdd: function(index){
-            return [
-                this._add(index, {x:0,y:0,z:0}),
-                this._add(index, {x:0,y:1,z:0}),
-                this._add(index, {x:1,y:0,z:0}),
-                this._add(index, {x:1,y:1,z:0}),
-
-                this._add(index, {x:0,y:0,z:1}),
-                this._add(index, {x:0,y:1,z:1}),
-                this._add(index, {x:1,y:0,z:1}),
-                this._add(index, {x:1,y:1,z:1})
-            ];
-        },
+//        _inverseIndicesToAdd: function(index){
+//            return [
+//                this._add(index, {x:0,y:0,z:0}),
+//                this._add(index, {x:0,y:1,z:0}),
+//                this._add(index, {x:1,y:0,z:0}),
+//                this._add(index, {x:1,y:1,z:0}),
+//
+//                this._add(index, {x:0,y:0,z:1}),
+//                this._add(index, {x:0,y:1,z:1}),
+//                this._add(index, {x:1,y:0,z:1}),
+//                this._add(index, {x:1,y:1,z:1})
+//            ];
+//        },
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
@@ -469,12 +458,7 @@ OctaLatticeSubclasses = {
         },
 
         _makeCellForLatticeType: function(indices, scale){
-            this._addInverseCellsForIndex(indices);
             return new DMAVertexOctaCell(indices, scale);
-        },
-
-        _makeInvCellForLatticeType: function(indices, scale){
-            return new DMATruncCubeCell(indices, scale);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

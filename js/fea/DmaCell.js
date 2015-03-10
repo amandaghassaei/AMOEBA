@@ -8,32 +8,29 @@
 var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-function DMACell(indices, scale, inverse) {
+function DMACell(indices, scale) {
 
     this.indices = indices;
-    if (!inverse) inverse = false;
-    this.isInverse = inverse;
     this.cellMesh = this._buildCellMesh();
     this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
     var cellMode = dmaGlobals.lattice.get("cellMode");
-    var inverseMode = dmaGlobals.lattice.get("inverseMode");
     var beamMode = dmaGlobals.lattice.get("partType") == "beam";
-    this.drawForMode(scale, cellMode, inverseMode, beamMode);
+    this.drawForMode(scale, cellMode, beamMode);
 }
 
 //todo this is a mess
-DMACell.prototype.drawForMode = function(scale, cellMode, inverseMode, beamMode){
+DMACell.prototype.drawForMode = function(scale, cellMode, beamMode){
     this.updateForScale(scale, cellMode);
-    this._setCellMeshVisibility(cellMode == "cell" && inverseMode==this.isInverse);//only show if in the correct inverseMode
+    this._setCellMeshVisibility(cellMode == "cell");
     if (!beamMode && cellMode == "part" && !this.parts) this.parts = this._initParts();
     _.each(this.parts, function(part){
         if (part) part.setVisibility(cellMode == "part" && !beamMode);
     });
     var self = this;
     _.each(this.beams, function(beam){
-        beam.setVisibility(beamMode && cellMode == "part" && inverseMode==self.isInverse);
+        beam.setVisibility(beamMode && cellMode == "part");
     });
 };
 
@@ -42,8 +39,7 @@ DMACell.prototype._buildCellMesh = function(unitCellGeo, material){//called from
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
     this._doMeshTransformations(mesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
     mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-    if (this.isInverse) dmaGlobals.three.sceneAdd(mesh, "inverseCell");
-    else dmaGlobals.three.sceneAdd(mesh, "cell");
+    dmaGlobals.three.sceneAdd(mesh, "cell");
     return mesh;
 };
 
@@ -92,7 +88,6 @@ DMACell.prototype.getEulerRotation = function(){
 };
 
 DMACell.prototype._calcPosition = function(){//need for part relay
-    if (this.isInverse) return dmaGlobals.lattice.getInvCellPositionForIndex(this.indices);
     return dmaGlobals.lattice.getPositionForIndex(this.indices);
 };
 
@@ -169,9 +164,7 @@ DMACell.prototype.removePart = function(index){
 
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
-        var type = "cell";
-        if (this.isInverse) type = "inverseCell";
-        dmaGlobals.three.sceneRemove(this.cellMesh, type);
+        dmaGlobals.three.sceneRemove(this.cellMesh, "cell");
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();
@@ -229,13 +222,3 @@ DMAFreeFormCell.prototype.toJSON = function(){
     });
     return json;
 };
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////INVERSE SUPERCLASS/////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-function DMAInverseCell(indices, scale){//no rigid lattice structure for cells
-    DMACell.call(this, indices, scale, true);
-}
-DMAInverseCell.prototype = Object.create(DMACell.prototype);

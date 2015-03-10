@@ -145,9 +145,6 @@ AppState = Backbone.Model.extend({
                 if (cellMode == "part") this.lattice.set("cellMode", "cell");
                 else if (cellMode == "cell") this.lattice.set("cellMode", "part");
                 break;
-            case 73://i inverse mode
-                this.lattice.set("inverseMode", !this.lattice.get("inverseMode"));
-                break;
             case 83://s save
                 if (e.ctrlKey || e.metaKey){//command
                     e.preventDefault();
