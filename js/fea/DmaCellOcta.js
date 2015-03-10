@@ -81,7 +81,7 @@ DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
     direction.applyQuaternion(this.cellMesh.quaternion);
 
     var position = this.getPosition();
-    var zScale = dmaGlobals.lattice.zScale();
+    var zScale = this.zScale();
     position.x += direction.x*zScale/2;
     position.y += direction.y*zScale/2;
     position.z += direction.z*zScale/2;
@@ -99,6 +99,11 @@ DMAFreeFormOctaCell.prototype._initParts = function(){
 
 DMAFreeFormOctaCell.prototype.getType = function(){
     return "octa";
+};
+
+DMAFreeFormOctaCell.prototype.zScale = function(scale){
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    return 2*scale/Math.sqrt(6);
 };
 
 
@@ -129,11 +134,64 @@ DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////VERTEX CONNECTED///////////////////////////////////////////////////////
+////////////////////////ROTATED EDGE CONNECTED/////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
 var unitVertexOcta = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+
+function DMARotatedEdgeCell(indices, scale){
+    DMACell.call(this, indices, scale);
+}
+DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
+
+DMARotatedEdgeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+    return DMACell.prototype._buildCellMesh.call(this, unitVertexOcta);
+};
+
+DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
+
+    var position = this.getPosition();
+    var direction = null;
+
+    var xScale = dmaGlobals.lattice.xScale();
+    if (point.x < position.x+xScale/4 && point.x > position.x-xScale/4){
+        if (point.y > position.y-xScale/4 && point.y < position.y+xScale/4){
+            if (face.normal.z > 0) {
+                direction = new THREE.Vector3(0,0,1);
+                position.z += dmaGlobals.lattice.zScale()/2;
+            }
+            else {
+                direction = new THREE.Vector3(0,0,-1);
+                position.z -= dmaGlobals.lattice.zScale()/2;
+            }
+        } else {
+            if (point.y < position.y-xScale/4){
+                direction = new THREE.Vector3(0,-1,0);
+                position.y -= xScale/2;
+            } else {
+                direction = new THREE.Vector3(0,1,0);
+                position.y += xScale/2;
+            }
+        }
+    } else {
+        if (point.x < position.x-xScale/4){
+            direction = new THREE.Vector3(-1,0,0);
+            position.x -= xScale/2;
+        } else {
+            direction = new THREE.Vector3(1,0,0);
+            position.x += xScale/2;
+        }
+    }
+
+    return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////VERTEX CONNECTED///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 
 function DMAVertexOctaCell(indices, scale){
     DMACell.call(this, indices, scale);

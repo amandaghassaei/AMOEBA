@@ -186,7 +186,7 @@ OctaLatticeSubclasses = {
 
         zScale: function(scale){
             if (!scale) scale = this.get("scale");
-//            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
+            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
             return 2*scale/Math.sqrt(24);
         },
 
@@ -331,10 +331,6 @@ OctaLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
-            return new DMAVertexOctaCell(indices, scale);
-        },
-
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
             return scale*Math.sqrt(2);
@@ -346,6 +342,10 @@ OctaLatticeSubclasses = {
 
         zScale: function(scale){
             return this.xScale(scale);
+        },
+
+        _makeCellForLatticeType: function(indices, scale){
+            return new DMARotatedEdgeCell(indices, scale);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
