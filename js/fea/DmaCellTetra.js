@@ -85,7 +85,7 @@ DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
     direction.applyQuaternion(this.cellMesh.quaternion);
 
     var position = this.getPosition();
-    var zScale = this.zScale();
+    var zScale = dmaGlobals.lattice.zScale();
     position.x += direction.x*zScale/2;
     position.y += direction.y*zScale/2;
     position.z += direction.z*zScale/2;
@@ -97,9 +97,9 @@ DMAFreeFormTetraCell.prototype.getType = function(){
     return "tetra";
 };
 
-DMAFreeFormTetraCell.prototype.zScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
-    return 2*scale/Math.sqrt(24);
-};
+//DMAFreeFormTetraCell.prototype.zScale = function(scale){
+//    if (!scale) scale = dmaGlobals.lattice.get("scale");
+//    return 2*scale/Math.sqrt(24);
+//};
 
 

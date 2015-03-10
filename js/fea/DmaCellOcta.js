@@ -81,7 +81,7 @@ DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
     direction.applyQuaternion(this.cellMesh.quaternion);
 
     var position = this.getPosition();
-    var zScale = this.zScale();
+    var zScale = dmaGlobals.lattice.zScale();
     position.x += direction.x*zScale/2;
     position.y += direction.y*zScale/2;
     position.z += direction.z*zScale/2;
@@ -99,11 +99,6 @@ DMAFreeFormOctaCell.prototype._initParts = function(){
 
 DMAFreeFormOctaCell.prototype.getType = function(){
     return "octa";
-};
-
-DMAFreeFormOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
-    return 2*scale/Math.sqrt(6);
 };
 
 
@@ -124,7 +119,7 @@ DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
     direction.applyQuaternion(this.cellMesh.quaternion);
 
     var position = this.getPosition();
-    var zScale = this.zScale();
+    var zScale = dmaGlobals.lattice.zScale();
     position.x += direction.x*zScale/2;
     position.y += direction.y*zScale/2;
     position.z += direction.z*zScale/2;
