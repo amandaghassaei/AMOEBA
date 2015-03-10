@@ -224,6 +224,14 @@ DMAFreeFormCell.prototype._calcPosition = function(){
     return position;
 };
 
+DMAFreeFormCell.prototype.calcHighlighterPosition = function(face){
+    var direction = face.normal.clone();
+    direction.applyQuaternion(this.cellMesh.quaternion);
+    var position = this.getPosition();
+    position.add(direction.clone().multiplyScalar(this.zScale()/2));
+    return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
 DMAFreeFormCell.prototype.toJSON = function(){
     var json = DMACell.prototype.toJSON.call(this);
     _.extend(json, {

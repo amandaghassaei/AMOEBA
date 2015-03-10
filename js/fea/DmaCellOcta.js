@@ -34,9 +34,7 @@ DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
 };
 
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
-
     if (face.normal.z<0.99) return {index: _.clone(this.indices)};//only highlight horizontal faces
-
     var direction = face.normal;
     var position = this.getPosition();
     position.z += face.normal.z*this.zScale()/2;
@@ -76,19 +74,6 @@ DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
     mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 };
 
-DMAFreeFormOctaCell.prototype.calcHighlighterPosition = function(face){
-    var direction = face.normal.clone();
-    direction.applyQuaternion(this.cellMesh.quaternion);
-
-    var position = this.getPosition();
-    var zScale = this.zScale();
-    position.x += direction.x*zScale/2;
-    position.y += direction.y*zScale/2;
-    position.z += direction.z*zScale/2;
-
-    return {index: _.clone(this.indices), direction:direction, position:position};
-};
-
 DMAFreeFormOctaCell.prototype._initParts = function(){
     var parts  = [];
     for (var i=0;i<3;i++){
@@ -123,13 +108,8 @@ DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
 DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
     var direction = face.normal.clone();
     direction.applyQuaternion(this.cellMesh.quaternion);
-
     var position = this.getPosition();
-    var zScale = this.zScale();
-    position.x += direction.x*zScale/2;
-    position.y += direction.y*zScale/2;
-    position.z += direction.z*zScale/2;
-
+    position.add(direction.clone().multiplyScalar(this.zScale()/2));
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
@@ -204,8 +184,6 @@ DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
             if (point.y > position.y) direction.y = 1;
             else direction.y = -1;
         }
-
-
         position.x += direction.x*this.xScale()/2;
         position.y += direction.y*this.yScale()/2;
     }

@@ -79,20 +79,6 @@ DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
     mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 };
 
-DMAFreeFormTetraCell.prototype.calcHighlighterPosition = function(face){
-
-    var direction = face.normal.clone();
-    direction.applyQuaternion(this.cellMesh.quaternion);
-
-    var position = this.getPosition();
-    var zScale = this.zScale();
-    position.x += direction.x*zScale/2;
-    position.y += direction.y*zScale/2;
-    position.z += direction.z*zScale/2;
-
-    return {index: _.clone(this.indices), direction:direction, position:position};
-};
-
 DMAFreeFormTetraCell.prototype.getType = function(){
     return "tetra";
 };
