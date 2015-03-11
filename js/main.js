@@ -16,7 +16,9 @@ $(function(){
 
     dmaGlobals.lattice = new Lattice();
     dmaGlobals.lattice._updateLatticeType();//todo get rid of this
-    dmaGlobals.appState = new AppState({lattice:dmaGlobals.lattice});
+    dmaGlobals.assembler = new Assembler();
+    dmaGlobals.appState = new AppState();
+
 
     //ui
     new NavBar({model:dmaGlobals.appState});

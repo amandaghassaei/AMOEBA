@@ -15,19 +15,20 @@ CamMenuView = Backbone.View.extend({
     initialize: function(options){
 
         this.lattice = options.lattice;
+        this.assembler = options.assembler;
 
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change:camProcess", this.render);
+        this.listenTo(this.assembler, "change", this.render);
     },
 
     _selectCamProcess: function(e){
         e.preventDefault();
-        this.model.set("camProcess", $(e.target).data("type"));
+        this.assembler.set("camProcess", $(e.target).data("type"));
     },
 
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
-        this.$el.html(this.template(_.extend(this.model.attributes)));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
     },
 
     template: _.template('\

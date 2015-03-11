@@ -8,24 +8,36 @@ AssemblerMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
+        "click .camStrategy":                            "_selectCamStrategy"
     },
 
     initialize: function(options){
 
+        this.assembler = options.assembler;
+
         _.bindAll(this, "render");
+        this.listenTo(this.assembler, "change", this.render);
+    },
+
+    _selectCamStrategy: function(e){
+        e.preventDefault();
+        this.assembler.set("camStrategy", $(e.target).data("type"));
     },
 
     render: function(){
         if (this.model.get("currentTab") != "assembler") return;
-        this.$el.html(this.template());
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
     },
 
-    template: _.template("\
-        <a href='https://www.youtube.com/watch?v=1Cv7qaz63nQ'>Kiva simulation</a><br/><br/>\
-        <a href='http://fab.cba.mit.edu/classes/865.15/people/will.langford/2_replicating/index.html'>will's demo</a><br/><br/>\
-        <a href='http://www.eecs.harvard.edu/ssr/papers/iros11wksp-werfel.pdf'>asynchronous, multi-agent assembly algorithms</a> (doesn't necessarily have to be swarm-based)\
-        <a href='https://www.youtube.com/watch?v=XNoNpjYQN4s'>video</a>\
-        <br/><br/>\
-        ")
-
+    template: _.template('\
+        Strategy: &nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allAssemblyStrategies[camStrategy] %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allAssemblyStrategies), function(key){ %>\
+                        <li><a class="camStrategy" data-type="<%= key %>" href="#"><%= allAssemblyStrategies[key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
+        ')
 });

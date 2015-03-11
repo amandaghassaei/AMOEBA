@@ -48,11 +48,14 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        allAssemblyStrategies: {
+            xRaster: "X Raster",
+            yRaster: "Y Raster"
+        },
         allCamProcesses: {
             shopbot: "Shopbot (sbp)",
             gcode: "G-Code"
         },
-        camProcess: "shopbot",
 
         menuIsVisible: true,
 
@@ -62,7 +65,7 @@ AppState = Backbone.Model.extend({
         extrudeMode: false
     },
 
-    initialize: function(options){
+    initialize: function(){
 
         _.bindAll(this, "_handleKeyStroke");
 
@@ -74,7 +77,6 @@ AppState = Backbone.Model.extend({
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
         this.listenTo(this, "change:currentTab", this._updateCellMode);
 
-        this.lattice = options.lattice;//this doesn't need to be tracked for changes
         this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
         if (this.isMobile()) this.set("menuIsVisible", false);
@@ -105,10 +107,10 @@ AppState = Backbone.Model.extend({
 
     _updateCellMode: function(){
         var currentTab = this.get("currentTab");
-        if (currentTab == "lattice") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "import") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "sketch") this.lattice.set("cellMode", "cell");
-        else if (currentTab == "part") this.lattice.set("cellMode", "part");
+        if (currentTab == "lattice") dmaGlobals.lattice.set("cellMode", "cell");
+        else if (currentTab == "import") dmaGlobals.lattice.set("cellMode", "cell");
+        else if (currentTab == "sketch") dmaGlobals.lattice.set("cellMode", "cell");
+        else if (currentTab == "part") dmaGlobals.lattice.set("cellMode", "part");
     },
 
     //update to last tab open in that section
@@ -155,9 +157,9 @@ AppState = Backbone.Model.extend({
                 this.set("extrudeMode", state);
                 break;
             case 80://p part mode
-                var cellMode = this.lattice.get("cellMode");
-                if (cellMode == "part") this.lattice.set("cellMode", "cell");
-                else if (cellMode == "cell") this.lattice.set("cellMode", "part");
+                var cellMode = dmaGlobals.lattice.get("cellMode");
+                if (cellMode == "part") dmaGlobals.lattice.set("cellMode", "cell");
+                else if (cellMode == "cell") dmaGlobals.lattice.set("cellMode", "part");
                 break;
             case 83://s save
                 if (e.ctrlKey || e.metaKey){//command

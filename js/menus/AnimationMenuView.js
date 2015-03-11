@@ -26,7 +26,7 @@ AnimationMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.appState.get("currentTab") != "animate") return;
-        this.$el.html(this.template(this.model.attributes));
+        this.$el.html(this.template(this.model.toJSON()));
     },
 
     template: _.template('\

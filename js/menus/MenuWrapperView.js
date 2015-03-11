@@ -26,9 +26,9 @@ MenuWrapper = Backbone.View.extend({
         this.physicsMenu = new PhysicsMenuView({model:this.model});
         this.materialMenu = new MaterialMenuView({model:this.model});
         this.optimizeMenu = new OptimizationMenuView({model:this.model});
-        this.assemblerMenu = new AssemblerMenuView({model:this.model});
+        this.assemblerMenu = new AssemblerMenuView({model:this.model, assembler: dmaGlobals.assembler});
         this.animationMenu = new AnimationMenuView({model:lattice.get("basePlane"), appState:this.model});
-        this.camMenu = new CamMenuView({model:this.model, lattice:lattice});
+        this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:dmaGlobals.assembler});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};

@@ -97,7 +97,7 @@ LatticeMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(_.extend(this.model.attributes, this.lattice.attributes)));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.lattice.toJSON())));
 
         $('#scaleSlider').slider({
             formatter: function(value) {

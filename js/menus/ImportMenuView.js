@@ -88,7 +88,7 @@ ImportMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.appState.get("currentTab") != "import") return;
-        this.$el.html(this.template(this.model.attributes));
+        this.$el.html(this.template(this.model.toJSON()));
     },
 
 //    makeDimensionString: function(){

@@ -25,7 +25,7 @@ SketchMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.appState.get("currentTab") != "sketch") return;
-        this.$el.html(this.template(this.model.get("basePlane").attributes));
+        this.$el.html(this.template(this.model.get("basePlane").toJSON()));
 
         $('#zHeightSlider').slider({
             formatter: function(value) {
