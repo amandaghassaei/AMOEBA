@@ -33,7 +33,7 @@ MenuWrapper = Backbone.View.extend({
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
         this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
-        this.assemMenuTabs = {assembler:"Assembler", animate:"Animate", cam: "CAM"};
+        this.assemMenuTabs = {assembler:"Assembler", animate:"Preview", cam: "Process"};
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
