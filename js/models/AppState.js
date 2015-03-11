@@ -48,6 +48,12 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        allCamProcesses: {
+            shopbot: "Shopbot (sbp)",
+            gcode: "G-Code"
+        },
+        camProcess: "shopbot",
+
         menuIsVisible: true,
 
         //key bindings

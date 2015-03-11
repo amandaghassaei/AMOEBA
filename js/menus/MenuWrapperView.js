@@ -28,6 +28,7 @@ MenuWrapper = Backbone.View.extend({
         this.optimizeMenu = new OptimizationMenuView({model:this.model});
         this.assemblerMenu = new AssemblerMenuView({model:this.model});
         this.animationMenu = new AnimationMenuView({model:lattice.get("basePlane"), appState:this.model});
+        this.camMenu = new CamMenuView({model:this.model, lattice:lattice});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
@@ -80,6 +81,8 @@ MenuWrapper = Backbone.View.extend({
             this.assemblerMenu.render();
         } else if (tabName == "animate"){
             this.animationMenu.render();
+        } else if (tabName == "cam"){
+            this.camMenu.render();
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu

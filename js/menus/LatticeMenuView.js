@@ -25,14 +25,7 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-//        var self = this;
-//        this.listenTo(this.model, "change", function(){
-//            var change = false;
-//            _.each(_.keys(self.model.changedAttributes()), function(attribute){
-//                if (attribute != "currentNav" && attribute != "currentTab") change = true;
-//            });
-//            if (change) this.render();
-//        });
+
         this.listenTo(this.lattice, "change", this.render);
     },
 
@@ -84,8 +77,6 @@ LatticeMenuView = Backbone.View.extend({
             newConnectionType = _.keys(dmaGlobals.appState.get("allConnectionTypes")[newCellType])[0];
             this.lattice.set("connectionType", newConnectionType, {silent:true});
         }
-        this.model.set("connectionType", newConnectionType, {silent:true});
-
         var partType = _.keys(dmaGlobals.appState.get("allPartTypes")[newCellType][newConnectionType])[0];
         this.lattice.set("partType", partType, {silent:true});
     },
