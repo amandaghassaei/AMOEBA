@@ -10,6 +10,7 @@ LatticeMenuView = Backbone.View.extend({
     events: {
         "click #latticeMenuClearCells":                 "_clearCells",
         "change #latticeScale":                         "_changeScale",
+        "click .units":                                 "_changeUnits",
         "click .cellType":                              "_changeCellType",
         "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
@@ -27,6 +28,7 @@ LatticeMenuView = Backbone.View.extend({
         _.bindAll(this, "render");
 
         this.listenTo(this.lattice, "change", this.render);
+        this.listenTo(this.model, "change:units", this.render);
     },
 
     _clearCells: function(e){
@@ -39,6 +41,11 @@ LatticeMenuView = Backbone.View.extend({
         var val = parseFloat($(e.target).val());
         if (isNaN(val)) return;
         this.lattice.set("scale", val);
+    },
+
+    _changeUnits: function(e){
+        e.preventDefault();
+        this.model.set("units", $(e.target).data("type"));
     },
 
     _sliderDidSlide: function(e){
@@ -143,6 +150,15 @@ LatticeMenuView = Backbone.View.extend({
         <br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
+        Units: &nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allUnitTypes), function(key){ %>\
+                        <li><a class="units" data-type="<%= key %>" href="#"><%= allUnitTypes[key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\

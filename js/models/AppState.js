@@ -59,6 +59,12 @@ AppState = Backbone.Model.extend({
 
         menuIsVisible: true,
 
+        allUnitTypes: {
+            mm: "mm",
+            inches: "Inches"
+        },
+        units: "mm",
+
         //key bindings
         shift: false,
         deleteMode: false,

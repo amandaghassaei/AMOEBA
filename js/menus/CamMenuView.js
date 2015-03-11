@@ -9,6 +9,7 @@ CamMenuView = Backbone.View.extend({
 
     events: {
         "click .camProcess":                            "_selectCamProcess",
+        "click .units":                                 "_changeUnits",
         "click #saveCam":                               "_processAndSave"
     },
 
@@ -20,11 +21,17 @@ CamMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         this.listenTo(this.assembler, "change", this.render);
+        this.listenTo(this.model, "change:units", this.render);
     },
 
     _selectCamProcess: function(e){
         e.preventDefault();
         this.assembler.set("camProcess", $(e.target).data("type"));
+    },
+
+    _changeUnits: function(e){
+        e.preventDefault();
+        this.model.set("units", $(e.target).data("type"));
     },
 
     _processAndSave: function(e){
@@ -44,6 +51,15 @@ CamMenuView = Backbone.View.extend({
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allCamProcesses), function(key){ %>\
                         <li><a class="camProcess" data-type="<%= key %>" href="#"><%= allCamProcesses[key] %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
+         Units: &nbsp;&nbsp;\
+            <div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allUnitTypes), function(key){ %>\
+                        <li><a class="units" data-type="<%= key %>" href="#"><%= allUnitTypes[key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
