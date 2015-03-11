@@ -194,11 +194,11 @@ DMACell.prototype.destroy = function(){
 };
 
 DMACell.prototype.toJSON = function(){
-    if (!this.parts) this.parts = this._initParts();
-    return {
-        indices:this.indices,//todo get rid of this and calculate from min and max
-        parts: this.parts
+    var data = {
+        indices:this.indices//todo get rid of this and calculate from min and max
     };
+    if (this.parts) data.parts = this.parts;
+    return data;
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
