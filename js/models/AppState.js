@@ -8,6 +8,7 @@
 AppState = Backbone.Model.extend({
 
     defaults: {
+
         currentNav:"navDesign",// design, sim, assemble
         currentTab:"lattice",
 
@@ -17,8 +18,37 @@ AppState = Backbone.Model.extend({
         lastAssembleTab: "assembler",
 
         menuWrapper: null,
+        menuIsVisible: true,
 
-        allCellTypes: {octa:"Octahedron", tetra: "Tetrahedron (Coming Soon)", cube:"Cube", truncatedCube:"Cuboctahedron", kelvin:"Truncated Octahedron"},
+        allMenuTabs: {
+            navDesign:{
+                lattice:"Lattice",
+                import:"Import",
+                sketch:"Sketch",
+                part:"Part",
+                script:"Script"
+            },
+            navSim:{
+                physics:"Physics",
+                part:"Part",
+                material:"Material",
+                optimize:"Optimize"
+            },
+            navAssemble:{
+               assembler:"Assembler",
+                animate:"Preview",
+                cam: "Process",
+                send: "Send"
+            }
+        },
+
+        allCellTypes: {
+            octa:"Octahedron",
+            tetra: "Tetrahedron (Coming Soon)",
+            cube:"Cube",
+            truncatedCube:"Cuboctahedron",
+            kelvin:"Truncated Octahedron"
+        },
         allConnectionTypes: {
             octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
             tetra: {vertex: "Vertex"},
@@ -28,11 +58,27 @@ AppState = Backbone.Model.extend({
         },
         allPartTypes:{
             octa:{
-                face: {triangle:"Triangle", beam:"Beam", truss:"Truss"},
-                freeformFace: {triangle:"Triangle", beam:"Beam"},
-                edge: {beam:"Beam", triangle:"Triangle"},
-                edgeRot: {beam:"Beam"},
-                vertex: {beam:"Beam", square:"Square", xShape:"X"}
+                face: {
+                    triangle:"Triangle",
+                    beam:"Beam",
+                    truss:"Truss"
+                },
+                freeformFace: {
+                    triangle:"Triangle",
+                    beam:"Beam"
+                },
+                edge: {
+                    beam:"Beam",
+                    triangle:"Triangle"
+                },
+                edgeRot: {
+                    beam:"Beam"
+                },
+                vertex: {
+                    beam:"Beam",
+                    square:"Square",
+                    xShape:"X"
+                }
             },
             tetra: {
                 vertex: {beam: "Beam"}
@@ -57,7 +103,6 @@ AppState = Backbone.Model.extend({
             gcode: "G-Code"
         },
 
-        menuIsVisible: true,
 
         allUnitTypes: {
             mm: "mm",

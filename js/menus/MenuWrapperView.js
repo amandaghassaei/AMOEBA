@@ -31,11 +31,6 @@ MenuWrapper = Backbone.View.extend({
         this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:dmaGlobals.assembler});
         this.sendMenu = new SendMenuView({model:this.model});
 
-        //data names and titles
-        this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
-        this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
-        this.assemMenuTabs = {assembler:"Assembler", animate:"Preview", cam: "Process", send: "Send"};
-
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
         this.listenTo(lattice, "change:cellType change:connectionType", this._populateAndShow);
@@ -101,11 +96,7 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _populateAndShow: function(){
-        this.$el.html(this.template(_.extend(this.model.toJSON(),
-            {navDesign:this.designMenuTabs,
-            navSim:this.simMenuTabs,
-            navAssemble:this.assemMenuTabs,
-            }, dmaGlobals.lattice.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.lattice.toJSON())));
         this._updateCurrentTab();
         this._show();
     },
@@ -130,10 +121,9 @@ MenuWrapper = Backbone.View.extend({
 
     template: _.template('\
         <ul class="nav nav-tabs nav-justified">\
-        <% var dict = eval(currentNav);\
-        _.each(_.keys(dict), function(key){\
+        <% _.each(_.keys(allMenuTabs[currentNav]), function(key){\
             if (key == "part" && !(allPartTypes[cellType][connectionType])) return;  %>\
-          <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= dict[key] %></a></li>\
+          <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= allMenuTabs[currentNav][key] %></a></li>\
         <% }); %>\
         </ul>\
         ')
