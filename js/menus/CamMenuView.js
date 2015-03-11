@@ -17,7 +17,7 @@ CamMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-        this.listenTo(this.model, "change", this.render);
+        this.listenTo(this.model, "change:camProcess", this.render);
     },
 
     _selectCamProcess: function(e){
