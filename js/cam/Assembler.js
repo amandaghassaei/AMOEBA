@@ -15,6 +15,13 @@ Assembler = Backbone.Model.extend({
 
     },
 
+    processAndSave: function(){
+        var exporter;
+        if (this.get("camProcess") == "shopbot") exporter = new ShopbotExporter();
+        if (exporter) exporter.processAndSave();
+        else console.warn("cam process not supported");
+    },
+
     destroy: function(){
     }
 

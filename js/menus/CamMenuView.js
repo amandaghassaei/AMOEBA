@@ -8,7 +8,8 @@ CamMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .camProcess":                            "_selectCamProcess"
+        "click .camProcess":                            "_selectCamProcess",
+        "click #saveCam":                               "_processAndSave"
     },
 
 
@@ -26,6 +27,11 @@ CamMenuView = Backbone.View.extend({
         this.assembler.set("camProcess", $(e.target).data("type"));
     },
 
+    _processAndSave: function(e){
+        e.preventDefault();
+        this.assembler.processAndSave();
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
@@ -41,6 +47,7 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
+            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
         ')
 
 });
