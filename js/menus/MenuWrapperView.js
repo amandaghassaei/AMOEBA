@@ -29,11 +29,12 @@ MenuWrapper = Backbone.View.extend({
         this.assemblerMenu = new AssemblerMenuView({model:this.model, assembler: dmaGlobals.assembler});
         this.animationMenu = new AnimationMenuView({model:lattice.get("basePlane"), appState:this.model});
         this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:dmaGlobals.assembler});
+        this.sendMenu = new SendMenuView({model:this.model});
 
         //data names and titles
         this.designMenuTabs = {lattice:"Lattice", import:"Import", sketch:"Sketch", part:"Part", script:"Script"};
         this.simMenuTabs = {physics:"Physics", part:"Part", material:"Material", optimize:"Optimize"};
-        this.assemMenuTabs = {assembler:"Assembler", animate:"Preview", cam: "Process"};
+        this.assemMenuTabs = {assembler:"Assembler", animate:"Preview", cam: "Process", send: "Send"};
 
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
@@ -83,6 +84,8 @@ MenuWrapper = Backbone.View.extend({
             this.animationMenu.render();
         } else if (tabName == "cam"){
             this.camMenu.render();
+        } else if (tabName == "send"){
+            this.sendMenu.render();
         } else {
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu
@@ -98,11 +101,11 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _populateAndShow: function(){
-        this.$el.html(this.template(_.extend(this.model.attributes,
+        this.$el.html(this.template(_.extend(this.model.toJSON(),
             {navDesign:this.designMenuTabs,
             navSim:this.simMenuTabs,
             navAssemble:this.assemMenuTabs,
-            }, dmaGlobals.lattice.attributes)));
+            }, dmaGlobals.lattice.toJSON())));
         this._updateCurrentTab();
         this._show();
     },
