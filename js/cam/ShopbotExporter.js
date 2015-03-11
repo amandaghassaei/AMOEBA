@@ -10,11 +10,9 @@ ShopbotExporter.prototype.makeHeader = function(){
     data += this.addLine("FG", [], "single step mode");
     data += this.goHome();
     data += this.addLine("SA", [], "absolute distances");
-    data += this.addLine("SM", [4, 1], "move/cut mode (as opposed to preview mode)");
+    data += this.addLine("SM", [], "move/cut mode (as opposed to preview mode)");
     data += this.addLine("JS", [4, 1], "jog speed- xy, z inches per sec");
-    data += this.addLine("MS", [4, 1], "move speed- xy, z inches per sec");
-    data += "\n";
-    data += "\n";
+    data += this.addLine("MS", [2, 0.5], "move speed- xy, z inches per sec");
     return data;
 };
 
@@ -27,6 +25,10 @@ ShopbotExporter.prototype.addLine = function(command, params, comment){
     if (comment) data += "'" +comment;
     data += "\n";
     return data;
+};
+
+ShopbotExporter.prototype.addComment = function(comment){
+    return "'" + comment + "\n";
 };
 
 ShopbotExporter.prototype.rapid3 = function(x, y, z){
@@ -47,7 +49,7 @@ ShopbotExporter.prototype.moveZ = function(z){
 
 ShopbotExporter.prototype.makeFooter = function(){
     var data = "";
-
+    data += this.goHome();
     return data;
 };
 

@@ -145,3 +145,14 @@ hr {
   border-color: #888 -moz-use-text-color #888;
 }
 
+
+#gcodeEditor {
+    font-family: Courier, monospace;
+    font-size: 13px;
+    line-height: 30px;
+    resize: none;
+    height: 600px;
+    width: 100%;
+    border-width: 0px;
+    background-color: rgba(255,255,255,0.5);
+}

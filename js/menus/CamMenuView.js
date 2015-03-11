@@ -10,7 +10,7 @@ CamMenuView = Backbone.View.extend({
     events: {
         "click .camProcess":                            "_selectCamProcess",
         "click .units":                                 "_changeUnits",
-        "click #saveCam":                               "_processAndSave"
+        "click #saveCam":                               "_save"
     },
 
 
@@ -34,9 +34,9 @@ CamMenuView = Backbone.View.extend({
         this.model.set("units", $(e.target).data("type"));
     },
 
-    _processAndSave: function(e){
+    _save: function(e){
         e.preventDefault();
-        this.assembler.processAndSave();
+        this.assembler.save();
     },
 
     render: function(){
@@ -63,7 +63,7 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
+            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         ')
 
 });

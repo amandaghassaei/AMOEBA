@@ -14,10 +14,11 @@ $(function(){
     //init threeJS and geometry models
     dmaGlobals.three = new ThreeModel();
 
+    dmaGlobals.appState = new AppState();
     dmaGlobals.lattice = new Lattice();
     dmaGlobals.lattice._updateLatticeType();//todo get rid of this
     dmaGlobals.assembler = new Assembler();
-    dmaGlobals.appState = new AppState();
+    dmaGlobals.appState.delayedInit();
 
 
     //ui

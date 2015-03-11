@@ -117,8 +117,11 @@ AppState = Backbone.Model.extend({
     },
 
     initialize: function(){
+    },
 
-        _.bindAll(this, "_handleKeyStroke");
+    delayedInit: function(){
+
+         _.bindAll(this, "_handleKeyStroke");
 
         //bind events
         $(document).bind('keydown', {state:true}, this._handleKeyStroke);

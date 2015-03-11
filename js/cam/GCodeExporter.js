@@ -13,16 +13,12 @@ GCodeExporter.prototype.makeHeader = function(){
     data += this.addLine("G54", [], "work offset");
 //    data += this.addLine("G49", [], "cancel tool length comp");
     data += this.addLine("G40", [], "cancel tool radius comp");
-    data += this.addLine("M09", [], "coolant off");
-
-
+//    data += this.addLine("M09", [], "coolant off");
 
     data += this.goHome();
 
     //set rapid and feed speeds
 
-    data += "\n";
-    data += "\n";
     return data;
 };
 
@@ -36,6 +32,10 @@ GCodeExporter.prototype.addLine = function(command, params, comment){
     if (comment) data += "(" + comment + ")";
     data += "\n";
     return data;
+};
+
+GCodeExporter.prototype.addComment = function(comment){
+    return "(" + comment + ")" + "\n";
 };
 
 GCodeExporter.prototype.rapid3 = function(x, y, z){
@@ -59,6 +59,8 @@ GCodeExporter.prototype.moveZ = function(z){
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";
+    data += "\n";
+    data += "\n";
     data += this.goHome();
     data += this.addLine("M30", [], "program stop");
 
