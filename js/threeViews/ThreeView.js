@@ -88,17 +88,16 @@ ThreeView = Backbone.View.extend({
         var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
         this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-        //check if we're in the same spot
-        if (this.highlighter.isVisible()){
-            if(this.mouseProjection.intersectObject(this.highlighter.mesh, false).length > 0) return;
-        }
-
-        var intersections = this.mouseProjection.intersectObjects(this.model.cells.concat(this.model.basePlane), false);
+        var objsToIntersect = this.model.cells.concat(this.model.basePlane);
+        if (this.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(this.highlighter.mesh);
+        var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
         if (intersections.length == 0) {//no intersections
             this.highlighter.setNothingHighlighted();
             this._setNoPartIntersections();
             return;
         }
+
+        if(intersections[0].object == this.highlighter.mesh) return;
 
         this.highlighter.highlight(intersections[0]);
 
