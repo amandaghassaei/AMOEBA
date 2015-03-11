@@ -186,6 +186,7 @@ AppState = Backbone.Model.extend({
     _handleKeyStroke: function(e){//receives keyup and keydown
 
         if ($("input").is(':focus')) return;//we are typing in an input
+        if ($("textarea").is(':focus')) return;//we are typing in an input
 
         var state = e.data.state;
         var currentTab = this.get("currentTab");

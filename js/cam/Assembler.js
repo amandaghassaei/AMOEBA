@@ -15,6 +15,8 @@ Assembler = Backbone.Model.extend({
 
     initialize: function(){
 
+        _.bindAll(this, "postProcess");
+
         //bind events
         this.listenTo(this, "change:camProcess", this._setNeedsPostProcessing);
         this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
@@ -25,8 +27,9 @@ Assembler = Backbone.Model.extend({
         this.set("needsPostProcessing", true);
     },
 
-    setProgramEditsMade: function(){
-        this.set("editsMadeToProgram", true);
+    makeProgramEdits: function(data){
+        this.set("dataOut", data, {silent:true});
+        this.set("editsMadeToProgram", true, {silent: true});
     },
 
     _getExporter: function(){
@@ -43,40 +46,37 @@ Assembler = Backbone.Model.extend({
             } else {
                 return new GCodeExporter();
             }
-        }
+        } else console.warn("cam process not supported");
     },
 
     postProcess: function(){
-        var exporter = this._getExporter();
-        if (exporter) {
-            var data = "";
-            data += exporter.makeHeader();
-            data += "\n\n";
-            data += exporter.addComment("begin program");
-            data += "\n";
-            data += exporter.moveZ(3);
-            data += exporter.move3(1, 4, 5);
-            data += "\n\n";
-            data += exporter.addComment("end program");
-            data += "\n";
-            data += exporter.makeFooter();
-            this.set("dataOut", data);
-            this.set("exporter", exporter);
-        }
-        else console.warn("cam process not supported");
         this.set("needsPostProcessing", false);
+        var exporter = this._getExporter();
+
+        var data = "";
+        data += exporter.makeHeader();
+        data += "\n\n";
+        data += exporter.addComment("begin program");
+        data += "\n";
+        data += exporter.moveZ(3);
+        data += exporter.move3(1, 4, 5);
+        data += "\n\n";
+        data += exporter.addComment("end program");
+        data += "\n";
+        data += exporter.makeFooter();
+
+        this.set("dataOut", data);
+        this.set("exporter", exporter);
         return {data:data, exporter:exporter};
     },
 
-    save: function(data, exporter){
+    save: function(){
         if (this.get("needsPostProcessing")){
             var output = this.postProcess();
             output.exporter.save(output.data);
             return;
         }
-        if (!data) data = this.get("dataOut");
-        if (!exporter) exporter = this.get("exporter");
-        exporter.save(data);
+        this.get("exporter").save(this.get("dataOut"));
     },
 
     destroy: function(){

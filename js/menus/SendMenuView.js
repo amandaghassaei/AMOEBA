@@ -15,6 +15,7 @@ SendMenuView = Backbone.View.extend({
 
         //bind events
         this.listenTo(dmaGlobals.assembler, "change", this.render);
+        $(document).bind('keyup', {state:false}, this._codeEdit);
 
         _.bindAll(this, "render");
     },
@@ -29,6 +30,13 @@ SendMenuView = Backbone.View.extend({
         dmaGlobals.assembler.postProcess();
     },
 
+    _codeEdit: function(e){
+        var textarea = $("#gcodeEditor");
+        if (!textarea.is(":focus")) return;
+        e.preventDefault();
+        dmaGlobals.assembler.makeProgramEdits(textarea.val());
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "send") return;
         if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
@@ -37,7 +45,7 @@ SendMenuView = Backbone.View.extend({
 
     template: _.template('\
         <a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
-        <textarea id="gcodeEditor"><%= dataOut %></textarea>\
+        <textarea id="gcodeEditor"><%= dataOut %></textarea><br/><br/>\
         <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 

@@ -63,7 +63,7 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
+            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
         ')
 
 });
