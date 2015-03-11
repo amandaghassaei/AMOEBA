@@ -81,7 +81,7 @@ LatticeMenuView = Backbone.View.extend({
 
     _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
         if (!newConnectionType){
-            newConnectionType = "face";
+            newConnectionType = _.keys(dmaGlobals.appState.get("allConnectionTypes")[newCellType])[0];
             this.lattice.set("connectionType", newConnectionType, {silent:true});
         }
         this.model.set("connectionType", newConnectionType, {silent:true});
