@@ -7,11 +7,14 @@ SendMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #saveSendMenu":                                       "_save"
+        "click #saveSendMenu":                                       "_save",
+        "click #overrideEdits":                                      "_postProcess"
     },
 
     initialize: function(){
 
+        //bind events
+        this.listenTo(dmaGlobals.assembler, "change", this.render);
 
         _.bindAll(this, "render");
     },
@@ -19,6 +22,11 @@ SendMenuView = Backbone.View.extend({
     _save: function(e){
         e.preventDefault();
         dmaGlobals.assembler.save();
+    },
+
+    _postProcess: function(e){
+        e.preventDefault();
+        dmaGlobals.assembler.postProcess();
     },
 
     render: function(){
@@ -30,6 +38,7 @@ SendMenuView = Backbone.View.extend({
     template: _.template('\
         <a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         <textarea id="gcodeEditor"><%= dataOut %></textarea>\
+        <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
 });

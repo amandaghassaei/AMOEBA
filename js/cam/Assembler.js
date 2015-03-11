@@ -29,10 +29,25 @@ Assembler = Backbone.Model.extend({
         this.set("editsMadeToProgram", true);
     },
 
+    _getExporter: function(){
+        var currentExporter = this.get("exporter");
+        if (this.get("camProcess") == "shopbot") {
+            if (currentExporter && currentExporter.constructor == ShopbotExporter){
+                return currentExporter;
+            } else {
+                return new ShopbotExporter();
+            }
+        } else if (this.get("camProcess") == "gcode") {
+            if (currentExporter && currentExporter.constructor == GCodeExporter){
+                return currentExporter;
+            } else {
+                return new GCodeExporter();
+            }
+        }
+    },
+
     postProcess: function(){
-        var exporter;
-        if (this.get("camProcess") == "shopbot") exporter = new ShopbotExporter();
-        else if (this.get("camProcess") == "gcode") exporter = new GCodeExporter();
+        var exporter = this._getExporter();
         if (exporter) {
             var data = "";
             data += exporter.makeHeader();
