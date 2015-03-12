@@ -14,6 +14,8 @@ Assembler = Backbone.Model.extend({
 
         rapidHeight: 12,
         stockHeight: 3,
+        origin: null,
+        originPosition: new THREE.Vector3(0,0,0)
     },
 
     initialize: function(){
@@ -23,7 +25,28 @@ Assembler = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:camProcess", this._setNeedsPostProcessing);
         this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
+        this.listenTo(dmaGlobals.appState, "change:currentTab", this._setOriginVisibility);
+        this.listenTo(this, "change:originPosition", this._moveOrigin);
 
+        //init origin mesh
+        var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4), new THREE.MeshBasicMaterial({color:0xff0000}));
+        dmaGlobals.three.sceneAdd(origin);
+        this.set("origin", origin);
+        this._setOriginVisibility();
+    },
+
+    _setOriginVisibility: function(){
+        var visible = false;
+        var currentTab = dmaGlobals.appState.get("currentTab");
+        if (currentTab == "cam" || currentTab == "animate" || currentTab == "send") visible = true;
+        this.get("origin").visible = visible;
+        dmaGlobals.three.render();
+    },
+
+    _moveOrigin: function(){
+        var position = this.get("originPosition");
+        this.get("origin").position.set(position.x, position.y, position.z);
+        dmaGlobals.three.render();
     },
 
     _setNeedsPostProcessing: function(){

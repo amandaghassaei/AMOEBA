@@ -20,8 +20,11 @@ CamMenuView = Backbone.View.extend({
         this.assembler = options.assembler;
 
         _.bindAll(this, "render");
+        _.bindAll(this, "_updateOrigin");
+        //bind events
         this.listenTo(this.assembler, "change", this.render);
         this.listenTo(this.model, "change:units", this.render);
+        $(document).bind('keyup', {state:false}, this._updateOrigin);
     },
 
     _selectCamProcess: function(e){
@@ -34,6 +37,16 @@ CamMenuView = Backbone.View.extend({
         this.model.set("units", $(e.target).data("type"));
     },
 
+    _updateOrigin: function(e){
+        if (!$(".wcs").is(":focus")) return;
+        e.preventDefault();
+        var newPosition = parseFloat($(e.target).val());
+        if (isNaN(newPosition)) return;
+        var origin = this.assembler.get("originPosition");
+        origin[$(e.target).data("type")] = newPosition;
+        this.assembler.trigger("change:originPosition");
+    },
+
     _save: function(e){
         e.preventDefault();
         this.assembler.save();
@@ -41,6 +54,7 @@ CamMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
+        if ($(".wcs").is(":focus")) return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
     },
 
@@ -54,6 +68,7 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
+         <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
          Units: &nbsp;&nbsp;\
             <div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
@@ -63,7 +78,9 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
+            Part Zero: &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x %>" placeholder="origin X" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="y" value="<%= originPosition.y %>" placeholder="origin Y" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="z" value="<%= originPosition.z %>" placeholder="origin Z" class="form-control numberInput wcs" type="text"><br/>\
         ')
 
 });

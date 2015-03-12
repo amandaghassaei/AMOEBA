@@ -92,6 +92,7 @@ MenuWrapper = Backbone.View.extend({
         var self = this;
         this._hide(function(){
             self._populateAndShow();
+            self.model.trigger("change:currentTab");//this was updated silently before
         }, true);
     },
 

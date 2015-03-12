@@ -160,3 +160,8 @@ hr {
 #gcodeEditor:focus {
     outline-width: 0;
 }
+
+input.numberInput{
+    width:22%;
+    display: inline;
+}
