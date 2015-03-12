@@ -65,6 +65,7 @@ Assembler = Backbone.Model.extend({
         var rapidHeight = this.get("rapidHeight");
         var stockHeight = this.get("stockHeight");
         data += exporter.moveZ(rapidHeight);
+        data += "\n";
         dmaGlobals.lattice.rasterCells("XYZ", function(cell, x, y, z){
             if (!cell) return;
 
@@ -73,7 +74,7 @@ Assembler = Backbone.Model.extend({
             data += exporter.moveZ(rapidHeight);
 
             var cellPosition = cell.getPosition();
-            data += exporter.rapidXY(cellPosition.x, cellPosition.y);
+            data += exporter.rapidXY(cellPosition.x.toFixed(3), cellPosition.y.toFixed(3));
             data += exporter.moveZ(stockHeight);
             data += exporter.moveZ(rapidHeight);
 
