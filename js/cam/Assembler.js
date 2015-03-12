@@ -10,7 +10,10 @@ Assembler = Backbone.Model.extend({
         exporter: null,
         dataOut: "",
         needsPostProcessing: true,
-        editsMadeToProgram: false//warn the user that they will override changes
+        editsMadeToProgram: false,//warn the user that they will override changes
+
+        rapidHeight: 12,
+        stockHeight: 3,
     },
 
     initialize: function(){
@@ -58,8 +61,26 @@ Assembler = Backbone.Model.extend({
         data += "\n\n";
         data += exporter.addComment("begin program");
         data += "\n";
-        data += exporter.moveZ(3);
-        data += exporter.move3(1, 4, 5);
+
+        var rapidHeight = this.get("rapidHeight");
+        var stockHeight = this.get("stockHeight");
+        data += exporter.moveZ(rapidHeight);
+        dmaGlobals.lattice.rasterCells("XYZ", function(cell, x, y, z){
+            if (!cell) return;
+
+            data += exporter.rapidXY(0, 0);
+            data += exporter.moveZ(stockHeight);
+            data += exporter.moveZ(rapidHeight);
+
+            var cellPosition = cell.getPosition();
+            data += exporter.rapidXY(cellPosition.x, cellPosition.y);
+            data += exporter.moveZ(stockHeight);
+            data += exporter.moveZ(rapidHeight);
+
+            data += "\n";
+        });
+        data += exporter.rapidXY(0, 0);
+
         data += "\n\n";
         data += exporter.addComment("end program");
         data += "\n";

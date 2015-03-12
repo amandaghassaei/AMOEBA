@@ -31,20 +31,30 @@ ShopbotExporter.prototype.addComment = function(comment){
     return "'" + comment + "\n";
 };
 
-ShopbotExporter.prototype.rapid3 = function(x, y, z){
+ShopbotExporter.prototype.rapidXYZ = function(x, y, z){
     return this.addLine("J3", [x,y,z]);
 };
 
-ShopbotExporter.prototype.move3 = function(x, y, z){
+ShopbotExporter.prototype.rapidXY = function(x, y){
+    return this.addLine("J2", [x,y]);
+};
+
+ShopbotExporter.prototype.moveXYZ = function(x, y, z){
     return this.addLine("M3", [x,y,z]);
 };
 
-ShopbotExporter.prototype.goHome = function(){
-    return this.addLine("JH", [], "go home");
+ShopbotExporter.prototype.moveXY = function(x, y){
+    return this.addLine("M2", [x,y]);
 };
 
 ShopbotExporter.prototype.moveZ = function(z){
-    return this.move3("", "", z);
+    return this.moveXYZ("", "", z);
+};
+
+ShopbotExporter.prototype.goHome = function(){
+    var data = this.moveZ(dmaGlobals.assembler.get("rapidHeight"));
+    data += this.moveXY(0,0);
+    return data;
 };
 
 ShopbotExporter.prototype.makeFooter = function(){

@@ -38,24 +38,33 @@ GCodeExporter.prototype.addComment = function(comment){
     return "(" + comment + ")" + "\n";
 };
 
-GCodeExporter.prototype.rapid3 = function(x, y, z){
-    return this.move3(x,y,z);
+GCodeExporter.prototype.rapidXYZ = function(x, y, z){
+    return this.moveXYZ(x,y,z);
 };
 
-GCodeExporter.prototype.move3 = function(x, y, z){
+GCodeExporter.prototype.rapidXY = function(x, y){
+    return this.rapidXYZ(x, y, null);
+};
+
+GCodeExporter.prototype.moveXYZ = function(x, y, z){
     if (x !== null) x = "X"+x;
     if (y !== null) y = "Y"+y;
     if (z !== null) z = "Z"+z;
     return this.addLine("G01", [x,y,z]);
 };
 
-GCodeExporter.prototype.goHome = function(){
-    return this.move3(0,0,0);
+GCodeExporter.prototype.moveXY = function(x, y){
+    return this.moveXYZ(x, y, null);
 };
 
 GCodeExporter.prototype.moveZ = function(z){
-    return this.move3(null, null, z);
+    return this.moveXYZ(null, null, z);
 };
+
+GCodeExporter.prototype.goHome = function(){
+    return this.moveXYZ(0,0,dmaGlobals.assembler.get("rapidHeight"));
+};
+
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";

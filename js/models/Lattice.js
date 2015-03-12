@@ -423,6 +423,70 @@ Lattice = Backbone.Model.extend({
         }
     },
 
+    rasterCells: function(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim){//used for CAM raster x/y/z in any order permutation
+        //order is of form 'XYZ'
+        var firstLetter = order.charAt(0);
+        var cells = this.get("cells");
+        var newVarOrder;
+        var newVarDim;
+        if (firstLetter == 'X'){
+            newVarOrder = 0;
+            newVarDim = cells.length;
+        } else if (firstLetter == 'Y'){
+            newVarOrder = 1;
+            newVarDim = cells[0].length;
+        } else if (firstLetter == 'Z'){
+            newVarOrder = 2;
+            newVarDim = cells[0][0].length;
+        } else if (firstLetter == ""){
+//            console.log(var1Dim);
+//            console.log(var2Dim);
+//            console.log(var3Dim);
+//            console.log(var1Order);
+//            console.log(var2Order);
+//            console.log(var3Order);
+            for (var i=0;i<var1Dim;i++){
+                for (var j=0;j<var2Dim;j++){
+                    for (var k=0;k<var3Dim;k++){
+                        if (var1Order == 0){
+                            if (var2Order == 1){
+                                callback(cells[i][j][k], i, j, k);
+                            } else if (var2Order == 2){
+                                callback(cells[i][k][j], i, k, j);
+                            }
+                        } else if (var1Order == 1){
+                            if (var2Order == 0){
+                                callback(cells[j][i][k], j, i, k);
+                            } else if (var2Order == 2){
+                                callback(cells[k][i][j], k, i, j);
+                            }
+                        } else {
+                            if (var2Order == 0){
+                                callback(cells[j][k][i], j, k, i);
+                            } else if (var2Order == 1){
+                                callback(cells[k][j][i], k, j, i);
+                            }
+                        }
+
+                    }
+                }
+            }
+            return;
+        }
+        if (var3Order == null) {
+            var3Order = newVarOrder;
+            var3Dim = newVarDim;
+        } else if (var2Order  == null) {
+            var2Order = newVarOrder;
+            var2Dim = newVarDim;
+        } else {
+            var1Order = newVarOrder;
+            var1Dim = newVarDim;
+        }
+        order = order.substr(1);
+        this.rasterCells(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim);
+    },
+
     ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////SAVE////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////

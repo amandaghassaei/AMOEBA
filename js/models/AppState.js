@@ -94,6 +94,39 @@ AppState = Backbone.Model.extend({
             }
         },
 
+        allMachineTypes:{
+            shopbot: "Shopbot"
+        },
+//        allAssemblyStrategies:{
+//            octa:{
+//                face: {},
+//                freeformFace: {},
+//                edge: {},
+//                edgeRot: {
+//                    xRaster: "X Raster",
+//                    yRaster: "Y Raster"
+//                },
+//                vertex: {
+//                    xRaster: "X Raster",
+//                    yRaster: "Y Raster"
+//                }
+//            },
+//            tetra: {
+//                vertex: {}
+//            },
+//            cube:{
+//                face: {
+//                    xRaster: "X Raster",
+//                    yRaster: "Y Raster"
+//                }
+//            },
+//            truncatedCube:{
+//                face: {}
+//            },
+//            kelvin:{
+//                face: {}
+//            }
+//        },
         allAssemblyStrategies: {
             xRaster: "X Raster",
             yRaster: "Y Raster"
