@@ -20,11 +20,11 @@ CamMenuView = Backbone.View.extend({
         this.assembler = options.assembler;
 
         _.bindAll(this, "render");
-        _.bindAll(this, "_updateOrigin");
+        _.bindAll(this, "_onKeyup");
         //bind events
         this.listenTo(this.assembler, "change", this.render);
         this.listenTo(this.model, "change:units", this.render);
-        $(document).bind('keyup', {state:false}, this._updateOrigin);
+        $(document).bind('keyup', {state:false}, this._onKeyup);
     },
 
     _selectCamProcess: function(e){
@@ -37,14 +37,20 @@ CamMenuView = Backbone.View.extend({
         this.model.set("units", $(e.target).data("type"));
     },
 
-    _updateOrigin: function(e){
-        if (!$(".wcs").is(":focus")) return;
+    _onKeyup: function(e){
+        if ($(".wcs").is(":focus")) this._updateNumber(e, "originPosition");
+        else if ($(".stockPosition").is(":focus")) this._updateNumber(e, "stockPosition");
+        else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
+        else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
+    },
+
+    _updateNumber: function(e, property){
         e.preventDefault();
-        var newPosition = parseFloat($(e.target).val());
-        if (isNaN(newPosition)) return;
-        var origin = this.assembler.get("originPosition");
-        origin[$(e.target).data("type")] = newPosition;
-        this.assembler.trigger("change:originPosition");
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        var object = this.assembler.get(property);
+        object[$(e.target).data("type")] = newVal;
+        this.assembler.trigger("change:"+property);
     },
 
     _save: function(e){
@@ -54,7 +60,7 @@ CamMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
-        if ($(".wcs").is(":focus")) return;
+        if ($("input").is(":focus")) return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
     },
 
@@ -81,6 +87,9 @@ CamMenuView = Backbone.View.extend({
             Zero (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x %>" placeholder="X" class="form-control numberInput wcs" type="text">\
             &nbsp;<input data-type="y" value="<%= originPosition.y %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
             &nbsp;<input data-type="z" value="<%= originPosition.z %>" placeholder="Z" class="form-control numberInput wcs" type="text"><br/><br/>\
+            Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
+            &nbsp;<input data-type="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
+            &nbsp;<input data-type="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
             Rapid Speeds (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
             &nbsp;<input data-type="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control numberInput rapidSpeeds" type="text"><br/><br/>\
             Feed Rate (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control numberInput feedRate" type="text">\

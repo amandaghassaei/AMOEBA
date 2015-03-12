@@ -8,8 +8,8 @@ function ShopbotExporter() {
 ShopbotExporter.prototype.makeHeader = function(){
     var data = "";
     data += this.addLine("FG", [], "single step mode");
-    data += this.goHome();
     data += this.addLine("SA", [], "absolute distances");
+    data += this.goHome();
     data += this.addLine("SM", [], "move/cut mode");
     var rapidSpeeds = dmaGlobals.assembler.get("rapidSpeeds");
     data += this.addLine("JS", [rapidSpeeds.xy, rapidSpeeds.z], "jog speed xy, z");

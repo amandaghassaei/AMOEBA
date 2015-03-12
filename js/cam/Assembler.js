@@ -17,9 +17,11 @@ Assembler = Backbone.Model.extend({
         stockHeight: 3,
         origin: null,
         originPosition: new THREE.Vector3(0,0,0),
+        stock: null,
+        stockPosition: new THREE.Vector3(0,0,0),
 
         rapidSpeeds:{xy: 12, z: 4},
-        feedRate:{xy: 12, z: 4},
+        feedRate:{xy: 12, z: 4}
     },
 
     initialize: function(){
@@ -27,9 +29,9 @@ Assembler = Backbone.Model.extend({
         _.bindAll(this, "postProcess");
 
         //bind events
-        this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
-        this.listenTo(dmaGlobals.appState, "change:currentTab", this._setOriginVisibility);
+        this.listenTo(dmaGlobals.appState, "change:currentTab", this._setCAMVisibility);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
+        this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
         this.listenTo(this,
                 "change:originPosition " +
                 "change:feedRate " +
@@ -37,19 +39,32 @@ Assembler = Backbone.Model.extend({
                 "change:camProcess " +
                 "change:camStrategy",
             this._setNeedsPostProcessing);
+        this.listenTo(dmaGlobals.lattice,
+                "change:numCells " +
+                "change:scale " +
+                "change:cellType " +
+                "change:connectionType",
+            this._setNeedsPostProcessing);
 
         //init origin mesh
-        var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4), new THREE.MeshBasicMaterial({color:0xff0000}));
+        var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
+            new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
-        this._setOriginVisibility();
+        //init stock mesh
+        var stock = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
+            new THREE.MeshBasicMaterial({color:0xffff00}));
+        dmaGlobals.three.sceneAdd(origin);
+        this.set("stock", stock);
+        this._setCAMVisibility();
     },
 
-    _setOriginVisibility: function(){
+    _setCAMVisibility: function(){
         var visible = false;
         var currentTab = dmaGlobals.appState.get("currentTab");
         if (currentTab == "cam" || currentTab == "animate" || currentTab == "send") visible = true;
         this.get("origin").visible = visible;
+        this.get("stock").visible = visible;
         dmaGlobals.three.render();
     },
 
