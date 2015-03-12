@@ -21,7 +21,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
     DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);
+        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
         var wireframe = new THREE.BoxHelper(mesh.children[0]);
         wireframe.material.color.set(0x000000);
         mesh.children.push(wireframe);
@@ -37,7 +37,11 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
             position[key] += direction[key]*scale/2;
         });
         return {index: _.clone(this.indices), direction:direction, position:position};
-    }
+    };
+
+    DMACubeCell.prototype.getGeometry = function(){
+        return unitCellGeo;
+    };
 
     self.DMACubeCell = DMACubeCell;
 
@@ -100,7 +104,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
 
     DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);
+        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
         mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
     };
@@ -116,7 +120,11 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
             position[key] += direction[key]*scale/2;
         });
         return {index: _.clone(this.indices), direction:direction, position:position};
-    }
+    };
+
+    DMATruncCubeCell.prototype.getGeometry = function(){
+        return unitCellGeo;
+    };
 
     self.DMATruncCubeCell = DMATruncCubeCell;
 
@@ -226,9 +234,13 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
     DMATruncOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, unitCellGeo, cellMaterial);
+        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
         mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
+    };
+
+    DMATruncOctaCell.prototype.getGeometry = function(){
+        return unitCellGeo;
     };
 
     self.DMATruncOctaCell = DMATruncOctaCell;

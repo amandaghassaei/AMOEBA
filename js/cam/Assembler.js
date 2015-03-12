@@ -31,6 +31,7 @@ Assembler = Backbone.Model.extend({
         //bind events
         this.listenTo(dmaGlobals.appState, "change:currentTab", this._setCAMVisibility);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
+        this.listenTo(this, "change:stockPosition", this._moveStock);
         this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
         this.listenTo(this,
                 "change:originPosition " +
@@ -54,7 +55,7 @@ Assembler = Backbone.Model.extend({
         //init stock mesh
         var stock = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
             new THREE.MeshBasicMaterial({color:0xffff00}));
-        dmaGlobals.three.sceneAdd(origin);
+        dmaGlobals.three.sceneAdd(stock);
         this.set("stock", stock);
         this._setCAMVisibility();
     },
@@ -71,6 +72,12 @@ Assembler = Backbone.Model.extend({
     _moveOrigin: function(){
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
+        dmaGlobals.three.render();
+    },
+
+    _moveStock: function(){
+        var position = this.get("stockPosition");
+        this.get("stock").position.set(position.x, position.y, position.z);
         dmaGlobals.three.render();
     },
 

@@ -21,13 +21,17 @@ DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
 DMATetraFaceCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
     var zIndex = this.indices.z;
-    if (zIndex%2 ==0) return DMACell.prototype._buildCellMesh.call(this, unitCellGeo);
+    if (zIndex%2 ==0) return DMACell.prototype._buildCellMesh.call(this);
     return DMACell.prototype._buildCellMesh.call(this, unitCellGeoUpsideDown);
 };
 
 DMATetraFaceCell.prototype._doMeshTransformations = function(mesh){
     var zIndex = this.indices.z;
     if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
+};
+
+DMATetraFaceCell.prototype.getGeometry = function(){
+    return unitCellGeo;
 };
 
 
@@ -58,10 +62,6 @@ function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, dir
 }
 DMAFreeFormTetraCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
-DMAFreeFormTetraCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-    return DMACell.prototype._buildCellMesh.call(this, unitCellGeo2);
-};
-
 DMAFreeFormTetraCell.prototype._doMeshTransformations = function(mesh){
     var direction = this.parentDirection.clone();
     var zAxis = new THREE.Vector3(0,0,1);
@@ -86,6 +86,10 @@ DMAFreeFormTetraCell.prototype.getType = function(){
 DMAFreeFormTetraCell.prototype.zScale = function(scale){
     if (!scale) scale = dmaGlobals.lattice.get("scale");
     return 2*scale/Math.sqrt(24);
+};
+
+DMAFreeFormTetraCell.prototype.getGeometry = function(){
+    return unitCellGeo2;
 };
 
 

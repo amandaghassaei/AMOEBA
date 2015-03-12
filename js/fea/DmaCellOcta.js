@@ -25,12 +25,12 @@ DMAFaceOctaCell.prototype._initParts = function(){
     return parts;
 };
 
-DMAFaceOctaCell.prototype._buildCellMesh = function(){
-    return DMACell.prototype._buildCellMesh.call(this, unitFaceOctaGeo);
-};
-
 DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
     if (this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
+};
+
+DMAFaceOctaCell.prototype.getGeometry = function(){
+    return unitFaceOctaGeo;
 };
 
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
@@ -51,10 +51,6 @@ function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, dire
     DMAFreeFormCell.call(this, indices, scale, parentCellPos, parentCellQuat, direction, parentType);
 }
 DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
-
-DMAFreeFormOctaCell.prototype._buildCellMesh = function(){
-    return DMACell.prototype._buildCellMesh.call(this, unitFaceOctaGeo);
-};
 
 DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
@@ -84,6 +80,10 @@ DMAFreeFormOctaCell.prototype._initParts = function(){
 
 DMAFreeFormOctaCell.prototype.getType = function(){
     return "octa";
+};
+
+DMAFreeFormOctaCell.prototype.getGeometry = function(){
+    return unitFaceOctaGeo;
 };
 
 DMAFreeFormOctaCell.prototype.zScale = function(scale){
@@ -125,10 +125,6 @@ function DMARotatedEdgeCell(indices, scale){
     DMACell.call(this, indices, scale);
 }
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
-
-DMARotatedEdgeCell.prototype._buildCellMesh = function(){
-    return DMACell.prototype._buildCellMesh.call(this, unitVertexOcta);
-};
 
 DMARotatedEdgeCell.prototype._doMeshTransformations = function(mesh){
     mesh.rotation.set(0, 0, Math.PI/4);
@@ -195,6 +191,10 @@ DMARotatedEdgeCell.prototype.zScale = function(scale){
     return this.xScale(scale)*Math.sqrt(2);
 };
 
+DMARotatedEdgeCell.prototype.getGeometry = function(){
+    return unitVertexOcta;
+};
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////VERTEX CONNECTED///////////////////////////////////////////////////////
@@ -205,10 +205,6 @@ function DMAVertexOctaCell(indices, scale){
     DMACell.call(this, indices, scale);
 }
 DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
-
-DMAVertexOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-    return DMACell.prototype._buildCellMesh.call(this, unitVertexOcta);
-};
 
 DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
 
@@ -246,4 +242,8 @@ DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
     }
 
     return {index: _.clone(this.indices), direction:direction, position:position};
+};
+
+DMAVertexOctaCell.prototype.getGeometry = function(){
+    return unitVertexOcta;
 };

@@ -28,13 +28,13 @@ DMACell.prototype.drawForMode = function(scale, cellMode, beamMode){
     _.each(this.parts, function(part){
         if (part) part.setVisibility(cellMode == "part" && !beamMode);
     });
-    var self = this;
     _.each(this.beams, function(beam){
         beam.setVisibility(beamMode && cellMode == "part");
     });
 };
 
-DMACell.prototype._buildCellMesh = function(unitCellGeo, material){//called from every subclass
+DMACell.prototype._buildCellMesh = function(material){//called from every subclass
+    var unitCellGeo = this.getGeometry();
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
     this._doMeshTransformations(mesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
