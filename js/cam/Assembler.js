@@ -7,6 +7,7 @@ Assembler = Backbone.Model.extend({
     defaults: {
         camStrategy: "xRaster",
         camProcess: "shopbot",
+        machine: "shopbot",
         exporter: null,
         dataOut: "",
         needsPostProcessing: true,

@@ -95,7 +95,8 @@ AppState = Backbone.Model.extend({
         },
 
         allMachineTypes:{
-            shopbot: "Shopbot"
+            shopbot: "Shopbot",
+            oneBit: "One Bit Bot"
         },
 //        allAssemblyStrategies:{
 //            octa:{
