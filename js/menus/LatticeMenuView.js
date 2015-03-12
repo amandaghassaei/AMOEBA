@@ -149,7 +149,7 @@ LatticeMenuView = Backbone.View.extend({
         <% } %>\
         <br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
-        <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control" type="text"><br/>\
+        <br/><input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control numberInput" type="text"><br/>\
         Units: &nbsp;&nbsp;\
             <div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\

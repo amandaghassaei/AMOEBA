@@ -18,6 +18,8 @@ GCodeExporter.prototype.makeHeader = function(){
     data += this.goHome();
 
     //set rapid and feed speeds
+    var rapidSpeeds = dmaGlobals.assembler.get("rapidSpeeds");
+    var feedRate = dmaGlobals.assembler.get("feedRate");
 
     return data;
 };
@@ -64,7 +66,6 @@ GCodeExporter.prototype.moveZ = function(z){
 GCodeExporter.prototype.goHome = function(){
     return this.moveXYZ(0,0,dmaGlobals.assembler.get("rapidHeight"));
 };
-
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";

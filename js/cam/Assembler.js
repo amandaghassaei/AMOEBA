@@ -15,7 +15,10 @@ Assembler = Backbone.Model.extend({
         rapidHeight: 12,
         stockHeight: 3,
         origin: null,
-        originPosition: new THREE.Vector3(0,0,0)
+        originPosition: new THREE.Vector3(0,0,0),
+
+        rapidSpeeds:{xy: 12, z: 4},
+        feedRate:{xy: 12, z: 4},
     },
 
     initialize: function(){
@@ -23,10 +26,16 @@ Assembler = Backbone.Model.extend({
         _.bindAll(this, "postProcess");
 
         //bind events
-        this.listenTo(this, "change:camProcess", this._setNeedsPostProcessing);
         this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
         this.listenTo(dmaGlobals.appState, "change:currentTab", this._setOriginVisibility);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
+        this.listenTo(this,
+                "change:originPosition " +
+                "change:feedRate " +
+                "change:rapidSpeeds " +
+                "change:camProcess " +
+                "change:camStrategy",
+            this._setNeedsPostProcessing);
 
         //init origin mesh
         var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4), new THREE.MeshBasicMaterial({color:0xff0000}));
@@ -89,7 +98,13 @@ Assembler = Backbone.Model.extend({
         var stockHeight = this.get("stockHeight");
         data += exporter.moveZ(rapidHeight);
         data += "\n";
-        dmaGlobals.lattice.rasterCells("XYZ", function(cell, x, y, z){
+        var wcs = this.get("originPosition");
+
+        var strategy = this.get("camStrategy");
+        var order;
+        if (strategy == "xRaster") order = "XYZ";
+        else if (strategy == "yRaster") order = "YXZ";
+        dmaGlobals.lattice.rasterCells(order, function(cell, x, y, z){
             if (!cell) return;
 
             data += exporter.rapidXY(0, 0);
@@ -97,7 +112,7 @@ Assembler = Backbone.Model.extend({
             data += exporter.moveZ(rapidHeight);
 
             var cellPosition = cell.getPosition();
-            data += exporter.rapidXY(cellPosition.x.toFixed(3), cellPosition.y.toFixed(3));
+            data += exporter.rapidXY((cellPosition.x-wcs.x).toFixed(3), (cellPosition.y-wcs.y).toFixed(3));
             data += exporter.moveZ(stockHeight);
             data += exporter.moveZ(rapidHeight);
 

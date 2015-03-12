@@ -78,9 +78,13 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            Part Zero: &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x %>" placeholder="origin X" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="y" value="<%= originPosition.y %>" placeholder="origin Y" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="z" value="<%= originPosition.z %>" placeholder="origin Z" class="form-control numberInput wcs" type="text"><br/>\
+            Zero (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x %>" placeholder="X" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="y" value="<%= originPosition.y %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="z" value="<%= originPosition.z %>" placeholder="Z" class="form-control numberInput wcs" type="text"><br/><br/>\
+            Rapid Speeds (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
+            &nbsp;<input data-type="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control numberInput rapidSpeeds" type="text"><br/><br/>\
+            Feed Rate (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control numberInput feedRate" type="text">\
+            &nbsp;<input data-type="z" value="<%= feedRate.z %>" placeholder="Z" class="form-control numberInput feedRate" type="text">\
         ')
 
 });

@@ -11,8 +11,10 @@ ShopbotExporter.prototype.makeHeader = function(){
     data += this.goHome();
     data += this.addLine("SA", [], "absolute distances");
     data += this.addLine("SM", [], "move/cut mode");
-    data += this.addLine("JS", [4, 1], "jog speed xy, z");
-    data += this.addLine("MS", [2, 0.5], "move speed xy, z");
+    var rapidSpeeds = dmaGlobals.assembler.get("rapidSpeeds");
+    data += this.addLine("JS", [rapidSpeeds.xy, rapidSpeeds.z], "jog speed xy, z");
+    var feedRate = dmaGlobals.assembler.get("feedRate");
+    data += this.addLine("MS", [feedRate.xy, feedRate.z], "move speed xy, z");
     return data;
 };
 
