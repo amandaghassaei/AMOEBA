@@ -30,7 +30,7 @@ DMATetraFaceCell.prototype._doMeshTransformations = function(mesh){
     if (Math.abs(zIndex%4) == 2 || Math.abs(zIndex%4) == 3) mesh.rotateZ(Math.PI/3);
 };
 
-DMATetraFaceCell.prototype.getGeometry = function(){
+DMATetraFaceCell.prototype._getGeometry = function(){
     return unitCellGeo;
 };
 
@@ -88,7 +88,7 @@ DMAFreeFormTetraCell.prototype.zScale = function(scale){
     return 2*scale/Math.sqrt(24);
 };
 
-DMAFreeFormTetraCell.prototype.getGeometry = function(){
+DMAFreeFormTetraCell.prototype._getGeometry = function(){
     return unitCellGeo2;
 };
 

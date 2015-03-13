@@ -40,7 +40,7 @@ OtherLatticeSubclasses = {
             return this.xScale(scale);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMACubeCell(indices, scale);
         },
 
@@ -87,7 +87,7 @@ OtherLatticeSubclasses = {
             return this.xScale(scale);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMATruncCubeCell(indices, scale);
         },
 
@@ -136,7 +136,7 @@ OtherLatticeSubclasses = {
             return this.xScale(scale);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMATruncOctaCell(indices, scale);
         },
 

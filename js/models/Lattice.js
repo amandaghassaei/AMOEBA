@@ -60,7 +60,7 @@ Lattice = Backbone.Model.extend({
             for (var y=relativeMin.y;y<=relativeMax.y;y++){
                 for (var z=relativeMin.z;z<=relativeMax.z;z++){
                     if (!cells[x][y][z]) {
-                        cells[x][y][z] = this._makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
+                        cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
                         this.set("numCells", this.get("numCells")+1);
                     } else console.warn("already a cell there");
                 }
@@ -77,7 +77,7 @@ Lattice = Backbone.Model.extend({
 
         var index = this._subtract(indices, this.get("cellsMin"));
         if (!cells[index.x][index.y][index.z]) {
-            cells[index.x][index.y][index.z] = this._makeCellForLatticeType(indices, scale);
+            cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, scale);
             this.set("numCells", this.get("numCells")+1);
             dmaGlobals.three.render();
         } else console.warn("already a cell there");
@@ -380,7 +380,7 @@ Lattice = Backbone.Model.extend({
                 if (cell.type) var type = cell.type;
 
                 if (cell.destroy) cell.destroy();
-                var newCell = self._makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction, parentType, type);
+                var newCell = self.makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction, parentType, type);
 
                 if (parts) {
                     //todo make this better

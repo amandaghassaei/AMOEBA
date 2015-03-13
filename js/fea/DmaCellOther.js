@@ -39,7 +39,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
-    DMACubeCell.prototype.getGeometry = function(){
+    DMACubeCell.prototype._getGeometry = function(){
         return unitCellGeo;
     };
 
@@ -122,7 +122,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
-    DMATruncCubeCell.prototype.getGeometry = function(){
+    DMATruncCubeCell.prototype._getGeometry = function(){
         return unitCellGeo;
     };
 
@@ -239,7 +239,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return mesh;
     };
 
-    DMATruncOctaCell.prototype.getGeometry = function(){
+    DMATruncOctaCell.prototype._getGeometry = function(){
         return unitCellGeo;
     };
 

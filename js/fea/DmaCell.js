@@ -12,12 +12,17 @@ function DMACell(indices, scale) {
 
     this.indices = indices;
     this.cellMesh = this._buildCellMesh();
+    if (!indices) return;//this is a way to get the cell mesh without really initing a cell
+
+    this._doMeshTransformations(this.cellMesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
+    dmaGlobals.three.sceneAdd(this.cellMesh, "cell");
     this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
     var cellMode = dmaGlobals.lattice.get("cellMode");
     var beamMode = dmaGlobals.lattice.get("partType") == "beam";
     this.drawForMode(scale, cellMode, beamMode);
+
 }
 
 //todo this is a mess
@@ -34,12 +39,10 @@ DMACell.prototype.drawForMode = function(scale, cellMode, beamMode){
 };
 
 DMACell.prototype._buildCellMesh = function(material){//called from every subclass
-    var unitCellGeo = this.getGeometry();
+    var unitCellGeo = this._getGeometry();
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
-    this._doMeshTransformations(mesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
     mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-    dmaGlobals.three.sceneAdd(mesh, "cell");
     return mesh;
 };
 

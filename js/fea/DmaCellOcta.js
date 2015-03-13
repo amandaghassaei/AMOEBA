@@ -29,7 +29,7 @@ DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
     if (this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
 };
 
-DMAFaceOctaCell.prototype.getGeometry = function(){
+DMAFaceOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
@@ -82,7 +82,7 @@ DMAFreeFormOctaCell.prototype.getType = function(){
     return "octa";
 };
 
-DMAFreeFormOctaCell.prototype.getGeometry = function(){
+DMAFreeFormOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
@@ -191,7 +191,7 @@ DMARotatedEdgeCell.prototype.zScale = function(scale){
     return this.xScale(scale)*Math.sqrt(2);
 };
 
-DMARotatedEdgeCell.prototype.getGeometry = function(){
+DMARotatedEdgeCell.prototype._getGeometry = function(){
     return unitVertexOcta;
 };
 
@@ -244,6 +244,6 @@ DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
-DMAVertexOctaCell.prototype.getGeometry = function(){
+DMAVertexOctaCell.prototype._getGeometry = function(){
     return unitVertexOcta;
 };

@@ -48,15 +48,17 @@ Assembler = Backbone.Model.extend({
             this._setNeedsPostProcessing);
 
         //init origin mesh
+        var scale = dmaGlobals.lattice.get("scale");
         var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
             new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
         //init stock mesh
-        var stock = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
-            new THREE.MeshBasicMaterial({color:0xffff00}));
-        dmaGlobals.three.sceneAdd(stock);
-        this.set("stock", stock);
+        var stock = dmaGlobals.lattice.makeCellForLatticeType(null);
+        var stockMesh = stock.cellMesh.clone();
+        stockMesh.scale.set(scale.x, scale.y, scale.z);
+        dmaGlobals.three.sceneAdd(stockMesh);
+        this.set("stock", stockMesh);
         this._setCAMVisibility();
     },
 

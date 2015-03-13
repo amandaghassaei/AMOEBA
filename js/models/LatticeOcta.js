@@ -53,42 +53,6 @@ OctaLatticeSubclasses = {
             return position;
         },
 
-//        getInvCellPositionForIndex: function(index){
-//
-//            var scale = this.get("scale");
-//            var position = _.clone(index);
-//
-//            var oddZ = position.z%2 != 0;
-//            var upPoint = (position.z%4 == 0 || Math.abs(position.z%4) == 3);
-//            position.z = Math.floor(position.z/2);
-//
-//            if (!upPoint){
-//                position.x = (position.x)*this.xScale(scale);
-//                position.y = position.y*this.yScale(scale);
-//            } else {
-//                position.x = (position.x+0.5)*this.xScale(scale);
-//                position.y = (position.y)*this.yScale(scale)-scale/Math.sqrt(3)/2;
-//            }
-//
-//            if (oddZ){
-//                position.z = (position.z + 1)*this.zScale(scale);
-//            } else {
-//                position.z = (position.z)*this.zScale(scale);
-//            }
-//
-////            if (Math.abs(index.z%4) == 1 || Math.abs(index.z%4) == 2) position.z += this.zScale(scale);
-//
-//            if ((index.y%2) != 0) {
-//                if (!upPoint){
-//                    position.x += this.xScale(scale)/2;
-//                } else {
-//                    position.x -= this.xScale(scale)/2;
-//                }
-//            }
-//
-//            return position;
-//        },
-
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
             var colSep = this.get("columnSeparation");
@@ -104,7 +68,7 @@ OctaLatticeSubclasses = {
             return 2*scale/Math.sqrt(6);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMAFaceOctaCell(indices, scale);
         },
 
@@ -140,12 +104,12 @@ OctaLatticeSubclasses = {
         addFreeFormCell: function(parentCellPos, parentCellOrient, direction, parentType, type){
             var scale = this.get("scale");
             var cells = this.get("cells");
-            cells[0][0].push(this._makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction, parentType, type));
+            cells[0][0].push(this.makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction, parentType, type));
             this.set("numCells", this.get("numCells")+1);
             dmaGlobals.three.render();
         },
 
-        _makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction, parentType, type){
+        makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction, parentType, type){
             if (type){
                 if (type == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
                 return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
@@ -255,7 +219,7 @@ OctaLatticeSubclasses = {
             return position;
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMAEdgeOctaCell(indices, scale);
         },
 
@@ -357,7 +321,7 @@ OctaLatticeSubclasses = {
             return this.xScale(scale)*Math.sqrt(2)/2;
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMARotatedEdgeCell(indices, scale);
         },
 
@@ -416,7 +380,7 @@ OctaLatticeSubclasses = {
             return this.xScale(scale);
         },
 
-        _makeCellForLatticeType: function(indices, scale){
+        makeCellForLatticeType: function(indices, scale){
             return new DMAVertexOctaCell(indices, scale);
         },
 
