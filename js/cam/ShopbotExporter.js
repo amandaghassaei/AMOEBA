@@ -47,6 +47,10 @@ ShopbotExporter.prototype.rapidXY = function(x, y){
     return this.addLine("J2", [x,y]);
 };
 
+ShopbotExporter.prototype.rapidZ = function(z){
+    return this.rapidXYZ("", "", z);
+};
+
 ShopbotExporter.prototype.moveXYZ = function(x, y, z){
     return this.addLine("M3", [x,y,z]);
 };

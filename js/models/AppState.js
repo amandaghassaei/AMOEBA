@@ -240,7 +240,8 @@ AppState = Backbone.Model.extend({
                 break;
             case 68://d delete mode
                 console.log(state);
-                if (dmaGlobals.lattice.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
+                console.log(dmaGlobals.lattice.get("cellMode"));
+                if (this.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);
                 break;
             case 69://e

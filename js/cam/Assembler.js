@@ -20,8 +20,8 @@ Assembler = Backbone.Model.extend({
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),
 
-        rapidSpeeds:{xy: 3, z: 1},
-        feedRate:{xy: 0.1, z: 0.1}
+        rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
+        feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
     },
 
     initialize: function(options){
@@ -145,14 +145,18 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
             if (!cell) return;
 
-            data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
-            data += exporter.moveZ(stockHeight);
-            data += exporter.moveZ(rapidHeight);
+            data += exporter.rapidXY(stockPosition.x, stockPosition.y);
+            data += exporter.rapidZ(stockPosition.z+0.5);
+            data += exporter.moveZ(stockPosition.z);
+            data += exporter.moveZ(stockPosition.z+0.5);
+            data += exporter.rapidZ(rapidHeight);
 
             var cellPosition = cell.getPosition();
             data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
-            data += exporter.moveZ(stockHeight);
-            data += exporter.moveZ(rapidHeight);
+            data += exporter.rapidZ(cellPosition.z-wcs.z+0.5);
+            data += exporter.moveZ(cellPosition.z-wcs.z);
+            data += exporter.moveZ(cellPosition.z-wcs.z+0.5);
+            data += exporter.rapidZ(rapidHeight);
 
             data += "\n";
         });
