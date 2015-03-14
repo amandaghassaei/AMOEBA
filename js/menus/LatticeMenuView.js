@@ -88,6 +88,7 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("partType", partType, {silent:true});
     },
 
+    //todo get rid of this
     _setTetraCell: function(e){
         e.preventDefault();
         this.lattice.set("freeformCellType", "tetra");

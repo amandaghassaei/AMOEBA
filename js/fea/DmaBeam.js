@@ -39,7 +39,7 @@ DmaBeam.prototype._buildBeamMesh = function(){
     return mesh;
 };
 
-DmaBeam.prototype.updateForScale = function(scale){
+DmaBeam.prototype.updateForScale = function(scale){//todo make this better
     if (!this.mesh) this.mesh = this._buildBeamMesh();
     var position = this.nodes[0].getPosition();
     position.add(this.nodes[1].getPosition());
