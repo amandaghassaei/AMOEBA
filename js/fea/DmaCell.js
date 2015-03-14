@@ -19,7 +19,7 @@ function DMACell(indices, scale) {
     this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
-    var cellMode = dmaGlobals.lattice.get("cellMode");
+    var cellMode = dmaGlobals.appState.get("cellMode");
     var beamMode = dmaGlobals.lattice.get("partType") == "beam";
     this.drawForMode(scale, cellMode, beamMode);
 

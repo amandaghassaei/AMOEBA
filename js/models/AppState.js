@@ -146,7 +146,8 @@ AppState = Backbone.Model.extend({
         //key bindings
         shift: false,
         deleteMode: false,
-        extrudeMode: false
+        extrudeMode: false,
+        cellMode: "cell"//show cells vs parts
     },
 
     initialize: function(){
@@ -194,10 +195,10 @@ AppState = Backbone.Model.extend({
 
     _updateCellMode: function(){
         var currentTab = this.get("currentTab");
-        if (currentTab == "lattice") dmaGlobals.lattice.set("cellMode", "cell");
-        else if (currentTab == "import") dmaGlobals.lattice.set("cellMode", "cell");
-        else if (currentTab == "sketch") dmaGlobals.lattice.set("cellMode", "cell");
-        else if (currentTab == "part") dmaGlobals.lattice.set("cellMode", "part");
+        if (currentTab == "lattice") this.set("cellMode", "cell");
+        else if (currentTab == "import") this.set("cellMode", "cell");
+        else if (currentTab == "sketch") this.set("cellMode", "cell");
+        else if (currentTab == "part") this.set("cellMode", "part");
     },
 
     //update to last tab open in that section
@@ -246,9 +247,9 @@ AppState = Backbone.Model.extend({
                 this.set("extrudeMode", state);
                 break;
             case 80://p part mode
-                var cellMode = dmaGlobals.lattice.get("cellMode");
-                if (cellMode == "part") dmaGlobals.lattice.set("cellMode", "cell");
-                else if (cellMode == "cell") dmaGlobals.lattice.set("cellMode", "part");
+                var cellMode = this.get("cellMode");
+                if (cellMode == "part") this.set("cellMode", "cell");
+                else if (cellMode == "cell") this.set("cellMode", "part");
                 break;
             case 83://s save
                 if (e.ctrlKey || e.metaKey){//command

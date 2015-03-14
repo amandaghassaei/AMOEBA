@@ -24,7 +24,6 @@ Lattice = Backbone.Model.extend({
         //spacing for connectors/joints
         cellSeparation: {xy:0, z:0},
 
-        cellMode: "cell",//show cells vs parts
         cellType: "octa",
         connectionType: "face",
         partType: "triangle"
@@ -38,7 +37,8 @@ Lattice = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
-        this.listenTo(this, "change:cellMode change:partType", this._updateForMode);
+        this.listenTo(dmaGlobals.appState, "change:cellMode", this._updateForMode);
+        this.listenTo(this, "change:partType", this._updateForMode);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
@@ -302,7 +302,7 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
 
     _updateForMode: function(){
-        var cellMode = this.get("cellMode");
+        var cellMode = dmaGlobals.appState.get("cellMode");
         var beamMode =  this.get("partType") == "beam";
         var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
@@ -314,7 +314,7 @@ Lattice = Backbone.Model.extend({
     _updateCellSeparation: function(){
         var cellSep = this.get("cellSeparation");
         var scale = this.get("scale");
-        var cellMode = this.get("cellMode");
+        var cellMode = dmaGlobals.appState.get("cellMode");
         this.get("basePlane").updateXYSeparation(cellSep.xy);
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale, cellMode);
@@ -327,7 +327,7 @@ Lattice = Backbone.Model.extend({
         this.get("basePlane").updateScale(scale);
         this.get("highlighter").updateScale(scale);
 
-        var cellMode = this.get("cellMode");
+        var cellMode = dmaGlobals.appState.get("cellMode");
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale, cellMode);
         });
@@ -505,9 +505,11 @@ Lattice = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "lattice";
+        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter"]);
+        if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
         var data = JSON.stringify({
             lattice:_.omit(this.toJSON(), ["highlighter", "basePlane"]),
-            assembler: _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock"])
+            assembler: assemblerData
         });
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + ".json");
@@ -517,8 +519,11 @@ Lattice = Backbone.Model.extend({
         this.clearCells();
         var data = JSON.parse(data);
         var self = this;
-        _.each(_.keys(data), function(key){
-            self.set(key, data[key], {silent:true});
+        _.each(_.keys(data.lattice), function(key){
+            self.set(key, data.lattice[key], {silent:true});
+        });
+        _.each(_.keys(data.assembler), function(key){
+            dmaGlobals.assembler.set(key, data.assembler[key]);
         });
         this.set("shouldPreserveCells", true, {silent:true});
         this._updateLatticeType(null, null, null, true);
