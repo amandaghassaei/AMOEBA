@@ -142,7 +142,6 @@ AppState = Backbone.Model.extend({
             mm: "mm",
             inches: "Inches"
         },
-        units: "mm",
 
         //key bindings
         shift: false,
@@ -238,6 +237,7 @@ AppState = Backbone.Model.extend({
                 this.set("shift", state);
                 break;
             case 68://d delete mode
+                console.log(state);
                 if (dmaGlobals.lattice.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);
                 break;

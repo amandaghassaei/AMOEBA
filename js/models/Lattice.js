@@ -7,6 +7,8 @@ Lattice = Backbone.Model.extend({
 
     defaults: {
 
+        units: "mm",
+
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
         cellsMin: {x:0, y:0, z:0},//min position of cells matrix
@@ -503,7 +505,10 @@ Lattice = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "lattice";
-        var data = JSON.stringify(_.omit(this.toJSON(), ["highlighter", "basePlane"]));
+        var data = JSON.stringify({
+            lattice:_.omit(this.toJSON(), ["highlighter", "basePlane"]),
+            assembler: _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock"])
+        });
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + ".json");
     },

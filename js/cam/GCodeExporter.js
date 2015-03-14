@@ -7,7 +7,7 @@ function GCodeExporter() {
 
 GCodeExporter.prototype.makeHeader = function(){
     var data = "";
-    if (dmaGlobals.appState.get("units") == "inches") data += this.addLine("G20", [], "units inches");
+    if (dmaGlobals.lattice.get("units") == "inches") data += this.addLine("G20", [], "units inches");
     else data += this.addLine("G21", [], "units mm");
     data += this.addLine("G90", [], "absolute positioning");
     data += this.addLine("G54", [], "work offset");
@@ -31,6 +31,7 @@ GCodeExporter.prototype.addLine = function(command, params, comment){
         if (!param) return;
         if (isNaN(parseFloat(param))) {
             data += param + " ";
+            return;
         }
         data += param.toFixed(3) + " ";
     });

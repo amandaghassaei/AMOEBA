@@ -23,7 +23,7 @@ CamMenuView = Backbone.View.extend({
         _.bindAll(this, "_onKeyup");
         //bind events
         this.listenTo(this.assembler, "change", this.render);
-        this.listenTo(this.model, "change:units", this.render);
+        this.listenTo(this.lattice, "change:units", this.render);
         $(document).bind('keyup', {state:false}, this._onKeyup);
     },
 
@@ -34,7 +34,7 @@ CamMenuView = Backbone.View.extend({
 
     _changeUnits: function(e){
         e.preventDefault();
-        this.model.set("units", $(e.target).data("type"));
+        this.lattice.set("units", $(e.target).data("type"));
     },
 
     _onKeyup: function(e){
@@ -61,7 +61,7 @@ CamMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), this.lattice.toJSON())));
     },
 
     template: _.template('\

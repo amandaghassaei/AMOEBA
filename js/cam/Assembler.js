@@ -32,7 +32,6 @@ Assembler = Backbone.Model.extend({
         this.listenTo(dmaGlobals.appState, "change:currentTab", this._setCAMVisibility);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
         this.listenTo(this, "change:stockPosition", this._moveStock);
-        this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
         this.listenTo(this,
                 "change:originPosition " +
                 "change:stockPosition " +
@@ -43,6 +42,7 @@ Assembler = Backbone.Model.extend({
             this._setNeedsPostProcessing);
         this.listenTo(dmaGlobals.lattice,
                 "change:numCells " +
+                "change:units " +
                 "change:scale " +
                 "change:cellType " +
                 "change:connectionType",
@@ -133,7 +133,7 @@ Assembler = Backbone.Model.extend({
 
         var wcs = this.get("originPosition");
         var stockPosition = this.get("stockPosition");
-        dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy"), function(cell){
+        dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
             if (!cell) return;
 
             data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);

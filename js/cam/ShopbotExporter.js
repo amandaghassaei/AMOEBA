@@ -27,7 +27,7 @@ ShopbotExporter.prototype.addLine = function(command, params, comment){
             data += param + ", ";
             return;
         }
-        if (dmaGlobals.appState.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
+        if (dmaGlobals.lattice.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
         data += param.toFixed(3) + ", ";
     });
     if (comment) data += "'" +comment;

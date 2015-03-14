@@ -28,7 +28,6 @@ LatticeMenuView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.lattice, "change", this.render);
-        this.listenTo(this.model, "change:units", this.render);
     },
 
     _clearCells: function(e){
@@ -45,7 +44,7 @@ LatticeMenuView = Backbone.View.extend({
 
     _changeUnits: function(e){
         e.preventDefault();
-        this.model.set("units", $(e.target).data("type"));
+        this.lattice.set("units", $(e.target).data("type"));
     },
 
     _sliderDidSlide: function(e){
