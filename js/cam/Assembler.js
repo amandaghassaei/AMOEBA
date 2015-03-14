@@ -35,6 +35,7 @@ Assembler = Backbone.Model.extend({
         this.listenTo(dmaGlobals.appState, "change:units", this._setNeedsPostProcessing);
         this.listenTo(this,
                 "change:originPosition " +
+                "change:stockPosition " +
                 "change:feedRate " +
                 "change:rapidSpeeds " +
                 "change:camProcess " +
@@ -54,11 +55,10 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
         //init stock mesh
-        var stock = dmaGlobals.lattice.makeCellForLatticeType(null);
-        var stockMesh = stock.cellMesh.clone();
-        stockMesh.scale.set(scale.x, scale.y, scale.z);
-        dmaGlobals.three.sceneAdd(stockMesh);
-        this.set("stock", stockMesh);
+        var stock = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
+            new THREE.MeshBasicMaterial({color:0xff00ff}));
+        dmaGlobals.three.sceneAdd(stock);
+        this.set("stock", stock);
         this._setCAMVisibility();
     },
 
@@ -129,15 +129,16 @@ Assembler = Backbone.Model.extend({
         var order;
         if (strategy == "xRaster") order = "XYZ";
         else if (strategy == "yRaster") order = "YXZ";
+        var stockPosition = this.get("stockPosition");
         dmaGlobals.lattice.rasterCells(order, function(cell, x, y, z){
             if (!cell) return;
 
-            data += exporter.rapidXY(0, 0);
+            data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
             data += exporter.moveZ(stockHeight);
             data += exporter.moveZ(rapidHeight);
 
             var cellPosition = cell.getPosition();
-            data += exporter.rapidXY((cellPosition.x-wcs.x).toFixed(3), (cellPosition.y-wcs.y).toFixed(3));
+            data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
             data += exporter.moveZ(stockHeight);
             data += exporter.moveZ(rapidHeight);
 

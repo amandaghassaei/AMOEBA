@@ -29,7 +29,10 @@ GCodeExporter.prototype.addLine = function(command, params, comment){
     data += command + " ";
     _.each(params, function(param){
         if (!param) return;
-        data += param + " ";
+        if (isNaN(parseFloat(param))) {
+            data += param + " ";
+        }
+        data += param.toFixed(3) + " ";
     });
     if (comment) data += "(" + comment + ")";
     data += "\n";

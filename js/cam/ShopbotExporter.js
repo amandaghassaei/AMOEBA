@@ -21,8 +21,14 @@ ShopbotExporter.prototype.makeHeader = function(){
 ShopbotExporter.prototype.addLine = function(command, params, comment){
     var data = "";
     data += command + " ";
+    var self = this;
     _.each(params, function(param){
-        data += param + ", ";
+        if (isNaN(parseFloat(param))) {
+            data += param + ", ";
+            return;
+        }
+        if (dmaGlobals.appState.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
+        data += param.toFixed(3) + ", ";
     });
     if (comment) data += "'" +comment;
     data += "\n";
@@ -69,3 +75,7 @@ ShopbotExporter.prototype.save = function(data){
     var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
     saveAs(blob, "ShopbotExport" + ".sbp");
 };
+
+ShopbotExporter.prototype.convertToInches = function(mm){
+    return mm*0.0393701;
+}
