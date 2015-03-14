@@ -39,6 +39,8 @@ BasePlane = Backbone.Model.extend({
         });
     },
 
+    updateXYSeparation: function(xySep) {},
+
     getOrientation: function(){
         return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
     },
@@ -112,11 +114,9 @@ OctaBasePlane = BasePlane.extend({
                 if (j == -dimX || i == -dimY) continue;
 
                 if (Math.abs(j)%2==1){
-//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-2-2*baseDim));
                     faces.push(new THREE.Face3(3*currentOffset-4, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
                 } else {
                     faces.push(new THREE.Face3(3*currentOffset-1, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
-//                        faces.push(new THREE.Face3(currentOffset-1, currentOffset-2, currentOffset-3-2*baseDim));
                 }
 
             }
@@ -143,7 +143,7 @@ OctaBasePlane = BasePlane.extend({
         dmaGlobals.three.render();
     },
 
-    _calcOctaFaceVertices: function(colSep){
+    _calcOctaFaceVertices: function(xySep){
 
         var vertices = [];
 
@@ -153,9 +153,9 @@ OctaBasePlane = BasePlane.extend({
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
 
-        var baseVertOffset = colSep/Math.sqrt(3);
+        var baseVertOffset = xySep/Math.sqrt(3);
         var pointVertOffset = 2*baseVertOffset;
-        var horizontalOffset = colSep;
+        var horizontalOffset = xySep;
 
         for (var j=-dimX;j<=dimX;j++){
             for (var i=-dimY;i<=dimY;i++){
@@ -175,9 +175,9 @@ OctaBasePlane = BasePlane.extend({
         return vertices;
     },
 
-    updateColSeparation: function(colSep){
+    updateXYSeparation: function(xySep){
         var geometry = this.get("mesh")[0].geometry;
-        geometry.vertices = this._calcOctaFaceVertices(colSep);
+        geometry.vertices = this._calcOctaFaceVertices(xySep);
         geometry.verticesNeedUpdate = true;
     },
 

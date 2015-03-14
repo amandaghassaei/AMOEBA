@@ -15,7 +15,6 @@ LatticeMenuView = Backbone.View.extend({
         "click .connectionType":                        "_changeConnectionType",
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider",
-        "change #preserveCells":                        "_changePreserveCells",
         "click #freeformTetraCell":                     "_setTetraCell",
         "click #freeformOctaCell":                      "_setOctaCell"
     },
@@ -89,10 +88,6 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice.set("partType", partType, {silent:true});
     },
 
-    _changePreserveCells: function(e){
-        this.lattice.set("shouldPreserveCells", $(e.target).prop("checked"));
-    },
-
     _setTetraCell: function(e){
         e.preventDefault();
         this.lattice.set("freeformCellType", "tetra");
@@ -142,11 +137,7 @@ LatticeMenuView = Backbone.View.extend({
                     <li><a id="freeformTetraCell" href="#">tetra</a></li>\
                 </ul>\
             </div>\
-        <% } else { %>\
-        <label class="checkbox">\
-            <input type="checkbox" <% if (shouldPreserveCells) { %> checked="checked" <% } %> value="" id="preserveCells" data-toggle="checkbox" class="custom-checkbox"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Preserve cells on lattice change\
-        </label>\
+            <br/><br/>\
         <% } %>\
         <br/>\
         Scale:&nbsp;&nbsp;<input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\

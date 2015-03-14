@@ -60,7 +60,10 @@ DMACell.prototype.updateForScale = function(scale, cellMode){
     if (cellMode == "part"){
         _.each(this.parts, function(part){
             if (part) part.updateForScale(scale, position);
-         });
+        });
+        _.each(this.beams, function(beam){
+            if (beam) beam.updateForScale(scale, position);
+        });
     }
 };
 

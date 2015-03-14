@@ -16,10 +16,11 @@ Lattice = Backbone.Model.extend({
         basePlane: null,//plane to build from
         scale: 20,
         highlighter: null,//highlights build-able surfaces
+        //todo this is not exposed in ui, is that useful?
         shouldPreserveCells: true,//preserve cells when changing lattice type
 
         //spacing for connectors/joints
-        cellSeparation: {xy:0.1, z:0},
+        cellSeparation: {xy:0, z:0},
 
         cellMode: "cell",//show cells vs parts
         cellType: "octa",
@@ -312,7 +313,7 @@ Lattice = Backbone.Model.extend({
         var cellSep = this.get("cellSeparation");
         var scale = this.get("scale");
         var cellMode = this.get("cellMode");
-        //this.get("basePlane").updateColSeparation(cellSep.xy);
+        this.get("basePlane").updateXYSeparation(cellSep.xy);
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale, cellMode);
         });

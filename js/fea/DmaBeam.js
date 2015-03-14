@@ -35,22 +35,25 @@ DmaBeam.prototype._buildBeamMesh = function(){
     var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
     mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 
-
-    var position = this.nodes[0].getPosition();
-    position.add(this.nodes[1].getPosition());
-    position.multiplyScalar(0.5);
-    position.add(this.parentCell.getPosition());
-    mesh.position.set(position.x, position.y, position.z);
-    var scale = this.parentCell.getScale();
-    mesh.scale.set(scale, scale, scale);
-
-
     dmaGlobals.three.sceneAdd(mesh, "part");
     return mesh;
 };
 
+DmaBeam.prototype.updateForScale = function(scale){
+    if (!this.mesh) this.mesh = this._buildBeamMesh();
+    var position = this.nodes[0].getPosition();
+    position.add(this.nodes[1].getPosition());
+    position.multiplyScalar(0.5);
+    position.add(this.parentCell.getPosition());
+    this.mesh.position.set(position.x, position.y, position.z);
+    this.mesh.scale.set(scale, scale, scale);
+};
+
 DmaBeam.prototype.setVisibility = function(visible){
-    if (visible && !this.mesh) this.mesh = this._buildBeamMesh();
+    if (visible && !this.mesh) {
+        this.mesh = this._buildBeamMesh();
+        this.updateForScale(this.parentCell.getScale());
+    }
     else if (!this.mesh) return;
     this.mesh.visible = visible;
 };
