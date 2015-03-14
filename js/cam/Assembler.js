@@ -13,15 +13,15 @@ Assembler = Backbone.Model.extend({
         needsPostProcessing: true,
         editsMadeToProgram: false,//warn the user that they will override changes
 
-        rapidHeight: 12,
-        stockHeight: 3,
+        rapidHeight: 6,
+        stockHeight: 0,
         origin: null,
-        originPosition: new THREE.Vector3(0,0,0),
+        originPosition: new THREE.Vector3(20,0,0),
         stock: null,
-        stockPosition: new THREE.Vector3(0,0,0),
+        stockPosition: new THREE.Vector3(20,0,0),
 
-        rapidSpeeds:{xy: 12, z: 4},
-        feedRate:{xy: 12, z: 4}
+        rapidSpeeds:{xy: 3, z: 1},
+        feedRate:{xy: 0.1, z: 0.1}
     },
 
     initialize: function(options){
@@ -54,11 +54,13 @@ Assembler = Backbone.Model.extend({
             new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
+        this._moveOrigin();
         //init stock mesh
         var stock = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff00ff}));
         dmaGlobals.three.sceneAdd(stock);
         this.set("stock", stock);
+        this._moveStock();
         this._setCAMScale(options.lattice.get("scale"));
         this._setCAMVisibility();
     },

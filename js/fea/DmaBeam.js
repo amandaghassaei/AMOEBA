@@ -95,4 +95,8 @@ DmaBeam.prototype.calcStiffnessMatrix = function(){
 //  	];
 };
 
+DmaBeam.prototype.toJSON = function(){
+
+}
+
 

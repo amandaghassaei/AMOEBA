@@ -7,7 +7,7 @@ Lattice = Backbone.Model.extend({
 
     defaults: {
 
-        units: "mm",
+        units: "inches",
 
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
@@ -16,7 +16,7 @@ Lattice = Backbone.Model.extend({
         numCells: 0,
 
         basePlane: null,//plane to build from
-        scale: 20,
+        scale: 2.78388,
         highlighter: null,//highlights build-able surfaces
         //todo this is not exposed in ui, is that useful?
         shouldPreserveCells: true,//preserve cells when changing lattice type
@@ -25,8 +25,8 @@ Lattice = Backbone.Model.extend({
         cellSeparation: {xy:0, z:0},
 
         cellType: "octa",
-        connectionType: "face",
-        partType: "triangle"
+        connectionType: "edgeRot",
+        partType: "beam"
     },
 
     //pass in fillGeometry
@@ -508,10 +508,10 @@ Lattice = Backbone.Model.extend({
 
     saveJSON: function(name){
         if (!name) name = "lattice";
-        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter"]);
+        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice"]);
         if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
         var data = JSON.stringify({
-            lattice:_.omit(this.toJSON(), ["highlighter", "basePlane"]),
+            lattice:_.omit(this.toJSON(), ["highlighter", "basePlane", "nodes", "appState"]),
             assembler: assemblerData
         });
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
