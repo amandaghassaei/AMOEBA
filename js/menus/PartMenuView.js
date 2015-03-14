@@ -7,7 +7,6 @@ PartMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "slide #columnSepSlider":                           "_changeColSeparation",
         "click .partType":                                  "_changePartType"
     },
 
@@ -16,12 +15,24 @@ PartMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
+        _.bindAll(this, "_onKeyup");
+        //bind events
         this.listenTo(this.lattice, "change:partType", this.render);
+        $(document).bind('keyup', {state:false}, this._onKeyup);
 
     },
 
-    _changeColSeparation: function(e){
-        this.lattice.set("columnSeparation", $(e.target).val()/100);
+    _onKeyup: function(e){
+        if ($(".cellSeparation").is(":focus")) this._updateNumber(e, "cellSeparation");
+    },
+
+    _updateNumber: function(e, property){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        var object = this.lattice.get(property);
+        object[$(e.target).data("type")] = newVal;
+        this.lattice.trigger("change:"+property);
     },
 
     _changePartType: function(e){
@@ -32,12 +43,6 @@ PartMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.get("currentTab") != "part") return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.lattice.toJSON())));
-
-        $('#columnSepSlider').slider({
-            formatter: function(value) {
-                return value + "%";
-            }
-        });
     },
 
     template: _.template('\
@@ -50,8 +55,8 @@ PartMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Column Separation:&nbsp;&nbsp;<input id="columnSepSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="35" data-slider-step="0.1" data-slider-value="<%= columnSeparation*100 %>"/>\
-        <br/><br/>\
+        Cell Separation (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control numberInput cellSeparation" type="text">\
+        &nbsp;<input data-type="z" value="<%= cellSeparation.z %>" placeholder="Z" class="form-control numberInput cellSeparation" type="text">\
         todo: generic beam part type, part types for new lattice configurations\
         ')
 

@@ -12,24 +12,8 @@ OctaLatticeSubclasses = {
     OctaFaceLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-            this.set("columnSeparation", 0.0);
-            this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
-
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFaceHighlighter({scale:this.get("scale")}));
-        },
-
-        _changeColSeparation: function(){
-            var colSep = this.get("columnSeparation");
-            var scale = this.get("scale");
-            var cellMode = this.get("cellMode");
-            this.get("basePlane").updateColSeparation(colSep);
-            this._iterCells(this.get("cells"), function(cell){
-                if (cell) cell.updateForScale(scale, cellMode);
-            });
-            dmaGlobals.three.render();
         },
 
         getIndexForPosition: function(absPosition){
@@ -55,8 +39,7 @@ OctaLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            var colSep = this.get("columnSeparation");
-            return scale*(1+2*colSep);
+            return scale*(1+2*this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
@@ -65,7 +48,7 @@ OctaLatticeSubclasses = {
 
         zScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return 2*scale/Math.sqrt(6);
+            return scale*(2/Math.sqrt(6)+2*this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){
@@ -73,7 +56,6 @@ OctaLatticeSubclasses = {
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
-            this.stopListening(this, "change:columnSeparation");
             var self = this;
             _.each(_.keys(this.OctaFaceLattice), function(key){
                 self[key] = null;
@@ -140,18 +122,17 @@ OctaLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            var colSep = this.get("columnSeparation");
-            return scale*(1+2*colSep);
+            return scale*(1+2*this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
             return this.xScale(scale)/2*Math.sqrt(3);
         },
 
-        zScale: function(scale){//base plane calls this, need it
+        zScale: function(scale){
             if (!scale) scale = this.get("scale");
-            if (this.get("freeformCellType") == "octa") return 2*scale/Math.sqrt(6);
-            return 2*scale/Math.sqrt(24);
+            if (this.get("freeformCellType") == "octa") return scale*(2/Math.sqrt(6)+2*this.get("cellSeparation").xy);
+            return scale*(2/Math.sqrt(24)+2*this.get("cellSeparation").xy);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -175,8 +156,6 @@ OctaLatticeSubclasses = {
         _initLatticeType: function(){
 
             //bind events
-            this.set("columnSeparation", 0.0);
-//            this.listenTo(this, "change:columnSeparation", this._changeColSeparation);
 
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaEdgeHighlighter({scale:this.get("scale")}));
@@ -330,7 +309,7 @@ OctaLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*Math.sqrt(2);
+            return scale*(Math.sqrt(2)+this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
@@ -338,7 +317,8 @@ OctaLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale);
+            if (!scale) scale = this.get("scale");
+            return scale*(Math.sqrt(2)+this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){

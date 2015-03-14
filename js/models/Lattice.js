@@ -19,7 +19,6 @@ Lattice = Backbone.Model.extend({
         shouldPreserveCells: true,//preserve cells when changing lattice type
 
         //spacing for connectors/joints
-        columnSeparation: 0.0,//todo get rid of this
         cellSeparation: {xy:0.1, z:0},
 
         cellMode: "cell",//show cells vs parts
@@ -38,6 +37,7 @@ Lattice = Backbone.Model.extend({
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:cellMode change:partType", this._updateForMode);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
+        this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
     },
 
@@ -304,6 +304,17 @@ Lattice = Backbone.Model.extend({
         var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.drawForMode(scale, cellMode, beamMode);
+        });
+        dmaGlobals.three.render();
+    },
+
+    _updateCellSeparation: function(){
+        var cellSep = this.get("cellSeparation");
+        var scale = this.get("scale");
+        var cellMode = this.get("cellMode");
+        //this.get("basePlane").updateColSeparation(cellSep.xy);
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.updateForScale(scale, cellMode);
         });
         dmaGlobals.three.render();
     },

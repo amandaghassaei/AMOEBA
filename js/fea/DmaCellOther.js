@@ -43,6 +43,19 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return unitCellGeo;
     };
 
+    DMACubeCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale;
+    };
+
+    DMACubeCell.prototype.yScale = function(scale){
+        return this.xScale(scale);
+    };
+
+    DMACubeCell.prototype.zScale = function(scale){
+        return this.xScale(scale);
+    };
+
     self.DMACubeCell = DMACubeCell;
 
 })();
@@ -124,6 +137,19 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMATruncCubeCell.prototype._getGeometry = function(){
         return unitCellGeo;
+    };
+
+    DMATruncCubeCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale*Math.sqrt(2);
+    };
+
+    DMATruncCubeCell.prototype.yScale = function(scale){
+        return this.xScale(scale);
+    };
+
+    DMATruncCubeCell.prototype.zScale = function(scale){
+        return this.xScale(scale);
     };
 
     self.DMATruncCubeCell = DMATruncCubeCell;
@@ -241,6 +267,11 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMATruncOctaCell.prototype._getGeometry = function(){
         return unitCellGeo;
+    };
+
+    DMATruncOctaCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale*2*Math.sqrt(2);
     };
 
     self.DMATruncOctaCell = DMATruncOctaCell;

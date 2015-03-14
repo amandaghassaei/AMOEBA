@@ -83,9 +83,18 @@ DMAFreeFormTetraCell.prototype.getType = function(){
     return "tetra";
 };
 
+DMAFreeFormTetraCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale;
+};
+
+DMAFreeFormTetraCell.prototype.yScale = function(scale){
+    return this.xScale(scale)/2*Math.sqrt(3);
+};
+
 DMAFreeFormTetraCell.prototype.zScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
-    return 2*scale/Math.sqrt(24);
+    if (!scale) scale = this.getScale();
+    return scale*2/Math.sqrt(24);
 };
 
 DMAFreeFormTetraCell.prototype._getGeometry = function(){

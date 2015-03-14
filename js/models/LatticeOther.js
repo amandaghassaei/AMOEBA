@@ -29,7 +29,7 @@ OtherLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale;
+            return scale*(1+2*this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
@@ -37,7 +37,8 @@ OtherLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale);
+            if (!scale) scale = this.get("scale");
+            return scale*(1+2*this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){
@@ -76,7 +77,7 @@ OtherLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*Math.sqrt(2);
+            return scale*(Math.sqrt(2)+2*this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
@@ -84,7 +85,8 @@ OtherLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale);
+            if (!scale) scale = this.get("scale");
+            return scale*(Math.sqrt(2)+2*this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){
@@ -125,7 +127,7 @@ OtherLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*2*Math.sqrt(2);
+            return scale*(2*Math.sqrt(2)+2*this.get("cellSeparation").xy);
         },
 
         yScale: function(scale){
@@ -133,7 +135,8 @@ OtherLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale);
+            if (!scale) scale = this.get("scale");
+            return scale*(2*Math.sqrt(2)+2*this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){

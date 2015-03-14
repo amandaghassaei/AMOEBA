@@ -218,9 +218,9 @@ function DMAFreeFormCell(indices, scale, parentCellPos, parentCellQuat, directio
 }
 DMAFreeFormCell.prototype = Object.create(DMACell.prototype);
 
-DMAFreeFormCell.prototype._calcPosition = function(){
+DMAFreeFormCell.prototype._calcPosition = function(){//todo this might not be necessary - put in lattice
     var position = {};
-    var zScale = this.zScale();
+    var zScale = dmaGlobals.lattice.zScale();
     position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
     position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
     position.z = this.parentPos.z+this.parentDirection.z*zScale/2;

@@ -33,6 +33,20 @@ DMAFaceOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
+DMAFaceOctaCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale;
+};
+
+DMAFaceOctaCell.prototype.yScale = function(scale){
+    return this.xScale(scale)/2*Math.sqrt(3);
+};
+
+DMAFaceOctaCell.prototype.zScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale*2/Math.sqrt(6);
+};
+
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
     if (face.normal.z<0.99) return {index: _.clone(this.indices)};//only highlight horizontal faces
     var direction = face.normal;
@@ -86,10 +100,20 @@ DMAFreeFormOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
-DMAFreeFormOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
-    return 2*scale/Math.sqrt(6);
+DMAFreeFormOctaCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale;
 };
+
+DMAFreeFormOctaCell.prototype.yScale = function(scale){
+    return this.xScale(scale)/2*Math.sqrt(3);
+};
+
+DMAFreeFormOctaCell.prototype.zScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale*2/Math.sqrt(6);
+};
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,7 +212,7 @@ DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
 };
 
 DMARotatedEdgeCell.prototype.xScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!scale) scale = this.getScale();
     return scale;
 };
 
@@ -197,7 +221,7 @@ DMARotatedEdgeCell.prototype.yScale = function(scale){
 };
 
 DMARotatedEdgeCell.prototype.zScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!scale) scale = this.getScale();
     return Math.sqrt(2)/2*scale;
 };
 
@@ -256,4 +280,18 @@ DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
 
 DMAVertexOctaCell.prototype._getGeometry = function(){
     return unitVertexOcta;
+};
+
+DMAVertexOctaCell.prototype.xScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return scale*Math.sqrt(2);
+};
+
+DMAVertexOctaCell.prototype.yScale = function(scale){
+    return this.xScale(scale);
+};
+
+DMAVertexOctaCell.prototype.zScale = function(scale){
+    if (!scale) scale = this.getScale();
+    return this.xScale(scale);
 };
