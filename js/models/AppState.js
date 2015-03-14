@@ -35,9 +35,9 @@ AppState = Backbone.Model.extend({
                 optimize:"Optimize"
             },
             navAssemble:{
-               assembler:"Assembler",
-                animate:"Preview",
+                assembler:"Assembler",
                 cam: "Process",
+                animate:"Preview",
                 send: "Send"
             }
         },
