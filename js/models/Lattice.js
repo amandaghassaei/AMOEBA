@@ -31,17 +31,20 @@ Lattice = Backbone.Model.extend({
 
     //pass in fillGeometry
 
-    initialize: function(){
+    initialize: function(options){
 
         _.extend(this, OctaLatticeSubclasses, OtherLatticeSubclasses);
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
-        this.listenTo(dmaGlobals.appState, "change:cellMode", this._updateForMode);
+        this.listenTo(options.appState, "change:cellMode", this._updateForMode);
         this.listenTo(this, "change:partType", this._updateForMode);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
+    },
 
+    delayedInit: function(){
+        this._updateLatticeType();
     },
 
     ////////////////////////////////////////////////////////////////////////////////////

@@ -147,13 +147,12 @@ AppState = Backbone.Model.extend({
         shift: false,
         deleteMode: false,
         extrudeMode: false,
-        cellMode: "cell"//show cells vs parts
+        cellMode: "cell",//show cells vs parts
+
+        stockSimulationPlaying: false
     },
 
     initialize: function(){
-    },
-
-    delayedInit: function(){
 
          _.bindAll(this, "_handleKeyStroke");
 
@@ -168,7 +167,9 @@ AppState = Backbone.Model.extend({
         this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
         if (this.isMobile()) this.set("menuIsVisible", false);
+    },
 
+    delayedInit: function(){
         this.set("menuWrapper", new MenuWrapper({model: this}));
     },
 

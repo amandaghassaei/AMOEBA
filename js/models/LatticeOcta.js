@@ -73,9 +73,6 @@ OctaLatticeSubclasses = {
     OctaFreeFormFaceLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaFreeFormHighlighter({scale:this.get("scale")}));
 
@@ -154,9 +151,6 @@ OctaLatticeSubclasses = {
     OctaEdgeLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaEdgeHighlighter({scale:this.get("scale")}));
 
@@ -216,9 +210,6 @@ OctaLatticeSubclasses = {
     OctaRotEdgeLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new RotEdgeOctaBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
         },
@@ -282,9 +273,6 @@ OctaLatticeSubclasses = {
     OctaVertexLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
         },

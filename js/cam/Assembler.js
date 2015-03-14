@@ -24,12 +24,12 @@ Assembler = Backbone.Model.extend({
         feedRate:{xy: 12, z: 4}
     },
 
-    initialize: function(){
+    initialize: function(options){
 
         _.bindAll(this, "postProcess");
 
         //bind events
-        this.listenTo(dmaGlobals.appState, "change:currentTab", this._setCAMVisibility);
+        this.listenTo(options.appState, "change:currentTab", this._setCAMVisibility);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
         this.listenTo(this, "change:stockPosition", this._moveStock);
         this.listenTo(this,
@@ -40,7 +40,7 @@ Assembler = Backbone.Model.extend({
                 "change:camProcess " +
                 "change:camStrategy",
             this._setNeedsPostProcessing);
-        this.listenTo(dmaGlobals.lattice,
+        this.listenTo(options.lattice,
                 "change:numCells " +
                 "change:units " +
                 "change:scale " +
@@ -49,13 +49,13 @@ Assembler = Backbone.Model.extend({
             this._setNeedsPostProcessing);
 
         //init origin mesh
-        var scale = dmaGlobals.lattice.get("scale");
-        var origin = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
+        var scale = options.lattice.get("scale");
+        var origin = new THREE.Mesh(new THREE.SphereGeometry(scale/4),
             new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
         //init stock mesh
-        var stock = new THREE.Mesh(new THREE.SphereGeometry(dmaGlobals.lattice.get("scale")/4),
+        var stock = new THREE.Mesh(new THREE.SphereGeometry(scale/4),
             new THREE.MeshBasicMaterial({color:0xff00ff}));
         dmaGlobals.three.sceneAdd(stock);
         this.set("stock", stock);

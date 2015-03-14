@@ -12,9 +12,6 @@ OtherLatticeSubclasses = {
     CubeLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new CubeHighlighter({scale:this.get("scale")}));
         },
@@ -60,9 +57,6 @@ OtherLatticeSubclasses = {
     TruncatedCubeLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new TruncatedCubeHighlighter({scale:this.get("scale")}));
         },
@@ -110,9 +104,6 @@ OtherLatticeSubclasses = {
     KelvinLattice: {
 
         _initLatticeType: function(){
-
-            //bind events
-
             this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
             this.set("highlighter", new TruncatedCubeHighlighter({scale:this.get("scale")}));
         },

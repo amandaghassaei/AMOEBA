@@ -11,13 +11,13 @@ $(function(){
     //init web workers
     window.workers = persistentWorkers(8);
 
-    //init threeJS and geometry models
+    //init global singletons
     dmaGlobals.three = new ThreeModel();
-
     dmaGlobals.appState = new AppState();
-    dmaGlobals.lattice = new Lattice();
-    dmaGlobals.lattice._updateLatticeType();//todo get rid of this
-    dmaGlobals.assembler = new Assembler();
+    dmaGlobals.lattice = new Lattice({appState: dmaGlobals.appState});
+    dmaGlobals.assembler = new Assembler({appState: dmaGlobals.appState, lattice:dmaGlobals.lattice});
+
+    dmaGlobals.lattice.delayedInit();
     dmaGlobals.appState.delayedInit();
 
 

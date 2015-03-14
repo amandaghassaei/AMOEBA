@@ -8,7 +8,8 @@ AnimationMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .sceneType":                         "_changeScene"
+        "click #playStockSim":                          "_playStockSim",
+        "click #pauseStockSim":                         "_pauseStockSim"
     },
 
     initialize: function(options){
@@ -17,6 +18,16 @@ AnimationMenuView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:currentScene", this.render);
+    },
+
+    _playStockSim: function(e){
+        e.preventDefault();
+        dmaGlobals.appState.set("stockSimulationPlaying", true);
+    },
+
+    _pauseStockSim: function(e){
+        e.preventDefault();
+        dmaGlobals.appState.set("stockSimulationPlaying", false);
     },
 
     _changeScene: function(e){
@@ -30,7 +41,8 @@ AnimationMenuView = Backbone.View.extend({
     },
 
     template: _.template('\
-        animation settings\
+        <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-default">Play</a><br/>\
+        <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-default">Pause</a><br/>\
         ')
 
 });
