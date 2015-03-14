@@ -139,12 +139,12 @@ nav .btn {
 }
 
 #menuContent{
-    padding: 30px;
+    padding: 30px 30px 100px 30px;
     overflow-y: scroll;
-    top: 100px;
+    top: 50px;
     bottom: 0;
-    position: fixed;
-    width: 400px;
+    position: absolute;
+    width: 100%;
 }
 
 hr {

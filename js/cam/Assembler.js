@@ -47,19 +47,26 @@ Assembler = Backbone.Model.extend({
                 "change:cellType " +
                 "change:connectionType",
             this._setNeedsPostProcessing);
+        this.listenTo(options.lattice, "change:scale", this._setCAMScale);
 
         //init origin mesh
-        var scale = options.lattice.get("scale");
-        var origin = new THREE.Mesh(new THREE.SphereGeometry(scale/4),
+        var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
         this.set("origin", origin);
         //init stock mesh
-        var stock = new THREE.Mesh(new THREE.SphereGeometry(scale/4),
+        var stock = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff00ff}));
         dmaGlobals.three.sceneAdd(stock);
         this.set("stock", stock);
+        this._setCAMScale(options.lattice.get("scale"));
         this._setCAMVisibility();
+    },
+
+    _setCAMScale: function(scale){
+        var scale = dmaGlobals.lattice.get("scale")/8;
+        this.get("origin").scale.set(scale, scale, scale);
+        this.get("stock").scale.set(scale, scale, scale);
     },
 
     _setCAMVisibility: function(){
