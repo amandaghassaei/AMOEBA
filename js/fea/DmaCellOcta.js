@@ -187,8 +187,18 @@ DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
+DMARotatedEdgeCell.prototype.xScale = function(scale){
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    return scale;
+};
+
+DMARotatedEdgeCell.prototype.yScale = function(scale){
+    return this.xScale(scale);
+};
+
 DMARotatedEdgeCell.prototype.zScale = function(scale){
-    return this.xScale(scale)*Math.sqrt(2);
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    return Math.sqrt(2)/2*scale;
 };
 
 DMARotatedEdgeCell.prototype._getGeometry = function(){

@@ -223,48 +223,6 @@ OctaLatticeSubclasses = {
             return new DMAEdgeOctaCell(indices, scale);
         },
 
-//        getInvCellPositionForIndex: function(index){
-//
-//            var scale = this.get("scale");
-//            var position = _.clone(index);
-//
-//            var oddZ = position.z%2 != 0;
-//            position.z = Math.floor(position.z/2);
-//            var yScale = scale/Math.sqrt(3);
-//
-//            if (oddZ){
-//                position.x = (position.x)*this.xScale(scale);
-//                position.y = position.y*this.yScale(scale);
-//            } else {
-//                position.x = (position.x+0.5)*this.xScale(scale);
-//                position.y = (position.y)*this.yScale(scale)-yScale/2;
-//            }
-//
-//            if (oddZ){
-//                position.z = (position.z + 1)*this.zScale(scale);
-//            } else {
-//                position.z = (position.z)*this.zScale(scale);
-//            }
-//
-//            if ((index.y%2) != 0) {
-//                if (oddZ){
-//                    position.x += this.xScale(scale)/2;
-//                } else {
-//                    position.x -= this.xScale(scale)/2;
-//                }
-//            }
-//
-//            var zLayer = Math.floor(index.z/2)%3;
-//            if (zLayer == 1) {
-//                position.x += this.xScale(scale)/2;
-//                position.y -= yScale/2;
-//            } else if (zLayer == 2){
-//                position.y -= yScale;
-//            }
-//
-//            return position;
-//        },
-
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
             _.each(_.keys(this.OctaEdgeLattice), function(key){
@@ -310,6 +268,7 @@ OctaLatticeSubclasses = {
 
         xScale: function(scale){
             if (!scale) scale = this.get("scale");
+            scale *= 1 + 2*this.get("cellSeparation").xy;
             return scale;
         },
 
@@ -318,7 +277,9 @@ OctaLatticeSubclasses = {
         },
 
         zScale: function(scale){
-            return this.xScale(scale)*Math.sqrt(2)/2;
+            if (!scale) scale = this.get("scale");
+            scale *= Math.sqrt(2)/2 + 2*this.get("cellSeparation").z;
+            return scale;
         },
 
         makeCellForLatticeType: function(indices, scale){

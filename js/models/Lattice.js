@@ -20,9 +20,7 @@ Lattice = Backbone.Model.extend({
 
         //spacing for connectors/joints
         columnSeparation: 0.0,//todo get rid of this
-        xSeparation: 0.0,
-        ySeparation: 0.0,
-        zSeparation: 0.0,
+        cellSeparation: {xy:0.1, z:0},
 
         cellMode: "cell",//show cells vs parts
         cellType: "octa",

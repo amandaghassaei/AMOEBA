@@ -2,8 +2,6 @@
  * Created by aghassaei on 1/7/15.
  */
 
-//test
-
 //setup persistent global variables
 if (typeof dmaGlobals === "undefined") dmaGlobals = {};
 

@@ -161,8 +161,7 @@ OctaBasePlane = BasePlane.extend({
             for (var i=-dimY;i<=dimY;i++){
 
                 var xOffset = 0;
-                if (Math.abs(j)%2==0) {
-                } else {
+                if (Math.abs(j)%2!=0) {
                     xOffset = 1/2*xScale;
                 }
 
