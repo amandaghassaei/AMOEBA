@@ -6,6 +6,7 @@ Assembler = Backbone.Model.extend({
 
     defaults: {
         camStrategy: "xRaster",
+        placementOrder: "XYZ",//used for manual strategy entry
         camProcess: "shopbot",
         machine: "shopbot",
         exporter: null,
@@ -13,15 +14,16 @@ Assembler = Backbone.Model.extend({
         needsPostProcessing: true,
         editsMadeToProgram: false,//warn the user that they will override changes
 
-        rapidHeight: 6,
-        stockHeight: 0,
+        rapidHeight: 6.6,
+        safeHeight: 0.5,//inches above stock or assembly, when feed rate should slow
+
         origin: null,
         originPosition: new THREE.Vector3(20,0,0),
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),
 
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
-        feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
+        feedRate:{xy: 0.1, z: 0.1}//speed when heading towards assembly
     },
 
     initialize: function(options){
@@ -38,7 +40,10 @@ Assembler = Backbone.Model.extend({
                 "change:feedRate " +
                 "change:rapidSpeeds " +
                 "change:camProcess " +
-                "change:camStrategy",
+                "change:camStrategy " +
+                "change:placementOrder " +
+                "change:safeHeight " +
+                "change:rapidHeight",
             this._setNeedsPostProcessing);
         this.listenTo(options.lattice,
                 "change:numCells " +
@@ -65,7 +70,7 @@ Assembler = Backbone.Model.extend({
         this._setCAMVisibility();
     },
 
-    _setCAMScale: function(scale){
+    _setCAMScale: function(){
         var scale = dmaGlobals.lattice.get("scale")/8;
         this.get("origin").scale.set(scale, scale, scale);
         this.get("stock").scale.set(scale, scale, scale);
@@ -121,6 +126,7 @@ Assembler = Backbone.Model.extend({
     _getOrder: function(strategy){
         if (strategy == "xRaster") return "XYZ";
         if (strategy == "yRaster") return "YXZ";
+        if (strategy == "manual") return this.get("placementOrder");
         console.warn("strategy not recognized");
         return "";
     },
@@ -136,28 +142,17 @@ Assembler = Backbone.Model.extend({
         data += "\n";
 
         var rapidHeight = this.get("rapidHeight");
-        var stockHeight = this.get("stockHeight");
+        var safeHeight = this.get("safeHeight");
         data += exporter.moveZ(rapidHeight);
         data += "\n";
 
         var wcs = this.get("originPosition");
         var stockPosition = this.get("stockPosition");
+        var self = this;
         dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
             if (!cell) return;
-
-            data += exporter.rapidXY(stockPosition.x, stockPosition.y);
-            data += exporter.rapidZ(stockPosition.z+0.5);
-            data += exporter.moveZ(stockPosition.z);
-            data += exporter.moveZ(stockPosition.z+0.5);
-            data += exporter.rapidZ(rapidHeight);
-
-            var cellPosition = cell.getPosition();
-            data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
-            data += exporter.rapidZ(cellPosition.z-wcs.z+0.5);
-            data += exporter.moveZ(cellPosition.z-wcs.z);
-            data += exporter.moveZ(cellPosition.z-wcs.z+0.5);
-            data += exporter.rapidZ(rapidHeight);
-
+            data += self._grabStock(exporter, stockPosition, rapidHeight, safeHeight);
+            data += self._placeCell(cell, exporter, rapidHeight, wcs, safeHeight);
             data += "\n";
         });
         data += exporter.rapidXY(0, 0);
@@ -170,6 +165,27 @@ Assembler = Backbone.Model.extend({
         this.set("dataOut", data);
         this.set("exporter", exporter);
         return {data:data, exporter:exporter};
+    },
+
+    _grabStock: function(exporter, stockPosition, rapidHeight, safeHeight){
+        var data = "";
+        data += exporter.rapidXY(stockPosition.x, stockPosition.y);
+        data += exporter.rapidZ(stockPosition.z+safeHeight);
+        data += exporter.moveZ(stockPosition.z);
+        data += exporter.moveZ(stockPosition.z+safeHeight);
+        data += exporter.rapidZ(rapidHeight);
+        return data;
+    },
+
+    _placeCell: function(cell, exporter, rapidHeight, wcs, safeHeight){
+        var data = "";
+        var cellPosition = cell.getPosition();
+        data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
+        data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
+        data += exporter.moveZ(cellPosition.z-wcs.z);
+        data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
+        data += exporter.rapidZ(rapidHeight);
+        return data;
     },
 
     save: function(){

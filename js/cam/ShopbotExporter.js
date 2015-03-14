@@ -64,8 +64,8 @@ ShopbotExporter.prototype.moveZ = function(z){
 };
 
 ShopbotExporter.prototype.goHome = function(){
-    var data = this.moveZ(dmaGlobals.assembler.get("rapidHeight"));
-    data += this.moveXY(0,0);
+    var data = this.rapidZ(dmaGlobals.assembler.get("rapidHeight"));
+    data += this.rapidXY(0,0);
     return data;
 };
 

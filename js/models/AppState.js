@@ -130,7 +130,8 @@ AppState = Backbone.Model.extend({
 //        },
         allAssemblyStrategies: {
             xRaster: "X Raster",
-            yRaster: "Y Raster"
+            yRaster: "Y Raster",
+            manual: "Manual Entry"
         },
         allCamProcesses: {
             shopbot: "Shopbot (sbp)",

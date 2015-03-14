@@ -42,6 +42,8 @@ CamMenuView = Backbone.View.extend({
         else if ($(".stockPosition").is(":focus")) this._updateNumber(e, "stockPosition");
         else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
         else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
+        else if ($(".safeHeight").is(":focus")) this._updateNumber(e, "safeHeight");
+        else if ($(".rapidHeight").is(":focus")) this._updateNumber(e, "rapidHeight");
     },
 
     _updateNumber: function(e, property){
@@ -49,8 +51,11 @@ CamMenuView = Backbone.View.extend({
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
         var object = this.assembler.get(property);
-        object[$(e.target).data("type")] = newVal;
-        this.assembler.trigger("change:"+property);
+        if ($(e.target).data("type")) {
+            object[$(e.target).data("type")] = newVal;
+            this.assembler.trigger("change:"+property);
+        }
+        else this.assembler.set(property, newVal);
     },
 
     _save: function(e){
@@ -90,6 +95,8 @@ CamMenuView = Backbone.View.extend({
             Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
+            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/><br/>\
+            Slowdown Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
             Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
             &nbsp;<input data-type="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control numberInput rapidSpeeds" type="text"><br/><br/>\

@@ -441,6 +441,13 @@ Lattice = Backbone.Model.extend({
     rasterCells: function(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim){//used for CAM raster x/y/z in any order permutation
         //order is of form 'XYZ'
         var firstLetter = order.charAt(0);
+        order = order.substr(1);
+        var isNeg = false;
+        if (firstLetter == "-") {
+            isNeg = true;
+            firstLetter = order.charAt(0);
+            order = order.substr(1);
+        }
         var cells = this.get("cells");
         var newVarOrder;
         var newVarDim;
@@ -498,7 +505,6 @@ Lattice = Backbone.Model.extend({
             var1Order = newVarOrder;
             var1Dim = newVarDim;
         }
-        order = order.substr(1);
         this.rasterCells(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim);
     },
 

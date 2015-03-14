@@ -17,7 +17,21 @@ AssemblerMenuView = Backbone.View.extend({
         this.assembler = options.assembler;
 
         _.bindAll(this, "render");
+        _.bindAll(this, "_onKeyup");
         this.listenTo(this.assembler, "change", this.render);
+        $(document).bind('keyup', {state:false}, this._onKeyup);
+    },
+
+    _onKeyup: function(e){
+        if ($(".placementOrder").is(":focus")) this._updatePlacementOrder(e);
+    },
+
+    _updatePlacementOrder: function(e){
+        e.preventDefault();
+        var newVal = $(e.target).val();
+        if (newVal.length<3) return;//todo this isn't quite right
+        this.assembler.set("placementOrder", newVal);
+        this.assembler.trigger("change:placementOrder");
     },
 
     _selectCamStrategy: function(e){
@@ -32,6 +46,7 @@ AssemblerMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "assembler") return;
+        if ($("input").is(":focus")) return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
     },
 
@@ -54,5 +69,8 @@ AssemblerMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
+            <% if (camStrategy == "manual"){ %>\
+        Manual Placement Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/><br/>\
+        <% } %>\
         ')
 });
