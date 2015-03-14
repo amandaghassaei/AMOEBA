@@ -438,7 +438,7 @@ Lattice = Backbone.Model.extend({
         }
     },
 
-    rasterCells: function(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim){//used for CAM raster x/y/z in any order permutation
+    rasterCells: function(order, callback, var1, var2, var3){//used for CAM raster x/y/z in any order permutation
         //order is of form 'XYZ'
         var firstLetter = order.charAt(0);
         order = order.substr(1);
@@ -461,33 +461,18 @@ Lattice = Backbone.Model.extend({
             newVarOrder = 2;
             newVarDim = cells[0][0].length;
         } else if (firstLetter == ""){
-//            console.log(var1Dim);
-//            console.log(var2Dim);
-//            console.log(var3Dim);
-//            console.log(var1Order);
-//            console.log(var2Order);
-//            console.log(var3Order);
-            for (var i=0;i<var1Dim;i++){
-                for (var j=0;j<var2Dim;j++){
-                    for (var k=0;k<var3Dim;k++){
-                        if (var1Order == 0){
-                            if (var2Order == 1){
-                                callback(cells[i][j][k], i, j, k);
-                            } else if (var2Order == 2){
-                                callback(cells[i][k][j], i, k, j);
-                            }
-                        } else if (var1Order == 1){
-                            if (var2Order == 0){
-                                callback(cells[j][i][k], j, i, k);
-                            } else if (var2Order == 2){
-                                callback(cells[k][i][j], k, i, j);
-                            }
+            for (var i=0;i<var1.dim;i++){
+                for (var j=0;j<var2.dim;j++){
+                    for (var k=0;k<var3.dim;k++){
+                        if (var1.order == 0){
+                            if (var2.order == 1) callback(cells[i][j][k], i, j, k);
+                            else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
+                        } else if (var1.order == 1){
+                            if (var2.order == 0) callback(cells[j][i][k], j, i, k);
+                            else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
                         } else {
-                            if (var2Order == 0){
-                                callback(cells[j][k][i], j, k, i);
-                            } else if (var2Order == 1){
-                                callback(cells[k][j][i], k, j, i);
-                            }
+                            if (var2.order == 0) callback(cells[j][k][i], j, k, i);
+                            else if (var2.order == 1) callback(cells[k][j][i], k, j, i);
                         }
 
                     }
@@ -495,17 +480,10 @@ Lattice = Backbone.Model.extend({
             }
             return;
         }
-        if (var3Order == null) {
-            var3Order = newVarOrder;
-            var3Dim = newVarDim;
-        } else if (var2Order  == null) {
-            var2Order = newVarOrder;
-            var2Dim = newVarDim;
-        } else {
-            var1Order = newVarOrder;
-            var1Dim = newVarDim;
-        }
-        this.rasterCells(order, callback, var1Order, var1Dim, var2Order, var2Dim, var3Order, var3Dim);
+        if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim};
+        else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim};
+        else var1 = {order: newVarOrder, dim: newVarDim};
+        this.rasterCells(order, callback, var1, var2, var3);
     },
 
     ////////////////////////////////////////////////////////////////////////////////////

@@ -70,9 +70,7 @@ ShopbotExporter.prototype.goHome = function(){
 };
 
 ShopbotExporter.prototype.makeFooter = function(){
-    var data = this.moveZ(dmaGlobals.assembler.get("rapidHeight"));
-    data += this.rapidXY(0,0);
-    return data;
+    return this.goHome();
 };
 
 ShopbotExporter.prototype.save = function(data){
