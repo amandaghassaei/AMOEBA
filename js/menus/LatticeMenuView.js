@@ -25,9 +25,23 @@ LatticeMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
 
         _.bindAll(this, "render");
-
+        _.bindAll(this, "_onKeyup");
         //bind events
         this.listenTo(this.lattice, "change", this.render);
+        $(document).bind('keyup', {state:false}, this._onKeyup);
+    },
+
+    _onKeyup: function(e){
+        if ($(".cellSeparation").is(":focus")) this._updateNumber(e, "cellSeparation");
+    },
+
+    _updateNumber: function(e, property){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        var object = this.lattice.get(property);
+        object[$(e.target).data("type")] = newVal;
+        this.lattice.trigger("change:"+property);
     },
 
     _clearCells: function(e){
@@ -151,7 +165,11 @@ LatticeMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
+        Cell Separation <% if (connectionType != "freeformFace"){ %>(xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control numberInput cellSeparation" type="text">\
+        &nbsp;<input data-type="z" value="<%= cellSeparation.z %>" placeholder="Z" class="form-control numberInput cellSeparation" type="text">\
+        <% } else { %>( radial ): &nbsp;&nbsp;<input data-type="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control numberInput cellSeparation" type="text"><% } %>\
+        <br/><br/>\
+        Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         hint: click to create cells, shift+drag to create a lot of cells, d+click to delete cells<br/>\

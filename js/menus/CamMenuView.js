@@ -90,7 +90,8 @@ CamMenuView = Backbone.View.extend({
             Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
-            Rapid Speeds (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
+            Speeds (measured in <%= units %> per second):<br/><br/>\
+            Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
             &nbsp;<input data-type="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control numberInput rapidSpeeds" type="text"><br/><br/>\
             Feed Rate (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control numberInput feedRate" type="text">\
             &nbsp;<input data-type="z" value="<%= feedRate.z %>" placeholder="Z" class="form-control numberInput feedRate" type="text">\
