@@ -109,6 +109,13 @@ Assembler = Backbone.Model.extend({
         } else console.warn("cam process not supported");
     },
 
+    _getOrder: function(strategy){
+        if (strategy == "xRaster") return "XYZ";
+        if (strategy == "yRaster") return "YXZ";
+        console.warn("strategy not recognized");
+        return "";
+    },
+
     postProcess: function(){
         this.set("needsPostProcessing", false);
         var exporter = this._getExporter();
@@ -123,14 +130,10 @@ Assembler = Backbone.Model.extend({
         var stockHeight = this.get("stockHeight");
         data += exporter.moveZ(rapidHeight);
         data += "\n";
-        var wcs = this.get("originPosition");
 
-        var strategy = this.get("camStrategy");
-        var order;
-        if (strategy == "xRaster") order = "XYZ";
-        else if (strategy == "yRaster") order = "YXZ";
+        var wcs = this.get("originPosition");
         var stockPosition = this.get("stockPosition");
-        dmaGlobals.lattice.rasterCells(order, function(cell, x, y, z){
+        dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy"), function(cell){
             if (!cell) return;
 
             data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
