@@ -155,11 +155,12 @@ AppState = Backbone.Model.extend({
 
     initialize: function(){
 
-         _.bindAll(this, "_handleKeyStroke");
+         _.bindAll(this, "_handleKeyStroke", "_handleScroll");
 
         //bind events
         $(document).bind('keydown', {state:true}, this._handleKeyStroke);
         $(document).bind('keyup', {state:false}, this._handleKeyStroke);
+        $(document).bind('mousewheel', {}, this._handleScroll);
 
         this.listenTo(this, "change:currentTab", this._storeTab);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
@@ -273,6 +274,10 @@ AppState = Backbone.Model.extend({
             default:
                 break;
         }
+    },
+
+    _handleScroll: function(e){//disable two finger swipe back
+        e.preventDefault();
     }
 
 });

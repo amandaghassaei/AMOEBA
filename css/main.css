@@ -170,4 +170,5 @@ hr {
 input.numberInput{
     width:22%;
     display: inline;
+    padding: 8px 10px;
 }

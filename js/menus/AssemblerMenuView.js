@@ -16,13 +16,13 @@ AssemblerMenuView = Backbone.View.extend({
 
         this.assembler = options.assembler;
 
-        _.bindAll(this, "render");
-        _.bindAll(this, "_onKeyup");
+        _.bindAll(this, "render", "_onKeyup");
         this.listenTo(this.assembler, "change", this.render);
-        $(document).bind('keyup', {state:false}, this._onKeyup);
+        $(document).bind('keyup', {}, this._onKeyup);
     },
 
     _onKeyup: function(e){
+        if (this.model.get("currentTab") != "assembler") return;
         if ($(".placementOrder").is(":focus")) this._updatePlacementOrder(e);
     },
 

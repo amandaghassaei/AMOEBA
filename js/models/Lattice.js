@@ -462,8 +462,12 @@ Lattice = Backbone.Model.extend({
             newVarDim = cells[0][0].length;
         } else if (firstLetter == ""){
             for (var i=0;i<var1.dim;i++){
-                for (var j=0;j<var2.dim;j++){
-                    for (var k=0;k<var3.dim;k++){
+            //for (var i=var1.dim-1;i>=0;i--){
+                for (var j=var2.dim-1;j>=0;j--){
+                    for (var k=var3.dim-1;k>=0;k--){
+            //for (var i=0;i<var1.dim;i++){
+            //    for (var j=0;j<var2.dim;j++){
+            //        for (var k=0;k<var3.dim;k++){
                         if (var1.order == 0){
                             if (var2.order == 1) callback(cells[i][j][k], i, j, k);
                             else if (var2.order == 2) callback(cells[i][k][j], i, k, j);

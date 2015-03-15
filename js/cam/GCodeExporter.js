@@ -52,6 +52,10 @@ GCodeExporter.prototype.rapidXY = function(x, y){
     return this.rapidXYZ(x, y, null);
 };
 
+GCodeExporter.prototype.rapidZ = function(z){
+    return this.rapidXYZ(null, null, z);
+};
+
 GCodeExporter.prototype.moveXYZ = function(x, y, z){
     if (x !== null) x = "X"+x;
     if (y !== null) y = "Y"+y;

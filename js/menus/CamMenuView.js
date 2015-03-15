@@ -19,12 +19,11 @@ CamMenuView = Backbone.View.extend({
         this.lattice = options.lattice;
         this.assembler = options.assembler;
 
-        _.bindAll(this, "render");
-        _.bindAll(this, "_onKeyup");
+        _.bindAll(this, "render", "_onKeyup");
         //bind events
         this.listenTo(this.assembler, "change", this.render);
         this.listenTo(this.lattice, "change:units", this.render);
-        $(document).bind('keyup', {state:false}, this._onKeyup);
+        $(document).bind('keyup', {}, this._onKeyup);
     },
 
     _selectCamProcess: function(e){
@@ -38,6 +37,7 @@ CamMenuView = Backbone.View.extend({
     },
 
     _onKeyup: function(e){
+        if (this.model.get("currentTab") != "cam") return;
         if ($(".wcs").is(":focus")) this._updateNumber(e, "originPosition");
         else if ($(".stockPosition").is(":focus")) this._updateNumber(e, "stockPosition");
         else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
@@ -50,6 +50,7 @@ CamMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
+        newVal = newVal.toFixed(4);
         var object = this.assembler.get(property);
         if ($(e.target).data("type")) {
             object[$(e.target).data("type")] = newVal;
