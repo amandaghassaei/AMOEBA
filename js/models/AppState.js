@@ -277,7 +277,7 @@ AppState = Backbone.Model.extend({
     },
 
     _handleScroll: function(e){//disable two finger swipe back
-        e.preventDefault();
+        if (Math.abs(e.originalEvent.deltaX) > Math.abs(e.originalEvent.deltaY)) e.preventDefault();
     }
 
 });
