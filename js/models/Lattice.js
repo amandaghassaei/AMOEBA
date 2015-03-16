@@ -7,7 +7,7 @@ Lattice = Backbone.Model.extend({
 
     defaults: {
 
-        units: "inches",
+        units: "mm",
 
         nodes: [],
         cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
@@ -16,7 +16,7 @@ Lattice = Backbone.Model.extend({
         numCells: 0,
 
         basePlane: null,//plane to build from
-        scale: 2.78388,
+        scale: 20,
         highlighter: null,//highlights build-able surfaces
         //todo this is not exposed in ui, is that useful?
         shouldPreserveCells: true,//preserve cells when changing lattice type
@@ -25,8 +25,8 @@ Lattice = Backbone.Model.extend({
         cellSeparation: {xy:0, z:0},
 
         cellType: "octa",
-        connectionType: "edgeRot",
-        partType: "beam"
+        connectionType: "face",
+        partType: "triangle"
     },
 
     //pass in fillGeometry

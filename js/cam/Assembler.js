@@ -14,7 +14,7 @@ Assembler = Backbone.Model.extend({
         needsPostProcessing: true,
         editsMadeToProgram: false,//warn the user that they will override changes
 
-        rapidHeight: 6.6,
+        rapidHeight: 6,
         safeHeight: 0.5,//inches above stock or assembly, when feed rate should slow
 
         origin: null,

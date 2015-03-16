@@ -173,6 +173,9 @@ input.numberInput{
     padding: 8px 10px;
 }
 
+.dropdown-menu, .select2-drop {
+    background-color: #fff;
+}
 
 
 .navbar-nav > .open > .dropdown-menu{
