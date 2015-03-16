@@ -488,36 +488,6 @@ Lattice = Backbone.Model.extend({
         else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim};
         else var1 = {order: newVarOrder, dim: newVarDim};
         this.rasterCells(order, callback, var1, var2, var3);
-    },
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////SAVE////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    saveJSON: function(name){
-        if (!name) name = "lattice";
-        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice"]);
-        if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
-        var data = JSON.stringify({
-            lattice:_.omit(this.toJSON(), ["highlighter", "basePlane", "nodes", "appState"]),
-            assembler: assemblerData
-        });
-        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, name + ".json");
-    },
-
-    loadFromJSON: function(data){
-        this.clearCells();
-        var data = JSON.parse(data);
-        var self = this;
-        _.each(_.keys(data.lattice), function(key){
-            self.set(key, data.lattice[key], {silent:true});
-        });
-        _.each(_.keys(data.assembler), function(key){
-            dmaGlobals.assembler.set(key, data.assembler[key]);
-        });
-        this.set("shouldPreserveCells", true, {silent:true});
-        this._updateLatticeType(null, null, null, true);
     }
 
 });

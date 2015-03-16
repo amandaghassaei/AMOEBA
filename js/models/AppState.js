@@ -38,7 +38,7 @@ AppState = Backbone.Model.extend({
                 assembler:"Assembler",
                 cam: "Process",
                 animate:"Preview",
-                send: "Send"
+                send: "Edit"
             }
         },
 
@@ -241,8 +241,6 @@ AppState = Backbone.Model.extend({
                 this.set("shift", state);
                 break;
             case 68://d delete mode
-                console.log(state);
-                console.log(dmaGlobals.lattice.get("cellMode"));
                 if (this.get("cellMode") == "cell") this.set("deleteMode", state);//only for cell mode
                 else this.set("deleteMode", false);
                 break;
@@ -278,6 +276,64 @@ AppState = Backbone.Model.extend({
 
     _handleScroll: function(e){//disable two finger swipe back
         if (Math.abs(e.originalEvent.deltaX) > Math.abs(e.originalEvent.deltaY)) e.preventDefault();
+    },
+
+        ////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////SAVE////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    _saveFile: function(data, name, extension){
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, name + extension);
+    },
+
+    saveJSON: function(name){
+        if (!name) name = "lattice";
+        var data = JSON.stringify({
+            lattice:this._getLatticeDataToSave(),
+            assembler: this._getAssemblerDataToSave()
+        });
+        this._saveFile(data, name, ".json");
+    },
+
+    _getAssemblerDataToSave: function(){
+        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice"]);
+        if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
+        return assemblerData;
+    },
+
+    _getLatticeDataToSave: function(){
+        return _.omit(dmaGlobals.lattice.toJSON(), ["highlighter", "basePlane", "nodes", "appState"]);
+    },
+
+    loadLatticeFromJSON: function(data){
+        dmaGlobals.lattice.clearCells();
+        this._setData(JSON.parse(data), true);
+        dmaGlobals.lattice._updateLatticeType(null, null, null, true);
+    },
+
+    saveUser: function(name){
+        var latticeData = _.omit(this._getLatticeDataToSave(), ["cells", "cellsMin", "cellsMax", "numCells"]);
+        var assemblerData = _.omit(this._getAssemblerDataToSave(), ["dataOut", "needsPostProcessing", "editsMadeToProgram"]);
+        var data = JSON.stringify({
+            lattice:latticeData,
+            assembler:assemblerData
+        });
+        this._saveFile(data, name, ".user");
+    },
+
+    loadUser: function(data, isParsed){
+        if (!isParsed) data = JSON.parse(data);
+        this._setData(data, false);
+    },
+
+    _setData: function(data, silent){
+        _.each(_.keys(data.lattice), function(key){
+            dmaGlobals.lattice.set(key, data.lattice[key], {silent:silent});
+        });
+        _.each(_.keys(data.assembler), function(key){
+            dmaGlobals.assembler.set(key, data.assembler[key]);
+        });
     }
 
 });

@@ -11,15 +11,17 @@ NavBar = Backbone.View.extend({
     el: "body",
 
     events: {
-        "click #showHideMenu":                          "_setMenuVis",
-        "click .menuHoverControls":                     "_setNavSelection",
-        "click #saveJSON":                              "_save",
-        "click #saveAsJSON":                            "_saveAs",
-        "shown.bs.modal #saveAsModel":                  "_showSaveAsModal",
-        "hide.bs.modal #saveAsModel":                   "_hideSaveAsModal",
-        "change #saveAsModel":                          "_saveAs",
-        "click #importJSON":                            "_importJSON",
-        "change #jsonInput":                            "_selectJSONFiles"
+        "click #showHideMenu":                                  "_setMenuVis",
+        "click .menuHoverControls":                             "_setNavSelection",
+        "click #saveJSON":                                      "_save",
+        "click #saveAsJSON":                                    "_saveAs",
+        "change #saveAsModel":                                  "_saveAs",//detect enter key
+        "click #saveUser":                                      "_saveUserSettings",
+        "shown.bs.modal .modal":                                "_showModal",
+        "hide.bs.modal .modal":                                 "_hideModal",
+        "click .importJSON":                                    "_importJSON",
+        "change #jsonInput":                                    "_selectJSONFiles",
+        "click .savedUserSettings":                             "_loadSavedUser"
     },
 
     initialize: function(){
@@ -90,31 +92,51 @@ NavBar = Backbone.View.extend({
         reader.readAsText(files[0]);
         reader.onload = (function() {
             return function(e) {
-                dmaGlobals.lattice.loadFromJSON(e.target.result);
+                var extension = filename.substr(filename.length - 5);
+                if (extension == ".json"){
+                    dmaGlobals.appState.loadLatticeFromJSON(e.target.result);
+                } else if (extension == ".user"){
+                    dmaGlobals.appState.loadUser(e.target.result);
+                } else console.warn("file type not recognized");
             }
         })();
     },
 
     _save: function(e){
         e.preventDefault();
-        dmaGlobals.lattice.saveJSON();
+        dmaGlobals.appState.saveJSON();
     },
 
     _saveAs: function(e){
         e.preventDefault();
         var fileName = $("#saveAsFileName").val();
-        dmaGlobals.lattice.saveJSON(fileName);
+        dmaGlobals.appState.saveJSON(fileName);
         $('#saveAsModel').modal('hide');
     },
 
-    _showSaveAsModal: function(){
-        var input = $("#saveAsFileName");
+    _saveUserSettings: function(e){
+        e.preventDefault();
+        var fileName = $("#userSettingsFilename").val();
+        dmaGlobals.appState.saveUser(fileName);
+        $('#saveUserModel').modal('hide');
+    },
+
+    _loadSavedUser: function(e){
+        e.preventDefault();
+        var url = "data/users/" + $(e.target).data("file");
+        $.getJSON( url, function(data) {
+            dmaGlobals.appState.loadUser(data, true);
+        });
+    },
+
+    _showModal: function(e){
+        var input = $(e.target).find("input.filename");
         input.focus();
         input.select();
     },
 
-    _hideSaveAsModal: function(){
-        $("#saveAsFileName").blur();
+    _hideModal: function(e){
+        $(e.target).find("input.filename").blur();
     },
 
     _uiStuff: function(){
@@ -128,7 +150,7 @@ NavBar = Backbone.View.extend({
     },
 
     _deselectAllNavItems: function(){
-        $(".menuHoverControls").parent().removeClass("open");//no highlight
+        $(".open").removeClass("open");//no highlight
     }
 
 });
