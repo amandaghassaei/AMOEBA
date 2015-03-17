@@ -55,6 +55,13 @@ DMACell.prototype.hide = function(){
     });
 };
 
+DMACell.prototype.destroyParts = function(){
+    _.each(this.parts, function(part){
+        if (part) part.destroy();
+    });
+    this.parts = null;
+};
+
 DMACell.prototype._buildCellMesh = function(material){//called from every subclass
     var unitCellGeo = this._getGeometry();
     if (!material) material = cellMaterials;
@@ -215,11 +222,8 @@ DMACell.prototype.destroy = function(){
 //            material.dispose();
         this.cellMesh = null;
     }
-    _.each(this.parts, function(part){
-        if (part) part.destroy();
-    });
+    this.destroyParts();
     this.indices = null;
-    this.parts = null;
     this.nodes = null;
     this.beams = null;
 };

@@ -38,7 +38,7 @@ Lattice = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(options.appState, "change:cellMode", this._updateForMode);
-        this.listenTo(this, "change:partType", this._updateForMode);
+        this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
     },
@@ -304,6 +304,13 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////EVENTS//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
 
+    _updatePartType: function(){
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.destroyParts();
+        });
+        this._updateForMode();
+    },
+
     _updateForMode: function(){
         var cellMode = dmaGlobals.appState.get("cellMode");
         var partType =  this.get("partType");
@@ -390,7 +397,8 @@ Lattice = Backbone.Model.extend({
                 if (!cell) return;
 
                 var index = _.clone(cell.indices);
-                var parts = _.clone(cell.parts);
+                var  parts = null;
+                if (loadingFromFile) parts = _.clone(cell.parts);
                 if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
                 if (cell.parentPosition) var parentPos = cell.parentPosition;
                 if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
