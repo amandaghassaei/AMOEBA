@@ -12,8 +12,8 @@ var unitFaceOctaGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
-function DMAFaceOctaCell(indices, scale){
-    DMACell.call(this, indices, scale);
+function DMAFaceOctaCell(indices, scale, cellMode, partType){
+    DMACell.call(this, indices, scale, cellMode, partType);
 }
 DMAFaceOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -121,8 +121,8 @@ DMAFreeFormOctaCell.prototype.zScale = function(scale){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAEdgeOctaCell(indices, scale){
-    DMAFaceOctaCell.call(this, indices, scale);
+function DMAEdgeOctaCell(indices, scale, cellMode, partType){
+    DMAFaceOctaCell.call(this, indices, scale, cellMode, partType);
 }
 DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
 
@@ -145,8 +145,8 @@ DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
 
 var unitVertexOcta = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 
-function DMARotatedEdgeCell(indices, scale){
-    DMACell.call(this, indices, scale);
+function DMARotatedEdgeCell(indices, scale, cellMode, partType){
+    DMACell.call(this, indices, scale, cellMode, partType);
 }
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
@@ -239,8 +239,8 @@ DMARotatedEdgeCell.prototype._getGeometry = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAVertexOctaCell(indices, scale){
-    DMACell.call(this, indices, scale);
+function DMAVertexOctaCell(indices, scale, cellMode, partType){
+    DMACell.call(this, indices, scale, cellMode, partType);
 }
 DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 

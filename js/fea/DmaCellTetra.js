@@ -14,8 +14,8 @@ unitCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-1
 var unitCellGeoUpsideDown = unitCellGeo.clone();
 unitCellGeoUpsideDown.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI));
 
-function DMATetraFaceCell(indices, scale){
-    DMACell.call(this, indices, scale);
+function DMATetraFaceCell(indices, scale, cellMode, partType){
+    DMACell.call(this, indices, scale, cellMode, partType);
 }
 DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
@@ -40,8 +40,8 @@ DMATetraFaceCell.prototype._getGeometry = function(){
 ////////////////////////EDGE CONNECTED OCTA////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-function DMATetraEdgeCell(indices, scale){
-    DMATetraFaceCell.call(this, indices, scale);
+function DMATetraEdgeCell(indices, scale, cellMode, partType){
+    DMATetraFaceCell.call(this, indices, scale, cellMode, partType);
 }
 DMATetraEdgeCell.prototype = Object.create(DMATetraFaceCell.prototype);
 

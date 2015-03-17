@@ -14,7 +14,10 @@ function DMACell(indices, scale, cellMode, partType) {
 
     this.cellMesh = this._buildCellMesh();
     this._doMeshTransformations(this.cellMesh);//some cell types require transformations
-    dmaGlobals.three.sceneAdd(this.cellMesh, "cell");
+
+    var sceneType = "cell";
+    if (!indices) sceneType = null;
+    dmaGlobals.three.sceneAdd(this.cellMesh,sceneType);
 
     this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
@@ -99,6 +102,7 @@ DMACell.prototype.updateForScale = function(scale, cellMode, partType){
     }
 };
 
+
 DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.x = position.x;
     mesh.position.y = position.y;
@@ -107,7 +111,7 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
 
 DMACell.prototype.getType = function(){
     return null;//only used in freeform layout
-}
+};
 
 DMACell.prototype.getScale = function(){//need for part relay
     return dmaGlobals.lattice.get("scale");
@@ -126,7 +130,8 @@ DMACell.prototype.getEulerRotation = function(){
 };
 
 DMACell.prototype._calcPosition = function(){//need for part relay
-    return dmaGlobals.lattice.getPositionForIndex(this.indices);
+    if (this.indices) return dmaGlobals.lattice.getPositionForIndex(this.indices);
+    return this.cellMesh.position;//used for cam simulation
 };
 
 DMACell.prototype._setCellMeshVisibility = function(visibility){

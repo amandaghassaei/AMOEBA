@@ -62,6 +62,12 @@ Assembler = Backbone.Model.extend({
         this.listenTo(options.lattice, "change:scale", this._setCAMScale);
         this.listenTo(dmaGlobals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
+        this.listenTo(options.lattice, "change:partType", this._updatePartType);
+        this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
+
+
+
+
         //init origin mesh
         var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff0000}));
@@ -84,8 +90,22 @@ Assembler = Backbone.Model.extend({
     },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////STOCK / ORIGIN/////////////////////////////////////////////////
+////////////////////////////////VISUALIZATION//////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
+
+    _isVisible: function(){
+        var currentTab = dmaGlobals.appState.get("currentTab");
+        return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
+    },
+
+    _updatePartType: function(){
+        if (this._isVisible()) this.get("machine").updatePartType();
+    },
+
+    _updateCellMode: function(){
+        this.get("machine").setVisibility(this._isVisible());
+        dmaGlobals.three.render();
+    },
 
     _setCAMScale: function(){
         var scale = dmaGlobals.lattice.get("scale")/8;
@@ -94,11 +114,10 @@ Assembler = Backbone.Model.extend({
     },
 
     _setCAMVisibility: function(){
-        var visible = false;
-        var currentTab = dmaGlobals.appState.get("currentTab");
-        if (currentTab == "cam" || currentTab == "animate" || currentTab == "send") visible = true;
+        var visible = this._isVisible();
         this.get("origin").visible = visible;
         this.get("stock").visible = visible;
+        this.get("machine").setVisibility(visible);
         dmaGlobals.three.render();
     },
 

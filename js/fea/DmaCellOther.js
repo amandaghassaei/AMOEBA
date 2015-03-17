@@ -15,8 +15,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    function DMACubeCell(indices, scale){
-        DMACell.call(this, indices, scale);
+    function DMACubeCell(indices, scale, cellMode, partType){
+        DMACell.call(this, indices, scale, cellMode, partType);
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -111,8 +111,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     ];
     unitCellGeo.computeFaceNormals();
 
-    function DMATruncCubeCell(indices, scale){
-        DMACell.call(this, indices, scale);
+    function DMATruncCubeCell(indices, scale, cellMode, partType){
+        DMACell.call(this, indices, scale, cellMode, partType);
     }
     DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -254,8 +254,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     ];
     unitCellGeo.computeFaceNormals();
 
-    function DMATruncOctaCell(indices, scale){
-        DMATruncCubeCell.call(this, indices, scale);
+    function DMATruncOctaCell(indices, scale, cellMode, partType){
+        DMATruncCubeCell.call(this, iindices, scale, cellMode, partType);
     }
     DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
