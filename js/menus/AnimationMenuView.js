@@ -12,7 +12,8 @@ AnimationMenuView = Backbone.View.extend({
         "click #pauseStockSim":                                     "_pauseStockSim",
         "click #resetStockSim":                                     "_resetStockSim",
         "click #saveSendMenu":                                      "_save",
-        "click #overrideEdits":                                     "_postProcess"
+        "click #overrideEdits":                                     "_postProcess",
+        "slideStop #speedSlider":                                   "_changeSpeedSlider"
     },
 
     initialize: function(){
@@ -57,24 +58,35 @@ AnimationMenuView = Backbone.View.extend({
         dmaGlobals.assembler.set("simLineNumber", 1);
     },
 
+    _changeSpeedSlider: function(e){
+        dmaGlobals.assembler.set("simSpeed", $(e.target)[0].value);
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "animate") return;
         if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
+
+        $('#speedSlider').slider({
+            formatter: function(value) {
+                return value + "X";
+            }
+        });
     },
 
     template: _.template('\
         <% if (stockSimulationPlaying){ %>\
-        <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a><br/>\
+        <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a>\
         <% } else { %>\
             <% if (simLineNumber != 1){ %>\
                 <a href="#" id="playStockSim" class=" btn btn-lg btn-halfWidth btn-success">Play</a>\
-                <a href="#" id="resetStockSim" class=" btn btn-lg btn-halfWidth pull-right btn-default">Reset</a><br/><br/>\
+                <a href="#" id="resetStockSim" class=" btn btn-lg btn-halfWidth pull-right btn-default">Reset</a><br/>\
             <% } else { %>\
-                <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a><br/>\
+                <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a>\
             <% } %>\
         <% } %>\
-        <a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
+        <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
+        <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         Assembly Time:&nbsp;&nbsp;<br/><br/>\
         <textarea id="gcodeEditor"><%= dataOut %></textarea><br/><br/>\
         <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\

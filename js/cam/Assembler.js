@@ -27,7 +27,8 @@ Assembler = Backbone.Model.extend({
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
         feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
 
-        simLineNumber: 1//used for stock simulation, reading through gcode
+        simLineNumber: 1,//used for stock simulation, reading through gcode
+        simSpeed: 4//#X times real speed
     },
 
     initialize: function(options){
@@ -126,7 +127,7 @@ Assembler = Backbone.Model.extend({
                 this.get("exporter").simulate(allLines[currentLine], this.get("machine"),
                     this.get("originPosition"), function(){
                     currentLine++;
-                    self.set("simLineNumber", currentLine);
+                    self.set("simLineNumber", currentLine, {silent:true});
                     self._stockSimulation();
                 });
             } else {

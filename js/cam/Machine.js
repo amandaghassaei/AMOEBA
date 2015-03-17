@@ -4,10 +4,16 @@
 
 
 function Machine() {
-    var mesh = new THREE.Mesh(new THREE.BoxGeometry(2,2,2));
-    //dmaGlobals.three.sceneAdd(mesh);
+    var mesh = new THREE.Mesh(new THREE.BoxGeometry(2,2,2));//this._makeStock();
+    dmaGlobals.three.sceneAdd(mesh);
     this.mesh = mesh;
 }
+
+Machine.prototype._makeStock = function(){
+    var mesh = DMAEdgeVoxPart.prototype._makeMeshForType();
+    mesh.myPart = null;
+    return mesh;
+};
 
 Machine.prototype.pause = function(){
 
@@ -21,6 +27,6 @@ Machine.prototype.moveTo = function(x, y, z, speed, wcs, callback){
         if (z != "") self.mesh.position.z = parseFloat(z)+wcs.z;
         dmaGlobals.three.render();
         return callback();
-    }, 300);
+    }, 500/dmaGlobals.assembler.get("simSpeed"));
 
 };
