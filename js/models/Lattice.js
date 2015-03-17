@@ -306,21 +306,23 @@ Lattice = Backbone.Model.extend({
 
     _updateForMode: function(){
         var cellMode = dmaGlobals.appState.get("cellMode");
-        var beamMode =  this.get("partType") == "beam";
+        var partType =  this.get("partType");
         var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.drawForMode(scale, cellMode, beamMode);
+            if (cell) cell.draw(scale, cellMode, partType);
         });
         dmaGlobals.three.render();
     },
 
     _updateCellSeparation: function(){
         var cellSep = this.get("cellSeparation");
+        this.get("basePlane").updateXYSeparation(cellSep.xy);
+
         var scale = this.get("scale");
         var cellMode = dmaGlobals.appState.get("cellMode");
-        this.get("basePlane").updateXYSeparation(cellSep.xy);
+        var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale, cellMode);
+            if (cell) cell.updateForScale(scale, cellMode, partType);
         });
         dmaGlobals.three.render();
     },
@@ -331,8 +333,9 @@ Lattice = Backbone.Model.extend({
         this.get("highlighter").updateScale(scale);
 
         var cellMode = dmaGlobals.appState.get("cellMode");
+        var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale, cellMode);
+            if (cell) cell.updateForScale(scale, cellMode, partType);
         });
 
         dmaGlobals.three.render();

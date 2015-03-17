@@ -8,33 +8,50 @@
 var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-function DMACell(indices, scale) {
+function DMACell(indices, scale, cellMode, partType) {
 
     this.indices = indices;
-    this.cellMesh = this._buildCellMesh();
-    if (!indices) return;//this is a way to get the cell mesh without really initing a cell
 
-    this._doMeshTransformations(this.cellMesh);//some cell types require transformations, this may go away if i decide to do this in the geo instead
+    this.cellMesh = this._buildCellMesh();
+    this._doMeshTransformations(this.cellMesh);//some cell types require transformations
     dmaGlobals.three.sceneAdd(this.cellMesh, "cell");
+
     this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
     this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
 
-    var cellMode = dmaGlobals.appState.get("cellMode");
-    var beamMode = dmaGlobals.lattice.get("partType") == "beam";
-    this.drawForMode(scale, cellMode, beamMode);
+    this.draw(scale, cellMode, partType);
 
 }
 
-//todo this is a mess
-DMACell.prototype.drawForMode = function(scale, cellMode, beamMode){
-    this.updateForScale(scale, cellMode);
-    this._setCellMeshVisibility(cellMode == "cell");
+DMACell.prototype.draw = function(scale, cellMode, partType){
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
+    if (!partType)  partType = dmaGlobals.lattice.get("partType");
+    var beamMode = partType == "beam";
+
+    //init parts if needed
     if (!beamMode && cellMode == "part" && !this.parts) this.parts = this._initParts();
+
+    //update scale
+    this.updateForScale(scale, cellMode, partType);
+
+    //set visibility
+    this._setCellMeshVisibility(cellMode == "cell");
     _.each(this.parts, function(part){
         if (part) part.setVisibility(cellMode == "part" && !beamMode);
     });
     _.each(this.beams, function(beam){
         beam.setVisibility(beamMode && cellMode == "part");
+    });
+};
+
+DMACell.prototype.hide = function(){
+    this._setCellMeshVisibility(false);
+    _.each(this.parts, function(part){
+        if (part) part.setVisibility(false);
+    });
+    _.each(this.beams, function(beam){
+        beam.setVisibility(false);
     });
 };
 
@@ -52,18 +69,26 @@ DMACell.prototype._doMeshTransformations = function(mesh){};//by default, no mes
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-DMACell.prototype.updateForScale = function(scale, cellMode){
-    //only update visible object to scale
+DMACell.prototype.updateForScale = function(scale, cellMode, partType){
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
+    if (!partType)  partType = dmaGlobals.lattice.get("partType");
+
     var position = this._calcPosition();
-    this.cellMesh.scale.set(scale, scale, scale);
     this._setMeshPosition(this.cellMesh, position);
+
+    this.cellMesh.scale.set(scale, scale, scale);//must do this so highlighting works properly in part mode
+    //only update visible object to scale
     if (cellMode == "part"){
-        _.each(this.parts, function(part){
-            if (part) part.updateForScale(scale, position);
-        });
-        _.each(this.beams, function(beam){
-            if (beam) beam.updateForScale(scale, position);
-        });
+        if (partType == "beam"){
+            _.each(this.beams, function(beam){
+                if (beam) beam.updateForScale(scale, position);//todo this is not working quite right yet
+            });
+        } else {
+            _.each(this.parts, function(part){
+                if (part) part.updateForScale(scale, position);
+            });
+        }
     }
 };
 
