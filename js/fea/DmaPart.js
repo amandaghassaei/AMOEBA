@@ -154,9 +154,10 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
         unitPartGeo = geometry;
         unitPartGeo.computeBoundingBox();
-        var unitScale = 0.7/unitPartGeo.boundingBox.max.y;
+        var unitScale = 0.706/unitPartGeo.boundingBox.max.y;
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
     });
 
     function DMAEdgeVoxPart(type, parent){

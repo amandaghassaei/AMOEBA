@@ -128,7 +128,7 @@ Lattice = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
-    //todo send clear all to three anddestroy without sceneRemove to cell
+    //todo send clear all to three and destroy without sceneRemove to cell
     clearCells: function(){
         this._iterCells(this.get("cells"), function(cell){
             if (cell && cell.destroy) cell.destroy();
