@@ -328,7 +328,6 @@ AppState = Backbone.Model.extend({
 
     loadUser: function(data, isParsed){
         if (!isParsed) data = JSON.parse(data);
-        console.log(data);
         this._setData(data, false);
     },
 

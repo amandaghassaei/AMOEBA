@@ -83,21 +83,21 @@ ShopbotExporter.prototype.convertToInches = function(mm){
 };
 
 
-ShopbotExporter.prototype.simulate = function(line, machine, callback){
+ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
     if (line == "" || line[0] == "'" || (line[0] != "J" && line[0] != "M")) {
         return callback();
     }
     if (line[0] == "J"){
-        return this.simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, callback);
+        return this.simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
     } else if (line[0] == "M"){
-        return this.simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, callback);
+        return this.simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
     } else {
         console.warn("problem parsing sbp");
         return callback();
     }
 };
 
-ShopbotExporter.prototype.simulateGetPosition = function(line, speed, machine, callback){
+ShopbotExporter.prototype.simulateGetPosition = function(line, speed, machine, wcs, callback){
     if (line[1] == 3 || line[1] == 2) {
         var data = line.split(" ");
         for (var i=0;i<data.length;i++){
@@ -105,10 +105,9 @@ ShopbotExporter.prototype.simulateGetPosition = function(line, speed, machine, c
             if (item[item.length-1] == ",") data[i] = item.substring(0, item.length - 1)
         }
         if (line[1] == 3){
-            console.log(machine);
-            machine.moveTo(data[1], data[2], data[3], speed, callback);
+            machine.moveTo(data[1], data[2], data[3], speed, wcs, callback);
         } else {
-            machine.moveTo(data[1], data[2], "", speed, callback);
+            machine.moveTo(data[1], data[2], "", speed, wcs, callback);
         }
     } else if (line[1] == "S"){
         return callback();

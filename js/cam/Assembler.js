@@ -123,7 +123,8 @@ Assembler = Backbone.Model.extend({
             var allLines = this.get("dataOut").split("\n");
             if(currentLine<allLines.length){
                 var self = this;
-                this.get("exporter").simulate(allLines[currentLine], this.get("machine"), function(){
+                this.get("exporter").simulate(allLines[currentLine], this.get("machine"),
+                    this.get("originPosition"), function(){
                     currentLine++;
                     self.set("simLineNumber", currentLine);
                     self._stockSimulation();
