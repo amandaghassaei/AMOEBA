@@ -5,10 +5,10 @@
 function myWorker(){
 
     //local variables
-    localEnv = null;//local variables passed in from outside
-    working = false;//boolean that says whether I'm busy or not
-    arg = null;//main data we are crunching
-    modelMesh = null;//hold on to this so we don't have to keep passing it in
+    var localEnv = null;//local variables passed in from outside
+    var working = false;//boolean that says whether I'm busy or not
+    var arg = null;//main data we are crunching
+    var modelMesh = null;//hold on to this so we don't have to keep passing it in
 
     self.onmessage = function(e) {
         var data = e.data;
@@ -20,13 +20,13 @@ function myWorker(){
               url = url.substring(0, index);
             }
         //load all scripts
-            importScripts(url + 'dependencies/three.js');
+        //    importScripts(url + 'dependencies/three.js');
     //    importScripts(url + 'js/models/dmaBeam.js');
         }
 //
         if (data.model){
-            var material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
-            modelMesh = new THREE.Mesh(JSON.parse(data.model), material);
+            //var material = new THREE.MeshBasicMaterial({side:THREE.DoubleSide});
+            //modelMesh = new THREE.Mesh(JSON.parse(data.model), material);
         }
 
         if (data.executable){

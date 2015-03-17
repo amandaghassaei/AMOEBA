@@ -54,12 +54,12 @@ NavBar = Backbone.View.extend({
     },
 
     _setNavSelection: function(e){
-        e.preventDefault();
         var navSelection = $(e.target).data("menuId");
         if (navSelection == "about") {
             $(e.target).blur();
             return;
         }
+        e.preventDefault();
         if (navSelection) this.model.set("currentNav", navSelection);
     },
 
