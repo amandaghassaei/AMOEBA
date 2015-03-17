@@ -10,6 +10,7 @@ AnimationMenuView = Backbone.View.extend({
     events: {
         "click #playStockSim":                                      "_playStockSim",
         "click #pauseStockSim":                                     "_pauseStockSim",
+        "click #resetStockSim":                                     "_resetStockSim",
         "click #saveSendMenu":                                      "_save",
         "click #overrideEdits":                                     "_postProcess"
     },
@@ -51,6 +52,11 @@ AnimationMenuView = Backbone.View.extend({
         this.model.set("stockSimulationPlaying", false);
     },
 
+    _resetStockSim: function(e){
+        e.preventDefault();
+        dmaGlobals.assembler.set("simLineNumber", 1);
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "animate") return;
         if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
@@ -61,7 +67,12 @@ AnimationMenuView = Backbone.View.extend({
         <% if (stockSimulationPlaying){ %>\
         <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a><br/>\
         <% } else { %>\
-        <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a><br/>\
+            <% if (simLineNumber != 1){ %>\
+                <a href="#" id="playStockSim" class=" btn btn-lg btn-halfWidth btn-success">Play</a>\
+                <a href="#" id="resetStockSim" class=" btn btn-lg btn-halfWidth pull-right btn-default">Reset</a><br/><br/>\
+            <% } else { %>\
+                <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a><br/>\
+            <% } %>\
         <% } %>\
         <a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         Assembly Time:&nbsp;&nbsp;<br/><br/>\

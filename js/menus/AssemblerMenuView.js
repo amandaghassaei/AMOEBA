@@ -41,7 +41,7 @@ AssemblerMenuView = Backbone.View.extend({
 
     _selectMachine: function(e){
         e.preventDefault();
-        this.assembler.set("machine", $(e.target).data("type"));
+        this.assembler.set("machineName", $(e.target).data("type"));
     },
 
     render: function(){
@@ -53,7 +53,7 @@ AssemblerMenuView = Backbone.View.extend({
     template: _.template('\
         Machine: &nbsp;&nbsp;\
             <div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[machine] %><span class="caret"></span></button>\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[machineName] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allMachineTypes), function(key){ %>\
                         <li><a class="machineType" data-type="<%= key %>" href="#"><%= allMachineTypes[key] %></a></li>\

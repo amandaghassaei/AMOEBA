@@ -26,7 +26,7 @@ ThreeView = Backbone.View.extend({
 
         this.appState = options.appState;
 
-        _.bindAll(this, "_animate", "_mouseMoved");
+        _.bindAll(this, "_mouseMoved");//"_animate"
 
         //bind events
         this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
@@ -40,17 +40,17 @@ ThreeView = Backbone.View.extend({
         this.$el.append(this.model.domElement);//render only once
 
         this.model.render();
-        this._animate();
+        //this._animate();
     },
 
     ////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////////CONTROLS/////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////
 
-    _animate: function(){
-        requestAnimationFrame(this._animate);
-        this.controls.update();
-    },
+    //_animate: function(){
+    //    requestAnimationFrame(this._animate);
+    //    this.controls.update();
+    //},
 
     _setControlsEnabled: function(){
         var state = this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode");

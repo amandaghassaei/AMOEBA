@@ -301,7 +301,7 @@ AppState = Backbone.Model.extend({
     },
 
     _getAssemblerDataToSave: function(){
-        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice"]);
+        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
         if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
         return assemblerData;
     },
@@ -328,6 +328,7 @@ AppState = Backbone.Model.extend({
 
     loadUser: function(data, isParsed){
         if (!isParsed) data = JSON.parse(data);
+        console.log(data);
         this._setData(data, false);
     },
 

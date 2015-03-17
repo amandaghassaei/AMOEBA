@@ -8,8 +8,10 @@ Assembler = Backbone.Model.extend({
         camStrategy: "xRaster",
         placementOrder: "XYZ",//used for manual strategy entry
         camProcess: "shopbot",
-        machine: "shopbot",
+        machineName: "shopbot",
+        machine: null,
         exporter: null,
+
         dataOut: "",
         needsPostProcessing: true,
         editsMadeToProgram: false,//warn the user that they will override changes
@@ -23,10 +25,14 @@ Assembler = Backbone.Model.extend({
         stockPosition: new THREE.Vector3(20,0,0),
 
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
-        feedRate:{xy: 0.1, z: 0.1}//speed when heading towards assembly
+        feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
+
+        simLineNumber: 1//used for stock simulation, reading through gcode
     },
 
     initialize: function(options){
+
+        this.set("machine", new Machine());
 
         _.bindAll(this, "postProcess");
 
@@ -53,6 +59,7 @@ Assembler = Backbone.Model.extend({
                 "change:connectionType",
             this._setNeedsPostProcessing);
         this.listenTo(options.lattice, "change:scale", this._setCAMScale);
+        this.listenTo(dmaGlobals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
         //init origin mesh
         var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
@@ -69,6 +76,15 @@ Assembler = Backbone.Model.extend({
         this._setCAMScale(options.lattice.get("scale"));
         this._setCAMVisibility();
     },
+
+    makeProgramEdits: function(data){
+        this.set("dataOut", data, {silent:true});
+        this.set("editsMadeToProgram", true, {silent: true});
+    },
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////STOCK / ORIGIN/////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
 
     _setCAMScale: function(){
         var scale = dmaGlobals.lattice.get("scale")/8;
@@ -97,41 +113,41 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////SIMULATION//////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+    _stockSimulation: function(){
+        if (dmaGlobals.appState.get("stockSimulationPlaying")){
+            var currentLine = this.get("simLineNumber");
+            var allLines = this.get("dataOut").split("\n");
+            if(currentLine<allLines.length){
+                var self = this;
+                this.get("exporter").simulate(allLines[currentLine], this.get("machine"), function(){
+                    currentLine++;
+                    self.set("simLineNumber", currentLine);
+                    self._stockSimulation();
+                });
+            } else {
+                //finished simulation
+                this.set("simLineNumber", 1);
+                dmaGlobals.appState.set("stockSimulationPlaying", false);
+            }
+        } else {
+            this.get("machine").pause();
+        }
+
+    },
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////POST PROCESSING////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
     _setNeedsPostProcessing: function(){
         this.set("needsPostProcessing", true);
     },
 
-    makeProgramEdits: function(data){
-        this.set("dataOut", data, {silent:true});
-        this.set("editsMadeToProgram", true, {silent: true});
-    },
-
-    _getExporter: function(){
-        var currentExporter = this.get("exporter");
-        if (this.get("camProcess") == "shopbot") {
-            if (currentExporter && currentExporter.constructor == ShopbotExporter){
-                return currentExporter;
-            } else {
-                return new ShopbotExporter();
-            }
-        } else if (this.get("camProcess") == "gcode") {
-            if (currentExporter && currentExporter.constructor == GCodeExporter){
-                return currentExporter;
-            } else {
-                return new GCodeExporter();
-            }
-        } else console.warn("cam process not supported");
-    },
-
-    _getOrder: function(strategy){
-        if (strategy == "xRaster") return "XYZ";
-        if (strategy == "yRaster") return "YXZ";
-        if (strategy == "manual") return this.get("placementOrder");
-        console.warn("strategy not recognized");
-        return "";
-    },
-
-    postProcess: function(){
+        postProcess: function(){
         this.set("needsPostProcessing", false);
         var exporter = this._getExporter();
 
@@ -164,7 +180,33 @@ Assembler = Backbone.Model.extend({
 
         this.set("dataOut", data);
         this.set("exporter", exporter);
+        this.set("simLineNumber", 1);
         return {data:data, exporter:exporter};
+    },
+
+    _getExporter: function(){
+        var currentExporter = this.get("exporter");
+        if (this.get("camProcess") == "shopbot") {
+            if (currentExporter && currentExporter.constructor == ShopbotExporter){
+                return currentExporter;
+            } else {
+                return new ShopbotExporter();
+            }
+        } else if (this.get("camProcess") == "gcode") {
+            if (currentExporter && currentExporter.constructor == GCodeExporter){
+                return currentExporter;
+            } else {
+                return new GCodeExporter();
+            }
+        } else console.warn("cam process not supported");
+    },
+
+    _getOrder: function(strategy){
+        if (strategy == "xRaster") return "XYZ";
+        if (strategy == "yRaster") return "YXZ";
+        if (strategy == "manual") return this.get("placementOrder");
+        console.warn("strategy not recognized");
+        return "";
     },
 
     _grabStock: function(exporter, stockPosition, rapidHeight, safeHeight){
@@ -195,9 +237,6 @@ Assembler = Backbone.Model.extend({
             return;
         }
         this.get("exporter").save(this.get("dataOut"));
-    },
-
-    destroy: function(){
     }
 
 });
