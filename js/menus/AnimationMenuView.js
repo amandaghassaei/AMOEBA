@@ -55,7 +55,7 @@ AnimationMenuView = Backbone.View.extend({
 
     _resetStockSim: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.set("simLineNumber", 1);
+        dmaGlobals.assembler.set("simLineNumber", 0);
     },
 
     _changeSpeedSlider: function(e){
@@ -78,7 +78,7 @@ AnimationMenuView = Backbone.View.extend({
         <% if (stockSimulationPlaying){ %>\
         <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a>\
         <% } else { %>\
-            <% if (simLineNumber != 1){ %>\
+            <% if (simLineNumber != 0){ %>\
                 <a href="#" id="playStockSim" class=" btn btn-lg btn-halfWidth btn-success">Play</a>\
                 <a href="#" id="resetStockSim" class=" btn btn-lg btn-halfWidth pull-right btn-default">Reset</a><br/>\
             <% } else { %>\

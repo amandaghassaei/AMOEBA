@@ -28,7 +28,7 @@ ShopbotExporter.prototype.addLine = function(command, params, comment){
             return;
         }
         if (dmaGlobals.lattice.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
-        data += param.toFixed(3) + ", ";
+        data += parseFloat(param).toFixed(3) + ", ";
     });
     if (comment) data += "'" +comment;
     data += "\n";
@@ -84,20 +84,28 @@ ShopbotExporter.prototype.convertToInches = function(mm){
 
 
 ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
+    if (line == "'get stock"){
+        machine.pickUpStock();
+        return callback();
+    }
+    if (line[1] == "{"){
+        machine.releaseStock(line.substr(1));
+        return callback();
+    }
     if (line == "" || line[0] == "'" || (line[0] != "J" && line[0] != "M")) {
         return callback();
     }
     if (line[0] == "J"){
-        return this.simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
+        return this._simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
     } else if (line[0] == "M"){
-        return this.simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
+        return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
     } else {
         console.warn("problem parsing sbp");
         return callback();
     }
 };
 
-ShopbotExporter.prototype.simulateGetPosition = function(line, speed, machine, wcs, callback){
+ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, wcs, callback){
     if (line[1] == 3 || line[1] == 2) {
         var data = line.split(" ");
         for (var i=0;i<data.length;i++){

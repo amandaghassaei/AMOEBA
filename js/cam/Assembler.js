@@ -27,7 +27,7 @@ Assembler = Backbone.Model.extend({
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
         feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
 
-        simLineNumber: 1,//used for stock simulation, reading through gcode
+        simLineNumber: 0,//used for stock simulation, reading through gcode
         simSpeed: 4//#X times real speed
     },
 
@@ -65,23 +65,7 @@ Assembler = Backbone.Model.extend({
         this.listenTo(options.lattice, "change:partType", this._updatePartType);
         this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
 
-
-
-
-        //init origin mesh
-        var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
-            new THREE.MeshBasicMaterial({color:0xff0000}));
-        dmaGlobals.three.sceneAdd(origin);
-        this.set("origin", origin);
-        this._moveOrigin();
-        //init stock mesh
-        var stock = new THREE.Mesh(new THREE.SphereGeometry(1),
-            new THREE.MeshBasicMaterial({color:0xff00ff}));
-        dmaGlobals.three.sceneAdd(stock);
-        this.set("stock", stock);
-        this._moveStock();
-        this._setCAMScale(options.lattice.get("scale"));
-        this._setCAMVisibility();
+        this._initOriginAndStock(options.lattice);
     },
 
     makeProgramEdits: function(data){
@@ -121,6 +105,22 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
+    _initOriginAndStock: function(lattice){//todo this is ugly
+        var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
+            new THREE.MeshBasicMaterial({color:0xff0000}));
+        dmaGlobals.three.sceneAdd(origin);
+        this.set("origin", origin);
+        this._moveOrigin();
+        //init stock mesh
+        var stock = new THREE.Mesh(new THREE.SphereGeometry(1),
+            new THREE.MeshBasicMaterial({color:0xff00ff}));
+        dmaGlobals.three.sceneAdd(stock);
+        this.set("stock", stock);
+        this._moveStock();
+        this._setCAMScale(lattice.get("scale"));
+        this._setCAMVisibility();
+    },
+
     _moveOrigin: function(){
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
@@ -140,6 +140,7 @@ Assembler = Backbone.Model.extend({
     _stockSimulation: function(){
         if (dmaGlobals.appState.get("stockSimulationPlaying")){
             var currentLine = this.get("simLineNumber");
+            if (currentLine == 0) dmaGlobals.lattice.hideCells();
             var allLines = this.get("dataOut").split("\n");
             if(currentLine<allLines.length){
                 var self = this;
@@ -151,7 +152,7 @@ Assembler = Backbone.Model.extend({
                 });
             } else {
                 //finished simulation
-                this.set("simLineNumber", 1);
+                this.set("simLineNumber", 0);
                 dmaGlobals.appState.set("stockSimulationPlaying", false);
             }
         } else {
@@ -168,7 +169,7 @@ Assembler = Backbone.Model.extend({
         this.set("needsPostProcessing", true);
     },
 
-        postProcess: function(){
+    postProcess: function(){
         this.set("needsPostProcessing", false);
         var exporter = this._getExporter();
 
@@ -201,7 +202,7 @@ Assembler = Backbone.Model.extend({
 
         this.set("dataOut", data);
         this.set("exporter", exporter);
-        this.set("simLineNumber", 1);
+        this.set("simLineNumber", 0);
         return {data:data, exporter:exporter};
     },
 
@@ -233,6 +234,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.rapidXY(stockPosition.x, stockPosition.y);
         data += exporter.rapidZ(stockPosition.z+safeHeight);
         data += exporter.moveZ(stockPosition.z);
+        data += exporter.addComment("get stock");
         data += exporter.moveZ(stockPosition.z+safeHeight);
         data += exporter.rapidZ(rapidHeight);
         return data;
@@ -244,6 +246,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
         data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.moveZ(cellPosition.z-wcs.z);
+        data += exporter.addComment(JSON.stringify(cell.indices));
         data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.rapidZ(rapidHeight);
         return data;

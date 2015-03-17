@@ -97,7 +97,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     var loader = new THREE.STLLoader();
     loader.load("data/trianglePart.stl", function(geometry){
 
-        unitPartGeo1 = geometry
+        unitPartGeo1 = geometry;
         unitPartGeo1.computeBoundingBox();
         var unitScale = 1.2/unitPartGeo1.boundingBox.max.y;
         unitPartGeo1.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));

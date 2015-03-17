@@ -352,6 +352,26 @@ Lattice = Backbone.Model.extend({
         this.get("basePlane").updateScale(scale);
     },
 
+    //hide show cells during stock simulation
+    hideCells: function(){
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.hide();
+        })
+    },
+
+    showCells: function(){
+        this._iterCells(this.get("cells"), function(cell){
+            if (cell) cell.draw();
+        })
+    },
+
+    showCellAtIndex: function(index){
+        var latticeIndex = this._subtract(index, this.get("cellsMin"));
+        var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+        if (cell) cell.draw();
+        else console.warn("placing a cell that does not exist");
+    },
+
     ////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
