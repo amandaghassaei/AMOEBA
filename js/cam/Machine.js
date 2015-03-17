@@ -5,7 +5,7 @@
 
 function Machine() {
     var mesh = new THREE.Mesh(new THREE.BoxGeometry(2,2,2));
-    dmaGlobals.three.sceneAdd(mesh);
+    //dmaGlobals.three.sceneAdd(mesh);
     this.mesh = mesh;
 }
 

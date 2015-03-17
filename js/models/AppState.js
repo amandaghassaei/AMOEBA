@@ -72,6 +72,7 @@ AppState = Backbone.Model.extend({
                     triangle:"Triangle"
                 },
                 edgeRot: {
+                    vox: "Snap Voxel",
                     beam:"Beam"
                 },
                 vertex: {

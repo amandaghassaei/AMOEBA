@@ -150,6 +150,10 @@ function DMARotatedEdgeCell(indices, scale){
 }
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
+DMARotatedEdgeCell.prototype._initParts = function(){
+    return [new DMAEdgeVoxPart(0, this)];
+};
+
 DMARotatedEdgeCell.prototype._doMeshTransformations = function(mesh){
     mesh.rotation.set(0, 0, Math.PI/4);
 };
