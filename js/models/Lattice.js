@@ -450,7 +450,7 @@ Lattice = Backbone.Model.extend({
         }
     },
 
-    rasterCells: function(order, callback, var1, var2, var3){//used for CAM raster x/y/z in any order permutation
+    rasterCells: function(order, callback, var1, var2, var3, cells){//used for CAM raster x/y/z in any order permutation
         //order is of form 'XYZ'
         var firstLetter = order.charAt(0);
         order = order.substr(1);
@@ -460,7 +460,7 @@ Lattice = Backbone.Model.extend({
             firstLetter = order.charAt(0);
             order = order.substr(1);
         }
-        var cells = this.get("cells");
+        if (!cells) cells = this.get("cells");//grab cells once at beginning and hold onto it in case changes are made while looping
         var newVarOrder;
         var newVarDim;
         if (firstLetter == 'X'){
@@ -473,13 +473,9 @@ Lattice = Backbone.Model.extend({
             newVarOrder = 2;
             newVarDim = cells[0][0].length;
         } else if (firstLetter == ""){
-            for (var i=0;i<var1.dim;i++){
-            //for (var i=var1.dim-1;i>=0;i--){
-                for (var j=var2.dim-1;j>=0;j--){
-                    for (var k=var3.dim-1;k>=0;k--){
-            //for (var i=0;i<var1.dim;i++){
-            //    for (var j=0;j<var2.dim;j++){
-            //        for (var k=0;k<var3.dim;k++){
+            for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
+                for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
+                    for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
                         if (var1.order == 0){
                             if (var2.order == 1) callback(cells[i][j][k], i, j, k);
                             else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
@@ -488,7 +484,9 @@ Lattice = Backbone.Model.extend({
                             else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
                         } else {
                             if (var2.order == 0) callback(cells[j][k][i], j, k, i);
-                            else if (var2.order == 1) callback(cells[k][j][i], k, j, i);
+                            else if (var2.order == 1) {
+                                callback(cells[k][j][i], k, j, i);
+                            }
                         }
 
                     }
@@ -496,10 +494,25 @@ Lattice = Backbone.Model.extend({
             }
             return;
         }
-        if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim};
-        else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim};
-        else var1 = {order: newVarOrder, dim: newVarDim};
-        this.rasterCells(order, callback, var1, var2, var3);
+        if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+        else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+        else var1 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+        this.rasterCells(order, callback, var1, var2, var3, cells);
+    },
+
+    _getRasterLoopInit: function(variable){
+        if (variable.neg) return variable.dim-1;
+        return 0;
+    },
+
+    _getRasterLoopCondition: function(iter, variable){
+        if (variable.neg) return iter>=0;
+        return iter<variable.dim;
+    },
+
+    _getRasterLoopIterator: function(variable){
+        if (variable.neg) return -1;
+        return 1;
     }
 
 });

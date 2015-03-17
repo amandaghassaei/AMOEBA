@@ -69,8 +69,8 @@ AssemblerMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            <% if (camStrategy == "manual"){ %>\
-        Manual Placement Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/><br/>\
+            <% if (camStrategy == "raster"){ %>\
+        Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/><br/>\
         <% } %>\
         ')
 });

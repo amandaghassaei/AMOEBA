@@ -5,8 +5,8 @@
 Assembler = Backbone.Model.extend({
 
     defaults: {
-        camStrategy: "xRaster",
-        placementOrder: "XYZ",//used for manual strategy entry
+        camStrategy: "raster",
+        placementOrder: "XYZ",//used for raster strategy entry
         camProcess: "shopbot",
         machineName: "shopbot",
         machine: null,
@@ -204,9 +204,7 @@ Assembler = Backbone.Model.extend({
     },
 
     _getOrder: function(strategy){
-        if (strategy == "xRaster") return "XYZ";
-        if (strategy == "yRaster") return "YXZ";
-        if (strategy == "manual") return this.get("placementOrder");
+        if (strategy == "raster") return this.get("placementOrder");
         console.warn("strategy not recognized");
         return "";
     },
