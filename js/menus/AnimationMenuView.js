@@ -8,41 +8,65 @@ AnimationMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #playStockSim":                          "_playStockSim",
-        "click #pauseStockSim":                         "_pauseStockSim"
+        "click #playStockSim":                                      "_playStockSim",
+        "click #pauseStockSim":                                     "_pauseStockSim",
+        "click #saveSendMenu":                                      "_save",
+        "click #overrideEdits":                                     "_postProcess"
     },
 
-    initialize: function(options){
+    initialize: function(){
 
-        this.appState = options.appState;
+        _.bindAll(this, "render", "_codeEdit");
 
         //bind events
-        this.listenTo(this.model, "change:currentScene", this.render);
+        this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
+        this.listenTo(dmaGlobals.assembler, "change", this.render);
+        $(document).bind('keyup', {state:false}, this._codeEdit);
+    },
+
+    _save: function(e){
+        e.preventDefault();
+        dmaGlobals.assembler.save();
+    },
+
+    _postProcess: function(e){
+        e.preventDefault();
+        dmaGlobals.assembler.postProcess();
+    },
+
+    _codeEdit: function(e){
+        var textarea = $("#gcodeEditor");
+        if (!textarea.is(":focus")) return;
+        e.preventDefault();
+        dmaGlobals.assembler.makeProgramEdits(textarea.val());
     },
 
     _playStockSim: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("stockSimulationPlaying", true);
+        this.model.set("stockSimulationPlaying", true);
     },
 
     _pauseStockSim: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("stockSimulationPlaying", false);
-    },
-
-    _changeScene: function(e){
-        e.preventDefault();
-        this.model.set("currentScene", $(e.target).data("type"));
+        this.model.set("stockSimulationPlaying", false);
     },
 
     render: function(){
-        if (this.appState.get("currentTab") != "animate") return;
-        this.$el.html(this.template(this.model.toJSON()));
+        if (this.model.get("currentTab") != "animate") return;
+        if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
+        this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
     },
 
     template: _.template('\
-        <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-default">Play</a><br/>\
-        <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-default">Pause</a><br/>\
+        <% if (stockSimulationPlaying){ %>\
+        <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a><br/>\
+        <% } else { %>\
+        <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a><br/>\
+        <% } %>\
+        <a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
+        Assembly Time:&nbsp;&nbsp;<br/><br/>\
+        <textarea id="gcodeEditor"><%= dataOut %></textarea><br/><br/>\
+        <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
 });

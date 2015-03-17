@@ -38,7 +38,7 @@ AppState = Backbone.Model.extend({
                 assembler:"Assembler",
                 cam: "Process",
                 animate:"Preview",
-                send: "Edit"
+                send: "Send"
             }
         },
 
@@ -162,7 +162,7 @@ AppState = Backbone.Model.extend({
         $(document).bind('keyup', {state:false}, this._handleKeyStroke);
         $(document).bind('mousewheel', {}, this._handleScroll);
 
-        this.listenTo(this, "change:currentTab", this._storeTab);
+        this.listenTo(this, "change:currentTab", this._tabChanged);
         this.listenTo(this, "change:currentNav", this._updateCurrentTabForNav);
         this.listenTo(this, "change:currentTab", this._updateCellMode);
 
@@ -188,9 +188,13 @@ AppState = Backbone.Model.extend({
     ///////////////////////////////////////////////////////////////////////////////
 
 
-    _storeTab: function(){
-        var currentNav = this.get("currentNav");
+    _tabChanged: function(){
         var currentTab = this.get("currentTab");
+        if (currentTab != "animate") this.set("stockSimulationPlaying", false);
+        this._storeTab(this.get("currentNav"), currentTab);
+    },
+
+    _storeTab: function(currentNav, currentTab){
         if (currentNav == "navDesign") this.set("lastDesignTab", currentTab);
         else if (currentNav == "navSim") this.set("lastSimulationTab", currentTab);
         else if (currentNav == "navAssemble") this.set("lastAssembleTab", currentTab);
@@ -259,7 +263,7 @@ AppState = Backbone.Model.extend({
                     if (e.shiftKey){
                         $("#saveAsModel").modal("show");
                     } else {
-                        dmaGlobals.lattice.saveJSON();
+                        dmaGlobals.appState.saveJSON();
                     }
                 }
                 break;

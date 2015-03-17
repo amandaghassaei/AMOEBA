@@ -24,8 +24,7 @@ LatticeMenuView = Backbone.View.extend({
 
         this.lattice = options.lattice;
 
-        _.bindAll(this, "render");
-        _.bindAll(this, "_onKeyup");
+        _.bindAll(this, "render", "_onKeyup");
         //bind events
         this.listenTo(this.lattice, "change", this.render);
         $(document).bind('keyup', {state:false}, this._onKeyup);
