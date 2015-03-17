@@ -389,6 +389,7 @@ Lattice = Backbone.Model.extend({
         }
         this._initLatticeType();
 
+        //todo refactor this eventually
         if (loadingFromFile || this.get("shouldPreserveCells")){
             var self = this;
             var scale = this.get("scale");
