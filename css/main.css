@@ -177,6 +177,12 @@ hr {
     background-color: rgba(255, 255, 0, 0.35);
 }
 
+#postWarning {
+    background-color: rgba(255,0,0,0.15);
+    padding: 10px 15px 15px 15px;
+    margin: 20px 0;
+}
+
 input.numberInput{
     width:22%;
     display: inline;

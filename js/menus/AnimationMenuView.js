@@ -12,7 +12,7 @@ AnimationMenuView = Backbone.View.extend({
         "click #pauseStockSim":                                     "_pauseStockSim",
         "click #resetStockSim":                                     "_resetStockSim",
         "click #saveSendMenu":                                      "_save",
-        "click #overrideEdits":                                     "_postProcess",
+        "click .overrideEdits":                                     "_postProcess",
         "slideStop #speedSlider":                                   "_changeSpeedSlider"
     },
 
@@ -44,10 +44,10 @@ AnimationMenuView = Backbone.View.extend({
     },
 
     _codeEdit: function(e){
-        var textarea = $("#gcodeEditor");
-        if (!textarea.is(":focus")) return;
+        var editor = $("#gcodeEditor");
+        if (!editor.is(":focus")) return;
         e.preventDefault();
-        dmaGlobals.assembler.makeProgramEdits(textarea.val());
+        dmaGlobals.assembler.makeProgramEdits(editor.text());
     },
 
     _playStockSim: function(e){
@@ -91,7 +91,7 @@ AnimationMenuView = Backbone.View.extend({
 
     render: function(){
         if (this.model.get("currentTab") != "animate") return;
-        if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
+        if (dmaGlobals.assembler.get("needsPostProcessing") && !dmaGlobals.assembler.get("editsMadeToProgram")) dmaGlobals.assembler.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
         if (!dmaGlobals.appState.get("stockSimulationPlaying")) this._drawGcodeHighlighter();//in case of code pause
 
@@ -117,9 +117,13 @@ AnimationMenuView = Backbone.View.extend({
         <% } %>\
         <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
         <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
-        Assembly Time:&nbsp;&nbsp;<br/><br/>\
+        Assembly Time:&nbsp;&nbsp;<br/>\
+        <% if (editsMadeToProgram && needsPostProcessing){ %>\
+        <div id="postWarning">You have made the following changes that require post processing:<br/>\
+        This will override edits you have made to the G-code.  OK to override? <a href="#" class="overrideEdits btn btn-block btn-lg btn-danger">OK</a></div>\
+        <% } %>\
         <div id="gcodeEditor" contenteditable><%= dataOut %></div><br/>\
-        <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
+        <a href="#" class="overrideEdits btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
 });

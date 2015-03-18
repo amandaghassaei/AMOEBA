@@ -201,6 +201,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.makeFooter();
 
         this.set("dataOut", data);
+        this.set("editsMadeToProgram", false);
         this.set("exporter", exporter);
         this.set("simLineNumber", 0);
         return {data:data, exporter:exporter};
