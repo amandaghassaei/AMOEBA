@@ -23,12 +23,16 @@ Assembler = Backbone.Model.extend({
         originPosition: new THREE.Vector3(20,0,0),
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),
+        stockArraySize: {x:3, y:3},
+        stockSeparation: 2.78388,
+        postStockNum: 0,//which piece of stock to pick up
 
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
         feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
 
         simLineNumber: 0,//used for stock simulation, reading through gcode
-        simSpeed: 4//#X times real speed
+        simSpeed: 4,//#X times real speed
+        simStockNum:0//which piece of stock to pick up
     },
 
     initialize: function(options){
@@ -145,6 +149,8 @@ Assembler = Backbone.Model.extend({
     resetSimulation: function(){
         this.set("simLineNumber", 0, {silent:true});
         dmaGlobals.appState.set("stockSimulationPlaying", false);
+        this.set("simStockNum", 0);
+        this.set("postStockNum", 0);
         dmaGlobals.lattice.showCells();
     },
 
@@ -199,7 +205,15 @@ Assembler = Backbone.Model.extend({
         var self = this;
         dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
             if (!cell) return;
-            data += self._grabStock(exporter, stockPosition, rapidHeight, safeHeight);
+            var stockNum = self.get("postStockNum");
+            var stockNumPosition = {x:stockPosition.x, y:stockPosition.y, z:stockPosition.z};
+            var stockArraySize = self.get("stockArraySize");
+            stockNumPosition.x += stockNum % stockArraySize.y * self.get("stockSeparation");
+            stockNumPosition.y -= Math.floor(stockNum / stockArraySize.y) * self.get("stockSeparation");
+            data += self._grabStock(exporter, stockNumPosition, rapidHeight, safeHeight);
+            stockNum += 1;
+            if (stockNum >= stockArraySize.x*stockArraySize.y) stockNum = 0;
+            self.set("postStockNum", stockNum, {silent:true});
             data += self._placeCell(cell, exporter, rapidHeight, wcs, safeHeight);
             data += "\n";
         });
