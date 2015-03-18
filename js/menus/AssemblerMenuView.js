@@ -23,6 +23,13 @@ AssemblerMenuView = Backbone.View.extend({
 
     _onKeyup: function(e){
         if (this.model.get("currentTab") != "assembler") return;
+
+        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
+            $(e.target).blur();
+            this.render();
+            return;
+        }
+
         if ($(".placementOrder").is(":focus")) this._updatePlacementOrder(e);
     },
 

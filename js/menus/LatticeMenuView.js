@@ -31,6 +31,14 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _onKeyup: function(e){
+        if (this.model.get("currentTab") != "lattice") return;
+
+        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
+            $(e.target).blur();
+            this.render();
+            return;
+        }
+
         if ($(".cellSeparation").is(":focus")) this._updateNumber(e, "cellSeparation");
     },
 
