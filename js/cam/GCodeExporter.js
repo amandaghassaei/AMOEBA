@@ -29,11 +29,7 @@ GCodeExporter.prototype.addLine = function(command, params, comment){
     data += command + " ";
     _.each(params, function(param){
         if (!param) return;
-        if (isNaN(parseFloat(param))) {
-            data += param + " ";
-            return;
-        }
-        data += param.toFixed(3) + " ";
+        data += param + " ";
     });
     if (comment) data += "(" + comment + ")";
     data += "\n";
@@ -57,9 +53,9 @@ GCodeExporter.prototype.rapidZ = function(z){
 };
 
 GCodeExporter.prototype.moveXYZ = function(x, y, z){
-    if (x !== null) x = "X"+x;
-    if (y !== null) y = "Y"+y;
-    if (z !== null) z = "Z"+z;
+    if (x !== null) x = "X"+parseFloat(x).toFixed(3);
+    if (y !== null) y = "Y"+parseFloat(y).toFixed(3);
+    if (z !== null) z = "Z"+parseFloat(z).toFixed(3);
     return this.addLine("G01", [x,y,z]);
 };
 
@@ -86,4 +82,38 @@ GCodeExporter.prototype.makeFooter = function(){
 GCodeExporter.prototype.save = function(data){
     var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
     saveAs(blob, "GCodeExport" + ".g");
+};
+
+GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
+    if (line == "(get stock)"){
+        machine.pickUpStock();
+        return callback();
+    }
+    if (line.substr(0,2) == "({"){
+        machine.releaseStock(line.substr(1,line.length-2));
+        return callback();
+    }
+    if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
+        return callback();
+    }
+    if (line.substr(0,3) == "G01"){
+        //return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
+        return this._simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
+    } else {
+        console.warn("problem parsing gcode: " + line);
+        return callback();
+    }
+};
+
+GCodeExporter.prototype._simulateGetPosition = function(line, speed, machine, wcs, callback){
+    var data = line.split(" ");
+    var position = {x:"",y:"",z:""};
+    if (data.length<2) console.warn("problem parsing gcode " + line);
+    for (var i=1;i<data.length;i++){
+        var item = data[i];
+        if (item[0] == "X") position.x = item.substr(1);
+        if (item[0] == "Y") position.y = item.substr(1);
+        if (item[0] == "Z") position.z = item.substr(1);
+    }
+    machine.moveTo(position.x, position.y, position.z, speed, wcs, callback);
 };

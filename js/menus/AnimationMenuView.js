@@ -78,14 +78,16 @@ AnimationMenuView = Backbone.View.extend({
         var newText = code.join("\n");
         var $editor = $('#gcodeEditor');
         $editor.html(newText);
-        var highlighterHeight = $("#gcodeHighlighter").position().top - $editor.position().top;
+        var $highlighter = $("#gcodeHighlighter");
+        if (!$editor.position() || !$highlighter.position()) return;//todo weird bug
+        var highlighterHeight = $highlighter.position().top - $editor.position().top;
         var desiredHeight = $editor.height()/2;
         if (highlighterHeight > desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
     },
 
     _setEditorHeight: function(){
         var $editor = $('#gcodeEditor');
-        var height = this.$el.height()-$editor.position().top-50
+        var height = this.$el.height()-$editor.position().top-50;
         height = Math.max(height, 250);
         $editor.css({height:height +"px"});
     },
@@ -94,9 +96,8 @@ AnimationMenuView = Backbone.View.extend({
         if (this.model.get("currentTab") != "animate") return;
         if (dmaGlobals.assembler.get("needsPostProcessing") && !dmaGlobals.assembler.get("editsMadeToProgram")) dmaGlobals.assembler.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
-        if (!dmaGlobals.appState.get("stockSimulationPlaying")) this._drawGcodeHighlighter();//in case of code pause
-
         this._setEditorHeight();
+        this._drawGcodeHighlighter();//in case of code pause
 
         $('#speedSlider').slider({
             formatter: function(value) {

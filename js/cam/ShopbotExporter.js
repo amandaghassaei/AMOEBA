@@ -100,7 +100,7 @@ ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
     } else if (line[0] == "M"){
         return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
     } else {
-        console.warn("problem parsing sbp");
+        console.warn("problem parsing sbp " + line);
         return callback();
     }
 };
@@ -121,7 +121,7 @@ ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, 
     } else if (line[1] == "S"){
         return callback();
     } else {
-        console.warn("problem parsing sbp");
+        console.warn("problem parsing sbp " + line);
         return callback();
     }
 };
