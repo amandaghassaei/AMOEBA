@@ -147,7 +147,7 @@ Assembler = Backbone.Model.extend({
                 this.get("exporter").simulate(allLines[currentLine], this.get("machine"),
                     this.get("originPosition"), function(){
                     currentLine++;
-                    self.set("simLineNumber", currentLine, {silent:true});
+                    self.set("simLineNumber", currentLine);
                     self._stockSimulation();
                 });
             } else {

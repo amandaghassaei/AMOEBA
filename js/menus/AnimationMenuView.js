@@ -22,7 +22,13 @@ AnimationMenuView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
-        this.listenTo(dmaGlobals.assembler, "change", this.render);
+        var self = this;
+        this.listenTo(dmaGlobals.assembler, "change", function(){
+            //ignore simLineNumber for render calls
+            if (_.isEqual(_.keys(dmaGlobals.assembler.changedAttributes()), ["simLineNumber"])) return;
+            self.render();
+        });
+        this.listenTo(dmaGlobals.assembler, "change:simLineNumber", this._drawGcodeHighlighter);
         $(document).bind('keyup', {state:false}, this._codeEdit);
     },
 
@@ -62,10 +68,24 @@ AnimationMenuView = Backbone.View.extend({
         dmaGlobals.assembler.set("simSpeed", $(e.target)[0].value);
     },
 
+    _drawGcodeHighlighter: function(){
+        var lineNum = dmaGlobals.assembler.get("simLineNumber");
+        if (lineNum == 0) return;
+        var code = dmaGlobals.assembler.get("dataOut").split("\n");
+        code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + "</span>";
+        var newText = code.join("\n");
+        var $editor = $('#gcodeEditor');
+        $editor.html(newText);
+        var highlighterHeight = $("#gcodeHighlighter").position().top - $editor.position().top;
+        var desiredHeight = $editor.height()/2;
+        if (highlighterHeight > desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "animate") return;
         if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
+        if (!dmaGlobals.appState.get("stockSimulationPlaying")) this._drawGcodeHighlighter();//in case of code pause
 
         $('#speedSlider').slider({
             formatter: function(value) {
@@ -88,7 +108,7 @@ AnimationMenuView = Backbone.View.extend({
         <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
         <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         Assembly Time:&nbsp;&nbsp;<br/><br/>\
-        <textarea id="gcodeEditor"><%= dataOut %></textarea><br/><br/>\
+        <div id="gcodeEditor" contenteditable><%= dataOut %></div><br/><br/>\
         <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
