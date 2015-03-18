@@ -105,6 +105,7 @@ ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
     }
 };
 
+//todo mm support
 ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, wcs, callback){
     if (line[1] == 3 || line[1] == 2) {
         var data = line.split(" ");
