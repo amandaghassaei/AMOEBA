@@ -10,7 +10,9 @@ CamMenuView = Backbone.View.extend({
     events: {
         "click .camProcess":                            "_selectCamProcess",
         "click .units":                                 "_changeUnits",
-        "click #saveCam":                               "_save"
+        "click #saveCam":                               "_save",
+        "change #stockPosRel":                          "_changeStockPositionRelative",
+        "focusout .numberInput":                        "render"
     },
 
 
@@ -38,8 +40,18 @@ CamMenuView = Backbone.View.extend({
 
     _onKeyup: function(e){
         if (this.model.get("currentTab") != "cam") return;
+
+        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
+            $(e.target).blur();
+            this.render();
+            return;
+        }
+
         if ($(".wcs").is(":focus")) this._updateNumber(e, "originPosition");
-        else if ($(".stockPosition").is(":focus")) this._updateNumber(e, "stockPosition");
+        else if ($(".stockPosition").is(":focus")){
+            if (!this.assembler.get("stockPositionRelative")) this._updateNumber(e, "stockPosition");
+            else this._updateRelativeStockPosition(e);
+        }
         else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
         else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
         else if ($(".safeHeight").is(":focus")) this._updateNumber(e, "safeHeight");
@@ -50,13 +62,31 @@ CamMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal = newVal.toFixed(4);
+        newVal = parseFloat(newVal.toFixed(4));
         var object = this.assembler.get(property);
         if ($(e.target).data("type")) {
             object[$(e.target).data("type")] = newVal;
-            this.assembler.trigger("change:"+property);
+            this.assembler.trigger("change:" + property);
+            this.assembler.trigger("change");
         }
         else this.assembler.set(property, newVal);
+    },
+
+    _updateRelativeStockPosition: function(e){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        var dim = $(e.target).data("type");
+        newVal = (newVal + this.assembler.get("originPosition")[dim]).toFixed(4);
+        this.assembler.get("stockPosition")[dim] = parseFloat(newVal);
+        this.assembler.trigger("change:stockPosition");
+        this.assembler.trigger("change");
+    },
+
+    _changeStockPositionRelative: function(e){
+        e.preventDefault();
+        $(e.target).blur();
+        dmaGlobals.assembler.set("stockPositionRelative", !dmaGlobals.assembler.get("stockPositionRelative"));
     },
 
     _save: function(e){
@@ -67,7 +97,15 @@ CamMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.get("currentTab") != "cam") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), this.lattice.toJSON())));
+        var data = _.extend(this.model.toJSON(), this.assembler.toJSON(), this.lattice.toJSON());
+        if (this.assembler.get("stockPositionRelative")){
+            var relStockPos = {};
+            relStockPos.x = data.stockPosition.x - data.originPosition.x;
+            relStockPos.y = data.stockPosition.y - data.originPosition.y;
+            relStockPos.z = data.stockPosition.z - data.originPosition.z;
+            data.stockPosition = relStockPos;
+        }
+        this.$el.html(this.template(data));
     },
 
     template: _.template('\
@@ -90,12 +128,16 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            Zero (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x %>" placeholder="X" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="y" value="<%= originPosition.y %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="z" value="<%= originPosition.z %>" placeholder="Z" class="form-control numberInput wcs" type="text"><br/><br/>\
-            Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
-            &nbsp;<input data-type="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
-            &nbsp;<input data-type="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
+            Zero (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
+            &nbsp;<input data-type="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput wcs" type="text"><br/><br/>\
+            Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
+            &nbsp;<input data-type="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
+            &nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/>\
+            <label class="checkbox" for="stockPosRel">\
+            <input id="stockPosRel" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Stock position relative to Zero</label><br/>\
             Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/><br/>\
             Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\

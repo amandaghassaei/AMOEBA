@@ -22,7 +22,8 @@ Assembler = Backbone.Model.extend({
         origin: null,
         originPosition: new THREE.Vector3(20,0,0),
         stock: null,
-        stockPosition: new THREE.Vector3(20,0,0),
+        stockPosition: new THREE.Vector3(20,0,0),//in abs coordinates
+        stockPositionRelative: true,
         stockArraySize: {x:3, y:3},
         stockSeparation: 2.78388,
         postStockNum: 0,//which piece of stock to pick up
@@ -197,10 +198,10 @@ Assembler = Backbone.Model.extend({
 
         var rapidHeight = this.get("rapidHeight");
         var safeHeight = this.get("safeHeight");
-        data += exporter.moveZ(rapidHeight);
+        var wcs = this.get("originPosition");
+        data += exporter.moveZ(rapidHeight+wcs.z);
         data += "\n";
 
-        var wcs = this.get("originPosition");
         var stockPosition = this.get("stockPosition");
         var self = this;
         dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
@@ -210,7 +211,7 @@ Assembler = Backbone.Model.extend({
             var stockArraySize = self.get("stockArraySize");
             stockNumPosition.x += stockNum % stockArraySize.y * self.get("stockSeparation");
             stockNumPosition.y -= Math.floor(stockNum / stockArraySize.y) * self.get("stockSeparation");
-            data += self._grabStock(exporter, stockNumPosition, rapidHeight, safeHeight);
+            data += self._grabStock(exporter, stockNumPosition, rapidHeight, wcs, safeHeight);
             stockNum += 1;
             if (stockNum >= stockArraySize.x*stockArraySize.y) stockNum = 0;
             self.set("postStockNum", stockNum, {silent:true});
@@ -254,14 +255,14 @@ Assembler = Backbone.Model.extend({
         return "";
     },
 
-    _grabStock: function(exporter, stockPosition, rapidHeight, safeHeight){
+    _grabStock: function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
         var data = "";
-        data += exporter.rapidXY(stockPosition.x, stockPosition.y);
-        data += exporter.rapidZ(stockPosition.z+safeHeight);
-        data += exporter.moveZ(stockPosition.z);
+        data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
+        data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
+        data += exporter.moveZ(stockPosition.z-wcs.z);
         data += exporter.addComment("get stock");
-        data += exporter.moveZ(stockPosition.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
+        data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
+        data += exporter.rapidZ(rapidHeight+wcs.z);
         return data;
     },
 
@@ -273,7 +274,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.moveZ(cellPosition.z-wcs.z);
         data += exporter.addComment(JSON.stringify(cell.indices));
         data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
+        data += exporter.rapidZ(rapidHeight+wcs.z);
         return data;
     },
 
