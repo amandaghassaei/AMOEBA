@@ -7,7 +7,7 @@ Assembler = Backbone.Model.extend({
     defaults: {
         camStrategy: "raster",
         placementOrder: "XYZ",//used for raster strategy entry
-        camProcess: "shopbot",
+        camProcess: "gcode",
         machineName: "shopbot",
         machine: null,
         exporter: null,

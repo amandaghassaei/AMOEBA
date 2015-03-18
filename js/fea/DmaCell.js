@@ -19,9 +19,6 @@ function DMACell(indices, scale, cellMode, partType) {
     if (!indices) sceneType = null;
     dmaGlobals.three.sceneAdd(this.cellMesh,sceneType);
 
-    this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
-    this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
-
     this.draw(scale, cellMode, partType);
 
 }
@@ -30,21 +27,27 @@ DMACell.prototype.draw = function(scale, cellMode, partType){
     if (!scale) scale = dmaGlobals.lattice.get("scale");
     if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
     if (!partType)  partType = dmaGlobals.lattice.get("partType");
-    var beamMode = partType == "beam";
+    //var beamMode = partType == "beam";
+    var beamMode = false;
+    var partMode = cellMode == "part";
 
-    //init parts if needed
-    if (!beamMode && cellMode == "part" && !this.parts) this.parts = this._initParts();
+    //init parts/beams if needed
+    if (partMode &&!beamMode && !this.parts) this.parts = this._initParts();
+    if (beamMode && !this.beams) {
+        this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
+        this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
+    }
 
     //update scale
     this.updateForScale(scale, cellMode, partType);
 
     //set visibility
-    this._setCellMeshVisibility(cellMode == "cell");
+    this._setCellMeshVisibility(!partMode);
     _.each(this.parts, function(part){
-        if (part) part.setVisibility(cellMode == "part" && !beamMode);
+        if (part) part.setVisibility(partMode && !beamMode);
     });
     _.each(this.beams, function(beam){
-        beam.setVisibility(beamMode && cellMode == "part");
+        beam.setVisibility(beamMode && partMode);
     });
 };
 
@@ -58,37 +61,19 @@ DMACell.prototype.hide = function(){
     });
 };
 
-DMACell.prototype.destroyParts = function(){
-    _.each(this.parts, function(part){
-        if (part) part.destroy();
-    });
-    this.parts = null;
-};
-
-DMACell.prototype._buildCellMesh = function(material){//called from every subclass
-    var unitCellGeo = this._getGeometry();
-    if (!material) material = cellMaterials;
-    var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
-    mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
-    return mesh;
-};
-
-DMACell.prototype._doMeshTransformations = function(mesh){};//by default, no mesh transformations
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 DMACell.prototype.updateForScale = function(scale, cellMode, partType){
     if (!scale) scale = dmaGlobals.lattice.get("scale");
-    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
-    if (!partType)  partType = dmaGlobals.lattice.get("partType");
-
     var position = this._calcPosition();
     this._setMeshPosition(this.cellMesh, position);
-
     this.cellMesh.scale.set(scale, scale, scale);//must do this so highlighting works properly in part mode
+
     //only update visible object to scale
+    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
+    if (!partType)  partType = dmaGlobals.lattice.get("partType");
     if (cellMode == "part"){
         if (partType == "beam"){
             _.each(this.beams, function(beam){
@@ -101,7 +86,6 @@ DMACell.prototype.updateForScale = function(scale, cellMode, partType){
         }
     }
 };
-
 
 DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.x = position.x;
@@ -155,8 +139,35 @@ DMACell.prototype.zScale = function(scale){
 /////////////////////////////////META//////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+DMACell.prototype._buildCellMesh = function(material){//called from every subclass
+    var unitCellGeo = this._getGeometry();
+    if (!material) material = cellMaterials;
+    var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
+    mesh.myParent = this;//we need a reference to this instance from the mesh for intersection selection stuff
+    return mesh;
+};
+
+DMACell.prototype._doMeshTransformations = function(mesh){};//by default, no mesh transformations
+
 DMACell.prototype._initParts = function(){
     return [];//override in subclasses
+};
+
+DMACell.prototype.removePart = function(index){
+    this.parts[index].destroy();
+    this.parts[index] = null;
+    var hasAnyParts = false;//check if all parts have been deleted
+    _.each(this.parts, function(part){
+        if (part) hasAnyParts = true;
+    });
+    if (!hasAnyParts) dmaGlobals.lattice.removeCell(this);//if all parts are gone, remove cell
+};
+
+DMACell.prototype.destroyParts = function(){
+    _.each(this.parts, function(part){
+        if (part) part.destroy();
+    });
+    this.parts = null;
 };
 
 DMACell.prototype._initNodes = function(vertices){
@@ -168,7 +179,7 @@ DMACell.prototype._initNodes = function(vertices){
         var vertex = vertices[i].clone();
         vertex.applyQuaternion(orientation);
         vertex.add(position);
-        vertex.multiplyScalar(scale);
+        //vertex.multiplyScalar(scale);
         nodes.push(new DmaNode(vertex, i));
     }
     return nodes;
@@ -206,16 +217,6 @@ DMACell.prototype._initBeams = function(nodes, faces){
         })
     }
     return beams;
-};
-
-DMACell.prototype.removePart = function(index){
-    this.parts[index].destroy();
-    this.parts[index] = null;
-    var hasAnyParts = false;//check if all parts have been deleted
-    _.each(this.parts, function(part){
-        if (part) hasAnyParts = true;
-    });
-    if (!hasAnyParts) dmaGlobals.lattice.removeCell(this);//if all parts are gone, remove cell
 };
 
 DMACell.prototype.destroy = function(){

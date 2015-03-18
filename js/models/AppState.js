@@ -122,7 +122,7 @@ AppState = Backbone.Model.extend({
         shift: false,
         deleteMode: false,
         extrudeMode: false,
-        cellMode: "cell",//show cells vs parts
+        cellMode: "cell",//show cells vs part
 
         stockSimulationPlaying: false
     },
