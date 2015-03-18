@@ -263,3 +263,29 @@ input.numberInput{
 .btn-halfWidth {
     width: 47%;
 }
+
+#navRibbon{
+    height: 30px;
+    width: 300px;
+    z-index: 1;
+    display: block;
+    position: absolute;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    bottom: 35px;
+    opacity: 0.75;
+}
+#navRibbon .btn-toolbar{
+    margin: 0 50px;
+    left: 0;
+    right: 0;
+}
+
+#navRibbon .btn-ribbon{
+    background-color: #444;
+}
+
+#navRibbon .btn-ribbon:hover{
+    background-color: #000;
+}

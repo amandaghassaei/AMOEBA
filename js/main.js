@@ -23,6 +23,7 @@ $(function(){
 
     //ui
     new NavBar({model:dmaGlobals.appState});
+    new Ribbon({model:dmaGlobals.appState});
 
     //threeJS View
     new ThreeView({model:dmaGlobals.three, appState:dmaGlobals.appState});
