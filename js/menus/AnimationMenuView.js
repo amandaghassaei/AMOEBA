@@ -18,7 +18,7 @@ AnimationMenuView = Backbone.View.extend({
 
     initialize: function(){
 
-        _.bindAll(this, "render", "_codeEdit");
+        _.bindAll(this, "render", "_codeEdit", "_setEditorHeight");
 
         //bind events
         this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
@@ -30,6 +30,7 @@ AnimationMenuView = Backbone.View.extend({
         });
         this.listenTo(dmaGlobals.assembler, "change:simLineNumber", this._drawGcodeHighlighter);
         $(document).bind('keyup', {state:false}, this._codeEdit);
+        //this.$el.bind('resize', this._setEditorHeight);
     },
 
     _save: function(e){
@@ -73,7 +74,7 @@ AnimationMenuView = Backbone.View.extend({
         var lineNum = dmaGlobals.assembler.get("simLineNumber");
         if (lineNum == 0) return;
         var code = dmaGlobals.assembler.get("dataOut").split("\n");
-        code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + "</span>";
+        code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
         var newText = code.join("\n");
         var $editor = $('#gcodeEditor');
         $editor.html(newText);
@@ -82,11 +83,19 @@ AnimationMenuView = Backbone.View.extend({
         if (highlighterHeight > desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
     },
 
+    _setEditorHeight: function(){
+        var $editor = $('#gcodeEditor');
+        var height = this.$el.height()-$editor.position().top-50;
+        $editor.css({height:height +"px"});
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "animate") return;
         if (dmaGlobals.assembler.get("needsPostProcessing")) dmaGlobals.assembler.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
         if (!dmaGlobals.appState.get("stockSimulationPlaying")) this._drawGcodeHighlighter();//in case of code pause
+
+        this._setEditorHeight();
 
         $('#speedSlider').slider({
             formatter: function(value) {
@@ -109,7 +118,7 @@ AnimationMenuView = Backbone.View.extend({
         <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
         <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         Assembly Time:&nbsp;&nbsp;<br/><br/>\
-        <div id="gcodeEditor" contenteditable><%= dataOut %></div><br/><br/>\
+        <div id="gcodeEditor" contenteditable><%= dataOut %></div><br/>\
         <a href="#" id="overrideEdits" class=" btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
