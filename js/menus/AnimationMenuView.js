@@ -62,7 +62,7 @@ AnimationMenuView = Backbone.View.extend({
 
     _resetStockSim: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.set("simLineNumber", 0);
+        dmaGlobals.assembler.resetSimulation();
         this.render();
     },
 

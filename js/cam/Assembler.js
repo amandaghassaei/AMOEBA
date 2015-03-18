@@ -38,7 +38,7 @@ Assembler = Backbone.Model.extend({
         _.bindAll(this, "postProcess");
 
         //bind events
-        this.listenTo(options.appState, "change:currentTab", this._setCAMVisibility);
+        this.listenTo(options.appState, "change:currentTab", this._tabChanged);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
         this.listenTo(this, "change:stockPosition", this._moveStock);
         this.listenTo(this,
@@ -97,6 +97,11 @@ Assembler = Backbone.Model.extend({
         this.get("stock").scale.set(scale, scale, scale);
     },
 
+    _tabChanged: function(){
+        this._setCAMVisibility();
+        if (dmaGlobals.appState.get("currentTab") != "animate") this.resetSimulation();
+    },
+
     _setCAMVisibility: function(){
         var visible = this._isVisible();
         this.get("origin").visible = visible;
@@ -137,6 +142,12 @@ Assembler = Backbone.Model.extend({
 ///////////////////////////////SIMULATION//////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
+    resetSimulation: function(){
+        this.set("simLineNumber", 0, {silent:true});
+        dmaGlobals.appState.set("stockSimulationPlaying", false);
+        dmaGlobals.lattice.showCells();
+    },
+
     _stockSimulation: function(){
         if (dmaGlobals.appState.get("stockSimulationPlaying")){
             var currentLine = this.get("simLineNumber");
@@ -152,8 +163,7 @@ Assembler = Backbone.Model.extend({
                 });
             } else {
                 //finished simulation
-                this.set("simLineNumber", 0);
-                dmaGlobals.appState.set("stockSimulationPlaying", false);
+                this.resetSimulation();
             }
         } else {
             this.get("machine").pause();
@@ -203,7 +213,7 @@ Assembler = Backbone.Model.extend({
         this.set("dataOut", data);
         this.set("editsMadeToProgram", false);
         this.set("exporter", exporter);
-        this.set("simLineNumber", 0);
+        this.resetSimulation();
         return {data:data, exporter:exporter};
     },
 

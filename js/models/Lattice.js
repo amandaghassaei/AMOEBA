@@ -356,13 +356,15 @@ Lattice = Backbone.Model.extend({
     hideCells: function(){
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.hide();
-        })
+        });
+        dmaGlobals.three.render();
     },
 
     showCells: function(){
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.draw();
-        })
+        });
+        dmaGlobals.three.render();
     },
 
     showCellAtIndex: function(index){
