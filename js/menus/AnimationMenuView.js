@@ -85,7 +85,8 @@ AnimationMenuView = Backbone.View.extend({
 
     _setEditorHeight: function(){
         var $editor = $('#gcodeEditor');
-        var height = this.$el.height()-$editor.position().top-50;
+        var height = this.$el.height()-$editor.position().top-50
+        height = Math.max(height, 250);
         $editor.css({height:height +"px"});
     },
 
@@ -127,13 +128,3 @@ AnimationMenuView = Backbone.View.extend({
         ')
 
 });
-
-//        Scene: &nbsp;&nbsp;\
-//        <div class="btn-group">\
-//            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allScenes[currentScene] %><span class="caret"></span></button>\
-//            <ul role="menu" class="dropdown-menu">\
-//                <% _.each(_.keys(allScenes), function(key){ %>\
-//                    <li><a class="sceneType" data-type="<%= key %>" href="#"><%= allScenes[key] %></a></li>\
-//                <% }); %>\
-//            </ul>\
-//        </div><br/><br/>\

@@ -96,39 +96,10 @@ AppState = Backbone.Model.extend({
         },
 
         allMachineTypes:{
+            handOfGod: "Hand of God",
             shopbot: "Shopbot",
             oneBit: "One Bit Bot"
         },
-//        allAssemblyStrategies:{
-//            octa:{
-//                face: {},
-//                freeformFace: {},
-//                edge: {},
-//                edgeRot: {
-//                    xRaster: "X Raster",
-//                    yRaster: "Y Raster"
-//                },
-//                vertex: {
-//                    xRaster: "X Raster",
-//                    yRaster: "Y Raster"
-//                }
-//            },
-//            tetra: {
-//                vertex: {}
-//            },
-//            cube:{
-//                face: {
-//                    xRaster: "X Raster",
-//                    yRaster: "Y Raster"
-//                }
-//            },
-//            truncatedCube:{
-//                face: {}
-//            },
-//            kelvin:{
-//                face: {}
-//            }
-//        },
         allAssemblyStrategies: {
             raster: "Raster"
         },
@@ -137,10 +108,14 @@ AppState = Backbone.Model.extend({
             gcode: "G-Code"
         },
 
+        allScripts: {
+            loadFile: "Load From File..."
+        },
 
         allUnitTypes: {
+            inches: "Inches",
             mm: "mm",
-            inches: "Inches"
+            //um: "micron"
         },
 
         //key bindings
