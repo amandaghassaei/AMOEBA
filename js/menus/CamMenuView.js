@@ -12,6 +12,7 @@ CamMenuView = Backbone.View.extend({
         "click .units":                                 "_changeUnits",
         "click #saveCam":                               "_save",
         "change #stockPosRel":                          "_changeStockPositionRelative",
+        "change #multipleStockPositions":               "_changeMultipleStockPositions",
         "focusout .numberInput":                        "render"
     },
 
@@ -56,6 +57,8 @@ CamMenuView = Backbone.View.extend({
         else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
         else if ($(".safeHeight").is(":focus")) this._updateNumber(e, "safeHeight");
         else if ($(".rapidHeight").is(":focus")) this._updateNumber(e, "rapidHeight");
+        else if ($(".stockArraySize").is(":focus")) this._updateNumber(e, "stockArraySize");
+        else if ($(".stockSeparation").is(":focus")) this._updateNumber(e, "stockSeparation");
     },
 
     _updateNumber: function(e, property){
@@ -87,6 +90,12 @@ CamMenuView = Backbone.View.extend({
         e.preventDefault();
         $(e.target).blur();
         dmaGlobals.assembler.set("stockPositionRelative", !dmaGlobals.assembler.get("stockPositionRelative"));
+    },
+
+    _changeMultipleStockPositions: function(e){
+        e.preventDefault();
+        $(e.target).blur();
+        dmaGlobals.assembler.set("multipleStockPositions", !dmaGlobals.assembler.get("multipleStockPositions"));
     },
 
     _save: function(e){
@@ -137,7 +146,16 @@ CamMenuView = Backbone.View.extend({
             <label class="checkbox" for="stockPosRel">\
             <input id="stockPosRel" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Stock position relative to Zero</label><br/>\
+            Stock position relative to Zero</label>\
+            <label class="checkbox" for="multipleStockPositions">\
+            <input id="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Multiple stock positions</label>\
+            <% if (multipleStockPositions){ %>\
+                Stock dimensions (xy): &nbsp;&nbsp;<input data-type="x" value="<%= stockArraySize.x %>" placeholder="X" class="form-control numberInput stockArraySize" type="text">\
+                &nbsp;<input data-type="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control numberInput stockArraySize" type="text"><br/><br/>\
+                Stock separation: &nbsp;&nbsp;<input value="<%= stockSeparation %>" placeholder="X" class="form-control numberInput stockSeparation" type="text"><br/><br/>\
+            <% } %>\
             Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/><br/>\
             Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\

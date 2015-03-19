@@ -111,7 +111,7 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _hide: function(callback, suppressModelUpdate){
-        this.$el.parent().animate({right: "-450"}, {done: callback});
+        this.$el.parent().animate({right: "-420"}, {done: callback});
         if (!suppressModelUpdate) this.model.set("menuIsVisible", false);
     },
 

@@ -7,7 +7,7 @@ PartMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .partType":                                  "_changePartType",
+        "click .partType":                                  "_changePartType"
     },
 
     initialize: function(options){
