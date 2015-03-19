@@ -98,7 +98,8 @@ AppState = Backbone.Model.extend({
         allMachineTypes:{
             handOfGod: "Hand of God",
             shopbot: "Shopbot",
-            oneBit: "One Bit Bot"
+            oneBit: "One Bit Bot",
+            will: "Electronics Assembler"
         },
         allAssemblyStrategies: {
             raster: "Raster"
@@ -288,7 +289,7 @@ AppState = Backbone.Model.extend({
         dmaGlobals.lattice.clearCells();
         this._setData(JSON.parse(data), true);
         dmaGlobals.lattice._updateLatticeType(null, null, null, true);
-        dmaGlobals.lattice.trigger("change:scale");
+        dmaGlobals.lattice.trigger("change:scale");//todo make this better
     },
 
     saveUser: function(name){
