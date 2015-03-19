@@ -288,6 +288,7 @@ AppState = Backbone.Model.extend({
         dmaGlobals.lattice.clearCells();
         this._setData(JSON.parse(data), true);
         dmaGlobals.lattice._updateLatticeType(null, null, null, true);
+        dmaGlobals.lattice.trigger("change:scale");
     },
 
     saveUser: function(name){
