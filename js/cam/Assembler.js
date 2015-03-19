@@ -203,7 +203,7 @@ Assembler = Backbone.Model.extend({
         var rapidHeight = this.get("rapidHeight");
         var safeHeight = this.get("safeHeight");
         var wcs = this.get("originPosition");
-        data += exporter.moveZ(rapidHeight+wcs.z);
+        data += exporter.moveZ(rapidHeight);
         data += "\n";
 
         var stockPosition = this.get("stockPosition");
@@ -275,7 +275,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.moveZ(stockPosition.z-wcs.z);
         data += exporter.addComment("get stock");
         data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight+wcs.z);
+        data += exporter.rapidZ(rapidHeight);
         return data;
     },
 
@@ -287,7 +287,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.moveZ(cellPosition.z-wcs.z);
         data += exporter.addComment(JSON.stringify(cell.indices));
         data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight+wcs.z);
+        data += exporter.rapidZ(rapidHeight);
         return data;
     },
 
