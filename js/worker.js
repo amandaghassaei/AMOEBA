@@ -15,7 +15,7 @@ function myWorker(){
 
         if (data.url) {
             var url = data.url;
-            var index = url.indexOf('main.html');//url of landing page
+            var index = url.indexOf('index.html');//url of landing page
             if (index != -1) {
               url = url.substring(0, index);
             }
