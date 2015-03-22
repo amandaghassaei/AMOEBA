@@ -255,7 +255,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     unitCellGeo.computeFaceNormals();
 
     function DMATruncOctaCell(indices, scale, cellMode, partType){
-        DMATruncCubeCell.call(this, iindices, scale, cellMode, partType);
+        DMATruncCubeCell.call(this, indices, scale, cellMode, partType);
     }
     DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
