@@ -82,6 +82,10 @@ ShopbotExporter.prototype.convertToInches = function(mm){
     return mm*0.0393701;
 };
 
+ShopbotExporter.prototype.convertToMM = function(inches){
+    return inches*25.4;
+};
+
 
 ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
     if (line == "'get stock"){
@@ -114,9 +118,11 @@ ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, 
             if (item[item.length-1] == ",") data[i] = item.substring(0, item.length - 1)
         }
         if (line[1] == 3){
-            machine.moveTo(data[1], data[2], data[3], speed, wcs, callback);
+            if (dmaGlobals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], data[3], speed, wcs, callback);
+            else machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), this.convertToMM(data[3]), speed, wcs, callback);
         } else {
-            machine.moveTo(data[1], data[2], "", speed, wcs, callback);
+            if (dmaGlobals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], "", speed, wcs, callback);
+            else return machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), "", speed, wcs, callback);
         }
     } else if (line[1] == "S"){
         return callback();
