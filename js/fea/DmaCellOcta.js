@@ -26,7 +26,7 @@ DMAFaceOctaCell.prototype._initParts = function(){
 };
 
 DMAFaceOctaCell.prototype._doMeshTransformations = function(mesh){
-    if (this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
+    if (this.indices && this.indices.z%2!=0) mesh.rotation.set(0, 0, Math.PI);
 };
 
 DMAFaceOctaCell.prototype._getGeometry = function(){

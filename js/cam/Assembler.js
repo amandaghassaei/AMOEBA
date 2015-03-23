@@ -40,7 +40,7 @@ Assembler = Backbone.Model.extend({
 
     initialize: function(options){
 
-        this.set("machine", new Machine());
+        this.set("machine", new Shopbot());
 
         _.bindAll(this, "postProcess");
 
@@ -73,6 +73,7 @@ Assembler = Backbone.Model.extend({
         this.listenTo(dmaGlobals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
         this.listenTo(options.lattice, "change:partType", this._updatePartType);
+        this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
         this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
 
         this._initOriginAndStock(options.lattice);
@@ -92,8 +93,14 @@ Assembler = Backbone.Model.extend({
         return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
     },
 
+    _updateCellType: function(){
+        this.get("machine").updateCellType();
+        this.get("machine").setVisibility(this._isVisible());
+    },
+
     _updatePartType: function(){
-        if (this._isVisible()) this.get("machine").updatePartType();
+        this.get("machine").updatePartType();
+        this.get("machine").setVisibility(this._isVisible());
     },
 
     _updateCellMode: function(){

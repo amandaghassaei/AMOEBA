@@ -15,13 +15,16 @@ function DMACell(indices, scale, cellMode, partType) {
     this.cellMesh = this._buildCellMesh();
     this._doMeshTransformations(this.cellMesh);//some cell types require transformations
 
-    var sceneType = "cell";
-    if (!indices) sceneType = null;
-    dmaGlobals.three.sceneAdd(this.cellMesh,sceneType);
+    dmaGlobals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
 
     this.draw(scale, cellMode, partType);
 
 }
+
+DMACell.prototype._sceneType = function(indices){
+    if (!indices || indices == null || indices === undefined) return null;
+    return "cell";
+};
 
 DMACell.prototype.draw = function(scale, cellMode, partType){
     if (!scale) scale = dmaGlobals.lattice.get("scale");
@@ -221,7 +224,7 @@ DMACell.prototype._initBeams = function(nodes, faces){
 
 DMACell.prototype.destroy = function(){
     if (this.cellMesh) {
-        dmaGlobals.three.sceneRemove(this.cellMesh, "cell");
+        dmaGlobals.three.sceneRemove(this.cellMesh, this._sceneType(this.indices));
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();

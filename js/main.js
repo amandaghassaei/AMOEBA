@@ -15,11 +15,9 @@ $(function(){
     dmaGlobals.three = new ThreeModel();
     dmaGlobals.appState = new AppState();
     dmaGlobals.lattice = new Lattice({appState: dmaGlobals.appState});
-    dmaGlobals.assembler = new Assembler({appState: dmaGlobals.appState, lattice:dmaGlobals.lattice});
-
     dmaGlobals.lattice.delayedInit();
+    dmaGlobals.assembler = new Assembler({appState: dmaGlobals.appState, lattice:dmaGlobals.lattice});
     dmaGlobals.appState.delayedInit();
-
 
     //ui
     new NavBar({model:dmaGlobals.appState});
