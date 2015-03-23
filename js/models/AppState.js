@@ -178,8 +178,8 @@ AppState = Backbone.Model.extend({
     _updateCellMode: function(){
         var currentTab = this.get("currentTab");
         if (currentTab == "lattice") this.set("cellMode", "cell");
-        else if (currentTab == "import") this.set("cellMode", "cell");
-        else if (currentTab == "sketch") this.set("cellMode", "cell");
+        //else if (currentTab == "import") this.set("cellMode", "cell");
+        //else if (currentTab == "sketch") this.set("cellMode", "cell");
         else if (currentTab == "part") this.set("cellMode", "part");
     },
 
