@@ -60,7 +60,8 @@ Assembler = Backbone.Model.extend({
                 "change:stockArraySize " +
                 "change:stockSeparation " +
                 "change:multipleStockPositions " +
-                "change:rapidHeight",
+                "change:rapidHeight " +
+                "change:machineName",
             this._setNeedsPostProcessing);
         this.listenTo(options.lattice,
                 "change:numCells " +
@@ -76,6 +77,8 @@ Assembler = Backbone.Model.extend({
         this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
         this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
 
+        this.listenTo(this, "change:machineName", this._changeMachine);
+
         this._initOriginAndStock(options.lattice);
     },
 
@@ -88,23 +91,25 @@ Assembler = Backbone.Model.extend({
 ////////////////////////////////VISUALIZATION//////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    _isVisible: function(){
+    _changeMachine: function(){
+
+    },
+
+    isVisible: function(){
         var currentTab = dmaGlobals.appState.get("currentTab");
         return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
     },
 
     _updateCellType: function(){
         this.get("machine").updateCellType();
-        this.get("machine").setVisibility(this._isVisible());
     },
 
     _updatePartType: function(){
         this.get("machine").updatePartType();
-        this.get("machine").setVisibility(this._isVisible());
     },
 
     _updateCellMode: function(){
-        this.get("machine").setVisibility(this._isVisible());
+        this.get("machine").setVisibility(this.isVisible());
         dmaGlobals.three.render();
     },
 
@@ -120,7 +125,7 @@ Assembler = Backbone.Model.extend({
     },
 
     _setCAMVisibility: function(){
-        var visible = this._isVisible();
+        var visible = this.isVisible();
         this.get("origin").visible = visible;
         this.get("stock").visible = visible;
         this.get("machine").setVisibility(visible);

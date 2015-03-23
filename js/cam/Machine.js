@@ -20,6 +20,7 @@ function Machine() {
 }
 
 Machine.prototype.setVisibility = function(visible){
+    if (visible == null || visible === undefined) visible = dmaGlobals.assembler.isVisible();
     if (visible && this.hasStock) this.cell.draw();
     else this.cell.hide();
     this._setMeshesVisiblity(visible);
@@ -38,11 +39,13 @@ Machine.prototype._makeStockCell = function(){
 Machine.prototype.updateCellType = function(){
     if (this.cell) this.cell.destroy();
     this.cell = this._makeStockCell();
+    this.setVisibility();
 };
 
 Machine.prototype.updatePartType = function(){
     this.cell.destroyParts();
     this.cell.draw();
+    this.setVisibility();
 };
 
 Machine.prototype.pickUpStock = function(){
@@ -57,6 +60,10 @@ Machine.prototype.releaseStock = function(index){
 };
 
 Machine.prototype.pause = function(){
+};
+
+Machine.prototype._animateMeshes = function(meshes, x, y, z, speed, callback){
+
 };
 
 Machine.prototype.destroy = function(){
@@ -97,7 +104,7 @@ Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
     var self = this;
     var endEffector = this.meshes[0];
     setTimeout( function() {
-        //reaching a little deep here, might want to find a better solution
+        //todo reaching a little deep here, might want to find a better solution
         if (x != "") {
             var nextX = parseFloat(x)+wcs.x;
             endEffector.position.x = nextX;
