@@ -24,7 +24,7 @@ AppState = Backbone.Model.extend({
             navDesign:{
                 lattice:"Lattice",
                 import:"Import",
-                sketch:"Sketch",
+                //sketch:"Sketch",
                 part:"Part",
                 script:"Script"
             },
@@ -59,39 +59,36 @@ AppState = Backbone.Model.extend({
         allPartTypes:{
             octa:{
                 face: {
-                    triangle:"Triangle",
-                    beam:"Beam",
-                    truss:"Truss"
+                    triangle:"Triangle"
+                    //beam:"Beam",
+                    //truss:"Truss"
                 },
                 freeformFace: {
-                    triangle:"Triangle",
-                    beam:"Beam"
-                },
-                edge: {
-                    beam:"Beam",
                     triangle:"Triangle"
+                    //beam:"Beam"
                 },
+                edge: null,
                 edgeRot: {
-                    vox: "Snap Voxel",
-                    beam:"Beam"
+                    vox: "Snap Voxel"
+                    //beam:"Beam"
                 },
                 vertex: {
-                    beam:"Beam",
+                    //beam:"Beam",
                     square:"Square",
                     xShape:"X"
                 }
             },
             tetra: {
-                vertex: {beam: "Beam"}
+                vertex: null
             },
             cube:{
-                face: {beam:"Beam"}
+                face: null
             },
             truncatedCube:{
-                face: {beam:"Beam"}
+                face: null
             },
             kelvin:{
-                face: {beam:"Beam"}
+                face: null
             }
         },
 
