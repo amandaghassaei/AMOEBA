@@ -92,7 +92,7 @@ CamMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        newVal -= this.assembler.get("originPosition".z).toFixed(4);//always store relative to origin
+        newVal -= this.assembler.get("originPosition").z.toFixed(4);//always store relative to origin
         this.assembler.set("rapidHeight", parseFloat(newVal));
     },
 
