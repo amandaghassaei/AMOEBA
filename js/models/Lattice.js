@@ -420,8 +420,8 @@ Lattice = Backbone.Model.extend({
                 if (!cell) return;
 
                 var index = _.clone(cell.indices);
-                var  parts = null;
-                if (loadingFromFile) parts = _.clone(cell.parts);
+                //var  parts = null;
+                //if (loadingFromFile) parts = _.clone(cell.parts);
                 if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
                 if (cell.parentPosition) var parentPos = cell.parentPosition;
                 if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
@@ -431,16 +431,16 @@ Lattice = Backbone.Model.extend({
                 if (cell.destroy) cell.destroy();
                 var newCell = self.makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction, parentType, type);
 
-                if (parts) {
-                    //todo make this better
-                    newCell.parts = newCell._initParts();
-                    for (var i=0;i<newCell.parts.length;i++){
-                        if (!parts[i]) {
-                            newCell.parts[i].destroy();
-                            newCell.parts[i] = null;
-                        }
-                    }
-                }
+                //if (parts) {
+                //    //todo make this better
+                //    newCell.parts = newCell._initParts();
+                //    for (var i=0;i<newCell.parts.length;i++){
+                //        if (!parts[i]) {
+                //            newCell.parts[i].destroy();
+                //            newCell.parts[i] = null;
+                //        }
+                //    }
+                //}
                 cells[x][y][z] = newCell;
             });
             dmaGlobals.three.render();
