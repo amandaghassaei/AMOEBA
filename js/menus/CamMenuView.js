@@ -55,7 +55,10 @@ CamMenuView = Backbone.View.extend({
         else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
         else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
         else if ($(".safeHeight").is(":focus")) this._updateNumber(e, "safeHeight");
-        else if ($(".rapidHeight").is(":focus")) this._updateNumber(e, "rapidHeight");
+        else if ($(".rapidHeight").is(":focus")) {
+            if (this.assembler.get("rapidHeightRelative")) this._updateNumber(e, "rapidHeight");
+            else this._updateAbsoluteRapidHeight(e)
+        }
         else if ($(".stockArraySize").is(":focus")) this._updateNumber(e, "stockArraySize");
         else if ($(".stockSeparation").is(":focus")) this._updateNumber(e, "stockSeparation");
     },
@@ -85,6 +88,14 @@ CamMenuView = Backbone.View.extend({
         this.assembler.trigger("change");
     },
 
+    _updateAbsoluteRapidHeight: function(e){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        newVal -= this.assembler.get("originPosition".z).toFixed(4);//always store relative to origin
+        this.assembler.set("rapidHeight", parseFloat(newVal));
+    },
+
     _clickCheckbox: function(e){
         e.preventDefault();
         var $object = $(e.target);
@@ -109,6 +120,10 @@ CamMenuView = Backbone.View.extend({
             relStockPos.z = data.stockPosition.z - data.originPosition.z;
             data.stockPosition = relStockPos;
         }
+        if (!this.assembler.get("rapidHeightRelative")){
+            data.rapidHeight = data.rapidHeight + data.originPosition.z;
+        }
+
         this.$el.html(this.template(data));
     },
 

@@ -16,12 +16,12 @@ Assembler = Backbone.Model.extend({
         needsPostProcessing: true,
         editsMadeToProgram: false,//warn the user that they will override changes
 
-        rapidHeight: 6,
+        rapidHeight: 6,//always store relative to origin
         rapidHeightRelative: true,
         safeHeight: 0.5,//inches above stock or assembly, when feed rate should slow
 
         origin: null,
-        originPosition: new THREE.Vector3(20,0,0),
+        originPosition: new THREE.Vector3(20,0,0),//in abs coordinates
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),//in abs coordinates
         stockPositionRelative: true,
