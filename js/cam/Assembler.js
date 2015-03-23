@@ -17,6 +17,7 @@ Assembler = Backbone.Model.extend({
         editsMadeToProgram: false,//warn the user that they will override changes
 
         rapidHeight: 6,
+        rapidHeightRelative: true,
         safeHeight: 0.5,//inches above stock or assembly, when feed rate should slow
 
         origin: null,
@@ -24,7 +25,7 @@ Assembler = Backbone.Model.extend({
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),//in abs coordinates
         stockPositionRelative: true,
-        multipleStockPositions: true,
+        multipleStockPositions: false,
         stockArraySize: {x:4, y:4},
         stockSeparation: 2.78388,
         postStockNum: 0,//which piece of stock to pick up

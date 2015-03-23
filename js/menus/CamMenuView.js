@@ -11,8 +11,7 @@ CamMenuView = Backbone.View.extend({
         "click .camProcess":                            "_selectCamProcess",
         "click .units":                                 "_changeUnits",
         "click #saveCam":                               "_save",
-        "change #stockPosRel":                          "_changeStockPositionRelative",
-        "change #multipleStockPositions":               "_changeMultipleStockPositions",
+        "change input:checkbox":                        "_clickCheckbox",
         "focusout .numberInput":                        "render"
     },
 
@@ -86,16 +85,12 @@ CamMenuView = Backbone.View.extend({
         this.assembler.trigger("change");
     },
 
-    _changeStockPositionRelative: function(e){
+    _clickCheckbox: function(e){
         e.preventDefault();
-        $(e.target).blur();
-        dmaGlobals.assembler.set("stockPositionRelative", !dmaGlobals.assembler.get("stockPositionRelative"));
-    },
-
-    _changeMultipleStockPositions: function(e){
-        e.preventDefault();
-        $(e.target).blur();
-        dmaGlobals.assembler.set("multipleStockPositions", !dmaGlobals.assembler.get("multipleStockPositions"));
+        var $object = $(e.target);
+        $object.blur();
+        var property = $object.data("property");
+        dmaGlobals.assembler.set(property, !dmaGlobals.assembler.get(property));
     },
 
     _save: function(e){
@@ -144,11 +139,11 @@ CamMenuView = Backbone.View.extend({
             &nbsp;<input data-type="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/>\
             <label class="checkbox" for="stockPosRel">\
-            <input id="stockPosRel" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="stockPosRel" data-property="stockPositionRelative" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Stock position relative to Zero</label>\
             <label class="checkbox" for="multipleStockPositions">\
-            <input id="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="multipleStockPositions" data-property="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Multiple stock positions</label>\
             <% if (multipleStockPositions){ %>\
@@ -156,7 +151,11 @@ CamMenuView = Backbone.View.extend({
                 &nbsp;<input data-type="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control numberInput stockArraySize" type="text"><br/><br/>\
                 Stock separation: &nbsp;&nbsp;<input value="<%= stockSeparation %>" placeholder="X" class="form-control numberInput stockSeparation" type="text"><br/><br/>\
             <% } %>\
-            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/><br/>\
+            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/>\
+            <label class="checkbox" for="rapidPosRel">\
+            <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            Clearance height relative to Zero</label>\
             Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
             Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
