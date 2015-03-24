@@ -93,9 +93,34 @@ AppState = Backbone.Model.extend({
         },
 
         allMachineTypes:{
-            handOfGod: "Hand of God",
-            shopbot: "Shopbot",
-            oneBit: "One Bit Bot",
+            octa:{
+                face: {
+                    handOfGod: "Hand of God"
+                },
+                freeformFace: {
+                    handOfGod: "Hand of God"
+                },
+                edgeRot: {
+                    shopbot: "Shopbot",
+                    oneBit: "One Bit Bot",
+                    handOfGod: "Hand of God"
+                },
+                vertex: {
+                    handOfGod: "Hand of God"
+                }
+            },
+            tetra: {
+                handOfGod: "Hand of God"
+            },
+            cube:{
+                handOfGod: "Hand of God"
+            },
+            truncatedCube:{
+                handOfGod: "Hand of God"
+            },
+            kelvin:{
+                handOfGod: "Hand of God"
+            },
             will: "Electronics Assembler"
         },
         allAssemblyStrategies: {

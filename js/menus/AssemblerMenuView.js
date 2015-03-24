@@ -48,22 +48,22 @@ AssemblerMenuView = Backbone.View.extend({
 
     _selectMachine: function(e){
         e.preventDefault();
-        this.assembler.set("machineName", $(e.target).data("type"));
+        this.assembler.selectMachine($(e.target).data("type"));
     },
 
     render: function(){
         if (this.model.get("currentTab") != "assembler") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), dmaGlobals.lattice.toJSON())));
     },
 
     template: _.template('\
         Machine: &nbsp;&nbsp;\
             <div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[machineName] %><span class="caret"></span></button>\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[cellType][connectionType][machineName] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
-                    <% _.each(_.keys(allMachineTypes), function(key){ %>\
-                        <li><a class="machineType" data-type="<%= key %>" href="#"><%= allMachineTypes[key] %></a></li>\
+                    <% _.each(_.keys(allMachineTypes[cellType][connectionType]), function(key){ %>\
+                        <li><a class="machineType" data-type="<%= key %>" href="#"><%= allMachineTypes[cellType][connectionType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\

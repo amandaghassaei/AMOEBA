@@ -8,7 +8,7 @@ Assembler = Backbone.Model.extend({
         camStrategy: "raster",
         placementOrder: "XYZ",//used for raster strategy entry
         camProcess: "gcode",
-        machineName: "shopbot",
+        machineName: "handOfGod",
         machine: null,
         exporter: null,
 
@@ -40,7 +40,7 @@ Assembler = Backbone.Model.extend({
 
     initialize: function(options){
 
-        this.set("machine", new Shopbot());
+        this.selectMachine();
 
         _.bindAll(this, "postProcess");
 
@@ -80,6 +80,17 @@ Assembler = Backbone.Model.extend({
         this.listenTo(this, "change:machineName", this._changeMachine);
 
         this._initOriginAndStock(options.lattice);
+    },
+
+    selectMachine: function(machineName){
+        if (!machineName) machineName = this.get("machineName");
+        if (this.get("machine")) this.get("machine").destroy();
+        if (machineName == "shopbot"){
+            this.set("machine", new Shopbot());
+        } else if (machineName == "handOfGod"){
+            this.set("machine", new Shopbot());
+        } else console.warn("selected machine not recognized");
+        this.set("machineName", machineName);
     },
 
     makeProgramEdits: function(data){
