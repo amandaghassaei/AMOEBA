@@ -92,7 +92,6 @@ Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
     var direction = 1;
     if (target-mesh.position[axis] < 0) direction = -1;
     increment = Math.max(Math.abs(increment), 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
-    dmaGlobals.three.startAnimationLoop();
     var simSpeed = 100/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
     this._incrementalMove(mesh, axis, increment, target, direction, callback, simSpeed);
 };

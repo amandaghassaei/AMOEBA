@@ -183,6 +183,7 @@ Assembler = Backbone.Model.extend({
 
     _stockSimulation: function(){
         if (dmaGlobals.appState.get("stockSimulationPlaying")){
+            dmaGlobals.three.startAnimationLoop();
             var currentLine = this.get("simLineNumber");
             if (currentLine == 0) dmaGlobals.lattice.hideCells();
             var allLines = this.get("dataOut").split("\n");
@@ -199,6 +200,7 @@ Assembler = Backbone.Model.extend({
                 this.resetSimulation();
             }
         } else {
+            dmaGlobals.three.stopAnimationLoop();
             this.get("machine").pause();
         }
 
