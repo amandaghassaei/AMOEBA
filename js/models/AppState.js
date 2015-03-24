@@ -248,6 +248,7 @@ AppState = Backbone.Model.extend({
                 if (e.ctrlKey || e.metaKey){//command
                     e.preventDefault();
                     if (e.shiftKey){
+                        this.set("shift", false);
                         $("#saveAsModel").modal("show");
                     } else {
                         dmaGlobals.appState.saveJSON();
