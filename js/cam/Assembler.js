@@ -77,9 +77,7 @@ Assembler = Backbone.Model.extend({
         this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
         this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
 
-        this.listenTo(this, "change:machineName", this._changeMachine);
-
-        this._initOriginAndStock(options.lattice);
+        this._initOriginAndStock();
     },
 
     selectMachine: function(machineName){
@@ -142,7 +140,7 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
-    _initOriginAndStock: function(lattice){//todo this is ugly
+    _initOriginAndStock: function(){//todo this is ugly
         var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff0000}));
         dmaGlobals.three.sceneAdd(origin);
@@ -154,7 +152,7 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.three.sceneAdd(stock);
         this.set("stock", stock);
         this._moveStock();
-        this._setCAMScale(lattice.get("scale"));
+        this._setCAMScale();
         this._setCAMVisibility();
     },
 

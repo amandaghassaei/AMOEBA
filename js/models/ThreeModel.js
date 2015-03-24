@@ -112,13 +112,22 @@ function ThreeModel(){
     }
 
     function _loop(){
-        if (stopAnimationFlag) return console.log("animation stopped");
-        render();
+        if (stopAnimationFlag) {
+            animationLoopRunning = false;
+            console.log("animation stopped");
+            return;
+        }
+//        console.log("loop");
+        _render();
         requestAnimationFrame(_loop);
     }
 
     function render(){
         if (animationLoopRunning) return;
+        _render();
+    }
+
+    function _render(){
         renderer.render(scene, camera);
     }
 

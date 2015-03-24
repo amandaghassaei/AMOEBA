@@ -63,21 +63,28 @@ Machine.prototype.pause = function(){
 };
 
 Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
+    var increment = (target-mesh.position[axis])/20;
+    if (increment == 0) {
+        if (callback) callback();
+        return;
+    }
+    var direction = 1;
+    if (increment<0) direction = -1;
+    increment = Math.max(Math.abs(increment), 0.0001)*direction;
     dmaGlobals.three.startAnimationLoop();
-    var increment = (target-mesh.position[axis])/10;
-    this._incrementalMove(mesh, axis, increment, mesh.position[axis]+increment*10, callback);
+    this._incrementalMove(mesh, axis, increment, target, direction, callback);
 };
 
-Machine.prototype._incrementalMove = function(mesh, axis, increment, target, callback){
+Machine.prototype._incrementalMove = function(mesh, axis, increment, target, direction, callback){
     var self = this;
     setTimeout(function(){
-        if (mesh.position[axis] == target) {
+        if ((target-mesh.position[axis])*direction <= 0) {
             if (callback) callback();
             return;
         }
-        mesh.position[axis] += increment;
-        console.log(mesh.position[axis]);
-        self._incrementalMove(mesh, axis, increment, target, callback)
+        if (Math.abs(target-mesh.position[axis]) < Math.abs(increment)) mesh.position[axis] = target;//don't overshoot
+        else mesh.position[axis] += increment;
+        self._incrementalMove(mesh, axis, increment, target, direction, callback)
     },100);
 };
 
