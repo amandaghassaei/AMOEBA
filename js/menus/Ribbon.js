@@ -8,7 +8,7 @@ Ribbon = Backbone.View.extend({
     el: "#navRibbon",
 
     events: {
-        "click #cellModeToggle":                                    "_toggleCellMode"
+        "click .cellModeBtn":                                    "_updateCellMode"
     },
 
     initialize: function(){
@@ -19,14 +19,9 @@ Ribbon = Backbone.View.extend({
         this.render();
     },
 
-    _toggleCellMode: function(e){
+    _updateCellMode: function(e){
         e.preventDefault();
-        var currentState = dmaGlobals.appState.get("cellMode");
-        var nextState = "cell";
-        if (currentState == "cell"){
-            nextState = "part";
-        }
-        dmaGlobals.appState.set("cellMode", nextState);
+        dmaGlobals.appState.set("cellMode", $(e.target).data("type"));
     },
 
     render: function(){
@@ -36,7 +31,8 @@ Ribbon = Backbone.View.extend({
     template: _.template('\
         <div class="btn-toolbar">\
             <div class="btn-group">\
-              <a id="cellModeToggle" class="btn btn-primary btn-ribbon" href="#fakelink">toggle cell/part view</a>\
+              <a class="btn btn-primary btn-ribbon cellModeBtn<% if (cellMode == "cell"){ %> ribbon-selected"<% } %> href="#"><img data-type="cell" src="assets/cell-sm.png"></a>\
+              <a class="btn btn-primary btn-ribbon cellModeBtn<% if (cellMode == "part"){ %> ribbon-selected"<% } %> href="#"><img data-type="part" src="assets/part-sm.png"></a>\
             </div>\
         </div>\
         ')

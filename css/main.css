@@ -265,7 +265,7 @@ input.numberInput{
 }
 
 #navRibbon{
-    height: 30px;
+    height: 49px;
     width: 300px;
     z-index: 1;
     display: block;
@@ -284,6 +284,11 @@ input.numberInput{
 
 #navRibbon .btn-ribbon{
     background-color: #444;
+    padding: 5px 10px;
+}
+
+.ribbon-selected {
+    background-color: #000!important;
 }
 
 #navRibbon .btn-ribbon:hover{
