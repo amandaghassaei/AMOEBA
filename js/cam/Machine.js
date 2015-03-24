@@ -7,11 +7,11 @@ function Machine() {
 
     this.hasStock = false;
 
-    this.meshes = [];
+    this.meshes = {};
     var self = this;
     this._buildMeshes(function(meshes){
         self.meshes = meshes;
-        _.each(meshes, function(mesh){
+        _.each(_.values(meshes), function(mesh){
             dmaGlobals.three.sceneAdd(mesh);
         });
     });
@@ -127,7 +127,7 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
 
 Machine.prototype.destroy = function(){
     this.cell.destroy();
-    _.each(this.meshes, function(mesh){
+    _.each(_.values(this.meshes), function(mesh){
         dmaGlobals.three.sceneRemove(mesh);
         mesh = null;
     });
@@ -146,7 +146,7 @@ function Shopbot(){
 Shopbot.prototype = Object.create(Machine.prototype);
 
 Shopbot.prototype._buildMeshes = function(callback){
-    var meshes = [];
+    var meshes = {};
     (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
         geometry.computeBoundingBox();
         var unitScale = 1.5/geometry.boundingBox.max.y;
@@ -154,7 +154,7 @@ Shopbot.prototype._buildMeshes = function(callback){
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0, Math.sqrt(2)/2));
         var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
         mesh.visible = false;
-        meshes.push(mesh);
+        meshes.endEffector = mesh;
         callback(meshes);
     });
 };
@@ -166,18 +166,19 @@ Shopbot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    speed = this._normalizeSpeed(this.meshes[0].position, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(x, "x", speed.x, sketchyCallback);
-    this._moveAxis(y, "y", speed.y, sketchyCallback);
-    this._moveAxis(z, "z", speed.z, sketchyCallback);
+    var startingPos = this.meshes.endEffector.position.clone();
+    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
+    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
+    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
 };
 
-Shopbot.prototype._moveAxis = function(target, axis, speed, callback){
+Shopbot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
         return;
     }
-    this._animateObjects(this.meshes.concat(this.cell), axis, speed, this.meshes[0].position[axis], target, callback);
+    this._animateObjects([this.meshes.endEffector, this.cell], axis, speed, startingPos, target, callback);
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -196,11 +197,11 @@ OneBitBot.prototype._buildMeshes = function(callback){
         numMeshes -= 1;
         return numMeshes <= 0;
     }
-    function geometryPrep(geometry){
+    function geometryPrep(geometry, name){
         var unitScale = 0.05;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
-        meshes.push(mesh);
+        meshes[name] = mesh;
         if (allLoaded()) callback(meshes);
     }
     var loader = new THREE.STLLoader();
@@ -236,5 +237,5 @@ OneBitBot.prototype._moveAxis = function(target, axis, speed, callback){
         callback();
         return;
     }
-    this._animateObjects(this.meshes.concat(this.cell), axis, speed, this.meshes[0].position[axis], target, callback);
+    this._animateObjects(_.values(this.meshes).concat(this.cell), axis, speed, this.meshes[0].position[axis], target, callback);
 };
