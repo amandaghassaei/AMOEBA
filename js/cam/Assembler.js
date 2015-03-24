@@ -102,10 +102,6 @@ Assembler = Backbone.Model.extend({
 ////////////////////////////////VISUALIZATION//////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-    _changeMachine: function(){
-
-    },
-
     isVisible: function(){
         var currentTab = dmaGlobals.appState.get("currentTab");
         return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
