@@ -122,12 +122,12 @@ ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, 
             else machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), this.convertToMM(data[3]), speed, wcs, callback);
         } else {
             if (dmaGlobals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], "", speed, wcs, callback);
-            else return machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), "", speed, wcs, callback);
+            else machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), "", speed, wcs, callback);
         }
     } else if (line[1] == "S"){
-        return callback();
+        callback();
     } else {
         console.warn("problem parsing sbp " + line);
-        return callback();
+        callback();
     }
 };
