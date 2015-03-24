@@ -75,12 +75,13 @@ Assembler = Backbone.Model.extend({
         this.listenTo(options.lattice, "change:partType", this._updatePartType);
         this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
         this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
+        this.listenTo(this, "change:machineName", this.selectMachine);
 
         this._initOriginAndStock();
     },
 
-    selectMachine: function(machineName){//todo put this on event - that way you know it is a change
-        if (!machineName) machineName = this.get("machineName");
+    selectMachine: function(){
+        var machineName = this.get("machineName");
         if (this.get("machine")) this.get("machine").destroy();
         if (machineName == "shopbot"){
             this.set("machine", new Shopbot());
@@ -92,7 +93,6 @@ Assembler = Backbone.Model.extend({
             this.set("machine", new OneBitBot());
             this.set("camProcess", "gcode");
         }else console.warn("selected machine not recognized");
-        this.set("machineName", machineName);
     },
 
     makeProgramEdits: function(data){
@@ -111,7 +111,8 @@ Assembler = Backbone.Model.extend({
 
     _updateCellType: function(){
         this.get("machine").updateCellType();
-        this.selectMachine("handOfGod");//todo this should go away with dynamic allocation of this model
+        this.set("machineName", "handOfGod");//todo this should go away with dynamic allocation of this model
+
     },
 
     _updatePartType: function(){
