@@ -70,7 +70,7 @@ Machine.prototype._reorganizeSpeed = function(speed){
     return newSpeed;
 }
 
-Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){
+Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy moves need speed normalization
     var normSpeed = {};
     if (x == "" || y == "") return speed;
     var deltaX = x-startingPos.x;
@@ -83,29 +83,37 @@ Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){
     return normSpeed;
 };
 
-Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
-    var increment = speed/10;//based on 1/10th of sec
+Machine.prototype._animateObjects = function(objects, axis, speed, target, callback){
+    var increment = speed/5;//based on 1/10th of sec
     if (increment == 0) {
         if (callback) callback();
         return;
     }
     var direction = 1;
-    if (target-mesh.position[axis] < 0) direction = -1;
-    increment = Math.max(Math.abs(increment), 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
-    var simSpeed = 100/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
-    this._incrementalMove(mesh, axis, increment, target, direction, callback, simSpeed);
+    if (target-objects[0].position[axis] < 0) direction = -1;
+    increment = Math.max(increment, 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
+    var simSpeed = 50/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
+    this._incrementalMove(objects, axis, increment, target, direction, callback, simSpeed);
 };
 
-Machine.prototype._incrementalMove = function(mesh, axis, increment, target, direction, callback, simSpeed){
+Machine.prototype._incrementalMove = function(objects, axis, increment, target, direction, callback, simSpeed){
     var self = this;
     setTimeout(function(){
-        if ((target-mesh.position[axis])*direction <= 0) {
+        if ((target-objects[0].position[axis])*direction <= 0) {
             if (callback) callback();
             return;
         }
-        if (Math.abs(target-mesh.position[axis]) < Math.abs(increment)) mesh.position[axis] = target;//don't overshoot
-        else mesh.position[axis] += increment;
-        self._incrementalMove(mesh, axis, increment, target, direction, callback, simSpeed)
+        _.each(objects, function(object){
+            if (object instanceof DMACell){
+                var currentPosition = object.currentPosition();
+                if (Math.abs(target-currentPosition[axis]) < Math.abs(increment)) object.moveTo(target, axis);//don't overshoot
+                else object.moveTo(currentPosition[axis]+increment, axis);
+            } else {
+                if (Math.abs(target-object.position[axis]) < Math.abs(increment)) object.position[axis] = target;//don't overshoot
+                else object.position[axis] += increment;
+            }
+        });
+        self._incrementalMove(objects, axis, increment, target, direction, callback, simSpeed)
     },simSpeed);
 };
 
@@ -144,7 +152,6 @@ Shopbot.prototype._buildMeshes = function(callback){
 };
 
 Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
-    var endEffector = this.meshes[0];
     var totalThreads = 3;
     function sketchyCallback(){
         totalThreads -= 1;
@@ -154,10 +161,10 @@ Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
     x = this._makeAbsPosition(x, wcs.x);
     y = this._makeAbsPosition(y, wcs.y);
     z = this._makeAbsPosition(z, wcs.z);
-    speed = this._normalizeSpeed(endEffector.position, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(endEffector, x, "x", speed.x, sketchyCallback);
-    this._moveAxis(endEffector, y, "y", speed.y, sketchyCallback);
-    this._moveAxis(endEffector, z, "z", speed.z, sketchyCallback);
+    speed = this._normalizeSpeed(this.meshes[0].position, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(x, "x", speed.x, sketchyCallback);
+    this._moveAxis(y, "y", speed.y, sketchyCallback);
+    this._moveAxis(z, "z", speed.z, sketchyCallback);
     this.cell.updateForScale();//todo why is this here?
 };
 
@@ -166,16 +173,13 @@ Shopbot.prototype._makeAbsPosition = function(target, wcs){
     return parseFloat(target)+wcs;
 };
 
-Shopbot.prototype._moveAxis = function(mesh, target, axis, speed, callback){
+Shopbot.prototype._moveAxis = function(target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
         return;
     }
-    this._animateMesh(mesh, axis, speed, target, callback);
-    this._animateMesh(this.cell.cellMesh, axis, speed, target, null);//todo reaching a little deep here, might want to find a better solution
+    this._animateObjects(this.meshes.concat(this.cell), axis, speed, target, callback);
 };
-
-
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////ONE BIT///////////////////////////////////////////////////

@@ -96,6 +96,15 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.z = position.z;
 };
 
+DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
+    this.cellMesh.position[axis] = position;
+    //todo update parts too
+};
+
+DMACell.prototype.currentPosition = function(){//used for stock simulations
+    return this.cellMesh.position.clone();
+};
+
 DMACell.prototype.getType = function(){
     return null;//only used in freeform layout
 };
