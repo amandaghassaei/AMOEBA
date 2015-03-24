@@ -87,8 +87,10 @@ Assembler = Backbone.Model.extend({
         if (this.get("machine")) this.get("machine").destroy();
         if (machineName == "shopbot"){
             this.set("machine", new Shopbot());
+            this.set("camProcess", "shopbot");
         } else if (machineName == "handOfGod"){
             this.set("machine", new Shopbot());
+            this.set("camProcess", "gcode");
         } else console.warn("selected machine not recognized");
         this.set("machineName", machineName);
     },
@@ -109,6 +111,7 @@ Assembler = Backbone.Model.extend({
 
     _updateCellType: function(){
         this.get("machine").updateCellType();
+        this.selectMachine("handOfGod");//todo this should go away with dynamic allocation of this model
     },
 
     _updatePartType: function(){

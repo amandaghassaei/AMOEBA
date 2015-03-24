@@ -78,50 +78,36 @@ AppState = Backbone.Model.extend({
                     xShape:"X"
                 }
             },
-            tetra: {
-                vertex: null
-            },
-            cube:{
-                face: null
-            },
-            truncatedCube:{
-                face: null
-            },
-            kelvin:{
-                face: null
-            }
+            tetra: {vertex: null},
+            cube: {face: null},
+            truncatedCube: {face: null},
+            kelvin: {face: null}
         },
 
         allMachineTypes:{
             octa:{
-                face: {
-                    handOfGod: "Hand of God"
-                },
-                freeformFace: {
-                    handOfGod: "Hand of God"
-                },
+                face: {handOfGod: "Hand of God"},
+                freeformFace: {handOfGod: "Hand of God"},
                 edgeRot: {
                     shopbot: "Shopbot",
                     oneBit: "One Bit Bot",
                     handOfGod: "Hand of God"
                 },
-                vertex: {
-                    handOfGod: "Hand of God"
-                }
+                vertex: {handOfGod: "Hand of God"}
             },
             tetra: {
-                handOfGod: "Hand of God"
+                vertex:{handOfGod: "Hand of God"}
             },
             cube:{
-                handOfGod: "Hand of God"
+                face:{handOfGod: "Hand of God"}
             },
             truncatedCube:{
-                handOfGod: "Hand of God"
+                face:{handOfGod: "Hand of God"}
             },
             kelvin:{
-                handOfGod: "Hand of God"
-            },
-            will: "Electronics Assembler"
+                face:{handOfGod: "Hand of God"}
+            }
+//            will: "Electronics Assembler"
         },
         allAssemblyStrategies: {
             raster: "Raster"
