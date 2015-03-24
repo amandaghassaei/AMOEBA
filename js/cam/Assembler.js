@@ -89,7 +89,10 @@ Assembler = Backbone.Model.extend({
         } else if (machineName == "handOfGod"){
             this.set("machine", new Shopbot());
             this.set("camProcess", "gcode");
-        } else console.warn("selected machine not recognized");
+        } else if (machineName == "oneBitBot"){
+            this.set("machine", new OneBitBot());
+            this.set("camProcess", "gcode");
+        }else console.warn("selected machine not recognized");
         this.set("machineName", machineName);
     },
 
@@ -283,7 +286,9 @@ Assembler = Backbone.Model.extend({
             } else {
                 return new GCodeExporter();
             }
-        } else console.warn("cam process not supported");
+        }
+        console.warn("cam process not supported");
+        return null;
     },
 
     _getOrder: function(strategy){

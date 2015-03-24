@@ -95,7 +95,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
     //import part geometry
     var loader = new THREE.STLLoader();
-    loader.load("data/trianglePart.stl", function(geometry){
+    loader.load("assets/stls/parts/trianglePart.stl", function(geometry){
 
         unitPartGeo1 = geometry;
         unitPartGeo1.computeBoundingBox();
@@ -150,7 +150,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
     //import part geometry
     var loader = new THREE.STLLoader();
-    loader.load("data/edgeVoxPart.stl", function(geometry){
+    loader.load("assets/stls/parts/edgeVoxPart.stl", function(geometry){
 
         unitPartGeo = geometry;
         unitPartGeo.computeBoundingBox();

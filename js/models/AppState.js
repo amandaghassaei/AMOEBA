@@ -90,7 +90,7 @@ AppState = Backbone.Model.extend({
                 freeformFace: {handOfGod: "Hand of God"},
                 edgeRot: {
                     shopbot: "Shopbot",
-                    oneBit: "One Bit Bot",
+                    oneBitBot: "One Bit Bot",
                     handOfGod: "Hand of God"
                 },
                 vertex: {handOfGod: "Hand of God"}

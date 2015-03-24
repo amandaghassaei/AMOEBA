@@ -147,7 +147,7 @@ Shopbot.prototype = Object.create(Machine.prototype);
 
 Shopbot.prototype._buildMeshes = function(callback){
     var meshes = [];
-    (new THREE.STLLoader()).load("data/shopbotEndEffector.stl", function(geometry){
+    (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
         geometry.computeBoundingBox();
         var unitScale = 1.5/geometry.boundingBox.max.y;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
@@ -170,7 +170,6 @@ Shopbot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
     this._moveAxis(x, "x", speed.x, sketchyCallback);
     this._moveAxis(y, "y", speed.y, sketchyCallback);
     this._moveAxis(z, "z", speed.z, sketchyCallback);
-    this.cell.updateForScale();//todo why is this here?
 };
 
 Shopbot.prototype._moveAxis = function(target, axis, speed, callback){
@@ -189,3 +188,53 @@ function OneBitBot(){
     Machine.call(this);
 }
 OneBitBot.prototype = Object.create(Machine.prototype);
+
+OneBitBot.prototype._buildMeshes = function(callback){
+    var meshes = [];
+    var numMeshes = 4;
+    function allLoaded(){
+        numMeshes -= 1;
+        return numMeshes <= 0;
+    }
+    function geometryPrep(geometry){
+        var unitScale = 0.05;
+        geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
+        meshes.push(mesh);
+        if (allLoaded()) callback(meshes);
+    }
+    var loader = new THREE.STLLoader();
+    loader.load("assets/stls/oneBitBot/zAxis.STL", function(geometry){
+        geometryPrep(geometry);
+    });
+    loader.load("assets/stls/oneBitBot/zDrive.STL", function(geometry){
+        geometryPrep(geometry);
+    });
+    loader.load("assets/stls/oneBitBot/yAxisMount.STL", function(geometry){
+        geometryPrep(geometry);
+    });
+    loader.load("assets/stls/oneBitBot/basePlate.STL", function(geometry){
+        geometryPrep(geometry);
+    });
+};
+
+OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
+    var totalThreads = 3;
+    function sketchyCallback(){
+        totalThreads -= 1;
+        if (totalThreads > 0) return;
+        callback();
+    }
+    speed = this._normalizeSpeed(this.meshes[0].position, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(x, "x", speed.x, sketchyCallback);
+    this._moveAxis(y, "y", speed.y, sketchyCallback);
+    this._moveAxis(z, "z", speed.z, sketchyCallback);
+};
+
+OneBitBot.prototype._moveAxis = function(target, axis, speed, callback){
+    if (target == null || target === undefined) {
+        callback();
+        return;
+    }
+    this._animateObjects(this.meshes.concat(this.cell), axis, speed, this.meshes[0].position[axis], target, callback);
+};
