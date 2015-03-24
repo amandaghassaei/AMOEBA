@@ -80,7 +80,7 @@ Assembler = Backbone.Model.extend({
         this._initOriginAndStock();
     },
 
-    selectMachine: function(machineName){
+    selectMachine: function(machineName){//todo put this on event - that way you know it is a change
         if (!machineName) machineName = this.get("machineName");
         if (this.get("machine")) this.get("machine").destroy();
         if (machineName == "shopbot"){

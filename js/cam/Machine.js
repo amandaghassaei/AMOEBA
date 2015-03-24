@@ -63,13 +63,13 @@ Machine.prototype.pause = function(){
 };
 
 Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
-    var increment = 0.1/speed;//based on 1/10th of sec
+    var increment = speed/10;//based on 1/10th of sec
     if (increment == 0) {
         if (callback) callback();
         return;
     }
     var direction = 1;
-    if (increment<0) direction = -1;
+    if (target-mesh.position[axis] < 0) direction = -1;
     increment = Math.max(Math.abs(increment), 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
     dmaGlobals.three.startAnimationLoop();
     var simSpeed = 100/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
