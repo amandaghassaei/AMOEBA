@@ -62,8 +62,23 @@ Machine.prototype.releaseStock = function(index){
 Machine.prototype.pause = function(){
 };
 
-Machine.prototype._animateMeshes = function(meshes, x, y, z, speed, callback){
+Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
+    dmaGlobals.three.startAnimationLoop();
+    var increment = (target-mesh.position[axis])/10;
+    this._incrementalMove(mesh, axis, increment, mesh.position[axis]+increment*10, callback);
+};
 
+Machine.prototype._incrementalMove = function(mesh, axis, increment, target, callback){
+    var self = this;
+    setTimeout(function(){
+        if (mesh.position[axis] == target) {
+            if (callback) callback();
+            return;
+        }
+        mesh.position[axis] += increment;
+        console.log(mesh.position[axis]);
+        self._incrementalMove(mesh, axis, increment, target, callback)
+    },100);
 };
 
 Machine.prototype.destroy = function(){
@@ -101,30 +116,25 @@ Shopbot.prototype._buildMeshes = function(callback){
 };
 
 Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
-    var self = this;
     var endEffector = this.meshes[0];
-    setTimeout( function() {
-        //todo reaching a little deep here, might want to find a better solution
-        if (x != "") {
-            var nextX = parseFloat(x)+wcs.x;
-            endEffector.position.x = nextX;
-            self.cell.cellMesh.position.x = nextX;
-        }
-        if (y != "") {
-            var nextY = parseFloat(y)+wcs.y;
-            endEffector.position.y = nextY;
-            self.cell.cellMesh.position.y = nextY;
-        }
-        if (z != "") {
-            var nextZ = parseFloat(z)+wcs.z;
-            endEffector.position.z = nextZ;
-            self.cell.cellMesh.position.z = nextZ;
-        }
-        self.cell.updateForScale();
-        dmaGlobals.three.render();
+    var totalThreads = 3;
+    function sketchyCallback(){
+        totalThreads -= 1;
+        if (totalThreads > 0) return;
         return callback();
-    }, 500/dmaGlobals.assembler.get("simSpeed"));
+    }
+    this._moveAxis(endEffector, x, "x", speed.xy, wcs, sketchyCallback);
+    this._moveAxis(endEffector, y, "y", speed.xy, wcs, sketchyCallback);
+    this._moveAxis(endEffector, z, "z", speed.z, wcs, sketchyCallback);
+    this.cell.updateForScale();//todo why is this here?
+};
 
+Shopbot.prototype._moveAxis = function(mesh, target, axis, speed, wcs, callback){
+    if (target != "") {
+        target = parseFloat(target)+wcs[axis];
+        this._animateMesh(mesh, axis, speed, target, callback);
+        this._animateMesh(this.cell.cellMesh, axis, speed, target, null);//todo reaching a little deep here, might want to find a better solution
+    } else callback();
 };
 
 

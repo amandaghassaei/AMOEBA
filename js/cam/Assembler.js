@@ -177,6 +177,7 @@ Assembler = Backbone.Model.extend({
     resetSimulation: function(){
         this.set("simLineNumber", 0, {silent:true});
         dmaGlobals.appState.set("stockSimulationPlaying", false);
+        dmaGlobals.three.stopAnimationLoop();
         this.set("simStockNum", 0);
         this.set("postStockNum", 0);
         dmaGlobals.lattice.showCells();
