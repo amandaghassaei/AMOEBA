@@ -62,6 +62,27 @@ Machine.prototype.releaseStock = function(index){
 Machine.prototype.pause = function(){
 };
 
+Machine.prototype._reorganizeSpeed = function(speed){
+    var newSpeed = {};
+    newSpeed.x = speed.xy;
+    newSpeed.y = speed.xy;
+    newSpeed.z = speed.z;
+    return newSpeed;
+}
+
+Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){
+    var normSpeed = {};
+    if (x == "" || y == "") return speed;
+    var deltaX = x-startingPos.x;
+    var deltaY = y-startingPos.y;
+    var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    if (totalDistance == 0) return speed;
+    normSpeed.x = Math.abs(deltaX/totalDistance*speed.x);
+    normSpeed.y = Math.abs(deltaY/totalDistance*speed.y);
+    normSpeed.z = speed.z;
+    return normSpeed;
+};
+
 Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
     var increment = speed/10;//based on 1/10th of sec
     if (increment == 0) {
@@ -131,18 +152,28 @@ Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    this._moveAxis(endEffector, x, "x", speed.xy, wcs, sketchyCallback);
-    this._moveAxis(endEffector, y, "y", speed.xy, wcs, sketchyCallback);
-    this._moveAxis(endEffector, z, "z", speed.z, wcs, sketchyCallback);
+    x = this._makeAbsPosition(x, wcs.x);
+    y = this._makeAbsPosition(y, wcs.y);
+    z = this._makeAbsPosition(z, wcs.z);
+    speed = this._normalizeSpeed(endEffector.position, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(endEffector, x, "x", speed.x, sketchyCallback);
+    this._moveAxis(endEffector, y, "y", speed.y, sketchyCallback);
+    this._moveAxis(endEffector, z, "z", speed.z, sketchyCallback);
     this.cell.updateForScale();//todo why is this here?
 };
 
-Shopbot.prototype._moveAxis = function(mesh, target, axis, speed, wcs, callback){
-    if (target != "") {
-        target = parseFloat(target)+wcs[axis];
-        this._animateMesh(mesh, axis, speed, target, callback);
-        this._animateMesh(this.cell.cellMesh, axis, speed, target, null);//todo reaching a little deep here, might want to find a better solution
-    } else callback();
+Shopbot.prototype._makeAbsPosition = function(target, wcs){
+    if (target == "" || target == null || target === undefined) return null;
+    return parseFloat(target)+wcs;
+};
+
+Shopbot.prototype._moveAxis = function(mesh, target, axis, speed, callback){
+    if (target == null || target === undefined) {
+        callback();
+        return;
+    }
+    this._animateMesh(mesh, axis, speed, target, callback);
+    this._animateMesh(this.cell.cellMesh, axis, speed, target, null);//todo reaching a little deep here, might want to find a better solution
 };
 
 
