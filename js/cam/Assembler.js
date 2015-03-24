@@ -28,7 +28,6 @@ Assembler = Backbone.Model.extend({
         multipleStockPositions: false,
         stockArraySize: {x:4, y:4},
         stockSeparation: 2.78388,
-        postStockNum: 0,//which piece of stock to pick up
 
         rapidSpeeds:{xy: 3, z: 2},//rapids at clearance height
         feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
@@ -180,7 +179,6 @@ Assembler = Backbone.Model.extend({
         dmaGlobals.appState.set("stockSimulationPlaying", false);
         dmaGlobals.three.stopAnimationLoop();
         this.set("simStockNum", 0);
-        this.set("postStockNum", 0);
         dmaGlobals.lattice.showCells();
     },
 
@@ -234,31 +232,23 @@ Assembler = Backbone.Model.extend({
         data += "\n";
 
         var stockPosition = this.get("stockPosition");
+        var stockNum = 0;//position of stock in stock array
         var multStockPositions = this.get("multipleStockPositions");
         var self = this;
         dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
             if (!cell) return;
-            var stockNum = self.get("postStockNum");
-            var stockNumPosition = {x:stockPosition.x, y:stockPosition.y, z:stockPosition.z};
+            var thisStockPosition = _.clone(stockPosition);
             if (multStockPositions) {
                 var stockArraySize = self.get("stockArraySize");
-                stockNumPosition.x += stockNum % stockArraySize.y * self.get("stockSeparation");
-                stockNumPosition.y -= Math.floor(stockNum / stockArraySize.y) * self.get("stockSeparation");
-            }
-            data += self._grabStock(exporter, stockNumPosition, rapidHeight, wcs, safeHeight);
-            if (multStockPositions) {
+                thisStockPosition.x += stockNum % stockArraySize.y * self.get("stockSeparation");
+                thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * self.get("stockSeparation");
                 stockNum += 1;
                 if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
-                self.set("postStockNum", stockNum, {silent: true});
-                data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);//move to stock origin
             }
+            data += self._grabStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             data += self._placeCell(cell, exporter, rapidHeight, wcs, safeHeight);
-            if (multStockPositions) {
-                data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);//move to stock origin
-            }
             data += "\n";
         });
-        data += exporter.rapidXY(0, 0);
 
         data += "\n\n";
         data += exporter.addComment("end program");

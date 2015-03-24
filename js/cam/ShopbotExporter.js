@@ -70,7 +70,7 @@ ShopbotExporter.prototype.goHome = function(){
 };
 
 ShopbotExporter.prototype.makeFooter = function(){
-    return this.goHome();
+    return "";
 };
 
 ShopbotExporter.prototype.save = function(data){

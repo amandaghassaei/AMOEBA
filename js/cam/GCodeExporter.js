@@ -73,7 +73,6 @@ GCodeExporter.prototype.goHome = function(){
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";
-    data += this.goHome();
     data += this.addLine("M30", [], "program stop");
 
     return data;
