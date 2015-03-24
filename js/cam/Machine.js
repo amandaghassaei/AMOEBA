@@ -126,6 +126,67 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
     },simSpeed);
 };
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////POST PROCESS//////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+Machine.prototype.postProcess = function(data, exporter){//override in subclasses
+
+    var rapidHeight = dmaGlobals.assembler.get("rapidHeight");
+    var safeHeight = dmaGlobals.assembler.get("safeHeight");
+    var wcs = dmaGlobals.assembler.get("originPosition");
+
+    var stockPosition = dmaGlobals.assembler.get("stockPosition");
+    var stockNum = 0;//position of stock in stock array
+    var multStockPositions = dmaGlobals.assembler.get("multipleStockPositions");
+    var stockSeparation = dmaGlobals.assembler.get("stockSeparation");
+    var stockArraySize = dmaGlobals.assembler.get("stockArraySize");
+    var self = this;
+
+    dmaGlobals.lattice.rasterCells(dmaGlobals.assembler._getOrder(dmaGlobals.assembler.get("camStrategy")), function(cell){
+        if (!cell) return;
+        var thisStockPosition = _.clone(stockPosition);
+        if (multStockPositions) {
+            thisStockPosition.x += stockNum % stockArraySize.y * stockSeparation;
+            thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * stockSeparation;
+            stockNum += 1;
+            if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
+        }
+        data += self._postPickUpStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
+        data += self._postReleaseStock(cell, exporter, rapidHeight, wcs, safeHeight);
+        data += "\n";
+    });
+    return data;
+};
+
+Machine.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
+    var data = "";
+    data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
+    data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
+    data += exporter.moveZ(stockPosition.z-wcs.z);
+    data += exporter.addComment("get stock");
+    data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
+    data += exporter.rapidZ(rapidHeight);
+    return data;
+};
+
+Machine.prototype._postReleaseStock = function(cell, exporter, rapidHeight, wcs, safeHeight){
+    var data = "";
+    var cellPosition = cell.getPosition();
+    data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
+    data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
+    data += exporter.moveZ(cellPosition.z-wcs.z);
+    data += exporter.addComment(JSON.stringify(cell.indices));
+    data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
+    data += exporter.rapidZ(rapidHeight);
+    return data;
+};
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////DEALLOCATE////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
 Machine.prototype.destroy = function(){
     this.cell.destroy();
     _.each(_.values(this.meshes), function(mesh){

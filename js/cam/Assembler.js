@@ -225,30 +225,7 @@ Assembler = Backbone.Model.extend({
         data += exporter.addComment("begin program");
         data += "\n";
 
-        var rapidHeight = this.get("rapidHeight");
-        var safeHeight = this.get("safeHeight");
-        var wcs = this.get("originPosition");
-        data += exporter.moveZ(rapidHeight);
-        data += "\n";
-
-        var stockPosition = this.get("stockPosition");
-        var stockNum = 0;//position of stock in stock array
-        var multStockPositions = this.get("multipleStockPositions");
-        var self = this;
-        dmaGlobals.lattice.rasterCells(this._getOrder(this.get("camStrategy")), function(cell){
-            if (!cell) return;
-            var thisStockPosition = _.clone(stockPosition);
-            if (multStockPositions) {
-                var stockArraySize = self.get("stockArraySize");
-                thisStockPosition.x += stockNum % stockArraySize.y * self.get("stockSeparation");
-                thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * self.get("stockSeparation");
-                stockNum += 1;
-                if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
-            }
-            data += self._grabStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
-            data += self._placeCell(cell, exporter, rapidHeight, wcs, safeHeight);
-            data += "\n";
-        });
+        data = this.get("machine").postProcess(data, exporter);
 
         data += "\n\n";
         data += exporter.addComment("end program");
@@ -285,29 +262,6 @@ Assembler = Backbone.Model.extend({
         if (strategy == "raster") return this.get("placementOrder");
         console.warn("strategy not recognized");
         return "";
-    },
-
-    _grabStock: function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
-        var data = "";
-        data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
-        data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
-        data += exporter.moveZ(stockPosition.z-wcs.z);
-        data += exporter.addComment("get stock");
-        data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
-        return data;
-    },
-
-    _placeCell: function(cell, exporter, rapidHeight, wcs, safeHeight){
-        var data = "";
-        var cellPosition = cell.getPosition();
-        data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
-        data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.moveZ(cellPosition.z-wcs.z);
-        data += exporter.addComment(JSON.stringify(cell.indices));
-        data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
-        return data;
     },
 
     save: function(){
