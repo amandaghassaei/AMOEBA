@@ -40,7 +40,7 @@ ThreeView = Backbone.View.extend({
         this.$el.append(this.model.domElement);//render only once
 
         this.model.render();
-        this._animate();
+//        this._animate();
     },
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -48,8 +48,8 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _animate: function(){
-        requestAnimationFrame(this._animate);
-        this.controls.update();
+//        requestAnimationFrame(this._animate);
+//        this.controls.update();
     },
 
     _setControlsEnabled: function(){

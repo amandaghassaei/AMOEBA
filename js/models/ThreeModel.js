@@ -14,6 +14,9 @@ function ThreeModel(){
     var parts = [];
     var basePlane = [];
 
+    var animationLoopRunning = false;
+    var stopAnimationFlag = false;
+
     initialize();
 
     function initialize(){
@@ -95,15 +98,36 @@ function ThreeModel(){
         return objectToRemove;
     }
 
+    function startAnimationLoop(){
+        if (animationLoopRunning) return;
+        stopAnimationFlag = false;
+        animationLoopRunning = true;
+        console.log("animation started");
+        _loop();
+    }
+
+    function stopAnimationLoop(){
+        if (!animationLoopRunning) return;
+        stopAnimationFlag = true;
+    }
+
+    function _loop(){
+        if (stopAnimationFlag) return console.log("animation stopped");
+        render();
+        requestAnimationFrame(_loop);
+    }
+
     function render(){
+        if (animationLoopRunning) return;
         renderer.render(scene, camera);
     }
 
     return {//return public properties/methods
         render: render,
+        startAnimationLoop: startAnimationLoop,
+        stopAnimationLoop: stopAnimationLoop,
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
-//        scene: scene,
         domElement: renderer.domElement,
         camera: camera,
         cells: cells,
