@@ -130,10 +130,10 @@ CamMenuView = Backbone.View.extend({
     template: _.template('\
         CAM output: &nbsp;&nbsp;\
             <div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCamProcesses[camProcess] %><span class="caret"></span></button>\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCamProcesses[machineName][camProcess] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
-                    <% _.each(_.keys(allCamProcesses), function(key){ %>\
-                        <li><a class="camProcess" data-type="<%= key %>" href="#"><%= allCamProcesses[key] %></a></li>\
+                    <% _.each(_.keys(allCamProcesses[machineName]), function(key){ %>\
+                        <li><a class="camProcess" data-type="<%= key %>" href="#"><%= allCamProcesses[machineName][key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\

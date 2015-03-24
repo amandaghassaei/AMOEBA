@@ -127,8 +127,12 @@ AppState = Backbone.Model.extend({
             raster: "Raster"
         },
         allCamProcesses: {
-            shopbot: "Shopbot (sbp)",
-            gcode: "G-Code"
+            shopbot:{
+                shopbot: "Shopbot (sbp)",
+                gcode: "G-Code"
+            },
+            handOfGod:{gcode: "G-Code"},
+            oneBitBot:{gcode: "G-Code"}
         },
 
         allScripts: {
