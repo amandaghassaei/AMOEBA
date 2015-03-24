@@ -259,25 +259,36 @@ OneBitBot.prototype._buildMeshes = function(callback){
         numMeshes -= 1;
         return numMeshes <= 0;
     }
-    function geometryPrep(geometry, name){
+    function geometryScale(geometry){
         var unitScale = 0.05;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        return geometry;
+    }
+    function meshPrep(geometry, name){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10,-12.8,0));
         var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
         meshes[name] = mesh;
         if (allLoaded()) callback(meshes);
     }
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.STL", function(geometry){
-        geometryPrep(geometry, "zAxis");
+        geometryScale(geometry);
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,-0.8));
+        meshPrep(geometry, "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.STL", function(geometry){
-        geometryPrep(geometry, "zDrive");
+        geometryScale(geometry);
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,0));
+        meshPrep(geometry, "zDrive");
     });
     loader.load("assets/stls/oneBitBot/yAxisMount.STL", function(geometry){
-        geometryPrep(geometry, "yAxisMount");
+        geometryScale(geometry);
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,0,0));
+        meshPrep(geometry, "yAxisMount");
     });
     loader.load("assets/stls/oneBitBot/basePlate.STL", function(geometry){
-        geometryPrep(geometry, "basePlate");
+        geometryScale(geometry);
+        meshPrep(geometry, "basePlate");
     });
 };
 
@@ -301,4 +312,56 @@ OneBitBot.prototype._moveAxis = function(startingPos, target, axis, speed, callb
         return;
     }
     this._animateObjects(_.values(this.meshes).concat(this.cell), axis, speed, startingPos, target, callback);
+};
+
+OneBitBot.prototype.postProcess = function(data, exporter){//override in subclasses
+
+    var rapidHeight = dmaGlobals.assembler.get("rapidHeight");
+    var safeHeight = dmaGlobals.assembler.get("safeHeight");
+    var wcs = dmaGlobals.assembler.get("originPosition");
+
+    var stockPosition = dmaGlobals.assembler.get("stockPosition");
+    var stockNum = 0;//position of stock in stock array
+    var multStockPositions = dmaGlobals.assembler.get("multipleStockPositions");
+    var stockSeparation = dmaGlobals.assembler.get("stockSeparation");
+    var stockArraySize = dmaGlobals.assembler.get("stockArraySize");
+    var self = this;
+
+    dmaGlobals.lattice.rasterCells(dmaGlobals.assembler._getOrder(dmaGlobals.assembler.get("camStrategy")), function(cell){
+        if (!cell) return;
+        var thisStockPosition = _.clone(stockPosition);
+        if (multStockPositions) {
+            thisStockPosition.x += stockNum % stockArraySize.y * stockSeparation;
+            thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * stockSeparation;
+            stockNum += 1;
+            if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
+        }
+        data += self._postPickUpStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
+        data += self._postReleaseStock(cell, exporter, rapidHeight, wcs, safeHeight);
+        data += "\n";
+    });
+    return data;
+};
+
+OneBitBot.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
+    var data = "";
+    data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
+    data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
+    data += exporter.moveZ(stockPosition.z-wcs.z);
+    data += exporter.addComment("get stock");
+    data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
+    data += exporter.rapidZ(rapidHeight);
+    return data;
+};
+
+OneBitBot.prototype._postReleaseStock = function(cell, exporter, rapidHeight, wcs, safeHeight){
+    var data = "";
+    var cellPosition = cell.getPosition();
+    data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
+    data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
+    data += exporter.moveZ(cellPosition.z-wcs.z);
+    data += exporter.addComment(JSON.stringify(cell.indices));
+    data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
+    data += exporter.rapidZ(rapidHeight);
+    return data;
 };
