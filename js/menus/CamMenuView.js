@@ -77,6 +77,24 @@ CamMenuView = Backbone.View.extend({
         else this.assembler.set(property, newVal);
     },
 
+    _updatePosNumber: function(e, property){
+        e.preventDefault();
+        var newVal = parseFloat($(e.target).val());
+        if (isNaN(newVal)) return;
+        newVal = parseFloat(newVal.toFixed(4));
+        if (newVal <= 0) {
+            console.warn("value must be positive");
+            return;
+        }
+        var object = this.assembler.get(property);
+        if ($(e.target).data("type")) {
+            object[$(e.target).data("type")] = newVal;
+            this.assembler.trigger("change:" + property);
+            this.assembler.trigger("change");
+        }
+        else this.assembler.set(property, newVal);
+    },
+
     _updateRelativeStockPosition: function(e){
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());

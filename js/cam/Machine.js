@@ -63,19 +63,20 @@ Machine.prototype.pause = function(){
 };
 
 Machine.prototype._animateMesh = function(mesh, axis, speed, target, callback){
-    var increment = (target-mesh.position[axis])/20;
+    var increment = 0.1/speed;//based on 1/10th of sec
     if (increment == 0) {
         if (callback) callback();
         return;
     }
     var direction = 1;
     if (increment<0) direction = -1;
-    increment = Math.max(Math.abs(increment), 0.0001)*direction;
+    increment = Math.max(Math.abs(increment), 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
     dmaGlobals.three.startAnimationLoop();
-    this._incrementalMove(mesh, axis, increment, target, direction, callback);
+    var simSpeed = 100/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
+    this._incrementalMove(mesh, axis, increment, target, direction, callback, simSpeed);
 };
 
-Machine.prototype._incrementalMove = function(mesh, axis, increment, target, direction, callback){
+Machine.prototype._incrementalMove = function(mesh, axis, increment, target, direction, callback, simSpeed){
     var self = this;
     setTimeout(function(){
         if ((target-mesh.position[axis])*direction <= 0) {
@@ -84,8 +85,8 @@ Machine.prototype._incrementalMove = function(mesh, axis, increment, target, dir
         }
         if (Math.abs(target-mesh.position[axis]) < Math.abs(increment)) mesh.position[axis] = target;//don't overshoot
         else mesh.position[axis] += increment;
-        self._incrementalMove(mesh, axis, increment, target, direction, callback)
-    },100);
+        self._incrementalMove(mesh, axis, increment, target, direction, callback, simSpeed)
+    },simSpeed);
 };
 
 Machine.prototype.destroy = function(){
@@ -128,7 +129,7 @@ Shopbot.prototype.moveTo = function(x, y, z, speed, wcs, callback){
     function sketchyCallback(){
         totalThreads -= 1;
         if (totalThreads > 0) return;
-        return callback();
+        callback();
     }
     this._moveAxis(endEffector, x, "x", speed.xy, wcs, sketchyCallback);
     this._moveAxis(endEffector, y, "y", speed.xy, wcs, sketchyCallback);
