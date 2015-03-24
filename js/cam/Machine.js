@@ -27,7 +27,7 @@ Machine.prototype.setVisibility = function(visible){
 };
 
 Machine.prototype._setMeshesVisiblity = function(visible){
-    _.each(this.meshes, function(mesh){
+    _.each(_.values(this.meshes), function(mesh){
         mesh.visible = visible;
     });
 };
@@ -206,16 +206,16 @@ OneBitBot.prototype._buildMeshes = function(callback){
     }
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.STL", function(geometry){
-        geometryPrep(geometry);
+        geometryPrep(geometry, "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.STL", function(geometry){
-        geometryPrep(geometry);
+        geometryPrep(geometry, "zDrive");
     });
     loader.load("assets/stls/oneBitBot/yAxisMount.STL", function(geometry){
-        geometryPrep(geometry);
+        geometryPrep(geometry, "yAxisMount");
     });
     loader.load("assets/stls/oneBitBot/basePlate.STL", function(geometry){
-        geometryPrep(geometry);
+        geometryPrep(geometry, "basePlate");
     });
 };
 
@@ -226,16 +226,17 @@ OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    speed = this._normalizeSpeed(this.meshes[0].position, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(x, "x", speed.x, sketchyCallback);
-    this._moveAxis(y, "y", speed.y, sketchyCallback);
-    this._moveAxis(z, "z", speed.z, sketchyCallback);
+    var startingPos = this.meshes["basePlate"].position.clone();
+    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
+    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
+    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
 };
 
-OneBitBot.prototype._moveAxis = function(target, axis, speed, callback){
+OneBitBot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
         return;
     }
-    this._animateObjects(_.values(this.meshes).concat(this.cell), axis, speed, this.meshes[0].position[axis], target, callback);
+    this._animateObjects(_.values(this.meshes).concat(this.cell), axis, speed, startingPos, target, callback);
 };
