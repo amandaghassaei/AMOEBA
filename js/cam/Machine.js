@@ -265,7 +265,7 @@ OneBitBot.prototype._buildMeshes = function(callback){
         return geometry;
     }
     function meshPrep(geometry, name){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10-1.3919,-12.8,-1.9685));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10,-12.8,0));
         var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
         meshes[name] = mesh;
         if (allLoaded()) callback(meshes);
@@ -273,7 +273,7 @@ OneBitBot.prototype._buildMeshes = function(callback){
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.STL", function(geometry){
         geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,-0.8));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,-0.8-1.9685));
         meshPrep(geometry, "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.STL", function(geometry){
@@ -299,17 +299,31 @@ OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    var startingPos = this.meshes["basePlate"].position.clone();
+    var startingPos = this.meshes["zAxis"].position.clone();
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
-    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
-    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
+    this._moveXAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
+    this._moveYAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
+    this._moveZAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
 };
 
-OneBitBot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
+OneBitBot.prototype._moveXAxis = function(startingPos, target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
         return;
     }
-    this._animateObjects(_.values(this.meshes).concat(this.cell), axis, speed, startingPos, target, callback);
+    this._animateObjects([this.meshes["zAxis"], this.meshes["zDrive"], this.meshes["yAxisMount"], this.cell], axis, speed, startingPos, target, callback);
+};
+OneBitBot.prototype._moveYAxis = function(startingPos, target, axis, speed, callback){
+    if (target == null || target === undefined) {
+        callback();
+        return;
+    }
+    this._animateObjects([this.meshes["zAxis"], this.meshes["zDrive"],  this.cell], axis, speed, startingPos, target, callback);
+};
+OneBitBot.prototype._moveZAxis = function(startingPos, target, axis, speed, callback){
+    if (target == null || target === undefined) {
+        callback();
+        return;
+    }
+    this._animateObjects([this.meshes["zAxis"], this.cell], axis, speed, startingPos, target, callback);
 };
