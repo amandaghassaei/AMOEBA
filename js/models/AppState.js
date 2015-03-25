@@ -300,7 +300,7 @@ AppState = Backbone.Model.extend({
 
     loadLatticeFromJSON: function(data){
         dmaGlobals.lattice.clearCells();
-        this._setData(JSON.parse(data), true);
+        this._setData(JSON.parse(data), false);
         dmaGlobals.lattice._updateLatticeType(null, null, null, true);
         dmaGlobals.lattice.trigger("change:scale");//todo make this better
     },

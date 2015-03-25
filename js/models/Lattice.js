@@ -340,7 +340,7 @@ Lattice = Backbone.Model.extend({
         var cellMode = dmaGlobals.appState.get("cellMode");
         var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale, cellMode, partType);
+            if (cell && cell.updateForScale) cell.updateForScale(scale, cellMode, partType);
         });
 
         dmaGlobals.three.render();
