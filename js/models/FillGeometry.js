@@ -39,13 +39,75 @@ FillGeometry = Backbone.Model.extend({
     makeBoundingBox: function(mesh){
         var box = new THREE.BoxHelper(mesh);
         box.material.color.setRGB(0,0,0);
+        box.material.opacity = 0.4;
+        box.material.transparent = true;
         this.set("boundingBox", box);
         dmaGlobals.three.sceneAdd(box);
     },
 
-    updateBoundingBox: function(){
-//        this.get("boundingBoxHelper").update();
-//        this.trigger("change:boundingBoxHelper");
+    fillGeo: function(){
+        var boundingBox = this.get("boundingBox");
+        boundingBox.geometry.computeBoundingBox();
+        var bounds = boundingBox.geometry.boundingBox;
+
+        var scale = dmaGlobals.lattice.get("scale");
+
+        var minIndex = dmaGlobals.lattice.getIndexForPosition(bounds.min);
+        var maxIndex = dmaGlobals.lattice.getIndexForPosition(bounds.max);
+        var raycaster = new THREE.Raycaster();
+        var direction = new THREE.Vector3(0,0,1);
+        var mesh = this.get("mesh");
+        raycaster.near = 0;
+        raycaster.far = bounds.max-bounds.min+10;//add some padding just in case
+        for (var x=minIndex.x;x<=maxIndex.x;x++){
+            for (var y=minIndex.y;y<=maxIndex.y;y++){
+                var origin = dmaGlobals.lattice.getPositionForIndex({x:x, y:y, z:minIndex.z});
+                origin.z = bounds.min.z-1;
+                raycaster.set(origin, direction);
+                var intersections = raycaster.intersectObject(mesh);
+                if (intersections.length == 0) continue;
+                var inside = false;
+                var nextIntersectionIndex = 0;
+                var nextIntersection = intersections[nextIntersectionIndex].distance;
+                for (var z=minIndex.z;z<=maxIndex.z;z++){
+                    var index = {x:x,y:y,z:z};
+                    var position = dmaGlobals.lattice.getPositionForIndex(index);
+                    if (!inside){
+                        if (position.z<nextIntersection) continue;
+                        else {
+                            inside = true;
+                            dmaGlobals.lattice.addCellAtIndex(index, true);
+                            var next = this._getNextIntersection(position, intersections, nextIntersectionIndex, inside);
+                            if (!next) break;
+                            inside = next.inside;
+                            nextIntersection = next.nextIntersection;
+                            nextIntersectionIndex = next.nextIntersetcionIndex;
+                        }
+                    } else {
+                        if (position.z<nextIntersection) dmaGlobals.lattice.addCellAtIndex(index, true);
+                        else {
+                            inside = false;
+                            var next = this._getNextIntersection(position, intersections, nextIntersectionIndex, inside);
+                            if (!next) break;
+                            inside = next.inside;
+                            nextIntersection = next.nextIntersection;
+                            nextIntersectionIndex = next.nextIntersetcionIndex;
+                        }
+                    }
+                }
+            }
+        }
+        dmaGlobals.three.render();
+    },
+
+    _getNextIntersection: function(position, intersections, nextIntersectionIndex, inside){
+        nextIntersectionIndex += 1;
+        if (nextIntersectionIndex < intersections.length) {
+            var nextIntersection = intersections[nextIntersectionIndex].distance;
+            if (nextIntersection < position.z) return this._getNextIntersection(position, intersections, nextIntersectionIndex, !inside);
+            return {nextIntersection:nextIntersection, nextIntersetcionIndex: nextIntersectionIndex, inside:inside};
+        }
+        else return null;
     },
 
     subtractGeo: function(){

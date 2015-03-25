@@ -73,7 +73,7 @@ ImportMenuView = Backbone.View.extend({
 
     _fillGeo: function(e){
         e.preventDefault();
-
+        this.fillGeometry.fillGeo();
     },
 
     _removeMesh: function(e){
@@ -122,7 +122,7 @@ ImportMenuView = Backbone.View.extend({
         Filename: &nbsp;&nbsp;<%= filename %><br/><br/>\
         <% if (mesh){ %>\
         Scale:<br/><br/>\
-        <a href="#" id="doFllGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
+        <a href="#" id="doFillGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
         <hr>\
         <% } %>\
@@ -136,7 +136,7 @@ ImportMenuView = Backbone.View.extend({
               <li><a class="selectMesh" data-file="meshes-airbus/wingCrossection.stl" href="#">Wing</a></li>\
             </ul>\
         </div><!-- /btn-group -->\
-        <br/><br/> todo: fill geometry - move/rotate/scale mesh')
+        ')
 
 });
 

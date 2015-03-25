@@ -71,7 +71,7 @@ Lattice = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
-    addCellAtIndex: function(indices){
+    addCellAtIndex: function(indices, dontRender){
 
         var scale = this.get("scale");
         var cells = this.get("cells");
@@ -81,7 +81,7 @@ Lattice = Backbone.Model.extend({
         if (!cells[index.x][index.y][index.z]) {
             cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, scale);
             this.set("numCells", this.get("numCells")+1);
-            dmaGlobals.three.render();
+            if (!dontRender) dmaGlobals.three.render();
         } else console.warn("already a cell there");
 
     },
