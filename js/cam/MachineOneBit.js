@@ -76,9 +76,6 @@ OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    x += this.position.x;
-    y += this.position.y;
-    z += this.position.z;
     var startingPos = this.meshes["zAxis"].position.clone();
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
     this._moveXAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
