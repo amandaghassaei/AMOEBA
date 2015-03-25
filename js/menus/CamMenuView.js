@@ -177,6 +177,7 @@ CamMenuView = Backbone.View.extend({
             Origin (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput wcs" type="text">\
             &nbsp;<input data-type="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
             &nbsp;<input data-type="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput wcs" type="text">\
+            <% if (!(machineName == "handOfGod")){ %>\
             <br/><a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>\
             <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>\
             Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
@@ -200,6 +201,9 @@ CamMenuView = Backbone.View.extend({
             <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Clearance height relative to Origin</label>\
+            <% } else { %>\
+            <br/><br/>Stock Height: &nbsp;&nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
+            <% } %>\
             Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
             Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
