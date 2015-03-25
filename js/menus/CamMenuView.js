@@ -65,29 +65,18 @@ CamMenuView = Backbone.View.extend({
         else if ($(".stockSeparation").is(":focus")) this._updateNumber(e, "stockSeparation");
     },
 
-    _updateNumber: function(e, property){
-        e.preventDefault();
+    _getNumber: function(e, dontRound){
         var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return;
+        if (isNaN(newVal)) return null;
+        if (dontRound) return newVal;
         newVal = parseFloat(newVal.toFixed(4));
-        var object = this.assembler.get(property);
-        if ($(e.target).data("type")) {
-            object[$(e.target).data("type")] = newVal;
-            this.assembler.trigger("change:" + property);
-            this.assembler.trigger("change");
-        }
-        else this.assembler.set(property, newVal);
+        return newVal;
     },
 
-    _updatePosNumber: function(e, property){
+    _updateNumber: function(e, property){
         e.preventDefault();
-        var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return;
-        newVal = parseFloat(newVal.toFixed(4));
-        if (newVal <= 0) {
-            console.warn("value must be positive");
-            return;
-        }
+        var newVal = this._getNumber(e);
+        if (!newVal) return;
         var object = this.assembler.get(property);
         if ($(e.target).data("type")) {
             object[$(e.target).data("type")] = newVal;
@@ -99,8 +88,8 @@ CamMenuView = Backbone.View.extend({
 
     _updateRelativeStockPosition: function(e){
         e.preventDefault();
-        var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return;
+        var newVal = this._getNumber(e, true);
+        if (!newVal) return;
         var dim = $(e.target).data("type");
         newVal = (newVal + this.assembler.get("originPosition")[dim]).toFixed(4);
         this.assembler.get("stockPosition")[dim] = parseFloat(newVal);
@@ -110,8 +99,8 @@ CamMenuView = Backbone.View.extend({
 
     _updateAbsoluteRapidHeight: function(e){
         e.preventDefault();
-        var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return;
+        var newVal = this._getNumber(e, true);
+        if (!newVal) return;
         newVal -= this.assembler.get("originPosition").z.toFixed(4);//always store relative to origin
         this.assembler.set("rapidHeight", parseFloat(newVal));
     },
@@ -196,7 +185,7 @@ CamMenuView = Backbone.View.extend({
                 &nbsp;<input data-type="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control numberInput stockArraySize" type="text"><br/><br/>\
                 Stock separation: &nbsp;&nbsp;<input value="<%= stockSeparation %>" placeholder="X" class="form-control numberInput stockSeparation" type="text"><br/><br/>\
             <% } %>\
-            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/>\
+            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight.toFixed(4) %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/>\
             <label class="checkbox" for="rapidPosRel">\
             <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\

@@ -85,7 +85,14 @@ Highlighter = Backbone.View.extend({
     ///////////////////////////////////////////////////////////////////////////////////
 
     getHighlightedObjectPosition: function(){
-        if (this.highlightedObject instanceof DMACell) return this.highlightedObject.getPosition();
+        if (this.highlightedObject instanceof DMACell) {
+            var position = this.highlightedObject.getPosition();
+            return {
+                x:parseFloat(position.x.toFixed(4)),
+                y:parseFloat(position.y.toFixed(4)),
+                z:parseFloat(position.z.toFixed(4))
+            };
+        }
         return null;
     },
 
