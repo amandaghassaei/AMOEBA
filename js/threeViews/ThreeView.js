@@ -72,6 +72,7 @@ ThreeView = Backbone.View.extend({
             var position = this.highlighter.getHighlightedObjectPosition();
             if (position){
                 dmaGlobals.assembler.set("originPosition", position);
+                dmaGlobals.appState.set("manualSelectOrigin", false);
                 return;
             }
         }
