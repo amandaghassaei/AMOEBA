@@ -8,6 +8,7 @@ function Machine() {
     this.hasStock = false;
 
     this.meshes = {};
+    this.material = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:1});
     this.cell = this._makeStockCell();
     var self = this;
     this._buildMeshes(function(meshes){
@@ -15,7 +16,7 @@ function Machine() {
         _.each(_.values(meshes), function(mesh){
             dmaGlobals.three.sceneAdd(mesh);
         });
-        if (this.setMachinePosition) this.setMachinePosition();
+        if (self.setMachinePosition) self.setMachinePosition();
         self.setVisibility();
     });
     this.setVisibility(false);
@@ -28,7 +29,18 @@ Machine.prototype.setVisibility = function(visible){
     }
     if (visible && this.hasStock) this.cell.draw();
     else this.cell.hide();
+    this._setAlpha();
     this._setMeshesVisiblity(visible);
+};
+
+Machine.prototype._setAlpha = function(visible){
+    //todo make stock transparent
+    if (dmaGlobals.appState.get("currentTab") == "cam"){
+        this.material.opacity = 0.5;
+    } else {
+        this.material.opacity = 1;
+    }
+
 };
 
 Machine.prototype._setMeshesVisiblity = function(visible){
@@ -217,6 +229,7 @@ Machine.prototype.destroy = function(){
     });
     this.meshes = null;
     this.position = null;
+    this.material = null;
 };
 
 
@@ -231,12 +244,13 @@ Shopbot.prototype = Object.create(Machine.prototype);
 
 Shopbot.prototype._buildMeshes = function(callback){
     var meshes = {};
+    var material = this.material;
     (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
         geometry.computeBoundingBox();
         var unitScale = 1.5/geometry.boundingBox.max.y;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0, Math.sqrt(2)/2));
-        var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
+        var mesh = new THREE.Mesh(geometry, material);
         mesh.visible = false;
         meshes.endEffector = mesh;
         callback(meshes);

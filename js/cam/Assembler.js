@@ -93,7 +93,7 @@ Assembler = Backbone.Model.extend({
         } else if (machineName == "oneBitBot"){
             this.set("machine", new OneBitBot());
             this.set("camProcess", "gcode");
-        }else console.warn("selected machine not recognized");
+        } else console.warn("selected machine not recognized");
     },
 
     makeProgramEdits: function(data){

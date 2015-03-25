@@ -11,10 +11,8 @@ OneBitBot.prototype.setMachinePosition = function(){
     if (!dmaGlobals.assembler) return;
     this.position = dmaGlobals.assembler.get("originPosition");
     var self = this;
-    _.each(_.values(this.meshes), function(mesh){
-        mesh.position.x += self.position.x;
-        mesh.position.y += self.position.y;
-        mesh.position.z += self.position.z;
+    _.each(_.values(this.meshes), function(mesh){//todo add cell?
+        mesh.position.set(self.position.x, self.position.y, self.position.z);
     });
     dmaGlobals.three.render();
 };
@@ -31,21 +29,21 @@ OneBitBot.prototype._buildMeshes = function(callback){
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         return geometry;
     }
+    var material = this.material;
     function meshPrep(geometry, name){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10,-12.8,0));
-        var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
-        meshes[name] = mesh;
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10,-12.8-1.39194,0));
+        meshes[name] = new THREE.Mesh(geometry, material);
         if (allLoaded()) callback(meshes);
     }
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
         geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,-0.8-1.9685));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4+1.39194,-0.8-1.9685));
         meshPrep(geometry, "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
         geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4+1.39194,0));
         meshPrep(geometry, "zDrive");
     });
     loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
