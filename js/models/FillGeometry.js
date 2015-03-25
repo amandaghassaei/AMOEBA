@@ -6,60 +6,41 @@
 FillGeometry = Backbone.Model.extend({
 
     defaults: {
-        material: new THREE.MeshLambertMaterial(
+        filename: "No File Loaded",
+        mesh: null,
+        boundingBox: null//show bounding box for mesh
+    },
+
+    initialize: function(){
+
+        //bind events
+    },
+
+    buildNewMesh:function(geometry){
+        this.removeMesh();
+
+        //center geometry in x and y
+        geometry.computeBoundingBox();
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-geometry.boundingBox.min.z));//set on top of baseplane
+        geometry.computeBoundingBox();
+
+        var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial(
             {color:0xf25536,
                 shading: THREE.FlatShading,
                 transparent:true,
                 opacity:0.4,
-                side:THREE.DoubleSide}),
-        geometry: null,
-        filename: "No File Loaded",
-        orientation: [0,0,0],
-        scale: [1.0,1.0,1.0],
-        mesh: null,
-    },
-
-    initialize: function(options){
-
-        this.lattice = options.lattice;
-
-        //bind events
-        this.on("change:mesh", this.getBounds);
-        this.on("change:orientation change:scale", this.updateBoundingBox);
-        this.on("change:geometry", this.buildNewMesh);
-
-    },
-
-    buildNewMesh:function(){
-        this.remove();
-
-        //center geometry in x and y
-        var geometry = this.get("geometry");
-        geometry.computeBoundingBox();
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-geometry.boundingBox.max.x/2,-geometry.boundingBox.max.y/2,0));
-
-        this.set({orientation:this.defaults.orientation, scale:this.defaults.scale}, {silent:true});//restore defaults
-        var mesh = new THREE.Mesh(this.get("geometry"), this.get("material"));
-        this.makeBoundingBoxHelper(mesh);
+                side:THREE.DoubleSide}));
+        this.makeBoundingBox(mesh);
         this.set({mesh: mesh});
         dmaGlobals.three.sceneAdd(mesh, null);
         dmaGlobals.three.render();
-
-        //send new geometry out to workers
-//            _.each(workers.allWorkers, function(worker){
-//                worker.postMessage({model: this.toJSON});
-//            });
     },
 
-    getBounds: function(){//bounds is the bounding box of the mesh geometry (before scaling)
-//        this.get("mesh").geometry.computeBoundingBox();
-//        this.set("bounds", this.get("geometry").boundingBox.clone());
-    },
-
-    makeBoundingBoxHelper: function(mesh){
-//        var helper = new THREE.BoundingBoxHelper(mesh, 0x000000);
-//        helper.update();
-//        this.set("boundingBoxHelper", helper);
+    makeBoundingBox: function(mesh){
+        var box = new THREE.BoxHelper(mesh);
+        box.material.color.setRGB(0,0,0);
+        this.set("boundingBox", box);
+        dmaGlobals.three.sceneAdd(box);
     },
 
     updateBoundingBox: function(){
@@ -68,13 +49,16 @@ FillGeometry = Backbone.Model.extend({
     },
 
     subtractGeo: function(){
-        this.lattice.subtractMesh(this.get("mesh"));
+        dmaGlobals.lattice.subtractMesh(this.get("mesh"));
     },
 
-    remove: function(){
+    removeMesh: function(){
         if (!this.get("mesh")) return;
-        dmaGlobals.three.sceneRemove(this.get("mesh"), null);
+        dmaGlobals.three.sceneRemove(this.get("mesh"));
+        dmaGlobals.three.sceneRemove(this.get("boundingBox"));
         this.set("mesh", null);
+        this.set("boundingBox", null);
+        this.set("filename", this.defaults.filename);
         dmaGlobals.three.render();
     },
 

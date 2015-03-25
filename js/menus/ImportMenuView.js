@@ -19,7 +19,7 @@ ImportMenuView = Backbone.View.extend({
 
     initialize: function(){
 
-        this.fillGeometry = new FillGeometry({lattice:dmaGlobals.lattice});
+        this.fillGeometry = new FillGeometry();
 
         this.listenTo(this.fillGeometry, "change", this.render);
     },
@@ -62,7 +62,7 @@ ImportMenuView = Backbone.View.extend({
         var self = this;
         var loader = new THREE.STLLoader();
   	    loader.load(url, function(geometry){
-            self.fillGeometry.set("geometry", geometry);
+            self.fillGeometry.buildNewMesh(geometry);
         });
     },
 
@@ -78,8 +78,7 @@ ImportMenuView = Backbone.View.extend({
 
     _removeMesh: function(e){
         e.preventDefault();
-        this.fillGeometry.remove();
-        this.fillGeometry.set("filename", this.model.defaults.filename);
+        this.fillGeometry.removeMesh();
     },
 
     render: function(){
@@ -134,7 +133,6 @@ ImportMenuView = Backbone.View.extend({
         <div class="btn-group fullWidth">\
             <button data-toggle="dropdown" class="btn btn-lg btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>\
             <ul role="menu" class="dropdown-menu">\
-              <li><a class="selectMesh" data-file="meshes-airbus/Airbus_A300-600.stl" href="#">Plane</a></li>\
               <li><a class="selectMesh" data-file="meshes-airbus/wingCrossection.stl" href="#">Wing</a></li>\
             </ul>\
         </div><!-- /btn-group -->\
@@ -146,3 +144,4 @@ ImportMenuView = Backbone.View.extend({
 //<li><a id="selectWall" href="#">Wall</a></li>\
 //<li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>\
 //<li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\
+//<li><a class="selectMesh" data-file="meshes-airbus/Airbus_A300-600.stl" href="#">Plane</a></li>\
