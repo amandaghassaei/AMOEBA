@@ -17,7 +17,6 @@ FillGeometry = Backbone.Model.extend({
         orientation: [0,0,0],
         scale: [1.0,1.0,1.0],
         mesh: null,
-        isLandscape: true
     },
 
     initialize: function(options){

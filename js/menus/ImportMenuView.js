@@ -6,7 +6,6 @@
 ImportMenuView = Backbone.View.extend({
 
     el: "#menuContent",
-    model: null,
 
     events: {
         "change #uploadMesh":               "_uploadMesh",
@@ -18,26 +17,23 @@ ImportMenuView = Backbone.View.extend({
         "click #doFillGeo":                 "_fillGeo"
     },
 
-    initialize: function(options){
+    initialize: function(){
 
-        this.model = new FillGeometry({lattice:options.lattice}),
-        this.lattice = options.lattice;
-        this.appState = options.appState;
+        this.fillGeometry = new FillGeometry({lattice:dmaGlobals.lattice});
 
-        this.listenTo(this.model, "change", this.render);
-//        this.listenTo(this.model, "change:filename change:boundingBoxHelper", this.render);//boundingBoxHelper covers orientation
+        this.listenTo(this.fillGeometry, "change", this.render);
     },
 
     _selectMesh: function(e){//select mesh from dropdown list
         e.preventDefault();
         var filename = $(e.target).data("file");
-        this._loadMeshFromURL('data/' + filename);
-        this.model.set("filename", filename);
+        this._loadMeshFromURL('assets/stls/' + filename);
+        this.fillGeometry.set("filename", filename.split('/')[1]);
     },
 
     _buildWall: function(e){
         e.preventDefault();
-        this.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:1,z:18}});
+        dmaGlobals.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:1,z:18}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -57,7 +53,7 @@ ImportMenuView = Backbone.View.extend({
         reader.onload = (function() {
         return function(e) {
             self._loadMeshFromURL(e.target.result);
-            self.model.set("filename", filename);
+            self.fillGeometry.set("filename", filename);
         }
         })();
     },
@@ -66,13 +62,13 @@ ImportMenuView = Backbone.View.extend({
         var self = this;
         var loader = new THREE.STLLoader();
   	    loader.load(url, function(geometry){
-            self.model.set("geometry", geometry);
+            self.fillGeometry.set("geometry", geometry);
         });
     },
 
     _subtractGeo: function(e){
         e.preventDefault();
-        this.model.subtractGeo();
+        this.fillGeometry.subtractGeo();
     },
 
     _fillGeo: function(e){
@@ -82,23 +78,23 @@ ImportMenuView = Backbone.View.extend({
 
     _removeMesh: function(e){
         e.preventDefault();
-        this.model.remove();
-        this.model.set("filename", this.model.defaults.filename);
+        this.fillGeometry.remove();
+        this.fillGeometry.set("filename", this.model.defaults.filename);
     },
 
     render: function(){
-        if (this.appState.get("currentTab") != "import") return;
-        this.$el.html(this.template(this.model.toJSON()));
+        if (this.model.get("currentTab") != "import") return;
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.fillGeometry.toJSON())));
     },
 
 //    makeDimensionString: function(){
-//        var bounds = this.model.get("boundingBoxHelper").box;
+//        var bounds = this.fillGeometry.get("boundingBoxHelper").box;
 //        return (bounds.max.x - bounds.min.x).toFixed(1) + " x " +
 //            (bounds.max.y - bounds.min.y).toFixed(1) + " x " + (bounds.max.z - bounds.min.z).toFixed(1);
 //    },
 //
 //    getScale: function(){
-//        var scale = this.model.get("scale");
+//        var scale = this.fillGeometry.get("scale");
 //        var dimensions = {};
 //        dimensions.xScale = scale[0];
 //        dimensions.yScale = scale[1];
@@ -109,7 +105,7 @@ ImportMenuView = Backbone.View.extend({
 //
 //    scale: function(e){
 //
-//        this.model.scale([this.getDimScale($(".xScale").val()), this.getDimScale($(".yScale").val()), this.getDimScale($(".zScale").val())]);
+//        this.fillGeometry.scale([this.getDimScale($(".xScale").val()), this.getDimScale($(".yScale").val()), this.getDimScale($(".zScale").val())]);
 //    },
 //
 //    getDimScale: function(val){
@@ -120,19 +116,14 @@ ImportMenuView = Backbone.View.extend({
 //    rotate: function(e){
 //        e.preventDefault();
 //        var axis = $(e.target).data("axis");
-//        this.model.rotate(axis);
+//        this.fillGeometry.rotate(axis);
 //    },
 
     template: _.template('\
-        Filename:&nbsp;&nbsp;<%= filename %><br/>\
+        Filename: &nbsp;&nbsp;<%= filename %><br/><br/>\
         <% if (mesh){ %>\
-        Rotate:<br/>\
         Scale:<br/><br/>\
-        <% if (isLandscape){ %>\
-        <a href="#" id="doSubtractGeo" class=" btn btn-block btn-lg btn-default">Subtract Mesh</a><br/>\
-        <% } else { %>\
         <a href="#" id="doFllGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
-        <% } %>\
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
         <hr>\
         <% } %>\
@@ -143,12 +134,15 @@ ImportMenuView = Backbone.View.extend({
         <div class="btn-group fullWidth">\
             <button data-toggle="dropdown" class="btn btn-lg btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>\
             <ul role="menu" class="dropdown-menu">\
-              <!--<li><a class="selectMesh fillGeo" data-file="Airbus_A300-600.stl" href="#">Plane</a></li>-->\
-              <li><a id="selectWall" href="#">Wall</a></li>\
-              <li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>\
-              <li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\
+              <li><a class="selectMesh" data-file="meshes-airbus/Airbus_A300-600.stl" href="#">Plane</a></li>\
+              <li><a class="selectMesh" data-file="meshes-airbus/wingCrossection.stl" href="#">Wing</a></li>\
             </ul>\
         </div><!-- /btn-group -->\
         <br/><br/> todo: fill geometry - move/rotate/scale mesh')
 
 });
+
+//<a href="#" id="doSubtractGeo" class=" btn btn-block btn-lg btn-default">Subtract Mesh</a><br/>\
+//<li><a id="selectWall" href="#">Wall</a></li>\
+//<li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>\
+//<li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>\

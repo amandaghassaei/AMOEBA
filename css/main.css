@@ -318,3 +318,10 @@ label {
 .btn-group > .btn {
     background-color: #ccc;
 }
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+}
