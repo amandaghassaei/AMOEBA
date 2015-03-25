@@ -176,8 +176,6 @@ LatticeMenuView = Backbone.View.extend({
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
         <br/>\
         <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
-        hint: click to create cells, shift+drag to create a lot of cells, d+click to delete cells<br/>\
-        hold "p" key to see parts\
         ')
 
 });
