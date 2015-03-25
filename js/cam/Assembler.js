@@ -86,7 +86,7 @@ Assembler = Backbone.Model.extend({
             this.set("machine", new Shopbot());
             this.set("camProcess", "shopbot");
         } else if (machineName == "handOfGod"){
-            this.set("machine", new Shopbot());
+            this.set("machine", new God());
             this.set("camProcess", "gcode");
         } else if (machineName == "oneBitBot"){
             this.set("machine", new OneBitBot());
