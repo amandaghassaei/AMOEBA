@@ -22,6 +22,6 @@ SendMenuView = Backbone.View.extend({
     },
 
 
-    template: _.template('')
+    template: _.template('realtime communication with machine')
 
 });

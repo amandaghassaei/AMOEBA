@@ -80,7 +80,7 @@ GCodeExporter.prototype.makeFooter = function(){
 
 GCodeExporter.prototype.save = function(data){
     var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-    saveAs(blob, "GCodeExport" + ".g");
+    saveAs(blob, "GCodeExport" + ".nc");
 };
 
 GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
