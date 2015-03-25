@@ -74,6 +74,20 @@ Machine.prototype.moveTo = function(x, y, z, speed, wcs, callback){
     this._moveTo(x, y, z, speed, wcs, callback);
 };
 
+Machine.prototype._moveTo = function(x, y, z, speed, wcs, callback){
+    var totalThreads = 3;
+    function sketchyCallback(){
+        totalThreads -= 1;
+        if (totalThreads > 0) return;
+        callback();
+    }
+    var startingPos = this.cell.getPosition();
+    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
+    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
+    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
+    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
+};
+
 Machine.prototype._makeAbsPosition = function(target, wcs){
     if (target == "" || target == null || target === undefined) return null;
     return parseFloat(target)+wcs;
@@ -122,12 +136,16 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
         }
         var nextPos = currentPos + increment;
         if (Math.abs(target-currentPos) < Math.abs(increment)) nextPos = target;//don't overshoot
-        _.each(objects, function(object){
-            if (object instanceof DMACell) object.moveTo(nextPos, axis);
-            else object.position[axis] = nextPos;
-        });
+        self._setPosition(objects, nextPos, axis);
         self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback, simSpeed)
     },simSpeed);
+};
+
+Machine.prototype._setPosition = function(objects, nextPos, axis){
+    _.each(objects, function(object){
+        if (object instanceof DMACell) object.moveTo(nextPos, axis);
+        else object.position[axis] = nextPos;
+    });
 };
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -225,20 +243,6 @@ Shopbot.prototype._buildMeshes = function(callback){
     });
 };
 
-Shopbot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
-    var totalThreads = 3;
-    function sketchyCallback(){
-        totalThreads -= 1;
-        if (totalThreads > 0) return;
-        callback();
-    }
-    var startingPos = this.meshes.endEffector.position.clone();
-    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
-    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
-    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
-};
-
 Shopbot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
@@ -262,17 +266,21 @@ God.prototype._buildMeshes = function(callback){
 };
 
 God.prototype._moveTo = function(x, y, z, speed, wcs, callback){
-    var totalThreads = 3;
-    function sketchyCallback(){
-        totalThreads -= 1;
-        if (totalThreads > 0) return;
-        callback();
-    }
     var startingPos = this.cell.getPosition();
-    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-    this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
-    this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
-    this._moveAxis(startingPos.z, z, "z", speed.z, sketchyCallback);
+    if (z != "" && z != null && z !== undefined){
+        if (z>startingPos.z){//ignore z up moves
+            this._setPosition(_.values(this.meshes).concat(this.cell), z, "z");
+            callback();
+            return;
+        }
+    } else {
+        this._setPosition(_.values(this.meshes).concat(this.cell), x, "x");
+        this._setPosition(_.values(this.meshes).concat(this.cell), y, "y");
+        callback();
+        return;
+    }
+
+    Machine.prototype._moveTo.call(this, x, y, z, speed, wcs, callback);
 };
 
 God.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
