@@ -19,6 +19,7 @@ function DMACell(indices, scale, cellMode, partType) {
 
     this.draw(scale, cellMode, partType);
 
+    this.hideForStockSimulation = false;
 }
 
 DMACell.prototype._sceneType = function(indices){
@@ -27,6 +28,7 @@ DMACell.prototype._sceneType = function(indices){
 };
 
 DMACell.prototype.draw = function(scale, cellMode, partType){
+    if (this.hideForStockSimulation) return;
     if (!scale) scale = dmaGlobals.lattice.get("scale");
     if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
     if (!partType)  partType = dmaGlobals.lattice.get("partType");
@@ -54,7 +56,7 @@ DMACell.prototype.draw = function(scale, cellMode, partType){
     });
 };
 
-DMACell.prototype.hide = function(){
+DMACell.prototype.hide = function(){//only used in the context of stock simulation
     this._setCellMeshVisibility(false);
     _.each(this.parts, function(part){
         if (part) part.setVisibility(false);

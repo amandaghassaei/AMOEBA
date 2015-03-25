@@ -353,14 +353,20 @@ Lattice = Backbone.Model.extend({
     //hide show cells during stock simulation
     hideCells: function(){
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.hide();
+            if (cell) {
+                cell.hide();
+                cell.hideForStockSimulation = true;
+            }
         });
         dmaGlobals.three.render();
     },
 
     showCells: function(){
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.draw();
+            if (cell) {
+                cell.hideForStockSimulation = false;
+                cell.draw();
+            }
         });
         dmaGlobals.three.render();
     },
@@ -368,7 +374,10 @@ Lattice = Backbone.Model.extend({
     showCellAtIndex: function(index){
         var latticeIndex = this._subtract(index, this.get("cellsMin"));
         var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
-        if (cell) cell.draw();
+        if (cell) {
+            cell.hideForStockSimulation = false;
+            cell.draw();
+        }
         else console.warn("placing a cell that does not exist");
     },
 
