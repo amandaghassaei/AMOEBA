@@ -67,6 +67,7 @@ AnimationMenuView = Backbone.View.extend({
     },
 
     _changeSpeedSlider: function(e){
+        e.preventDefault();
         dmaGlobals.assembler.set("simSpeed", $(e.target)[0].value);
     },
 

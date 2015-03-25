@@ -127,7 +127,7 @@ Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy move
 };
 
 Machine.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
-    var increment = speed/5;//based on 1/10th of sec
+    var increment = speed/5;
     if (increment == 0) {
         if (callback) callback();
         return;
@@ -135,11 +135,10 @@ Machine.prototype._animateObjects = function(objects, axis, speed, startingPos, 
     var direction = 1;
     if (target-startingPos < 0) direction = -1;
     increment = Math.max(increment, 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
-    var simSpeed = 50/dmaGlobals.assembler.get("simSpeed");//1/10th of sec
-    this._incrementalMove(objects, axis, increment, startingPos, target, direction, callback, simSpeed);
+    this._incrementalMove(objects, axis, increment, startingPos, target, direction, callback);
 };
 
-Machine.prototype._incrementalMove = function(objects, axis, increment, currentPos, target, direction, callback, simSpeed){
+Machine.prototype._incrementalMove = function(objects, axis, increment, currentPos, target, direction, callback){
     var self = this;
     setTimeout(function(){
         if ((target-currentPos)*direction <= 0) {
@@ -149,8 +148,8 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
         var nextPos = currentPos + increment;
         if (Math.abs(target-currentPos) < Math.abs(increment)) nextPos = target;//don't overshoot
         self._setPosition(objects, nextPos, axis);
-        self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback, simSpeed)
-    },simSpeed);
+        self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback)
+    }, 50/dmaGlobals.assembler.get("simSpeed"));
 };
 
 Machine.prototype._setPosition = function(objects, nextPos, axis){

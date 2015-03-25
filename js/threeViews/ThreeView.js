@@ -86,7 +86,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseMoved: function(e){
 
-        if (this.mouseIsDown && this.controls.enabled) {//in the middle of a camera move
+        if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
             this.highlighter.setNothingHighlighted();
             this._setNoPartIntersections();
             return;

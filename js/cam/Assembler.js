@@ -248,7 +248,7 @@ Assembler = Backbone.Model.extend({
         this.set("dataOut", data);
         this.set("editsMadeToProgram", false);
         this.set("exporter", exporter);
-        this.resetSimulation();
+        if (!dmaGlobals.appState.get("stockSimulationPlaying")) this.resetSimulation();
         return {data:data, exporter:exporter};
     },
 
