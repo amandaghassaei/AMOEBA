@@ -84,6 +84,11 @@ Highlighter = Backbone.View.extend({
     /////////////////////////////POSITION/SCALE////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
+    getHighlightedObjectPosition: function(){
+        if (this.highlightedObject instanceof DMACell) return this.highlightedObject.getPosition();
+        return null;
+    },
+
     updateScale: function(scale){
         this.mesh.scale.set(scale, scale, scale);
     },

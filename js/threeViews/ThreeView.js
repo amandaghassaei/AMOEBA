@@ -68,6 +68,13 @@ ThreeView = Backbone.View.extend({
 
     _mouseUp: function(){
         this.mouseIsDown = false;
+        if (dmaGlobals.appState.get("currentTab") == "cam" && dmaGlobals.appState.get("manualSelectOrigin")){
+            var position = this.highlighter.getHighlightedObjectPosition();
+            if (position){
+                dmaGlobals.assembler.set("originPosition", position);
+                return;
+            }
+        }
         if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
         else this.highlighter.addRemoveVoxel(!this.appState.get("deleteMode"));
     },
