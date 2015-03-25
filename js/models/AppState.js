@@ -137,7 +137,8 @@ AppState = Backbone.Model.extend({
         extrudeMode: false,
         cellMode: "cell",//show cells vs part
 
-        stockSimulationPlaying: false
+        stockSimulationPlaying: false,
+        manualSelectOrigin: false//mode that allows user ot select origin from existing cell
     },
 
     initialize: function(){
@@ -178,6 +179,7 @@ AppState = Backbone.Model.extend({
     _tabChanged: function(){
         var currentTab = this.get("currentTab");
         if (currentTab != "animate") this.set("stockSimulationPlaying", false);
+        if (currentTab != "cam") this.set("manualSelectOrigin", false);
         this._storeTab(this.get("currentNav"), currentTab);
     },
 
@@ -199,12 +201,12 @@ AppState = Backbone.Model.extend({
     _updateCurrentTabForNav: function(){
         var navSelection = this.get("currentNav");
         if (navSelection == "navDesign") this.set("currentTab",
-            this.get("lastDesignTab"), {silent:true});
+            this.get("lastDesignTab"));
         else if (navSelection == "navSim") this.set("currentTab",
-            this.get("lastSimulationTab"), {silent:true});
+            this.get("lastSimulationTab"));
         else if (navSelection == "navAssemble") this.set("currentTab",
-            this.get("lastAssembleTab"), {silent:true});
-        this._updateCellMode();//a little bit hacky, this updates the cell mode, but holds off on updating the menus til the animation has happened
+            this.get("lastAssembleTab"));
+        //todo make it so animation looks good again
     },
 
     ///////////////////////////////////////////////////////////////////////////////

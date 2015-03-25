@@ -302,3 +302,27 @@ input.numberInput{
 #navRibbon .btn-ribbon:hover{
     background-color: #000;
 }
+
+.btn-imageCustom {
+    height: 45px;
+    padding-top: 8px;
+}
+
+.btn-imageCustom img{
+    height: 100%;
+}
+
+#manualSelectOrigin {
+      padding: 8px 12px 15px 12px!important
+}
+
+label {
+    font-size: 14px!important;
+}
+
+.btn-selected {
+    background-color: #8E8E8E;
+}
+.btn-selected:hover {
+    background-color: #8E8E8E;
+}

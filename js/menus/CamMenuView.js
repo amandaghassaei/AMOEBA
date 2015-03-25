@@ -12,7 +12,8 @@ CamMenuView = Backbone.View.extend({
         "click .units":                                 "_changeUnits",
         "click #saveCam":                               "_save",
         "change input:checkbox":                        "_clickCheckbox",
-        "focusout .numberInput":                        "render"
+        "focusout .numberInput":                        "render",
+        "click #manualSelectOrigin":                    "_selectOrigin"
     },
 
 
@@ -24,6 +25,7 @@ CamMenuView = Backbone.View.extend({
         _.bindAll(this, "render", "_onKeyup");
         //bind events
         this.listenTo(this.assembler, "change", this.render);
+        this.listenTo(this.model, "change", this.render);
         this.listenTo(this.lattice, "change:units", this.render);
         $(document).bind('keyup', {}, this._onKeyup);
     },
@@ -122,6 +124,11 @@ CamMenuView = Backbone.View.extend({
         dmaGlobals.assembler.set(property, !dmaGlobals.assembler.get(property));
     },
 
+    _selectOrigin: function(e){
+        e.preventDefault();
+        dmaGlobals.appState.set("manualSelectOrigin", !dmaGlobals.appState.get("manualSelectOrigin"));
+    },
+
     _save: function(e){
         e.preventDefault();
         this.assembler.save();
@@ -156,6 +163,8 @@ CamMenuView = Backbone.View.extend({
                 </ul>\
             </div><br/><br/>\
          <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
+         <% if (machineName == "oneBitBot") {%>Rotate Machine: &nbsp;&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/clockwise.png"></a>\
+         &nbsp;&nbsp&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/counterClockwise.png"></a><br/><br/><% } %>\
          Units: &nbsp;&nbsp;\
             <div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
@@ -165,16 +174,18 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            Zero (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput wcs" type="text">\
+            Origin (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput wcs" type="text">\
             &nbsp;<input data-type="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput wcs" type="text"><br/><br/>\
+            &nbsp;<input data-type="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput wcs" type="text">\
+            <br/><a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>\
+            <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>\
             Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
             &nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/>\
             <label class="checkbox" for="stockPosRel">\
             <input id="stockPosRel" data-property="stockPositionRelative" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Stock position relative to Zero</label>\
+            Stock position relative to Origin</label>\
             <label class="checkbox" for="multipleStockPositions">\
             <input id="multipleStockPositions" data-property="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
@@ -188,7 +199,7 @@ CamMenuView = Backbone.View.extend({
             <label class="checkbox" for="rapidPosRel">\
             <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Clearance height relative to Zero</label>\
+            Clearance height relative to Origin</label>\
             Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
             Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\

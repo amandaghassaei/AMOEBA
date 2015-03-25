@@ -142,10 +142,10 @@ NavBar = Backbone.View.extend({
     _uiStuff: function(){
         var $logo = $("#logo");
         $logo.mouseover(function(){
-            $logo.attr("src","assets/logo-active.png");
+            $logo.attr("src","assets/imgs/logo-active.png");
         });
         $logo.mouseout(function(){
-            $logo.attr("src","assets/logo.png");
+            $logo.attr("src","assets/imgs/logo.png");
         });
     },
 
