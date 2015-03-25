@@ -54,7 +54,7 @@ ThreeView = Backbone.View.extend({
 
     _setControlsEnabled: function(){
         var state = this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode");
-        this.controls.enabled = !state;
+        this.controls.noRotate = state;
     },
 
     ////////////////////////////////////////////////////////////////////////////////
