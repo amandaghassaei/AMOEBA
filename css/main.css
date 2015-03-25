@@ -310,3 +310,7 @@ label {
 .btn-selected:hover {
     background-color: #8E8E8E;
 }
+
+.btn-group > .btn {
+    background-color: #ccc;
+}
