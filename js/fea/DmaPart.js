@@ -36,6 +36,10 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         mesh.position.z = position.z;
     };
 
+    DMAPart.prototype.moveTo = function(position, axis){//used for stock simulation
+        this.mesh.position[axis] = position;
+    };
+
     DMAPart.prototype.setVisibility = function(visibility){
         if (visibility) this._show();
         else this._hide();

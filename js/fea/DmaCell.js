@@ -100,7 +100,11 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
 
 DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
     this.cellMesh.position[axis] = position;
-    //todo update parts too
+    if (dmaGlobals.appState.get("cellMode") == "part"){
+        _.each(this.parts, function(part){
+            if (part) part.moveTo(position, axis);
+        });
+    }
 };
 
 DMACell.prototype.getType = function(){
