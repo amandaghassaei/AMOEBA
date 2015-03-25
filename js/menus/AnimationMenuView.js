@@ -117,7 +117,7 @@ AnimationMenuView = Backbone.View.extend({
                 <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a>\
             <% } %>\
         <% } %>\
-        <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
+        <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
         <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         Assembly Time:&nbsp;&nbsp;<br/><br/>\
         <% if (editsMadeToProgram && needsPostProcessing){ %>\

@@ -8,6 +8,7 @@ function Machine() {
     this.hasStock = false;
 
     this.meshes = {};
+    this.cell = this._makeStockCell();
     var self = this;
     this._buildMeshes(function(meshes){
         self.meshes = meshes;
@@ -16,12 +17,14 @@ function Machine() {
         });
         self.setVisibility();
     });
-    this.cell = this._makeStockCell();
     this.setVisibility(false);
 }
 
 Machine.prototype.setVisibility = function(visible){
-    if (visible == null || visible === undefined) visible = dmaGlobals.assembler.isVisible();
+    if (visible == null || visible === undefined) {
+        if (dmaGlobals.assembler) visible = dmaGlobals.assembler.isVisible();
+        else visible = false;
+    }
     if (visible && this.hasStock) this.cell.draw();
     else this.cell.hide();
     this._setMeshesVisiblity(visible);
@@ -253,17 +256,7 @@ function God(){
 God.prototype = Object.create(Machine.prototype);
 
 God.prototype._buildMeshes = function(callback){
-    var meshes = {};
-    (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
-        geometry.computeBoundingBox();
-        var unitScale = 1.5/geometry.boundingBox.max.y;
-        geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0, Math.sqrt(2)/2));
-        var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading}));
-        mesh.visible = false;
-        meshes.endEffector = mesh;
-        callback(meshes);
-    });
+    callback({});
 };
 
 God.prototype._moveTo = function(x, y, z, speed, wcs, callback){
@@ -273,7 +266,7 @@ God.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    var startingPos = this.meshes.endEffector.position.clone();
+    var startingPos = this.cell.getPosition();
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
     this._moveAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
     this._moveAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
@@ -285,7 +278,25 @@ God.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
         callback();
         return;
     }
-    this._animateObjects([this.meshes.endEffector, this.cell], axis, speed, startingPos, target, callback);
+    this._animateObjects([this.cell], axis, speed, startingPos, target, callback);
+};
+
+God.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
+    var data = "";
+    data += exporter.moveZ(stockPosition.z-wcs.z);
+    return data;
+};
+
+God.prototype._postReleaseStock = function(cell, exporter, rapidHeight, wcs, safeHeight){
+    var data = "";
+    var cellPosition = cell.getPosition();
+    data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
+    data += exporter.addComment("get stock");
+    data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
+    data += exporter.moveZ(cellPosition.z-wcs.z);
+    data += exporter.addComment(JSON.stringify(cell.indices));
+    data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
+    return data;
 };
 
 

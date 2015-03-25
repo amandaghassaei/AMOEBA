@@ -9,7 +9,7 @@ OneBitBot.prototype = Object.create(Machine.prototype);
 
 OneBitBot.prototype._buildMeshes = function(callback){
     var meshes = [];
-    var numMeshes = 4;
+    var numMeshes = 7;
     function allLoaded(){
         numMeshes -= 1;
         return numMeshes <= 0;
@@ -44,6 +44,18 @@ OneBitBot.prototype._buildMeshes = function(callback){
     loader.load("assets/stls/oneBitBot/basePlate.stl", function(geometry){
         geometryScale(geometry);
         meshPrep(geometry, "basePlate");
+    });
+    loader.load("assets/stls/oneBitBot/footMount1.stl", function(geometry){
+        geometryScale(geometry);
+        meshPrep(geometry, "footMount1");
+    });
+    loader.load("assets/stls/oneBitBot/footMount2.stl", function(geometry){
+        geometryScale(geometry);
+        meshPrep(geometry, "footMount2");
+    });
+    loader.load("assets/stls/oneBitBot/backFootMount.stl", function(geometry){
+        geometryScale(geometry);
+        meshPrep(geometry, "backFootMount");
     });
 };
 

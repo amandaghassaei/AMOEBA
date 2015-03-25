@@ -97,7 +97,7 @@ GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
     }
     if (line.substr(0,3) == "G01"){
         //return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
-        return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
+        return this._simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
     } else {
         console.warn("problem parsing gcode: " + line);
         return callback();

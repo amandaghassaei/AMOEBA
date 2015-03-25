@@ -48,7 +48,7 @@ AssemblerMenuView = Backbone.View.extend({
 
     _selectMachine: function(e){
         e.preventDefault();
-        this.assembler.set("MachineName", $(e.target).data("type"));
+        this.assembler.set("machineName", $(e.target).data("type"));
     },
 
     render: function(){

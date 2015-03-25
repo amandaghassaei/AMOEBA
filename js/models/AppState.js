@@ -91,6 +91,7 @@ AppState = Backbone.Model.extend({
                 edgeRot: {
                     shopbot: "Shopbot",
                     oneBitBot: "One Bit Bot",
+                    oneBitBotLegs: "One Bit Bot with Legs",
                     handOfGod: "Hand of God"
                 },
                 vertex: {handOfGod: "Hand of God"}
