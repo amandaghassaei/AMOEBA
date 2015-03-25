@@ -271,22 +271,22 @@ OneBitBot.prototype._buildMeshes = function(callback){
         if (allLoaded()) callback(meshes);
     }
     var loader = new THREE.STLLoader();
-    loader.load("assets/stls/oneBitBot/zAxis.STL", function(geometry){
+    loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
         geometryScale(geometry);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,-0.8-1.9685));
         meshPrep(geometry, "zAxis");
     });
-    loader.load("assets/stls/oneBitBot/zDrive.STL", function(geometry){
+    loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
         geometryScale(geometry);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,-2.4,0));
         meshPrep(geometry, "zDrive");
     });
-    loader.load("assets/stls/oneBitBot/yAxisMount.STL", function(geometry){
+    loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
         geometryScale(geometry);
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,0,0));
         meshPrep(geometry, "yAxisMount");
     });
-    loader.load("assets/stls/oneBitBot/basePlate.STL", function(geometry){
+    loader.load("assets/stls/oneBitBot/basePlate.stl", function(geometry){
         geometryScale(geometry);
         meshPrep(geometry, "basePlate");
     });
