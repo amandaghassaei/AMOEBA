@@ -31,16 +31,16 @@ Machine.prototype.setVisibility = function(visible){
     else this.cell.hide();
     this._setAlpha();
     this._setMeshesVisiblity(visible);
+    dmaGlobals.three.render();
 };
 
-Machine.prototype._setAlpha = function(visible){
+Machine.prototype._setAlpha = function(){
     //todo make stock transparent
     if (dmaGlobals.appState.get("currentTab") == "cam"){
         this.material.opacity = 0.5;
     } else {
         this.material.opacity = 1;
     }
-
 };
 
 Machine.prototype._setMeshesVisiblity = function(visible){
