@@ -311,6 +311,10 @@ label {
     background-color: #8E8E8E;
 }
 
+.dropdown-submenu > a {
+    white-space: normal!important;
+}
+
 .btn-group > .btn {
     background-color: #ccc;
 }
