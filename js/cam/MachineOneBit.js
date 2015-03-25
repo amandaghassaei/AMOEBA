@@ -7,6 +7,18 @@ function OneBitBot(){
 }
 OneBitBot.prototype = Object.create(Machine.prototype);
 
+OneBitBot.prototype.setMachinePosition = function(){
+    if (!dmaGlobals.assembler) return;
+    this.position = dmaGlobals.assembler.get("originPosition");
+    var self = this;
+    _.each(_.values(this.meshes), function(mesh){
+        mesh.position.x += self.position.x;
+        mesh.position.y += self.position.y;
+        mesh.position.z += self.position.z;
+    });
+    dmaGlobals.three.render();
+};
+
 OneBitBot.prototype._buildMeshes = function(callback){
     var meshes = [];
     var numMeshes = 7;
@@ -66,6 +78,9 @@ OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
+    x += this.position.x;
+    y += this.position.y;
+    z += this.position.z;
     var startingPos = this.meshes["zAxis"].position.clone();
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
     this._moveXAxis(startingPos.x, x, "x", speed.x, sketchyCallback);

@@ -15,6 +15,7 @@ function Machine() {
         _.each(_.values(meshes), function(mesh){
             dmaGlobals.three.sceneAdd(mesh);
         });
+        if (this.setMachinePosition) this.setMachinePosition();
         self.setVisibility();
     });
     this.setVisibility(false);
@@ -197,6 +198,7 @@ Machine.prototype.destroy = function(){
         mesh = null;
     });
     this.meshes = null;
+    this.position = null;
 };
 
 

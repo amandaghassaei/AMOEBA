@@ -164,6 +164,7 @@ Assembler = Backbone.Model.extend({
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
         dmaGlobals.three.render();
+        if (this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
     },
 
     _moveStock: function(){
