@@ -386,6 +386,9 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
 
     _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
+
+        this._setDefaultCellMode();
+
         if (typeof loadingFromFile == "undefined") loadingFromFile = false;
         var cellType = this.get("cellType");
         var connectionType = this.get("connectionType");
@@ -449,6 +452,12 @@ Lattice = Backbone.Model.extend({
             cells[x][y][z] = newCell;
         });
         dmaGlobals.three.render();
+    },
+
+    _setDefaultCellMode: function(){
+        if (!dmaGlobals.appState.get("allPartTypes")[this.get("cellType")][this.get("connectionType")]){
+            dmaGlobals.appState.set("cellMode", "cell");
+        }
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
