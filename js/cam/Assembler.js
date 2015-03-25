@@ -33,7 +33,7 @@ Assembler = Backbone.Model.extend({
         feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
 
         simLineNumber: 0,//used for stock simulation, reading through gcode
-        simSpeed: 4,//#X times real speed
+        simSpeed: 4//#X times real speed
     },
 
     initialize: function(options){
