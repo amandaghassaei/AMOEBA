@@ -34,7 +34,6 @@ Assembler = Backbone.Model.extend({
 
         simLineNumber: 0,//used for stock simulation, reading through gcode
         simSpeed: 4,//#X times real speed
-        simStockNum:0//which piece of stock to pick up
     },
 
     initialize: function(options){
@@ -179,7 +178,6 @@ Assembler = Backbone.Model.extend({
         this.set("simLineNumber", 0, {silent:true});
         dmaGlobals.appState.set("stockSimulationPlaying", false);
         dmaGlobals.three.stopAnimationLoop();
-        this.set("simStockNum", 0);
         dmaGlobals.lattice.showCells();
     },
 

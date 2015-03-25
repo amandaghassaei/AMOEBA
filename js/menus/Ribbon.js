@@ -8,7 +8,8 @@ Ribbon = Backbone.View.extend({
     el: "#navRibbon",
 
     events: {
-        "click .cellModeBtn":                                    "_updateCellMode"
+        "click .cellModeBtn":                                    "_updateCellMode",
+        "click .deleteMode":                                     "_updateDeleteMode"
     },
 
     initialize: function(){
@@ -16,12 +17,18 @@ Ribbon = Backbone.View.extend({
         _.bindAll(this, "render");
 
         this.listenTo(this.model, "change:cellMode", this.render);
+        this.listenTo(this.model, "change:deleteMode", this.render);
         this.render();
     },
 
     _updateCellMode: function(e){
         e.preventDefault();
         dmaGlobals.appState.set("cellMode", $(e.target).data("type"));
+    },
+
+    _updateDeleteMode: function(e){
+        e.preventDefault();
+        dmaGlobals.appState.set("deleteMode", !dmaGlobals.appState.get("deleteMode"));
     },
 
     render: function(){
@@ -33,6 +40,7 @@ Ribbon = Backbone.View.extend({
             <div class="btn-group">\
               <a data-type="cell" class="btn btn-primary btn-ribbon cellModeBtn<% if (cellMode == "cell"){ %> ribbon-selected"<% } %> href="#"><img data-type="cell" src="assets/cell-sm.png"></a>\
               <a data-type="part" class="btn btn-primary btn-ribbon cellModeBtn<% if (cellMode == "part"){ %> ribbon-selected"<% } %> href="#"><img data-type="part" src="assets/part-sm.png"></a>\
+              <a class="btn btn-primary btn-ribbon deleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>\
             </div>\
         </div>\
         ')

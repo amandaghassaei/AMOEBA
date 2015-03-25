@@ -261,6 +261,10 @@ AppState = Backbone.Model.extend({
                     $("#jsonInput").click();
                 }
                 break;
+            case 32://space bar (play/pause simulation)
+                e.preventDefault();
+                if (state && this.get("currentTab") == "animate") this.set("stockSimulationPlaying", !this.get("stockSimulationPlaying"));
+                break;
             default:
                 break;
         }
