@@ -25,6 +25,7 @@ Assembler = Backbone.Model.extend({
         stock: null,
         stockPosition: new THREE.Vector3(20,0,0),//in abs coordinates
         stockPositionRelative: true,
+        stockFixed: false,//stock is fixed position from origin
         multipleStockPositions: false,
         stockArraySize: {x:4, y:4},
         stockSeparation: 2.78388,
@@ -93,6 +94,7 @@ Assembler = Backbone.Model.extend({
         } else if (machineName == "oneBitBot"){
             this.set("machine", new OneBitBot());
             this.set("camProcess", "gcode");
+            this.set("stockFixed", true);
         } else console.warn("selected machine not recognized");
     },
 
@@ -164,7 +166,7 @@ Assembler = Backbone.Model.extend({
     _moveOrigin: function(){
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
-        if (this.get("stockPositionRelative")) this._updateStockPosToOrigin(position);
+        if (this.get("stockFixed")) this._updateStockPosToOrigin(position);
         dmaGlobals.three.render();
         if (this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
     },

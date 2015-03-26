@@ -86,7 +86,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseMoved: function(e){
 
-        if (!dmaGlobals.appState.get("highlightMode")) return;
+        if (!dmaGlobals.appState.get("highlightMode") && !(dmaGlobals.appState.get("manualSelectOrigin"))) return;
 
         if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
             this.highlighter.setNothingHighlighted();
