@@ -65,7 +65,8 @@ OneBitBot.prototype._buildMeshes = function(callback){
         meshPrep(geometryScale(geometry), "backFootMount");
     });
     loader.load("assets/stls/oneBitBot/foot1.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(406.45,301.77,0));
+        var height = 70;
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(406.45,301.77,height));
         var geometry2 = geometry.clone();
         geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,-141.42,0));
         meshPrep(geometryScale(geometry), "foot1A");
@@ -74,12 +75,13 @@ OneBitBot.prototype._buildMeshes = function(callback){
     loader.load("assets/stls/oneBitBot/foot2.stl", function(geometry){
         var geometry1 = geometry.clone();
         geometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-        geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(22.5,2,0));
+        var height = 70;
+        geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(22.5,2,height));
         var geometry2 = geometry1.clone();
         geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
 
         var geometry3 = geometry.clone();
-        geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(35,450,0));
+        geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(35,450,height));
         var geometry4 = geometry3.clone();
         geometry4.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
         meshPrep(geometryScale(geometry1), "foot2A");
