@@ -14,7 +14,8 @@ ImportMenuView = Backbone.View.extend({
         "click #removeFillGeo":             "_removeMesh",
         "click #selectWall":                "_buildWall",
         "click #doSubtractGeo":             "_subtractGeo",
-        "click #doFillGeo":                 "_fillGeo"
+        "click #doFillGeo":                 "_fillGeo",
+        "click .btn-clearCells":            "_clearCells"
     },
 
     initialize: function(){
@@ -81,6 +82,11 @@ ImportMenuView = Backbone.View.extend({
         this.fillGeometry.removeMesh();
     },
 
+    _clearCells: function(e){
+        e.preventDefault();
+        dmaGlobals.lattice.clearCells();
+    },
+
     render: function(){
         if (this.model.get("currentTab") != "import") return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.fillGeometry.toJSON())));
@@ -126,6 +132,7 @@ ImportMenuView = Backbone.View.extend({
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
         <hr>\
         <% } %>\
+        <a href="#" class=" btn btn-block btn-lg btn-default btn-clearCells">Clear All Cells</a><br/><br/>\
         <br/><span class="btn btn-default btn-lg btn-file fullWidth">\
             Upload STL<input id="uploadMesh" type="file">\
        </span><br/>\
