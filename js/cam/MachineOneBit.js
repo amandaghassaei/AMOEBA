@@ -23,53 +23,59 @@ OneBitBot.prototype.setMachinePosition = function(){
 
 OneBitBot.prototype._buildMeshes = function(callback){
     var meshes = [];
-    var numMeshes = 7;
+    var numMeshes = 10;
     function allLoaded(){
         numMeshes -= 1;
         return numMeshes <= 0;
     }
     function geometryScale(geometry){
         var unitScale = 0.05/2.78388;
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-200,-283.84,0));
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         return geometry;
     }
     var material = this.material;
     function meshPrep(geometry, name){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-10/2.78388,(-12.8-1.39194)/2.78388,0));
         meshes[name] = new THREE.Mesh(geometry, material);
         if (allLoaded()) callback(meshes);
     }
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
-        geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5/2.78388,(-2.4+1.39194)/2.78388,(-0.8-1.9685)/2.78388));
-        meshPrep(geometry, "zAxis");
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-55.37));
+        meshPrep(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
-        geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5/2.78388,(-2.4+1.39194)/2.78388,0));
-        meshPrep(geometry, "zDrive");
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,0));
+        meshPrep(geometryScale(geometry), "zDrive");
     });
     loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
-        geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5/2.78388,0,0));
-        meshPrep(geometry, "yAxisMount");
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,0,0));
+        meshPrep(geometryScale(geometry), "yAxisMount");
     });
     loader.load("assets/stls/oneBitBot/basePlate.stl", function(geometry){
-        geometryScale(geometry);
-        meshPrep(geometry, "basePlate");
+        meshPrep(geometryScale(geometry), "basePlate");
     });
     loader.load("assets/stls/oneBitBot/footMount1.stl", function(geometry){
-        geometryScale(geometry);
-        meshPrep(geometry, "footMount1");
+        meshPrep(geometryScale(geometry), "footMount1");
     });
     loader.load("assets/stls/oneBitBot/footMount2.stl", function(geometry){
-        geometryScale(geometry);
-        meshPrep(geometry, "footMount2");
+        meshPrep(geometryScale(geometry), "footMount2");
     });
     loader.load("assets/stls/oneBitBot/backFootMount.stl", function(geometry){
+        meshPrep(geometryScale(geometry), "backFootMount");
+    });
+    loader.load("assets/stls/oneBitBot/foot1.stl", function(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(406.45,301.77,0));
+        var geometry2 = geometry.clone();
+        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,-141.42,0));
+        meshPrep(geometryScale(geometry), "foot1A");
+        meshPrep(geometryScale(geometry2), "foot1B");
+    });
+    loader.load("assets/stls/oneBitBot/foot2.stl", function(geometry){
         geometryScale(geometry);
-        meshPrep(geometry, "backFootMount");
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,0,0));
+
+        meshPrep(geometry, "foot2");
     });
 };
 
