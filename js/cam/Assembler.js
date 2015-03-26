@@ -126,9 +126,10 @@ Assembler = Backbone.Model.extend({
     },
 
     _setCAMScale: function(){
-        var scale = dmaGlobals.lattice.get("scale")/8;
-        this.get("origin").scale.set(scale, scale, scale);
-        this.get("stock").scale.set(scale, scale, scale);
+        var scale = dmaGlobals.lattice.get("scale");
+        this.get("origin").scale.set(scale/8, scale/8, scale/8);
+        this.get("stock").scale.set(scale/8, scale/8, scale/8);
+        this.get("machine").setScale(scale);
     },
 
     _tabChanged: function(){

@@ -47,7 +47,14 @@ Machine.prototype._setMeshesVisiblity = function(visible){
     _.each(_.values(this.meshes), function(mesh){
         mesh.visible = visible;
     });
+    if (visible) this.setScale(dmaGlobals.lattice.get("scale"));
 };
+
+Machine.prototype.setScale = function(scale){
+    _.each(_.values(this.meshes), function(mesh){
+        mesh.scale.set(scale, scale, scale);
+    });
+}
 
 Machine.prototype._makeStockCell = function(){
     return dmaGlobals.lattice.makeCellForLatticeType(null, dmaGlobals.lattice.get("scale"));
@@ -246,7 +253,7 @@ Shopbot.prototype._buildMeshes = function(callback){
     var material = this.material;
     (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
         geometry.computeBoundingBox();
-        var unitScale = 1.5/geometry.boundingBox.max.y;
+        var unitScale = 1.5/geometry.boundingBox.max.y/2.78388;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0, Math.sqrt(2)/2));
         var mesh = new THREE.Mesh(geometry, material);
