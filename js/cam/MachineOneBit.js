@@ -128,11 +128,11 @@ OneBitBot.prototype._moveZAxis = function(startingPos, target, axis, speed, call
 };
 
 OneBitBot.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
-    if (exporter.engageZAxis) return exporter.engageZAxis();
+    if (exporter.engageZAxis) return exporter.engageZAxis("stock");
     else return Machine.prototype._postPickUpStock.call(this, exporter, stockPosition, rapidHeight, wcs, safeHeight);
 };
 
 OneBitBot.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
-    if (exporter.engageZAxis) return exporter.engageZAxis();
+    if (exporter.engageZAxis) return exporter.engageZAxis("cell", cellPosition, cell, wcs);
     else return Machine.prototype._postReleaseStock.call(this, cellPosition, cell, exporter, rapidHeight, wcs, safeHeight);
 };

@@ -20,7 +20,7 @@ function TinyGExporter(){
 TinyGExporter.prototype = Object.create(GCodeExporter.prototype);
 
 TinyGExporter.prototype.makeHeader = function(){
-    return "";
+    return this.goHome();
 };
 
 TinyGExporter.prototype._setSpeed = function(speed){
@@ -28,47 +28,54 @@ TinyGExporter.prototype._setSpeed = function(speed){
 };
 
 TinyGExporter.prototype.goHome = function(){
-    return "";
+    return this.addComment("home");
 };
 
-TinyGExporter.prototype.engageZAxis = function(height){
-    console.log("z");
+TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
+    var data = "";
+    if (type == "cell"){
+        if (Math.abs(cellPosition.z-wcs.z)<0.001) data += "M3 ";//lower height
+        else data += "M4 ";//upper height
+        data += this.addComment(JSON.stringify(cell.indices));
+    } else if (type == "stock"){
+        data += "M8\n";
+    } else {
+        console.warn("tinyG type not recognized");
+        return "";
+    }
+    data += "G04 P750\n";//pause for 750 ms
+    data += "M5\n";
+    return data
 };
 
 TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
-    if (line == "(get stock)"){
-        machine.pickUpStock();
-        return callback();
+    var rapidSpeed = dmaGlobals.assembler.get("rapidSpeeds");
+    var rapidHeight = dmaGlobals.assembler.get("rapidHeight");
+    if (line == "(home)"){
+        machine.moveTo("", "", rapidHeight, rapidSpeed, wcs, callback);
+        return;
+    } else if (line[0]=="M"){
+        if (line[1] == "8"){//get stock
+            var stockPosition = dmaGlobals.assembler.get("stockPosition");
+            machine.moveTo("", "", stockPosition.z-wcs.z, rapidSpeed, wcs, function(){
+                machine.pickUpStock();
+                machine.moveTo("", "", rapidHeight, rapidSpeed, wcs, callback);
+            });
+        } else if (line[1] == "3"){//lower height
+            callback();
+            return;
+        } else if (line[1] == "4"){
+            callback();
+            return;
+        } else if (line[1] == "5") {
+            console.log("here");
+            callback();
+            return;
+        }
+    } else if (line.substr(0,3) == "G04"){
+        callback();
+        return;
     }
-    if (line.substr(0,2) == "({"){
-        machine.releaseStock(line.substr(1,line.length-2));
-        return callback();
-    }
-    if (line[0] == "F"){//speed
-        this.animationSpeed = line.split("F")[1];
-        return callback();
-    }
-    if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
-        return callback();
-    }
-    if (line.substr(0,3) == "G01"){
-        return this._simulateGetPosition(line, {xy:this.animationSpeed, z:this.animationSpeed}, machine, wcs, callback);
-    } else {
-        console.warn("problem parsing gcode: " + line);
-        return callback();
-    }
-};
-
-TinyGExporter.prototype._simulateGetPosition = function(line, speed, machine, wcs, callback){
-    var data = line.split(" ");
-    var position = {x:"",y:"",z:""};
-    if (data.length<2) console.warn("problem parsing gcode " + line);
-    for (var i=1;i<data.length;i++){
-        var item = data[i];
-        if (item[0] == "X") position.x = item.substr(1);
-        if (item[0] == "Y") position.y = item.substr(1);
-        if (item[0] == "Z") position.z = item.substr(1);
-    }
-    machine.moveTo(position.x, position.y, position.z, speed, wcs, callback);
+    GCodeExporter.prototype.simulate.call(this, line, machine, wcs, callback);
 };
 
