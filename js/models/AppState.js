@@ -302,7 +302,7 @@ AppState = Backbone.Model.extend({
     },
 
     _getLatticeDataToSave: function(){
-        return _.omit(dmaGlobals.lattice.toJSON(), ["highlighter", "basePlane", "nodes", "appState"]);
+        return _.omit(dmaGlobals.lattice.toJSONFull(), ["highlighter", "basePlane", "nodes", "appState"]);
     },
 
     loadLatticeFromJSON: function(data){

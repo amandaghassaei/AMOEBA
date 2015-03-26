@@ -53,6 +53,7 @@ FillGeometry = Backbone.Model.extend({
         var scale = dmaGlobals.lattice.get("scale");
 
         var minIndex = dmaGlobals.lattice.getIndexForPosition(bounds.min);
+        console.log(minIndex);
         var maxIndex = dmaGlobals.lattice.getIndexForPosition(bounds.max);
         var raycaster = new THREE.Raycaster();
         var direction = new THREE.Vector3(0,0,1);

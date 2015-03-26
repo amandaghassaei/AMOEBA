@@ -548,6 +548,18 @@ Lattice = Backbone.Model.extend({
     _getRasterLoopIterator: function(variable){
         if (variable.neg) return -1;
         return 1;
+    },
+
+    ////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////UI///////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////
+
+    toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
+        return _.omit(this.attributes, ["cells", "nodes"]);
+    },//todo something weird here
+
+    toJSONFull: function(){//for saving only - it's ok to pass attributes
+        return this.attributes;
     }
 
 });
