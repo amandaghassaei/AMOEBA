@@ -3,6 +3,9 @@
  */
 
 function GCodeExporter() {
+    //keep track of speeds for G94's
+    this.postSpeed = null;
+    this.animationSpeed = null;
 }
 
 GCodeExporter.prototype.makeHeader = function(){
@@ -16,11 +19,7 @@ GCodeExporter.prototype.makeHeader = function(){
 //    data += this.addLine("M09", [], "coolant off");
 
     data += this.goHome();
-
-    //set rapid and feed speeds
-    var rapidSpeeds = dmaGlobals.assembler.get("rapidSpeeds");
-    var feedRate = dmaGlobals.assembler.get("feedRate");
-
+    
     return data;
 };
 
@@ -40,19 +39,27 @@ GCodeExporter.prototype.addComment = function(comment){
     return "(" + comment + ")" + "\n";
 };
 
-GCodeExporter.prototype.rapidXYZ = function(x, y, z){
-    return this.moveXYZ(x,y,z);
-};
+GCodeExporter.prototype._setSpeed = function(speed){
+    return "G94 "+ speed + "\n";
+}
+
+//GCodeExporter.prototype._rapidXYZ = function(x, y, z){
+//    return this._goXYZ(x,y,z);
+//};
 
 GCodeExporter.prototype.rapidXY = function(x, y){
-    return this.rapidXYZ(x, y, null);
+    var data = "";
+    if (this.postSpeed != dmaGlobals.assembler.get("rapidSpeeds").xy) data += this._setSpeed(dmaGlobals.assembler.get("rapidSpeeds").xy);
+    return data + this._goXYZ(x, y, null);
 };
 
 GCodeExporter.prototype.rapidZ = function(z){
-    return this.rapidXYZ(null, null, z);
+    var data = "";
+    if (this.postSpeed != dmaGlobals.assembler.get("rapidSpeeds").z) data += this._setSpeed(dmaGlobals.assembler.get("rapidSpeeds").z);
+    return data + this._goXYZ(null, null, z);
 };
 
-GCodeExporter.prototype.moveXYZ = function(x, y, z){
+GCodeExporter.prototype._goXYZ = function(x, y, z){
     if (x !== null) x = "X"+parseFloat(x).toFixed(3);
     if (y !== null) y = "Y"+parseFloat(y).toFixed(3);
     if (z !== null) z = "Z"+parseFloat(z).toFixed(3);
@@ -60,21 +67,25 @@ GCodeExporter.prototype.moveXYZ = function(x, y, z){
 };
 
 GCodeExporter.prototype.moveXY = function(x, y){
-    return this.moveXYZ(x, y, null);
+    var data = "";
+    if (this.postSpeed != dmaGlobals.assembler.get("feedRate").xy) data += this._setSpeed(dmaGlobals.assembler.get("feedRate").xy);
+    return data + this._goXYZ(x, y, null);
 };
 
 GCodeExporter.prototype.moveZ = function(z){
-    return this.moveXYZ(null, null, z);
+    var data = "";
+    if (this.postSpeed != dmaGlobals.assembler.get("feedRate").z) data += this._setSpeed(dmaGlobals.assembler.get("feedRate").z);
+    return data + this._goXYZ(null, null, z);
 };
 
 GCodeExporter.prototype.goHome = function(){
-    return this.moveXYZ(0,0,dmaGlobals.assembler.get("rapidHeight"));
+    var data = this._setSpeed(dmaGlobals.assembler.get("rapidSpeeds").z);
+    return data + this._goXYZ(0,0,dmaGlobals.assembler.get("rapidHeight"));
 };
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";
     data += this.addLine("M30", [], "program stop");
-
     return data;
 };
 
@@ -92,12 +103,15 @@ GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
         machine.releaseStock(line.substr(1,line.length-2));
         return callback();
     }
+    if (line.substr(0,3) == "G94" ){//speed
+        this.animationSpeed = line.split(" ")[1];
+        return callback();
+    }
     if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
         return callback();
     }
     if (line.substr(0,3) == "G01"){
-        //return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
-        return this._simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
+        return this._simulateGetPosition(line, {xy:this.animationSpeed, z:this.animationSpeed}, machine, wcs, callback);
     } else {
         console.warn("problem parsing gcode: " + line);
         return callback();
