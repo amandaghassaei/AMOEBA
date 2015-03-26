@@ -135,6 +135,7 @@ AppState = Backbone.Model.extend({
         //key bindings
         shift: false,
         deleteMode: false,
+        highlightMode: true,
         extrudeMode: false,
         cellMode: "cell",//show cells vs part
 

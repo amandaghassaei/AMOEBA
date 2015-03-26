@@ -9,7 +9,8 @@ Ribbon = Backbone.View.extend({
 
     events: {
         "click .cellModeBtn":                                    "_updateCellMode",
-        "click .deleteMode":                                     "_updateDeleteMode"
+        "click .deleteMode":                                     "_updateDeleteMode",
+        "click .highlightMode":                                  "_updateHighlightMode"
     },
 
     initialize: function(){
@@ -18,6 +19,7 @@ Ribbon = Backbone.View.extend({
 
         this.listenTo(this.model, "change:cellMode", this.render);
         this.listenTo(this.model, "change:deleteMode", this.render);
+        this.listenTo(this.model, "change:highlightMode", this.render);
         this.listenTo(dmaGlobals.lattice, "change:cellType change:connectionType", this.render);
         this.render();
     },
@@ -32,6 +34,11 @@ Ribbon = Backbone.View.extend({
         dmaGlobals.appState.set("deleteMode", !dmaGlobals.appState.get("deleteMode"));
     },
 
+    _updateHighlightMode: function(e){
+        e.preventDefault();
+        dmaGlobals.appState.set("highlightMode", !dmaGlobals.appState.get("highlightMode"));
+    },
+
     render: function(){
         this.$el.html(this.template(_.extend(dmaGlobals.lattice.toJSON(), this.model.toJSON())));
     },
@@ -43,6 +50,7 @@ Ribbon = Backbone.View.extend({
               <% if (allPartTypes[cellType][connectionType]){ %>\
               <a data-type="part" class="btn btn-primary btn-ribbon cellModeBtn<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>\
               <% } %>\
+              <a class="btn btn-primary btn-ribbon highlightMode<% if (highlightMode){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/cursor-light.png"></a>\
               <a class="btn btn-primary btn-ribbon deleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>\
             </div>\
         </div>\

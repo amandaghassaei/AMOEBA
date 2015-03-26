@@ -14,6 +14,10 @@ OneBitBot.prototype.setMachinePosition = function(){
     _.each(_.values(this.meshes), function(mesh){//todo add cell?
         mesh.position.set(self.position.x, self.position.y, self.position.z);
     });
+    var stockPosition = dmaGlobals.assembler.get("stockPosition");
+    this.cell.moveTo(stockPosition.x, "x");
+    this.cell.moveTo(stockPosition.y, "y");
+    this.cell.moveTo(stockPosition.z, "z");
     dmaGlobals.three.render();
 };
 
