@@ -60,11 +60,11 @@ FillGeometry = Backbone.Model.extend({
         var direction = new THREE.Vector3(0,0,1);
         var mesh = this.get("mesh");
         raycaster.near = 0;
-        raycaster.far = bounds.max-bounds.min+10;//add some padding just in case
+        raycaster.far = bounds.max-bounds.min+2;//add some padding just in case
         for (var x=minIndex.x;x<=maxIndex.x;x++){
             for (var y=minIndex.y;y<=maxIndex.y;y++){
                 var origin = dmaGlobals.lattice.getPositionForIndex({x:x, y:y, z:minIndex.z});
-                origin.z = bounds.min.z-1;
+                origin.z = bounds.min.z-1;//more padding
                 raycaster.set(origin, direction);
                 var intersections = raycaster.intersectObject(mesh);
                 if (intersections.length == 0) continue;
@@ -78,24 +78,20 @@ FillGeometry = Backbone.Model.extend({
                         if (position.z<nextIntersection) continue;
                         else {
                             inside = true;
-                            dmaGlobals.lattice.addCellAtIndex(index, true);
-                            var next = this._getNextIntersection(position, intersections, nextIntersectionIndex, inside);
-                            if (!next) break;
-                            inside = next.inside;
-                            nextIntersection = next.nextIntersection;
-                            nextIntersectionIndex = next.nextIntersetcionIndex;
+                            dmaGlobals.lattice.addCellAtIndex(index, true, true);
                         }
                     } else {
-                        if (position.z<nextIntersection) dmaGlobals.lattice.addCellAtIndex(index, true);
-                        else {
-                            inside = false;
-                            var next = this._getNextIntersection(position, intersections, nextIntersectionIndex, inside);
-                            if (!next) break;
-                            inside = next.inside;
-                            nextIntersection = next.nextIntersection;
-                            nextIntersectionIndex = next.nextIntersetcionIndex;
+                        if (position.z<nextIntersection) {
+                            dmaGlobals.lattice.addCellAtIndex(index, true, true);
+                            continue;
                         }
+                        else inside = false;
                     }
+                    var next = this._getNextIntersection(position, intersections, nextIntersectionIndex, inside);
+                    if (!next) break;
+                    inside = next.inside;
+                    nextIntersection = next.nextIntersection;
+                    nextIntersectionIndex = next.nextIntersetcionIndex;
                 }
             }
         }
