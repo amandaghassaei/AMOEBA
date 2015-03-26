@@ -257,17 +257,24 @@ Assembler = Backbone.Model.extend({
 
     _getExporter: function(){
         var currentExporter = this.get("exporter");
-        if (this.get("camProcess") == "shopbot") {
+        var camProcess = this.get("camProcess");
+        if (camProcess == "shopbot") {
             if (currentExporter && currentExporter.constructor == ShopbotExporter){
                 return currentExporter;
             } else {
                 return new ShopbotExporter();
             }
-        } else if (this.get("camProcess") == "gcode") {
+        } else if (camProcess == "gcode") {
             if (currentExporter && currentExporter.constructor == GCodeExporter){
                 return currentExporter;
             } else {
                 return new GCodeExporter();
+            }
+        } else if (camProcess == "tinyG"){
+            if (currentExporter && currentExporter.constructor == TinyGExporter){
+                return TinyGExporter;
+            } else {
+                return new TinyGExporter();
             }
         }
         console.warn("cam process not supported");

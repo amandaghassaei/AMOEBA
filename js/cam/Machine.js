@@ -192,16 +192,22 @@ Machine.prototype.postProcess = function(data, exporter){//override in subclasse
             stockNum += 1;
             if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
         }
+        data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
         data += self._postPickUpStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
-        data += self._postReleaseStock(cell, exporter, rapidHeight, wcs, safeHeight);
+        var cellPosition = cell.getPosition();
+        data += self._postMoveXY(exporter, cellPosition.x-wcs.x, cellPosition.y-wcs.y);
+        data += self._postReleaseStock(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight);
         data += "\n";
     });
     return data;
 };
 
+Machine.prototype._postMoveXY = function(exporter, x, y){
+    return exporter.rapidXY(x, y);
+};
+
 Machine.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
     var data = "";
-    data += exporter.rapidXY(stockPosition.x-wcs.x, stockPosition.y-wcs.y);
     data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
     data += exporter.moveZ(stockPosition.z-wcs.z);
     data += exporter.addComment("get stock");
@@ -210,10 +216,8 @@ Machine.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeig
     return data;
 };
 
-Machine.prototype._postReleaseStock = function(cell, exporter, rapidHeight, wcs, safeHeight){
+Machine.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
     var data = "";
-    var cellPosition = cell.getPosition();
-    data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
     data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
     data += exporter.moveZ(cellPosition.z-wcs.z);
     data += exporter.addComment(JSON.stringify(cell.indices));

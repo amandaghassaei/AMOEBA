@@ -119,7 +119,10 @@ AppState = Backbone.Model.extend({
                 gcode: "G-Code"
             },
             handOfGod:{gcode: "G-Code"},
-            oneBitBot:{gcode: "G-Code"}
+            oneBitBot:{
+                gcode: "G-Code",
+                tinyG: "TinyG"
+            }
         },
 
         allScripts: {
