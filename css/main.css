@@ -82,13 +82,13 @@ nav .btn {
 /*menus*/
 
 #menuWrapper {
-    width: 420px;
+    width: 430px;
     height: 100%;
     z-index: 1;
     position: absolute;
     display: block;
     background-color: rgba(255,255,255,0.8);
-    right: -420px;/*initially hidden*/
+    right: -430px;/*initially hidden*/
     overflow:hidden;
 }
 

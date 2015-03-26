@@ -30,7 +30,7 @@ OneBitBot.prototype._buildMeshes = function(callback){
     }
     function geometryScale(geometry){
         var unitScale = 0.05/2.78388;
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-200,-283.84,0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-200,-283.84,30));
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         return geometry;
     }
@@ -41,11 +41,11 @@ OneBitBot.prototype._buildMeshes = function(callback){
     }
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-55.37));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-85.37));
         meshPrep(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-0));
         meshPrep(geometryScale(geometry), "zDrive");
     });
     loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
