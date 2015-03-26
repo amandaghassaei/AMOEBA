@@ -55,11 +55,11 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     };
 
     DMAPart.prototype.highlight = function(){
-        this.mesh.material.color.setRGB(1,0,0);
+//        this.mesh.material.color.setRGB(1,0,0);
     };
 
     DMAPart.prototype.unhighlight = function(){
-        if (this.mesh) this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
+//        if (this.mesh) this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
     };
 
     DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
@@ -124,13 +124,13 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         var mesh;
         switch(type){
             case 0:
-                mesh = new THREE.Mesh(unitPartGeo1, partMaterial.clone());
+                mesh = new THREE.Mesh(unitPartGeo1, partMaterial);
                 break;
             case 1:
-                mesh = new THREE.Mesh(unitPartGeo2, partMaterial.clone());
+                mesh = new THREE.Mesh(unitPartGeo2, partMaterial);
                 break;
             case 2:
-                 mesh = new THREE.Mesh(unitPartGeo3, partMaterial.clone());
+                 mesh = new THREE.Mesh(unitPartGeo3, partMaterial);
                 break;
         }
         mesh.myPart = this;//need a ref back to this part
@@ -170,7 +170,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAEdgeVoxPart.prototype = Object.create(DMAPart.prototype);
 
     DMAEdgeVoxPart.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial.clone());
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
