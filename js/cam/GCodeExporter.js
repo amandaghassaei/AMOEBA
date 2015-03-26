@@ -3,7 +3,7 @@
  */
 
 function GCodeExporter() {
-    //keep track of speeds for G94's
+    //keep track of speeds for F commands
     this.postSpeed = null;
     this.animationSpeed = null;
 }
@@ -40,7 +40,7 @@ GCodeExporter.prototype.addComment = function(comment){
 };
 
 GCodeExporter.prototype._setSpeed = function(speed){
-    return "G94 "+ speed + "\n";
+    return "F"+ speed + "\n";
 }
 
 //GCodeExporter.prototype._rapidXYZ = function(x, y, z){
@@ -103,8 +103,8 @@ GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
         machine.releaseStock(line.substr(1,line.length-2));
         return callback();
     }
-    if (line.substr(0,3) == "G94" ){//speed
-        this.animationSpeed = line.split(" ")[1];
+    if (line[0] == "F"){//speed
+        this.animationSpeed = line.split("F")[1];
         return callback();
     }
     if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
