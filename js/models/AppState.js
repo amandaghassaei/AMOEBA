@@ -138,6 +138,7 @@ AppState = Backbone.Model.extend({
         highlightMode: true,
         extrudeMode: false,
         cellMode: "cell",//show cells vs part
+        cellsVisible: true,
 
         stockSimulationPlaying: false,
         manualSelectOrigin: false//mode that allows user ot select origin from existing cell

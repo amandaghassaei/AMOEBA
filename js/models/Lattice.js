@@ -39,6 +39,7 @@ Lattice = Backbone.Model.extend({
         this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
+        this.listenTo(options.appState, "change:cellsVisible", this._setCellVisibility);
     },
 
     delayedInit: function(){
@@ -350,6 +351,11 @@ Lattice = Backbone.Model.extend({
 
     previewScaleChange: function(scale){
         this.get("basePlane").updateScale(scale);
+    },
+
+    _setCellVisibility: function(){//todo maybe leave wireframes?
+        if (dmaGlobals.appState.get("cellsVisible")) this.showCells();
+        else this.hideCells();
     },
 
     //hide show cells during stock simulation

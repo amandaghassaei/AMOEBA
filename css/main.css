@@ -250,7 +250,7 @@ input.numberInput{
 
 #navRibbon{
     height: 49px;
-    width: 320px;
+    width: 370px;
     z-index: 1;
     display: block;
     position: absolute;
@@ -272,11 +272,15 @@ input.numberInput{
     height: 49px;
 }
 
+.btn-ribbon span{
+    font-size: 28px!important;
+    display: block;
+    margin-top: 4px!important;
+    color: #7C7B7B;
+}
+
 .fui-cross{
-  font-size: 28px!important;
-  display: block;
-  margin-top: 4px!important;
-  color: #B50303;
+  color: #B50303!important;
 }
 
 .ribbon-selected {
