@@ -283,6 +283,10 @@ input.numberInput{
   color: #B50303!important;
 }
 
+.cellsVisible{
+    padding-top: 7px;
+}
+
 .ribbon-selected {
     background-color: #000!important;
 }
