@@ -34,7 +34,7 @@ ImportMenuView = Backbone.View.extend({
 
     _buildWall: function(e){
         e.preventDefault();
-        dmaGlobals.lattice.addCellsInRange({min:{x:-70,y:-1,z:0}, max:{x:70,y:1,z:18}});
+        dmaGlobals.lattice.addCellsInRange({min:{x:-5,y:-5,z:0}, max:{x:5,y:5,z:3}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -141,6 +141,7 @@ ImportMenuView = Backbone.View.extend({
             <button data-toggle="dropdown" class="btn btn-lg btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>\
             <ul role="menu" class="dropdown-menu">\
               <li><a class="selectMesh" data-file="meshes-airbus/wingCrossection.stl" href="#">Wing</a></li>\
+              <li><a id="selectWall" href="#">Block</a></li>\
             </ul>\
         </div><!-- /btn-group -->\
         ')
