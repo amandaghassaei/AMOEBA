@@ -23,7 +23,7 @@ OneBitBot.prototype.setMachinePosition = function(){
 
 OneBitBot.prototype._buildMeshes = function(callback){
     var meshes = [];
-    var numMeshes = 10;
+    var numMeshes = 13;
     function allLoaded(){
         numMeshes -= 1;
         return numMeshes <= 0;
@@ -72,10 +72,20 @@ OneBitBot.prototype._buildMeshes = function(callback){
         meshPrep(geometryScale(geometry2), "foot1B");
     });
     loader.load("assets/stls/oneBitBot/foot2.stl", function(geometry){
-        geometryScale(geometry);
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(5,0,0));
+        var geometry1 = geometry.clone();
+        geometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
+        geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(22.5,2,0));
+        var geometry2 = geometry1.clone();
+        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
 
-        meshPrep(geometry, "foot2");
+        var geometry3 = geometry.clone();
+        geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(35,450,0));
+        var geometry4 = geometry3.clone();
+        geometry4.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
+        meshPrep(geometryScale(geometry1), "foot2A");
+        meshPrep(geometryScale(geometry2), "foot2B");
+        meshPrep(geometryScale(geometry3), "foot2C");
+        meshPrep(geometryScale(geometry4), "foot2D");
     });
 };
 
