@@ -228,6 +228,8 @@ AppState = Backbone.Model.extend({
         var state = e.data.state;
         var currentTab = this.get("currentTab");
 
+        this.set("shift", false);//just in case, this is getting all weird during other meta commands in the browser
+
         if (e.ctrlKey || e.metaKey){
         }else if (state) {
             if (this.downKeys[e.keyCode]) return;
