@@ -317,11 +317,12 @@ God.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
 
 God.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
     var data = "";
+    data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
     data += exporter.moveZ(stockPosition.z-wcs.z);
     return data;
 };
 
-God.prototype._postReleaseStock = function(cellPosicell, exporter, rapidHeight, wcs, safeHeight){
+God.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
     var data = "";
     var cellPosition = cell.getPosition();
     data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);
