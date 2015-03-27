@@ -44,7 +44,6 @@ DmaBeam.prototype.updateForScale = function(scale){//todo make this better
     var position = this.nodes[0].getPosition();
     position.add(this.nodes[1].getPosition());
     position.add(this.parentCell.getPosition());
-    console.log(this.nodes[1].getPosition());
     this.mesh.position.set(position.x, position.y, position.z);
     this.mesh.scale.set(scale, scale, scale);
 };

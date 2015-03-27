@@ -145,8 +145,6 @@ Lattice = Backbone.Model.extend({
         var scale = this._allAxesScales();
         var min = _.clone(this.get("cellsMin"));
         var max = _.clone(this.get("cellsMax"));
-        console.log(min);
-        console.log(max);
         _.each(_.keys(scale), function(key){
             min[key] *= scale[key];
             max[key] *= scale[key];
