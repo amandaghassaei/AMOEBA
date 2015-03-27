@@ -166,13 +166,12 @@ Assembler = Backbone.Model.extend({
     _moveOrigin: function(){
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
-        if (this.get("stockFixed")) this._updateStockPosToOrigin(position);
+        if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
         dmaGlobals.three.render();
         if (this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
     },
 
-    _updateStockPosToOrigin: function(newOrigin){
-        var lastOrigin = this.previous("originPosition");
+    _updateStockPosToOrigin: function(newOrigin, lastOrigin){
         var newStockPosition = _.clone(this.get("stockPosition"));
         _.each(_.keys(newStockPosition), function(key){
             newStockPosition[key] += newOrigin[key] - lastOrigin[key];
