@@ -6,6 +6,7 @@
 function Machine() {
 
     this.hasStock = false;
+    this._setDefaults();
 
     this.meshes = {};
     this.material = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:1});
@@ -21,6 +22,12 @@ function Machine() {
     });
     this.setVisibility(false);
 }
+
+Machine.prototype._setDefaults = function(){
+    dmaGlobals.assembler.set("camProcess", "gcode");
+    dmaGlobals.assembler.set("originPosition", {x:0,y:0,z:0});
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:0});
+};
 
 Machine.prototype.setVisibility = function(visible){
     if (visible == null || visible === undefined) {
@@ -267,6 +274,11 @@ Shopbot.prototype._buildMeshes = function(callback){
     });
 };
 
+Shopbot.prototype._setDefaults = function(){
+    Machine.prototype._setDefaults.call(this);
+    dmaGlobals.assembler.set("camProcess", "shopbot");
+};
+
 Shopbot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
     if (target == null || target === undefined) {
         callback();
@@ -284,6 +296,11 @@ function God(){
     Machine.call(this);
 }
 God.prototype = Object.create(Machine.prototype);
+
+God.prototype._setDefaults = function(){
+    Machine.prototype._setDefaults.call(this);
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:150});
+};
 
 God.prototype._buildMeshes = function(callback){
     callback({});

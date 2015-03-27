@@ -39,8 +39,6 @@ Assembler = Backbone.Model.extend({
 
     initialize: function(options){
 
-        this.selectMachine();
-
         _.bindAll(this, "postProcess");
 
         //bind events
@@ -85,16 +83,10 @@ Assembler = Backbone.Model.extend({
         if (this.get("machine")) this.get("machine").destroy();
         if (machineName == "shopbot"){
             this.set("machine", new Shopbot());
-            this.set("camProcess", "shopbot");
         } else if (machineName == "handOfGod"){
             this.set("machine", new God());
-            this.set("camProcess", "gcode");
-            this.set("originPosition", {x:0,y:0,z:0});
-            this.set("stockPosition", {x:0,y:0,z:150});//todo calculate a good stock position
         } else if (machineName == "oneBitBot"){
             this.set("machine", new OneBitBot());
-            this.set("camProcess", "gcode");
-            this.set("stockFixed", true);
         } else console.warn("selected machine not recognized");
     },
 
@@ -113,17 +105,17 @@ Assembler = Backbone.Model.extend({
     },
 
     _updateCellType: function(){
-        this.get("machine").updateCellType();
+        if (this.get("machine")) this.get("machine").updateCellType();
         this.set("machineName", "handOfGod");//todo this should go away with dynamic allocation of this model
 
     },
 
     _updatePartType: function(){
-        this.get("machine").updatePartType();
+        if (this.get("machine")) this.get("machine").updatePartType();
     },
 
     _updateCellMode: function(){
-        this.get("machine").setVisibility(this.isVisible());
+        if (this.get("machine")) this.get("machine").setVisibility(this.isVisible());
         dmaGlobals.three.render();
     },
 
@@ -131,7 +123,7 @@ Assembler = Backbone.Model.extend({
         var scale = dmaGlobals.lattice.get("scale");
         this.get("origin").scale.set(scale/8, scale/8, scale/8);
         this.get("stock").scale.set(scale/8, scale/8, scale/8);
-        this.get("machine").setScale(scale);
+        if (this.get("machine")) this.get("machine").setScale(scale);
     },
 
     _tabChanged: function(){
@@ -143,7 +135,8 @@ Assembler = Backbone.Model.extend({
         var visible = this.isVisible();
         this.get("origin").visible = visible;
         this.get("stock").visible = visible;
-        this.get("machine").setVisibility(visible);
+        if (visible && !this.get("machine")) this.selectMachine();
+        if (this.get("machine")) this.get("machine").setVisibility(visible);
         dmaGlobals.three.render();
     },
 
@@ -168,7 +161,7 @@ Assembler = Backbone.Model.extend({
         this.get("origin").position.set(position.x, position.y, position.z);
         if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
         dmaGlobals.three.render();
-        if (this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
+        if (this.get("machine") && this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
     },
 
     _updateStockPosToOrigin: function(newOrigin, lastOrigin){

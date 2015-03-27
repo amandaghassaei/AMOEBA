@@ -7,6 +7,14 @@ function OneBitBot(){
 }
 OneBitBot.prototype = Object.create(Machine.prototype);
 
+OneBitBot.prototype._setDefaults = function(){
+    Machine.prototype._setDefaults.call(this);
+    dmaGlobals.assembler.set("stockFixed", true);
+    var scale = dmaGlobals.lattice.get("scale");
+    dmaGlobals.assembler.set("stockPosition", {x:1.8*scale,y:0,z:1.1*scale});
+    dmaGlobals.assembler.set("rapidHeight", 2*scale);
+};
+
 OneBitBot.prototype.setMachinePosition = function(){
     if (!dmaGlobals.assembler) return;
     this.position = dmaGlobals.assembler.get("originPosition");
