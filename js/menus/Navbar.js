@@ -21,7 +21,8 @@ NavBar = Backbone.View.extend({
         "hide.bs.modal .modal":                                 "_hideModal",
         "click .importJSON":                                    "_importJSON",
         "change #jsonInput":                                    "_selectJSONFiles",
-        "click .savedUserSettings":                             "_loadSavedUser"
+        "click .savedUserSettings":                             "_loadSavedUser",
+        "click .savedDemo":                                     "_loadDemo"
     },
 
     initialize: function(){
@@ -94,7 +95,7 @@ NavBar = Backbone.View.extend({
             return function(e) {
                 var extension = filename.substr(filename.length - 5);
                 if (extension == ".json"){
-                    dmaGlobals.appState.loadLatticeFromJSON(e.target.result);
+                    dmaGlobals.appState.loadLatticeFromJSON(JSON.parse(e.target.result));
                 } else if (extension == ".user"){
                     dmaGlobals.appState.loadUser(e.target.result);
                 } else console.warn("file type not recognized");
@@ -126,6 +127,14 @@ NavBar = Backbone.View.extend({
         var url = "data/users/" + $(e.target).data("file");
         $.getJSON( url, function(data) {
             dmaGlobals.appState.loadUser(data, true);
+        });
+    },
+
+    _loadDemo: function(e){
+        e.preventDefault();
+        var url = "data/demos/" + $(e.target).data("file");
+        $.getJSON( url, function(data) {
+            dmaGlobals.appState.loadLatticeFromJSON(data);
         });
     },
 
