@@ -42,7 +42,7 @@ FillGeometry = Backbone.Model.extend({
         box.material.opacity = 0.4;
         box.material.transparent = true;
         this.set("boundingBox", box);
-        dmaGlobals.three.sceneAdd(box);
+//        dmaGlobals.three.sceneAdd(box);
     },
 
     fillGeo: function(){
