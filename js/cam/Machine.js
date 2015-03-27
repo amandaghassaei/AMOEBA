@@ -25,8 +25,10 @@ function Machine() {
 
 Machine.prototype._setDefaults = function(){
     dmaGlobals.assembler.set("camProcess", "gcode");
+    dmaGlobals.assembler.set("stockFixed", false);
     dmaGlobals.assembler.set("originPosition", {x:0,y:0,z:0});
     dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:0});
+    dmaGlobals.assembler.set("stockSeparation", dmaGlobals.lattice.xScale());
 };
 
 Machine.prototype.setVisibility = function(visible){
@@ -259,6 +261,12 @@ function Shopbot(){
 }
 Shopbot.prototype = Object.create(Machine.prototype);
 
+Shopbot.prototype._setDefaults = function(){
+    Machine.prototype._setDefaults.call(this);
+    dmaGlobals.assembler.set("camProcess", "shopbot");
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:100,z:0});//todo calculate this
+};
+
 Shopbot.prototype._buildMeshes = function(callback){
     var meshes = {};
     var material = this.material;
@@ -272,11 +280,6 @@ Shopbot.prototype._buildMeshes = function(callback){
         meshes.endEffector = mesh;
         callback(meshes);
     });
-};
-
-Shopbot.prototype._setDefaults = function(){
-    Machine.prototype._setDefaults.call(this);
-    dmaGlobals.assembler.set("camProcess", "shopbot");
 };
 
 Shopbot.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
@@ -299,7 +302,7 @@ God.prototype = Object.create(Machine.prototype);
 
 God.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:150});
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:150});//todo calculate this
 };
 
 God.prototype._buildMeshes = function(callback){

@@ -177,7 +177,7 @@ CamMenuView = Backbone.View.extend({
             <label class="checkbox" for="stockFixed">\
             <input id="stockFixed" data-property="stockFixed" type="checkbox" <% if (stockFixed){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Fix stock to to Origin</label>\
+            Fix stock relative to to Origin</label>\
             <label class="checkbox" for="multipleStockPositions">\
             <input id="multipleStockPositions" data-property="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\

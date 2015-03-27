@@ -81,6 +81,7 @@ Assembler = Backbone.Model.extend({
     selectMachine: function(){
         var machineName = this.get("machineName");
         if (this.get("machine")) this.get("machine").destroy();
+        this.set("machine", null);
         if (machineName == "shopbot"){
             this.set("machine", new Shopbot());
         } else if (machineName == "handOfGod"){
