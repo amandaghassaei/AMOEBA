@@ -27,6 +27,8 @@ Machine.prototype._setDefaults = function(){
     dmaGlobals.assembler.set("camProcess", "gcode");
     dmaGlobals.assembler.set("stockFixed", false);
     dmaGlobals.assembler.set("originPosition", {x:0,y:0,z:0});
+    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
+    dmaGlobals.assembler.set("rapidHeight", boundingBox.max.z + 2*dmaGlobals.lattice.zScale());
     dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:0});
     dmaGlobals.assembler.set("stockSeparation", dmaGlobals.lattice.xScale());
 };
@@ -264,7 +266,8 @@ Shopbot.prototype = Object.create(Machine.prototype);
 Shopbot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
     dmaGlobals.assembler.set("camProcess", "shopbot");
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:100,z:0});//todo calculate this
+    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:boundingBox.max.y + 3*dmaGlobals.lattice.yScale(),z:0});
 };
 
 Shopbot.prototype._buildMeshes = function(callback){
@@ -302,7 +305,8 @@ God.prototype = Object.create(Machine.prototype);
 
 God.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:150});//todo calculate this
+    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
+    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:boundingBox.max.z + 5*dmaGlobals.lattice.zScale()});
 };
 
 God.prototype._buildMeshes = function(callback){

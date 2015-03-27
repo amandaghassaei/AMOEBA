@@ -141,6 +141,27 @@ Lattice = Backbone.Model.extend({
         dmaGlobals.three.render();
     },
 
+    calculateBoundingBox: function(){
+        var scale = this._allAxesScales();
+        var min = _.clone(this.get("cellsMin"));
+        var max = _.clone(this.get("cellsMax"));
+        console.log(min);
+        console.log(max);
+        _.each(_.keys(scale), function(key){
+            min[key] *= scale[key];
+            max[key] *= scale[key];
+        });
+        return {min:min, max:max};
+    },
+
+    _allAxesScales: function(){
+        var scale = this.get("scale");
+        var xScale = this.xScale(scale);
+        var yScale = this.yScale(scale);
+        var zScale = this.zScale(scale);
+        return {x:xScale, y:yScale, z:zScale};
+    },
+
     ////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////FILL GEOMETRY////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
