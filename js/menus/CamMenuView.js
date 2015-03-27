@@ -76,7 +76,7 @@ CamMenuView = Backbone.View.extend({
     _updateNumber: function(e, property){
         e.preventDefault();
         var newVal = this._getNumber(e);
-        if (!newVal) return;
+        if (newVal == null) return;
         var object = this.assembler.get(property);
         if ($(e.target).data("type")) {
             object[$(e.target).data("type")] = newVal;
