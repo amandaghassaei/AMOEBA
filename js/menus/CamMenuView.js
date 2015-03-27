@@ -152,8 +152,6 @@ CamMenuView = Backbone.View.extend({
                 </ul>\
             </div><br/><br/>\
          <a href="#" id="saveCam" class=" btn btn-block btn-lg btn-default">Process and Save</a><br/>\
-         <% if (machineName == "oneBitBot") {%>Rotate Machine: &nbsp;&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/clockwise.png"></a>\
-         &nbsp;&nbsp&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/counterClockwise.png"></a><br/><br/><% } %>\
          Units: &nbsp;&nbsp;\
             <div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
@@ -206,3 +204,7 @@ CamMenuView = Backbone.View.extend({
         ')
 
 });
+
+
+//<% if (machineName == "oneBitBot") {%>Rotate Machine: &nbsp;&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/clockwise.png"></a>\
+//         &nbsp;&nbsp&nbsp;<a class=" btn btn-lg btn-default btn-machineRotation btn-imageCustom"><img src="assets/imgs/counterClockwise.png"></a><br/><br/><% } %>\
