@@ -12,11 +12,11 @@ GCodeExporter.prototype.makeHeader = function(){
     var data = "";
     if (dmaGlobals.lattice.get("units") == "inches") data += this.addLine("G20", [], "units inches");
     else data += this.addLine("G21", [], "units mm");
-    data += this.addLine("G90", [], "absolute positioning");
-    data += this.addLine("G54", [], "work offset");
-//    data += this.addLine("G49", [], "cancel tool length comp");
-    data += this.addLine("G40", [], "cancel tool radius comp");
-//    data += this.addLine("M09", [], "coolant off");
+//    data += this.addLine("G90", [], "absolute positioning");
+//    data += this.addLine("G54", [], "work offset");
+////    data += this.addLine("G49", [], "cancel tool length comp");
+//    data += this.addLine("G40", [], "cancel tool radius comp");
+////    data += this.addLine("M09", [], "coolant off");
 
     data += this.goHome();
     
@@ -85,7 +85,7 @@ GCodeExporter.prototype.goHome = function(){
 
 GCodeExporter.prototype.makeFooter = function(){
     var data = "";
-    data += this.addLine("M30", [], "program stop");
+//    data += this.addLine("M30", [], "program stop");
     return data;
 };
 

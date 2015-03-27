@@ -31,7 +31,7 @@ OneBitBot.prototype.setMachinePosition = function(){
 
 OneBitBot.prototype._buildMeshes = function(callback){
     var meshes = [];
-    var numMeshes = 1;
+    var numMeshes = 14;
     function allLoaded(){
         numMeshes -= 1;
         return numMeshes <= 0;
@@ -51,55 +51,55 @@ OneBitBot.prototype._buildMeshes = function(callback){
     loader.load("assets/stls/oneBitBot/basePlateTest.stl", function(geometry){
         meshPrep(geometryScale(geometry), "basePlate");
     });
-//    loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
-//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-85.37));
-//        meshPrep(geometryScale(geometry), "zAxis");
-//    });
-//    loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
-//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-0));
-//        meshPrep(geometryScale(geometry), "zDrive");
-//    });
-//    loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
-//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,0,0));
-//        meshPrep(geometryScale(geometry), "yAxisMount");
-//    });
-//    loader.load("assets/stls/oneBitBot/basePlate.stl", function(geometry){
-//        meshPrep(geometryScale(geometry), "basePlate");
-//    });
-//    loader.load("assets/stls/oneBitBot/footMount1.stl", function(geometry){
-//        meshPrep(geometryScale(geometry), "footMount1");
-//    });
-//    loader.load("assets/stls/oneBitBot/footMount2.stl", function(geometry){
-//        meshPrep(geometryScale(geometry), "footMount2");
-//    });
-//    loader.load("assets/stls/oneBitBot/backFootMount.stl", function(geometry){
-//        meshPrep(geometryScale(geometry), "backFootMount");
-//    });
-//    loader.load("assets/stls/oneBitBot/foot1.stl", function(geometry){
-//        var height = 70;
-//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(406.45,301.77,height));
-//        var geometry2 = geometry.clone();
-//        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,-141.42,0));
-//        meshPrep(geometryScale(geometry), "foot1A");
-//        meshPrep(geometryScale(geometry2), "foot1B");
-//    });
-//    loader.load("assets/stls/oneBitBot/foot2.stl", function(geometry){
-//        var geometry1 = geometry.clone();
-//        geometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
-//        var height = 70;
-//        geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(22.5,2,height));
-//        var geometry2 = geometry1.clone();
-//        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
-//
-//        var geometry3 = geometry.clone();
-//        geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(35,450,height));
-//        var geometry4 = geometry3.clone();
-//        geometry4.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
-//        meshPrep(geometryScale(geometry1), "foot2A");
-//        meshPrep(geometryScale(geometry2), "foot2B");
-//        meshPrep(geometryScale(geometry3), "foot2C");
-//        meshPrep(geometryScale(geometry4), "foot2D");
-//    });
+    loader.load("assets/stls/oneBitBot/zAxis.stl", function(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-85.37));
+        meshPrep(geometryScale(geometry), "zAxis");
+    });
+    loader.load("assets/stls/oneBitBot/zDrive.stl", function(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,-20.16,-0));
+        meshPrep(geometryScale(geometry), "zDrive");
+    });
+    loader.load("assets/stls/oneBitBot/yAxisMount.stl", function(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(100,0,0));
+        meshPrep(geometryScale(geometry), "yAxisMount");
+    });
+    loader.load("assets/stls/oneBitBot/basePlate.stl", function(geometry){
+        meshPrep(geometryScale(geometry), "basePlate");
+    });
+    loader.load("assets/stls/oneBitBot/footMount1.stl", function(geometry){
+        meshPrep(geometryScale(geometry), "footMount1");
+    });
+    loader.load("assets/stls/oneBitBot/footMount2.stl", function(geometry){
+        meshPrep(geometryScale(geometry), "footMount2");
+    });
+    loader.load("assets/stls/oneBitBot/backFootMount.stl", function(geometry){
+        meshPrep(geometryScale(geometry), "backFootMount");
+    });
+    loader.load("assets/stls/oneBitBot/foot1.stl", function(geometry){
+        var height = 70;
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(406.45,301.77,height));
+        var geometry2 = geometry.clone();
+        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(0,-141.42,0));
+        meshPrep(geometryScale(geometry), "foot1A");
+        meshPrep(geometryScale(geometry2), "foot1B");
+    });
+    loader.load("assets/stls/oneBitBot/foot2.stl", function(geometry){
+        var geometry1 = geometry.clone();
+        geometry1.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
+        var height = 70;
+        geometry1.applyMatrix(new THREE.Matrix4().makeTranslation(22.5,2,height));
+        var geometry2 = geometry1.clone();
+        geometry2.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
+
+        var geometry3 = geometry.clone();
+        geometry3.applyMatrix(new THREE.Matrix4().makeTranslation(35,450,height));
+        var geometry4 = geometry3.clone();
+        geometry4.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,0));
+        meshPrep(geometryScale(geometry1), "foot2A");
+        meshPrep(geometryScale(geometry2), "foot2B");
+        meshPrep(geometryScale(geometry3), "foot2C");
+        meshPrep(geometryScale(geometry4), "foot2D");
+    });
 };
 
 OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
@@ -109,7 +109,7 @@ OneBitBot.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    var startingPos = this.meshes["zAxis"].position.clone();
+    var startingPos = this.cell.getPosition();
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
     this._moveXAxis(startingPos.x, x, "x", speed.x, sketchyCallback);
     this._moveYAxis(startingPos.y, y, "y", speed.y, sketchyCallback);
