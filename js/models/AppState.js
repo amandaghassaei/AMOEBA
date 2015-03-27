@@ -72,11 +72,11 @@ AppState = Backbone.Model.extend({
                     vox: "Snap Voxel"
                     //beam:"Beam"
                 },
-                vertex: {
+                vertex: null//{
                     //beam:"Beam",
-                    square:"Square",
-                    xShape:"X"
-                }
+//                    square:"Square",
+//                    xShape:"X"
+//                }
             },
             tetra: {vertex: null},
             cube: {face: null},

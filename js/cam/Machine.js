@@ -321,7 +321,7 @@ God.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, 
     return data;
 };
 
-God.prototype._postReleaseStock = function(cell, exporter, rapidHeight, wcs, safeHeight){
+God.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
     var data = "";
     var cellPosition = cell.getPosition();
     data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);

@@ -68,6 +68,11 @@ DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
 DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
+    if (!this.parentDirection) {
+        this.parentDirection = new THREE.Vector3(0,0,1);
+        this.parentQuaternion = new THREE.Quaternion();
+        this.parentPos = new THREE.Vector3(0,0,0);
+    }
     var direction = this.parentDirection.clone();
     var zAxis = new THREE.Vector3(0,0,1);
     zAxis.applyQuaternion(this.parentQuaternion);

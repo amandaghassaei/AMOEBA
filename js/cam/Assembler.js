@@ -90,7 +90,7 @@ Assembler = Backbone.Model.extend({
             this.set("machine", new God());
             this.set("camProcess", "gcode");
             this.set("originPosition", {x:0,y:0,z:0});
-            this.set("stockPosition", {x:0,y:0,z:50});//todo calculate a good stock position
+            this.set("stockPosition", {x:0,y:0,z:150});//todo calculate a good stock position
         } else if (machineName == "oneBitBot"){
             this.set("machine", new OneBitBot());
             this.set("camProcess", "gcode");
