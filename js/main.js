@@ -9,7 +9,7 @@ if (typeof dmaGlobals === "undefined") dmaGlobals = {};
 $(function(){
 
     //init web workers
-    window.workers = persistentWorkers(8);
+//    window.workers = persistentWorkers(8);
 
     //init global singletons
     dmaGlobals.three = new ThreeModel();

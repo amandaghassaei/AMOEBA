@@ -134,7 +134,7 @@ Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy move
 };
 
 Machine.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
-    var increment = speed/5;
+    var increment = speed/25*dmaGlobals.assembler.get("simSpeed");
     if (increment == 0) {
         if (callback) callback();
         return;
@@ -156,7 +156,7 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
         if (Math.abs(target-currentPos) < Math.abs(increment)) nextPos = target;//don't overshoot
         self._setPosition(objects, nextPos, axis);
         self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback)
-    }, 50/dmaGlobals.assembler.get("simSpeed"));
+    }, 10);
 };
 
 Machine.prototype._setPosition = function(objects, nextPos, axis){
@@ -321,7 +321,7 @@ God.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, 
     return data;
 };
 
-God.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
+God.prototype._postReleaseStock = function(cellPosicell, exporter, rapidHeight, wcs, safeHeight){
     var data = "";
     var cellPosition = cell.getPosition();
     data += exporter.rapidXY(cellPosition.x-wcs.x, cellPosition.y-wcs.y);

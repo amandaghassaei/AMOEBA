@@ -68,7 +68,7 @@ AnimationMenuView = Backbone.View.extend({
 
     _changeSpeedSlider: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.set("simSpeed", $(e.target)[0].value);
+        dmaGlobals.assembler.set("simSpeed", Math.pow(2,$(e.target)[0].value));
     },
 
     _drawGcodeHighlighter: function(){
@@ -103,7 +103,7 @@ AnimationMenuView = Backbone.View.extend({
 
         $('#speedSlider').slider({
             formatter: function(value) {
-                return value + "X";
+                return Math.pow(2, value) + "X";
             }
         });
     },
@@ -119,7 +119,7 @@ AnimationMenuView = Backbone.View.extend({
                 <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a>\
             <% } %>\
         <% } %>\
-        <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="1" data-slider-max="20" data-slider-step="1" data-slider-value="<%= simSpeed %>"/>\
+        <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="0" data-slider-max="6" data-slider-step="1" data-slider-value="<%= Math.log2(simSpeed) %>"/>\
         <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         <!--Assembly Time:&nbsp;&nbsp;<br/><br/>-->\
         <% if (editsMadeToProgram && needsPostProcessing){ %>\
