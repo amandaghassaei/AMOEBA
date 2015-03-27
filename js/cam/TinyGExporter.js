@@ -19,10 +19,6 @@ function TinyGExporter(){
 }
 TinyGExporter.prototype = Object.create(GCodeExporter.prototype);
 
-TinyGExporter.prototype.makeHeader = function(){
-    return this.goHome();
-};
-
 TinyGExporter.prototype._setSpeed = function(speed){
     return "F"+ speed + "\n";
 };
@@ -34,11 +30,11 @@ TinyGExporter.prototype.goHome = function(){
 TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
     var data = "";
     if (type == "cell"){
-        if (Math.abs(cellPosition.z-wcs.z)<0.001) data += "M3 ";//lower height
-        else data += "M4 ";//upper height
+        if (Math.abs(cellPosition.z-wcs.z)<0.001) data += "M3 \nM5 \nM3 \nM5 \nM3 \nM5\n";//lower height
+        else data += "M3 \nM5 \nM3 \nM5 \nM4 \nM5\n";//upper height
         data += this.addComment(JSON.stringify(cell.indices));
     } else if (type == "stock"){
-        data += "M8 \n";
+        data += "M3 \nM5 \nM4 \nM5 \nM3 \nM5\n";
     } else {
         console.warn("tinyG type not recognized");
         return "";
@@ -54,17 +50,17 @@ TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
     if (line == "(home)"){
         return machine.moveTo("", "", rapidHeight, rapidSpeed, wcs, callback);
     } else if (line[0]=="M"){
-        if (line.substr(0,3) == "M8 "){//get stock
+        if (line == "M3 M5 M4 M5 M3 M5"){//get stock
             var stockPosition = dmaGlobals.assembler.get("stockPosition");
             return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, stockPosition.z-wcs.z, function(){
                 machine.pickUpStock();
             }, callback);
-        } else if (line.substr(0,3) == "M3 "){//lower height
+        } else if (line == "M3 M5 M3 M5 M3 M5"){//lower height
             //stupid thing needs to do some math to force to float...
             return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, wcs.z+0.000001, function(){
                 machine.releaseStock(line.substr(4, line.length-5));
             }, callback);
-        } else if (line.substr(0,3) == "M4 "){//higher height
+        } else if (line == "M3 M5 M3 M5 M4 M5"){//higher height
             return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, wcs.z+dmaGlobals.lattice.zScale(), function(){
                 machine.releaseStock(line.substr(4, line.length-5));
             }, callback);
