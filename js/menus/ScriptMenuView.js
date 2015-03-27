@@ -15,6 +15,7 @@ ScriptMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "script") return;
         this.$el.html(this.template(this.model.toJSON()));
     },

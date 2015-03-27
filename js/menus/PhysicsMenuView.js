@@ -15,6 +15,7 @@ PhysicsMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "physics") return;
         this.$el.html(this.template());
     },

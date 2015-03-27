@@ -124,6 +124,7 @@ CamMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "cam") return;
         if ($("input").is(":focus")) return;
         var data = _.extend(this.model.toJSON(), this.assembler.toJSON(), this.lattice.toJSON());

@@ -69,7 +69,8 @@ AppState = Backbone.Model.extend({
                 },
                 edge: null,
                 edgeRot: {
-                    vox: "Snap Voxel"
+                    voxLowPoly: "Snap Voxel (low res)",
+                    vox: "Snap Voxel (high res)"
                     //beam:"Beam"
                 },
                 vertex: null//{

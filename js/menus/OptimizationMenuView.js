@@ -15,6 +15,7 @@ OptimizationMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "optimize") return;
         this.$el.html(this.template());
     },

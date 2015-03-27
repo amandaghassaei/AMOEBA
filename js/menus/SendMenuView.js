@@ -17,6 +17,7 @@ SendMenuView = Backbone.View.extend({
     },
 
     render: function(){
+        if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "send") return;
         this.$el.html(this.template(this.model.toJSON()));
     },
