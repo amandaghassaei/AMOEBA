@@ -39,7 +39,7 @@ TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
         console.warn("tinyG type not recognized");
         return "";
     }
-//    data += "G28.2 Z0\n";//home Z
+    data += "G28.2 Z0\n";//home Z
     data += "G4 P2\n";//pause
     return data
 };
