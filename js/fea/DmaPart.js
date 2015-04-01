@@ -189,6 +189,36 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     loader.load("assets/stls/parts/edgeVoxPartLowPoly.stl", function(geometry){
 
         unitPartGeo = geometry;
+        unitPartGeo.computeBoundingBox();
+        var unitScale = 0.706/unitPartGeo.boundingBox.max.y;
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    });
+
+    function DMAEdgeVoxPartLowPoly(type, parent){
+        DMAPart.call(this, type, parent);
+    }
+    DMAEdgeVoxPartLowPoly.prototype = Object.create(DMAPart.prototype);
+
+    DMAEdgeVoxPartLowPoly.prototype._makeMeshForType = function(){
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        mesh.myPart = this;//need a ref back to this part
+        return mesh;
+    };
+
+    self.DMAEdgeVoxPartLowPoly = DMAEdgeVoxPartLowPoly;
+
+})();
+
+
+(function () {
+
+    var unitPartGeo;
+
+    //import part geometry
+    var loader = new THREE.STLLoader();
+    loader.load("assets/stls/parts/edgeVoxPartLowPoly.stl", function(geometry){
+
+        unitPartGeo = geometry;
 //        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));
 //        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
     });

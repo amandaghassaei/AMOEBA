@@ -156,7 +156,22 @@ function DMARotatedEdgeCell(indices, scale, cellMode, partType){
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
 DMARotatedEdgeCell.prototype._initParts = function(){
-    return [new DMAEdgeVoxPart(0, this)];
+    return this.changePartType(dmaGlobals.lattice.get("partType"));
+};
+
+DMARotatedEdgeCell.prototype.changePartType = function(type){
+    var newParts = [];
+    if (type == "vox"){
+        newParts.push(new DMAEdgeVoxPart(0, this));
+    } else if (type == "voxLowPoly"){
+        newParts.push(new DMAEdgeVoxPartLowPoly(0, this));
+    } else {
+        console.warn("part type not recognized");
+        return;
+    }
+    if (!this.parts) return newParts;
+    this.destroyParts();
+    this.parts = newParts;
 };
 
 DMARotatedEdgeCell.prototype._doMeshTransformations = function(mesh){

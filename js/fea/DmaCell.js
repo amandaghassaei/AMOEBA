@@ -167,6 +167,9 @@ DMACell.prototype._initParts = function(){
     return [];//override in subclasses
 };
 
+DMACell.prototype.changePartType = function(){//override in subclasses
+};
+
 DMACell.prototype.removePart = function(index){
     this.parts[index].destroy();
     this.parts[index] = null;
