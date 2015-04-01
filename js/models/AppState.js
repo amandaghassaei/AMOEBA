@@ -236,9 +236,12 @@ AppState = Backbone.Model.extend({
             this.downKeys[e.keyCode] = true;
         } else this.downKeys[e.keyCode] = false;
 
-//        console.log(e);
-//        console.log(e.keyCode);
+//        consog(e);
+//        console.log(e.keyCode);le.lo
         switch(e.keyCode){
+            case 8://delete key - causes back nav in chrome, super annoying
+                e.preventDefault();
+                e.stopPropagation();
             case 16://shift
                 this.set("shift", state);
                 break;

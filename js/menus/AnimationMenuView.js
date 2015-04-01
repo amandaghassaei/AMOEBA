@@ -126,7 +126,7 @@ AnimationMenuView = Backbone.View.extend({
         <div id="postWarning">You have made the following changes that require post processing:<br/>\
         This will override edits you have made to the G-code.  OK to override? <a href="#" class="overrideEdits btn btn-block btn-lg btn-danger">OK</a></div>\
         <% } %>\
-        <div id="gcodeEditor" contenteditable><%= dataOut %></div><br/>\
+        <div id="gcodeEditor"><%= dataOut %></div><br/>\
         <a href="#" class="overrideEdits btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
         ')
 
