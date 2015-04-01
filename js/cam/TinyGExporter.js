@@ -24,17 +24,20 @@ TinyGExporter.prototype._setSpeed = function(speed){
 };
 
 TinyGExporter.prototype.goHome = function(){
-    return this.addComment("home");
+//    var data = this.addComment("home z");
+//    data += "M9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";data += "G28.2 Z0\n";//home Z
+//    data += "G4 P2\n";//pause
+    return "";
 };
 
 TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
     var data = "";
     if (type == "cell"){
-        if (Math.abs(cellPosition.z-wcs.z)<0.001) data += "M3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";//lower height
-        else data += "M3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";//upper height
+        if (Math.abs(cellPosition.z-wcs.z)<0.001) data += "M9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM8 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";//lower height
+        else data += "M9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM8 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM8 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";//upper height
         data += this.addComment(JSON.stringify(cell.indices));
     } else if (type == "stock"){
-        data += "M3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";
+        data += "M9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM9 \nM3 \nG4 P0.05 \nM5 \nG4 P0.05 \nM8 \nM3 \nG4 P0.05 \nM5 \nG4 P0.5 \n";
     } else {
         console.warn("tinyG type not recognized");
         return "";

@@ -275,9 +275,9 @@ Shopbot.prototype._buildMeshes = function(callback){
     var material = this.material;
     (new THREE.STLLoader()).load("assets/stls/shopbot/shopbotEndEffector.stl", function(geometry){
         geometry.computeBoundingBox();
-        var unitScale = 1.5/geometry.boundingBox.max.y/2.78388;
+        var unitScale = 0.5/geometry.boundingBox.max.y;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0, Math.sqrt(2)/2));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,1.13));
         var mesh = new THREE.Mesh(geometry, material);
         mesh.visible = false;
         meshes.endEffector = mesh;
