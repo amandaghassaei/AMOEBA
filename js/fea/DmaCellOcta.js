@@ -166,7 +166,7 @@ DMARotatedEdgeCell.prototype.changePartType = function(type){
     } else if (type == "voxLowPoly"){
         newParts.push(new DMAEdgeVoxPartLowPoly(0, this));
     } else {
-        console.warn("part type not recognized");
+        console.warn("part type " + type + " not recognized");
         return;
     }
     if (!this.parts) return newParts;

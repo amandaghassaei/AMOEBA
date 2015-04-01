@@ -52,15 +52,15 @@ OneBitBot.prototype._buildMeshes = function(callback){
         meshPrep(geometryScale(geometry), "basePlate");
     });
     loader.load("assets/stls/oneBitBot/endEffector.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(140,150,-135.37));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(142,142,-125));
         meshPrep(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/oneBitBot/endEffectorPlate.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(140,150,-0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(142,142,-0));
         meshPrep(geometryScale(geometry), "zDrive");
     });
     loader.load("assets/stls/oneBitBot/xAxis.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(140,0,-0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(142,0,-0));
         meshPrep(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/oneBitBot/backYAxis.stl", function(geometry){
