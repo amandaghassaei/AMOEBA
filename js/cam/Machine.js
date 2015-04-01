@@ -277,7 +277,7 @@ Shopbot.prototype._buildMeshes = function(callback){
         geometry.computeBoundingBox();
         var unitScale = 0.5/geometry.boundingBox.max.y;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,1.13));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,1.13-Math.sqrt(2)/2));
         var mesh = new THREE.Mesh(geometry, material);
         mesh.visible = false;
         meshes.endEffector = mesh;
