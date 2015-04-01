@@ -187,6 +187,7 @@ AppState = Backbone.Model.extend({
         var currentTab = this.get("currentTab");
         if (currentTab != "animate") this.set("stockSimulationPlaying", false);
         if (currentTab != "cam") this.set("manualSelectOrigin", false);
+        if (currentTab == "import" && dmaGlobals.lattice.get("connectionType") == "edgeRot") dmaGlobals.lattice.set("partType", "voxLowPoly");
         this._storeTab(this.get("currentNav"), currentTab);
     },
 
@@ -198,7 +199,7 @@ AppState = Backbone.Model.extend({
 
     _updateCellMode: function(){
         var currentTab = this.get("currentTab");
-        if (currentTab == "lattice") this.set("cellMode", "cell");
+        if (currentTab == "lattice" || currentTab == "import") this.set("cellMode", "cell");
         //else if (currentTab == "import") this.set("cellMode", "cell");
         //else if (currentTab == "sketch") this.set("cellMode", "cell");
         else if (currentTab == "part") this.set("cellMode", "part");
@@ -243,7 +244,7 @@ AppState = Backbone.Model.extend({
                 e.preventDefault();
                 e.stopPropagation();
             case 16://shift
-                this.set("shift", state);
+//                this.set("shift", state);
                 break;
             case 68://d delete mode
                 this.set("deleteMode", state);
