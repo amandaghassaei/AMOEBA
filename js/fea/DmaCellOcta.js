@@ -91,9 +91,7 @@ DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
 
 DMAFreeFormOctaCell.prototype._initParts = function(){
     var parts  = [];
-    for (var i=0;i<3;i++){
-        parts.push(new DMATrianglePart(i, this));
-    }
+    parts.push(new DMAOctaTroxPart(1, this));
     return parts;
 };
 

@@ -64,7 +64,7 @@ AppState = Backbone.Model.extend({
                     //truss:"Truss"
                 },
                 freeformFace: {
-                    triangle:"Triangle"
+                    trox:"Troxes"
                     //beam:"Beam"
                 },
                 edge: null,
