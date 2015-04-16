@@ -57,69 +57,6 @@ DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////FREEFORM CONNECTED/////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-    DMAFreeFormCell.call(this, indices, scale, parentCellPos, parentCellQuat, direction, parentType);
-}
-DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
-
-DMAFreeFormOctaCell.prototype._doMeshTransformations = function(mesh){
-
-    if (!this.parentDirection) {
-        this.parentDirection = new THREE.Vector3(0,0,1);
-        this.parentQuaternion = new THREE.Quaternion();
-        this.parentPos = new THREE.Vector3(0,0,0);
-    }
-    var direction = this.parentDirection.clone();
-    var zAxis = new THREE.Vector3(0,0,1);
-    zAxis.applyQuaternion(this.parentQuaternion);
-    var quaternion = new THREE.Quaternion().setFromUnitVectors(zAxis, direction);
-    quaternion.multiply(this.parentQuaternion);
-
-    if ((this.parentType == "octa" && direction.sub(zAxis).length() < 0.1) || this.parentType == "tetra"){
-        var zRot = new THREE.Quaternion().setFromAxisAngle(this.parentDirection, Math.PI);
-        zRot.multiply(quaternion);
-        quaternion = zRot;
-    }
-
-    var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
-    mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
-};
-
-DMAFreeFormOctaCell.prototype._initParts = function(){
-    var parts  = [];
-    parts.push(new DMAOctaTroxPart(1, this));
-    return parts;
-};
-
-DMAFreeFormOctaCell.prototype.getType = function(){
-    return "octa";
-};
-
-DMAFreeFormOctaCell.prototype._getGeometry = function(){
-    return unitFaceOctaGeo;
-};
-
-DMAFreeFormOctaCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
-};
-
-DMAFreeFormOctaCell.prototype.yScale = function(scale){
-    return this.xScale(scale)/2*Math.sqrt(3);
-};
-
-DMAFreeFormOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*2/Math.sqrt(6);
-};
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////EDGE CONNECTED/////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
