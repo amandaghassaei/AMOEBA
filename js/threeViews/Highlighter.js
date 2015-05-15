@@ -70,7 +70,7 @@ Highlighter = Backbone.View.extend({
 
         var highlightedPos = highlighted.myParent.calcHighlighterPosition(intersection.face, intersection.point);
         this.index = highlightedPos.index;
-        this.position = highlightedPos.position;
+        this.position = highlightedPos.position;//todo used just for gik
         if (!highlightedPos.direction) {//may be hovering over a face that we shouldn't highlight
             this.hide();
             return;
@@ -229,7 +229,7 @@ GIKHighlighter = Highlighter.extend({
             this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
         }
         else {
-            this.mesh.rotation.set(0, 0,0);
+            this.mesh.rotation.set(0,0,0);
             this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
         }
     },
@@ -239,6 +239,24 @@ GIKHighlighter = Highlighter.extend({
         this._setPosition(this.position, this.direction);//position of center point
         this._setRotation(this.direction, this.index);
         dmaGlobals.three.render();
+    },
+
+    addRemoveVoxel: function(shouldAdd){
+
+        if (shouldAdd){
+            if (!this.isVisible() || !this.highlightedObject) return;
+            var position = this._getNextCellPosition();
+            var min;
+            if (this.mesh.rotation.z == 0) min = {x:position.x-(dmaGlobals.lattice.get("gikLength")-1), y:position.y, z:position.z};
+            else min = {x:position.x, y:position.y-(dmaGlobals.lattice.get("gikLength")-1), z:position.z};
+            var range = {min:min, max:position};
+            dmaGlobals.lattice.addCellsInRange(range);
+        } else {
+            if (!this.highlightedObject) return;
+            if (!(this.highlightedObject instanceof DMACell)) return;
+            dmaGlobals.lattice.removeCell(this.highlightedObject);
+        }
+        this.setNothingHighlighted();
     }
 });
 
