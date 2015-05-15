@@ -24,7 +24,8 @@ Lattice = Backbone.Model.extend({
 
         cellType: "octa",
         connectionType: "face",
-        partType: "triangle"
+        partType: "triangle",
+        microGikLength: 4
     },
 
     //pass in fillGeometry

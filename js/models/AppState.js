@@ -52,7 +52,7 @@ AppState = Backbone.Model.extend({
         allConnectionTypes: {
             octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
             tetra: {vertex: "Vertex"},
-            cube: {face:"Face"},
+            cube: {face:"Face", microGik: "GIK"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"}
         },
@@ -237,8 +237,8 @@ AppState = Backbone.Model.extend({
             this.downKeys[e.keyCode] = true;
         } else this.downKeys[e.keyCode] = false;
 
-//        consog(e);
-//        console.log(e.keyCode);le.lo
+//        console.log(e);
+//        console.log(e.keyCode);
         switch(e.keyCode){
             case 8://delete key - causes back nav in chrome, super annoying
                 e.preventDefault();
@@ -278,6 +278,17 @@ AppState = Backbone.Model.extend({
             case 32://space bar (play/pause simulation)
                 e.preventDefault();
                 if (state && this.get("currentTab") == "animate") this.set("stockSimulationPlaying", !this.get("stockSimulationPlaying"));
+                break;
+            case 49://1-9
+            case 50:
+            case 51:
+            case 52:
+            case 53:
+            case 54:
+            case 55:
+            case 56:
+            case 57:
+                if (state) dmaGlobals.lattice.set("microGikLength", e.keyCode-48);
                 break;
             default:
                 break;

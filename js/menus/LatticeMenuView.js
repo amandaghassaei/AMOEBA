@@ -16,7 +16,7 @@ LatticeMenuView = Backbone.View.extend({
         "slide #scaleSlider":                           "_sliderDidSlide",
         "slideStop #scaleSlider":                       "_changeScaleSlider",
         "click #freeformTetraCell":                     "_setTetraCell",
-        "click #freeformOctaCell":                      "_setOctaCell"
+        "click #freeformOctaCell":                      "_setOctaCell",
     },
 
 
@@ -40,6 +40,7 @@ LatticeMenuView = Backbone.View.extend({
         }
 
         if ($(".cellSeparation").is(":focus")) this._updateNumber(e, "cellSeparation");
+        if ($("#gikLength").is(":focus")) this._updateGikLength(e);
     },
 
     _updateNumber: function(e, property){
@@ -49,6 +50,13 @@ LatticeMenuView = Backbone.View.extend({
         var object = this.lattice.get(property);
         object[$(e.target).data("type")] = newVal;
         this.lattice.trigger("change:"+property);
+    },
+
+    _updateGikLength: function(e){
+        e.preventDefault();
+        var newVal = parseInt($(e.target).val());
+        if (isNaN(newVal)) return;
+        dmaGlobals.lattice.set("microGikLength", newVal);
     },
 
     _clearCells: function(e){
@@ -160,6 +168,9 @@ LatticeMenuView = Backbone.View.extend({
                 </ul>\
             </div>\
             <br/><br/>\
+        <% } %>\
+        <% if (connectionType == "microGik") { %>\
+        GIK Length:&nbsp;&nbsp;<input id="gikLength" value="<%= microGikLength %>" placeholder="GIK length" class="form-control numberInput" type="text"><br/>\
         <% } %>\
         <br/>\
         Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control numberInput" type="text"><br/>\
