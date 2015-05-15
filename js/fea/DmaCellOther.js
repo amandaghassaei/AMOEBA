@@ -78,6 +78,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     };
 
     DMAGIKCell.prototype.setSuperCell = function(superCell, index, length){
+        this.superCell = superCell;
         this.superCellIndex = index;
         this.superCellLength = length;
     };

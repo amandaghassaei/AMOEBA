@@ -76,6 +76,8 @@ DMACell.prototype.updateForScale = function(scale, cellMode, partType){
     this._setMeshPosition(this.cellMesh, position);
     this.cellMesh.scale.set(scale, scale, scale);//must do this so highlighting works properly in part mode
 
+    if (this.superCell && this.superCellIndex == 0) this.superCell.setScale(scale);
+
     //only update visible object to scale
     if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
     if (!partType)  partType = dmaGlobals.lattice.get("partType");
@@ -249,6 +251,9 @@ DMACell.prototype.destroy = function(){
     this.indices = null;
     this.nodes = null;
     this.beams = null;
+    this.superCell = null;
+    this.superCellIndex = null;
+    this.superCellLength = null;
 };
 
 DMACell.prototype.toJSON = function(){
