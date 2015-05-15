@@ -288,6 +288,7 @@ AppState = Backbone.Model.extend({
             case 55:
             case 56:
             case 57:
+                if (dmaGlobals.lattice.get("connectionType") != "gik") break;
                 if (state) dmaGlobals.lattice.set("gikLength", e.keyCode-48);
                 break;
             default:
