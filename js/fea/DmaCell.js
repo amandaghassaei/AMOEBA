@@ -239,6 +239,8 @@ DMACell.prototype._initBeams = function(nodes, faces){
 };
 
 DMACell.prototype.destroy = function(){
+    if (this.destroyStarted) return;
+    this.destroyStarted = true;
     if (this.cellMesh) {
         dmaGlobals.three.sceneRemove(this.cellMesh, this._sceneType(this.indices));
         this.cellMesh.myParent = null;
@@ -251,7 +253,10 @@ DMACell.prototype.destroy = function(){
     this.indices = null;
     this.nodes = null;
     this.beams = null;
-    this.superCell = null;
+    if (this.superCell) {
+        this.superCell.destroy();
+        this.superCell = null;
+    }
     this.superCellIndex = null;
     this.superCellLength = null;
 };

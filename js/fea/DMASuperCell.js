@@ -38,9 +38,11 @@ DMASuperCell.prototype.setScale = function(scale){
 };
 
 DMASuperCell.prototype.destroy = function(){
+    if (this.destroyStarted) return;//prevents loop destroy from cells
+    this.destroyStarted = true;
     dmaGlobals.three.sceneRemove(this.mesh);
     _.each(this.cells, function(cell){
-        if (cell) cell.destroy();
+        if (cell && !cell.destroyStarted) dmaGlobals.lattice.removeCell(cell);
     });
     this.cells = null;
     this.mesh = null;
