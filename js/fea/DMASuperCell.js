@@ -5,16 +5,19 @@
 
 var cellMaterials = [new THREE.MeshNormalMaterial()];
 
-DMASuperCell = function(length, index){
-    this.mesh = this._buildSuperCellMesh(length);
-    this.index = _.clone(index);
+DMASuperCell = function(length, range){
+    var shouldRotate = range.max.x == range.min.x;
+    this.mesh = this._buildSuperCellMesh(length, shouldRotate);
+    this.index = _.clone(range.max);
     this.setScale();
     dmaGlobals.three.sceneAdd(this.mesh);
 };
 
-DMASuperCell.prototype._buildSuperCellMesh = function(length){
+DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
     var superCellGeo = new THREE.BoxGeometry(1,1,1);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
+    superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(length/2-1/2), 0, 0));
+    if (shouldRotate) superCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
     var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, cellMaterials);
     var wireframe = new THREE.BoxHelper(mesh.children[0]);
     wireframe.material.color.set(0x000000);
