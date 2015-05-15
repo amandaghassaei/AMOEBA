@@ -75,6 +75,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMAGIKCell.prototype._setCellMeshVisibility = function(visible){
         this.cellMesh.visible = false;
+        if (this.superCell) this.superCell.setVisibility(visible);
     };
 
     DMAGIKCell.prototype.setSuperCell = function(superCell, index, length){

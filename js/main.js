@@ -26,5 +26,5 @@ $(function(){
     //threeJS View
     new ThreeView({model:dmaGlobals.three, appState:dmaGlobals.appState});
 
-    dmaGlobals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
+    if (dmaGlobals.lattice.get("connectionType") != "gik") dmaGlobals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
 });
