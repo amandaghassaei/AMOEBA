@@ -84,6 +84,12 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         this.superCellLength = length;
     };
 
+    DMAGIKCell.prototype._initParts = function(){
+        var parts  = [];
+        parts.push(new DMAGIKPart(0, this));
+        return parts;
+};
+
     self.DMAGIKCell = DMAGIKCell;
 
 })();

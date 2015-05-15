@@ -209,6 +209,10 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
 })();
 
+//////////////////////////////////////////////////////////////
+/////////////////Micro LEGO///////////////////////////////////
+//////////////////////////////////////////////////////////////
+
 
 (function () {
 
@@ -223,17 +227,17 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 //        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
     });
 
-    function DMAEdgeVoxPartLowPoly(type, parent){
+    function DMAGIKPart(type, parent){
         DMAPart.call(this, type, parent);
     }
-    DMAEdgeVoxPartLowPoly.prototype = Object.create(DMAPart.prototype);
+    DMAGIKPart.prototype = Object.create(DMAPart.prototype);
 
-    DMAEdgeVoxPartLowPoly.prototype._makeMeshForType = function(){
+    DMAGIKPart.prototype._makeMeshForType = function(){
         var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
 
-    self.DMAEdgeVoxPartLowPoly = DMAEdgeVoxPartLowPoly;
+    self.DMAMicroLegoPart = DMAGIKPart;
 
 })();

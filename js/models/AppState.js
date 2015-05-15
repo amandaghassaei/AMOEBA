@@ -80,7 +80,12 @@ AppState = Backbone.Model.extend({
 //                }
             },
             tetra: {vertex: null},
-            cube: {face: null},
+            cube: {face: null,
+                gik: {
+                    lego: "Micro LEGO (high res)",
+                    legoLowPoly: "Micro LEGO (low res)"
+                }
+            },
             truncatedCube: {face: null},
             kelvin: {face: null}
         },

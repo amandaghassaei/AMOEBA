@@ -24,7 +24,7 @@ Lattice = Backbone.Model.extend({
 
         cellType: "cube",
         connectionType: "gik",
-        partType: "triangle",
+        partType: "lego",
         gikLength: 4
     },
 
