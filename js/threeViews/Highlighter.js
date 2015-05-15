@@ -250,7 +250,7 @@ GIKHighlighter = Highlighter.extend({
             if (this.mesh.rotation.z == 0) min = {x:position.x-(dmaGlobals.lattice.get("gikLength")-1), y:position.y, z:position.z};
             else min = {x:position.x, y:position.y-(dmaGlobals.lattice.get("gikLength")-1), z:position.z};
             var range = {min:min, max:position};
-            dmaGlobals.lattice.addCellsInRange(range);
+            dmaGlobals.lattice.addSuperCell(range);
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;

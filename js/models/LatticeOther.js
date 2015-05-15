@@ -84,7 +84,17 @@ OtherLatticeSubclasses = {
         },
 
         makeCellForLatticeType: function(indices, scale){
-            return new DMACubeCell(indices, scale);
+            return new DMAGIKCell(indices, scale);
+        },
+
+        addSuperCell: function(range){
+
+            var length = this.get("gikLength");
+            var superCell = new DMASuperCell(length, range.max);
+            var cells = this.addCellsInRange(range);
+            _.each(cells, function(cell, index){
+                cell.setSuperCell(superCell, index, length);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

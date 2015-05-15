@@ -448,6 +448,7 @@ Lattice = Backbone.Model.extend({
             if (connectionType == "face"){
                 _.extend(this, this.CubeLattice);
             } else if (connectionType == "gik"){
+                if (!loadingFromFile) this.clearCells();
                 _.extend(this, this.GIKLattice);
             }
         } else if (cellType == "truncatedCube"){

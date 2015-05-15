@@ -60,6 +60,32 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
 })();
 
+(function () {
+
+    var unitCellGeo = new THREE.BoxGeometry(1,1,1);
+
+    function DMAGIKCell(indices, scale, cellMode, partType){
+        DMACubeCell.call(this, indices, scale, cellMode, partType);
+    }
+    DMAGIKCell.prototype = Object.create(DMACubeCell.prototype);
+
+    DMAGIKCell.prototype._buildCellMesh = function(){
+        return DMACell.prototype._buildCellMesh.call(this, cellMaterial);
+    };
+
+    DMAGIKCell.prototype._setCellMeshVisibility = function(visible){
+        this.cellMesh.visible = false;
+    };
+
+    DMAGIKCell.prototype.setSuperCell = function(superCell, index, length){
+        this.superCellIndex = index;
+        this.superCellLength = length;
+    };
+
+    self.DMAGIKCell = DMAGIKCell;
+
+})();
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////TRUNCATED CUBE CLASS///////////////////////////////////////////////////
