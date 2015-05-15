@@ -56,6 +56,7 @@ Highlighter = Backbone.View.extend({
         this.highlightedObject = null;
         this.index = null;
         this.direction = null;
+        this.position = null;
         this.hide();
     },
 
@@ -69,6 +70,7 @@ Highlighter = Backbone.View.extend({
 
         var highlightedPos = highlighted.myParent.calcHighlighterPosition(intersection.face, intersection.point);
         this.index = highlightedPos.index;
+        this.position = highlightedPos.position;
         if (!highlightedPos.direction) {//may be hovering over a face that we shouldn't highlight
             this.hide();
             return;
@@ -230,6 +232,13 @@ GIKHighlighter = Highlighter.extend({
             this.mesh.rotation.set(0, 0,0);
             this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
         }
+    },
+
+    updateGikLength: function(scale){
+        this.updateScale(scale);
+        this._setPosition(this.position, this.direction);//position of center point
+        this._setRotation(this.direction, this.index);
+        dmaGlobals.three.render();
     }
 });
 

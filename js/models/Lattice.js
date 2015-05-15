@@ -36,6 +36,7 @@ Lattice = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
+        this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
         this.listenTo(options.appState, "change:cellMode", this._updateForMode);
         this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
@@ -367,6 +368,10 @@ Lattice = Backbone.Model.extend({
         });
 
         dmaGlobals.three.render();
+    },
+
+    _gikLengthDidChange: function(){
+        if (this.get("highlighter").updateGikLength) this.get("highlighter").updateGikLength(this.get("scale"));
     },
 
     previewScaleChange: function(scale){
