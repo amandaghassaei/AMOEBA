@@ -258,7 +258,6 @@ DMACell.prototype.destroy = function(){
         this.superCell = null;
     }
     this.superCellIndex = null;
-    this.superCellLength = null;
 };
 
 DMACell.prototype.toJSON = function(){

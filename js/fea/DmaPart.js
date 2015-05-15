@@ -220,7 +220,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
     //import part geometry
     var loader = new THREE.STLLoader();
-    loader.load("assets/stls/parts/edgeVoxPartLowPoly.stl", function(geometry){
+    loader.load("assets/stls/parts/GIKPart.stl", function(geometry){
 
         unitPartGeo = geometry;
 //        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));

@@ -41,6 +41,10 @@ DMASuperCell.prototype.setVisibility = function(visible){
     this.mesh.visible = visible;
 };
 
+DMASuperCell.prototype.getLength = function(){
+    return this.cells.length;
+};
+
 DMASuperCell.prototype.destroy = function(){
     if (this.destroyStarted) return;//prevents loop destroy from cells
     this.destroyStarted = true;
