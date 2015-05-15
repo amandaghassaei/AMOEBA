@@ -51,6 +51,52 @@ OtherLatticeSubclasses = {
     },
 
 ////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////GIK LATTICE//////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////
+
+    GIKLattice: {
+
+        _initLatticeType: function(){
+            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
+            this.set("highlighter", new GIKHighlighter({scale:this.get("scale")}));
+        },
+
+        getIndexForPosition: function(absPosition){
+            return this._indexForPosition(absPosition);
+        },
+
+        getPositionForIndex: function(index){
+            return this._positionForIndex(index);
+        },
+
+        xScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale*(1+2*this.get("cellSeparation").xy);
+        },
+
+        yScale: function(scale){
+            return this.xScale(scale);
+        },
+
+        zScale: function(scale){
+            if (!scale) scale = this.get("scale");
+            return scale*(1+2*this.get("cellSeparation").z);
+        },
+
+        makeCellForLatticeType: function(indices, scale){
+            return new DMACubeCell(indices, scale);
+        },
+
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            var self = this;
+            _.each(_.keys(this.GIKLattice), function(key){
+                self[key] = null;
+            });
+        }
+    },
+
+
+////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////TRUNCATED CUBE LATTICE////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 

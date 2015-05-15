@@ -22,10 +22,10 @@ Lattice = Backbone.Model.extend({
         //spacing for connectors/joints
         cellSeparation: {xy:0, z:0},
 
-        cellType: "octa",
-        connectionType: "face",
+        cellType: "cube",
+        connectionType: "gik",
         partType: "triangle",
-        microGikLength: 4
+        gikLength: 4
     },
 
     //pass in fillGeometry
@@ -440,7 +440,11 @@ Lattice = Backbone.Model.extend({
         } else if (cellType == "tetra"){
             _.extend(this, this.CubeLattice);
         } else if (cellType == "cube"){
-            _.extend(this, this.CubeLattice);
+            if (connectionType == "face"){
+                _.extend(this, this.CubeLattice);
+            } else if (connectionType == "gik"){
+                _.extend(this, this.GIKLattice);
+            }
         } else if (cellType == "truncatedCube"){
             _.extend(this, this.TruncatedCubeLattice);
         } else if (cellType == "kelvin"){

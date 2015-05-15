@@ -52,7 +52,7 @@ AppState = Backbone.Model.extend({
         allConnectionTypes: {
             octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
             tetra: {vertex: "Vertex"},
-            cube: {face:"Face", microGik: "GIK"},
+            cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"}
         },
@@ -288,7 +288,7 @@ AppState = Backbone.Model.extend({
             case 55:
             case 56:
             case 57:
-                if (state) dmaGlobals.lattice.set("microGikLength", e.keyCode-48);
+                if (state) dmaGlobals.lattice.set("gikLength", e.keyCode-48);
                 break;
             default:
                 break;

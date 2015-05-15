@@ -74,8 +74,8 @@ Highlighter = Backbone.View.extend({
             return;
         }
         this.direction = highlightedPos.direction;
-        this._setPosition(highlightedPos.position);//position of center point
-        this._setRotation(this.direction);
+        this._setPosition(highlightedPos.position, this.direction);//position of center point
+        this._setRotation(this.direction, this.index);
 
         this.show(true);
     },
@@ -201,15 +201,43 @@ OctaFreeFormHighlighter = Highlighter.extend({
 CubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        return new THREE.BoxGeometry(1,1,0.01);;
+        return new THREE.BoxGeometry(1,1,0.01);
     }
 
 });
 
+GIKHighlighter = Highlighter.extend({
+
+    updateScale: function(scale){
+        this.mesh.scale.set(dmaGlobals.lattice.get("gikLength")*scale, scale, scale);
+    },
+
+    _makeGeometry: function(){
+        return new THREE.BoxGeometry(1,1,1);
+    },
+
+    _setPosition: function(position, direction){
+        var scale = this.mesh.scale.z/2;
+        this.mesh.position.set(position.x+scale*direction.x, position.y+scale*direction.y, position.z+scale*direction.z);
+    },
+
+    _setRotation: function(direction, index){
+        if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) {
+            this.mesh.rotation.set(0, 0, Math.PI/2);
+            this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
+        }
+        else {
+            this.mesh.rotation.set(0, 0,0);
+            this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
+        }
+    }
+});
+
+
 TruncatedCubeHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        return new THREE.BoxGeometry(1,1,0.01);;
+        return new THREE.BoxGeometry(1,1,0.01);
     },
 
     _setRotation: function(direction){
