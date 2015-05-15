@@ -5,10 +5,11 @@
 
 var cellMaterials = [new THREE.MeshNormalMaterial()];
 
-DMASuperCell = function(length, range){
+DMASuperCell = function(length, range, cells){
     var shouldRotate = range.max.x == range.min.x;
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
     this.index = _.clone(range.max);
+    this.cells = cells;
     this.setScale();
     dmaGlobals.three.sceneAdd(this.mesh);
 };
@@ -38,6 +39,10 @@ DMASuperCell.prototype.setScale = function(scale){
 
 DMASuperCell.prototype.destroy = function(){
     dmaGlobals.three.sceneRemove(this.mesh);
+    _.each(this.cells, function(cell){
+        if (cell) cell.destroy();
+    });
+    this.cells = null;
     this.mesh = null;
     this.index = null;
 }

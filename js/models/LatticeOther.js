@@ -88,10 +88,9 @@ OtherLatticeSubclasses = {
         },
 
         addSuperCell: function(range){
-
             var length = this.get("gikLength");
-            var superCell = new DMASuperCell(length, range);
             var cells = this.addCellsInRange(range);
+            var superCell = new DMASuperCell(length, range, cells);
             _.each(cells, function(cell, index){
                 cell.setSuperCell(superCell, index, length);
             });

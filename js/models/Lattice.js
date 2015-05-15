@@ -55,6 +55,7 @@ Lattice = Backbone.Model.extend({
     addCellsInRange: function(range){//add a block of cells (extrude)
         var scale = this.get("scale");
         var cells = this.get("cells");
+        var newCells = [];
         this.checkForMatrixExpansion(cells, range.max, range.min);
 
         var cellsMin = this.get("cellsMin");
@@ -65,13 +66,16 @@ Lattice = Backbone.Model.extend({
             for (var y=relativeMin.y;y<=relativeMax.y;y++){
                 for (var z=relativeMin.z;z<=relativeMax.z;z++){
                     if (!cells[x][y][z]) {
-                        cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
+                        var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
+                        cells[x][y][z] = cell;
+                        newCells.push(cell);
                         this.set("numCells", this.get("numCells")+1);
                     } else console.warn("already a cell there");
                 }
             }
         }
         dmaGlobals.three.render();
+        return newCells;
     },
 
     addCellAtIndex: function(indices, noRender, noCheck){
