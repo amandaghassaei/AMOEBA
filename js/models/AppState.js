@@ -105,8 +105,14 @@ AppState = Backbone.Model.extend({
             tetra: {vertex: null},
             cube: {face: null,
                 gik: {
-                    brass:"Brass",
-                    fiberGlass: "Fiberglass"
+                    brass:{
+                        name: "Brass",
+                        color: "#b5a642"
+                    },
+                    fiberGlass: {
+                        name: "Fiberglass",
+                        color: "#fef1b5"
+                    }
                 }
             },
             truncatedCube: {face: null},

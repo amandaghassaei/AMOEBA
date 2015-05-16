@@ -3,10 +3,12 @@
  */
 
 
-var cellMaterials = [new THREE.MeshNormalMaterial()];
+var cellBrassMaterial = [new THREE.MeshLambertMaterial({color:"#b5a642"})];
+var cellFiberGlassMaterial = [new THREE.MeshLambertMaterial({color:"#fef1b5"})];
 
 DMASuperCell = function(length, range, cells){
     var shouldRotate = range.max.x == range.min.x;
+    this.material = dmaGlobals.lattice.get("materialType");
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
     this.setVisibility(dmaGlobals.appState.get("cellMode")=="cell");
     this.index = _.clone(range.max);
@@ -20,7 +22,9 @@ DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
     superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(length/2-1/2), 0, 0));
     if (shouldRotate) superCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
-    var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, cellMaterials);
+    var material = cellBrassMaterial;
+    if (this.material == "fiberGlass") material = cellFiberGlassMaterial;
+    var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, material);
     var wireframe = new THREE.BoxHelper(mesh.children[0]);
     wireframe.material.color.set(0x000000);
     mesh.children.push(wireframe);
@@ -56,4 +60,5 @@ DMASuperCell.prototype.destroy = function(){
     this.cells = null;
     this.mesh = null;
     this.index = null;
+    this.material = null;
 }

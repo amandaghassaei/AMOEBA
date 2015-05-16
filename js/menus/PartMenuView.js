@@ -76,10 +76,10 @@ PartMenuView = Backbone.View.extend({
         <br/><br/>\
         <% if (allMaterialTypes[cellType][connectionType]){ %> \
         Material Type: &nbsp;&nbsp;<div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType] %><span class="caret"></span></button>\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType].name %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
-                        <li><a class="materialType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key] %></a></li>\
+                        <li><a class="materialType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key].name %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\

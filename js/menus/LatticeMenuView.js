@@ -171,7 +171,18 @@ LatticeMenuView = Backbone.View.extend({
         <% } %>\
         <% if (connectionType == "gik") { %>\
         GIK Length:&nbsp;&nbsp;<input id="gikLength" value="<%= gikLength %>" placeholder="GIK length" class="form-control numberInput" type="text"><br/>\
-        <br/><% } %>\
+        <br/>\
+        <% } %>\
+        <% if (allMaterialTypes[cellType][connectionType]){ %> \
+        Material Type: &nbsp;&nbsp;<div class="btn-group">\
+                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType].name %><span class="caret"></span></button>\
+                <ul role="menu" class="dropdown-menu">\
+                    <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
+                        <li><a class="materialType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key].name %></a></li>\
+                    <% }); %>\
+                </ul>\
+            </div><br/><br/>\
+        <% } %>\
         <br/>\
         Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control numberInput" type="text"><br/>\
         <input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
