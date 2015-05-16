@@ -231,7 +231,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
     });
 
-    function DMAGIKPart(type, parent){
+    function DMAGIKPart(type, parent, rotated){
         DMAPart.call(this, type, parent);
     }
     DMAGIKPart.prototype = Object.create(DMAPart.prototype);
@@ -263,16 +263,10 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
     });
 
-    function DMAGIKPartLowPoly(type, parent){
-        DMAPart.call(this, type, parent);
+    function DMAGIKPartLowPoly(type, parent, rotated){
+        DMAGIKPart.call(this, type, parent, rotated);
     }
-    DMAGIKPartLowPoly.prototype = Object.create(DMAPart.prototype);
-
-    DMAGIKPartLowPoly.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
-        mesh.myPart = this;//need a ref back to this part
-        return mesh;
-    };
+    DMAGIKPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
     self.DMAGIKPartLowPoly = DMAGIKPartLowPoly;
 
