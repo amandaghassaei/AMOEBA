@@ -177,6 +177,7 @@ AppState = Backbone.Model.extend({
         extrudeMode: false,
         cellMode: "cell",//show cells vs part
         cellsVisible: true,
+        superCellIndex: 0,
 
         stockSimulationPlaying: false,
         manualSelectOrigin: false//mode that allows user ot select origin from existing cell
@@ -272,7 +273,7 @@ AppState = Backbone.Model.extend({
         } else this.downKeys[e.keyCode] = false;
 
 //        console.log(e);
-//        console.log(e.keyCode);
+        console.log(e.keyCode);
         switch(e.keyCode){
             case 8://delete key - causes back nav in chrome, super annoying
                 e.preventDefault();
@@ -324,6 +325,20 @@ AppState = Backbone.Model.extend({
             case 57:
                 if (dmaGlobals.lattice.get("connectionType") != "gik") break;
                 if (state) dmaGlobals.lattice.set("gikLength", e.keyCode-48);
+                break;
+            case 81://q - increase supercell index
+                if (state) {
+                    var index = this.get("superCellIndex")+1;
+                    if (index > dmaGlobals.lattice.get("gikLength")-1) index = 0;
+                    this.set("superCellIndex", index);
+                }
+                break;
+            case 65://a - decrease supercell index
+                if (state) {
+                    var index = this.get("superCellIndex")-1;
+                    if (index < 0) index = dmaGlobals.lattice.get("gikLength")-1;
+                    this.set("superCellIndex", index);
+                }
                 break;
             default:
                 break;

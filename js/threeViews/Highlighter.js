@@ -224,14 +224,11 @@ GIKHighlighter = Highlighter.extend({
     },
 
     _setRotation: function(direction, index){
-        if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) {
-            this.mesh.rotation.set(0, 0, Math.PI/2);
-            this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
-        }
-        else {
-            this.mesh.rotation.set(0,0,0);
-            this.mesh.translateX(-this.mesh.scale.x/2+this.mesh.scale.z/2);
-        }
+        var superCellIndex = dmaGlobals.appState.get("superCellIndex");
+        var scale  = this.mesh.scale.z;
+        if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) this.mesh.rotation.set(0, 0, Math.PI/2);
+        else this.mesh.rotation.set(0,0,0);
+        this.mesh.translateX(-this.mesh.scale.x/2+scale/2+scale*superCellIndex);
     },
 
     updateGikLength: function(scale){
@@ -247,10 +244,17 @@ GIKHighlighter = Highlighter.extend({
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
             var position = this._getNextCellPosition();
-            var min;
-            if (this.mesh.rotation.z == 0) min = {x:position.x-(dmaGlobals.lattice.get("gikLength")-1), y:position.y, z:position.z};
-            else min = {x:position.x, y:position.y-(dmaGlobals.lattice.get("gikLength")-1), z:position.z};
-            var range = {min:min, max:position};
+            var index = dmaGlobals.appState.get("superCellIndex");
+            var min, max;
+            if (this.mesh.rotation.z == 0) {
+                min = {x:position.x-dmaGlobals.lattice.get("gikLength")+index, y:position.y, z:position.z};
+                max = {x:position.x+index, y:position.y, z:position.z};
+            }
+            else {
+                min = {x:position.x, y:position.y-dmaGlobals.lattice.get("gikLength")+index, z:position.z};
+                max = {x:position.x, y:position.y+index, z:position.z};
+            }
+            var range = {min:min, max:max};
             dmaGlobals.lattice.addSuperCell(range);
         } else {
             if (!this.highlightedObject) return;
