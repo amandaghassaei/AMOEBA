@@ -90,6 +90,29 @@ AppState = Backbone.Model.extend({
             kelvin: {face: null}
         },
 
+        allMaterialTypes:{
+            octa:{
+                face: null,
+                freeformFace: null,
+                edge: null,
+                edgeRot: null,
+                vertex: null//{
+                    //beam:"Beam",
+//                    square:"Square",
+//                    xShape:"X"
+//                }
+            },
+            tetra: {vertex: null},
+            cube: {face: null,
+                gik: {
+                    brass:"Brass",
+                    fiberGlass: "Fiberglass"
+                }
+            },
+            truncatedCube: {face: null},
+            kelvin: {face: null}
+        },
+
         allMachineTypes:{
             octa:{
                 face: {handOfGod: "Hand of God"},

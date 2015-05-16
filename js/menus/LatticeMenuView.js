@@ -171,7 +171,7 @@ LatticeMenuView = Backbone.View.extend({
         <% } %>\
         <% if (connectionType == "gik") { %>\
         GIK Length:&nbsp;&nbsp;<input id="gikLength" value="<%= gikLength %>" placeholder="GIK length" class="form-control numberInput" type="text"><br/>\
-        <% } %>\
+        <br/><% } %>\
         <br/>\
         Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control numberInput" type="text"><br/>\
         <input id="scaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\

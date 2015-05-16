@@ -80,7 +80,7 @@ OtherLatticeSubclasses = {
 
         zScale: function(scale){
             if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").z);
+            return 1.28*scale*(1+2*this.get("cellSeparation").z);
         },
 
         makeCellForLatticeType: function(indices, scale){

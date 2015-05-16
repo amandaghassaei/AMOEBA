@@ -236,6 +236,7 @@ GIKHighlighter = Highlighter.extend({
 
     updateGikLength: function(scale){
         this.updateScale(scale);
+        if (!this.direction) return;
         this._setPosition(this.position, this.direction);//position of center point
         this._setRotation(this.direction, this.index);
         dmaGlobals.three.render();
