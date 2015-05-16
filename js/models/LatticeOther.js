@@ -92,7 +92,7 @@ OtherLatticeSubclasses = {
             var cells = this.addCellsInRange(range);
             var superCell = new DMASuperCell(length, range, cells);
             _.each(cells, function(cell, index){
-                cell.setSuperCell(superCell, index, length);
+                cell.setSuperCell(superCell, index);
             });
         },
 

@@ -226,12 +226,12 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         unitPartGeo.computeBoundingBox();
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
             -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
-        var unitScale = 1/(unitPartGeo.boundingBox.max.x-unitPartGeo.boundingBox.min.x);
+        var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
     });
 
-    function DMAGIKPart(type, parent, rotated){
+    function DMAGIKPart(type, parent){
         DMAPart.call(this, type, parent);
     }
     DMAGIKPart.prototype = Object.create(DMAPart.prototype);
@@ -258,16 +258,68 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         unitPartGeo.computeBoundingBox();
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
             -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
-        var unitScale = 1/(unitPartGeo.boundingBox.max.x-unitPartGeo.boundingBox.min.x);
+        var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
     });
 
-    function DMAGIKPartLowPoly(type, parent, rotated){
-        DMAGIKPart.call(this, type, parent, rotated);
+    function DMAGIKPartLowPoly(type, parent){
+        DMAGIKPart.call(this, type, parent);
     }
     DMAGIKPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
     self.DMAGIKPartLowPoly = DMAGIKPartLowPoly;
+
+})();
+
+(function () {
+
+    var unitPartGeo;
+
+    //import part geometry
+    var loader = new THREE.STLLoader();
+    loader.load("assets/stls/parts/GIKEndPart.stl", function(geometry){
+
+        unitPartGeo = geometry;
+        unitPartGeo.computeBoundingBox();
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+            -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
+        var unitScale = 1/(1.2699999809265137);
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    });
+
+    function DMAGIKEndPart(type, parent){
+        DMAGIKPart.call(this, type, parent);
+    }
+    DMAGIKEndPart.prototype = Object.create(DMAGIKPart.prototype);
+
+    self.DMAGIKEndPart = DMAGIKEndPart;
+
+})();
+
+(function () {
+
+    var unitPartGeo;
+
+    //import part geometry
+    var loader = new THREE.STLLoader();
+    loader.load("assets/stls/parts/GIKEndPartLowPoly.stl", function(geometry){
+
+        unitPartGeo = geometry;
+        unitPartGeo.computeBoundingBox();
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+            -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
+        var unitScale = 1/(1.2699999809265137);
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    });
+
+    function DMAGIKEndPartLowPoly(type, parent){
+        DMAGIKPart.call(this, type, parent);
+    }
+    DMAGIKEndPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
+
+    self.DMAGIKEndPartLowPoly = DMAGIKEndPartLowPoly;
 
 })();
