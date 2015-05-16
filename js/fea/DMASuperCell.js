@@ -43,7 +43,7 @@ DMASuperCell.prototype.setVisibility = function(visible){
 };
 
 DMASuperCell.prototype.getLength = function(){
-    return this.cells.length;
+    return this.cells.length-1;
 };
 
 DMASuperCell.prototype.destroy = function(){

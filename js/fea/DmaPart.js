@@ -268,6 +268,12 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     }
     DMAGIKPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
+    DMAGIKPartLowPoly.prototype._makeMeshForType = function(){
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        mesh.myPart = this;//need a ref back to this part
+        return mesh;
+    };
+
     self.DMAGIKPartLowPoly = DMAGIKPartLowPoly;
 
 })();
@@ -282,7 +288,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
         unitPartGeo = geometry;
         unitPartGeo.computeBoundingBox();
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+0.5),
             -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
         var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
@@ -293,6 +299,12 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         DMAGIKPart.call(this, type, parent);
     }
     DMAGIKEndPart.prototype = Object.create(DMAGIKPart.prototype);
+
+    DMAGIKEndPart.prototype._makeMeshForType = function(){
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        mesh.myPart = this;//need a ref back to this part
+        return mesh;
+    };
 
     self.DMAGIKEndPart = DMAGIKEndPart;
 
@@ -308,7 +320,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
 
         unitPartGeo = geometry;
         unitPartGeo.computeBoundingBox();
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+0.5),
             -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
         var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
@@ -319,6 +331,12 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         DMAGIKPart.call(this, type, parent);
     }
     DMAGIKEndPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
+
+    DMAGIKEndPartLowPoly.prototype._makeMeshForType = function(){
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        mesh.myPart = this;//need a ref back to this part
+        return mesh;
+    };
 
     self.DMAGIKEndPartLowPoly = DMAGIKEndPartLowPoly;
 
