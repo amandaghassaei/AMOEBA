@@ -30,7 +30,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMACubeCell.prototype.calcHighlighterPosition = function(face){
 
-        var direction = face.normal;
+        var direction = face.normal.clone().applyEuler(this.cellMesh.rotation);
         var position = this.getPosition();
         var scale = this.xScale();
         _.each(_.keys(position), function(key){
