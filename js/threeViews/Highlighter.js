@@ -251,7 +251,7 @@ GIKHighlighter = Highlighter.extend({
                 max = {x:position.x+index, y:position.y, z:position.z};
             }
             else {
-                min = {x:position.x, y:position.y-dmaGlobals.lattice.get("gikLength")+index, z:position.z};
+                min = {x:position.x, y:position.y-dmaGlobals.lattice.get("gikLength")+1+index, z:position.z};
                 max = {x:position.x, y:position.y+index, z:position.z};
             }
             var range = {min:min, max:max};
