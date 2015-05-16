@@ -273,7 +273,7 @@ AppState = Backbone.Model.extend({
         } else this.downKeys[e.keyCode] = false;
 
 //        console.log(e);
-        console.log(e.keyCode);
+//        console.log(e.keyCode);
         switch(e.keyCode){
             case 8://delete key - causes back nav in chrome, super annoying
                 e.preventDefault();
@@ -314,8 +314,7 @@ AppState = Backbone.Model.extend({
                 e.preventDefault();
                 if (state && this.get("currentTab") == "animate") this.set("stockSimulationPlaying", !this.get("stockSimulationPlaying"));
                 break;
-            case 49://1-9
-            case 50:
+            case 50://2-9
             case 51:
             case 52:
             case 53:
