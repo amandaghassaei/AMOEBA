@@ -85,7 +85,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMAGIKCell.prototype._initParts = function(){
         var parts  = [];
-        parts.push(new DMAGIKPart(0, this));
+        if (dmaGlobals.lattice.get("partType") == "lego") parts.push(new DMAGIKPart(0, this));
+        else parts.push(new DMAGIKPartLowPoly(0, this));
         return parts;
 };
 

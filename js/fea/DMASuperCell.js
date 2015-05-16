@@ -8,6 +8,7 @@ var cellMaterials = [new THREE.MeshNormalMaterial()];
 DMASuperCell = function(length, range, cells){
     var shouldRotate = range.max.x == range.min.x;
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
+    this.setVisibility(dmaGlobals.appState.get("cellMode")=="cell");
     this.index = _.clone(range.max);
     this.cells = cells;
     this.setScale();

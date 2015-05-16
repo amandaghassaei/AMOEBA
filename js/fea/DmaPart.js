@@ -223,8 +223,12 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     loader.load("assets/stls/parts/GIKPart.stl", function(geometry){
 
         unitPartGeo = geometry;
-//        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));
-//        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
+        unitPartGeo.computeBoundingBox();
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+            -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
+        var unitScale = 1/(unitPartGeo.boundingBox.max.x-unitPartGeo.boundingBox.min.x);
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
     });
 
     function DMAGIKPart(type, parent){
@@ -238,6 +242,38 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         return mesh;
     };
 
-    self.DMAMicroLegoPart = DMAGIKPart;
+    self.DMAGIKPart = DMAGIKPart;
+
+})();
+
+(function () {
+
+    var unitPartGeo;
+
+    //import part geometry
+    var loader = new THREE.STLLoader();
+    loader.load("assets/stls/parts/GIKPartLowPoly.stl", function(geometry){
+
+        unitPartGeo = geometry;
+        unitPartGeo.computeBoundingBox();
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(unitPartGeo.boundingBox.min.x+unitPartGeo.boundingBox.max.x)/2,
+            -(unitPartGeo.boundingBox.min.y+unitPartGeo.boundingBox.max.y)/2, -(unitPartGeo.boundingBox.min.z+unitPartGeo.boundingBox.max.z)/2));
+        var unitScale = 1/(unitPartGeo.boundingBox.max.x-unitPartGeo.boundingBox.min.x);
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    });
+
+    function DMAGIKPartLowPoly(type, parent){
+        DMAPart.call(this, type, parent);
+    }
+    DMAGIKPartLowPoly.prototype = Object.create(DMAPart.prototype);
+
+    DMAGIKPartLowPoly.prototype._makeMeshForType = function(){
+        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        mesh.myPart = this;//need a ref back to this part
+        return mesh;
+    };
+
+    self.DMAGIKPartLowPoly = DMAGIKPartLowPoly;
 
 })();
