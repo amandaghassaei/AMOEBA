@@ -247,7 +247,7 @@ GIKHighlighter = Highlighter.extend({
             var index = dmaGlobals.appState.get("superCellIndex");
             var min, max;
             if (this.mesh.rotation.z == 0) {
-                min = {x:position.x-dmaGlobals.lattice.get("gikLength")+index, y:position.y, z:position.z};
+                min = {x:position.x-dmaGlobals.lattice.get("gikLength")+1+index, y:position.y, z:position.z};
                 max = {x:position.x+index, y:position.y, z:position.z};
             }
             else {
