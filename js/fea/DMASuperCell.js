@@ -3,8 +3,8 @@
  */
 
 
-var cellBrassMaterial = [new THREE.MeshLambertMaterial({color:"#b5a642"})];
-var cellFiberGlassMaterial = [new THREE.MeshLambertMaterial({color:"#fef1b5"})];
+var cellBrassMaterial = new THREE.MeshLambertMaterial({color:"#b5a642"});
+var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fef1b5"});
 
 DMASuperCell = function(length, range, cells){
     var shouldRotate = range.max.x == range.min.x;
@@ -22,13 +22,17 @@ DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
     superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(length/2-1/2), 0, 0));
     if (shouldRotate) superCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
-    var material = cellBrassMaterial;
-    if (this.material == "fiberGlass") material = cellFiberGlassMaterial;
-    var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, material);
+    var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, [this.getMaterialType()]);
     var wireframe = new THREE.BoxHelper(mesh.children[0]);
     wireframe.material.color.set(0x000000);
     mesh.children.push(wireframe);
     return mesh;
+};
+
+DMASuperCell.prototype.getMaterialType = function(){
+    var material = cellBrassMaterial;
+    if (this.material == "fiberGlass") material = cellFiberGlassMaterial;
+    return material;
 };
 
 DMASuperCell.prototype._setPosition = function(index){

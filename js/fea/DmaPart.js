@@ -237,7 +237,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAGIKPart.prototype = Object.create(DMAPart.prototype);
 
     DMAGIKPart.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
@@ -269,7 +269,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAGIKPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
     DMAGIKPartLowPoly.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
@@ -301,7 +301,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAGIKEndPart.prototype = Object.create(DMAGIKPart.prototype);
 
     DMAGIKEndPart.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };
@@ -333,7 +333,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAGIKEndPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
     DMAGIKEndPartLowPoly.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, partMaterial);
+        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
         mesh.myPart = this;//need a ref back to this part
         return mesh;
     };

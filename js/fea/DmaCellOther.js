@@ -90,6 +90,10 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         }
     };
 
+    DMAGIKCell.prototype.getMaterialType = function(){
+        return this.superCell.getMaterialType();
+    };
+
     DMAGIKCell.prototype.__initParts = function(){
         var parts  = [];
         var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
