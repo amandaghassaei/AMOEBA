@@ -7,7 +7,8 @@ PartMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .partType":                                  "_changePartType"
+        "click .partType":                                  "_changePartType",
+        "click .materialType":                              "_changeMaterialType"
     },
 
     initialize: function(options){
@@ -17,7 +18,7 @@ PartMenuView = Backbone.View.extend({
         _.bindAll(this, "render");
         _.bindAll(this, "_onKeyup");
         //bind events
-        this.listenTo(this.lattice, "change:partType", this.render);
+        this.listenTo(this.lattice, "change", this.render);
         $(document).bind('keyup', {state:false}, this._onKeyup);
 
     },
@@ -48,6 +49,11 @@ PartMenuView = Backbone.View.extend({
         this.lattice.set("partType", $(e.target).data("type"));
     },
 
+     _changeMaterialType: function(e){
+        e.preventDefault();
+        this.lattice.set("materialType", $(e.target).data("type"));
+    },
+
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "part") return;
@@ -69,11 +75,11 @@ PartMenuView = Backbone.View.extend({
         <% } else { %>( radial ): &nbsp;&nbsp;<input data-type="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control numberInput cellSeparation" type="text"><% } %>\
         <br/><br/>\
         <% if (allMaterialTypes[cellType][connectionType]){ %> \
-        Material Type: &nbsp;&nbsp;\<div class="btn-group">\
+        Material Type: &nbsp;&nbsp;<div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
-                        <li><a class="partType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key] %></a></li>\
+                        <li><a class="materialType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
