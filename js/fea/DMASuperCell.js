@@ -4,7 +4,7 @@
 
 
 var cellBrassMaterial = new THREE.MeshLambertMaterial({color:"#b5a642"});
-var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fef1b5"});
+var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fff68f"});
 
 DMASuperCell = function(length, range, cells){
     var shouldRotate = range.max.x == range.min.x;

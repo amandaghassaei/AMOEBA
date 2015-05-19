@@ -1,4 +1,4 @@
 fix parse int/float/lattice/appstate - put in menu wrapper
 color swatch menu
-gik direction
 gik position z scale
+giz end positions
