@@ -110,26 +110,36 @@ OtherLatticeSubclasses = {
             for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
                 for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
                     for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
+                        var numToSkip = [0,0];
                         if (var1.order == 0){
-                            if (var2.order == 1) callback(this._retrieveSuperCell(cells[i][j][k]), i, j, k);
-                            else if (var2.order == 2) callback(this._retrieveSuperCell(cells[i][k][j]), i, k, j);
+                            if (var2.order == 1) numToSkip = this._doSuperCellCallback(cells, i, j, k, callback);
+                            else if (var2.order == 2) numToSkip = this._doSuperCellCallback(cells, i, k, j, callback);
                         } else if (var1.order == 1){
-                            if (var2.order == 0) callback(this._retrieveSuperCell(cells[j][i][k]), j, i, k);
-                            else if (var2.order == 2) callback(this._retrieveSuperCell(cells[k][i][j]), k, i, j);
+                            if (var2.order == 0) numToSkip = this._doSuperCellCallback(cells, j, i, k, callback);
+                            else if (var2.order == 2) numToSkip = this._doSuperCellCallback(cells, k, i, j, callback);
                         } else {
-                            if (var2.order == 0) callback(this._retrieveSuperCell(cells[j][k][i]), j, k, i);
+                            if (var2.order == 0) numToSkip = this._doSuperCellCallback(cells, j, k, i, callback);
                             else if (var2.order == 1) {
-                                callback(this._retrieveSuperCell(cells[k][j][i]), k, j, i);
+                                numToSkip = this._doSuperCellCallback(cells, k, j, i, callback);
                             }
                         }
+
                     }
                 }
             }
         },
 
-        _retrieveSuperCell: function(cell){
-            if (cell) return cell.superCell;
-            return null;
+        _doSuperCellCallback: function(cells, x, y, z, callback){
+            var cell = cells[x][y][z];
+            if (z%2 != 0) cell = cells[y][x][z];
+            if (!cell) {
+                callback(null, x, y, z);
+                return [0,0];
+            }
+            var superCell = cell.superCell;
+            callback(superCell, x, y, z);
+            if (z%2 != 0) return [0, superCell.getLength()];
+            return [superCell.getLength(), 0];
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
