@@ -70,9 +70,11 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     DMAGIKCell.prototype = Object.create(DMACubeCell.prototype);
 
     DMAGIKCell.prototype._buildCellMesh = function(){
-        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
-        if (this.indices.z%2 != 0) mesh.rotateZ(Math.PI/2);
-        return mesh;
+        return DMACubeCell.prototype._buildCellMesh.call(this, cellMaterial);
+    };
+
+    DMAGIKCell.prototype._doMeshTransformations = function(mesh){
+        if (this.indices && this.indices.z%2 != 0) mesh.rotateZ(Math.PI/2);
     };
 
     DMAGIKCell.prototype._setCellMeshVisibility = function(visible){

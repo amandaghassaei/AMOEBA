@@ -163,6 +163,7 @@ DMACell.prototype._buildCellMesh = function(material){//called from every subcla
     return mesh;
 };
 
+
 DMACell.prototype._doMeshTransformations = function(mesh){};//by default, no mesh transformations
 
 DMACell.prototype._initParts = function(){

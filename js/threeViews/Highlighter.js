@@ -255,7 +255,7 @@ GIKHighlighter = Highlighter.extend({
                 max = {x:position.x, y:position.y+index, z:position.z};
             }
             var range = {min:min, max:max};
-            dmaGlobals.lattice.addSuperCell(range);
+            dmaGlobals.lattice.makeSuperCell(range);
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;

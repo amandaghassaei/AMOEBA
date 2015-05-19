@@ -7,11 +7,16 @@ var cellBrassMaterial = new THREE.MeshLambertMaterial({color:"#b5a642"});
 var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fff68f"});
 
 DMASuperCell = function(length, range, cells){
-    var shouldRotate = range.max.x == range.min.x;
+    if (range) var shouldRotate = range.max.x == range.min.x;
     this.material = dmaGlobals.lattice.get("materialType");
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
     this.setVisibility(dmaGlobals.appState.get("cellMode")=="cell");
-    this.index = _.clone(range.max);
+    if (range) {
+        this.index = _.clone(range.max);
+        if (this.index.z %2 == 0) this.index.x -= cells.length/2.0-0.5;
+        else this.index.y -= cells.length/2.0-0.5;
+    }
+
     this.cells = cells;
     this.setScale();
     dmaGlobals.three.sceneAdd(this.mesh);
@@ -20,7 +25,6 @@ DMASuperCell = function(length, range, cells){
 DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
     var superCellGeo = new THREE.BoxGeometry(1,1,1);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
-    superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-(length/2-1/2), 0, 0));
     if (shouldRotate) superCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
     var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, [this.getMaterialType()]);
     var wireframe = new THREE.BoxHelper(mesh.children[0]);
@@ -36,6 +40,7 @@ DMASuperCell.prototype.getMaterialType = function(){
 };
 
 DMASuperCell.prototype._setPosition = function(index){
+    if (!index) return;
     var position = dmaGlobals.lattice.getPositionForIndex(index);
     this.mesh.position.set(position.x, position.y, position.z);
 };
@@ -52,6 +57,38 @@ DMASuperCell.prototype.setVisibility = function(visible){
 
 DMASuperCell.prototype.getLength = function(){
     return this.cells.length-1;
+};
+
+DMASuperCell.prototype.hide = function(){//only used in the context of stock simulation
+    this.setVisibility(false);
+    _.each(this.cells, function(cell){
+        if (cell) cell.hide();
+    });
+};
+
+DMASuperCell.prototype.draw = function(scale, cellMode, partType){
+    if (this.hideForStockSimulation) return;
+    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    var partMode = cellMode == "part";
+
+//    this.updateForScale(scale, cellMode, partType);
+
+    //set visibility
+    this.setVisibility(!partMode);
+    _.each(this.cells, function(cell){
+        if (cell) cell.draw(scale, cellMode, partType);
+    });
+};
+
+DMASuperCell.prototype.getPosition = function(){
+    return this.mesh.position.clone();
+};
+
+DMASuperCell.prototype.moveTo = function(position, axis){//used for stock simulations
+    this.mesh.position[axis] = position;
+    _.each(this.cells, function(cell){
+        if (cell) cell.moveTo(position, axis);
+    });
 };
 
 DMASuperCell.prototype.destroy = function(){

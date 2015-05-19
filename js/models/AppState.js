@@ -69,8 +69,8 @@ AppState = Backbone.Model.extend({
                 },
                 edge: null,
                 edgeRot: {
-                    voxLowPoly: "Snap Voxel (low res)",
-                    vox: "Snap Voxel (high res)"
+                    vox: "Snap Voxel (high res)",
+                    voxLowPoly: "Snap Voxel (low res)"
                     //beam:"Beam"
                 },
                 vertex: null//{
@@ -135,7 +135,8 @@ AppState = Backbone.Model.extend({
                 vertex:{handOfGod: "Hand of God"}
             },
             cube:{
-                face:{handOfGod: "Hand of God"}
+                face:{handOfGod: "Hand of God"},
+                gik: {handOfGod: "Hand of God"}
             },
             truncatedCube:{
                 face:{handOfGod: "Hand of God"}
@@ -143,7 +144,6 @@ AppState = Backbone.Model.extend({
             kelvin:{
                 face:{handOfGod: "Hand of God"}
             }
-//            will: "Electronics Assembler"
         },
         allAssemblyStrategies: {
             raster: "Raster"
@@ -249,7 +249,6 @@ AppState = Backbone.Model.extend({
             this.get("lastSimulationTab"));
         else if (navSelection == "navAssemble") this.set("currentTab",
             this.get("lastAssembleTab"));
-        //todo make it so animation looks good again
     },
 
     ///////////////////////////////////////////////////////////////////////////////

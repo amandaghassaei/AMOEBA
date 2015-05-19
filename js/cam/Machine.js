@@ -68,6 +68,7 @@ Machine.prototype.setScale = function(scale){
 }
 
 Machine.prototype._makeStockCell = function(){
+    if (dmaGlobals.lattice.makeSuperCell) return dmaGlobals.lattice.makeSuperCell();
     return dmaGlobals.lattice.makeCellForLatticeType(null, dmaGlobals.lattice.get("scale"));
 };
 
@@ -172,7 +173,7 @@ Machine.prototype._incrementalMove = function(objects, axis, increment, currentP
 
 Machine.prototype._setPosition = function(objects, nextPos, axis){
     _.each(objects, function(object){
-        if (object instanceof DMACell) object.moveTo(nextPos, axis);
+        if (object instanceof DMACell || object instanceof  DMASuperCell) object.moveTo(nextPos, axis);
         else object.position[axis] = nextPos;
     });
 };
