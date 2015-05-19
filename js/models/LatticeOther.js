@@ -110,7 +110,7 @@ OtherLatticeSubclasses = {
             for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
                 for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
                     for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
-                        var numToSkip = [0,0];
+                        var numToSkip = {x:0,y:0};
                         if (var1.order == 0){
                             if (var2.order == 1) numToSkip = this._doSuperCellCallback(cells, i, j, k, callback);
                             else if (var2.order == 2) numToSkip = this._doSuperCellCallback(cells, i, k, j, callback);
@@ -118,7 +118,9 @@ OtherLatticeSubclasses = {
                             if (var2.order == 0) numToSkip = this._doSuperCellCallback(cells, j, i, k, callback);
                             else if (var2.order == 2) numToSkip = this._doSuperCellCallback(cells, k, i, j, callback);
                         } else {
-                            if (var2.order == 0) numToSkip = this._doSuperCellCallback(cells, j, k, i, callback);
+                            if (var2.order == 0) {
+                                numToSkip = this._doSuperCellCallback(cells, j, k, i, callback);
+                            }
                             else if (var2.order == 1) {
                                 numToSkip = this._doSuperCellCallback(cells, k, j, i, callback);
                             }
@@ -134,12 +136,12 @@ OtherLatticeSubclasses = {
             if (z%2 != 0) cell = cells[y][x][z];
             if (!cell) {
                 callback(null, x, y, z);
-                return [0,0];
+                return {x:0,y:0};
             }
             var superCell = cell.superCell;
             callback(superCell, x, y, z);
-            if (z%2 != 0) return [0, superCell.getLength()];
-            return [superCell.getLength(), 0];
+            if (z%2 != 0) return {x:0, y:superCell.getLength()};
+            return {x:superCell.getLength(), y:0};
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
