@@ -16,7 +16,6 @@ DMASuperCell = function(length, range, cells){
         if (this.index.z %2 == 0) this.index.x -= cells.length/2.0-0.5;
         else this.index.y -= cells.length/2.0-0.5;
     }
-
     this.cells = cells;
     this.setScale();
     dmaGlobals.three.sceneAdd(this.mesh);
