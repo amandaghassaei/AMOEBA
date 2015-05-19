@@ -11,11 +11,7 @@ DMASuperCell = function(length, range, cells){
     this.material = dmaGlobals.lattice.get("materialType");
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
     this.setVisibility(dmaGlobals.appState.get("cellMode")=="cell");
-    if (range) {
-        this.index = _.clone(range.max);
-        if (this.index.z %2 == 0) this.index.x -= cells.length/2.0-0.5;
-        else this.index.y -= cells.length/2.0-0.5;
-    }
+    if (range) this.indices = _.clone(range.max);
     this.cells = cells;
     this.setScale();
     dmaGlobals.three.sceneAdd(this.mesh);
@@ -24,6 +20,7 @@ DMASuperCell = function(length, range, cells){
 DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
     var superCellGeo = new THREE.BoxGeometry(1,1,1);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
+    superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
     if (shouldRotate) superCellGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
     var mesh = THREE.SceneUtils.createMultiMaterialObject(superCellGeo, [this.getMaterialType()]);
     var wireframe = new THREE.BoxHelper(mesh.children[0]);
@@ -47,7 +44,7 @@ DMASuperCell.prototype._setPosition = function(index){
 DMASuperCell.prototype.setScale = function(scale){
     if (!scale) scale = dmaGlobals.lattice.get("scale");
     this.mesh.scale.set(scale, scale, scale);
-    this._setPosition(this.index);
+    this._setPosition(this.indices);
 };
 
 DMASuperCell.prototype.setVisibility = function(visible){
@@ -99,6 +96,6 @@ DMASuperCell.prototype.destroy = function(){
     });
     this.cells = null;
     this.mesh = null;
-    this.index = null;
+    this.indices = null;
     this.material = null;
 }

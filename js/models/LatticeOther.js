@@ -106,6 +106,32 @@ OtherLatticeSubclasses = {
             return superCell;
         },
 
+        _rasterGikCells: function(order, callback, var1, var2, var3, cells){
+            for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
+                for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
+                    for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
+                        if (var1.order == 0){
+                            if (var2.order == 1) callback(this._retrieveSuperCell(cells[i][j][k]), i, j, k);
+                            else if (var2.order == 2) callback(this._retrieveSuperCell(cells[i][k][j]), i, k, j);
+                        } else if (var1.order == 1){
+                            if (var2.order == 0) callback(this._retrieveSuperCell(cells[j][i][k]), j, i, k);
+                            else if (var2.order == 2) callback(this._retrieveSuperCell(cells[k][i][j]), k, i, j);
+                        } else {
+                            if (var2.order == 0) callback(this._retrieveSuperCell(cells[j][k][i]), j, k, i);
+                            else if (var2.order == 1) {
+                                callback(this._retrieveSuperCell(cells[k][j][i]), k, j, i);
+                            }
+                        }
+                    }
+                }
+            }
+        },
+
+        _retrieveSuperCell: function(cell){
+            if (cell) return cell.superCell;
+            return null;
+        },
+
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
             _.each(_.keys(this.GIKLattice), function(key){

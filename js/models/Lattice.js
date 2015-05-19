@@ -552,31 +552,39 @@ Lattice = Backbone.Model.extend({
             newVarOrder = 2;
             newVarDim = cells[0][0].length;
         } else if (firstLetter == ""){
-            for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
-                for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
-                    for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
-                        if (var1.order == 0){
-                            if (var2.order == 1) callback(cells[i][j][k], i, j, k);
-                            else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
-                        } else if (var1.order == 1){
-                            if (var2.order == 0) callback(cells[j][i][k], j, i, k);
-                            else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
-                        } else {
-                            if (var2.order == 0) callback(cells[j][k][i], j, k, i);
-                            else if (var2.order == 1) {
-                                callback(cells[k][j][i], k, j, i);
-                            }
-                        }
-
-                    }
-                }
+            if (this._rasterGikCells) {
+                this._rasterGikCells(order, callback, var1, var2, var3, cells);
+                return;
             }
+            this._rasterCells(order, callback, var1, var2, var3, cells);
             return;
         }
         if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
         else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
         else var1 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
         this.rasterCells(order, callback, var1, var2, var3, cells);
+    },
+
+    _rasterCells: function(order, callback, var1, var2, var3, cells){
+        for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
+            for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
+                for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
+                    if (var1.order == 0){
+                        if (var2.order == 1) callback(cells[i][j][k], i, j, k);
+                        else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
+                    } else if (var1.order == 1){
+                        if (var2.order == 0) callback(cells[j][i][k], j, i, k);
+                        else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
+                    } else {
+                        if (var2.order == 0) callback(cells[j][k][i], j, k, i);
+                        else if (var2.order == 1) {
+                            callback(cells[k][j][i], k, j, i);
+                        }
+                    }
+
+                }
+            }
+        }
     },
 
     _getRasterLoopInit: function(variable){
