@@ -5,7 +5,7 @@
 
 function ThreeModel(){
 
-    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.001, 10000);
+    var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 10000);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 

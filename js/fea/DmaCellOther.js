@@ -96,7 +96,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return this.superCell.getMaterialType();
     };
 
-    DMAGIKCell.prototype.__initParts = function(){
+    DMAGIKCell.prototype._initParts = function(){
+        if (!this.superCell) return [];
         var parts  = [];
         var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
         if (dmaGlobals.lattice.get("partType") == "lego") {
@@ -108,11 +109,6 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
             else parts.push(new DMAGIKPartLowPoly(0, this));
         }
         return parts;
-    };
-
-    DMAGIKCell.prototype._initParts = function(){
-        if (this.superCell) return this.__initParts();
-        return [];
     };
 
     self.DMAGIKCell = DMAGIKCell;

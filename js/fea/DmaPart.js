@@ -229,6 +229,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        console.log(unitPartGeo);
     });
 
     function DMAGIKPart(type, parent){
@@ -236,9 +237,25 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     }
     DMAGIKPart.prototype = Object.create(DMAPart.prototype);
 
+    DMAGIKPart.prototype._makeGikWireframe = function(positions, yPosition){
+        var geometry = new THREE.Geometry();
+        _.each(positions, function(position, index){
+            if (position == yPosition){
+                geometry.vertices.push(new THREE.Vector3(positions[index-1], yPosition, positions[index+1]));
+            }
+        });
+        console.log(geometry.vertices);
+        return new THREE.Line(geometry);
+    };
+
     DMAGIKPart.prototype._makeMeshForType = function(){
         var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
+
+
+
         mesh.myPart = this;//need a ref back to this part
+        var wireframe = new THREE.EdgesHelper(mesh, 0x000000);
+        mesh.children.push(wireframe);
         return mesh;
     };
 
