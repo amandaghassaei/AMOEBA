@@ -34,7 +34,7 @@ ImportMenuView = Backbone.View.extend({
 
     _buildWall: function(e){
         e.preventDefault();
-        dmaGlobals.lattice.addCellsInRange({min:{x:-5,y:-5,z:0}, max:{x:5,y:5,z:3}});
+        globals.lattice.addCellsInRange({min:{x:-5,y:-5,z:0}, max:{x:5,y:5,z:3}});
     },
 
     _uploadMesh: function(e){//select a mesh to upload
@@ -84,7 +84,7 @@ ImportMenuView = Backbone.View.extend({
 
     _clearCells: function(e){
         e.preventDefault();
-        dmaGlobals.lattice.clearCells();
+        globals.lattice.clearCells();
     },
 
     render: function(){

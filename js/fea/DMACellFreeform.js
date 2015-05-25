@@ -19,7 +19,7 @@ DMAFreeFormCell.prototype = Object.create(DMACell.prototype);
 
 DMAFreeFormCell.prototype._calcPosition = function(){//todo this might not be necessary - put in lattice
     var position = {};
-    var zScale = dmaGlobals.lattice.zScale();
+    var zScale = globals.lattice.zScale();
     position.x = this.parentPos.x+this.parentDirection.x*zScale/2;
     position.y = this.parentPos.y+this.parentDirection.y*zScale/2;
     position.z = this.parentPos.z+this.parentDirection.z*zScale/2;

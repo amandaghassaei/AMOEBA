@@ -15,7 +15,7 @@ MenuWrapper = Backbone.View.extend({
 
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
 
-        var lattice = dmaGlobals.lattice;
+        var lattice = globals.lattice;
 
         //init all tab view controllers
         this.latticeMenu = new LatticeMenuView({model:this.model, lattice:lattice});
@@ -26,9 +26,9 @@ MenuWrapper = Backbone.View.extend({
         this.physicsMenu = new PhysicsMenuView({model:this.model});
         this.materialMenu = new MaterialMenuView({model:this.model});
         this.optimizeMenu = new OptimizationMenuView({model:this.model});
-        this.assemblerMenu = new AssemblerMenuView({model:this.model, assembler: dmaGlobals.assembler});
+        this.assemblerMenu = new AssemblerMenuView({model:this.model, assembler: globals.assembler});
         this.animationMenu = new AnimationMenuView({model:this.model});
-        this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:dmaGlobals.assembler});
+        this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:globals.assembler});
         this.sendMenu = new SendMenuView({model:this.model});
 
         //bind events
@@ -97,7 +97,7 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _populateAndShow: function(){
-        this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.lattice.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.lattice.toJSON(), globals.plist)));
         this._updateCurrentTab();
         this._show();
     },

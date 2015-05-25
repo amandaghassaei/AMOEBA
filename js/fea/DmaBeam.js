@@ -35,7 +35,7 @@ DmaBeam.prototype._buildBeamMesh = function(){
     var eulerRot = new THREE.Euler().setFromQuaternion(quaternion);
     mesh.rotation.set(eulerRot.x, eulerRot.y, eulerRot.z);
 
-    dmaGlobals.three.sceneAdd(mesh);//todo make a type for this
+    globals.three.sceneAdd(mesh);//todo make a type for this
     return mesh;
 };
 
@@ -58,7 +58,7 @@ DmaBeam.prototype.setVisibility = function(visible){
 };
 
 DmaBeam.prototype.destroy = function(){
-    dmaGlobals.three.sceneRemove(this.mesh, "part");
+    globals.three.sceneRemove(this.mesh, "part");
     this.mesh = null;
     var self = this;
     _.each(this.nodes, function(node){

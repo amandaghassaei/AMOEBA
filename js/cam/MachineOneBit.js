@@ -9,24 +9,24 @@ OneBitBot.prototype = Object.create(Machine.prototype);
 
 OneBitBot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    dmaGlobals.assembler.set("stockFixed", true);
-    var scale = dmaGlobals.lattice.get("scale");
-    dmaGlobals.assembler.set("stockPosition", {x:1.11*scale,y:0,z:1.14*scale});
-    dmaGlobals.assembler.set("rapidHeight", 2*scale);
+    globals.assembler.set("stockFixed", true);
+    var scale = globals.lattice.get("scale");
+    globals.assembler.set("stockPosition", {x:1.11*scale,y:0,z:1.14*scale});
+    globals.assembler.set("rapidHeight", 2*scale);
 };
 
 OneBitBot.prototype.setMachinePosition = function(){
-    if (!dmaGlobals.assembler) return;
-    this.position = dmaGlobals.assembler.get("originPosition");
+    if (!globals.assembler) return;
+    this.position = globals.assembler.get("originPosition");
     var self = this;
     _.each(_.values(this.meshes), function(mesh){//todo add cell?
         mesh.position.set(self.position.x, self.position.y, self.position.z);
     });
-    var stockPosition = dmaGlobals.assembler.get("stockPosition");
+    var stockPosition = globals.assembler.get("stockPosition");
     this.cell.moveTo(stockPosition.x, "x");
     this.cell.moveTo(stockPosition.y, "y");
     this.cell.moveTo(stockPosition.z, "z");
-    dmaGlobals.three.render();
+    globals.three.render();
 };
 
 OneBitBot.prototype._buildMeshes = function(callback){

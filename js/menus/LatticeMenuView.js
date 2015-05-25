@@ -56,7 +56,7 @@ LatticeMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseInt($(e.target).val());
         if (isNaN(newVal)) return;
-        dmaGlobals.lattice.set("gikLength", newVal);
+        globals.lattice.set("gikLength", newVal);
     },
 
     _clearCells: function(e){
@@ -80,7 +80,7 @@ LatticeMenuView = Backbone.View.extend({
         var scale = $(e.target)[0].value;
         this.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
         $("#latticeScale").val(scale);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _changeScaleSlider: function(e){
@@ -109,10 +109,10 @@ LatticeMenuView = Backbone.View.extend({
 
     _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
         if (!newConnectionType){
-            newConnectionType = _.keys(dmaGlobals.appState.get("allConnectionTypes")[newCellType])[0];
+            newConnectionType = _.keys(globals.appState.get("allConnectionTypes")[newCellType])[0];
             this.lattice.set("connectionType", newConnectionType, {silent:true});
         }
-        var partType = _.keys(dmaGlobals.appState.get("allPartTypes")[newCellType][newConnectionType])[0];
+        var partType = _.keys(globals.appState.get("allPartTypes")[newCellType][newConnectionType])[0];
         this.lattice.set("partType", partType, {silent:true});
     },
 
@@ -130,7 +130,7 @@ LatticeMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.lattice.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.lattice.toJSON(), globals.plist)));
 
         $('#scaleSlider').slider({
             formatter: function(value) {

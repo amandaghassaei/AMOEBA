@@ -76,7 +76,7 @@ Lattice = Backbone.Model.extend({
                 }
             }
         }
-        dmaGlobals.three.render();
+        globals.three.render();
         return newCells;
     },
 
@@ -90,7 +90,7 @@ Lattice = Backbone.Model.extend({
         if (!cells[index.x][index.y][index.z]) {
             cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, scale);
             this.set("numCells", this.get("numCells")+1);
-            if (!noRender) dmaGlobals.three.render();
+            if (!noRender) globals.three.render();
         } else console.warn("already a cell there");
 
     },
@@ -132,7 +132,7 @@ Lattice = Backbone.Model.extend({
         //todo shrink cells matrix if needed
 
         this.set("numCells", this.get("numCells")-1);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     //todo send clear all to three and destroy without sceneRemove to cell
@@ -146,7 +146,7 @@ Lattice = Backbone.Model.extend({
         this.set("nodes", []);
         this.set("numCells", 0);
         if (this.get("basePlane")) this.get("basePlane").set("zIndex", 0);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     calculateBoundingBox: function(){
@@ -208,7 +208,7 @@ Lattice = Backbone.Model.extend({
             }
 
         }
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
@@ -340,13 +340,13 @@ Lattice = Backbone.Model.extend({
     },
 
     _updateForMode: function(){
-        var cellMode = dmaGlobals.appState.get("cellMode");
+        var cellMode = globals.appState.get("cellMode");
         var partType =  this.get("partType");
         var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.draw(scale, cellMode, partType);
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _updateCellSeparation: function(){
@@ -354,12 +354,12 @@ Lattice = Backbone.Model.extend({
         this.get("basePlane").updateXYSeparation(cellSep.xy);
 
         var scale = this.get("scale");
-        var cellMode = dmaGlobals.appState.get("cellMode");
+        var cellMode = globals.appState.get("cellMode");
         var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.updateForScale(scale, cellMode, partType);
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _scaleDidChange: function(){
@@ -367,13 +367,13 @@ Lattice = Backbone.Model.extend({
         this.get("basePlane").updateScale(scale);
         this.get("highlighter").updateScale(scale);
 
-        var cellMode = dmaGlobals.appState.get("cellMode");
+        var cellMode = globals.appState.get("cellMode");
         var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
             if (cell && cell.updateForScale) cell.updateForScale(scale, cellMode, partType);
         });
 
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _gikLengthDidChange: function(){
@@ -385,7 +385,7 @@ Lattice = Backbone.Model.extend({
     },
 
     _setCellVisibility: function(){//todo maybe leave wireframes?
-        if (dmaGlobals.appState.get("cellsVisible")) this.showCells();
+        if (globals.appState.get("cellsVisible")) this.showCells();
         else this.hideCells();
     },
 
@@ -397,7 +397,7 @@ Lattice = Backbone.Model.extend({
                 cell.hideForStockSimulation = true;
             }
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     showCells: function(){
@@ -407,7 +407,7 @@ Lattice = Backbone.Model.extend({
                 cell.draw();
             }
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     showCellAtIndex: function(index){
@@ -495,12 +495,12 @@ Lattice = Backbone.Model.extend({
             //}
             cells[x][y][z] = newCell;
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _setDefaultCellMode: function(){
-        if (!dmaGlobals.appState.get("allPartTypes")[this.get("cellType")][this.get("connectionType")]){
-            dmaGlobals.appState.set("cellMode", "cell");
+        if (!globals.plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
+            globals.appState.set("cellMode", "cell");
         }
     },
 

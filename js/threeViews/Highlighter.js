@@ -21,7 +21,7 @@ Highlighter = Backbone.View.extend({
                 vertexColors:THREE.FaceColors
             }));
 
-        dmaGlobals.three.sceneAdd(this.mesh, null);
+        globals.three.sceneAdd(this.mesh, null);
         this.updateScale(options.scale);
         this.hide();
 
@@ -43,7 +43,7 @@ Highlighter = Backbone.View.extend({
     _setVisibility: function(visible, forceRender){
         if (forceRender || this.isVisible() != visible){
             this.mesh.visible = visible;
-            dmaGlobals.three.render();
+            globals.three.render();
         }
         this.mesh.visible = visible;
     },
@@ -127,23 +127,23 @@ Highlighter = Backbone.View.extend({
 
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
-            if (dmaGlobals.lattice.get("connectionType") == "freeformFace"){
+            if (globals.lattice.get("connectionType") == "freeformFace"){
                 //todo make this work for baseplane
-                dmaGlobals.lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction, this.highlightedObject.getType());
+                globals.lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction, this.highlightedObject.getType());
                 return;
             }
-            dmaGlobals.lattice.addCellAtIndex(this._getNextCellPosition());
+            globals.lattice.addCellAtIndex(this._getNextCellPosition());
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;
-            dmaGlobals.lattice.removeCell(this.highlightedObject);
+            globals.lattice.removeCell(this.highlightedObject);
         }
         this.setNothingHighlighted();
     },
 
     destroy: function(){
         this.setNothingHighlighted();
-        dmaGlobals.three.sceneRemove(this.mesh, null);
+        globals.three.sceneRemove(this.mesh, null);
         this.mesh = null;
         this.stopListening();
     }
@@ -211,7 +211,7 @@ CubeHighlighter = Highlighter.extend({
 GIKHighlighter = Highlighter.extend({
 
     updateScale: function(scale){
-        this.mesh.scale.set(dmaGlobals.lattice.get("gikLength")*scale, scale, scale);
+        this.mesh.scale.set(globals.lattice.get("gikLength")*scale, scale, scale);
     },
 
     _makeGeometry: function(){
@@ -220,11 +220,11 @@ GIKHighlighter = Highlighter.extend({
 
     _setPosition: function(position, direction){
         var scale = this.mesh.scale.z/2;
-        this.mesh.position.set(position.x+scale*direction.x, position.y+scale*direction.y, position.z+dmaGlobals.lattice.zScale()/2*direction.z);
+        this.mesh.position.set(position.x+scale*direction.x, position.y+scale*direction.y, position.z+globals.lattice.zScale()/2*direction.z);
     },
 
     _setRotation: function(direction, index){
-        var superCellIndex = dmaGlobals.appState.get("superCellIndex");
+        var superCellIndex = globals.appState.get("superCellIndex");
         var scale  = this.mesh.scale.z;
         if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) this.mesh.rotation.set(0, 0, Math.PI/2);
         else this.mesh.rotation.set(0,0,0);
@@ -236,7 +236,7 @@ GIKHighlighter = Highlighter.extend({
         if (!this.direction) return;
         this._setPosition(this.position, this.direction);//position of center point
         this._setRotation(this.direction, this.index);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     addRemoveVoxel: function(shouldAdd){
@@ -244,22 +244,22 @@ GIKHighlighter = Highlighter.extend({
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
             var position = this._getNextCellPosition();
-            var index = dmaGlobals.appState.get("superCellIndex");
+            var index = globals.appState.get("superCellIndex");
             var min, max;
             if (this.mesh.rotation.z == 0) {
-                min = {x:position.x-dmaGlobals.lattice.get("gikLength")+1+index, y:position.y, z:position.z};
+                min = {x:position.x-globals.lattice.get("gikLength")+1+index, y:position.y, z:position.z};
                 max = {x:position.x+index, y:position.y, z:position.z};
             }
             else {
-                min = {x:position.x, y:position.y-dmaGlobals.lattice.get("gikLength")+1+index, z:position.z};
+                min = {x:position.x, y:position.y-globals.lattice.get("gikLength")+1+index, z:position.z};
                 max = {x:position.x, y:position.y+index, z:position.z};
             }
             var range = {min:min, max:max};
-            dmaGlobals.lattice.makeSuperCell(range);
+            globals.lattice.makeSuperCell(range);
         } else {
             if (!this.highlightedObject) return;
             if (!(this.highlightedObject instanceof DMACell)) return;
-            dmaGlobals.lattice.removeCell(this.highlightedObject);
+            globals.lattice.removeCell(this.highlightedObject);
         }
         this.setNothingHighlighted();
     }

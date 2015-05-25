@@ -95,9 +95,9 @@ NavBar = Backbone.View.extend({
             return function(e) {
                 var extension = filename.substr(filename.length - 5);
                 if (extension == ".json"){
-                    dmaGlobals.appState.loadLatticeFromJSON(JSON.parse(e.target.result));
+                    globals.appState.loadLatticeFromJSON(JSON.parse(e.target.result));
                 } else if (extension == ".user"){
-                    dmaGlobals.appState.loadUser(e.target.result);
+                    globals.appState.loadUser(e.target.result);
                 } else console.warn("file type not recognized");
             }
         })();
@@ -105,20 +105,20 @@ NavBar = Backbone.View.extend({
 
     _save: function(e){
         e.preventDefault();
-        dmaGlobals.appState.saveJSON();
+        globals.appState.saveJSON();
     },
 
     _saveAs: function(e){
         e.preventDefault();
         var fileName = $("#saveAsFileName").val();
-        dmaGlobals.appState.saveJSON(fileName);
+        globals.appState.saveJSON(fileName);
         $('#saveAsModel').modal('hide');
     },
 
     _saveUserSettings: function(e){
         e.preventDefault();
         var fileName = $("#userSettingsFilename").val();
-        dmaGlobals.appState.saveUser(fileName);
+        globals.appState.saveUser(fileName);
         $('#saveUserModel').modal('hide');
     },
 
@@ -126,7 +126,7 @@ NavBar = Backbone.View.extend({
         e.preventDefault();
         var url = "data/users/" + $(e.target).data("file");
         $.getJSON( url, function(data) {
-            dmaGlobals.appState.loadUser(data, true);
+            globals.appState.loadUser(data, true);
         });
     },
 
@@ -134,7 +134,7 @@ NavBar = Backbone.View.extend({
         e.preventDefault();
         var url = "data/demos/" + $(e.target).data("file");
         $.getJSON( url, function(data) {
-            dmaGlobals.appState.loadLatticeFromJSON(data);
+            globals.appState.loadLatticeFromJSON(data);
         });
     },
 

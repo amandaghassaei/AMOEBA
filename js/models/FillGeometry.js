@@ -32,8 +32,8 @@ FillGeometry = Backbone.Model.extend({
                 side:THREE.DoubleSide}));
         this.makeBoundingBox(mesh);
         this.set({mesh: mesh});
-        dmaGlobals.three.sceneAdd(mesh, null);
-        dmaGlobals.three.render();
+        globals.three.sceneAdd(mesh, null);
+        globals.three.render();
     },
 
     makeBoundingBox: function(mesh){
@@ -42,7 +42,7 @@ FillGeometry = Backbone.Model.extend({
         box.material.opacity = 0.4;
         box.material.transparent = true;
         this.set("boundingBox", box);
-//        dmaGlobals.three.sceneAdd(box);
+//        globals.three.sceneAdd(box);
     },
 
     fillGeo: function(){
@@ -50,11 +50,11 @@ FillGeometry = Backbone.Model.extend({
         boundingBox.geometry.computeBoundingBox();
         var bounds = boundingBox.geometry.boundingBox;
 
-        var scale = dmaGlobals.lattice.get("scale");
+        var scale = globals.lattice.get("scale");
 
-        var minIndex = dmaGlobals.lattice.getIndexForPosition(bounds.min);
-        var maxIndex = dmaGlobals.lattice.getIndexForPosition(bounds.max);
-        dmaGlobals.lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
+        var minIndex = globals.lattice.getIndexForPosition(bounds.min);
+        var maxIndex = globals.lattice.getIndexForPosition(bounds.max);
+        globals.lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
 
         var raycaster = new THREE.Raycaster();
         var direction = new THREE.Vector3(0,0,1);
@@ -63,7 +63,7 @@ FillGeometry = Backbone.Model.extend({
         raycaster.far = bounds.max-bounds.min+2;//add some padding just in case
         for (var x=minIndex.x;x<=maxIndex.x;x++){
             for (var y=minIndex.y;y<=maxIndex.y;y++){
-                var origin = dmaGlobals.lattice.getPositionForIndex({x:x, y:y, z:minIndex.z});
+                var origin = globals.lattice.getPositionForIndex({x:x, y:y, z:minIndex.z});
                 origin.z = bounds.min.z-1;//more padding
                 raycaster.set(origin, direction);
                 var intersections = raycaster.intersectObject(mesh);
@@ -73,16 +73,16 @@ FillGeometry = Backbone.Model.extend({
                 var nextIntersection = intersections[nextIntersectionIndex].distance;
                 for (var z=minIndex.z;z<=maxIndex.z;z++){
                     var index = {x:x,y:y,z:z};
-                    var position = dmaGlobals.lattice.getPositionForIndex(index);
+                    var position = globals.lattice.getPositionForIndex(index);
                     if (!inside){
                         if (position.z<nextIntersection) continue;
                         else {
                             inside = true;
-                            dmaGlobals.lattice.addCellAtIndex(index, true, true);
+                            globals.lattice.addCellAtIndex(index, true, true);
                         }
                     } else {
                         if (position.z<nextIntersection) {
-                            dmaGlobals.lattice.addCellAtIndex(index, true, true);
+                            globals.lattice.addCellAtIndex(index, true, true);
                             continue;
                         }
                         else inside = false;
@@ -95,7 +95,7 @@ FillGeometry = Backbone.Model.extend({
                 }
             }
         }
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _getNextIntersection: function(position, intersections, nextIntersectionIndex, inside){
@@ -109,17 +109,17 @@ FillGeometry = Backbone.Model.extend({
     },
 
     subtractGeo: function(){
-        dmaGlobals.lattice.subtractMesh(this.get("mesh"));
+        globals.lattice.subtractMesh(this.get("mesh"));
     },
 
     removeMesh: function(){
         if (!this.get("mesh")) return;
-        dmaGlobals.three.sceneRemove(this.get("mesh"));
-        dmaGlobals.three.sceneRemove(this.get("boundingBox"));
+        globals.three.sceneRemove(this.get("mesh"));
+        globals.three.sceneRemove(this.get("boundingBox"));
         this.set("mesh", null);
         this.set("boundingBox", null);
         this.set("filename", this.defaults.filename);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     scale: function(scale){

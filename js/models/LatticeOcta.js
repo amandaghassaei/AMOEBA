@@ -85,7 +85,7 @@ OctaLatticeSubclasses = {
             var cells = this.get("cells");
             cells[0][0].push(this.makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction, parentType, type));
             this.set("numCells", this.get("numCells")+1);
-            dmaGlobals.three.render();
+            globals.three.render();
         },
 
         makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction, parentType, type){

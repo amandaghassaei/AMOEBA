@@ -22,32 +22,32 @@ Ribbon = Backbone.View.extend({
         this.listenTo(this.model, "change:deleteMode", this.render);
         this.listenTo(this.model, "change:highlightMode", this.render);
         this.listenTo(this.model, "change:cellsVisible", this.render);
-        this.listenTo(dmaGlobals.lattice, "change:cellType change:connectionType", this.render);
+        this.listenTo(globals.lattice, "change:cellType change:connectionType", this.render);
         this.render();
     },
 
     _updateCellMode: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("cellMode", $(e.target).data("type"));
+        globals.appState.set("cellMode", $(e.target).data("type"));
     },
 
     _updateDeleteMode: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("deleteMode", !dmaGlobals.appState.get("deleteMode"));
+        globals.appState.set("deleteMode", !globals.appState.get("deleteMode"));
     },
 
     _updateHighlightMode: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("highlightMode", !dmaGlobals.appState.get("highlightMode"));
+        globals.appState.set("highlightMode", !globals.appState.get("highlightMode"));
     },
 
     _updateVisibility: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("cellsVisible", !dmaGlobals.appState.get("cellsVisible"));
+        globals.appState.set("cellsVisible", !globals.appState.get("cellsVisible"));
     },
 
     render: function(){
-        this.$el.html(this.template(_.extend(dmaGlobals.lattice.toJSON(), this.model.toJSON())));
+        this.$el.html(this.template(_.extend(globals.lattice.toJSON(), this.model.toJSON(), globals.plist)));
     },
 
     template: _.template('\

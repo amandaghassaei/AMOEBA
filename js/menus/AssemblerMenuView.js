@@ -55,7 +55,7 @@ AssemblerMenuView = Backbone.View.extend({
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "assembler") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), dmaGlobals.lattice.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), globals.lattice.toJSON())));
     },
 
     template: _.template('\

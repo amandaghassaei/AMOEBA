@@ -30,7 +30,7 @@ ThreeView = Backbone.View.extend({
 
         //bind events
         this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
-        this.listenTo(dmaGlobals.lattice, "change:highlighter", this._saveHighlighter);
+        this.listenTo(globals.lattice, "change:highlighter", this._saveHighlighter);
 
         this._saveHighlighter();//need a reference to the highlighter
 
@@ -68,11 +68,11 @@ ThreeView = Backbone.View.extend({
 
     _mouseUp: function(){
         this.mouseIsDown = false;
-        if (dmaGlobals.appState.get("currentTab") == "cam" && dmaGlobals.appState.get("manualSelectOrigin")){
+        if (globals.appState.get("currentTab") == "cam" && globals.appState.get("manualSelectOrigin")){
             var position = this.highlighter.getHighlightedObjectPosition();
             if (position){
-                dmaGlobals.assembler.set("originPosition", position);
-                dmaGlobals.appState.set("manualSelectOrigin", false);
+                globals.assembler.set("originPosition", position);
+                globals.appState.set("manualSelectOrigin", false);
                 return;
             }
         }
@@ -86,7 +86,7 @@ ThreeView = Backbone.View.extend({
 
     _mouseMoved: function(e){
 
-        if (!dmaGlobals.appState.get("highlightMode") && !(dmaGlobals.appState.get("manualSelectOrigin"))) return;
+        if (!globals.appState.get("highlightMode") && !(globals.appState.get("manualSelectOrigin"))) return;
 
         if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
             this.highlighter.setNothingHighlighted();
@@ -134,14 +134,14 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _saveHighlighter: function(){
-        this.highlighter = dmaGlobals.lattice.get("highlighter");
+        this.highlighter = globals.lattice.get("highlighter");
     },
 
     _setNoPartIntersections: function(){
         if (this.currentIntersectedPart){
             this.currentIntersectedPart.unhighlight();
             this.currentIntersectedPart = null;
-            dmaGlobals.three.render();
+            globals.three.render();
         }
     },
 
@@ -156,7 +156,7 @@ ThreeView = Backbone.View.extend({
             if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
             part.highlight();
             this.currentIntersectedPart = part;
-            dmaGlobals.three.render();
+            globals.three.render();
         }
     }
 

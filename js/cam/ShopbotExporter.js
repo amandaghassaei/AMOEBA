@@ -10,9 +10,9 @@ ShopbotExporter.prototype.makeHeader = function(){
     //data += this.addLine("FG", [], "single step mode");
     data += this.addLine("SA", [], "absolute distances");
     data += this.addLine("SM", [], "move/cut mode");
-    var rapidSpeeds = dmaGlobals.assembler.get("rapidSpeeds");
+    var rapidSpeeds = globals.assembler.get("rapidSpeeds");
     data += this.addLine("JS", [rapidSpeeds.xy, rapidSpeeds.z], "jog speed xy, z");
-    var feedRate = dmaGlobals.assembler.get("feedRate");
+    var feedRate = globals.assembler.get("feedRate");
     data += this.addLine("MS", [feedRate.xy, feedRate.z], "move speed xy, z");
     data += this.goHome();
     return data;
@@ -27,7 +27,7 @@ ShopbotExporter.prototype.addLine = function(command, params, comment){
             data += param + ", ";
             return;
         }
-        if (dmaGlobals.lattice.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
+        if (globals.lattice.get("units") == "mm") param = self.convertToInches(param);//all shopbot stuff must be in inches
         data += parseFloat(param).toFixed(3) + ", ";
     });
     if (comment) data += "'" +comment;
@@ -64,7 +64,7 @@ ShopbotExporter.prototype.moveZ = function(z){
 };
 
 ShopbotExporter.prototype.goHome = function(){
-    var data = this.rapidZ(dmaGlobals.assembler.get("rapidHeight"));
+    var data = this.rapidZ(globals.assembler.get("rapidHeight"));
     data += this.rapidXY(0,0);
     return data;
 };
@@ -100,9 +100,9 @@ ShopbotExporter.prototype.simulate = function(line, machine, wcs,  callback){
         return callback();
     }
     if (line[0] == "J"){
-        return this._simulateGetPosition(line, dmaGlobals.assembler.get("rapidSpeeds"), machine, wcs, callback);
+        return this._simulateGetPosition(line, globals.assembler.get("rapidSpeeds"), machine, wcs, callback);
     } else if (line[0] == "M"){
-        return this._simulateGetPosition(line, dmaGlobals.assembler.get("feedRate"), machine, wcs, callback);
+        return this._simulateGetPosition(line, globals.assembler.get("feedRate"), machine, wcs, callback);
     } else {
         console.warn("problem parsing sbp " + line);
         return callback();
@@ -118,10 +118,10 @@ ShopbotExporter.prototype._simulateGetPosition = function(line, speed, machine, 
             if (item[item.length-1] == ",") data[i] = item.substring(0, item.length - 1)
         }
         if (line[1] == 3){
-            if (dmaGlobals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], data[3], speed, wcs, callback);
+            if (globals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], data[3], speed, wcs, callback);
             else machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), this.convertToMM(data[3]), speed, wcs, callback);
         } else {
-            if (dmaGlobals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], "", speed, wcs, callback);
+            if (globals.lattice.get("units") == "inches") machine.moveTo(data[1], data[2], "", speed, wcs, callback);
             else machine.moveTo(this.convertToMM(data[1]), this.convertToMM(data[2]), "", speed, wcs, callback);
         }
     } else if (line[1] == "S"){

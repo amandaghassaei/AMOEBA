@@ -8,13 +8,13 @@ var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fff68f"});
 
 DMASuperCell = function(length, range, cells){
     if (range) var shouldRotate = range.max.x == range.min.x;
-    this.material = dmaGlobals.lattice.get("materialType");
+    this.material = globals.lattice.get("materialType");
     this.mesh = this._buildSuperCellMesh(length, shouldRotate);
-    this.setVisibility(dmaGlobals.appState.get("cellMode")=="cell");
+    this.setVisibility(globals.appState.get("cellMode")=="cell");
     if (range) this.indices = _.clone(range.max);
     this.cells = cells;
     this.setScale();
-    dmaGlobals.three.sceneAdd(this.mesh);
+    globals.three.sceneAdd(this.mesh);
 };
 
 DMASuperCell.prototype._buildSuperCellMesh = function(length, shouldRotate){
@@ -37,12 +37,12 @@ DMASuperCell.prototype.getMaterialType = function(){
 
 DMASuperCell.prototype._setPosition = function(index){
     if (!index) return;
-    var position = dmaGlobals.lattice.getPositionForIndex(index);
+    var position = globals.lattice.getPositionForIndex(index);
     this.mesh.position.set(position.x, position.y, position.z);
 };
 
 DMASuperCell.prototype.setScale = function(scale){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!scale) scale = globals.lattice.get("scale");
     this.mesh.scale.set(scale, scale, scale);
     this._setPosition(this.indices);
 };
@@ -64,7 +64,7 @@ DMASuperCell.prototype.hide = function(){//only used in the context of stock sim
 
 DMASuperCell.prototype.draw = function(scale, cellMode, partType){
     if (this.hideForStockSimulation) return;
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!scale) scale = globals.lattice.get("scale");
     var partMode = cellMode == "part";
 
 //    this.updateForScale(scale, cellMode, partType);
@@ -90,9 +90,9 @@ DMASuperCell.prototype.moveTo = function(position, axis){//used for stock simula
 DMASuperCell.prototype.destroy = function(){
     if (this.destroyStarted) return;//prevents loop destroy from cells
     this.destroyStarted = true;
-    dmaGlobals.three.sceneRemove(this.mesh);
+    globals.three.sceneRemove(this.mesh);
     _.each(this.cells, function(cell){
-        if (cell && !cell.destroyStarted) dmaGlobals.lattice.removeCell(cell);
+        if (cell && !cell.destroyStarted) globals.lattice.removeCell(cell);
     });
     this.cells = null;
     this.mesh = null;

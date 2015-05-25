@@ -20,156 +20,6 @@ AppState = Backbone.Model.extend({
         menuWrapper: null,
         menuIsVisible: true,
 
-        allMenuTabs: {
-            navDesign:{
-                lattice:"Lattice",
-                import:"Import",
-                //sketch:"Sketch",
-                part:"Part",
-                script:"Script"
-            },
-            navSim:{
-                physics:"Physics",
-                part:"Part",
-                material:"Material",
-                optimize:"Optimize"
-            },
-            navAssemble:{
-                assembler:"Assembler",
-                cam: "Process",
-                animate:"Preview",
-                send: "Send"
-            }
-        },
-
-        allCellTypes: {
-            octa:"Octahedron",
-            tetra: "Tetrahedron (Coming Soon)",
-            cube:"Cube",
-            truncatedCube:"Cuboctahedron",
-            kelvin:"Truncated Octahedron"
-        },
-        allConnectionTypes: {
-            octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
-            tetra: {vertex: "Vertex"},
-            cube: {face:"Face", gik: "GIK"},
-            truncatedCube: {face:"Face"},
-            kelvin: {face: "Face"}
-        },
-        allPartTypes:{
-            octa:{
-                face: {
-                    triangle:"Triangle"
-                    //beam:"Beam",
-                    //truss:"Truss"
-                },
-                freeformFace: {
-                    trox:"Troxes"
-                    //beam:"Beam"
-                },
-                edge: null,
-                edgeRot: {
-                    vox: "Snap Voxel (high res)",
-                    voxLowPoly: "Snap Voxel (low res)"
-                    //beam:"Beam"
-                },
-                vertex: null//{
-                    //beam:"Beam",
-//                    square:"Square",
-//                    xShape:"X"
-//                }
-            },
-            tetra: {vertex: null},
-            cube: {face: null,
-                gik: {
-                    lego: "Micro LEGO (high res)",
-                    legoLowPoly: "Micro LEGO (low res)"
-                }
-            },
-            truncatedCube: {face: null},
-            kelvin: {face: null}
-        },
-
-        allMaterialTypes:{
-            octa:{
-                face: null,
-                freeformFace: null,
-                edge: null,
-                edgeRot: null,
-                vertex: null//{
-                    //beam:"Beam",
-//                    square:"Square",
-//                    xShape:"X"
-//                }
-            },
-            tetra: {vertex: null},
-            cube: {face: null,
-                gik: {
-                    brass:{
-                        name: "Brass",
-                        color: "#b5a642"
-                    },
-                    fiberGlass: {
-                        name: "Fiberglass",
-                        color: "#fef1b5"
-                    }
-                }
-            },
-            truncatedCube: {face: null},
-            kelvin: {face: null}
-        },
-
-        allMachineTypes:{
-            octa:{
-                face: {handOfGod: "Hand of God"},
-                freeformFace: {handOfGod: "Hand of God"},
-                edgeRot: {
-                    shopbot: "Shopbot",
-                    oneBitBot: "One Bit Bot",
-                    oneBitBotLegs: "One Bit Bot with Legs",
-                    handOfGod: "Hand of God"
-                },
-                vertex: {handOfGod: "Hand of God"}
-            },
-            tetra: {
-                vertex:{handOfGod: "Hand of God"}
-            },
-            cube:{
-                face:{handOfGod: "Hand of God"},
-                gik: {handOfGod: "Hand of God"}
-            },
-            truncatedCube:{
-                face:{handOfGod: "Hand of God"}
-            },
-            kelvin:{
-                face:{handOfGod: "Hand of God"}
-            }
-        },
-        allAssemblyStrategies: {
-            raster: "Raster"
-        },
-        allCamProcesses: {
-            shopbot:{
-                shopbot: "Shopbot (sbp)",
-                gcode: "G-Code"
-            },
-            handOfGod:{gcode: "G-Code"},
-            oneBitBot:{
-                gcode: "G-Code",
-                tinyG: "TinyG"
-            }
-        },
-
-        allScripts: {
-            loadFile: "Load From File..."
-        },
-
-        allUnitTypes: {
-            inches: "Inches",
-            mm: "mm",
-            //um: "micron"
-        },
-
         //key bindings
         shift: false,
         deleteMode: false,
@@ -222,7 +72,7 @@ AppState = Backbone.Model.extend({
         var currentTab = this.get("currentTab");
         if (currentTab != "animate") this.set("stockSimulationPlaying", false);
         if (currentTab != "cam") this.set("manualSelectOrigin", false);
-        if (currentTab == "import" && dmaGlobals.lattice.get("connectionType") == "edgeRot") dmaGlobals.lattice.set("partType", "voxLowPoly");
+        if (currentTab == "import" && globals.lattice.get("connectionType") == "edgeRot") globals.lattice.set("partType", "voxLowPoly");
         this._storeTab(this.get("currentNav"), currentTab);
     },
 
@@ -299,7 +149,7 @@ AppState = Backbone.Model.extend({
                         this.set("shift", false);
                         $("#saveAsModel").modal("show");
                     } else {
-                        dmaGlobals.appState.saveJSON();
+                        globals.appState.saveJSON();
                     }
                 }
                 break;
@@ -321,20 +171,20 @@ AppState = Backbone.Model.extend({
             case 55:
             case 56:
             case 57:
-                if (dmaGlobals.lattice.get("connectionType") != "gik") break;
-                if (state) dmaGlobals.lattice.set("gikLength", e.keyCode-48);
+                if (globals.lattice.get("connectionType") != "gik") break;
+                if (state) globals.lattice.set("gikLength", e.keyCode-48);
                 break;
             case 81://q - increase supercell index
                 if (state) {
                     var index = this.get("superCellIndex")+1;
-                    if (index > dmaGlobals.lattice.get("gikLength")-1) index = 0;
+                    if (index > globals.lattice.get("gikLength")-1) index = 0;
                     this.set("superCellIndex", index);
                 }
                 break;
             case 65://a - decrease supercell index
                 if (state) {
                     var index = this.get("superCellIndex")-1;
-                    if (index < 0) index = dmaGlobals.lattice.get("gikLength")-1;
+                    if (index < 0) index = globals.lattice.get("gikLength")-1;
                     this.set("superCellIndex", index);
                 }
                 break;
@@ -366,20 +216,20 @@ AppState = Backbone.Model.extend({
     },
 
     _getAssemblerDataToSave: function(){
-        var assemblerData = _.omit(dmaGlobals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
-        if (!dmaGlobals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
+        var assemblerData = _.omit(globals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
+        if (!globals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
         return assemblerData;
     },
 
     _getLatticeDataToSave: function(){
-        return _.omit(dmaGlobals.lattice.toJSONFull(), ["highlighter", "basePlane", "nodes", "appState"]);
+        return _.omit(globals.lattice.toJSONFull(), ["highlighter", "basePlane", "nodes", "appState"]);
     },
 
     loadLatticeFromJSON: function(data){
-        dmaGlobals.lattice.clearCells();
+        globals.lattice.clearCells();
         this._setData(data, false);
-        dmaGlobals.lattice._updateLatticeType(null, null, null, true);
-        dmaGlobals.lattice.trigger("change:scale");//todo make this better
+        globals.lattice._updateLatticeType(null, null, null, true);
+        globals.lattice.trigger("change:scale");//todo make this better
     },
 
     saveUser: function(name){
@@ -399,10 +249,10 @@ AppState = Backbone.Model.extend({
 
     _setData: function(data, silent){
         _.each(_.keys(data.lattice), function(key){
-            dmaGlobals.lattice.set(key, data.lattice[key], {silent:silent});
+            globals.lattice.set(key, data.lattice[key], {silent:silent});
         });
         _.each(_.keys(data.assembler), function(key){
-            dmaGlobals.assembler.set(key, data.assembler[key]);
+            globals.assembler.set(key, data.assembler[key]);
         });
     }
 

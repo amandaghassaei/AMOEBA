@@ -19,7 +19,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         var rotation = this.parentCell.getEulerRotation();
         this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
         this.updateForScale(this.parentCell.getScale(), this.parentCell.getPosition());
-        dmaGlobals.three.sceneAdd(this.mesh, "part");
+        globals.three.sceneAdd(this.mesh, "part");
     };
 
     DMAPart.prototype.updateForScale = function(scale, position){
@@ -65,13 +65,13 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
     DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
         if (this.parentCell) {
             this.parentCell.removePart(this.type);
-            dmaGlobals.three.render();
+            globals.three.render();
         } else console.warn("part has no parent cell");
     };
 
     DMAPart.prototype.destroy = function(){
         if (this.mesh) {
-            dmaGlobals.three.sceneRemove(this.mesh, "part");
+            globals.three.sceneRemove(this.mesh, "part");
             this.mesh.myPart = null;
 //            this.mesh.dispose();
 //            geometry.dispose();

@@ -15,7 +15,7 @@ function Machine() {
     this._buildMeshes(function(meshes){
         self.meshes = meshes;
         _.each(_.values(meshes), function(mesh){
-            dmaGlobals.three.sceneAdd(mesh);
+            globals.three.sceneAdd(mesh);
         });
         if (self.setMachinePosition) self.setMachinePosition();
         self.setVisibility();
@@ -24,30 +24,30 @@ function Machine() {
 }
 
 Machine.prototype._setDefaults = function(){
-    dmaGlobals.assembler.set("camProcess", "gcode");
-    dmaGlobals.assembler.set("stockFixed", false);
-    dmaGlobals.assembler.set("originPosition", {x:0,y:0,z:0});
-    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
-    dmaGlobals.assembler.set("rapidHeight", boundingBox.max.z + 2*dmaGlobals.lattice.zScale());
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:0});
-    dmaGlobals.assembler.set("stockSeparation", dmaGlobals.lattice.xScale());
+    globals.assembler.set("camProcess", "gcode");
+    globals.assembler.set("stockFixed", false);
+    globals.assembler.set("originPosition", {x:0,y:0,z:0});
+    var boundingBox = globals.lattice.calculateBoundingBox();
+    globals.assembler.set("rapidHeight", boundingBox.max.z + 2*globals.lattice.zScale());
+    globals.assembler.set("stockPosition", {x:0,y:0,z:0});
+    globals.assembler.set("stockSeparation", globals.lattice.xScale());
 };
 
 Machine.prototype.setVisibility = function(visible){
     if (visible == null || visible === undefined) {
-        if (dmaGlobals.assembler) visible = dmaGlobals.assembler.isVisible();
+        if (globals.assembler) visible = globals.assembler.isVisible();
         else visible = false;
     }
     if (visible && this.hasStock) this.cell.draw();
     else this.cell.hide();
     this._setAlpha();
     this._setMeshesVisiblity(visible);
-    dmaGlobals.three.render();
+    globals.three.render();
 };
 
 Machine.prototype._setAlpha = function(){
     //todo make stock transparent
-    if (dmaGlobals.appState.get("currentTab") == "cam"){
+    if (globals.appState.get("currentTab") == "cam"){
         this.material.opacity = 0.5;
     } else {
         this.material.opacity = 1;
@@ -58,7 +58,7 @@ Machine.prototype._setMeshesVisiblity = function(visible){
     _.each(_.values(this.meshes), function(mesh){
         mesh.visible = visible;
     });
-    if (visible) this.setScale(dmaGlobals.lattice.get("scale"));
+    if (visible) this.setScale(globals.lattice.get("scale"));
 };
 
 Machine.prototype.setScale = function(scale){
@@ -68,8 +68,8 @@ Machine.prototype.setScale = function(scale){
 }
 
 Machine.prototype._makeStockCell = function(){
-    if (dmaGlobals.lattice.makeSuperCell) return dmaGlobals.lattice.makeSuperCell();
-    return dmaGlobals.lattice.makeCellForLatticeType(null, dmaGlobals.lattice.get("scale"));
+    if (globals.lattice.makeSuperCell) return globals.lattice.makeSuperCell();
+    return globals.lattice.makeCellForLatticeType(null, globals.lattice.get("scale"));
 };
 
 Machine.prototype.updateCellType = function(){
@@ -91,7 +91,7 @@ Machine.prototype.pickUpStock = function(){
 
 Machine.prototype.releaseStock = function(index){
     this.hasStock = false;
-    dmaGlobals.lattice.showCellAtIndex(JSON.parse(index));
+    globals.lattice.showCellAtIndex(JSON.parse(index));
     this.cell.hide();
 };
 
@@ -146,7 +146,7 @@ Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy move
 };
 
 Machine.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
-    var increment = speed/25*dmaGlobals.assembler.get("simSpeed");
+    var increment = speed/25*globals.assembler.get("simSpeed");
     if (increment == 0) {
         if (callback) callback();
         return;
@@ -184,18 +184,18 @@ Machine.prototype._setPosition = function(objects, nextPos, axis){
 
 Machine.prototype.postProcess = function(data, exporter){//override in subclasses
 
-    var rapidHeight = dmaGlobals.assembler.get("rapidHeight");
-    var safeHeight = dmaGlobals.assembler.get("safeHeight");
-    var wcs = dmaGlobals.assembler.get("originPosition");
+    var rapidHeight = globals.assembler.get("rapidHeight");
+    var safeHeight = globals.assembler.get("safeHeight");
+    var wcs = globals.assembler.get("originPosition");
 
-    var stockPosition = dmaGlobals.assembler.get("stockPosition");
+    var stockPosition = globals.assembler.get("stockPosition");
     var stockNum = 0;//position of stock in stock array
-    var multStockPositions = dmaGlobals.assembler.get("multipleStockPositions");
-    var stockSeparation = dmaGlobals.assembler.get("stockSeparation");
-    var stockArraySize = dmaGlobals.assembler.get("stockArraySize");
+    var multStockPositions = globals.assembler.get("multipleStockPositions");
+    var stockSeparation = globals.assembler.get("stockSeparation");
+    var stockArraySize = globals.assembler.get("stockArraySize");
     var self = this;
 
-    dmaGlobals.lattice.rasterCells(dmaGlobals.assembler._getOrder(dmaGlobals.assembler.get("camStrategy")), function(cell){
+    globals.lattice.rasterCells(globals.assembler._getOrder(globals.assembler.get("camStrategy")), function(cell){
         if (!cell) return;
         var thisStockPosition = _.clone(stockPosition);
         if (multStockPositions) {
@@ -246,7 +246,7 @@ Machine.prototype._postReleaseStock = function(cellPosition, cell, exporter, rap
 Machine.prototype.destroy = function(){
     this.cell.destroy();
     _.each(_.values(this.meshes), function(mesh){
-        dmaGlobals.three.sceneRemove(mesh);
+        globals.three.sceneRemove(mesh);
         mesh = null;
     });
     this.meshes = null;
@@ -266,9 +266,9 @@ Shopbot.prototype = Object.create(Machine.prototype);
 
 Shopbot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    dmaGlobals.assembler.set("camProcess", "shopbot");
-    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:boundingBox.max.y + 3*dmaGlobals.lattice.yScale(),z:0});
+    globals.assembler.set("camProcess", "shopbot");
+    var boundingBox = globals.lattice.calculateBoundingBox();
+    globals.assembler.set("stockPosition", {x:0,y:boundingBox.max.y + 3*globals.lattice.yScale(),z:0});
 };
 
 Shopbot.prototype._buildMeshes = function(callback){
@@ -306,8 +306,8 @@ God.prototype = Object.create(Machine.prototype);
 
 God.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    var boundingBox = dmaGlobals.lattice.calculateBoundingBox();
-    dmaGlobals.assembler.set("stockPosition", {x:0,y:0,z:boundingBox.max.z + 5*dmaGlobals.lattice.zScale()});
+    var boundingBox = globals.lattice.calculateBoundingBox();
+    globals.assembler.set("stockPosition", {x:0,y:0,z:boundingBox.max.z + 5*globals.lattice.zScale()});
 };
 
 God.prototype._buildMeshes = function(callback){

@@ -48,13 +48,13 @@ TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
 };
 
 TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
-    var rapidSpeed = dmaGlobals.assembler.get("rapidSpeeds");
-    var rapidHeight = dmaGlobals.assembler.get("rapidHeight");
+    var rapidSpeed = globals.assembler.get("rapidSpeeds");
+    var rapidHeight = globals.assembler.get("rapidHeight");
     if (line == "(home)"){
         return machine.moveTo("", "", rapidHeight, rapidSpeed, wcs, callback);
     } else if (line[0]=="M"){
         if (line == "M3 M5 M4 M5 M3 M5"){//get stock
-            var stockPosition = dmaGlobals.assembler.get("stockPosition");
+            var stockPosition = globals.assembler.get("stockPosition");
             return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, stockPosition.z-wcs.z, function(){
                 machine.pickUpStock();
             }, callback);
@@ -64,7 +64,7 @@ TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
                 machine.releaseStock(line.substr(4, line.length-5));
             }, callback);
         } else if (line == "M3 M5 M3 M5 M4 M5"){//higher height
-            return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, wcs.z+dmaGlobals.lattice.zScale(), function(){
+            return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, wcs.z+globals.lattice.zScale(), function(){
                 machine.releaseStock(line.substr(4, line.length-5));
             }, callback);
         } else if (line.substr(0,3) == "M5 ") return callback();
@@ -75,8 +75,8 @@ TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
 };
 
 TinyGExporter.prototype.simulateZ = function(machine, rapidSpeed, wcs, rapidHeight, height, action, callback){
-    var feedRate = dmaGlobals.assembler.get("feedRate");
-    var safeHeight = dmaGlobals.assembler.get("safeHeight");
+    var feedRate = globals.assembler.get("feedRate");
+    var safeHeight = globals.assembler.get("safeHeight");
     return machine.moveTo("", "", height+safeHeight, rapidSpeed, wcs, function(){
         machine.moveTo("", "", height, feedRate, wcs, function(){
             action();

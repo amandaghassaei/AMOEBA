@@ -23,31 +23,31 @@ AnimationMenuView = Backbone.View.extend({
         //bind events
         this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
         var self = this;
-        this.listenTo(dmaGlobals.assembler, "change", function(){
+        this.listenTo(globals.assembler, "change", function(){
             //ignore simLineNumber for render calls
-            if (_.isEqual(_.keys(dmaGlobals.assembler.changedAttributes()), ["simLineNumber"])) return;
+            if (_.isEqual(_.keys(globals.assembler.changedAttributes()), ["simLineNumber"])) return;
             self.render();
         });
-        this.listenTo(dmaGlobals.assembler, "change:simLineNumber", this._drawGcodeHighlighter);
+        this.listenTo(globals.assembler, "change:simLineNumber", this._drawGcodeHighlighter);
         $(document).bind('keyup', {state:false}, this._codeEdit);
         //this.$el.bind('resize', this._setEditorHeight);
     },
 
     _save: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.save();
+        globals.assembler.save();
     },
 
     _postProcess: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.postProcess();
+        globals.assembler.postProcess();
     },
 
     _codeEdit: function(e){
         var editor = $("#gcodeEditor");
         if (!editor.is(":focus")) return;
         e.preventDefault();
-        dmaGlobals.assembler.makeProgramEdits(editor.text());
+        globals.assembler.makeProgramEdits(editor.text());
     },
 
     _playStockSim: function(e){
@@ -62,19 +62,19 @@ AnimationMenuView = Backbone.View.extend({
 
     _resetStockSim: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.resetSimulation();
+        globals.assembler.resetSimulation();
         this.render();
     },
 
     _changeSpeedSlider: function(e){
         e.preventDefault();
-        dmaGlobals.assembler.set("simSpeed", Math.pow(2,$(e.target)[0].value));
+        globals.assembler.set("simSpeed", Math.pow(2,$(e.target)[0].value));
     },
 
     _drawGcodeHighlighter: function(){
-        var lineNum = dmaGlobals.assembler.get("simLineNumber");
+        var lineNum = globals.assembler.get("simLineNumber");
         if (lineNum == 0) return;
-        var code = dmaGlobals.assembler.get("dataOut").split("\n");
+        var code = globals.assembler.get("dataOut").split("\n");
         code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
         var newText = code.join("\n");
         var $editor = $('#gcodeEditor');
@@ -96,8 +96,8 @@ AnimationMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "animate") return;
-        if (dmaGlobals.assembler.get("needsPostProcessing") && !dmaGlobals.assembler.get("editsMadeToProgram")) dmaGlobals.assembler.postProcess();
-        this.$el.html(this.template(_.extend(this.model.toJSON(), dmaGlobals.assembler.toJSON())));
+        if (globals.assembler.get("needsPostProcessing") && !globals.assembler.get("editsMadeToProgram")) globals.assembler.postProcess();
+        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.assembler.toJSON())));
         this._setEditorHeight();
         this._drawGcodeHighlighter();//in case of code pause
 

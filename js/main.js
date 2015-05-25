@@ -3,7 +3,7 @@
  */
 
 //setup persistent global variables
-if (typeof dmaGlobals === "undefined") dmaGlobals = {};
+if (typeof globals === "undefined") globals = {};
 
 
 $(function(){
@@ -12,19 +12,20 @@ $(function(){
 //    window.workers = persistentWorkers(8);
 
     //init global singletons
-    dmaGlobals.three = new ThreeModel();
-    dmaGlobals.appState = new AppState();
-    dmaGlobals.lattice = new Lattice({appState: dmaGlobals.appState});
-    dmaGlobals.lattice.delayedInit();
-    dmaGlobals.assembler = new Assembler({appState: dmaGlobals.appState, lattice:dmaGlobals.lattice});
-    dmaGlobals.appState.delayedInit();
+    globals.plist = buildAppPList();
+    globals.three = new ThreeModel();
+    globals.appState = new AppState();
+    globals.lattice = new Lattice({appState: globals.appState});
+    globals.lattice.delayedInit();
+    globals.assembler = new Assembler({appState: globals.appState, lattice:globals.lattice});
+    globals.appState.delayedInit();
 
     //ui
-    new NavBar({model:dmaGlobals.appState});
-    new Ribbon({model:dmaGlobals.appState});
+    new NavBar({model:globals.appState});
+    new Ribbon({model:globals.appState});
 
     //threeJS View
-    new ThreeView({model:dmaGlobals.three, appState:dmaGlobals.appState});
+    new ThreeView({model:globals.three, appState:globals.appState});
 
-    if (dmaGlobals.lattice.get("connectionType") != "gik") dmaGlobals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
+    if (globals.lattice.get("connectionType") != "gik") globals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
 });

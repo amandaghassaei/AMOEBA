@@ -109,12 +109,12 @@ CamMenuView = Backbone.View.extend({
         var $object = $(e.target);
         $object.blur();
         var property = $object.data("property");
-        dmaGlobals.assembler.set(property, !dmaGlobals.assembler.get(property));
+        globals.assembler.set(property, !globals.assembler.get(property));
     },
 
     _selectOrigin: function(e){
         e.preventDefault();
-        dmaGlobals.appState.set("manualSelectOrigin", !dmaGlobals.appState.get("manualSelectOrigin"));
+        globals.appState.set("manualSelectOrigin", !globals.appState.get("manualSelectOrigin"));
     },
 
     _save: function(e){

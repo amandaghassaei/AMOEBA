@@ -86,7 +86,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         this.superCell = superCell;
         this.superCellIndex = index;
         if (this.superCellIndex == this.superCell.getLength()) this.cellMesh.rotateZ(Math.PI);
-        if (dmaGlobals.appState.get("cellMode")=="part") {
+        if (globals.appState.get("cellMode")=="part") {
             this.parts = this.__initParts();
             this.draw();
         }
@@ -100,7 +100,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         if (!this.superCell) return [];
         var parts  = [];
         var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
-        if (dmaGlobals.lattice.get("partType") == "lego") {
+        if (globals.lattice.get("partType") == "lego") {
             if (isEnd) parts.push(new DMAGIKEndPart(0, this));
             else parts.push(new DMAGIKPart(0, this));
         }

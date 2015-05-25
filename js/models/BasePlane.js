@@ -27,9 +27,9 @@ BasePlane = Backbone.Model.extend({
 
         var self = this;
         _.each(this.get("mesh"), function(mesh){
-            dmaGlobals.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
+            globals.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
         });
-        dmaGlobals.three.render();
+        globals.three.render();
 
     },
 
@@ -71,9 +71,9 @@ BasePlane = Backbone.Model.extend({
         var self = this;
         _.each(this.get("mesh"), function(mesh){
             if (mesh.myParent) mesh.myParent = null;
-            dmaGlobals.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
+            globals.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     destroy: function(){
@@ -131,24 +131,24 @@ OctaBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var scale = dmaGlobals.lattice.get("scale");
-        var xScale = dmaGlobals.lattice.xScale(scale);
-        var yScale = dmaGlobals.lattice.yScale(scale);
-        var zScale = dmaGlobals.lattice.zScale(scale);
+        var scale = globals.lattice.get("scale");
+        var xScale = globals.lattice.xScale(scale);
+        var yScale = globals.lattice.yScale(scale);
+        var zScale = globals.lattice.zScale(scale);
 
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(xScale*(zIndex%2)/2, -yScale/3*(zIndex%2), zIndex*zScale);
             mesh.rotation.set(Math.PI*(zIndex%2),0,0)
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _calcOctaFaceVertices: function(xySep){
 
         var vertices = [];
 
-        var xScale = dmaGlobals.lattice.xScale(1);
-        var yScale = dmaGlobals.lattice.yScale(1);
+        var xScale = globals.lattice.xScale(1);
+        var yScale = globals.lattice.yScale(1);
 
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
@@ -183,11 +183,11 @@ OctaBasePlane = BasePlane.extend({
 
     calcHighlighterPosition: function(face, position){
 
-        var index = dmaGlobals.lattice.getIndexForPosition(position);
+        var index = globals.lattice.getIndexForPosition(position);
         if (index.z%2 != 0) index.x -= 1;
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-        var position = dmaGlobals.lattice.getPositionForIndex(index);
-        position.z += dmaGlobals.lattice.zScale()/2;
+        var position = globals.lattice.getPositionForIndex(index);
+        position.z += globals.lattice.zScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
@@ -202,7 +202,7 @@ SquareBasePlane = BasePlane.extend({
 
     _makeBasePlaneMesh: function(){
 
-        var scale = dmaGlobals.lattice.xScale(1);
+        var scale = globals.lattice.xScale(1);
         var dimX = this.get("dimX")*scale;
         var dimY = this.get("dimY")*scale;
 
@@ -232,18 +232,18 @@ SquareBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var zScale = dmaGlobals.lattice.zScale();
+        var zScale = globals.lattice.zScale();
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(0, 0, zIndex*zScale);
         });
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     calcHighlighterPosition: function(face, position){
-        var index = dmaGlobals.lattice.getIndexForPosition(position);
+        var index = globals.lattice.getIndexForPosition(position);
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-        var latticePosition = dmaGlobals.lattice.getPositionForIndex(index);
-        latticePosition.z += dmaGlobals.lattice.zScale()/2;
+        var latticePosition = globals.lattice.getPositionForIndex(index);
+        latticePosition.z += globals.lattice.zScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 
@@ -258,11 +258,11 @@ SquareBasePlane = BasePlane.extend({
 RotEdgeOctaBasePlane = SquareBasePlane.extend({
 
     calcHighlighterPosition: function(face, position){
-        var index = dmaGlobals.lattice.getIndexForPosition(position);
+        var index = globals.lattice.getIndexForPosition(position);
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-        var latticePosition = dmaGlobals.lattice.getPositionForIndex(index);
-        latticePosition.x -= dmaGlobals.lattice.xScale()/2;
-        latticePosition.y -= dmaGlobals.lattice.yScale()/2;
+        var latticePosition = globals.lattice.getPositionForIndex(index);
+        latticePosition.x -= globals.lattice.xScale()/2;
+        latticePosition.y -= globals.lattice.yScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 });

@@ -91,7 +91,7 @@ function DMARotatedEdgeCell(indices, scale, cellMode, partType){
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
 DMARotatedEdgeCell.prototype._initParts = function(){
-    return this.changePartType(dmaGlobals.lattice.get("partType"));
+    return this.changePartType(globals.lattice.get("partType"));
 };
 
 DMARotatedEdgeCell.prototype.changePartType = function(type){

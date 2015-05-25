@@ -15,7 +15,7 @@ function DMACell(indices, scale, cellMode, partType) {
     this.cellMesh = this._buildCellMesh();
     this._doMeshTransformations(this.cellMesh);//some cell types require transformations
 
-    dmaGlobals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
+    globals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
 
     this.draw(scale, cellMode, partType);
 
@@ -29,9 +29,9 @@ DMACell.prototype._sceneType = function(indices){
 
 DMACell.prototype.draw = function(scale, cellMode, partType){
     if (this.hideForStockSimulation) return;
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
-    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
-    if (!partType)  partType = dmaGlobals.lattice.get("partType");
+    if (!scale) scale = globals.lattice.get("scale");
+    if (!cellMode) cellMode = globals.appState.get("cellMode");
+    if (!partType)  partType = globals.lattice.get("partType");
     //var beamMode = partType == "beam";
     var beamMode = false;
     var partMode = cellMode == "part";
@@ -71,7 +71,7 @@ DMACell.prototype.hide = function(){//only used in the context of stock simulati
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 DMACell.prototype.updateForScale = function(scale, cellMode, partType){
-    if (!scale) scale = dmaGlobals.lattice.get("scale");
+    if (!scale) scale = globals.lattice.get("scale");
     var position = this._calcPosition();
     this._setMeshPosition(this.cellMesh, position);
     this.cellMesh.scale.set(scale, scale, scale);//must do this so highlighting works properly in part mode
@@ -79,8 +79,8 @@ DMACell.prototype.updateForScale = function(scale, cellMode, partType){
     if (this.superCell && this.superCellIndex == 0) this.superCell.setScale(scale);
 
     //only update visible object to scale
-    if (!cellMode) cellMode = dmaGlobals.appState.get("cellMode");
-    if (!partType)  partType = dmaGlobals.lattice.get("partType");
+    if (!cellMode) cellMode = globals.appState.get("cellMode");
+    if (!partType)  partType = globals.lattice.get("partType");
     if (cellMode == "part"){
         if (partType == "beam"){
             _.each(this.beams, function(beam){
@@ -102,7 +102,7 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
 
 DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
     this.cellMesh.position[axis] = position;
-    if (dmaGlobals.appState.get("cellMode") == "part"){
+    if (globals.appState.get("cellMode") == "part"){
         _.each(this.parts, function(part){
             if (part) part.moveTo(position, axis);
         });
@@ -114,7 +114,7 @@ DMACell.prototype.getType = function(){
 };
 
 DMACell.prototype.getScale = function(){//need for part relay
-    return dmaGlobals.lattice.get("scale");
+    return globals.lattice.get("scale");
 };
 
 DMACell.prototype.getPosition = function(){
@@ -130,7 +130,7 @@ DMACell.prototype.getEulerRotation = function(){
 };
 
 DMACell.prototype._calcPosition = function(){//need for part relay
-    if (this.indices) return dmaGlobals.lattice.getPositionForIndex(this.indices);
+    if (this.indices) return globals.lattice.getPositionForIndex(this.indices);
     return this.cellMesh.position;//used for cam simulation
 };
 
@@ -139,15 +139,15 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
 };
 
 DMACell.prototype.xScale = function(scale){
-    return dmaGlobals.lattice.xScale(scale);
+    return globals.lattice.xScale(scale);
 };
 
 DMACell.prototype.yScale = function(scale){
-    return dmaGlobals.lattice.yScale(scale);
+    return globals.lattice.yScale(scale);
 };
 
 DMACell.prototype.zScale = function(scale){
-    return dmaGlobals.lattice.zScale(scale);
+    return globals.lattice.zScale(scale);
 };
 
 
@@ -180,7 +180,7 @@ DMACell.prototype.removePart = function(index){
     _.each(this.parts, function(part){
         if (part) hasAnyParts = true;
     });
-    if (!hasAnyParts) dmaGlobals.lattice.removeCell(this);//if all parts are gone, remove cell
+    if (!hasAnyParts) globals.lattice.removeCell(this);//if all parts are gone, remove cell
 };
 
 DMACell.prototype.destroyParts = function(){
@@ -243,7 +243,7 @@ DMACell.prototype.destroy = function(){
     if (this.destroyStarted) return;
     this.destroyStarted = true;
     if (this.cellMesh) {
-        dmaGlobals.three.sceneRemove(this.cellMesh, this._sceneType(this.indices));
+        globals.three.sceneRemove(this.cellMesh, this._sceneType(this.indices));
         this.cellMesh.myParent = null;
 //            this.cellMesh.dispose();
 //            geometry.dispose();

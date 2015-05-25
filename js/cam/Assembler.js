@@ -68,7 +68,7 @@ Assembler = Backbone.Model.extend({
                 "change:connectionType",
             this._setNeedsPostProcessing);
         this.listenTo(options.lattice, "change:scale", this._setCAMScale);
-        this.listenTo(dmaGlobals.appState, "change:stockSimulationPlaying", this._stockSimulation);
+        this.listenTo(globals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
         this.listenTo(options.lattice, "change:partType", this._updatePartType);
         this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
@@ -101,7 +101,7 @@ Assembler = Backbone.Model.extend({
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
     isVisible: function(){
-        var currentTab = dmaGlobals.appState.get("currentTab");
+        var currentTab = globals.appState.get("currentTab");
         return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
     },
 
@@ -117,11 +117,11 @@ Assembler = Backbone.Model.extend({
 
     _updateCellMode: function(){
         if (this.get("machine")) this.get("machine").setVisibility(this.isVisible());
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _setCAMScale: function(){
-        var scale = dmaGlobals.lattice.get("scale");
+        var scale = globals.lattice.get("scale");
         this.get("origin").scale.set(scale/8, scale/8, scale/8);
         this.get("stock").scale.set(scale/8, scale/8, scale/8);
         if (this.get("machine")) this.get("machine").setScale(scale);
@@ -129,7 +129,7 @@ Assembler = Backbone.Model.extend({
 
     _tabChanged: function(){
         this._setCAMVisibility();
-        if (dmaGlobals.appState.get("currentTab") != "animate") this.resetSimulation();
+        if (globals.appState.get("currentTab") != "animate") this.resetSimulation();
     },
 
     _setCAMVisibility: function(){
@@ -138,19 +138,19 @@ Assembler = Backbone.Model.extend({
         this.get("stock").visible = visible;
         if (visible && !this.get("machine")) this.selectMachine();
         if (this.get("machine")) this.get("machine").setVisibility(visible);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
     _initOriginAndStock: function(){//todo this is ugly
         var origin = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff0000}));
-        dmaGlobals.three.sceneAdd(origin);
+        globals.three.sceneAdd(origin);
         this.set("origin", origin);
         this._moveOrigin();
         //init stock mesh
         var stock = new THREE.Mesh(new THREE.SphereGeometry(1),
             new THREE.MeshBasicMaterial({color:0xff00ff}));
-        dmaGlobals.three.sceneAdd(stock);
+        globals.three.sceneAdd(stock);
         this.set("stock", stock);
         this._moveStock();
         this._setCAMScale();
@@ -161,7 +161,7 @@ Assembler = Backbone.Model.extend({
         var position = this.get("originPosition");
         this.get("origin").position.set(position.x, position.y, position.z);
         if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
-        dmaGlobals.three.render();
+        globals.three.render();
         if (this.get("machine") && this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
     },
 
@@ -177,7 +177,7 @@ Assembler = Backbone.Model.extend({
     _moveStock: function(){
         var position = this.get("stockPosition");
         this.get("stock").position.set(position.x, position.y, position.z);
-        dmaGlobals.three.render();
+        globals.three.render();
     },
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -186,16 +186,16 @@ Assembler = Backbone.Model.extend({
 
     resetSimulation: function(){
         this.set("simLineNumber", 0, {silent:true});
-        dmaGlobals.appState.set("stockSimulationPlaying", false);
-        dmaGlobals.three.stopAnimationLoop();
-        dmaGlobals.lattice.showCells();
+        globals.appState.set("stockSimulationPlaying", false);
+        globals.three.stopAnimationLoop();
+        globals.lattice.showCells();
     },
 
     _stockSimulation: function(){
-        if (dmaGlobals.appState.get("stockSimulationPlaying")){
-            dmaGlobals.three.startAnimationLoop();
+        if (globals.appState.get("stockSimulationPlaying")){
+            globals.three.startAnimationLoop();
             var currentLine = this.get("simLineNumber");
-            if (currentLine == 0) dmaGlobals.lattice.hideCells();
+            if (currentLine == 0) globals.lattice.hideCells();
             var allLines = this.get("dataOut").split("\n");
             if(currentLine<allLines.length){
                 var self = this;
@@ -210,7 +210,7 @@ Assembler = Backbone.Model.extend({
                 this.resetSimulation();
             }
         } else {
-            dmaGlobals.three.stopAnimationLoop();
+            globals.three.stopAnimationLoop();
             this.get("machine").pause();
         }
 
@@ -244,7 +244,7 @@ Assembler = Backbone.Model.extend({
         this.set("dataOut", data);
         this.set("editsMadeToProgram", false);
         this.set("exporter", exporter);
-        if (!dmaGlobals.appState.get("stockSimulationPlaying")) this.resetSimulation();
+        if (!globals.appState.get("stockSimulationPlaying")) this.resetSimulation();
         return {data:data, exporter:exporter};
     },
 
