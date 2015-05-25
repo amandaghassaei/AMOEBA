@@ -2,6 +2,8 @@
  * Created by aghassaei on 1/26/15.
  */
 
+//todo scale input update renders view
+
 
 LatticeMenuView = Backbone.View.extend({
 
@@ -21,15 +23,6 @@ LatticeMenuView = Backbone.View.extend({
         _.bindAll(this, "render");
         //bind events
         this.listenTo(globals.lattice, "change", this.render);
-    },
-
-    _updateNumber: function(e, property){
-        e.preventDefault();
-        var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return;
-        var object = globals.lattice.get(property);
-        object[$(e.target).data("type")] = newVal;
-        globals.lattice.trigger("change:"+property);
     },
 
     _clearCells: function(e){
