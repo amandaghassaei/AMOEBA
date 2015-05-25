@@ -10,6 +10,7 @@ MenuWrapper = Backbone.View.extend({
     events: {
         "click .menuWrapperTab>a":                     "_tabWasSelected",
         "click .dropdownSelector":                     "_makeDropdownSelection",
+        "click .clearCells":                           "_clearCells"
     },
 
     initialize: function(){
@@ -20,7 +21,6 @@ MenuWrapper = Backbone.View.extend({
         var lattice = globals.lattice;
 
         //init all tab view controllers
-        this.importMenu = new ImportMenuView({model:this.model});
         this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
         this.partMenu = new PartMenuView({model:this.model, lattice:lattice});
         this.scriptMenu = new ScriptMenuView({model:this.model});
@@ -98,6 +98,11 @@ MenuWrapper = Backbone.View.extend({
         if ($target.hasClass("lattice")) globals.lattice.set(property, value);
     },
 
+    _clearCells: function(e){
+        e.preventDefault();
+        globals.lattice.clearCells();
+    },
+
 
 
     _tabWasSelected: function(e){
@@ -127,6 +132,7 @@ MenuWrapper = Backbone.View.extend({
             if (!this.latticeMenu) this.latticeMenu = new LatticeMenuView({model:this.model});
             this.latticeMenu.render();
         } else if (tabName == "import"){
+            if (!this.importMenu) this.importMenu = new ImportMenuView({model:this.model});
             this.importMenu.render();
         } else if (tabName == "sketch"){
             this.sketchMenu.render();

@@ -10,8 +10,6 @@ LatticeMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click #latticeMenuClearCells":                 "_clearCells",
-
         "change #latticeScale":                         "_changeScale",
         "slide #latticeMenuScaleSlider":                "_sliderDidSlide",
         "slideStop #latticeMenuScaleSlider":            "_changeScaleSlider"
@@ -23,11 +21,6 @@ LatticeMenuView = Backbone.View.extend({
         _.bindAll(this, "render");
         //bind events
         this.listenTo(globals.lattice, "change", this.render);
-    },
-
-    _clearCells: function(e){
-        e.preventDefault();
-        globals.lattice.clearCells();
     },
 
     _changeScale: function(e){
@@ -119,7 +112,7 @@ LatticeMenuView = Backbone.View.extend({
             </div><br/><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
         <br/>\
-        <a href="#" id="latticeMenuClearCells" class=" btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
+        <a href="#" class="clearCells btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
         ')
 
 });
