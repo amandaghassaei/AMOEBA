@@ -2,8 +2,6 @@
  * Created by aghassaei on 1/26/15.
  */
 
-//todo scale input update renders view
-
 
 LatticeMenuView = Backbone.View.extend({
 
@@ -44,6 +42,7 @@ LatticeMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "lattice") return;
+        if ($("input").is(":focus")) return;
         this.$el.html(this.template(_.extend(globals.lattice.toJSON(), globals.plist)));
 
         $('#latticeMenuScaleSlider').slider({

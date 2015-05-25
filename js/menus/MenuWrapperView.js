@@ -80,11 +80,18 @@ MenuWrapper = Backbone.View.extend({
         }
         var key = $target.data("key");
         if (key){
-            if ($target.hasClass("lattice")) globals.lattice.get(property)[key] = newVal;
-            globals.lattice.trigger("change:"+property);
+            if ($target.hasClass("lattice")) {
+                globals.lattice.get(property)[key] = newVal;
+                globals.lattice.trigger("change:"+property);
+            } else if ($target.hasClass("assembler")) {
+                globals.assembler.get(property)[key] = newVal;
+                globals.assembler.trigger("change:"+property);
+            }
+
             return;
         }
         if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
+        else if ($target.hasClass("assembler")) globals.assembler.set(property, newVal);
     },
 
     _makeDropdownSelection: function(e){
@@ -93,12 +100,14 @@ MenuWrapper = Backbone.View.extend({
         var value = $target.data("value");
         if (!property || !value) return;
         if ($target.hasClass("lattice")) globals.lattice.set(property, value);
+        else if ($target.hasClass("assembler")) globals.assembler.set(property, value);
     },
 
     _clearCells: function(e){
         e.preventDefault();
         globals.lattice.clearCells();
     },
+
 
 
 

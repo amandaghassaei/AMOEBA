@@ -8,8 +8,6 @@ AssemblerMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .camStrategy":                            "_selectCamStrategy",
-        "click .machineType":                            "_selectMachine"
     },
 
     initialize: function(options){
@@ -23,13 +21,6 @@ AssemblerMenuView = Backbone.View.extend({
 
     _onKeyup: function(e){
         if (this.model.get("currentTab") != "assembler") return;
-
-        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
-            $(e.target).blur();
-            this.render();
-            return;
-        }
-
         if ($(".placementOrder").is(":focus")) this._updatePlacementOrder(e);
     },
 
@@ -38,24 +29,14 @@ AssemblerMenuView = Backbone.View.extend({
         var newVal = $(e.target).val();
         if (newVal.length<3) return;//todo this isn't quite right
         this.assembler.set("placementOrder", newVal);
-        this.assembler.trigger("change:placementOrder");
-    },
-
-    _selectCamStrategy: function(e){
-        e.preventDefault();
-        this.assembler.set("camStrategy", $(e.target).data("type"));
-    },
-
-    _selectMachine: function(e){
-        e.preventDefault();
-        this.assembler.set("machineName", $(e.target).data("type"));
+//        this.assembler.trigger("change:placementOrder");
     },
 
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "assembler") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), globals.lattice.toJSON())));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), globals.lattice.toJSON(), globals.plist)));
     },
 
     template: _.template('\
@@ -64,7 +45,7 @@ AssemblerMenuView = Backbone.View.extend({
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[cellType][connectionType][machineName] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allMachineTypes[cellType][connectionType]), function(key){ %>\
-                        <li><a class="machineType" data-type="<%= key %>" href="#"><%= allMachineTypes[cellType][connectionType][key] %></a></li>\
+                        <li><a class="assembler dropdownSelector" data-property="machineName" data-value="<%= key %>" href="#"><%= allMachineTypes[cellType][connectionType][key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
@@ -73,7 +54,7 @@ AssemblerMenuView = Backbone.View.extend({
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allAssemblyStrategies[camStrategy] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allAssemblyStrategies), function(key){ %>\
-                        <li><a class="camStrategy" data-type="<%= key %>" href="#"><%= allAssemblyStrategies[key] %></a></li>\
+                        <li><a class="assembler dropdownSelector" data-property="camStrategy" data-value="<%= key %>" href="#"><%= allAssemblyStrategies[key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\

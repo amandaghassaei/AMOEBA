@@ -20,6 +20,7 @@ PartMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "part") return;
+        if ($("input").is(":focus")) return;
         this.$el.html(this.template(_.extend(globals.lattice.toJSON(), globals.plist)));
     },
 
