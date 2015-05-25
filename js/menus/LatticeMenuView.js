@@ -32,10 +32,7 @@ LatticeMenuView = Backbone.View.extend({
     },
 
     _updateGikLength: function(e){
-        e.preventDefault();
-        var newVal = parseInt($(e.target).val());
-        if (isNaN(newVal)) return;
-        globals.lattice.set("gikLength", newVal);
+
     },
 
     _clearCells: function(e){
@@ -104,7 +101,7 @@ LatticeMenuView = Backbone.View.extend({
             <br/><br/>\
         <% } %>\
         <% if (connectionType == "gik") { %>\
-        GIK Length:&nbsp;&nbsp;<input id="gikLength" value="<%= gikLength %>" placeholder="GIK length" class="form-control numberInput" type="text"><br/>\
+        GIK Length:&nbsp;&nbsp;<input data-property="gikLength" value="<%= gikLength %>" placeholder="GIK length" class="form-control intInput lattice" type="text"><br/>\
         <br/>\
         <% } %>\
         <% if (allMaterialTypes[cellType][connectionType]){ %> \

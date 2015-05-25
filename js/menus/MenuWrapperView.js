@@ -9,7 +9,7 @@ MenuWrapper = Backbone.View.extend({
 
     events: {
         "click .menuWrapperTab>a":                     "_tabWasSelected",
-        "click .dropdownSelector":                     "_makeDropdownSelection"
+        "click .dropdownSelector":                     "_makeDropdownSelection",
     },
 
     initialize: function(){
@@ -46,7 +46,7 @@ MenuWrapper = Backbone.View.extend({
 
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
-//            this.render();
+            this._renderTab();
             return;
         }
 
@@ -55,11 +55,39 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _updateFloat: function(e){
-
+        e.preventDefault();
+        var $target = $(e.target);
+        var newVal = parseFloat($target.val());
+        if (isNaN(newVal)) {
+            console.warn("value is not float");
+            return;
+        }
+        this._setNumber($target, newVal);
     },
 
     _updateInt: function(e){
+        e.preventDefault();
+        var $target = $(e.target);
+        var newVal = parseInt($target.val());
+        if (isNaN(newVal)) {
+            console.warn("value is NaN");
+            return;
+        }
+        this._setNumber($target, newVal);
+    },
 
+    _setNumber: function($target, newVal){
+        var property = $target.data("property");
+        if (!property) {
+            console.warn("no property associated with number input");
+            return;
+        }
+        var key = $target.data("key");
+        if (key){
+            if ($target.hasClass("lattice")) globals.lattice.get(property)[key] = newVal;
+            return;
+        }
+        if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
     },
 
     _makeDropdownSelection: function(e){
@@ -88,6 +116,12 @@ MenuWrapper = Backbone.View.extend({
                 $tab.removeClass("active");
             }
         });
+
+        this._renderTab(tabName);
+    },
+
+    _renderTab: function(tabName){
+        if (!tabName) tabName = this.model.get("currentTab");
 
         if (tabName == "lattice"){
             if (!this.latticeMenu) this.latticeMenu = new LatticeMenuView({model:this.model});
@@ -118,7 +152,6 @@ MenuWrapper = Backbone.View.extend({
             console.warn("no tab initialized!");
             $("#menuContent").html('Coming Soon.');//clear out content from menu
         }
-
     },
 
     render: function(){

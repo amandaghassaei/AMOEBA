@@ -183,7 +183,7 @@ hr {
     margin: 20px 0;
 }
 
-input.numberInput{
+input.intInput, number.floatInput{
     width:22%;
     display: inline;
     padding: 8px 10px;
