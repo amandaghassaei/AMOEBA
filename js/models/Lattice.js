@@ -424,6 +424,7 @@ Lattice = Backbone.Model.extend({
 
     _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
 
+        this._setToDefaultsSilently();
         this._setDefaultCellMode();
 
         if (typeof loadingFromFile == "undefined") loadingFromFile = false;
@@ -494,6 +495,17 @@ Lattice = Backbone.Model.extend({
             cells[x][y][z] = newCell;
         });
         globals.three.render();
+    },
+
+    _setToDefaultsSilently: function(){
+        var newCellType = this.get("cellType");
+        var newConnectionType = this.get("connectionType");
+        if (newConnectionType == this.previous("connectionType")){
+            newConnectionType = _.keys(globals.plist["allConnectionTypes"][newCellType])[0];
+            this.set("connectionType", newConnectionType, {silent:true});
+        }
+        var partType = _.keys(globals.plist["allPartTypes"][newCellType][newConnectionType])[0];
+        this.set("partType", partType, {silent:true});
     },
 
     _setDefaultCellMode: function(){

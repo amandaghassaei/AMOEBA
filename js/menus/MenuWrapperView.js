@@ -5,20 +5,21 @@
 
 MenuWrapper = Backbone.View.extend({
 
-    el: "#menuHeader",
+    el: "#menuWrapper",
 
     events: {
-        "click .menuWrapperTab>a":                     "_tabWasSelected"
+        "click .menuWrapperTab>a":                     "_tabWasSelected",
+        "click .dropdownSelector":                     "_makeDropdownSelection"
     },
 
     initialize: function(){
 
-        _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show");
+        _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show", "_onKeyUp");
+        $(document).bind('keyup', {}, this._onKeyUp);
 
         var lattice = globals.lattice;
 
         //init all tab view controllers
-        this.latticeMenu = new LatticeMenuView({model:this.model});
         this.importMenu = new ImportMenuView({model:this.model});
         this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
         this.partMenu = new PartMenuView({model:this.model, lattice:lattice});
@@ -40,6 +41,37 @@ MenuWrapper = Backbone.View.extend({
         if (this.model.get("menuIsVisible")) this._populateAndShow();
     },
 
+
+    _onKeyUp: function(e){
+
+        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
+            $(e.target).blur();
+//            this.render();
+            return;
+        }
+
+        if ($(".floatInput").is(":focus")) this._updateFloat(e);
+        if ($(".intInput").is(":focus")) this._updateInt(e);
+    },
+
+    _updateFloat: function(e){
+
+    },
+
+    _updateInt: function(e){
+
+    },
+
+    _makeDropdownSelection: function(e){
+        var $target = $(e.target);
+        var property = $target.data("property");
+        var value = $target.data("value");
+        if (!property || !value) return;
+        if ($target.hasClass("lattice")) globals.lattice.set(property, value);
+    },
+
+
+
     _tabWasSelected: function(e){
         e.preventDefault();
         var tabName = $(e.target).parent().data('name');
@@ -58,6 +90,7 @@ MenuWrapper = Backbone.View.extend({
         });
 
         if (tabName == "lattice"){
+            if (!this.latticeMenu) this.latticeMenu = new LatticeMenuView({model:this.model});
             this.latticeMenu.render();
         } else if (tabName == "import"){
             this.importMenu.render();
@@ -97,7 +130,7 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _populateAndShow: function(){
-        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.lattice.toJSON(), globals.plist)));
+        $("#menuHeader").html(this.template(_.extend(this.model.toJSON(), globals.lattice.toJSON(), globals.plist)));
         this._updateCurrentTab();
         this._show();
     },
@@ -111,12 +144,12 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _hide: function(callback, suppressModelUpdate){
-        this.$el.parent().animate({right: "-430"}, {done: callback});
+        this.$el.animate({right: "-430"}, {done: callback});
         if (!suppressModelUpdate) this.model.set("menuIsVisible", false);
     },
 
     _show: function(){
-        this.$el.parent().animate({right: "0"});
+        this.$el.animate({right: "0"});
         this.model.set("menuIsVisible", true);
     },
 
