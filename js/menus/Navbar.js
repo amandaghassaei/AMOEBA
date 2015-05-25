@@ -18,8 +18,9 @@ NavBar = Backbone.View.extend({
 
         "click .saveJSON":                                      "_save",
         "click .saveAsJSON":                                    "_saveAs",
-//        "change #saveAsModel":                                  "_saveAs",//detect enter key
+        "change #saveAsFileName":                               "_saveAs",//detect enter key
         "click .saveUser":                                      "_saveUser",
+        "change #saveUserFileName":                             "_saveUser",//detect enter key
 
         "click .importJSON":                                    "_importJSON",
         "change #jsonInput":                                    "_selectJSONFiles",
@@ -99,8 +100,7 @@ NavBar = Backbone.View.extend({
         $(e.target).find("input.filename").blur();
     },
 
-
-
+    
 
 
     _save: function(e){
@@ -121,6 +121,9 @@ NavBar = Backbone.View.extend({
         globals.fileSaver.saveUser(fileName);
         $('#saveUserModel').modal('hide');
     },
+
+
+
 
     _importJSON: function(e){
         e.preventDefault();

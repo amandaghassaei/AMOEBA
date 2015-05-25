@@ -606,6 +606,6 @@ Lattice = Backbone.Model.extend({
 
     toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
         return _.omit(this.attributes, ["cells", "nodes"]);//omit makes a copy
-    },//todo something weird here
+    }//todo something weird here
 
 });
