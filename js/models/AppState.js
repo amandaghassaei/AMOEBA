@@ -7,7 +7,7 @@
 
 AppState = Backbone.Model.extend({
 
-    defaults: {
+    defaults: {//menu and view/render/interaction states
 
         currentNav:"navDesign",// design, sim, assemble
         currentTab:"lattice",
@@ -17,7 +17,6 @@ AppState = Backbone.Model.extend({
         lastSimulationTab: "physics",
         lastAssembleTab: "assembler",
 
-        menuWrapper: null,
         menuIsVisible: true,
 
         //key bindings
@@ -27,7 +26,8 @@ AppState = Backbone.Model.extend({
         extrudeMode: false,
         cellMode: "cell",//show cells vs part
         cellsVisible: true,
-        superCellIndex: 0,
+
+        superCellIndex: 0,//offset of superCell adds todo lattice?
 
         stockSimulationPlaying: false,
         manualSelectOrigin: false//mode that allows user ot select origin from existing cell
@@ -49,10 +49,6 @@ AppState = Backbone.Model.extend({
         this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
         if (this.isMobile()) this.set("menuIsVisible", false);
-    },
-
-    delayedInit: function(){
-        this.set("menuWrapper", new MenuWrapper({model: this}));
     },
 
     isMobile: function() {

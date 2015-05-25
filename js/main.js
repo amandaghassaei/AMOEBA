@@ -15,12 +15,12 @@ $(function(){
     globals.plist = buildAppPList();
     globals.three = new ThreeModel();
     globals.appState = new AppState();
-    globals.lattice = new Lattice({appState: globals.appState});
-    globals.lattice.delayedInit();
+    globals.lattice = new Lattice();
+    globals.lattice.delayedInit();//todo need this?
     globals.assembler = new Assembler({appState: globals.appState, lattice:globals.lattice});
-    globals.appState.delayedInit();
 
     //ui
+    new MenuWrapper({model: globals.appState});
     new NavBar({model:globals.appState});
     new Ribbon({model:globals.appState});
 

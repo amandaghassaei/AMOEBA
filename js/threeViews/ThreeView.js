@@ -134,7 +134,7 @@ ThreeView = Backbone.View.extend({
     ////////////////////////////////////////////////////////////////////////////////
 
     _saveHighlighter: function(){
-        this.highlighter = globals.lattice.get("highlighter");
+        this.highlighter = globals.highlighter;
     },
 
     _setNoPartIntersections: function(){

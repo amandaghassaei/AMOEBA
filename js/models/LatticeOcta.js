@@ -12,8 +12,8 @@ OctaLatticeSubclasses = {
     OctaFaceLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new OctaFaceHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new OctaBasePlane({scale:this.get("scale")});
+            globals.highlighter = new OctaFaceHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){
@@ -73,8 +73,8 @@ OctaLatticeSubclasses = {
     OctaFreeFormFaceLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new OctaFreeFormHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new OctaBasePlane({scale:this.get("scale")});
+            globals.highlighter = new OctaFreeFormHighlighter({scale:this.get("scale")});
 
             this.set("freeformCellType", "octa");
 
@@ -151,8 +151,8 @@ OctaLatticeSubclasses = {
     OctaEdgeLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new OctaBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new OctaEdgeHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new OctaBasePlane({scale:this.get("scale")});
+            globals.highlighter = new OctaEdgeHighlighter({scale:this.get("scale")});
 
         },
 
@@ -210,8 +210,8 @@ OctaLatticeSubclasses = {
     OctaRotEdgeLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new RotEdgeOctaBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new RotEdgeOctaBasePlane({scale:this.get("scale")});
+            globals.highlighter = new OctaVertexHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){
@@ -273,8 +273,8 @@ OctaLatticeSubclasses = {
     OctaVertexLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new OctaVertexHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
+            globals.highlighter = new OctaVertexHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){

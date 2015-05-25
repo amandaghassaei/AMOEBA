@@ -12,8 +12,8 @@ OtherLatticeSubclasses = {
     CubeLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new CubeHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
+            globals.highlighter = new CubeHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){
@@ -57,8 +57,8 @@ OtherLatticeSubclasses = {
     GIKLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new GIKHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
+            globals.highlighter = new GIKHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){
@@ -160,8 +160,8 @@ OtherLatticeSubclasses = {
     TruncatedCubeLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new TruncatedCubeHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
+            globals.highlighter = new TruncatedCubeHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){
@@ -207,8 +207,8 @@ OtherLatticeSubclasses = {
     KelvinLattice: {
 
         _initLatticeType: function(){
-            this.set("basePlane", new SquareBasePlane({scale:this.get("scale")}));
-            this.set("highlighter", new TruncatedCubeHighlighter({scale:this.get("scale")}));
+            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
+            globals.highlighter = new TruncatedCubeHighlighter({scale:this.get("scale")});
         },
 
         getIndexForPosition: function(absPosition){

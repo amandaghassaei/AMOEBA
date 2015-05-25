@@ -15,9 +15,7 @@ Lattice = Backbone.Model.extend({
         cellsMax: {x:0, y:0, z:0},//max position of cells matrix
         numCells: 0,
 
-        basePlane: null,//plane to build from
         scale: 20,
-        highlighter: null,//highlights build-able surfaces
 
         //spacing for connectors/joints
         cellSeparation: {xy:0, z:0},
@@ -31,19 +29,19 @@ Lattice = Backbone.Model.extend({
 
     //pass in fillGeometry
 
-    initialize: function(options){
+    initialize: function(){
 
         _.extend(this, OctaLatticeSubclasses, OtherLatticeSubclasses);
 
         //bind events
         this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
-        this.listenTo(options.appState, "change:superCellIndex", this._gikLengthDidChange);
-        this.listenTo(options.appState, "change:cellMode", this._updateForMode);
+        this.listenTo(globals.appState, "change:superCellIndex", this._gikLengthDidChange);
+        this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
         this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
-        this.listenTo(options.appState, "change:cellsVisible", this._setCellVisibility);
+        this.listenTo(globals.appState, "change:cellsVisible", this._setCellVisibility);
     },
 
     delayedInit: function(){
@@ -145,7 +143,7 @@ Lattice = Backbone.Model.extend({
         this.set("cellsMin", {x:0, y:0, z:0});
         this.set("nodes", []);
         this.set("numCells", 0);
-        if (this.get("basePlane")) this.get("basePlane").set("zIndex", 0);
+        if (globals.basePlane) globals.basePlane.set("zIndex", 0);
         globals.three.render();
     },
 
@@ -351,7 +349,7 @@ Lattice = Backbone.Model.extend({
 
     _updateCellSeparation: function(){
         var cellSep = this.get("cellSeparation");
-        this.get("basePlane").updateXYSeparation(cellSep.xy);
+        globals.basePlane.updateXYSeparation(cellSep.xy);
 
         var scale = this.get("scale");
         var cellMode = globals.appState.get("cellMode");
@@ -364,8 +362,8 @@ Lattice = Backbone.Model.extend({
 
     _scaleDidChange: function(){
         var scale = this.get("scale");
-        this.get("basePlane").updateScale(scale);
-        this.get("highlighter").updateScale(scale);
+        globals.basePlane.updateScale(scale);
+        globals.highlighter.updateScale(scale);
 
         var cellMode = globals.appState.get("cellMode");
         var partType = this.get("partType");
@@ -377,11 +375,11 @@ Lattice = Backbone.Model.extend({
     },
 
     _gikLengthDidChange: function(){
-        if (this.get("highlighter").updateGikLength) this.get("highlighter").updateGikLength(this.get("scale"));
+        if (globals.highlighter.updateGikLength) globals.highlighter.updateGikLength(this.get("scale"));
     },
 
     previewScaleChange: function(scale){
-        this.get("basePlane").updateScale(scale);
+        globals.basePlane.updateScale(scale);
     },
 
     _setCellVisibility: function(){//todo maybe leave wireframes?
@@ -432,8 +430,8 @@ Lattice = Backbone.Model.extend({
         var cellType = this.get("cellType");
         var connectionType = this.get("connectionType");
         if (this._undo) this._undo();
-        if (this.get("basePlane")) this.get("basePlane").destroy();
-        if (this.get("highlighter")) this.get("highlighter").destroy();
+        if (globals.basePlane) globals.basePlane.destroy();
+        if (globals.highlighter) globals.highlighter.destroy();
         if (cellType == "octa"){
             if (connectionType == "face"){
                 _.extend(this, this.OctaFaceLattice);
