@@ -9,6 +9,7 @@ LatticeMenuView = Backbone.View.extend({
 
     events: {
         "click #latticeMenuClearCells":                 "_clearCells",
+
         "change #latticeScale":                         "_changeScale",
         "slide #latticeMenuScaleSlider":                "_sliderDidSlide",
         "slideStop #latticeMenuScaleSlider":            "_changeScaleSlider"
@@ -29,10 +30,6 @@ LatticeMenuView = Backbone.View.extend({
         var object = globals.lattice.get(property);
         object[$(e.target).data("type")] = newVal;
         globals.lattice.trigger("change:"+property);
-    },
-
-    _updateGikLength: function(e){
-
     },
 
     _clearCells: function(e){
@@ -61,7 +58,7 @@ LatticeMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.lattice.toJSON(), globals.plist)));
+        this.$el.html(this.template(_.extend(globals.lattice.toJSON(), globals.plist)));
 
         $('#latticeMenuScaleSlider').slider({
             formatter: function(value) {
@@ -115,7 +112,7 @@ LatticeMenuView = Backbone.View.extend({
             </div><br/><br/>\
         <% } %>\
         <br/>\
-        Scale:&nbsp;&nbsp;<input id="latticeScale" value="<%= scale %>" placeholder="enter scale" class="form-control numberInput" type="text"><br/>\
+        Scale:&nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput lattice" type="text"><br/>\
         <input id="latticeMenuScaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
         <br/>\
         Units: &nbsp;&nbsp;\
