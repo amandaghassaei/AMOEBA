@@ -21,15 +21,12 @@ ThreeView = Backbone.View.extend({
 
     controls: null,
 
-    initialize: function(options){
-
-        this.appState = options.appState;
+    initialize: function(){
 
         _.bindAll(this, "_mouseMoved", "_animate");
 
         //bind events
-        this.listenTo(this.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
-        this.listenTo(globals.lattice, "change:highlighter", this._saveHighlighter);
+        this.listenTo(globals.appState, "change:deleteMode change:extrudeMode change:shift", this._setControlsEnabled);
 
         this.controls = new THREE.OrbitControls(this.model.camera, this.$el.get(0));
         this.controls.addEventListener('change', this.model.render);
@@ -50,7 +47,7 @@ ThreeView = Backbone.View.extend({
     },
 
     _setControlsEnabled: function(){
-        var state = this.appState.get("deleteMode") || this.appState.get("shift") || this.appState.get("extrudeMode");
+        var state = globals.appState.get("deleteMode") || globals.appState.get("shift") || globals.appState.get("extrudeMode");
         this.controls.noRotate = state;
     },
 
@@ -74,7 +71,7 @@ ThreeView = Backbone.View.extend({
             }
         }
         if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
-        else globals.highlighter.addRemoveVoxel(!this.appState.get("deleteMode"));
+        else globals.highlighter.addRemoveVoxel(!globals.appState.get("deleteMode"));
     },
 
     _mouseDown: function(){
@@ -109,14 +106,14 @@ ThreeView = Backbone.View.extend({
         globals.highlighter.highlight(intersections[0]);
 
         if (this.mouseIsDown) {
-            if (this.appState.get("deleteMode")){
+            if (globals.appState.get("deleteMode")){
                 globals.highlighter.addRemoveVoxel(false);
-            } else if (this.appState.get("shift")){
+            } else if (globals.appState.get("shift")){
                 globals.highlighter.addRemoveVoxel(true);
             }
         }
 
-        if (this.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
+        if (globals.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
             var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
             if (partIntersections.length == 0) {
                 this._setNoPartIntersections();
