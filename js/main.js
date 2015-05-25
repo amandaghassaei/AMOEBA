@@ -12,12 +12,13 @@ $(function(){
 //    window.workers = persistentWorkers(8);
 
     //init global singletons
-    globals.plist = buildAppPList();
-    globals.three = new ThreeModel();
+    globals.three = ThreeModel();
+    globals.plist = AppPList();
     globals.appState = new AppState();
     globals.lattice = new Lattice();
     globals.lattice.delayedInit();//todo need this?
     globals.assembler = new Assembler({appState: globals.appState, lattice:globals.lattice});
+    globals.fileSaver = GlobalFilesaver();
 
     //ui
     new MenuWrapper({model: globals.appState});

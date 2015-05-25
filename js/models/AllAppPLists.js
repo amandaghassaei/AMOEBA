@@ -1,6 +1,6 @@
 //all property lists for the app, these are "static" variables
 
-function buildAppPList(){
+function AppPList(){
     return {
 
 

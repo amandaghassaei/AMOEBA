@@ -605,11 +605,7 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
 
     toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
-        return _.omit(this.attributes, ["cells", "nodes"]);
+        return _.omit(this.attributes, ["cells", "nodes"]);//omit makes a copy
     },//todo something weird here
-
-    toJSONFull: function(){//for saving only - it's ok to pass attributes
-        return this.attributes;
-    }
 
 });

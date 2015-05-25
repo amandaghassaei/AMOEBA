@@ -67,6 +67,7 @@
     <script src="js/cam/ShopbotExporter.js"></script>
     <script src="js/cam/GCodeExporter.js"></script>
     <script src="js/cam/TinyGExporter.js"></script>
+    <script src="js/models/GlobalFileSaver.js"></script>
 
     <!--views-->
     <script src="js/menus/MenuWrapperView.js"></script>
@@ -107,22 +108,22 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
-                <li><a id="saveJSON" href="#">Save JSON &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>
+                <li><a class="saveJSON" href="#">Save JSON &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>
                 <li><a data-toggle="modal" data-target="#saveAsModel" href="#">Save JSON As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>
                 <li><a class="importJSON" href="#">Open JSON... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + O)</a></li>
                 <li class="dropdown-submenu">
                 <a tabindex="-1">Demo Files<span class="pull-right fui-arrow-right"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a data-file="oneBitBot.json" class="savedDemo" href="#">One Bit Assembly</a></li>
+                    <li><a data-file="oneBitBot.json" class="loadDemo" href="#">One Bit Assembly</a></li>
                 </ul></li>
                 <li class="divider"></li>
                 <li class="dropdown-submenu">
                 <a tabindex="-1">Load User Settings<span class="pull-right fui-arrow-right"></span></a>
                 <ul class="dropdown-menu">
                     <!--<li><a id="resetDefaultSettings" href="#">Reset Settings</a></li>-->
-                    <li><a data-file="ben.user" class="savedUserSettings" href="#">Ben</a></li>
-                    <li><a data-file="matt.user" class="savedUserSettings" href="#">Matt</a></li>
-                    <li><a data-file="will.user" class="savedUserSettings" href="#">Will</a></li>
+                    <li><a data-file="ben.user" class="loadUser" href="#">Ben</a></li>
+                    <li><a data-file="matt.user" class="loadUser" href="#">Matt</a></li>
+                    <li><a data-file="will.user" class="loadUser" href="#">Will</a></li>
                     <li><a class="importJSON" href="#">From File...</a></li>
                 </ul>
               </li>
@@ -164,11 +165,11 @@
             <p class="modal-title" >Enter File Name</p>
             </div>
             <div class="modal-body">
-                <input id="saveAsFileName" type="text" value="lattice" placeholder="Enter file name" class="form-control filename">
+                <input id="saveAsFileName" type="text" value="file" placeholder="Enter file name" class="form-control filename">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="saveAsJSON" class="btn btn-primary">Save</button>
+                <button type="button" class="saveAsJSON btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -182,11 +183,11 @@
             <p class="modal-title" >Save User Settings</p>
             </div>
             <div class="modal-body">
-                <input id="userSettingsFilename" type="text" value="lattice" placeholder="Enter file name" class="form-control filename">
+                <input id="saveUserFileName" type="text" value="user" placeholder="Enter file name" class="form-control filename">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" id="saveUser" class="btn btn-primary">Save</button>
+                <button type="button" class="saveUser btn btn-primary">Save</button>
             </div>
         </div>
     </div>
