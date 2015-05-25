@@ -22,7 +22,6 @@ MenuWrapper = Backbone.View.extend({
 
         //init all tab view controllers
         this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
-        this.partMenu = new PartMenuView({model:this.model, lattice:lattice});
         this.scriptMenu = new ScriptMenuView({model:this.model});
         this.physicsMenu = new PhysicsMenuView({model:this.model});
         this.materialMenu = new MaterialMenuView({model:this.model});
@@ -43,13 +42,11 @@ MenuWrapper = Backbone.View.extend({
 
 
     _onKeyUp: function(e){
-
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
             $(e.target).blur();
             this._renderTab();
             return;
         }
-
         if ($(".floatInput").is(":focus")) this._updateFloat(e);
         if ($(".intInput").is(":focus")) this._updateInt(e);
     },
@@ -85,6 +82,7 @@ MenuWrapper = Backbone.View.extend({
         var key = $target.data("key");
         if (key){
             if ($target.hasClass("lattice")) globals.lattice.get(property)[key] = newVal;
+            globals.lattice.trigger("change:"+property);
             return;
         }
         if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
@@ -137,6 +135,7 @@ MenuWrapper = Backbone.View.extend({
         } else if (tabName == "sketch"){
             this.sketchMenu.render();
         } else if (tabName == "part"){
+            if (!this.partMenu) this.partMenu = new PartMenuView({model:this.model});
             this.partMenu.render();
         } else if (tabName == "script"){
             this.scriptMenu.render();
