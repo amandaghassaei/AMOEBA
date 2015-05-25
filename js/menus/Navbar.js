@@ -100,7 +100,7 @@ NavBar = Backbone.View.extend({
         $(e.target).find("input.filename").blur();
     },
 
-    
+
 
 
     _save: function(e){

@@ -20,13 +20,11 @@ LatticeMenuView = Backbone.View.extend({
     },
 
 
-    initialize: function(options){
-
-        this.lattice = options.lattice;
+    initialize: function(){
 
         _.bindAll(this, "render", "_onKeyup");
         //bind events
-        this.listenTo(this.lattice, "change", this.render);
+        this.listenTo(globals.lattice, "change", this.render);
         $(document).bind('keyup', {state:false}, this._onKeyup);
     },
 
@@ -47,9 +45,9 @@ LatticeMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = parseFloat($(e.target).val());
         if (isNaN(newVal)) return;
-        var object = this.lattice.get(property);
+        var object = globals.lattice.get(property);
         object[$(e.target).data("type")] = newVal;
-        this.lattice.trigger("change:"+property);
+        globals.lattice.trigger("change:"+property);
     },
 
     _updateGikLength: function(e){
@@ -61,30 +59,30 @@ LatticeMenuView = Backbone.View.extend({
 
     _clearCells: function(e){
         e.preventDefault();
-        this.lattice.clearCells();
+        globals.lattice.clearCells();
     },
 
     _changeScale: function(e){
         e.preventDefault();
         var val = parseFloat($(e.target).val());
         if (isNaN(val)) return;
-        this.lattice.set("scale", val);
+        globals.lattice.set("scale", val);
     },
 
     _changeUnits: function(e){
         e.preventDefault();
-        this.lattice.set("units", $(e.target).data("type"));
+        globals.lattice.set("units", $(e.target).data("type"));
     },
 
     _sliderDidSlide: function(e){
         var scale = $(e.target)[0].value;
-        this.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
+        globals.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
         $("#latticeScale").val(scale);
         globals.three.render();
     },
 
     _changeScaleSlider: function(e){
-        this.lattice.set("scale", $(e.target)[0].value);
+        globals.lattice.set("scale", $(e.target)[0].value);
     },
 
     _changeCellType: function(e){
@@ -92,45 +90,45 @@ LatticeMenuView = Backbone.View.extend({
         var cellType = $(e.target).data("type");
 
         //reset everything to defaults silently
-        if (cellType != this.lattice.get("cellType")){
+        if (cellType != globals.lattice.get("cellType")){
             this._setAppStateToDefaultsSilently(cellType);
         }
-        this.lattice.set("cellType", cellType);
+        globals.lattice.set("cellType", cellType);
     },
 
     _changeConnectionType: function(e){
         e.preventDefault();
         var connectionType = $(e.target).data("type");
-        if (connectionType != this.lattice.get("connectionType")){
-            this._setAppStateToDefaultsSilently(this.lattice.get("cellType"), connectionType);
+        if (connectionType != globals.lattice.get("connectionType")){
+            this._setAppStateToDefaultsSilently(globals.lattice.get("cellType"), connectionType);
         }
-        this.lattice.set("connectionType", connectionType);
+        globals.lattice.set("connectionType", connectionType);
     },
 
     _setAppStateToDefaultsSilently: function(newCellType, newConnectionType){
         if (!newConnectionType){
-            newConnectionType = _.keys(globals.appState.get("allConnectionTypes")[newCellType])[0];
-            this.lattice.set("connectionType", newConnectionType, {silent:true});
+            newConnectionType = _.keys(globals.plist["allConnectionTypes"][newCellType])[0];
+            globals.lattice.set("connectionType", newConnectionType, {silent:true});
         }
-        var partType = _.keys(globals.appState.get("allPartTypes")[newCellType][newConnectionType])[0];
-        this.lattice.set("partType", partType, {silent:true});
+        var partType = _.keys(globals.plist["allPartTypes"][newCellType][newConnectionType])[0];
+        globals.lattice.set("partType", partType, {silent:true});
     },
 
     //todo get rid of this
     _setTetraCell: function(e){
         e.preventDefault();
-        this.lattice.set("freeformCellType", "tetra");
+        globals.lattice.set("freeformCellType", "tetra");
     },
 
     _setOctaCell: function(e){
         e.preventDefault();
-        this.lattice.set("freeformCellType", "octa");
+        globals.lattice.set("freeformCellType", "octa");
     },
 
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "lattice") return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.lattice.toJSON(), globals.plist)));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.lattice.toJSON(), globals.plist)));
 
         $('#scaleSlider').slider({
             formatter: function(value) {

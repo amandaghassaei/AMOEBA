@@ -18,7 +18,7 @@ MenuWrapper = Backbone.View.extend({
         var lattice = globals.lattice;
 
         //init all tab view controllers
-        this.latticeMenu = new LatticeMenuView({model:this.model, lattice:lattice});
+        this.latticeMenu = new LatticeMenuView({model:this.model});
         this.importMenu = new ImportMenuView({model:this.model});
         this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
         this.partMenu = new PartMenuView({model:this.model, lattice:lattice});
