@@ -21,8 +21,7 @@ MenuWrapper = Backbone.View.extend({
         var lattice = globals.lattice;
 
         //init all tab view controllers
-        this.sketchMenu = new SketchMenuView({model:lattice, appState:this.model});
-        this.scriptMenu = new ScriptMenuView({model:this.model});
+
         this.physicsMenu = new PhysicsMenuView({model:this.model});
         this.materialMenu = new MaterialMenuView({model:this.model});
         this.optimizeMenu = new OptimizationMenuView({model:this.model});
@@ -133,11 +132,13 @@ MenuWrapper = Backbone.View.extend({
             if (!this.importMenu) this.importMenu = new ImportMenuView({model:this.model});
             this.importMenu.render();
         } else if (tabName == "sketch"){
+            if (!this.sketchMenu) this.sketchMenu = new SketchMenuView({model:this.model});
             this.sketchMenu.render();
         } else if (tabName == "part"){
             if (!this.partMenu) this.partMenu = new PartMenuView({model:this.model});
             this.partMenu.render();
         } else if (tabName == "script"){
+            if (!this.scriptMenu) this.scriptMenu = new ScriptMenuView({model:this.model});
             this.scriptMenu.render();
         } else if (tabName == "physics"){
             this.physicsMenu.render();
