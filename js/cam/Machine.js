@@ -28,7 +28,7 @@ Machine.prototype._setDefaults = function(){
     globals.cam.set("stockFixed", false);
     globals.cam.set("originPosition", {x:0,y:0,z:0});
     var boundingBox = globals.lattice.calculateBoundingBox();
-    var rapidHeight = (boundingBox.max.z + 2*globals.lattice.zScale()).toFixed(4);
+    var rapidHeight = parseFloat((boundingBox.max.z + 2*globals.lattice.zScale()).toFixed(4));
     globals.cam.set("rapidHeight", rapidHeight);
     globals.cam.set("stockPosition", {x:0,y:0,z:0});
     globals.cam.set("stockSeparation", globals.lattice.xScale());
@@ -269,7 +269,7 @@ Shopbot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
     globals.cam.set("camProcess", "shopbot");
     var boundingBox = globals.lattice.calculateBoundingBox();
-    var yPos = (boundingBox.max.y + 3*globals.lattice.yScale()).toFixed(4);
+    var yPos = parseFloat((boundingBox.max.y + 3*globals.lattice.yScale()).toFixed(4));
     globals.cam.set("stockPosition", {x:0,y:yPos,z:0});
 };
 
@@ -309,7 +309,7 @@ God.prototype = Object.create(Machine.prototype);
 God.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
     var boundingBox = globals.lattice.calculateBoundingBox();
-    var zPos = (boundingBox.max.z + 5*globals.lattice.zScale()).toFixed(4);
+    var zPos = parseFloat((boundingBox.max.z + 5*globals.lattice.zScale()).toFixed(4));
     globals.cam.set("stockPosition", {x:0,y:0,z:zPos});
 };
 

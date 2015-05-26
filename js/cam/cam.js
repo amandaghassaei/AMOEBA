@@ -167,7 +167,9 @@ Cam = Backbone.Model.extend({
 
     _updateStockPosToOrigin: function(newOrigin, lastOrigin){
         var newStockPosition = _.clone(this.get("stockPosition"));
+        console.log(newStockPosition);
         _.each(_.keys(newStockPosition), function(key){
+            console.log(key);
             newStockPosition[key] += newOrigin[key] - lastOrigin[key];
             newStockPosition[key] = parseFloat(newStockPosition[key].toFixed(4));
         });

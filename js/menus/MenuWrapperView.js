@@ -85,11 +85,13 @@ MenuWrapper = Backbone.View.extend({
 
         if (key){
             if ($target.hasClass("lattice")) {
-                globals.lattice.get(property)[key] = newVal;
-                globals.lattice.trigger("change:"+property);
+                var value = _.clone(globals.lattice.get(property));
+                value[key] = newVal;
+                globals.lattice.set(property, value);
             } else if ($target.hasClass("assembler")) {
-                globals.cam.get(property)[key] = newVal;
-                globals.cam.trigger("change:"+property);
+                var value = _.clone(globals.cam.get(property));
+                value[key] = newVal;
+                globals.cam.set(property, value);
             }
             return;
         }
