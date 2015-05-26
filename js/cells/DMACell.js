@@ -7,28 +7,26 @@ var cellMaterial = new THREE.MeshNormalMaterial();
 var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
 function DMACell(indices){
+
     this.indices = indices;
-    this.object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
-    this.object3D.myParent = this;//reference to get mouse raycasting back
-    this._buildMesh(this.object3D);
+
+    //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
+    this.object3D = this._buildObject3D();
+    this._addMeshes(this._buildMesh(), this.object3D);//build cell meshes
     globals.three.sceneAdd(this.object3D, this._getSceneType());
+
     this.setMode();
 }
 
+DMACell.prototype._getSceneType = function(){
+    if (this.indices) return "cell";
+    return null;
+};
 
-
-
-
-DMACell.prototype._buildMesh = function(object3D){//called from every subclass
-    var geometry = this._getGeometry();
-    if (!object3D || object3D === undefined) object3D = this.object3D;
-
-    var mesh = new THREE.Mesh(geometry, cellMaterial);
-    mesh.name = "cell";
-    object3D.add(mesh);
-    var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
-    wireframe.name = "cell";
-    object3D.add(wireframe);
+DMACell.prototype._buildObject3D = function(){
+    var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
+    object3D.myParent = this;//reference to get mouse raycasting back
+    return object3D;
 };
 
 DMACell.prototype._rotateCell = function(object3D){
@@ -41,10 +39,26 @@ DMACell.prototype._translateCell = function(object3D){
     return object3D;
 };
 
+DMACell.prototype._addMeshes = function(meshes, object3D){//accepts an array or a single mesh
+    if (object3D === undefined) object3D = this.object3D;
+    if (meshes.constructor === Array){
+        _.each(meshes, function(mesh){
+            object3D.add(mesh);
+        });
+    } else object3D.add(meshes);
+};
 
-
-
-
+DMACell.prototype._buildMesh = function(){//called from every subclass
+    var geometry = this._getGeometry();
+    var meshes = [];
+    var mesh = new THREE.Mesh(geometry, cellMaterial);
+    mesh.name = "cell";
+    var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+    wireframe.name = "cell";
+    meshes.push(mesh);
+    meshes.push(wireframe);
+    return meshes;
+};
 
 DMACell.prototype._initParts = function(){
     return [];//override in subclasses
@@ -52,11 +66,6 @@ DMACell.prototype._initParts = function(){
 
 DMACell.prototype.changePartType = function(){//override in subclasses
 };
-
-
-
-
-
 
 DMACell.prototype.setMode = function(mode){
 
@@ -73,8 +82,6 @@ DMACell.prototype.setMode = function(mode){
             break;
         case "node":
             if (!this.nodes) this.nodes = this._initNodes();
-            break;
-        case "hide":
             break;
     }
 
@@ -93,18 +100,6 @@ DMACell.prototype.show = function(){
 
 DMACell.prototype.setOpacity = function(opacity){
 };
-
-DMACell.prototype._getSceneType = function(){
-    if (this.indices) return "cell";
-    return null;
-};
-
-
-
-
-
-
-
 
 DMACell.prototype.getPosition = function(){
     return this.object3D.position.clone();
@@ -129,11 +124,6 @@ DMACell.prototype.yScale = function(){
 DMACell.prototype.zScale = function(){
     return globals.lattice.zScale(0);
 };
-
-
-
-
-
 
 DMACell.prototype.destroy = function(){
     if (this.destroyStarted) return;
