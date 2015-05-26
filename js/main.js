@@ -29,4 +29,6 @@ $(function(){
     new ThreeView({model:globals.three});
 
     if (globals.lattice.get("connectionType") != "gik") globals.lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
+
+//    return {globals:globals};
 });
