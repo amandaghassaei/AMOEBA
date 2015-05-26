@@ -28,16 +28,18 @@ latticeSubclasses["OctaFaceLattice"] = {
             return position;
         },
 
-        xScale: function(){
-            return 1+2*this.get("cellSeparation").xy;
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1+2*cellSeparation;
         },
 
-        yScale: function(){
-            return this.xScale()/2*Math.sqrt(3);
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation)/2*Math.sqrt(3);
         },
 
-        zScale: function(){
-            return 2/Math.sqrt(6)+2*this.get("cellSeparation").z;
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return 2/Math.sqrt(6)+2*cellSeparation;
         },
 
         makeCellForLatticeType: function(indices){

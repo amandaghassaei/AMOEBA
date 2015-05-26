@@ -20,8 +20,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
-    DMACubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
+    DMACubeCell.prototype._buildMesh = function(){//abstract mesh representation of cell
+        var mesh = DMACell.prototype._buildMesh.call(this, cellMaterial);
         var wireframe = new THREE.BoxHelper(mesh.children[0]);
         wireframe.material.color.set(0x000000);
         mesh.children.push(wireframe);
@@ -30,7 +30,7 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMACubeCell.prototype.calcHighlighterPosition = function(face){
 
-        var direction = face.normal.clone().applyEuler(this.cellMesh.rotation);
+        var direction = face.normal.clone().applyEuler(this.mesh.rotation);
         var position = this.getPosition();
         var scale = this.xScale();
         _.each(_.keys(position), function(key){
@@ -41,18 +41,6 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMACubeCell.prototype._getGeometry = function(){
         return unitCellGeo;
-    };
-
-    DMACubeCell.prototype.xScale = function(){
-    return 1;
-    };
-
-    DMACubeCell.prototype.yScale = function(){
-        return this.xScale();
-    };
-
-    DMACubeCell.prototype.zScale = function(){
-        return this.xScale();
     };
 
     self.DMACubeCell = DMACubeCell;
@@ -68,8 +56,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     }
     DMAGIKCell.prototype = Object.create(DMACubeCell.prototype);
 
-    DMAGIKCell.prototype._buildCellMesh = function(){
-        return DMACubeCell.prototype._buildCellMesh.call(this, cellMaterial);
+    DMAGIKCell.prototype._buildMesh = function(){
+        return DMACubeCell.prototype._buildMesh.call(this, cellMaterial);
     };
 
     DMAGIKCell.prototype._doMeshTransformations = function(mesh){
@@ -77,14 +65,14 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     };
 
     DMAGIKCell.prototype._setCellMeshVisibility = function(visible){
-        this.cellMesh.visible = false;
+        this.mesh.visible = false;
         if (this.superCell) this.superCell.setVisibility(visible);
     };
 
     DMAGIKCell.prototype.setSuperCell = function(superCell, index){
         this.superCell = superCell;
         this.superCellIndex = index;
-        if (this.superCellIndex == this.superCell.getLength()) this.cellMesh.rotateZ(Math.PI);
+        if (this.superCellIndex == this.superCell.getLength()) this.mesh.rotateZ(Math.PI);
         if (globals.appState.get("cellMode")=="part") {
             this.parts = this.__initParts();
             this.draw();
@@ -170,8 +158,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     }
     DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
 
-    DMATruncCubeCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
+    DMATruncCubeCell.prototype._buildMesh = function(){//abstract mesh representation of cell
+        var mesh = DMACell.prototype._buildMesh.call(this, cellMaterial);
         mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
     };
@@ -191,18 +179,6 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     DMATruncCubeCell.prototype._getGeometry = function(){
         return unitCellGeo;
-    };
-
-    DMATruncCubeCell.prototype.xScale = function(){
-    return Math.sqrt(2);
-    };
-
-    DMATruncCubeCell.prototype.yScale = function(){
-        return this.xScale();
-    };
-
-    DMATruncCubeCell.prototype.zScale = function(){
-        return this.xScale();
     };
 
     self.DMATruncCubeCell = DMATruncCubeCell;
@@ -312,18 +288,14 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     }
     DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
-    DMATruncOctaCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
-        var mesh = DMACell.prototype._buildCellMesh.call(this, cellMaterial);
+    DMATruncOctaCell.prototype._buildMesh = function(){//abstract mesh representation of cell
+        var mesh = DMACell.prototype._buildMesh.call(this, cellMaterial);
         mesh.children.push(new THREE.EdgesHelper(mesh.children[0], 0x000000));
         return mesh;
     };
 
     DMATruncOctaCell.prototype._getGeometry = function(){
         return unitCellGeo;
-    };
-
-    DMATruncOctaCell.prototype.xScale = function(){
-    return 2*Math.sqrt(2);
     };
 
     self.DMATruncOctaCell = DMATruncOctaCell;

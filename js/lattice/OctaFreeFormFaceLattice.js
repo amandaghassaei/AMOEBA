@@ -48,17 +48,19 @@ latticeSubclasses["OctaFreeFormFaceLattice"] = {
             return position;
         },
 
-        xScale: function(){
-            return 1+2*this.get("cellSeparation").xy;
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1+2*cellSeparation;
         },
 
-        yScale: function(){
-            return this.xScale()/2*Math.sqrt(3);
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation)/2*Math.sqrt(3);
         },
 
-        zScale: function(){
-            if (this.get("freeformCellType") == "octa") return 2/Math.sqrt(6)+2*this.get("cellSeparation").xy;
-            return 2/Math.sqrt(24)+2*this.get("cellSeparation").xy;
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;//todo xy?
+            if (this.get("freeformCellType") == "octa") return 2/Math.sqrt(6)+2*cellSeparation;
+            return 2/Math.sqrt(24)+2*cellSeparation;
         },
 
         _undo: function(){//remove all the mixins

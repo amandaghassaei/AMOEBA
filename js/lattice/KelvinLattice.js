@@ -20,16 +20,18 @@ latticeSubclasses["KelvinLattice"] = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(){
-            return 2*Math.sqrt(2)+2*this.get("cellSeparation").xy;
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 2*Math.sqrt(2)+2*cellSeparation;
         },
 
-        yScale: function(){
-            return this.xScale();
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation);
         },
 
-        zScale: function(){
-            return 2*Math.sqrt(2)+2*this.get("cellSeparation").z;
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return 2*Math.sqrt(2)+2*cellSeparation;
         },
 
         makeCellForLatticeType: function(indices){

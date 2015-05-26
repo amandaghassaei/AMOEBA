@@ -19,16 +19,18 @@ latticeSubclasses["CubeLattice"] = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(){
-            return 1+2*this.get("cellSeparation").xy;
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1+2*cellSeparation;
         },
 
-        yScale: function(){
-            return this.xScale();
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation);
         },
 
-        zScale: function(){
-            return 1+2*this.get("cellSeparation").z;
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return 1+2*cellSeparation;
         },
 
         makeCellForLatticeType: function(indices){

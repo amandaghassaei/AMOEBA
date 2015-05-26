@@ -33,18 +33,6 @@ DMAFaceOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
-DMAFaceOctaCell.prototype.xScale = function(){
-    return 1;
-};
-
-DMAFaceOctaCell.prototype.yScale = function(){
-    return this.xScale()/2*Math.sqrt(3);
-};
-
-DMAFaceOctaCell.prototype.zScale = function(){
-    return 2/Math.sqrt(6);
-};
-
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
     if (face.normal.z<0.99) return {index: _.clone(this.indices)};//only highlight horizontal faces
     var direction = face.normal;
@@ -69,7 +57,7 @@ DMAEdgeOctaCell.prototype._doMeshTransformations = function(){};
 //todo fix this
 DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
     var direction = face.normal.clone();
-    direction.applyQuaternion(this.cellMesh.quaternion);
+    direction.applyQuaternion(this.mesh.quaternion);
     var position = this.getPosition();
     position.add(direction.clone().multiplyScalar(this.zScale()/2));
     return {index: _.clone(this.indices), direction:direction, position:position};
@@ -168,18 +156,6 @@ DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
-DMARotatedEdgeCell.prototype.xScale = function(){
-    return 1;
-};
-
-DMARotatedEdgeCell.prototype.yScale = function(){
-    return this.xScale();
-};
-
-DMARotatedEdgeCell.prototype.zScale = function(){
-    return Math.sqrt(2)/2;
-};
-
 DMARotatedEdgeCell.prototype._getGeometry = function(){
     return unitVertexOcta;
 };
@@ -235,16 +211,4 @@ DMAVertexOctaCell.prototype.calcHighlighterPosition = function(face, point){
 
 DMAVertexOctaCell.prototype._getGeometry = function(){
     return unitVertexOcta;
-};
-
-DMAVertexOctaCell.prototype.xScale = function(){
-    return Math.sqrt(2);
-};
-
-DMAVertexOctaCell.prototype.yScale = function(){
-    return this.xScale();
-};
-
-DMAVertexOctaCell.prototype.zScale = function(){
-    return this.xScale();
 };

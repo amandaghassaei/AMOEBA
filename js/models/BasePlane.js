@@ -115,9 +115,9 @@ OctaBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var xScale = globals.lattice.xScale(1);
-        var yScale = globals.lattice.yScale(1);
-        var zScale = globals.lattice.zScale(1);
+        var xScale = globals.lattice.xScale();
+        var yScale = globals.lattice.yScale();
+        var zScale = globals.lattice.zScale();
 
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(xScale*(zIndex%2)/2, -yScale/3*(zIndex%2), zIndex*zScale);
@@ -130,8 +130,8 @@ OctaBasePlane = BasePlane.extend({
 
         var vertices = [];
 
-        var xScale = globals.lattice.xScale(1);
-        var yScale = globals.lattice.yScale(1);
+        var xScale = globals.lattice.xScale();
+        var yScale = globals.lattice.yScale();
 
         var dimX = this.get("dimX");
         var dimY = this.get("dimY");
@@ -169,7 +169,7 @@ OctaBasePlane = BasePlane.extend({
         if (index.z%2 != 0) index.x -= 1;
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var position = globals.lattice.getPositionForIndex(index);
-        position.z += globals.lattice.zScale(1)/2;
+        position.z += globals.lattice.zScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
@@ -184,7 +184,7 @@ SquareBasePlane = BasePlane.extend({
 
     _makeBasePlaneMesh: function(){
 
-        var scale = globals.lattice.xScale(1);
+        var scale = globals.lattice.xScale();
         var dimX = this.get("dimX")*scale;
         var dimY = this.get("dimY")*scale;
 
@@ -214,7 +214,7 @@ SquareBasePlane = BasePlane.extend({
 
     _renderZIndexChange: function(){
         var zIndex = this.get("zIndex");
-        var zScale = globals.lattice.zScale(1);
+        var zScale = globals.lattice.zScale();
         _.each(this.get("mesh"), function(mesh){
             mesh.position.set(0, 0, zIndex*zScale);
         });
@@ -225,7 +225,7 @@ SquareBasePlane = BasePlane.extend({
         var index = globals.lattice.getIndexForPosition(position);
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var latticePosition = globals.lattice.getPositionForIndex(index);
-        latticePosition.z += globals.lattice.zScale(1)/2;
+        latticePosition.z += globals.lattice.zScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 
@@ -243,8 +243,8 @@ RotEdgeOctaBasePlane = SquareBasePlane.extend({
         var index = globals.lattice.getIndexForPosition(position);
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var latticePosition = globals.lattice.getPositionForIndex(index);
-        latticePosition.x -= globals.lattice.xScale(1)/2;
-        latticePosition.y -= globals.lattice.yScale(1)/2;
+        latticePosition.x -= globals.lattice.xScale()/2;
+        latticePosition.y -= globals.lattice.yScale()/2;
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 });

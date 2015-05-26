@@ -27,16 +27,18 @@ latticeSubclasses["OctaVertexLattice"] = {
             return position;
         },
 
-        xScale: function(){
-            return Math.sqrt(2)+this.get("cellSeparation").xy;
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return Math.sqrt(2)+2*cellSeparation;
         },
 
-        yScale: function(){
-            return this.xScale();
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation);
         },
 
-        zScale: function(){
-            return Math.sqrt(2)+this.get("cellSeparation").z;
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return Math.sqrt(2)+2*cellSeparation;
         },
 
         makeCellForLatticeType: function(indices){

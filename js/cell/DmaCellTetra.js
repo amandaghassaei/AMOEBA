@@ -19,10 +19,10 @@ function DMATetraFaceCell(indices, scale, cellMode, partType){
 }
 DMATetraFaceCell.prototype = Object.create(DMACell.prototype);
 
-DMATetraFaceCell.prototype._buildCellMesh = function(){//abstract mesh representation of cell
+DMATetraFaceCell.prototype._buildMesh = function(){//abstract mesh representation of cell
     var zIndex = this.indices.z;
-    if (zIndex%2 ==0) return DMACell.prototype._buildCellMesh.call(this);
-    return DMACell.prototype._buildCellMesh.call(this, unitCellGeoUpsideDown);
+    if (zIndex%2 ==0) return DMACell.prototype._buildMesh.call(this);
+    return DMACell.prototype._buildMesh.call(this, unitCellGeoUpsideDown);
 };
 
 DMATetraFaceCell.prototype._doMeshTransformations = function(mesh){

@@ -27,9 +27,9 @@ DMAFreeFormCell.prototype._calcPosition = function(){//todo this might not be ne
 };
 
 DMAFreeFormCell.prototype.calcHighlighterPosition = function(face){
-    //var direction = face.normal.clone().applyEuler(this.cellMesh.rotation);
+    //var direction = face.normal.clone().applyEuler(this.mesh.rotation);
     var direction = face.normal.clone();
-    direction.applyQuaternion(this.cellMesh.quaternion);
+    direction.applyQuaternion(this.mesh.quaternion);
     var position = this.getPosition();
     position.add(direction.clone().multiplyScalar(this.zScale()/2));
     return {index: _.clone(this.indices), direction:direction, position:position};

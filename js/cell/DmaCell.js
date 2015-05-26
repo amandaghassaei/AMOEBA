@@ -11,12 +11,11 @@ var cellMaterials = [new THREE.MeshNormalMaterial(),
 function DMACell(indices, cellMode, partType) {
 
     this.indices = indices;
+    this.mesh = this._buildMesh();
+    this._doMeshTransformations(this.mesh);//some cell types require transformations
+    this._setMeshPosition(this.mesh, this._calcPosition());
 
-    this.cellMesh = this._buildCellMesh();
-    this._doMeshTransformations(this.cellMesh);//some cell types require transformations
-    this._setMeshPosition(this.cellMesh, this._calcPosition());
-
-    globals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
+    globals.three.sceneAdd(this.mesh,this._sceneType(indices));
 
     this.draw(cellMode, partType);
 
@@ -39,8 +38,8 @@ DMACell.prototype.draw = function(cellMode, partType){
     //init parts/beams if needed
     if (partMode &&!beamMode && !this.parts) this.parts = this._initParts();
     if (beamMode && !this.beams) {
-        this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
-        this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
+        this.nodes = this._initNodes(this.mesh.children[0].geometry.vertices);
+        this.beams = this._initBeams(this.nodes, this.mesh.children[0].geometry.faces);
     }
 
     //set visibility
@@ -74,7 +73,7 @@ DMACell.prototype._setMeshPosition = function(mesh, position){
 };
 
 DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
-    this.cellMesh.position[axis] = position;
+    this.mesh.position[axis] = position;
     if (globals.appState.get("cellMode") == "part"){
         _.each(this.parts, function(part){
             if (part) part.moveTo(position, axis);
@@ -87,36 +86,36 @@ DMACell.prototype.getType = function(){
 };
 
 DMACell.prototype.getPosition = function(){
-    return this.cellMesh.position.clone();
+    return this.mesh.position.clone();
 };
 
 DMACell.prototype.getOrientation = function(){
-    return this.cellMesh.quaternion.clone();
+    return this.mesh.quaternion.clone();
 };
 
 DMACell.prototype.getEulerRotation = function(){
-    return this.cellMesh.rotation.clone();
+    return this.mesh.rotation.clone();
 };
 
 DMACell.prototype._calcPosition = function(){//need for part relay
     if (this.indices) return globals.lattice.getPositionForIndex(this.indices);
-    return this.cellMesh.position;//used for cam simulation
+    return this.mesh.position;//used for cam simulation
 };
 
 DMACell.prototype._setCellMeshVisibility = function(visibility){
-    this.cellMesh.visible = visibility;
+    this.mesh.visible = visibility;
 };
 
 DMACell.prototype.xScale = function(){
-    return globals.lattice.xScale();
+    return globals.lattice.xScale(0);
 };
 
 DMACell.prototype.yScale = function(){
-    return globals.lattice.yScale();
+    return globals.lattice.yScale(0);
 };
 
 DMACell.prototype.zScale = function(){
-    return globals.lattice.zScale();
+    return globals.lattice.zScale(0);
 };
 
 
@@ -124,7 +123,7 @@ DMACell.prototype.zScale = function(){
 /////////////////////////////////META//////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-DMACell.prototype._buildCellMesh = function(material){//called from every subclass
+DMACell.prototype._buildMesh = function(material){//called from every subclass
     var unitCellGeo = this._getGeometry();
     if (!material) material = cellMaterials;
     var mesh = THREE.SceneUtils.createMultiMaterialObject(unitCellGeo, material);
@@ -209,13 +208,13 @@ DMACell.prototype._initBeams = function(nodes, faces){
 DMACell.prototype.destroy = function(){
     if (this.destroyStarted) return;
     this.destroyStarted = true;
-    if (this.cellMesh) {
-        globals.three.sceneRemove(this.cellMesh, this._sceneType(this.indices));
-        this.cellMesh.myParent = null;
-//            this.cellMesh.dispose();
+    if (this.mesh) {
+        globals.three.sceneRemove(this.mesh, this._sceneType(this.indices));
+        this.mesh.myParent = null;
+//            this.mesh.dispose();
 //            geometry.dispose();
 //            material.dispose();
-        this.cellMesh = null;
+        this.mesh = null;
     }
     this.destroyParts();
     this.indices = null;
