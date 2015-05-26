@@ -65,7 +65,7 @@ ThreeView = Backbone.View.extend({
         if (globals.appState.get("currentTab") == "cam" && globals.appState.get("manualSelectOrigin")){
             var position = globals.highlighter.getHighlightedObjectPosition();
             if (position){
-                globals.assembler.set("originPosition", position);
+                globals.cam.set("originPosition", position);
                 globals.appState.set("manualSelectOrigin", false);
                 return;
             }

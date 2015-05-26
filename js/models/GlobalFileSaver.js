@@ -43,8 +43,8 @@ function GlobalFilesaver(){
     }
 
     function _getAssemblerDataToSave(){
-        var assemblerData = _.omit(globals.assembler.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
-        if (!globals.assembler.get("editsMadeToProgram")) assemblerData.dataOut = "";
+        var assemblerData = _.omit(globals.cam.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
+        if (!globals.cam.get("editsMadeToProgram")) assemblerData.dataOut = "";
         return assemblerData;
     }
 
@@ -68,7 +68,7 @@ function GlobalFilesaver(){
             globals.lattice.set(key, data.lattice[key], {silent:silent});
         });
         _.each(_.keys(data.assembler), function(key){
-            globals.assembler.set(key, data.assembler[key]);
+            globals.cam.set(key, data.assembler[key]);
         });
     }
 

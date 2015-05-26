@@ -49,13 +49,13 @@ GCodeExporter.prototype._setSpeed = function(speed){
 
 GCodeExporter.prototype.rapidXY = function(x, y){
     var data = "";
-    if (this.postSpeed != globals.assembler.get("rapidSpeeds").xy) data += this._setSpeed(globals.assembler.get("rapidSpeeds").xy);
+    if (this.postSpeed != globals.cam.get("rapidSpeeds").xy) data += this._setSpeed(globals.cam.get("rapidSpeeds").xy);
     return data + this._goXYZ(x, y, null);
 };
 
 GCodeExporter.prototype.rapidZ = function(z){
     var data = "";
-    if (this.postSpeed != globals.assembler.get("rapidSpeeds").z) data += this._setSpeed(globals.assembler.get("rapidSpeeds").z);
+    if (this.postSpeed != globals.cam.get("rapidSpeeds").z) data += this._setSpeed(globals.cam.get("rapidSpeeds").z);
     return data + this._goXYZ(null, null, z);
 };
 
@@ -68,19 +68,19 @@ GCodeExporter.prototype._goXYZ = function(x, y, z){
 
 GCodeExporter.prototype.moveXY = function(x, y){
     var data = "";
-    if (this.postSpeed != globals.assembler.get("feedRate").xy) data += this._setSpeed(globals.assembler.get("feedRate").xy);
+    if (this.postSpeed != globals.cam.get("feedRate").xy) data += this._setSpeed(globals.cam.get("feedRate").xy);
     return data + this._goXYZ(x, y, null);
 };
 
 GCodeExporter.prototype.moveZ = function(z){
     var data = "";
-    if (this.postSpeed != globals.assembler.get("feedRate").z) data += this._setSpeed(globals.assembler.get("feedRate").z);
+    if (this.postSpeed != globals.cam.get("feedRate").z) data += this._setSpeed(globals.cam.get("feedRate").z);
     return data + this._goXYZ(null, null, z);
 };
 
 GCodeExporter.prototype.goHome = function(){
-    var data = this._setSpeed(globals.assembler.get("rapidSpeeds").z);
-    return data + this._goXYZ(0,0,globals.assembler.get("rapidHeight"));
+    var data = this._setSpeed(globals.cam.get("rapidSpeeds").z);
+    return data + this._goXYZ(0,0,globals.cam.get("rapidHeight"));
 };
 
 GCodeExporter.prototype.makeFooter = function(){

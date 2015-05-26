@@ -48,13 +48,13 @@ TinyGExporter.prototype.engageZAxis = function(type, cellPosition, cell, wcs){
 };
 
 TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
-    var rapidSpeed = globals.assembler.get("rapidSpeeds");
-    var rapidHeight = globals.assembler.get("rapidHeight");
+    var rapidSpeed = globals.cam.get("rapidSpeeds");
+    var rapidHeight = globals.cam.get("rapidHeight");
     if (line == "(home)"){
         return machine.moveTo("", "", rapidHeight, rapidSpeed, wcs, callback);
     } else if (line[0]=="M"){
         if (line == "M3 M5 M4 M5 M3 M5"){//get stock
-            var stockPosition = globals.assembler.get("stockPosition");
+            var stockPosition = globals.cam.get("stockPosition");
             return this.simulateZ(machine, rapidSpeed, wcs, rapidHeight, stockPosition.z-wcs.z, function(){
                 machine.pickUpStock();
             }, callback);
@@ -75,8 +75,8 @@ TinyGExporter.prototype.simulate = function(line, machine, wcs,  callback){
 };
 
 TinyGExporter.prototype.simulateZ = function(machine, rapidSpeed, wcs, rapidHeight, height, action, callback){
-    var feedRate = globals.assembler.get("feedRate");
-    var safeHeight = globals.assembler.get("safeHeight");
+    var feedRate = globals.cam.get("feedRate");
+    var safeHeight = globals.cam.get("safeHeight");
     return machine.moveTo("", "", height+safeHeight, rapidSpeed, wcs, function(){
         machine.moveTo("", "", height, feedRate, wcs, function(){
             action();

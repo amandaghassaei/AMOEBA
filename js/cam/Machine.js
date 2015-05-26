@@ -24,18 +24,18 @@ function Machine() {
 }
 
 Machine.prototype._setDefaults = function(){
-    globals.assembler.set("camProcess", "gcode");
-    globals.assembler.set("stockFixed", false);
-    globals.assembler.set("originPosition", {x:0,y:0,z:0});
+    globals.cam.set("camProcess", "gcode");
+    globals.cam.set("stockFixed", false);
+    globals.cam.set("originPosition", {x:0,y:0,z:0});
     var boundingBox = globals.lattice.calculateBoundingBox();
-    globals.assembler.set("rapidHeight", boundingBox.max.z + 2*globals.lattice.zScale());
-    globals.assembler.set("stockPosition", {x:0,y:0,z:0});
-    globals.assembler.set("stockSeparation", globals.lattice.xScale());
+    globals.cam.set("rapidHeight", boundingBox.max.z + 2*globals.lattice.zScale());
+    globals.cam.set("stockPosition", {x:0,y:0,z:0});
+    globals.cam.set("stockSeparation", globals.lattice.xScale());
 };
 
 Machine.prototype.setVisibility = function(visible){
     if (visible == null || visible === undefined) {
-        if (globals.assembler) visible = globals.assembler.isVisible();
+        if (globals.cam) visible = globals.cam.isVisible();
         else visible = false;
     }
     if (visible && this.hasStock) this.cell.draw();
@@ -146,7 +146,7 @@ Machine.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy move
 };
 
 Machine.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
-    var increment = speed/25*globals.assembler.get("simSpeed");
+    var increment = speed/25*globals.cam.get("simSpeed");
     if (increment == 0) {
         if (callback) callback();
         return;
@@ -184,18 +184,18 @@ Machine.prototype._setPosition = function(objects, nextPos, axis){
 
 Machine.prototype.postProcess = function(data, exporter){//override in subclasses
 
-    var rapidHeight = globals.assembler.get("rapidHeight");
-    var safeHeight = globals.assembler.get("safeHeight");
-    var wcs = globals.assembler.get("originPosition");
+    var rapidHeight = globals.cam.get("rapidHeight");
+    var safeHeight = globals.cam.get("safeHeight");
+    var wcs = globals.cam.get("originPosition");
 
-    var stockPosition = globals.assembler.get("stockPosition");
+    var stockPosition = globals.cam.get("stockPosition");
     var stockNum = 0;//position of stock in stock array
-    var multStockPositions = globals.assembler.get("multipleStockPositions");
-    var stockSeparation = globals.assembler.get("stockSeparation");
-    var stockArraySize = globals.assembler.get("stockArraySize");
+    var multStockPositions = globals.cam.get("multipleStockPositions");
+    var stockSeparation = globals.cam.get("stockSeparation");
+    var stockArraySize = globals.cam.get("stockArraySize");
     var self = this;
 
-    globals.lattice.rasterCells(globals.assembler._getOrder(globals.assembler.get("camStrategy")), function(cell){
+    globals.lattice.rasterCells(globals.cam._getOrder(globals.cam.get("camStrategy")), function(cell){
         if (!cell) return;
         var thisStockPosition = _.clone(stockPosition);
         if (multStockPositions) {
@@ -266,9 +266,9 @@ Shopbot.prototype = Object.create(Machine.prototype);
 
 Shopbot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
-    globals.assembler.set("camProcess", "shopbot");
+    globals.cam.set("camProcess", "shopbot");
     var boundingBox = globals.lattice.calculateBoundingBox();
-    globals.assembler.set("stockPosition", {x:0,y:boundingBox.max.y + 3*globals.lattice.yScale(),z:0});
+    globals.cam.set("stockPosition", {x:0,y:boundingBox.max.y + 3*globals.lattice.yScale(),z:0});
 };
 
 Shopbot.prototype._buildMeshes = function(callback){
@@ -307,7 +307,7 @@ God.prototype = Object.create(Machine.prototype);
 God.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
     var boundingBox = globals.lattice.calculateBoundingBox();
-    globals.assembler.set("stockPosition", {x:0,y:0,z:boundingBox.max.z + 5*globals.lattice.zScale()});
+    globals.cam.set("stockPosition", {x:0,y:0,z:boundingBox.max.z + 5*globals.lattice.zScale()});
 };
 
 God.prototype._buildMeshes = function(callback){

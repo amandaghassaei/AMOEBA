@@ -23,31 +23,31 @@ AnimationMenuView = Backbone.View.extend({
         //bind events
         this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
         var self = this;
-        this.listenTo(globals.assembler, "change", function(){
+        this.listenTo(globals.cam, "change", function(){
             //ignore simLineNumber for render calls
-            if (_.isEqual(_.keys(globals.assembler.changedAttributes()), ["simLineNumber"])) return;
+            if (_.isEqual(_.keys(globals.cam.changedAttributes()), ["simLineNumber"])) return;
             self.render();
         });
-        this.listenTo(globals.assembler, "change:simLineNumber", this._drawGcodeHighlighter);
+        this.listenTo(globals.cam, "change:simLineNumber", this._drawGcodeHighlighter);
         $(document).bind('keyup', {state:false}, this._codeEdit);
         //this.$el.bind('resize', this._setEditorHeight);
     },
 
     _save: function(e){
         e.preventDefault();
-        globals.assembler.save();
+        globals.cam.save();
     },
 
     _postProcess: function(e){
         e.preventDefault();
-        globals.assembler.postProcess();
+        globals.cam.postProcess();
     },
 
     _codeEdit: function(e){
         var editor = $("#gcodeEditor");
         if (!editor.is(":focus")) return;
         e.preventDefault();
-        globals.assembler.makeProgramEdits(editor.text());
+        globals.cam.makeProgramEdits(editor.text());
     },
 
     _playStockSim: function(e){
@@ -62,19 +62,19 @@ AnimationMenuView = Backbone.View.extend({
 
     _resetStockSim: function(e){
         e.preventDefault();
-        globals.assembler.resetSimulation();
+        globals.cam.resetSimulation();
         this.render();
     },
 
     _changeSpeedSlider: function(e){
         e.preventDefault();
-        globals.assembler.set("simSpeed", Math.pow(2,$(e.target)[0].value));
+        globals.cam.set("simSpeed", Math.pow(2,$(e.target)[0].value));
     },
 
     _drawGcodeHighlighter: function(){
-        var lineNum = globals.assembler.get("simLineNumber");
+        var lineNum = globals.cam.get("simLineNumber");
         if (lineNum == 0) return;
-        var code = globals.assembler.get("dataOut").split("\n");
+        var code = globals.cam.get("dataOut").split("\n");
         code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
         var newText = code.join("\n");
         var $editor = $('#gcodeEditor');
@@ -96,8 +96,8 @@ AnimationMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "animate") return;
-        if (globals.assembler.get("needsPostProcessing") && !globals.assembler.get("editsMadeToProgram")) globals.assembler.postProcess();
-        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.assembler.toJSON())));
+        if (globals.cam.get("needsPostProcessing") && !globals.cam.get("editsMadeToProgram")) globals.cam.postProcess();
+        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.cam.toJSON())));
         this._setEditorHeight();
         this._drawGcodeHighlighter();//in case of code pause
 

@@ -17,7 +17,7 @@ $(function(){
     globals.appState = new AppState();
     globals.lattice = new Lattice();
     globals.lattice.delayedInit();//todo need this?
-    globals.assembler = new Assembler({appState: globals.appState, lattice:globals.lattice});
+    globals.cam = new Cam({appState: globals.appState, lattice:globals.lattice});
     globals.fileSaver = GlobalFilesaver();
 
     //ui

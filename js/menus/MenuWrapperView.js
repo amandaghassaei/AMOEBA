@@ -72,11 +72,11 @@ MenuWrapper = Backbone.View.extend({
         var key = $target.data("key");
 
         //some numbers are relative
-        if (property == "stockPosition" && globals.assembler.get(property + "Relative")){
-            if (key) newVal = parseFloat((newVal + globals.assembler.get("originPosition")[key]).toFixed(4));
+        if (property == "stockPosition" && globals.cam.get(property + "Relative")){
+            if (key) newVal = parseFloat((newVal + globals.cam.get("originPosition")[key]).toFixed(4));
             else console.warn("no key found for " + property);
-        } else if (property == "rapidHeight" && !globals.assembler.get(property + "Relative")){
-            newVal = parseFloat((newVal - globals.assembler.get("originPosition")["z"]).toFixed(4));
+        } else if (property == "rapidHeight" && !globals.cam.get(property + "Relative")){
+            newVal = parseFloat((newVal - globals.cam.get("originPosition")["z"]).toFixed(4));
         }
 
         if (key){
@@ -84,13 +84,13 @@ MenuWrapper = Backbone.View.extend({
                 globals.lattice.get(property)[key] = newVal;
                 globals.lattice.trigger("change:"+property);
             } else if ($target.hasClass("assembler")) {
-                globals.assembler.get(property)[key] = newVal;
-                globals.assembler.trigger("change:"+property);
+                globals.cam.get(property)[key] = newVal;
+                globals.cam.trigger("change:"+property);
             }
             return;
         }
         if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
-        else if ($target.hasClass("assembler")) globals.assembler.set(property, newVal);
+        else if ($target.hasClass("assembler")) globals.cam.set(property, newVal);
     },
 
     _makeDropdownSelection: function(e){
@@ -99,7 +99,7 @@ MenuWrapper = Backbone.View.extend({
         var value = $target.data("value");
         if (!property || !value) return;
         if ($target.hasClass("lattice")) globals.lattice.set(property, value);
-        else if ($target.hasClass("assembler")) globals.assembler.set(property, value);
+        else if ($target.hasClass("assembler")) globals.cam.set(property, value);
     },
 
     _clickCheckbox: function(e){
@@ -112,7 +112,7 @@ MenuWrapper = Backbone.View.extend({
             return;
         }
         if ($target.hasClass("lattice")) globals.lattice.set(property, !globals.lattice.get(property));
-        else if ($target.hasClass("assembler")) globals.assembler.set(property, !globals.assembler.get(property));
+        else if ($target.hasClass("assembler")) globals.cam.set(property, !globals.cam.get(property));
     },
 
     _clearCells: function(e){

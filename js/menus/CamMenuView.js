@@ -17,7 +17,7 @@ CamMenuView = Backbone.View.extend({
 
         _.bindAll(this, "render");
         //bind events
-        this.listenTo(globals.assembler, "change", this.render);
+        this.listenTo(globals.cam, "change", this.render);
         this.listenTo(this.model, "change", this.render);
         this.listenTo(globals.lattice, "change", this.render);
     },
@@ -29,7 +29,7 @@ CamMenuView = Backbone.View.extend({
 
     _save: function(e){
         e.preventDefault();
-        globals.assembler.save();
+        globals.cam.save();
     },
 
     render: function(){
@@ -37,15 +37,15 @@ CamMenuView = Backbone.View.extend({
         if (this.model.get("currentTab") != "cam") return;
         if ($("input").is(":focus")) return;
 
-        var data = _.extend(this.model.toJSON(), globals.assembler.toJSON(), globals.lattice.toJSON(), globals.plist);
-        if (globals.assembler.get("stockPositionRelative")){
+        var data = _.extend(this.model.toJSON(), globals.cam.toJSON(), globals.lattice.toJSON(), globals.plist);
+        if (globals.cam.get("stockPositionRelative")){
             var relStockPos = {};
             relStockPos.x = data.stockPosition.x - data.originPosition.x;
             relStockPos.y = data.stockPosition.y - data.originPosition.y;
             relStockPos.z = data.stockPosition.z - data.originPosition.z;
             data.stockPosition = relStockPos;
         }
-        if (!globals.assembler.get("rapidHeightRelative")){
+        if (!globals.cam.get("rapidHeightRelative")){
             data.rapidHeight = data.rapidHeight + data.originPosition.z;
         }
         this.$el.html(this.template(data));
