@@ -46,7 +46,7 @@ latticeSubclasses["OctaRotEdgeLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMARotatedEdgeCell(indices);
+            return new OctaRotEdgeCell(indices);
         },
 
         _undo: function(){//remove all the mixins

@@ -42,7 +42,7 @@ latticeSubclasses["OctaVertexLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMAVertexOctaCell(indices);
+            return new OctaVertexCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

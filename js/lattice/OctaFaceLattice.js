@@ -43,7 +43,7 @@ latticeSubclasses["OctaFaceLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMAFaceOctaCell(indices);
+            return new OctaFaceCell(indices);
         },
 
         _undo: function(){//remove all the mixins
