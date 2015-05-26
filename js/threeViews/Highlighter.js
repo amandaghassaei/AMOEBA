@@ -9,7 +9,7 @@ Highlighter = Backbone.View.extend({
     index: null,
     direction: null,
 
-    initialize: function(options){
+    initialize: function(){
 
         var geometry = this._makeGeometry();
         this.mesh = new THREE.Mesh(geometry,
@@ -22,7 +22,6 @@ Highlighter = Backbone.View.extend({
             }));
 
         globals.three.sceneAdd(this.mesh, null);
-        this.updateScale(options.scale);
         this.hide();
 
         //bind events
@@ -96,10 +95,6 @@ Highlighter = Backbone.View.extend({
             };
         }
         return null;
-    },
-
-    updateScale: function(scale){
-        this.mesh.scale.set(scale, scale, scale);
     },
 
     _setPosition: function(position){
@@ -210,29 +205,22 @@ CubeHighlighter = Highlighter.extend({
 
 GIKHighlighter = Highlighter.extend({
 
-    updateScale: function(scale){
-        this.mesh.scale.set(globals.lattice.get("gikLength")*scale, scale, scale);
-    },
-
     _makeGeometry: function(){
         return new THREE.BoxGeometry(1,1,1);
     },
 
     _setPosition: function(position, direction){
-        var scale = this.mesh.scale.z/2;
-        this.mesh.position.set(position.x+scale*direction.x, position.y+scale*direction.y, position.z+globals.lattice.zScale()/2*direction.z);
+        this.mesh.position.set(position.x+direction.x, position.y+direction.y, position.z+globals.lattice.zScale(1)/2*direction.z);
     },
 
     _setRotation: function(direction, index){
         var superCellIndex = globals.appState.get("superCellIndex");
-        var scale  = this.mesh.scale.z;
         if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) this.mesh.rotation.set(0, 0, Math.PI/2);
         else this.mesh.rotation.set(0,0,0);
-        this.mesh.translateX(-this.mesh.scale.x/2+scale/2+scale*superCellIndex);
+        this.mesh.translateX(superCellIndex);
     },
 
-    updateGikLength: function(scale){
-        this.updateScale(scale);
+    updateGikLength: function(){
         if (!this.direction) return;
         this._setPosition(this.position, this.direction);//position of center point
         this._setRotation(this.direction, this.index);

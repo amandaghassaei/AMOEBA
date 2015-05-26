@@ -9,7 +9,6 @@ LatticeMenuView = Backbone.View.extend({
 
     events: {
         "change #latticeScale":                         "_changeScale",
-        "slide #latticeMenuScaleSlider":                "_sliderDidSlide",
         "slideStop #latticeMenuScaleSlider":            "_changeScaleSlider"
     },
 
@@ -26,13 +25,6 @@ LatticeMenuView = Backbone.View.extend({
         var val = parseFloat($(e.target).val());
         if (isNaN(val)) return;
         globals.lattice.set("scale", val);
-    },
-
-    _sliderDidSlide: function(e){
-        var scale = $(e.target)[0].value;
-        globals.lattice.previewScaleChange(scale);//does not trigger lattice change event - no rerendering of ui
-        $("#latticeScale").val(scale);
-        globals.three.render();
     },
 
     _changeScaleSlider: function(e){

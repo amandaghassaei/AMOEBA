@@ -12,8 +12,8 @@ OtherLatticeSubclasses = {
     CubeLattice: {
 
         _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
-            globals.highlighter = new CubeHighlighter({scale:this.get("scale")});
+            globals.basePlane = new SquareBasePlane();
+            globals.highlighter = new CubeHighlighter();
         },
 
         getIndexForPosition: function(absPosition){
@@ -57,8 +57,8 @@ OtherLatticeSubclasses = {
     GIKLattice: {
 
         _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
-            globals.highlighter = new GIKHighlighter({scale:this.get("scale")});
+            globals.basePlane = new SquareBasePlane();
+            globals.highlighter = new GIKHighlighter();
         },
 
         getIndexForPosition: function(absPosition){
@@ -160,8 +160,8 @@ OtherLatticeSubclasses = {
     TruncatedCubeLattice: {
 
         _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
-            globals.highlighter = new TruncatedCubeHighlighter({scale:this.get("scale")});
+            globals.basePlane = new SquareBasePlane();
+            globals.highlighter = new TruncatedCubeHighlighter();
         },
 
         getIndexForPosition: function(absPosition){
@@ -207,8 +207,8 @@ OtherLatticeSubclasses = {
     KelvinLattice: {
 
         _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane({scale:this.get("scale")});
-            globals.highlighter = new TruncatedCubeHighlighter({scale:this.get("scale")});
+            globals.basePlane = new SquareBasePlane();
+            globals.highlighter = new TruncatedCubeHighlighter();
         },
 
         getIndexForPosition: function(absPosition){
