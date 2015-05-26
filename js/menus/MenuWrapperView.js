@@ -21,21 +21,14 @@ MenuWrapper = Backbone.View.extend({
         _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show", "_onKeyUp");
         $(document).bind('keyup', {}, this._onKeyUp);
 
-        var lattice = globals.lattice;
-
-        //init all tab view controllers
-        this.animationMenu = new AnimationMenuView({model:this.model});
-        this.sendMenu = new SendMenuView({model:this.model});
-
         //bind events
         this.listenTo(this.model, "change:currentNav", this.render);
-        this.listenTo(lattice, "change:cellType change:connectionType", this._populateAndShow);
+        this.listenTo(globals.lattice, "change:cellType change:connectionType", this._populateAndShow);
         this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
         this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
         if (this.model.get("menuIsVisible")) this._populateAndShow();
     },
-
 
     _onKeyUp: function(e){
         if ($("input").is(":focus") && e.keyCode == 13) {//enter key
@@ -78,6 +71,7 @@ MenuWrapper = Backbone.View.extend({
         }
         var key = $target.data("key");
 
+        //some numbers are relative
         if (property == "stockPosition" && globals.assembler.get(property + "Relative")){
             if (key) newVal = parseFloat((newVal + globals.assembler.get("originPosition")[key]).toFixed(4));
             else console.warn("no key found for " + property);
@@ -145,7 +139,6 @@ MenuWrapper = Backbone.View.extend({
                 $tab.removeClass("active");
             }
         });
-
         this._renderTab(tabName);
     },
 
@@ -183,8 +176,10 @@ MenuWrapper = Backbone.View.extend({
             if (!this.camMenu) this.camMenu = new CamMenuView({model:this.model});
             this.camMenu.render();
         } else if (tabName == "animate"){
+            if (!this.animationMenu) this.animationMenu = new AnimationMenuView({model:this.model});
             this.animationMenu.render();
         } else if (tabName == "send"){
+            if (!this.sendMenu) this.sendMenu = new SendMenuView({model:this.model});
             this.sendMenu.render();
         } else {
             console.warn("no tab initialized!");
@@ -196,7 +191,7 @@ MenuWrapper = Backbone.View.extend({
         var self = this;
         this._hide(function(){
             self._populateAndShow();
-            self.model.trigger("change:currentTab");//this was updated silently before
+            self.model.trigger("change:currentTab");//this was updated silently before todo need this?
         }, true);
     },
 
