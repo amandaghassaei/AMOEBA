@@ -14,6 +14,7 @@ function DMACell(indices, cellMode, partType) {
 
     this.cellMesh = this._buildCellMesh();
     this._doMeshTransformations(this.cellMesh);//some cell types require transformations
+    this._setMeshPosition(this.cellMesh, this._calcPosition());
 
     globals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
 

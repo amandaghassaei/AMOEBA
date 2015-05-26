@@ -22,13 +22,6 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         globals.three.sceneAdd(this.mesh, "part");
     };
 
-    DMAPart.prototype.updateForScale = function(scale, position){
-        if (this.mesh) {
-            this.mesh.scale.set(scale, scale, scale);
-            this._setMeshPosition(position);
-        }
-    };
-
     DMAPart.prototype._setMeshPosition = function(position){
         var mesh = this.mesh;
         mesh.position.x = position.x;
@@ -229,7 +222,6 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         var unitScale = 1/(1.2699999809265137);
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        console.log(unitPartGeo);
     });
 
     function DMAGIKPart(type, parent){
