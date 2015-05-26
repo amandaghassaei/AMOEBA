@@ -79,6 +79,10 @@ MenuWrapper = Backbone.View.extend({
             newVal = parseFloat((newVal - globals.cam.get("originPosition")["z"]).toFixed(4));
         }
 
+        //remove trailing zeros
+        newVal = newVal.toString();
+        newVal = parseFloat(newVal);
+
         if (key){
             if ($target.hasClass("lattice")) {
                 globals.lattice.get(property)[key] = newVal;

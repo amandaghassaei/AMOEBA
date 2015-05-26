@@ -11,8 +11,9 @@ OneBitBot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);
     globals.cam.set("stockFixed", true);
     var scale = globals.lattice.get("scale");
-    globals.cam.set("stockPosition", {x:1.11*scale,y:0,z:1.14*scale});
-    globals.cam.set("rapidHeight", 2*scale);
+    var xPos = (1.11*scale).toFixed(4);
+    var zPos = (1.14*scale).toFixed(4);
+    globals.cam.set("stockPosition", {x:xPos,y:0,z:zPos});
 };
 
 OneBitBot.prototype.setMachinePosition = function(){

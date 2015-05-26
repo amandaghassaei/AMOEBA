@@ -71,15 +71,15 @@ CamMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            Origin (xyz): &nbsp;&nbsp;<input data-property="originPosition" data-key="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control floatInput assembler" type="text">\
-            &nbsp;<input data-property="originPosition" data-key="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
-            &nbsp;<input data-property="originPosition" data-key="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text">\
+            Origin (xyz): &nbsp;&nbsp;<input data-property="originPosition" data-key="x" value="<%= originPosition.x %>" placeholder="X" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="originPosition" data-key="y" value="<%= originPosition.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="originPosition" data-key="z" value="<%= originPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text">\
             <% if (!(machineName == "handOfGod")){ %>\
             <br/><a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>\
             <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>\
-            Stock (xyz): &nbsp;&nbsp;<input data-property="stockPosition" data-key="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control floatInput assembler" type="text">\
-            &nbsp;<input data-property="stockPosition" data-key="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
-            &nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
+            Stock (xyz): &nbsp;&nbsp;<input data-property="stockPosition" data-key="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="stockPosition" data-key="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
             <label class="checkbox" for="stockPosRel">\
             <input id="stockPosRel" data-property="stockPositionRelative" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
@@ -97,13 +97,13 @@ CamMenuView = Backbone.View.extend({
                 &nbsp;<input data-property="stockArraySize" data-key="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control intInput assembler" type="text"><br/><br/>\
                 Stock separation: &nbsp;&nbsp;<input data-property="stockSeparation" value="<%= stockSeparation %>" placeholder="X" class="form-control floatInput assembler" type="text"><br/><br/>\
             <% } %>\
-            Clearance Height: &nbsp;&nbsp;<input data-property="rapidHeight" value="<%= rapidHeight.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
+            Clearance Height: &nbsp;&nbsp;<input data-property="rapidHeight" value="<%= rapidHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
             <label class="checkbox" for="rapidPosRel">\
             <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Clearance height relative to Origin</label>\
             <% } else { %>\
-            <br/><br/>Stock Height: &nbsp;&nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
+            <br/><br/>Stock Height: &nbsp;&nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
             <% } %>\
             Approach Height: &nbsp;&nbsp;<input data-property="safeHeight" value="<%= safeHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
