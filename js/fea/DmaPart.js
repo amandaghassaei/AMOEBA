@@ -18,7 +18,7 @@ var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THRE
         this.mesh = this._makeMeshForType(this.type);
         var rotation = this.parentCell.getEulerRotation();
         this.mesh.rotation.set(rotation.x, rotation.y, rotation.z);
-        this.updateForScale(this.parentCell.getScale(), this.parentCell.getPosition());
+        this._setMeshPosition(this.parentCell.getPosition());
         globals.three.sceneAdd(this.mesh, "part");
     };
 
