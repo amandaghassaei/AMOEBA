@@ -11,7 +11,7 @@ AnimationMenuView = Backbone.View.extend({
         "click #playStockSim":                                      "_playStockSim",
         "click #pauseStockSim":                                     "_pauseStockSim",
         "click #resetStockSim":                                     "_resetStockSim",
-        "click #saveSendMenu":                                      "_save",
+        "click #animationMenuSave":                                 "_save",
         "click .overrideEdits":                                     "_postProcess",
         "slideStop #speedSlider":                                   "_changeSpeedSlider"
     },
@@ -120,7 +120,7 @@ AnimationMenuView = Backbone.View.extend({
             <% } %>\
         <% } %>\
         <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="0" data-slider-max="6" data-slider-step="1" data-slider-value="<%= Math.log2(simSpeed) %>"/>\
-        <br/><a href="#" id="saveSendMenu" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
+        <br/><a href="#" id="animationMenuSave" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
         <!--Assembly Time:&nbsp;&nbsp;<br/><br/>-->\
         <% if (editsMadeToProgram && needsPostProcessing){ %>\
         <div id="postWarning">You have made the following changes that require post processing:<br/>\
