@@ -2,10 +2,9 @@
  * Created by aghassaei on 5/26/15.
  */
 
+latticeSubclasses = latticeSubclasses || {};
 
-_.extend(Lattice, {
-
-    OctaEdgeLattice: {
+latticeSubclasses["OctaEdgeLattice"] = {
 
         _initLatticeType: function(){
             globals.basePlane = new OctaBasePlane();
@@ -61,4 +60,3 @@ _.extend(Lattice, {
             });
         }
     }
-});

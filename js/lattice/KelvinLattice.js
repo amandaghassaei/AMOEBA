@@ -3,9 +3,9 @@
  */
 
 
-_.extend(Lattice, {
+latticeSubclasses = latticeSubclasses || {};
 
-    KelvinLattice: {
+latticeSubclasses["KelvinLattice"] = {
 
         _initLatticeType: function(){
             globals.basePlane = new SquareBasePlane();
@@ -43,4 +43,3 @@ _.extend(Lattice, {
             });
         }
     }
-});

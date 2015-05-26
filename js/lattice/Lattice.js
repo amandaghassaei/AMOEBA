@@ -2,6 +2,7 @@
  * Created by aghassaei on 1/16/15.
  */
 
+latticeSubclasses = {};
 
 Lattice = Backbone.Model.extend({
 
@@ -31,7 +32,7 @@ Lattice = Backbone.Model.extend({
 
     initialize: function(){
 
-        _.extend(this, OctaLatticeSubclasses, OtherLatticeSubclasses);
+        _.extend(this, latticeSubclasses);
 
         //bind events
         this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
