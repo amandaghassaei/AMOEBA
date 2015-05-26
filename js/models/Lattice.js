@@ -34,7 +34,6 @@ Lattice = Backbone.Model.extend({
         _.extend(this, OctaLatticeSubclasses, OtherLatticeSubclasses);
 
         //bind events
-        this.listenTo(this, "change:scale", this._scaleDidChange);
         this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
         this.listenTo(globals.appState, "change:superCellIndex", this._gikLengthDidChange);
         this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
@@ -53,7 +52,6 @@ Lattice = Backbone.Model.extend({
     ////////////////////////////////////////////////////////////////////////////////////
 
     addCellsInRange: function(range){//add a block of cells (extrude)
-        var scale = this.get("scale");
         var cells = this.get("cells");
         var newCells = [];
         this.checkForMatrixExpansion(cells, range.max, range.min);
@@ -66,7 +64,7 @@ Lattice = Backbone.Model.extend({
             for (var y=relativeMin.y;y<=relativeMax.y;y++){
                 for (var z=relativeMin.z;z<=relativeMax.z;z++){
                     if (!cells[x][y][z]) {
-                        var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), scale);
+                        var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin));
                         cells[x][y][z] = cell;
                         newCells.push(cell);
                         this.set("numCells", this.get("numCells")+1);
@@ -80,13 +78,12 @@ Lattice = Backbone.Model.extend({
 
     addCellAtIndex: function(indices, noRender, noCheck){
 
-        var scale = this.get("scale");
         var cells = this.get("cells");
         if (!noCheck) this.checkForMatrixExpansion(cells, indices, indices);
 
         var index = this._subtract(indices, this.get("cellsMin"));
         if (!cells[index.x][index.y][index.z]) {
-            cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, scale);
+            cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
             this.set("numCells", this.get("numCells")+1);
             if (!noRender) globals.three.render();
         } else console.warn("already a cell there");
@@ -95,19 +92,17 @@ Lattice = Backbone.Model.extend({
 
     _indexForPosition: function(absPosition){
         var position = {};
-        var scale = this.get("scale");
-        position.x = Math.floor(absPosition.x/this.xScale(scale));
-        position.y = Math.floor(absPosition.y/this.yScale(scale));
-        position.z = Math.floor(absPosition.z/this.zScale(scale));
+        position.x = Math.floor(absPosition.x/this.xScale());
+        position.y = Math.floor(absPosition.y/this.yScale());
+        position.z = Math.floor(absPosition.z/this.zScale());
         return position;
     },
 
     _positionForIndex: function(index){
-        var scale = this.get("scale");
         var position = _.clone(index);
-        position.x = (position.x+0.5)*this.xScale(scale);
-        position.y = (position.y+0.5)*this.yScale(scale);
-        position.z = (position.z+0.5)*this.zScale(scale);
+        position.x = (position.x+0.5)*this.xScale();
+        position.y = (position.y+0.5)*this.yScale();
+        position.z = (position.z+0.5)*this.zScale();
         return position;
     },
 
@@ -159,10 +154,9 @@ Lattice = Backbone.Model.extend({
     },
 
     _allAxesScales: function(){
-        var scale = this.get("scale");
-        var xScale = this.xScale(scale);
-        var yScale = this.yScale(scale);
-        var zScale = this.zScale(scale);
+        var xScale = this.xScale();
+        var yScale = this.yScale();
+        var zScale = this.zScale();
         return {x:xScale, y:yScale, z:zScale};
     },
 
@@ -173,10 +167,9 @@ Lattice = Backbone.Model.extend({
     subtractMesh: function(mesh){
         //todo this is specific to octa face
 
-        var scale = this.get("scale");
-        var xScale = this.xScale(scale);
-        var yScale = this.yScale(scale);
-        var zScale = this.zScale(scale);
+        var xScale = this.xScale();
+        var yScale = this.yScale();
+        var zScale = this.zScale();
 
         var cells = this.get("cells");
         var cellsMin = this.get("cellsMin");
@@ -340,9 +333,8 @@ Lattice = Backbone.Model.extend({
     _updateForMode: function(){
         var cellMode = globals.appState.get("cellMode");
         var partType =  this.get("partType");
-        var scale = this.get("scale");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.draw(scale, cellMode, partType);
+            if (cell) cell.draw(cellMode, partType);
         });
         globals.three.render();
     },
@@ -351,35 +343,16 @@ Lattice = Backbone.Model.extend({
         var cellSep = this.get("cellSeparation");
         globals.basePlane.updateXYSeparation(cellSep.xy);
 
-        var scale = this.get("scale");
         var cellMode = globals.appState.get("cellMode");
         var partType = this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(scale, cellMode, partType);
+            if (cell) cell.updateForScale(cellMode, partType);
         });
-        globals.three.render();
-    },
-
-    _scaleDidChange: function(){
-        var scale = this.get("scale");
-        globals.basePlane.updateScale(scale);
-        globals.highlighter.updateScale(scale);
-
-        var cellMode = globals.appState.get("cellMode");
-        var partType = this.get("partType");
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell && cell.updateForScale) cell.updateForScale(scale, cellMode, partType);
-        });
-
         globals.three.render();
     },
 
     _gikLengthDidChange: function(){
-        if (globals.highlighter.updateGikLength) globals.highlighter.updateGikLength(this.get("scale"));
-    },
-
-    previewScaleChange: function(scale){
-        globals.basePlane.updateScale(scale);
+        if (globals.highlighter.updateGikLength) globals.highlighter.updateGikLength();
     },
 
     _setCellVisibility: function(){//todo maybe leave wireframes?
@@ -465,7 +438,6 @@ Lattice = Backbone.Model.extend({
 
         //todo refactor this eventually
         var self = this;
-        var scale = this.get("scale");
         var cells = this.get("cells");
         this._loopCells(cells, function(cell, x, y, z){
             if (!cell) return;
@@ -480,7 +452,7 @@ Lattice = Backbone.Model.extend({
             if (cell.type) var type = cell.type;
 
             if (cell.destroy) cell.destroy();
-            var newCell = self.makeCellForLatticeType(index, scale, parentPos, parentOrientation, direction, parentType, type);
+            var newCell = self.makeCellForLatticeType(index, parentPos, parentOrientation, direction, parentType, type);
 
             //if (parts) {
             //    //todo make this better

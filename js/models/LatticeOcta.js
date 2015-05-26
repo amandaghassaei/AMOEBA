@@ -17,42 +17,36 @@ OctaLatticeSubclasses = {
         },
 
         getIndexForPosition: function(absPosition){
-            var scale = this.get("scale");
-            var yIndex = Math.floor(absPosition.y/this.yScale(scale));
-            if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
+            var yIndex = Math.floor(absPosition.y/this.yScale());
+            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
             var index = this._indexForPosition(absPosition);
             if (index.z%2 == 1) index.y += 1;
             return index;
         },
 
         getPositionForIndex: function(index){
-
-            var scale = this.get("scale");
             var position = _.clone(index);
-            var xScale = this.xScale(scale);
-            position.x = (position.x+1/2)*xScale;
-            position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
-            position.z = (position.z+0.5)*this.zScale(scale);
-            if ((index.y%2) != 0) position.x -= this.xScale(scale)/2;
+            position.x = (position.x+1/2);
+            position.y = position.y*this.yScale()+1/Math.sqrt(3)/2;
+            position.z = (position.z+0.5)*this.zScale();
+            if ((index.y%2) != 0) position.x -= this.xScale()/2;
             return position;
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return 1+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale)/2*Math.sqrt(3);
+        yScale: function(){
+            return this.xScale()/2*Math.sqrt(3);
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(2/Math.sqrt(6)+2*this.get("cellSeparation").z);
+        zScale: function(){
+            return 2/Math.sqrt(6)+2*this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMAFaceOctaCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMAFaceOctaCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -81,55 +75,50 @@ OctaLatticeSubclasses = {
         },
 
         addFreeFormCell: function(parentCellPos, parentCellOrient, direction, parentType, type){
-            var scale = this.get("scale");
             var cells = this.get("cells");
-            cells[0][0].push(this.makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, scale, parentCellPos, parentCellOrient, direction, parentType, type));
+            cells[0][0].push(this.makeCellForLatticeType({x:0,y:0,z:cells[0][0].length}, parentCellPos, parentCellOrient, direction, parentType, type));
             this.set("numCells", this.get("numCells")+1);
             globals.three.render();
         },
 
-        makeCellForLatticeType: function(index, scale, parentPosition, parentOrientation, direction, parentType, type){
+        makeCellForLatticeType: function(index, parentPosition, parentOrientation, direction, parentType, type){
             if (type){
-                if (type == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
-                return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+                if (type == "octa") return new DMAFreeFormOctaCell(index, parentPosition, parentOrientation, direction, parentType);
+                return new DMAFreeFormTetraCell(index, parentPosition, parentOrientation, direction, parentType);
             }
-            if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, scale, parentPosition, parentOrientation, direction, parentType);
-            return new DMAFreeFormTetraCell(index, scale, parentPosition, parentOrientation, direction, parentType);
+            if (this.get("freeformCellType") == "octa") return new DMAFreeFormOctaCell(index, parentPosition, parentOrientation, direction, parentType);
+            return new DMAFreeFormTetraCell(index, parentPosition, parentOrientation, direction, parentType);
         },
 
         getIndexForPosition: function(absPosition){//only used by baseplane
-            var scale = this.get("scale");
-            var yIndex = Math.floor(absPosition.y/this.yScale(scale));
-            if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
+            var yIndex = Math.floor(absPosition.y/this.yScale());
+            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
             var index = this._indexForPosition(absPosition);
             if (index.z%2 == 1) index.y += 1;
             return index;
         },
 
         getPositionForIndex: function(index){//only used by baseplane
-            var scale = this.get("scale");
             var position = _.clone(index);
-            var xScale = this.xScale(scale);
+            var xScale = this.xScale();
             position.x = (position.x+1/2)*xScale;
-            position.y = position.y*this.yScale(scale)+scale/Math.sqrt(3)/2;
-            position.z = (position.z+0.5)*this.zScale(scale);
-            if ((index.y%2) != 0) position.x -= this.xScale(scale)/2;
+            position.y = position.y*this.yScale()+1/Math.sqrt(3)/2;
+            position.z = (position.z+0.5)*this.zScale();
+            if ((index.y%2) != 0) position.x -= xScale/2;
             return position;
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return 1+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale)/2*Math.sqrt(3);
+        yScale: function(){
+            return this.xScale()/2*Math.sqrt(3);
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            if (this.get("freeformCellType") == "octa") return scale*(2/Math.sqrt(6)+2*this.get("cellSeparation").xy);
-            return scale*(2/Math.sqrt(24)+2*this.get("cellSeparation").xy);
+        zScale: function(){
+            if (this.get("freeformCellType") == "octa") return 2/Math.sqrt(6)+2*this.get("cellSeparation").xy;
+            return 2/Math.sqrt(24)+2*this.get("cellSeparation").xy;
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -158,13 +147,12 @@ OctaLatticeSubclasses = {
 
         getIndexForPosition: function(absPosition){
             //todo finish this
-            var scale = this.get("scale");
-            var yIndex = Math.floor(absPosition.y/this.yScale(scale));
-            if (yIndex%2 != 0) absPosition.x += this.xScale(scale)/2;
-            var yScale = scale/Math.sqrt(3);
+            var yIndex = Math.floor(absPosition.y/this.yScale());
+            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
+            var yScale = 1/Math.sqrt(3);
             var index = this._indexForPosition(absPosition);
             if (index.z%3 == 1) {
-                absPosition.x -= this.xScale(scale)/2;
+                absPosition.x -= this.xScale()/2;
                 absPosition.y += yScale/2;
             } else if (index.z%3 == 2){
                 absPosition.y += yScale;
@@ -175,16 +163,15 @@ OctaLatticeSubclasses = {
 
         getPositionForIndex: function(index){
 
-            var scale = this.get("scale");
             var position = _.clone(index);
-            var xScale = this.xScale(scale);
-            var yScale = scale/Math.sqrt(3);
+            var xScale = this.xScale();
+            var yScale = 1/Math.sqrt(3);
             position.x = (position.x+1/2)*xScale;
-            position.y = position.y*this.yScale(scale)+yScale/2;
-            position.z = (position.z+0.5)*this.zScale(scale);
-            if (index.y%2 != 0) position.x -= this.xScale(scale)/2;
+            position.y = position.y*this.yScale()+yScale/2;
+            position.z = (position.z+0.5)*this.zScale();
+            if (index.y%2 != 0) position.x -= this.xScale()/2;
             if (index.z%3 == 1) {
-                position.x += this.xScale(scale)/2;
+                position.x += this.xScale()/2;
                 position.y -= yScale/2;
             } else if (index.z%3 == 2){
                 position.y -= yScale;
@@ -192,8 +179,8 @@ OctaLatticeSubclasses = {
             return position;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMAEdgeOctaCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMAEdgeOctaCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -216,44 +203,38 @@ OctaLatticeSubclasses = {
 
         getIndexForPosition: function(absPosition){
             var position = {};
-            var scale = this.get("scale");
-            position.x = Math.floor(absPosition.x/this.xScale(scale)+0.5);
-            position.y = Math.floor(absPosition.y/this.yScale(scale)+0.5);
-            position.z = Math.floor(absPosition.z/this.zScale(scale)+0.5);
+            position.x = Math.floor(absPosition.x/this.xScale()+0.5);
+            position.y = Math.floor(absPosition.y/this.yScale()+0.5);
+            position.z = Math.floor(absPosition.z/this.zScale()+0.5);
             return position;
         },
 
         getPositionForIndex: function(index){
-            var scale = this.get("scale");
             var position = _.clone(index);
             if (index.z %2 != 0){
                 position.x += 0.5;
                 position.y += 0.5;
             }
-            position.x = (position.x)*this.xScale(scale);
-            position.y = (position.y)*this.yScale(scale);
-            position.z = (position.z+1)*this.zScale(scale);
+            position.x = (position.x)*this.xScale();
+            position.y = (position.y)*this.yScale();
+            position.z = (position.z+1)*this.zScale();
             return position;
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            scale *= 1 + 2*this.get("cellSeparation").xy;
-            return scale;
+        xScale: function(){
+            return 1 + 2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            scale *= Math.sqrt(2)/2 + 2*this.get("cellSeparation").z;
-            return scale;
+        zScale: function(){
+            return Math.sqrt(2)/2 + 2*this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMARotatedEdgeCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMARotatedEdgeCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -279,38 +260,34 @@ OctaLatticeSubclasses = {
 
         getIndexForPosition: function(absPosition){
             var position = {};
-            var scale = this.get("scale");
-            position.x = Math.floor(absPosition.x/this.xScale(scale)+0.5);
-            position.y = Math.floor(absPosition.y/this.yScale(scale)+0.5);
-            position.z = Math.floor(absPosition.z/this.zScale(scale)+0.5);
+            position.x = Math.floor(absPosition.x/this.xScale()+0.5);
+            position.y = Math.floor(absPosition.y/this.yScale()+0.5);
+            position.z = Math.floor(absPosition.z/this.zScale()+0.5);
             return position;
         },
 
         getPositionForIndex: function(index){
-            var scale = this.get("scale");
             var position = _.clone(index);
-            position.x = (position.x)*this.xScale(scale);
-            position.y = (position.y)*this.yScale(scale);
-            position.z = (position.z+0.5)*this.zScale(scale);
+            position.x = (position.x)*this.xScale();
+            position.y = (position.y)*this.yScale();
+            position.z = (position.z+0.5)*this.zScale();
             return position;
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(Math.sqrt(2)+this.get("cellSeparation").xy);
+        xScale: function(){
+            return Math.sqrt(2)+this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(Math.sqrt(2)+this.get("cellSeparation").z);
+        zScale: function(){
+            return Math.sqrt(2)+this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMAVertexOctaCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMAVertexOctaCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

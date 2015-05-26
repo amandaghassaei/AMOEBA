@@ -8,7 +8,7 @@
 var cellMaterials = [new THREE.MeshNormalMaterial(),
         new THREE.MeshBasicMaterial({color:0x000000, wireframe:true})];
 
-function DMACell(indices, scale, cellMode, partType) {
+function DMACell(indices, cellMode, partType) {
 
     this.indices = indices;
 
@@ -17,7 +17,7 @@ function DMACell(indices, scale, cellMode, partType) {
 
     globals.three.sceneAdd(this.cellMesh,this._sceneType(indices));
 
-    this.draw(scale, cellMode, partType);
+    this.draw(cellMode, partType);
 
     this.hideForStockSimulation = false;
 }
@@ -27,9 +27,8 @@ DMACell.prototype._sceneType = function(indices){
     return "cell";
 };
 
-DMACell.prototype.draw = function(scale, cellMode, partType){
+DMACell.prototype.draw = function(cellMode, partType){
     if (this.hideForStockSimulation) return;
-    if (!scale) scale = globals.lattice.get("scale");
     if (!cellMode) cellMode = globals.appState.get("cellMode");
     if (!partType)  partType = globals.lattice.get("partType");
     //var beamMode = partType == "beam";
@@ -42,9 +41,6 @@ DMACell.prototype.draw = function(scale, cellMode, partType){
         this.nodes = this._initNodes(this.cellMesh.children[0].geometry.vertices);
         this.beams = this._initBeams(this.nodes, this.cellMesh.children[0].geometry.faces);
     }
-
-    //update scale
-    this.updateForScale(scale, cellMode, partType);
 
     //set visibility
     this._setCellMeshVisibility(!partMode);
@@ -70,30 +66,6 @@ DMACell.prototype.hide = function(){//only used in the context of stock simulati
 /////////////////////////////////SCALE/POSITION////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
-DMACell.prototype.updateForScale = function(scale, cellMode, partType){
-    if (!scale) scale = globals.lattice.get("scale");
-    var position = this._calcPosition();
-    this._setMeshPosition(this.cellMesh, position);
-    this.cellMesh.scale.set(scale, scale, scale);//must do this so highlighting works properly in part mode
-
-    if (this.superCell && this.superCellIndex == 0) this.superCell.setScale(scale);
-
-    //only update visible object to scale
-    if (!cellMode) cellMode = globals.appState.get("cellMode");
-    if (!partType)  partType = globals.lattice.get("partType");
-    if (cellMode == "part"){
-        if (partType == "beam"){
-            _.each(this.beams, function(beam){
-                if (beam) beam.updateForScale(scale, position);//todo this is not working quite right yet
-            });
-        } else {
-            _.each(this.parts, function(part){
-                if (part) part.updateForScale(scale, position);
-            });
-        }
-    }
-};
-
 DMACell.prototype._setMeshPosition = function(mesh, position){
     mesh.position.x = position.x;
     mesh.position.y = position.y;
@@ -111,10 +83,6 @@ DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
 
 DMACell.prototype.getType = function(){
     return null;//only used in freeform layout
-};
-
-DMACell.prototype.getScale = function(){//need for part relay
-    return globals.lattice.get("scale");
 };
 
 DMACell.prototype.getPosition = function(){
@@ -138,16 +106,16 @@ DMACell.prototype._setCellMeshVisibility = function(visibility){
     this.cellMesh.visible = visibility;
 };
 
-DMACell.prototype.xScale = function(scale){
-    return globals.lattice.xScale(scale);
+DMACell.prototype.xScale = function(){
+    return globals.lattice.xScale();
 };
 
-DMACell.prototype.yScale = function(scale){
-    return globals.lattice.yScale(scale);
+DMACell.prototype.yScale = function(){
+    return globals.lattice.yScale();
 };
 
-DMACell.prototype.zScale = function(scale){
-    return globals.lattice.zScale(scale);
+DMACell.prototype.zScale = function(){
+    return globals.lattice.zScale();
 };
 
 
@@ -194,12 +162,10 @@ DMACell.prototype._initNodes = function(vertices){
     var position = this.getPosition();
     var orientation = this.getOrientation();
     var nodes = [];
-    var scale = this.getScale();
     for (var i=0;i<vertices.length;i++){
         var vertex = vertices[i].clone();
         vertex.applyQuaternion(orientation);
         vertex.add(position);
-        //vertex.multiplyScalar(scale);
         nodes.push(new DmaNode(vertex, i));
     }
     return nodes;

@@ -24,22 +24,20 @@ OtherLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return 1+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").z);
+        zScale: function(){
+            return 1+2*this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMACubeCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMACubeCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -69,22 +67,20 @@ OtherLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(1+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return 1+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return 1.28*scale*(1+2*this.get("cellSeparation").z);
+        zScale: function(){
+            return 1.28*(1+2*this.get("cellSeparation").z);
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMAGIKCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMAGIKCell(indices);
         },
 
         makeSuperCell: function(range){
@@ -93,9 +89,8 @@ OtherLatticeSubclasses = {
             if (range) cells = this.addCellsInRange(range);
             else {
                 cells = [];
-                var scale = this.get("scale");
                 for (var i=0;i<length;i++){
-                    cells.push(this.makeCellForLatticeType(null, scale));
+                    cells.push(this.makeCellForLatticeType(null));
                 }
             }
             if (cells.length < 1) return null;
@@ -172,22 +167,20 @@ OtherLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(Math.sqrt(2)+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return Math.sqrt(2)+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(Math.sqrt(2)+2*this.get("cellSeparation").z);
+        zScale: function(){
+            return Math.sqrt(2)+2*this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMATruncCubeCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMATruncCubeCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
@@ -219,22 +212,20 @@ OtherLatticeSubclasses = {
             return this._positionForIndex(index);
         },
 
-        xScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(2*Math.sqrt(2)+2*this.get("cellSeparation").xy);
+        xScale: function(){
+            return 2*Math.sqrt(2)+2*this.get("cellSeparation").xy;
         },
 
-        yScale: function(scale){
-            return this.xScale(scale);
+        yScale: function(){
+            return this.xScale();
         },
 
-        zScale: function(scale){
-            if (!scale) scale = this.get("scale");
-            return scale*(2*Math.sqrt(2)+2*this.get("cellSeparation").z);
+        zScale: function(){
+            return 2*Math.sqrt(2)+2*this.get("cellSeparation").z;
         },
 
-        makeCellForLatticeType: function(indices, scale){
-            return new DMATruncOctaCell(indices, scale);
+        makeCellForLatticeType: function(indices){
+            return new DMATruncOctaCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

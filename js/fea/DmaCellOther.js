@@ -15,8 +15,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    function DMACubeCell(indices, scale, cellMode, partType){
-        DMACell.call(this, indices, scale, cellMode, partType);
+    function DMACubeCell(indices, cellMode, partType){
+        DMACell.call(this, indices, cellMode, partType);
     }
     DMACubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -43,17 +43,16 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return unitCellGeo;
     };
 
-    DMACubeCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
+    DMACubeCell.prototype.xScale = function(){
+    return 1;
     };
 
-    DMACubeCell.prototype.yScale = function(scale){
-        return this.xScale(scale);
+    DMACubeCell.prototype.yScale = function(){
+        return this.xScale();
     };
 
-    DMACubeCell.prototype.zScale = function(scale){
-        return this.xScale(scale);
+    DMACubeCell.prototype.zScale = function(){
+        return this.xScale();
     };
 
     self.DMACubeCell = DMACubeCell;
@@ -64,8 +63,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    function DMAGIKCell(indices, scale, cellMode, partType){
-        DMACubeCell.call(this, indices, scale, cellMode, partType);
+    function DMAGIKCell(indices, cellMode, partType){
+        DMACubeCell.call(this, indices, cellMode, partType);
     }
     DMAGIKCell.prototype = Object.create(DMACubeCell.prototype);
 
@@ -166,8 +165,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     ];
     unitCellGeo.computeFaceNormals();
 
-    function DMATruncCubeCell(indices, scale, cellMode, partType){
-        DMACell.call(this, indices, scale, cellMode, partType);
+    function DMATruncCubeCell(indices, cellMode, partType){
+        DMACell.call(this, indices, cellMode, partType);
     }
     DMATruncCubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -194,17 +193,16 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return unitCellGeo;
     };
 
-    DMATruncCubeCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*Math.sqrt(2);
+    DMATruncCubeCell.prototype.xScale = function(){
+    return Math.sqrt(2);
     };
 
-    DMATruncCubeCell.prototype.yScale = function(scale){
-        return this.xScale(scale);
+    DMATruncCubeCell.prototype.yScale = function(){
+        return this.xScale();
     };
 
-    DMATruncCubeCell.prototype.zScale = function(scale){
-        return this.xScale(scale);
+    DMATruncCubeCell.prototype.zScale = function(){
+        return this.xScale();
     };
 
     self.DMATruncCubeCell = DMATruncCubeCell;
@@ -309,8 +307,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
     ];
     unitCellGeo.computeFaceNormals();
 
-    function DMATruncOctaCell(indices, scale, cellMode, partType){
-        DMATruncCubeCell.call(this, indices, scale, cellMode, partType);
+    function DMATruncOctaCell(indices, cellMode, partType){
+        DMATruncCubeCell.call(this, indices, cellMode, partType);
     }
     DMATruncOctaCell.prototype = Object.create(DMATruncCubeCell.prototype);
 
@@ -324,9 +322,8 @@ var cellMaterial = [new THREE.MeshNormalMaterial()];
         return unitCellGeo;
     };
 
-    DMATruncOctaCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*2*Math.sqrt(2);
+    DMATruncOctaCell.prototype.xScale = function(){
+    return 2*Math.sqrt(2);
     };
 
     self.DMATruncOctaCell = DMATruncOctaCell;

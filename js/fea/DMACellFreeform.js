@@ -8,12 +8,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAFreeFormCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){//no rigid lattice structure for cells
+function DMAFreeFormCell(indices, parentCellPos, parentCellQuat, direction, parentType){//no rigid lattice structure for cells
     this.parentPos = parentCellPos;
     this.parentQuaternion = parentCellQuat;
     this.parentDirection = direction;
     this.parentType = parentType;
-    DMACell.call(this, indices, scale);
+    DMACell.call(this, indices);
 }
 DMAFreeFormCell.prototype = Object.create(DMACell.prototype);
 
@@ -54,8 +54,8 @@ DMAFreeFormCell.prototype.toJSON = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAFreeFormOctaCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-    DMAFreeFormCell.call(this, indices, scale, parentCellPos, parentCellQuat, direction, parentType);
+function DMAFreeFormOctaCell(indices, parentCellPos, parentCellQuat, direction, parentType){
+    DMAFreeFormCell.call(this, indices, parentCellPos, parentCellQuat, direction, parentType);
 }
 DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
@@ -98,18 +98,16 @@ DMAFreeFormOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
-DMAFreeFormOctaCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
+DMAFreeFormOctaCell.prototype.xScale = function(){
+    return 1;
 };
 
-DMAFreeFormOctaCell.prototype.yScale = function(scale){
-    return this.xScale(scale)/2*Math.sqrt(3);
+DMAFreeFormOctaCell.prototype.yScale = function(){
+    return this.xScale()/2*Math.sqrt(3);
 };
 
-DMAFreeFormOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*2/Math.sqrt(6);
+DMAFreeFormOctaCell.prototype.zScale = function(){
+    return 2/Math.sqrt(6);
 };
 
 
@@ -124,8 +122,8 @@ var unitCellGeo2 = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
 unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
 
-function DMAFreeFormTetraCell(indices, scale, parentCellPos, parentCellQuat, direction, parentType){
-    DMAFreeFormCell.call(this, indices, scale, parentCellPos, parentCellQuat, direction, parentType);
+function DMAFreeFormTetraCell(indices, parentCellPos, parentCellQuat, direction, parentType){
+    DMAFreeFormCell.call(this, indices, parentCellPos, parentCellQuat, direction, parentType);
 }
 DMAFreeFormTetraCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
@@ -161,18 +159,16 @@ DMAFreeFormTetraCell.prototype._initParts = function(){
     return parts;
 };
 
-DMAFreeFormTetraCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
+DMAFreeFormTetraCell.prototype.xScale = function(){
+    return 1;
 };
 
-DMAFreeFormTetraCell.prototype.yScale = function(scale){
-    return this.xScale(scale)/2*Math.sqrt(3);
+DMAFreeFormTetraCell.prototype.yScale = function(){
+    return this.xScale()/2*Math.sqrt(3);
 };
 
-DMAFreeFormTetraCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*2/Math.sqrt(24);
+DMAFreeFormTetraCell.prototype.zScale = function(){
+    return 2/Math.sqrt(24);
 };
 
 DMAFreeFormTetraCell.prototype._getGeometry = function(){

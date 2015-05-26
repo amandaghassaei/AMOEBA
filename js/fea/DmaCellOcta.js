@@ -12,8 +12,8 @@ var unitFaceOctaGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
-function DMAFaceOctaCell(indices, scale, cellMode, partType){
-    DMACell.call(this, indices, scale, cellMode, partType);
+function DMAFaceOctaCell(indices, cellMode, partType){
+    DMACell.call(this, indices, cellMode, partType);
 }
 DMAFaceOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -33,18 +33,16 @@ DMAFaceOctaCell.prototype._getGeometry = function(){
     return unitFaceOctaGeo;
 };
 
-DMAFaceOctaCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
+DMAFaceOctaCell.prototype.xScale = function(){
+    return 1;
 };
 
-DMAFaceOctaCell.prototype.yScale = function(scale){
-    return this.xScale(scale)/2*Math.sqrt(3);
+DMAFaceOctaCell.prototype.yScale = function(){
+    return this.xScale()/2*Math.sqrt(3);
 };
 
-DMAFaceOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*2/Math.sqrt(6);
+DMAFaceOctaCell.prototype.zScale = function(){
+    return 2/Math.sqrt(6);
 };
 
 DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
@@ -61,8 +59,8 @@ DMAFaceOctaCell.prototype.calcHighlighterPosition = function(face){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAEdgeOctaCell(indices, scale, cellMode, partType){
-    DMAFaceOctaCell.call(this, indices, scale, cellMode, partType);
+function DMAEdgeOctaCell(indices, cellMode, partType){
+    DMAFaceOctaCell.call(this, indices, cellMode, partType);
 }
 DMAEdgeOctaCell.prototype = Object.create(DMAFaceOctaCell.prototype);
 
@@ -85,8 +83,8 @@ DMAEdgeOctaCell.prototype.calcHighlighterPosition = function(face){
 
 var unitVertexOcta = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 
-function DMARotatedEdgeCell(indices, scale, cellMode, partType){
-    DMACell.call(this, indices, scale, cellMode, partType);
+function DMARotatedEdgeCell(indices, cellMode, partType){
+    DMACell.call(this, indices, cellMode, partType);
 }
 DMARotatedEdgeCell.prototype = Object.create(DMACell.prototype);
 
@@ -170,18 +168,16 @@ DMARotatedEdgeCell.prototype.calcHighlighterPosition = function(face, point){
     return {index: _.clone(this.indices), direction:direction, position:position};
 };
 
-DMARotatedEdgeCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale;
+DMARotatedEdgeCell.prototype.xScale = function(){
+    return 1;
 };
 
-DMARotatedEdgeCell.prototype.yScale = function(scale){
-    return this.xScale(scale);
+DMARotatedEdgeCell.prototype.yScale = function(){
+    return this.xScale();
 };
 
-DMARotatedEdgeCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return Math.sqrt(2)/2*scale;
+DMARotatedEdgeCell.prototype.zScale = function(){
+    return Math.sqrt(2)/2;
 };
 
 DMARotatedEdgeCell.prototype._getGeometry = function(){
@@ -194,8 +190,8 @@ DMARotatedEdgeCell.prototype._getGeometry = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAVertexOctaCell(indices, scale, cellMode, partType){
-    DMACell.call(this, indices, scale, cellMode, partType);
+function DMAVertexOctaCell(indices, cellMode, partType){
+    DMACell.call(this, indices, cellMode, partType);
 }
 DMAVertexOctaCell.prototype = Object.create(DMACell.prototype);
 
@@ -241,16 +237,14 @@ DMAVertexOctaCell.prototype._getGeometry = function(){
     return unitVertexOcta;
 };
 
-DMAVertexOctaCell.prototype.xScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return scale*Math.sqrt(2);
+DMAVertexOctaCell.prototype.xScale = function(){
+    return Math.sqrt(2);
 };
 
-DMAVertexOctaCell.prototype.yScale = function(scale){
-    return this.xScale(scale);
+DMAVertexOctaCell.prototype.yScale = function(){
+    return this.xScale();
 };
 
-DMAVertexOctaCell.prototype.zScale = function(scale){
-    if (!scale) scale = this.getScale();
-    return this.xScale(scale);
+DMAVertexOctaCell.prototype.zScale = function(){
+    return this.xScale();
 };
