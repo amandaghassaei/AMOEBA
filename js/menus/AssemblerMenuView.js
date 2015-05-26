@@ -10,12 +10,10 @@ AssemblerMenuView = Backbone.View.extend({
     events: {
     },
 
-    initialize: function(options){
-
-        this.assembler = options.assembler;
+    initialize: function(){
 
         _.bindAll(this, "render", "_onKeyup");
-        this.listenTo(this.assembler, "change", this.render);
+        this.listenTo(globals.assembler, "change", this.render);
         $(document).bind('keyup', {}, this._onKeyup);
     },
 
@@ -28,15 +26,15 @@ AssemblerMenuView = Backbone.View.extend({
         e.preventDefault();
         var newVal = $(e.target).val();
         if (newVal.length<3) return;//todo this isn't quite right
-        this.assembler.set("placementOrder", newVal);
-//        this.assembler.trigger("change:placementOrder");
+        globals.assembler.set("placementOrder", newVal);
+//        globals.assembler.trigger("change:placementOrder");
     },
 
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "assembler") return;
         if ($("input").is(":focus")) return;
-        this.$el.html(this.template(_.extend(this.model.toJSON(), this.assembler.toJSON(), globals.lattice.toJSON(), globals.plist)));
+        this.$el.html(this.template(_.extend(this.model.toJSON(), globals.assembler.toJSON(), globals.lattice.toJSON(), globals.plist)));
     },
 
     template: _.template('\

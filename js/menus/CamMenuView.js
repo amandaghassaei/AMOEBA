@@ -8,108 +8,18 @@ CamMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "click .camProcess":                            "_selectCamProcess",
-        "click .units":                                 "_changeUnits",
         "click #saveCam":                               "_save",
-        "change input:checkbox":                        "_clickCheckbox",
-        "focusout .numberInput":                        "render",
         "click #manualSelectOrigin":                    "_selectOrigin"
     },
 
 
-    initialize: function(options){
+    initialize: function(){
 
-        this.lattice = options.lattice;
-        this.assembler = options.assembler;
-
-        _.bindAll(this, "render", "_onKeyup");
+        _.bindAll(this, "render");
         //bind events
-        this.listenTo(this.assembler, "change", this.render);
+        this.listenTo(globals.assembler, "change", this.render);
         this.listenTo(this.model, "change", this.render);
-        this.listenTo(this.lattice, "change:units", this.render);
-        $(document).bind('keyup', {}, this._onKeyup);
-    },
-
-    _selectCamProcess: function(e){
-        e.preventDefault();
-        this.assembler.set("camProcess", $(e.target).data("type"));
-    },
-
-    _changeUnits: function(e){
-        e.preventDefault();
-        this.lattice.set("units", $(e.target).data("type"));
-    },
-
-    _onKeyup: function(e){
-        if (this.model.get("currentTab") != "cam") return;
-
-        if ($("input").is(":focus") && e.keyCode == 13) {//enter key
-            $(e.target).blur();
-            this.render();
-            return;
-        }
-
-        if ($(".wcs").is(":focus")) this._updateNumber(e, "originPosition");
-        else if ($(".stockPosition").is(":focus")){
-            if (!this.assembler.get("stockPositionRelative")) this._updateNumber(e, "stockPosition");
-            else this._updateRelativeStockPosition(e);
-        }
-        else if ($(".rapidSpeeds").is(":focus")) this._updateNumber(e, "rapidSpeeds");
-        else if ($(".feedRate").is(":focus")) this._updateNumber(e, "feedRate");
-        else if ($(".safeHeight").is(":focus")) this._updateNumber(e, "safeHeight");
-        else if ($(".rapidHeight").is(":focus")) {
-            if (this.assembler.get("rapidHeightRelative")) this._updateNumber(e, "rapidHeight");
-            else this._updateAbsoluteRapidHeight(e)
-        }
-        else if ($(".stockArraySize").is(":focus")) this._updateNumber(e, "stockArraySize");
-        else if ($(".stockSeparation").is(":focus")) this._updateNumber(e, "stockSeparation");
-    },
-
-    _getNumber: function(e, dontRound){
-        var newVal = parseFloat($(e.target).val());
-        if (isNaN(newVal)) return null;
-        if (dontRound) return newVal;
-        newVal = parseFloat(newVal.toFixed(4));
-        return newVal;
-    },
-
-    _updateNumber: function(e, property){
-        e.preventDefault();
-        var newVal = this._getNumber(e);
-        if (newVal == null) return;
-        var object = _.clone(this.assembler.get(property));
-        if ($(e.target).data("type")) {
-            object[$(e.target).data("type")] = newVal;
-            this.assembler.set(property, object);
-        }
-        else this.assembler.set(property, newVal);
-    },
-
-    _updateRelativeStockPosition: function(e){
-        e.preventDefault();
-        var newVal = this._getNumber(e, true);
-        if (!newVal) return;
-        var dim = $(e.target).data("type");
-        newVal = (newVal + this.assembler.get("originPosition")[dim]).toFixed(4);
-        this.assembler.get("stockPosition")[dim] = parseFloat(newVal);
-        this.assembler.trigger("change:stockPosition");
-        this.assembler.trigger("change");
-    },
-
-    _updateAbsoluteRapidHeight: function(e){
-        e.preventDefault();
-        var newVal = this._getNumber(e, true);
-        if (!newVal) return;
-        newVal -= this.assembler.get("originPosition").z.toFixed(4);//always store relative to origin
-        this.assembler.set("rapidHeight", parseFloat(newVal));
-    },
-
-    _clickCheckbox: function(e){
-        e.preventDefault();
-        var $object = $(e.target);
-        $object.blur();
-        var property = $object.data("property");
-        globals.assembler.set(property, !globals.assembler.get(property));
+        this.listenTo(globals.lattice, "change", this.render);
     },
 
     _selectOrigin: function(e){
@@ -119,25 +29,25 @@ CamMenuView = Backbone.View.extend({
 
     _save: function(e){
         e.preventDefault();
-        this.assembler.save();
+        globals.assembler.save();
     },
 
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "cam") return;
         if ($("input").is(":focus")) return;
-        var data = _.extend(this.model.toJSON(), this.assembler.toJSON(), this.lattice.toJSON());
-        if (this.assembler.get("stockPositionRelative")){
+
+        var data = _.extend(this.model.toJSON(), globals.assembler.toJSON(), globals.lattice.toJSON(), globals.plist);
+        if (globals.assembler.get("stockPositionRelative")){
             var relStockPos = {};
             relStockPos.x = data.stockPosition.x - data.originPosition.x;
             relStockPos.y = data.stockPosition.y - data.originPosition.y;
             relStockPos.z = data.stockPosition.z - data.originPosition.z;
             data.stockPosition = relStockPos;
         }
-        if (!this.assembler.get("rapidHeightRelative")){
+        if (!globals.assembler.get("rapidHeightRelative")){
             data.rapidHeight = data.rapidHeight + data.originPosition.z;
         }
-
         this.$el.html(this.template(data));
     },
 
@@ -147,7 +57,7 @@ CamMenuView = Backbone.View.extend({
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCamProcesses[machineName][camProcess] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allCamProcesses[machineName]), function(key){ %>\
-                        <li><a class="camProcess" data-type="<%= key %>" href="#"><%= allCamProcesses[machineName][key] %></a></li>\
+                        <li><a class="assembler dropdownSelector" data-property="camProcess" data-value="<%= key %>" href="#"><%= allCamProcesses[machineName][key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
@@ -157,52 +67,51 @@ CamMenuView = Backbone.View.extend({
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
                 <ul role="menu" class="dropdown-menu">\
                     <% _.each(_.keys(allUnitTypes), function(key){ %>\
-                        <li><a class="units" data-type="<%= key %>" href="#"><%= allUnitTypes[key] %></a></li>\
+                        <li><a class="lattice dropdownSelector" data-property="units" data-value="<%= key %>" href="#"><%= allUnitTypes[key] %></a></li>\
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-            Origin (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput wcs" type="text">\
-            &nbsp;<input data-type="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput wcs" type="text">\
+            Origin (xyz): &nbsp;&nbsp;<input data-property="originPosition" data-key="x" value="<%= originPosition.x.toFixed(4) %>" placeholder="X" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="originPosition" data-key="y" value="<%= originPosition.y.toFixed(4) %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="originPosition" data-key="z" value="<%= originPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text">\
             <% if (!(machineName == "handOfGod")){ %>\
             <br/><a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>\
             <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>\
-            Stock (xyz): &nbsp;&nbsp;<input data-type="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control numberInput stockPosition" type="text">\
-            &nbsp;<input data-type="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control numberInput stockPosition" type="text">\
-            &nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/>\
+            Stock (xyz): &nbsp;&nbsp;<input data-property="stockPosition" data-key="x" value="<%= stockPosition.x.toFixed(4) %>" placeholder="X" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="stockPosition" data-key="y" value="<%= stockPosition.y.toFixed(4) %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
             <label class="checkbox" for="stockPosRel">\
-            <input id="stockPosRel" data-property="stockPositionRelative" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="stockPosRel" data-property="stockPositionRelative" type="checkbox" <% if (stockPositionRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Stock position relative to Origin</label>\
             <label class="checkbox" for="stockFixed">\
-            <input id="stockFixed" data-property="stockFixed" type="checkbox" <% if (stockFixed){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="stockFixed" data-property="stockFixed" type="checkbox" <% if (stockFixed){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Fix stock relative to to Origin</label>\
             <label class="checkbox" for="multipleStockPositions">\
-            <input id="multipleStockPositions" data-property="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="multipleStockPositions" data-property="multipleStockPositions" type="checkbox" <% if (multipleStockPositions){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Multiple stock positions</label>\
             <% if (multipleStockPositions){ %>\
-                Stock dimensions (xy): &nbsp;&nbsp;<input data-type="x" value="<%= stockArraySize.x %>" placeholder="X" class="form-control numberInput stockArraySize" type="text">\
-                &nbsp;<input data-type="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control numberInput stockArraySize" type="text"><br/><br/>\
-                Stock separation: &nbsp;&nbsp;<input value="<%= stockSeparation %>" placeholder="X" class="form-control numberInput stockSeparation" type="text"><br/><br/>\
+                Stock dimensions (xy): &nbsp;&nbsp;<input data-property="stockArraySize" data-key="x" value="<%= stockArraySize.x %>" placeholder="X" class="form-control intInput assembler" type="text">\
+                &nbsp;<input data-property="stockArraySize" data-key="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control intInput assembler" type="text"><br/><br/>\
+                Stock separation: &nbsp;&nbsp;<input data-property="stockSeparation" value="<%= stockSeparation %>" placeholder="X" class="form-control floatInput assembler" type="text"><br/><br/>\
             <% } %>\
-            Clearance Height: &nbsp;&nbsp;<input value="<%= rapidHeight.toFixed(4) %>" placeholder="Z" class="form-control numberInput rapidHeight" type="text"><br/>\
+            Clearance Height: &nbsp;&nbsp;<input data-property="rapidHeight" value="<%= rapidHeight.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
             <label class="checkbox" for="rapidPosRel">\
-            <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="custom-checkbox">\
+            <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">\
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             Clearance height relative to Origin</label>\
             <% } else { %>\
-            <br/><br/>Stock Height: &nbsp;&nbsp;<input data-type="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control numberInput stockPosition" type="text"><br/><br/>\
+            <br/><br/>Stock Height: &nbsp;&nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z.toFixed(4) %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
             <% } %>\
-            Approach Height: &nbsp;&nbsp;<input value="<%= safeHeight %>" placeholder="Z" class="form-control numberInput safeHeight" type="text"><br/><br/>\
+            Approach Height: &nbsp;&nbsp;<input data-property="safeHeight" value="<%= safeHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
             Speeds (measured in <%= units %> per second):<br/><br/>\
-            Rapids (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control numberInput rapidSpeeds" type="text">\
-            &nbsp;<input data-type="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control numberInput rapidSpeeds" type="text"><br/><br/>\
-            Feed Rate (xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control numberInput feedRate" type="text">\
-            &nbsp;<input data-type="z" value="<%= feedRate.z %>" placeholder="Z" class="form-control numberInput feedRate" type="text">\
+            Rapids (xy, z): &nbsp;&nbsp;<input data-property="rapidSpeeds" data-key="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="rapidSpeeds" data-key="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>\
+            Feed Rate (xy, z): &nbsp;&nbsp;<input data-property="feedRate" data-key="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control floatInput assembler" type="text">\
+            &nbsp;<input data-property="feedRate" data-key="z" value="<%= feedRate.z %>" placeholder="Z" class="form-control floatInput assembler" type="text">\
         ')
-
 });
 
 

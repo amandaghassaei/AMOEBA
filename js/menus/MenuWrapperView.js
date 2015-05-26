@@ -10,7 +10,10 @@ MenuWrapper = Backbone.View.extend({
     events: {
         "click .menuWrapperTab>a":                     "_tabWasSelected",
         "click .dropdownSelector":                     "_makeDropdownSelection",
-        "click .clearCells":                           "_clearCells"
+        "click .clearCells":                           "_clearCells",
+        "focusout .floatInput":                        "_renderTab",//force rounding if needed
+        "focusout .intInput":                          "_renderTab",
+        "change input:checkbox":                       "_clickCheckbox"
     },
 
     initialize: function(){
@@ -21,13 +24,7 @@ MenuWrapper = Backbone.View.extend({
         var lattice = globals.lattice;
 
         //init all tab view controllers
-
-        this.physicsMenu = new PhysicsMenuView({model:this.model});
-        this.materialMenu = new MaterialMenuView({model:this.model});
-        this.optimizeMenu = new OptimizationMenuView({model:this.model});
-        this.assemblerMenu = new AssemblerMenuView({model:this.model, assembler: globals.assembler});
         this.animationMenu = new AnimationMenuView({model:this.model});
-        this.camMenu = new CamMenuView({model:this.model, lattice:lattice, assembler:globals.assembler});
         this.sendMenu = new SendMenuView({model:this.model});
 
         //bind events
@@ -58,6 +55,7 @@ MenuWrapper = Backbone.View.extend({
             console.warn("value is not float");
             return;
         }
+        newVal = parseFloat(newVal.toFixed(parseInt(4)));
         this._setNumber($target, newVal);
     },
 
@@ -79,6 +77,14 @@ MenuWrapper = Backbone.View.extend({
             return;
         }
         var key = $target.data("key");
+
+        if (property == "stockPosition" && globals.assembler.get(property + "Relative")){
+            if (key) newVal = parseFloat((newVal + globals.assembler.get("originPosition")[key]).toFixed(4));
+            else console.warn("no key found for " + property);
+        } else if (property == "rapidHeight" && !globals.assembler.get(property + "Relative")){
+            newVal = parseFloat((newVal - globals.assembler.get("originPosition")["z"]).toFixed(4));
+        }
+
         if (key){
             if ($target.hasClass("lattice")) {
                 globals.lattice.get(property)[key] = newVal;
@@ -87,7 +93,6 @@ MenuWrapper = Backbone.View.extend({
                 globals.assembler.get(property)[key] = newVal;
                 globals.assembler.trigger("change:"+property);
             }
-
             return;
         }
         if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
@@ -101,6 +106,19 @@ MenuWrapper = Backbone.View.extend({
         if (!property || !value) return;
         if ($target.hasClass("lattice")) globals.lattice.set(property, value);
         else if ($target.hasClass("assembler")) globals.assembler.set(property, value);
+    },
+
+    _clickCheckbox: function(e){
+        e.preventDefault();
+        var $target = $(e.target);
+        $target.blur();
+        var property = $target.data("property");
+        if (!property) {
+            console.warn("no property associated with checkbox input");
+            return;
+        }
+        if ($target.hasClass("lattice")) globals.lattice.set(property, !globals.lattice.get(property));
+        else if ($target.hasClass("assembler")) globals.assembler.set(property, !globals.assembler.get(property));
     },
 
     _clearCells: function(e){
@@ -132,7 +150,7 @@ MenuWrapper = Backbone.View.extend({
     },
 
     _renderTab: function(tabName){
-        if (!tabName) tabName = this.model.get("currentTab");
+        if (!tabName || !_.isString(tabName)) tabName = this.model.get("currentTab");
 
         if (tabName == "lattice"){
             if (!this.latticeMenu) this.latticeMenu = new LatticeMenuView({model:this.model});
@@ -150,17 +168,22 @@ MenuWrapper = Backbone.View.extend({
             if (!this.scriptMenu) this.scriptMenu = new ScriptMenuView({model:this.model});
             this.scriptMenu.render();
         } else if (tabName == "physics"){
+            if (!this.physicsMenu) this.physicsMenu = new PhysicsMenuView({model:this.model});
             this.physicsMenu.render();
         } else if (tabName == "material"){
+            if (!this.materialMenu) this.materialMenu = new MaterialMenuView({model:this.model});
             this.materialMenu.render();
         } else if (tabName == "optimize"){
+            if (!this.optimizeMenu) this.optimizeMenu = new OptimizationMenuView({model:this.model});
             this.optimizeMenu.render();
         } else if (tabName == "assembler"){
+            if (!this.assemblerMenu) this.assemblerMenu = new AssemblerMenuView({model:this.model});
             this.assemblerMenu.render();
+        } else if (tabName == "cam"){
+            if (!this.camMenu) this.camMenu = new CamMenuView({model:this.model});
+            this.camMenu.render();
         } else if (tabName == "animate"){
             this.animationMenu.render();
-        } else if (tabName == "cam"){
-            this.camMenu.render();
         } else if (tabName == "send"){
             this.sendMenu.render();
         } else {
