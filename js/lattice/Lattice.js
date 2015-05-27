@@ -333,9 +333,8 @@ Lattice = Backbone.Model.extend({
 
     _updateForMode: function(){
         var cellMode = globals.appState.get("cellMode");
-        var partType =  this.get("partType");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.draw(cellMode, partType);
+            if (cell) cell.setMode(cellMode);
         });
         globals.three.render();
     },
@@ -364,20 +363,15 @@ Lattice = Backbone.Model.extend({
     //hide show cells during stock simulation
     hideCells: function(){
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) {
-                cell.hide();
-                cell.hideForStockSimulation = true;
-            }
+            if (cell) cell.hide();
         });
         globals.three.render();
     },
 
     showCells: function(){
+        var cellMode = globals.appState.get("cellMode");
         this._iterCells(this.get("cells"), function(cell){
-            if (cell) {
-                cell.hideForStockSimulation = false;
-                cell.draw();
-            }
+            if (cell) cell.show(cellMode)
         });
         globals.three.render();
     },
@@ -385,10 +379,7 @@ Lattice = Backbone.Model.extend({
     showCellAtIndex: function(index){
         var latticeIndex = this._subtract(index, this.get("cellsMin"));
         var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
-        if (cell) {
-            cell.hideForStockSimulation = false;
-            cell.draw();
-        }
+        if (cell) cell.show();
         else console.warn("placing a cell that does not exist");
     },
 

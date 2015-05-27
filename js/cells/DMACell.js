@@ -40,12 +40,22 @@ DMACell.prototype._translateCell = function(object3D){
 };
 
 DMACell.prototype._addMeshes = function(meshes, object3D){//accepts an array or a single mesh
+    this._addRemoveMeshes(true, meshes, object3D);
+};
+
+DMACell.prototype._removeMeshes = function(meshes, object3D){//accepts an array or a single mesh
+    this._addRemoveMeshes(false, meshes, object3D);
+};
+
+DMACell.prototype._addRemoveMeshes = function(shouldAdd, meshes, object3D){//accepts an array or a single mesh
     if (object3D === undefined) object3D = this.object3D;
     if (meshes.constructor === Array){
         _.each(meshes, function(mesh){
-            object3D.add(mesh);
+            if (shouldAdd) object3D.add(mesh);
+            else object3D.remove(mesh);
         });
-    } else object3D.add(meshes);
+    } else if (shouldAdd) object3D.add(meshes);
+    else object3D.remove(meshes);
 };
 
 DMACell.prototype._buildMesh = function(){//called from every subclass
@@ -75,7 +85,13 @@ DMACell.prototype.setMode = function(mode){
         case "cell":
             break;
         case "part":
-            if (!this.parts) this.parts = this._initParts();
+            if (!this.parts) {
+                this.parts = this._initParts();
+                var self = this;
+                _.each(this.parts, function(part){
+                    self._addMeshes(part.getMesh());
+                });
+            }
             break;
         case "beam":
             if (!this.beams) this.beams = this._initBeams();
@@ -94,8 +110,9 @@ DMACell.prototype.hide = function(){
     this.object3D.visible = false;
 };
 
-DMACell.prototype.show = function(){
+DMACell.prototype.show = function(mode){
     this.object3D.visible = true;
+    this.setMode(mode);
 };
 
 DMACell.prototype.setOpacity = function(opacity){
@@ -154,6 +171,16 @@ DMACell.prototype.destroyParts = function(){
     this.parts = null;
 };
 
+//DMACell.prototype.removePart = function(index){
+//    this.parts[index].destroy();
+//    this.parts[index] = null;
+//    var hasAnyParts = false;//check if all parts have been deleted
+//    _.each(this.parts, function(part){
+//        if (part) hasAnyParts = true;
+//    });
+//    if (!hasAnyParts) globals.lattice.removeCell(this);//if all parts are gone, remove cell
+//};
+
 DMACell.prototype.toJSON = function(){
     var data = {
         indices:this.indices//todo get rid of this and calculate from min and max
@@ -190,15 +217,6 @@ DMACell.prototype.toJSON = function(){
 //    return nodes;
 //};
 //
-//DMACell.prototype.removePart = function(index){
-//    this.parts[index].destroy();
-//    this.parts[index] = null;
-//    var hasAnyParts = false;//check if all parts have been deleted
-//    _.each(this.parts, function(part){
-//        if (part) hasAnyParts = true;
-//    });
-//    if (!hasAnyParts) globals.lattice.removeCell(this);//if all parts are gone, remove cell
-//};
 //
 //DMACell.prototype._initBeams = function(nodes, faces){
 //    var beams = [];

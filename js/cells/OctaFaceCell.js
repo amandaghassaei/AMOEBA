@@ -15,7 +15,7 @@ OctaFaceCell.prototype = Object.create(DMACell.prototype);
 OctaFaceCell.prototype._initParts = function(){
     var parts  = [];
     for (var i=0;i<3;i++){
-        parts.push(new DMATrianglePart(i, this));
+        parts.push(new OctaFaceTriPart(i, this));
     }
     return parts;
 };

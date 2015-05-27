@@ -17,9 +17,9 @@ OctaRotEdgeCell.prototype._initParts = function(){
 OctaRotEdgeCell.prototype.changePartType = function(type){
     var newParts = [];
     if (type == "vox"){
-        newParts.push(new DMAEdgeVoxPart(0, this));
+        newParts.push(new OctaEdgeVoxPart(0));
     } else if (type == "voxLowPoly"){
-        newParts.push(new DMAEdgeVoxPartLowPoly(0, this));
+        newParts.push(new OctaEdgeVoxPartLowPoly(0));
     } else {
         console.warn("part type " + type + " not recognized");
         return;
