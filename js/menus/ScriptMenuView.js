@@ -17,6 +17,7 @@ ScriptMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "script") return;
+        if ($("input[type=text]").is(":focus")) return;
         this.$el.html(this.template(globals.plist));
     },
 
@@ -29,7 +30,7 @@ ScriptMenuView = Backbone.View.extend({
                 <% }); %>\
             </ul>\
         </div><br/><br/><!-- /btn-group -->\
-        <a href="#" class="clearCells btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
+        <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>\
         ')
 
 });

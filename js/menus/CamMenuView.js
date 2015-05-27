@@ -35,7 +35,7 @@ CamMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "cam") return;
-        if ($("input").is(":focus")) return;
+        if ($("input[type=text]").is(":focus")) return;
 
         var data = _.extend(this.model.toJSON(), globals.cam.toJSON(), globals.lattice.toJSON(), globals.plist);
         if (globals.cam.get("stockPositionRelative")){

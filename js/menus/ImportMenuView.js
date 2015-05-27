@@ -83,6 +83,7 @@ ImportMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "import") return;
+        if ($("input[type=text]").is(":focus")) return;
         this.$el.html(this.template(_.extend(this.model.toJSON(), this.fillGeometry.toJSON())));
     },
 
@@ -94,7 +95,7 @@ ImportMenuView = Backbone.View.extend({
         <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
         <hr>\
         <% } %>\
-        <a href="#" class=" btn btn-block btn-lg btn-default clearCells">Clear All Cells</a><br/><br/>\
+        <a href="#" class=" btn btn-block btn-lg btn-danger clearCells">Clear All Cells</a><br/><br/>\
         <br/><span class="btn btn-default btn-lg btn-file fullWidth">\
             Upload STL<input id="importMenuUploadSTL" type="file">\
        </span><br/>\

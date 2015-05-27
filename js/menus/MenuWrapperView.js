@@ -13,7 +13,8 @@ MenuWrapper = Backbone.View.extend({
         "click .clearCells":                           "_clearCells",
         "focusout .floatInput":                        "_renderTab",//force rounding if needed
         "focusout .intInput":                          "_renderTab",
-        "change input:checkbox":                       "_clickCheckbox"
+        "change input:checkbox":                       "_clickCheckbox",
+        "click input:radio":                           "_radioSelection"
     },
 
     initialize: function(){
@@ -84,19 +85,11 @@ MenuWrapper = Backbone.View.extend({
         newVal = parseFloat(newVal);
 
         if (key){
-            if ($target.hasClass("lattice")) {
-                var value = _.clone(globals.lattice.get(property));
-                value[key] = newVal;
-                globals.lattice.set(property, value);
-            } else if ($target.hasClass("assembler")) {
-                var value = _.clone(globals.cam.get(property));
-                value[key] = newVal;
-                globals.cam.set(property, value);
-            }
-            return;
+            var value = _.clone(this._getPropertyOwner($target).get(property));
+            value[key] = newVal;
+            this._getPropertyOwner($target).set(property, value);
         }
-        if ($target.hasClass("lattice")) globals.lattice.set(property, newVal);
-        else if ($target.hasClass("assembler")) globals.cam.set(property, newVal);
+        this._getPropertyOwner($target).set(property, newVal);
     },
 
     _makeDropdownSelection: function(e){
@@ -104,8 +97,7 @@ MenuWrapper = Backbone.View.extend({
         var property = $target.data("property");
         var value = $target.data("value");
         if (!property || !value) return;
-        if ($target.hasClass("lattice")) globals.lattice.set(property, value);
-        else if ($target.hasClass("assembler")) globals.cam.set(property, value);
+        this._getPropertyOwner($target).set(property, value);
     },
 
     _clickCheckbox: function(e){
@@ -117,13 +109,27 @@ MenuWrapper = Backbone.View.extend({
             console.warn("no property associated with checkbox input");
             return;
         }
-        if ($target.hasClass("lattice")) globals.lattice.set(property, !globals.lattice.get(property));
-        else if ($target.hasClass("assembler")) globals.cam.set(property, !globals.cam.get(property));
+       this._getPropertyOwner($target).set(property, !this._getPropertyOwner($target).get(property));
+    },
+
+    _radioSelection: function(e){
+        e.preventDefault();
+        var $target = $(e.target);
+        this._getPropertyOwner($target).set($target.attr("name"), $target.val());
+        $target.blur();
     },
 
     _clearCells: function(e){
         e.preventDefault();
         globals.lattice.clearCells();
+    },
+
+    _getPropertyOwner: function($target){
+        if ($target.hasClass("lattice")) return globals.lattice;
+        if ($target.hasClass("assembler")) return globals.cam;
+        if ($target.hasClass("appState")) return globals.appState;
+        console.warn("no owner found for " + $target);
+        return null;
     },
 
 

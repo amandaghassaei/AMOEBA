@@ -8,8 +8,6 @@ LatticeMenuView = Backbone.View.extend({
     el: "#menuContent",
 
     events: {
-        "change #latticeScale":                         "_changeScale",
-        "slideStop #latticeMenuScaleSlider":            "_changeScaleSlider"
     },
 
 
@@ -20,28 +18,11 @@ LatticeMenuView = Backbone.View.extend({
         this.listenTo(globals.lattice, "change", this.render);
     },
 
-    _changeScale: function(e){
-        e.preventDefault();
-        var val = parseFloat($(e.target).val());
-        if (isNaN(val)) return;
-        globals.lattice.set("scale", val);
-    },
-
-    _changeScaleSlider: function(e){
-        globals.lattice.set("scale", $(e.target)[0].value);
-    },
-
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "lattice") return;
-        if ($("input").is(":focus")) return;
+        if ($("input[type=text]").is(":focus")) return;
         this.$el.html(this.template(_.extend(globals.lattice.toJSON(), globals.plist)));
-
-        $('#latticeMenuScaleSlider').slider({
-            formatter: function(value) {
-                return value;
-            }
-        });
     },
 
     template: _.template('\
@@ -89,9 +70,6 @@ LatticeMenuView = Backbone.View.extend({
             </div><br/><br/>\
         <% } %>\
         <br/>\
-        Scale:&nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput lattice" type="text"><br/>\
-        <input id="latticeMenuScaleSlider" data-slider-id="ex1Slider" type="text" data-slider-min="1" data-slider-max="100" data-slider-step="0.1" data-slider-value="<%= scale %>"/>\
-        <br/>\
         Units: &nbsp;&nbsp;\
             <div class="btn-group">\
                 <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
@@ -101,9 +79,9 @@ LatticeMenuView = Backbone.View.extend({
                     <% }); %>\
                 </ul>\
             </div><br/><br/>\
-        Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
-        <br/>\
-        <a href="#" class="clearCells btn btn-block btn-lg btn-default">Clear All Cells</a><br/>\
+        <br/><br/>\
+        <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>\
+        Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         ')
 
 });

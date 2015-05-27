@@ -96,6 +96,7 @@ AnimationMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "animate") return;
+        if ($("input[type=text]").is(":focus")) return;
         if (globals.cam.get("needsPostProcessing") && !globals.cam.get("editsMadeToProgram")) globals.cam.postProcess();
         this.$el.html(this.template(_.extend(this.model.toJSON(), globals.cam.toJSON())));
         this._setEditorHeight();

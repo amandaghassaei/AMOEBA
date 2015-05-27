@@ -24,6 +24,7 @@ SketchMenuView = Backbone.View.extend({
     render: function(){
         if (this.model.changedAttributes()["currentNav"]) return;
         if (this.model.get("currentTab") != "sketch") return;
+        if ($("input[type=text]").is(":focus")) return;
         this.$el.html(this.template(globals.basePlane.toJSON()));
 
         $('#zHeightSlider').slider({

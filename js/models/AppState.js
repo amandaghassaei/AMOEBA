@@ -29,6 +29,8 @@ AppState = Backbone.Model.extend({
 
         superCellIndex: 0,//offset of superCell adds todo lattice?
 
+        realisticColorScheme: true,
+
         stockSimulationPlaying: false,
         manualSelectOrigin: false//mode that allows user ot select origin from existing cell
     },
