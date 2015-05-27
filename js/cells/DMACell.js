@@ -12,7 +12,7 @@ function DMACell(indices){
 
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
     this.object3D = this._buildObject3D();
-    this._addMeshes(this._buildMesh(), this.object3D);//build cell meshes
+    this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
     if (!this.superCell) globals.three.sceneAdd(this.object3D, this._getSceneType());
 
     this.setMode();
@@ -27,8 +27,13 @@ DMACell.prototype._getSceneType = function(){//todo need this?
 DMACell.prototype._buildObject3D = function(){
     var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
     object3D.myParent = this;//reference to get mouse raycasting back
+    object3D.name = "object3d";
     return object3D;
 };
+
+DMACell.prototype.getObject3D = function(){//only called by supercells
+    return this.object3D;
+}
 
 DMACell.prototype._buildMesh = function(){
     var geometry = this._getGeometry();
@@ -74,7 +79,7 @@ DMACell.prototype.setMode = function(mode){
                 this.parts = this._initParts();
                 var self = this;
                 _.each(this.parts, function(part){
-                    self._addMeshes(part.getMesh());
+                    self._addChildren(part.getMesh());
                 });
             }
             break;

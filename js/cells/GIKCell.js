@@ -22,7 +22,7 @@
     };
 
     GIKCell.prototype._initParts = function(){
-        if (!this.superCell) return [];
+        if (!this.superCell || this.superCell === true) return null;
         var parts  = [];
         var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
         if (globals.lattice.get("partType") == "lego") {

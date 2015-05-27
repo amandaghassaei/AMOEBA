@@ -21,9 +21,9 @@ Lattice = Backbone.Model.extend({
         //spacing for connectors/joints
         cellSeparation: {xy:0, z:0},
 
-        cellType: "octa",
-        connectionType: "edgeRot",
-        partType: "vox",
+        cellType: "cube",
+        connectionType: "gik",
+        partType: "lego",
         materialType: "fiberGlass",
         gikLength: 4
     },

@@ -210,7 +210,7 @@ GIKHighlighter = Highlighter.extend({
     },
 
     _setPosition: function(position, direction){
-        this.mesh.position.set(position.x+direction.x, position.y+direction.y, position.z+globals.lattice.zScale(1)/2*direction.z);
+        this.mesh.position.set(position.x+direction.x, position.y+direction.y, position.z+globals.lattice.zScale()/2*direction.z);
     },
 
     _setRotation: function(direction, index){

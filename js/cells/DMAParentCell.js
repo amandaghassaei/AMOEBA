@@ -18,23 +18,23 @@ DMAParentCell.prototype._translateCell = function(object3D){
     return object3D;
 };
 
-DMAParentCell.prototype._addMeshes = function(meshes, object3D){//accepts an array or a single mesh
-    this._addRemoveMeshes(true, meshes, object3D);
+DMAParentCell.prototype._addChildren = function(children, object3D){//accepts an array or a single mesh
+    this._addRemoveChildren(true, children, object3D);
 };
 
-DMAParentCell.prototype._removeMeshes = function(meshes, object3D){//accepts an array or a single mesh
-    this._addRemoveMeshes(false, meshes, object3D);
+DMAParentCell.prototype._removeChildren = function(children, object3D){//accepts an array or a single mesh
+    this._addRemoveMeshes(false, children, object3D);
 };
 
-DMAParentCell.prototype._addRemoveMeshes = function(shouldAdd, meshes, object3D){//accepts an array or a single mesh
+DMAParentCell.prototype._addRemoveChildren = function(shouldAdd, children, object3D){//accepts an array or a single mesh
     if (object3D === undefined) object3D = this.object3D;
-    if (meshes.constructor === Array){
-        _.each(meshes, function(mesh){
-            if (shouldAdd) object3D.add(mesh);
-            else object3D.remove(mesh);
+    if (children.constructor === Array){
+        _.each(children, function(child){
+            if (shouldAdd) object3D.add(child);
+            else object3D.remove(child);
         });
-    } else if (shouldAdd) object3D.add(meshes);
-    else object3D.remove(meshes);
+    } else if (shouldAdd) object3D.add(children);
+    else object3D.remove(children);
 };
 
 DMAParentCell.prototype.hide = function(){

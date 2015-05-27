@@ -26,25 +26,18 @@
     DMAGIKPart.prototype = Object.create(DMAPart.prototype);
 
     DMAGIKPart.prototype._makeGikWireframe = function(positions, yPosition){
-        var geometry = new THREE.Geometry();
-        _.each(positions, function(position, index){
-            if (position == yPosition){
-                geometry.vertices.push(new THREE.Vector3(positions[index-1], yPosition, positions[index+1]));
-            }
-        });
-        console.log(geometry.vertices);
-        return new THREE.Line(geometry);
+//        var geometry = new THREE.Geometry();
+//        _.each(positions, function(position, index){
+//            if (position == yPosition){
+//                geometry.vertices.push(new THREE.Vector3(positions[index-1], yPosition, positions[index+1]));
+//            }
+//        });
+//        console.log(geometry.vertices);
+//        return new THREE.Line(geometry);
     };
 
-    DMAGIKPart.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
-
-
-
-        mesh.myPart = this;//need a ref back to this part
-        var wireframe = new THREE.EdgesHelper(mesh, 0x000000);
-        mesh.children.push(wireframe);
-        return mesh;
+    DMAGIKPart.prototype._getGeometry = function(){
+        return unitPartGeo;//this.parentCell.getMaterialType()
     };
 
     self.DMAGIKPart = DMAGIKPart;
@@ -73,10 +66,8 @@
     }
     DMAGIKPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
-    DMAGIKPartLowPoly.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
-        mesh.myPart = this;//need a ref back to this part
-        return mesh;
+    DMAGIKPartLowPoly.prototype._getGeometry = function(){
+        return unitPartGeo;
     };
 
     self.DMAGIKPartLowPoly = DMAGIKPartLowPoly;
@@ -105,10 +96,8 @@
     }
     DMAGIKEndPart.prototype = Object.create(DMAGIKPart.prototype);
 
-    DMAGIKEndPart.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
-        mesh.myPart = this;//need a ref back to this part
-        return mesh;
+    DMAGIKEndPart.prototype._getGeometry = function(){
+        return unitPartGeo;
     };
 
     self.DMAGIKEndPart = DMAGIKEndPart;
@@ -137,10 +126,8 @@
     }
     DMAGIKEndPartLowPoly.prototype = Object.create(DMAGIKPart.prototype);
 
-    DMAGIKEndPartLowPoly.prototype._makeMeshForType = function(){
-        var mesh = new THREE.Mesh(unitPartGeo, this.parentCell.getMaterialType());
-        mesh.myPart = this;//need a ref back to this part
-        return mesh;
+    DMAGIKEndPartLowPoly.prototype._getGeometry = function(){
+        return unitPartGeo;
     };
 
     self.DMAGIKEndPartLowPoly = DMAGIKEndPartLowPoly;

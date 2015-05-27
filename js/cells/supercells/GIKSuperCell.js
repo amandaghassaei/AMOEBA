@@ -12,15 +12,30 @@ GIKSuperCell = function(length, range, cells){
     this.cells = cells;
 
     this.object3D = this._buildObject3D();
-    this._addMeshes(this._buildMesh(length), this.object3D);
-    globals.three.sceneAdd(this.object3D);
+    this._addChildren(this._buildMesh(length), this.object3D);
+    this._addChildren(this._getCellObject3Ds(cells));
+    globals.three.sceneAdd(this.object3D, this._getSceneType());
 
+//    this.setMode();
 
 };
 GIKSuperCell.prototype = Object.create(DMAParentCell.prototype);
 
+GIKSuperCell.prototype._getSceneType = function(){//todo need this?
+    if (this.indices) return "supercell";
+    return null;
+};
+
 GIKSuperCell.prototype._buildObject3D = function(){
     return this._translateCell(this._rotateCell(new THREE.Object3D()));
+};
+
+GIKSuperCell.prototype._getCellObject3Ds = function(cells){
+    var object3Ds = [];
+    _.each(cells, function(cell){
+        object3Ds.push(cell.getObject3D());
+    });
+    return object3Ds;
 };
 
 GIKSuperCell.prototype._rotateCell = function(object3D){
@@ -72,7 +87,7 @@ GIKSuperCell.prototype.setMode = function(mode){
                 this.parts = this._initParts();
                 var self = this;
                 _.each(this.parts, function(part){
-                    self._addMeshes(part.getMesh());
+                    self._addChildren(part.getMesh());
                 });
             }
             break;

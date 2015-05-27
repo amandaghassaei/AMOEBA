@@ -57,7 +57,12 @@ function ThreeModel(){
 
         if (type == "cell"){
             cells.push(object.children[0]);
-        } else if (type == "part"){
+        } else if (type == "supercell"){
+            _.each(object.children, function(child){//add cells as hover
+                if (child.name != "object3d") return;
+                cells.push(child.children[0]);
+            });
+        } else if (type == "part"){//todo change this
             parts.push(object);
         } else if (type == "basePlane"){
             basePlane.push(object);
