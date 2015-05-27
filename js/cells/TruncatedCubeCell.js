@@ -59,7 +59,10 @@
     };
 
     TruncatedCubeCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
-        return new THREE.EdgesHelper(mesh, 0x000000);
+        var wireframe = new THREE.EdgesHelper(mesh, 0x000000);
+        wireframe.matrixWorld = mesh.matrixWorld;
+        wireframe.matrixAutoUpdate = true;
+        return wireframe;
     };
 
     TruncatedCubeCell.prototype.calcHighlighterPosition = function(face){

@@ -31,7 +31,7 @@ function AppPList(){
         tetra: "Tetrahedron (Coming Soon)",
         cube:"Cube",
         truncatedCube:"Cuboctahedron",
-        kelvin:"Truncated Octahedron"
+        kelvin:"Kelvin"
     },
     allConnectionTypes: {
         octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",

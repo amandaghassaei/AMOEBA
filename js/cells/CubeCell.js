@@ -19,6 +19,8 @@
     CubeCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
         var wireframe = new THREE.BoxHelper(mesh);
         wireframe.material.color.set(0x000000);
+        wireframe.matrixWorld = mesh.matrixWorld;
+        wireframe.matrixAutoUpdate = true;
         return wireframe;
     };
 
