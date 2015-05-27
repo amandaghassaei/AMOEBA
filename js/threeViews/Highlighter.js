@@ -210,14 +210,15 @@ GIKHighlighter = Highlighter.extend({
     },
 
     _setPosition: function(position, direction){
-        this.mesh.position.set(position.x+direction.x, position.y+direction.y, position.z+globals.lattice.zScale()/2*direction.z);
+        this.mesh.position.set(position.x+direction.x/2, position.y+direction.y/2, position.z+globals.lattice.zScale()*direction.z/2);
     },
 
     _setRotation: function(direction, index){
         var superCellIndex = globals.appState.get("superCellIndex");
-        if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1)) this.mesh.rotation.set(0, 0, Math.PI/2);
+        if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1))
+            this.mesh.rotation.set(0, 0, Math.PI/2);
         else this.mesh.rotation.set(0,0,0);
-        this.mesh.translateX(superCellIndex);
+        this.mesh.translateX(superCellIndex - this.mesh.scale.x/2 + 0.5);
     },
 
     updateGikLength: function(){

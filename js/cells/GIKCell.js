@@ -15,6 +15,7 @@
     GIKCell.prototype.setSuperCell = function(superCell, index){
         this.superCell = superCell;
         this.superCellIndex = index;
+        console.log(this.indices);
         CubeCell.call(this, this.indices);
         if (this.superCellIndex == this.superCell.getLength()) this.object3D.rotateZ(Math.PI);
         return this.object3D;
@@ -25,7 +26,10 @@
     };
 
     GIKCell.prototype._translateCell = function(object3D){
-        if (this.superCellIndex) object3D.position.set(-this.superCellIndex*this.xScale(),0, 0);
+        if (this.superCellIndex != null) {
+            var offset = this.superCellIndex-this.superCell.getLength();
+            object3D.position.set(offset*this.xScale(),0, 0);
+        }
         return object3D;
     };
 
@@ -46,6 +50,18 @@
             else parts.push(new DMAGIKPartLowPoly(0, this));
         }
         return parts;
+    };
+
+    GIKCell.prototype.calcHighlighterPosition = function(face){
+
+//        var params = CubeCell.prototype.calcHighlighterPosition.call();
+        var direction = face.normal.clone().applyEuler(this.object3D.rotation).applyEuler(this.superCell.object3D.rotation);
+        var position = globals.lattice.getPositionForIndex(this.indices);
+        var self = this;
+        _.each(_.keys(position), function(key){
+            position[key] += direction[key]*self.axisScale(key)/2;
+        });
+        return {index: _.clone(this.indices), direction:direction, position:position};
     };
 
     self.GIKCell = GIKCell;

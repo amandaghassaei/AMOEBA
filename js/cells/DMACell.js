@@ -139,6 +139,20 @@ DMACell.prototype.getEuler = function(){
     return this.object3D.rotation.clone();
 };
 
+DMACell.prototype.axisScale = function(axis){
+    switch (axis){
+        case "x":
+            return this.xScale();
+        case "y":
+            return this.yScale();
+        case "z":
+            return this.zScale();
+        default:
+            console.warn(axis + " axis not recognized");
+            break;
+    }
+};
+
 DMACell.prototype.xScale = function(){
     return globals.lattice.xScale(0);
 };
