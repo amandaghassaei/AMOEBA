@@ -206,7 +206,7 @@ CubeHighlighter = Highlighter.extend({
 GIKHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        return new THREE.BoxGeometry(1,1,1);
+        return new THREE.BoxGeometry(1,1,1);//globals.lattice.zScale(0)
     },
 
     _setPosition: function(position, direction){
@@ -221,6 +221,9 @@ GIKHighlighter = Highlighter.extend({
     },
 
     updateGikLength: function(){
+        if (!this.mesh) return;
+        this.mesh.scale.set(globals.lattice.get("gikLength"), 1, 1);
+        globals.three.render();
         if (!this.direction) return;
         this._setPosition(this.position, this.direction);//position of center point
         this._setRotation(this.direction, this.index);

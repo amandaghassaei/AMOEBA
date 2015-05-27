@@ -9,6 +9,7 @@ latticeSubclasses["GIKLattice"] = {
         _initLatticeType: function(){
             globals.basePlane = new SquareBasePlane();
             globals.highlighter = new GIKHighlighter();
+            globals.highlighter.updateGikLength();
         },
 
         getIndexForPosition: function(absPosition){

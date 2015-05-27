@@ -15,7 +15,7 @@ GIKSuperCell = function(length, range, cells){
     this._addChildren(this._buildMesh(length), this.object3D);
     var self = this;
     _.each(cells, function(cell, index){
-        self.addObject3D(cell.setSuperCell(self, index));
+        self.addChildCell(cell.setSuperCell(self, index));
     });
     if (this.indices) globals.three.sceneAdd(this.object3D, "supercell");
 
@@ -27,7 +27,7 @@ GIKSuperCell.prototype._buildObject3D = function(){
     return this._translateCell(this._rotateCell(new THREE.Object3D()));
 };
 
-GIKSuperCell.prototype.addObject3D = function(object3D){
+GIKSuperCell.prototype.addChildCell = function(object3D){
     this._addChildren(object3D);
 };
 
@@ -38,7 +38,7 @@ GIKSuperCell.prototype._rotateCell = function(object3D){
 
 GIKSuperCell.prototype._buildMesh = function(length){
     var meshes = [];
-    var superCellGeo = new THREE.BoxGeometry(1,1,1);
+    var superCellGeo = new THREE.BoxGeometry(1,1,1.28);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
     superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
     var mesh = new THREE.Mesh(superCellGeo, this.getMaterialType());
