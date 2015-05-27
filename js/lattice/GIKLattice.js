@@ -48,7 +48,7 @@ latticeSubclasses["GIKLattice"] = {
                 }
             }
             if (cells.length < 1) return null;
-            var superCell = new DMASuperCell(length, range, cells);
+            var superCell = new GIKSuperCell(length, range, cells);
             _.each(cells, function(cell, index){
                 cell.setSuperCell(superCell, index);
             });

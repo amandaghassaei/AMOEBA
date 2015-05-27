@@ -5,32 +5,16 @@
 
 (function () {
 
-    function GIKCell(indices, cellMode, partType){
-        CubeCell.call(this, indices, cellMode, partType);
+    function GIKCell(indices){
+        this.superCell = true;
+        CubeCell.call(this, indices, true);
     }
     GIKCell.prototype = Object.create(CubeCell.prototype);
-
-    GIKCell.prototype._buildMesh = function(){
-        return DMACubeCell.prototype._buildMesh.call(this, cellMaterial);
-    };
-
-    GIKCell.prototype._doMeshTransformations = function(mesh){
-        if (this.indices && this.indices.z%2 != 0) mesh.rotateZ(Math.PI/2);
-    };
-
-    GIKCell.prototype._setCellMeshVisibility = function(visible){
-        this.mesh.visible = false;
-        if (this.superCell) this.superCell.setVisibility(visible);
-    };
 
     GIKCell.prototype.setSuperCell = function(superCell, index){
         this.superCell = superCell;
         this.superCellIndex = index;
-        if (this.superCellIndex == this.superCell.getLength()) this.mesh.rotateZ(Math.PI);
-        if (globals.appState.get("cellMode")=="part") {
-            this.parts = this.__initParts();
-            this.draw();
-        }
+        if (this.superCellIndex == this.superCell.getLength()) this.object3D.rotateZ(Math.PI);
     };
 
     GIKCell.prototype.getMaterialType = function(){

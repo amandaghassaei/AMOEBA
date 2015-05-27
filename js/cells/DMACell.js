@@ -13,10 +13,11 @@ function DMACell(indices){
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
     this.object3D = this._buildObject3D();
     this._addMeshes(this._buildMesh(), this.object3D);//build cell meshes
-    globals.three.sceneAdd(this.object3D, this._getSceneType());
+    if (!this.superCell) globals.three.sceneAdd(this.object3D, this._getSceneType());
 
     this.setMode();
 }
+DMACell.prototype = Object.create(DMAParentCell.prototype);
 
 DMACell.prototype._getSceneType = function(){//todo need this?
     if (this.indices) return "cell";
@@ -29,43 +30,15 @@ DMACell.prototype._buildObject3D = function(){
     return object3D;
 };
 
-DMACell.prototype._rotateCell = function(object3D){
-    return object3D;//by default, no mesh transformations
-};
-
-DMACell.prototype._translateCell = function(object3D){
-    var position = globals.lattice.getPositionForIndex(this.indices);
-    object3D.position.set(position.x, position.y, position.z);
-    return object3D;
-};
-
-DMACell.prototype._addMeshes = function(meshes, object3D){//accepts an array or a single mesh
-    this._addRemoveMeshes(true, meshes, object3D);
-};
-
-DMACell.prototype._removeMeshes = function(meshes, object3D){//accepts an array or a single mesh
-    this._addRemoveMeshes(false, meshes, object3D);
-};
-
-DMACell.prototype._addRemoveMeshes = function(shouldAdd, meshes, object3D){//accepts an array or a single mesh
-    if (object3D === undefined) object3D = this.object3D;
-    if (meshes.constructor === Array){
-        _.each(meshes, function(mesh){
-            if (shouldAdd) object3D.add(mesh);
-            else object3D.remove(mesh);
-        });
-    } else if (shouldAdd) object3D.add(meshes);
-    else object3D.remove(meshes);
-};
-
-DMACell.prototype._buildMesh = function(){//called from every subclass
+DMACell.prototype._buildMesh = function(){
     var geometry = this._getGeometry();
     var meshes = [];
     var mesh = new THREE.Mesh(geometry, cellMaterial);
     mesh.name = "cell";
-    var wireframe = this._buildWireframe(mesh, geometry);
-    wireframe.name = "cell";
     meshes.push(mesh);
+    var wireframe = this._buildWireframe(mesh, geometry);
+    if (!wireframe) return meshes;
+    wireframe.name = "cell";
     meshes.push(wireframe);
     return meshes;
 };
@@ -76,6 +49,17 @@ DMACell.prototype._buildWireframe = function(mesh, geometry){//abstract mesh rep
 
 DMACell.prototype._initParts = function(){
     return [];//override in subclasses
+};
+
+DMACell.prototype.setSuperCell = function(superCell, index){
+    this.superCell = superCell;
+    this.superCellIndex = index;
+
+    if (this.superCellIndex == this.superCell.getLength()) this.mesh.rotateZ(Math.PI);
+    if (globals.appState.get("cellMode")=="part") {
+        this.parts = this.__initParts();
+        this.draw();
+    }
 };
 
 DMACell.prototype.setMode = function(mode){
@@ -105,30 +89,6 @@ DMACell.prototype.setMode = function(mode){
     _.each(this.object3D.children, function(child){
         child.visible = child.name == mode;
     });
-};
-
-DMACell.prototype.hide = function(){
-    this.object3D.visible = false;
-};
-
-DMACell.prototype.show = function(mode){
-    this.object3D.visible = true;
-    this.setMode(mode);
-};
-
-DMACell.prototype.setOpacity = function(opacity){
-};
-
-DMACell.prototype.getPosition = function(){
-    return this.object3D.position.clone();
-};
-
-DMACell.prototype.getQuaternion = function(){
-    return this.object3D.quaternion.clone();
-};
-
-DMACell.prototype.getEuler = function(){
-    return this.object3D.rotation.clone();
 };
 
 DMACell.prototype.xScale = function(){
