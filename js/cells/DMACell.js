@@ -18,7 +18,7 @@ function DMACell(indices){
     this.setMode();
 }
 
-DMACell.prototype._getSceneType = function(){
+DMACell.prototype._getSceneType = function(){//todo need this?
     if (this.indices) return "cell";
     return null;
 };
@@ -72,9 +72,6 @@ DMACell.prototype._buildMesh = function(){//called from every subclass
 
 DMACell.prototype._initParts = function(){
     return [];//override in subclasses
-};
-
-DMACell.prototype.changePartType = function(){//override in subclasses
 };
 
 DMACell.prototype.setMode = function(mode){

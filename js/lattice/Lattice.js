@@ -37,10 +37,12 @@ Lattice = Backbone.Model.extend({
         //bind events
         this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
         this.listenTo(globals.appState, "change:superCellIndex", this._gikLengthDidChange);
-        this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
+
         this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
+
+        this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
         this.listenTo(globals.appState, "change:cellsVisible", this._setCellVisibility);
     },
 
@@ -77,7 +79,7 @@ Lattice = Backbone.Model.extend({
         return newCells;
     },
 
-    addCellAtIndex: function(indices, noRender, noCheck){
+    addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
 
         var cells = this.get("cells");
         if (!noCheck) this.checkForMatrixExpansion(cells, indices, indices);
@@ -152,13 +154,6 @@ Lattice = Backbone.Model.extend({
             max[key] *= scale[key];
         });
         return {min:min, max:max};
-    },
-
-    _allAxesScales: function(){
-        var xScale = this.xScale();
-        var yScale = this.yScale();
-        var zScale = this.zScale();
-        return {x:xScale, y:yScale, z:zScale};
     },
 
     ////////////////////////////////////////////////////////////////////////////////////
@@ -312,14 +307,6 @@ Lattice = Backbone.Model.extend({
         return false;
     },
 
-    _subtract: function(pos1, pos2){
-        return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
-    },
-
-    _add: function(pos1, pos2){
-        return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
-    },
-
     ////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////EVENTS//////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////
@@ -355,12 +342,12 @@ Lattice = Backbone.Model.extend({
         if (globals.highlighter.updateGikLength) globals.highlighter.updateGikLength();
     },
 
-    _setCellVisibility: function(){//todo maybe leave wireframes?
+    _setCellVisibility: function(){
         if (globals.appState.get("cellsVisible")) this.showCells();
         else this.hideCells();
     },
 
-    //hide show cells during stock simulation
+    //hide/show cells during stock simulation
     hideCells: function(){
         this._iterCells(this.get("cells"), function(cell){
             if (cell) cell.hide();
@@ -392,41 +379,16 @@ Lattice = Backbone.Model.extend({
         this._setToDefaultsSilently();
         this._setDefaultCellMode();
 
-        if (typeof loadingFromFile == "undefined") loadingFromFile = false;
-        var cellType = this.get("cellType");
-        var connectionType = this.get("connectionType");
+        if (loadingFromFile === undefined) loadingFromFile = false;
+
         if (this._undo) this._undo();
         if (globals.basePlane) globals.basePlane.destroy();
         if (globals.highlighter) globals.highlighter.destroy();
-        if (cellType == "octa"){
-            if (connectionType == "face"){
-                _.extend(this, this.OctaFaceLattice);
-            } else if (connectionType == "freeformFace"){
-                if (!loadingFromFile) this.clearCells();
-                _.extend(this, this.OctaFreeFormFaceLattice);
-            } else if (connectionType == "edge"){
-                _.extend(this, this.OctaFaceLattice);
-                _.extend(this, this.OctaEdgeLattice);
-            } else if (connectionType == "edgeRot"){
-                _.extend(this, this.OctaRotEdgeLattice);
-            } else if (connectionType == "vertex"){
-                _.extend(this, this.OctaVertexLattice);
-            }
-        } else if (cellType == "tetra"){
-            _.extend(this, this.CubeLattice);
-        } else if (cellType == "cube"){
-            if (connectionType == "face"){
-                _.extend(this, this.CubeLattice);
-            } else if (connectionType == "gik"){
-                if (!loadingFromFile) this.clearCells();
-                _.extend(this, this.GIKLattice);
-            }
-        } else if (cellType == "truncatedCube"){
-            _.extend(this, this.TruncatedCubeLattice);
-        } else if (cellType == "kelvin"){
-            _.extend(this, this.KelvinLattice);
-        }
+        _.extend(this, this._getSubclassForLatticeType(loadingFromFile));
         this._initLatticeType();
+
+
+
 
         //todo refactor this eventually
         var self = this;
@@ -461,6 +423,38 @@ Lattice = Backbone.Model.extend({
         globals.three.render();
     },
 
+    _getSubclassForLatticeType: function(loadingFromFile){
+        var cellType = this.get("cellType");
+        var connectionType = this.get("connectionType");
+        if (cellType == "octa"){
+            if (connectionType == "face"){
+                return this.OctaFaceLattice;
+            } else if (connectionType == "freeformFace"){
+                if (!loadingFromFile) this.clearCells();
+                return this.OctaFreeFormFaceLattice;
+            } else if (connectionType == "edge"){
+                return this.OctaEdgeLattice;
+            } else if (connectionType == "edgeRot"){
+                return this.OctaRotEdgeLattice;
+            } else if (connectionType == "vertex"){
+                return this.OctaVertexLattice;
+            }
+        } else if (cellType == "tetra"){
+            return this.CubeLattice;
+        } else if (cellType == "cube"){
+            if (connectionType == "face"){
+                return this.CubeLattice;
+            } else if (connectionType == "gik"){
+                if (!loadingFromFile) this.clearCells();
+                return this.GIKLattice;
+            }
+        } else if (cellType == "truncatedCube"){
+            return this.TruncatedCubeLattice;
+        } else if (cellType == "kelvin"){
+            return this.KelvinLattice;
+        }
+    },
+
     _setToDefaultsSilently: function(){
         var newCellType = this.get("cellType");
         var newConnectionType = this.get("connectionType");
@@ -472,7 +466,7 @@ Lattice = Backbone.Model.extend({
         this.set("partType", partType, {silent:true});
     },
 
-    _setDefaultCellMode: function(){
+    _setDefaultCellMode: function(){//if no part associated with this lattice type
         if (!globals.plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
             globals.appState.set("cellMode", "cell");
         }
@@ -574,6 +568,21 @@ Lattice = Backbone.Model.extend({
     _getRasterLoopIterator: function(variable){
         if (variable.neg) return -1;
         return 1;
+    },
+
+    _allAxesScales: function(){
+        var xScale = this.xScale();
+        var yScale = this.yScale();
+        var zScale = this.zScale();
+        return {x:xScale, y:yScale, z:zScale};
+    },
+
+    _subtract: function(pos1, pos2){
+        return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
+    },
+
+    _add: function(pos1, pos2){
+        return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
     },
 
     ////////////////////////////////////////////////////////////////////////////////////

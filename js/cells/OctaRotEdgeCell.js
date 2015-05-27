@@ -11,10 +11,7 @@ function OctaRotEdgeCell(indices){
 OctaRotEdgeCell.prototype = Object.create(DMACell.prototype);
 
 OctaRotEdgeCell.prototype._initParts = function(){
-    return this.changePartType(globals.lattice.get("partType"));
-};
-
-OctaRotEdgeCell.prototype.changePartType = function(type){
+    var type = globals.lattice.get("partType");
     var newParts = [];
     if (type == "vox"){
         newParts.push(new OctaEdgeVoxPart(0));
@@ -24,9 +21,7 @@ OctaRotEdgeCell.prototype.changePartType = function(type){
         console.warn("part type " + type + " not recognized");
         return;
     }
-    if (!this.parts) return newParts;
-    this.destroyParts();
-    this.parts = newParts;
+    return newParts;
 };
 
 OctaRotEdgeCell.prototype._getGeometry = function(){

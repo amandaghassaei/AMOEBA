@@ -46,6 +46,20 @@ latticeSubclasses["OctaEdgeLattice"] = {
             return position;
         },
 
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1+2*cellSeparation;
+        },
+
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation)/2*Math.sqrt(3);
+        },
+
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return 2/Math.sqrt(6)+2*cellSeparation;
+        },
+
         makeCellForLatticeType: function(indices){
             return new DMAEdgeOctaCell(indices);
         },
@@ -53,9 +67,6 @@ latticeSubclasses["OctaEdgeLattice"] = {
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
             _.each(_.keys(this.OctaEdgeLattice), function(key){
-                self[key] = null;
-            });
-            _.each(_.keys(this.OctaFaceLattice), function(key){
                 self[key] = null;
             });
         }
