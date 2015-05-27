@@ -15,7 +15,6 @@
     GIKCell.prototype.setSuperCell = function(superCell, index){
         this.superCell = superCell;
         this.superCellIndex = index;
-        console.log(this.indices);
         CubeCell.call(this, this.indices);
         if (this.superCellIndex == this.superCell.getLength()) this.object3D.rotateZ(Math.PI);
         return this.object3D;
@@ -53,9 +52,7 @@
     };
 
     GIKCell.prototype.calcHighlighterPosition = function(face){
-
-//        var params = CubeCell.prototype.calcHighlighterPosition.call();
-        var direction = face.normal.clone().applyEuler(this.object3D.rotation).applyEuler(this.superCell.object3D.rotation);
+        var direction = face.normal.clone().applyEuler(this.object3D.rotation).applyEuler(this.object3D.parent.rotation);
         var position = globals.lattice.getPositionForIndex(this.indices);
         var self = this;
         _.each(_.keys(position), function(key){
