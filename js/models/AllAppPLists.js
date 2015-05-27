@@ -34,7 +34,7 @@ function AppPList(){
         kelvin:"Kelvin"
     },
     allConnectionTypes: {
-        octa: {face:"Face", freeformFace:"Freeform Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge",
+        octa: {face:"Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge", freeformFace:"Freeform Face"
         tetra: {vertex: "Vertex"},
         cube: {face:"Face", gik: "GIK"},
         truncatedCube: {face:"Face"},
