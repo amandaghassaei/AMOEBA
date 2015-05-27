@@ -63,11 +63,15 @@ DMACell.prototype._buildMesh = function(){//called from every subclass
     var meshes = [];
     var mesh = new THREE.Mesh(geometry, cellMaterial);
     mesh.name = "cell";
-    var wireframe = new THREE.Mesh(geometry, wireframeMaterial);
+    var wireframe = this._buildWireframe(mesh, geometry);
     wireframe.name = "cell";
     meshes.push(mesh);
     meshes.push(wireframe);
     return meshes;
+};
+
+DMACell.prototype._buildWireframe = function(mesh, geometry){//abstract mesh representation of cell
+    return new THREE.Mesh(geometry, wireframeMaterial);
 };
 
 DMACell.prototype._initParts = function(){

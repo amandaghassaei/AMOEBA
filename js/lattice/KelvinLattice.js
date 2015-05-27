@@ -35,7 +35,7 @@ latticeSubclasses["KelvinLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMATruncOctaCell(indices);
+            return new KelvinCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

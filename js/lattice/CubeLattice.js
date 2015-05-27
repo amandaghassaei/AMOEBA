@@ -34,7 +34,7 @@ latticeSubclasses["CubeLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMACubeCell(indices);
+            return new CubeCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

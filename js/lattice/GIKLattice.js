@@ -34,7 +34,7 @@ latticeSubclasses["GIKLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMAGIKCell(indices);
+            return new GIKCell(indices);
         },
 
         makeSuperCell: function(range){

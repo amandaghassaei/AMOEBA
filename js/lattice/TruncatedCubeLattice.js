@@ -34,7 +34,7 @@ latticeSubclasses["TruncatedCubeLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMATruncCubeCell(indices);
+            return new TruncatedCubeCell(indices);
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
