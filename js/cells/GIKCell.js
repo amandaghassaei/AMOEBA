@@ -6,15 +6,20 @@
 (function () {
 
     function GIKCell(indices){
-        this.superCell = true;
-        CubeCell.call(this, indices, true);
+        this.indices = indices;
     }
     GIKCell.prototype = Object.create(CubeCell.prototype);
 
     GIKCell.prototype.setSuperCell = function(superCell, index){
         this.superCell = superCell;
         this.superCellIndex = index;
+        CubeCell.call(this, this.indices);
         if (this.superCellIndex == this.superCell.getLength()) this.object3D.rotateZ(Math.PI);
+    };
+
+    GIKCell.prototype._translateCell = function(object3D){
+        if (this.superCellIndex) object3D.position.set(-this.superCellIndex*this.xScale(),0, 0);
+        return object3D;
     };
 
     GIKCell.prototype.getMaterialType = function(){
@@ -22,7 +27,7 @@
     };
 
     GIKCell.prototype._initParts = function(){
-        if (!this.superCell || this.superCell === true) return null;
+        if (!this.superCell) return null;
         var parts  = [];
         var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
         if (globals.lattice.get("partType") == "lego") {

@@ -13,7 +13,7 @@ GIKSuperCell = function(length, range, cells){
 
     this.object3D = this._buildObject3D();
     this._addChildren(this._buildMesh(length), this.object3D);
-    this._addChildren(this._getCellObject3Ds(cells));
+
     globals.three.sceneAdd(this.object3D, this._getSceneType());
 
 //    this.setMode();
@@ -30,10 +30,16 @@ GIKSuperCell.prototype._buildObject3D = function(){
     return this._translateCell(this._rotateCell(new THREE.Object3D()));
 };
 
+GIKSuperCell.prototype.addCellsToScene = function(){
+    this._addChildren(this._getCellObject3Ds(this.cells));
+};
+
 GIKSuperCell.prototype._getCellObject3Ds = function(cells){
     var object3Ds = [];
+    var self = this;
     _.each(cells, function(cell){
-        object3Ds.push(cell.getObject3D());
+        var object3D = cell.getObject3D();
+        object3Ds.push(object3D);
     });
     return object3Ds;
 };
@@ -76,28 +82,7 @@ GIKSuperCell.prototype.setMode = function(mode){
 
     if (mode === undefined) mode = globals.appState.get("cellMode");
     if (mode == "cell") mode = "supercell";
-
-    switch(mode) {
-        case "supercell":
-            break;
-        case "cell":
-            break;
-        case "part":
-            if (!this.parts) {
-                this.parts = this._initParts();
-                var self = this;
-                _.each(this.parts, function(part){
-                    self._addChildren(part.getMesh());
-                });
-            }
-            break;
-        case "beam":
-            if (!this.beams) this.beams = this._initBeams();
-            break;
-        case "node":
-            if (!this.nodes) this.nodes = this._initNodes();
-            break;
-    }
+    if (mode == "part") mode = "object3D";
 
     _.each(this.object3D.children, function(child){
         child.visible = child.name == mode;

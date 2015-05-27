@@ -59,7 +59,7 @@ function ThreeModel(){
             cells.push(object.children[0]);
         } else if (type == "supercell"){
             _.each(object.children, function(child){//add cells as hover
-                if (child.name != "object3d") return;
+                if (child.name != "object3D") return;
                 cells.push(child.children[0]);
             });
         } else if (type == "part"){//todo change this

@@ -27,7 +27,7 @@ DMACell.prototype._getSceneType = function(){//todo need this?
 DMACell.prototype._buildObject3D = function(){
     var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
     object3D.myParent = this;//reference to get mouse raycasting back
-    object3D.name = "object3d";
+    object3D.name = "object3D";
     return object3D;
 };
 

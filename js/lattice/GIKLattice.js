@@ -52,6 +52,7 @@ latticeSubclasses["GIKLattice"] = {
             _.each(cells, function(cell, index){
                 cell.setSuperCell(superCell, index);
             });
+            superCell.addCellsToScene();
             return superCell;
         },
 
