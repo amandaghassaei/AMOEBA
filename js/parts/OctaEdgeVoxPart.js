@@ -19,8 +19,8 @@
         unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
     });
 
-    function OctaEdgeVoxPart(type){
-        DMAPart.call(this, type);
+    function OctaEdgeVoxPart(type, parent){
+        DMAPart.call(this, type, parent);
     }
     OctaEdgeVoxPart.prototype = Object.create(DMAPart.prototype);
 

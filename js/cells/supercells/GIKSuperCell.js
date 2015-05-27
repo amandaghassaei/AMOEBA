@@ -41,7 +41,7 @@ GIKSuperCell.prototype._buildMesh = function(length){
     var superCellGeo = new THREE.BoxGeometry(1,1,1.28);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
     superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
-    var mesh = new THREE.Mesh(superCellGeo, this.getMaterialType());
+    var mesh = new THREE.Mesh(superCellGeo, this.getMaterial());
     mesh.name = "supercell";
     meshes.push(mesh);
     var wireframe = this._buildWireframe(mesh);
@@ -59,7 +59,7 @@ GIKSuperCell.prototype._buildWireframe = function(mesh){
     return wireframe;
 };
 
-GIKSuperCell.prototype.getMaterialType = function(){
+GIKSuperCell.prototype.getMaterial = function(){
     var material = cellBrassMaterial;
     if (this.material == "fiberGlass") material = cellFiberGlassMaterial;
     return material;

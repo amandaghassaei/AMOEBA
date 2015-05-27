@@ -14,9 +14,9 @@ OctaRotEdgeCell.prototype._initParts = function(){
     var type = globals.lattice.get("partType");
     var newParts = [];
     if (type == "vox"){
-        newParts.push(new OctaEdgeVoxPart(0));
+        newParts.push(new OctaEdgeVoxPart(0, this));
     } else if (type == "voxLowPoly"){
-        newParts.push(new OctaEdgeVoxPartLowPoly(0));
+        newParts.push(new OctaEdgeVoxPartLowPoly(0, this));
     } else {
         console.warn("part type " + type + " not recognized");
         return;

@@ -6,14 +6,15 @@
 var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
     partMaterial.color.setRGB( 0.9619657144369509, 0.6625466032079207, 0.20799727886007258 );
 
-function DMAPart(index) {
+function DMAPart(index, parent) {
+    this.parentCell  = parent;
     this.index = index;//todo need this?
     this.mesh = this._buildMesh(index);
 }
 
 DMAPart.prototype._buildMesh = function(index){
     var geometry = this._getGeometry(index);
-    var mesh = new THREE.Mesh(geometry, partMaterial);
+    var mesh = new THREE.Mesh(geometry, this.getMaterial());
     mesh.name = "part";
     return mesh;
 };
@@ -37,11 +38,16 @@ DMAPart.prototype.getMesh = function(){//only call by parent cell
     return this.mesh;
 };
 
+DMAPart.prototype.getMaterial = function(){
+    return partMaterial;
+};
+
 DMAPart.prototype.destroy = function(){
     if (this.mesh) {
         this.mesh.parent.remove(this.mesh);
         this.mesh = null;
     }
+    this.parentCell = null;
     this.index = null;
 };
 

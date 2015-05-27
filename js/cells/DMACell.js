@@ -38,7 +38,7 @@ DMACell.prototype._translateCell = function(object3D){
 DMACell.prototype._buildMesh = function(){
     var geometry = this._getGeometry();
     var meshes = [];
-    var mesh = new THREE.Mesh(geometry, cellMaterial);
+    var mesh = new THREE.Mesh(geometry, this.getMaterial());
     mesh.name = "cell";
     meshes.push(mesh);
     var wireframe = this._buildWireframe(mesh, geometry);
@@ -78,6 +78,10 @@ DMACell.prototype.hide = function(){
 DMACell.prototype.show = function(mode){
     this.object3D.visible = true;
     this.setMode(mode);
+};
+
+DMACell.prototype.getMaterial = function(){
+    return cellMaterial;
 };
 
 DMACell.prototype.setOpacity = function(opacity){

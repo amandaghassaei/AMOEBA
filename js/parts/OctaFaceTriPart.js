@@ -25,8 +25,8 @@ loader.load("assets/stls/parts/trianglePart.stl", function(geometry){
     unitPartGeo3.applyMatrix(new THREE.Matrix4().makeRotationZ(-2*Math.PI/3));
 });
 
-function OctaFaceTriPart(type){
-    DMAPart.call(this, type);
+function OctaFaceTriPart(type, parent){
+    DMAPart.call(this, type, parent);
 }
 OctaFaceTriPart.prototype = Object.create(DMAPart.prototype);
 

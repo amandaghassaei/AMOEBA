@@ -40,6 +40,10 @@
         return unitPartGeo;//this.parentCell.getMaterialType()
     };
 
+    DMAPart.prototype.getMaterial = function(){
+        return this.parentCell.getMaterial();
+    };
+
     self.DMAGIKPart = DMAGIKPart;
 
 })();

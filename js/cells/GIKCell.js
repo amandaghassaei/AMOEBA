@@ -32,8 +32,8 @@
         return object3D;
     };
 
-    GIKCell.prototype.getMaterialType = function(){
-        return this.superCell.getMaterialType();
+    GIKCell.prototype.getMaterial = function(){
+        return this.superCell.getMaterial();
     };
 
     GIKCell.prototype._initParts = function(){
