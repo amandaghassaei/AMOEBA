@@ -13,16 +13,10 @@ function DMACell(indices){
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
     this.object3D = this._buildObject3D();
     this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
-    if (!this.superCell) globals.three.sceneAdd(this.object3D, this._getSceneType());
+    if (!this.superCell && this.indices) globals.three.sceneAdd(this.object3D, "cell");
 
     this.setMode();
 }
-DMACell.prototype = Object.create(DMAParentCell.prototype);
-
-DMACell.prototype._getSceneType = function(){//todo need this?
-    if (this.indices) return "cell";
-    return null;
-};
 
 DMACell.prototype._buildObject3D = function(){
     var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
@@ -31,9 +25,15 @@ DMACell.prototype._buildObject3D = function(){
     return object3D;
 };
 
-DMACell.prototype.getObject3D = function(){//only called by supercells
-    return this.object3D;
-}
+DMACell.prototype._rotateCell = function(object3D){
+    return object3D;//by default, no mesh transformations
+};
+
+DMACell.prototype._translateCell = function(object3D){
+    var position = globals.lattice.getPositionForIndex(this.indices);
+    object3D.position.set(position.x, position.y, position.z);
+    return object3D;
+};
 
 DMACell.prototype._buildMesh = function(){
     var geometry = this._getGeometry();
@@ -50,6 +50,37 @@ DMACell.prototype._buildMesh = function(){
 
 DMACell.prototype._buildWireframe = function(mesh, geometry){//abstract mesh representation of cell
     return new THREE.Mesh(geometry, wireframeMaterial);
+};
+
+DMACell.prototype._addChildren = function(children, object3D){//accepts an array or a single mesh
+    this._addRemoveChildren(true, children, object3D);
+};
+
+DMACell.prototype._removeChildren = function(children, object3D){//accepts an array or a single mesh
+    this._addRemoveMeshes(false, children, object3D);
+};
+
+DMACell.prototype._addRemoveChildren = function(shouldAdd, children, object3D){//accepts an array or a single mesh
+    if (object3D === undefined) object3D = this.object3D;
+    if (children.constructor === Array){
+        _.each(children, function(child){
+            if (shouldAdd) object3D.add(child);
+            else object3D.remove(child);
+        });
+    } else if (shouldAdd) object3D.add(children);
+    else object3D.remove(children);
+};
+
+DMACell.prototype.hide = function(){
+    this.object3D.visible = false;
+};
+
+DMACell.prototype.show = function(mode){
+    this.object3D.visible = true;
+    this.setMode(mode);
+};
+
+DMACell.prototype.setOpacity = function(opacity){
 };
 
 DMACell.prototype._initParts = function(){
@@ -96,6 +127,18 @@ DMACell.prototype.setMode = function(mode){
     });
 };
 
+DMACell.prototype.getPosition = function(){
+    return this.object3D.position.clone();
+};
+
+DMACell.prototype.getQuaternion = function(){
+    return this.object3D.quaternion.clone();
+};
+
+DMACell.prototype.getEuler = function(){
+    return this.object3D.rotation.clone();
+};
+
 DMACell.prototype.xScale = function(){
     return globals.lattice.xScale(0);
 };
@@ -112,7 +155,8 @@ DMACell.prototype.destroy = function(){
     if (this.destroyStarted) return;
     this.destroyStarted = true;
     if (this.object3D) {
-        globals.three.sceneRemove(this.object3D, this._getSceneType());
+        if (this.superCell) this.object3D.parent.remove(this.object3D);
+        else if (this.indices) globals.three.sceneRemove(this.object3D, "cell");
         this.object3D.myParent = null;
 //            this.object3D.dispose();
 //            geometry.dispose();

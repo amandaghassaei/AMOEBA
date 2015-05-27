@@ -48,12 +48,7 @@ latticeSubclasses["GIKLattice"] = {
                 }
             }
             if (cells.length < 1) return null;
-            var superCell = new GIKSuperCell(length, range, cells);
-            _.each(cells, function(cell, index){
-                cell.setSuperCell(superCell, index);
-            });
-            superCell.addCellsToScene();
-            return superCell;
+            return new GIKSuperCell(length, range, cells);
         },
 
         _rasterGikCells: function(order, callback, var1, var2, var3, cells){

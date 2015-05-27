@@ -15,6 +15,7 @@
         this.superCellIndex = index;
         CubeCell.call(this, this.indices);
         if (this.superCellIndex == this.superCell.getLength()) this.object3D.rotateZ(Math.PI);
+        return this.object3D;
     };
 
     GIKCell.prototype._translateCell = function(object3D){
