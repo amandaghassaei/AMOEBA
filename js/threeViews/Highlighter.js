@@ -206,7 +206,7 @@ CubeHighlighter = Highlighter.extend({
 GIKHighlighter = Highlighter.extend({
 
     _makeGeometry: function(){
-        return new THREE.BoxGeometry(1,1,1);//globals.lattice.zScale(0)
+        return new THREE.BoxGeometry(1,1,globals.lattice.zScale(0));
     },
 
     _setPosition: function(position, direction){

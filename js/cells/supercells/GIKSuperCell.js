@@ -19,7 +19,7 @@ GIKSuperCell = function(length, range, cells){
     });
     if (this.indices) globals.three.sceneAdd(this.object3D, "supercell");
 
-//    this.setMode();
+    this.setMode();
 };
 GIKSuperCell.prototype = Object.create(DMACell.prototype);
 

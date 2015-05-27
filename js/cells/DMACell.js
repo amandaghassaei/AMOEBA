@@ -105,6 +105,7 @@ DMACell.prototype.setSuperCell = function(superCell, index){
 DMACell.prototype.setMode = function(mode){
 
     if (mode === undefined) mode = globals.appState.get("cellMode");
+    if (this.superCell) this.superCell.setMode(mode);
 
     switch(mode) {
         case "cell":
