@@ -113,14 +113,14 @@ ThreeView = Backbone.View.extend({
             }
         }
 
-        if (globals.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
-            var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
-            if (partIntersections.length == 0) {
-                this._setNoPartIntersections();
-                return;
-            }
-            this._handlePartIntersections(partIntersections, intersections[0].distance);
-        }
+//        if (globals.appState.get("cellMode") == "part"){//additionally check for part intersections in part mode
+//            var partIntersections = this.mouseProjection.intersectObjects(this.model.parts, false);
+//            if (partIntersections.length == 0) {
+//                this._setNoPartIntersections();
+//                return;
+//            }
+//            this._handlePartIntersections(partIntersections, intersections[0].distance);
+//        }
     },
 
     ////////////////////////////////////////////////////////////////////////////////

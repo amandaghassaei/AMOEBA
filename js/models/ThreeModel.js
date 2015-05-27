@@ -11,7 +11,7 @@ function ThreeModel(){
 
     //store all meshes to highlight
     var cells = [];
-    var parts = [];
+//    var parts = [];
     var basePlane = [];
 
     var animationLoopRunning = false;
@@ -63,7 +63,7 @@ function ThreeModel(){
                 cells.push(child.children[0]);
             });
         } else if (type == "part"){//todo change this
-            parts.push(object);
+//            parts.push(object);
         } else if (type == "basePlane"){
             basePlane.push(object);
         }
@@ -71,36 +71,25 @@ function ThreeModel(){
 
     function sceneRemove(object, type){
 
-        var objectToRemove = getParentObject(object);
-
         if (type == "cell"){
-            cells.splice(cells.indexOf(objectToRemove.children[0]), 1);
+            cells.splice(cells.indexOf(object.children[0]), 1);
         } else if (type == "part"){
-            parts.splice(parts.indexOf(objectToRemove), 1);
+//            parts.splice(parts.indexOf(object), 1);
         } else if (type == "basePlane"){
             basePlane.splice(0, basePlane.length);//delete array without removing reference
         }
-        scene.remove(objectToRemove);
+        scene.remove(object);
     }
 
     function removeAllCells(){
         _.each(cells, function(cell){
-            var objectToRemove = getParentObject(cell);
-            scene.remove(objectToRemove);
+            scene.remove(cell);
         });
-        _.each(parts, function(part){
-            scene.remove(part);
-        });
+//        _.each(parts, function(part){
+//            scene.remove(part);
+//        });
         cells.splice(0, cells.length);
-        parts.splice(0, parts.length);
-    }
-
-    function getParentObject(object){
-        var objectToRemove = object;
-        if (object.parent && object.parent.type != "Scene") {
-            objectToRemove = object.parent;
-        }
-        return objectToRemove;
+//        parts.splice(0, parts.length);
     }
 
     function startAnimationLoop(){
@@ -144,7 +133,7 @@ function ThreeModel(){
         domElement: renderer.domElement,
         camera: camera,
         cells: cells,
-        parts: parts,
+//        parts: parts,
         basePlane: basePlane,
         removeAllCells: removeAllCells
     }

@@ -376,6 +376,8 @@ Lattice = Backbone.Model.extend({
 
     _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
 
+        if (this.previous("connectionType") == "gik") this.clearCells();
+
         this._setToDefaultsSilently();
         this._setDefaultCellMode();
 

@@ -156,7 +156,7 @@ DMACell.prototype.destroy = function(){
     this.destroyStarted = true;
     if (this.object3D) {
         if (this.superCell) this.object3D.parent.remove(this.object3D);
-        else if (this.indices) globals.three.sceneRemove(this.object3D, "cell");
+        if (this.indices) globals.three.sceneRemove(this.object3D, "cell");
         this.object3D.myParent = null;
 //            this.object3D.dispose();
 //            geometry.dispose();
