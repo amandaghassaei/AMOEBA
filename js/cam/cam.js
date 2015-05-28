@@ -8,8 +8,8 @@ Cam = Backbone.Model.extend({
         camStrategy: "raster",
         placementOrder: "XYZ",//used for raster strategy entry
         camProcess: "gcode",
-        machineName: "handOfGod",
-        machine: null,
+        machineName: "stapler",
+        assembler: null,
         exporter: null,
 
         dataOut: "",
@@ -37,12 +37,12 @@ Cam = Backbone.Model.extend({
         simSpeed: 4//#X times real speed
     },
 
-    initialize: function(options){
+    initialize: function(){
 
         _.bindAll(this, "postProcess");
 
         //bind events
-        this.listenTo(options.appState, "change:currentTab", this._tabChanged);
+        this.listenTo(globals.appState, "change:currentTab", this._tabChanged);
         this.listenTo(this, "change:originPosition", this._moveOrigin);
         this.listenTo(this, "change:stockPosition", this._moveStock);
         this.listenTo(this,
@@ -60,19 +60,19 @@ Cam = Backbone.Model.extend({
                 "change:rapidHeight " +
                 "change:machineName",
             this._setNeedsPostProcessing);
-        this.listenTo(options.lattice,
+        this.listenTo(globals.lattice,
                 "change:numCells " +
                 "change:units " +
                 "change:scale " +
                 "change:cellType " +
                 "change:connectionType",
             this._setNeedsPostProcessing);
-        this.listenTo(options.lattice, "change:scale", this._setCAMScale);
+        this.listenTo(globals.lattice, "change:scale", this._setCAMScale);
         this.listenTo(globals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
-        this.listenTo(options.lattice, "change:partType", this._updatePartType);
-        this.listenTo(options.lattice, "change:cellType change:connectionType", this._updateCellType);
-        this.listenTo(options.appState, "change:cellMode", this._updateCellMode);
+        this.listenTo(globals.lattice, "change:partType", this._updatePartType);
+        this.listenTo(globals.lattice, "change:cellType change:connectionType", this._updateCellType);
+        this.listenTo(globals.appState, "change:cellMode", this._updateCellMode);
         this.listenTo(this, "change:machineName", this.selectMachine);
 
         this._initOriginAndStock();
@@ -80,15 +80,21 @@ Cam = Backbone.Model.extend({
 
     selectMachine: function(){
         var machineName = this.get("machineName");
-        if (this.get("machine")) this.get("machine").destroy();
-        this.set("machine", null);
+        if (this.get("assembler")) this.get("assembler").destroy();
+        this.set("assembler", null);
         if (machineName == "shopbot"){
-            this.set("machine", new Shopbot());
+            this.set("assembler", new Shopbot());
         } else if (machineName == "handOfGod"){
-            this.set("machine", new God());
+            this.set("assembler", new God());
         } else if (machineName == "oneBitBot"){
-            this.set("machine", new OneBitBot());
-        } else console.warn("selected machine not recognized");
+            this.set("assembler", new OneBitBot());
+        } else if (machineName == "stapler"){
+            this.set("assembler", new StaplerAssembler());
+        } else if (machineName == "staplerDual"){
+            this.set("assembler", new StaplerAssembler());
+        } else{
+            console.warn("selected assembler not recognized");
+        }
     },
 
     makeProgramEdits: function(data){
@@ -106,17 +112,17 @@ Cam = Backbone.Model.extend({
     },
 
     _updateCellType: function(){
-        if (this.get("machine")) this.get("machine").updateCellType();
+        if (this.get("assembler")) this.get("assembler").updateCellType();
         this.set("machineName", "handOfGod");//todo this should go away with dynamic allocation of this model
 
     },
 
     _updatePartType: function(){
-        if (this.get("machine")) this.get("machine").updatePartType();
+        if (this.get("assembler")) this.get("assembler").updatePartType();
     },
 
     _updateCellMode: function(){
-        if (this.get("machine")) this.get("machine").setVisibility(this.isVisible());
+        if (this.get("assembler")) this.get("assembler").setVisibility(this.isVisible());
         globals.three.render();
     },
 
@@ -124,7 +130,7 @@ Cam = Backbone.Model.extend({
         var scale = globals.lattice.get("scale");
         this.get("origin").scale.set(scale/8, scale/8, scale/8);
         this.get("stock").scale.set(scale/8, scale/8, scale/8);
-        if (this.get("machine")) this.get("machine").setScale(scale);
+        if (this.get("assembler")) this.get("assembler").setScale(scale);
     },
 
     _tabChanged: function(){
@@ -136,8 +142,8 @@ Cam = Backbone.Model.extend({
         var visible = this.isVisible();
         this.get("origin").visible = visible;
         this.get("stock").visible = visible;
-        if (visible && !this.get("machine")) this.selectMachine();
-        if (this.get("machine")) this.get("machine").setVisibility(visible);
+        if (visible && !this.get("assembler")) this.selectMachine();
+        if (this.get("assembler")) this.get("assembler").setVisibility(visible);
         globals.three.render();
     },
 
@@ -162,7 +168,7 @@ Cam = Backbone.Model.extend({
         this.get("origin").position.set(position.x, position.y, position.z);
         if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
         globals.three.render();
-        if (this.get("machine") && this.get("machine").setMachinePosition) this.get("machine").setMachinePosition();
+        if (this.get("assembler") && this.get("assembler").setMachinePosition) this.get("assembler").setMachinePosition();
     },
 
     _updateStockPosToOrigin: function(newOrigin, lastOrigin){
@@ -201,7 +207,7 @@ Cam = Backbone.Model.extend({
             var allLines = this.get("dataOut").split("\n");
             if(currentLine<allLines.length){
                 var self = this;
-                this.get("exporter").simulate(allLines[currentLine], this.get("machine"),
+                this.get("exporter").simulate(allLines[currentLine], this.get("assembler"),
                     this.get("originPosition"), function(){
                     currentLine++;
                     self.set("simLineNumber", currentLine);
@@ -213,7 +219,7 @@ Cam = Backbone.Model.extend({
             }
         } else {
             globals.three.stopAnimationLoop();
-            this.get("machine").pause();
+            this.get("assembler").pause();
         }
 
     },
@@ -236,7 +242,7 @@ Cam = Backbone.Model.extend({
         data += exporter.addComment("begin program");
         data += "\n";
 
-        data = this.get("machine").postProcess(data, exporter);
+        data = this.get("assembler").postProcess(data, exporter);
 
         data += "\n\n";
         data += exporter.addComment("end program");

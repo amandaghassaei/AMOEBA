@@ -3,9 +3,9 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 function OneBitBot(){
-    Machine.call(this);
+    Assembler.call(this);
 }
-OneBitBot.prototype = Object.create(Machine.prototype);
+OneBitBot.prototype = Object.create(Assembler.prototype);
 
 OneBitBot.prototype._setDefaults = function(){
     Machine.prototype._setDefaults.call(this);

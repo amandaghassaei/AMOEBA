@@ -19,7 +19,7 @@ $(function(){
     globals.basePlane = null;
     globals.highlighter = null;
     globals.lattice.delayedInit();//todo need this?
-    globals.cam = new Cam({appState: globals.appState, lattice:globals.lattice});
+    globals.cam = new Cam({appState: globals.appState});
     globals.fileSaver = GlobalFilesaver();
 
     //ui

@@ -25,11 +25,16 @@ DMACell.prototype._buildObject3D = function(){
     return object3D;
 };
 
+DMACell.prototype.getObject3D = function(){//careful, used for stock sim only for now
+    return this.object3D;
+};
+
 DMACell.prototype._rotateCell = function(object3D){
     return object3D;//by default, no mesh transformations
 };
 
 DMACell.prototype._translateCell = function(object3D){
+    if (!this.indices) return object3D;
     var position = globals.lattice.getPositionForIndex(this.indices);
     object3D.position.set(position.x, position.y, position.z);
     return object3D;

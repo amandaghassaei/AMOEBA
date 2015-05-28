@@ -40,7 +40,6 @@ NavViewMenu = Backbone.View.extend({
     },
 
     render: function(){
-        console.log("render");
         this.$el.html(this.template(this.model.toJSON()));
 
         _.each($(".boolProperty"), function(item){

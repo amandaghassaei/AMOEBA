@@ -54,13 +54,13 @@ GIKSuperCell.prototype._buildObject3D = function(){
     return this._translateCell(this._rotateCell(new THREE.Object3D()));
 };
 
-GIKSuperCell.prototype.addChildCell = function(object3D){
-    this._addChildren(object3D);
-};
-
 GIKSuperCell.prototype._rotateCell = function(object3D){
     if (this.indices && this.indices.z%2 != 0) object3D.rotateZ(Math.PI/2);
     return object3D;
+};
+
+GIKSuperCell.prototype.addChildCell = function(object3D){
+    this._addChildren(object3D);
 };
 
 GIKSuperCell.prototype._buildMesh = function(length){

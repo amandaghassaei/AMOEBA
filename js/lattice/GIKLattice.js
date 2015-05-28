@@ -42,7 +42,7 @@ latticeSubclasses["GIKLattice"] = {
             var length = this.get("gikLength");
             var cells;
             if (range) cells = this.addCellsInRange(range);
-            else {
+            else {//this is for assembler stock only
                 cells = [];
                 for (var i=0;i<length;i++){
                     cells.push(this.makeCellForLatticeType(null));

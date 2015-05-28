@@ -147,7 +147,11 @@ function AppPList(){
         },
         cube:{
             face:{handOfGod: "Hand of God"},
-            gik: {handOfGod: "Hand of God"}
+            gik: {
+                stapler: "Stapler",
+                staplerDual: "Dual Head Stapler"
+//                handOfGod: "Hand of God"
+            }
         },
         truncatedCube:{
             face:{handOfGod: "Hand of God"}
