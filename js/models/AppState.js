@@ -23,6 +23,7 @@ AppState = Backbone.Model.extend({
 
         basePlaneIsVisible:true,
         highlighterIsVisible:true,
+        axesAreVisible: false,
 
         //key bindings
         shift: false,

@@ -141,6 +141,7 @@ DMACell.prototype.setMode = function(mode){
 };
 
 DMACell.prototype.getPosition = function(){
+    if (this.superCell && this.indices) return globals.lattice.getPositionForIndex(this.indices);
     return this.object3D.position.clone();
 };
 

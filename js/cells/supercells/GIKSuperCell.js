@@ -45,7 +45,7 @@ GIKSuperCell = function(length, range, cells){
         self.addChildCell(cell.setSuperCell(self, index));
     });
     if (this.indices) globals.three.sceneAdd(this.object3D, "supercell");
-//    else (this.hide());
+    else (this.hide());
 
     this.setMode();
 };

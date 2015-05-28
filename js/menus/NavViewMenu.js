@@ -58,6 +58,7 @@ NavViewMenu = Backbone.View.extend({
         <li><a class="appState boolProperty" data-property="basePlaneIsVisible" href="#">BasePlane</a></li>\
         <li><a class="appState boolProperty" data-property="highlighterIsVisible" href="#">Hover Tool</a></li>\
         <li class="divider"></li>\
+        <li><a class="appState boolProperty" data-property="axesAreVisible" href="#">Axes</a></li>\
         <li><a id="reset3DView" href="#">Reset 3D Navigation</a></li>\
         ')
 

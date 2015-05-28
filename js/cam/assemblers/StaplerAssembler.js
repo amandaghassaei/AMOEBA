@@ -25,9 +25,12 @@ StaplerAssembler.prototype._getTotalNumMeshes = function(){
 StaplerAssembler.prototype._loadSTls = function(doAdd){
 
     function geometryScale(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.125, -2.3883, 1.0348));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.0625, -0.025));
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+
         var unitScale = 20;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         return geometry;
     }
 
@@ -45,6 +48,8 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
         doAdd(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/stapler/substrate.stl", function(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI/2));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 1.8545, -1.2598));
         doAdd(geometryScale(geometry), "substrate");
     });
 };

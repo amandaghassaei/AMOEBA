@@ -7,13 +7,13 @@ function DualStaplerAssembler(){
 }
 DualStaplerAssembler.prototype = Object.create(StaplerAssembler.prototype);
 
-StaplerAssembler.prototype._loadSTls = function(doAdd){
+DualStaplerAssembler.prototype._loadSTls = function(doAdd){
 
     function geometryScale(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -4.3112));
+//        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -4.3112));
         var unitScale = 20;
-        geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+//        geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
         return geometry;
     }
 
