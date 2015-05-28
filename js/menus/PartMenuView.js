@@ -45,7 +45,7 @@ PartMenuView = Backbone.View.extend({
         <label class="radio colorSwatches">\
             <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
             <div class="materialColorSwatch">\
-            <div style="background-color:<%= allMaterialTypes[cellType][connectionType][key].color %>"></div>\
+            <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterialTypes[cellType][connectionType][key].color %><% }else{ %><%= allMaterialTypes[cellType][connectionType][key].altColor %><% } %>"></div>\
             <span><%= allMaterialTypes[cellType][connectionType][key].name %></span></div>\
         </label>\
         <% }); %>\

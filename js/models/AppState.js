@@ -46,6 +46,7 @@ AppState = Backbone.Model.extend({
 
         this.listenTo(this, "change:currentTab", this._tabChanged);
         this.listenTo(this, "change:currentNav", this._navChanged);
+        this.listenTo(this, "change:realisticColorScheme", this._updateColorScheme);
 
         this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
@@ -93,6 +94,11 @@ AppState = Backbone.Model.extend({
             this.get("lastSimulationTab"));
         else if (navSelection == "navAssemble") this.set("currentTab",
             this.get("lastAssembleTab"));
+    },
+
+    _updateColorScheme: function(){
+        changeGikMaterials();
+        globals.three.render();
     },
 
     ///////////////////////////////////////////////////////////////////////////////

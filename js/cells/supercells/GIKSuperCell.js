@@ -2,6 +2,19 @@
  * Created by aghassaei on 5/26/15.
  */
 
+var allGIKMaterials = {};
+var gikMaterialList = AppPList().allMaterialTypes.cube.gik;
+_.each(_.keys(gikMaterialList), function(material){
+    allGIKMaterials[material] = new THREE.MeshLambertMaterial({color:gikMaterialList[material].color});
+});
+
+function changeGikMaterials(){
+    _.each(_.keys(allGIKMaterials), function(material){
+        if (globals.appState.get("realisticColorScheme")) allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].color);
+        else allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].altColor);
+    });
+}
+
 
 GIKSuperCell = function(length, range, cells){
     if (range) this.indices = _.clone(range.max);
@@ -57,8 +70,7 @@ GIKSuperCell.prototype._buildWireframe = function(mesh){
 };
 
 GIKSuperCell.prototype.getMaterial = function(){
-    var material = globals.plist.allMaterialTypes[globals.lattice.get("cellType")][globals.lattice.get("connectionType")][globals.lattice.get("materialType")];
-    return new THREE.MeshLambertMaterial({color:material.color});
+    return allGIKMaterials[globals.lattice.get("materialType")];
 };
 
 GIKSuperCell.prototype.setMode = function(mode){

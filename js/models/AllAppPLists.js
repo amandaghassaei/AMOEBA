@@ -107,7 +107,7 @@ function AppPList(){
                 silicon: {
                     name: "Silicon",
                     color: "#bcc6cc",
-                    altColor: "#34495e"
+                    altColor: "#3498db"
                 }
             }
         },
