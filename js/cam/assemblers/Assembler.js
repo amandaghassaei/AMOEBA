@@ -8,6 +8,7 @@ var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: 
 function Assembler(){
 
     this.stock = this._buildStock();
+    this._positionStockRelativeToEndEffector(this.stock);
     this.object3D = new THREE.Object3D();
     globals.three.sceneAdd(this.object3D);
     var self = this;
@@ -20,6 +21,9 @@ function Assembler(){
 Assembler.prototype._buildStock = function(){
     if (globals.lattice.makeSuperCell) return globals.lattice.makeSuperCell();
     return globals.lattice.makeCellForLatticeType(null);
+};
+
+Assembler.prototype._positionStockRelativeToEndEffector = function(){
 };
 
 Assembler.prototype._buildAssemblerMeshes = function(callback){

@@ -75,7 +75,7 @@ Cam = Backbone.Model.extend({
         this.listenTo(globals.appState, "change:cellMode", this._updateCellMode);
         this.listenTo(this, "change:machineName", this.selectMachine);
 
-        this._initOriginAndStock();
+//        this._initOriginAndStock();
     },
 
     selectMachine: function(){
@@ -140,8 +140,8 @@ Cam = Backbone.Model.extend({
 
     _setCAMVisibility: function(){
         var visible = this.isVisible();
-        this.get("origin").visible = visible;
-        this.get("stock").visible = visible;
+//        this.get("origin").visible = visible;
+//        this.get("stock").visible = visible;
         if (visible && !this.get("assembler")) this.selectMachine();
         if (this.get("assembler")) this.get("assembler").setVisibility(visible);
         globals.three.render();

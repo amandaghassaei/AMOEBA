@@ -9,6 +9,11 @@ function StaplerAssembler(){
 }
 StaplerAssembler.prototype = Object.create(Assembler.prototype);
 
+StaplerAssembler.prototype._positionStockRelativeToEndEffector = function(stock){
+    var object3D = stock.getObject3D();
+    object3D.position.set((2.4803+0.2)*20, (-1.9471+0.36)*20, 1.7*20);
+};
+
 StaplerAssembler.prototype._configureAssemblerMovementDependencies = function(){
     this.zAxis.add(this.stock.getObject3D());
     this.xAxis.add(this.zAxis);
