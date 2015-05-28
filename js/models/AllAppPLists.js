@@ -91,11 +91,23 @@ function AppPList(){
             gik: {
                 brass:{
                     name: "Brass",
-                    color: "#b5a642"
+                    color: "#b5a642",
+                    altColor: "#e67e22"
                 },
                 fiberGlass: {
                     name: "Fiberglass",
-                    color: "#fef1b5"
+                    color: "#fef1b5",
+                    altColor: "#ecf0f1"
+                },
+                carbonFiber: {
+                    name: "Carbon Fiber",
+                    color: "#222",
+                    altColor: "#000"
+                },
+                silicon: {
+                    name: "Silicon",
+                    color: "#bcc6cc",
+                    altColor: "#34495e"
                 }
             }
         },

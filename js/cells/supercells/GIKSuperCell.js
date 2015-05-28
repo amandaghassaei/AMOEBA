@@ -3,9 +3,6 @@
  */
 
 
-var cellBrassMaterial = new THREE.MeshLambertMaterial({color:"#b5a642"});
-var cellFiberGlassMaterial = new THREE.MeshLambertMaterial({color:"#fff68f"});
-
 GIKSuperCell = function(length, range, cells){
     if (range) this.indices = _.clone(range.max);
     this.material = globals.lattice.get("materialType");
@@ -60,9 +57,8 @@ GIKSuperCell.prototype._buildWireframe = function(mesh){
 };
 
 GIKSuperCell.prototype.getMaterial = function(){
-    var material = cellBrassMaterial;
-    if (this.material == "fiberGlass") material = cellFiberGlassMaterial;
-    return material;
+    var material = globals.plist.allMaterialTypes[globals.lattice.get("cellType")][globals.lattice.get("connectionType")][globals.lattice.get("materialType")];
+    return new THREE.MeshLambertMaterial({color:material.color});
 };
 
 GIKSuperCell.prototype.setMode = function(mode){

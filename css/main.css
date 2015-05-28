@@ -8,6 +8,10 @@ html, body {
     height: 100%;
 }
 
+.checkbox input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .radio input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .checkbox input[type="radio"].custom-radio:checked + .icons .icon-checked, .radio input[type="radio"].custom-radio:checked + .icons .icon-checked {
+    color: #888;
+}
+
 .navbar {
     margin-bottom:0;
     z-index: 2;
@@ -332,4 +336,25 @@ label {
     overflow: hidden;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
+}
+
+.materialColorSwatch{
+    height: 30px;
+    width: 100%;
+}
+.materialColorSwatch>div {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.materialColorSwatch>span{
+    display: inline-block;
+    vertical-align: middle;
+    padding-bottom: 20px;
+}
+
+label.colorSwatches>span.icons{
+    margin: 5px 0;
 }

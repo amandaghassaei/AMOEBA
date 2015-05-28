@@ -41,26 +41,19 @@ PartMenuView = Backbone.View.extend({
         <br/><br/>--><br/>\
         <% if (allMaterialTypes[cellType][connectionType]){ %> \
         Materials:<br/>\
+        <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
+        <label class="radio colorSwatches">\
+            <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+            <div class="materialColorSwatch">\
+            <div style="background-color:<%= allMaterialTypes[cellType][connectionType][key].color %>"></div>\
+            <span><%= allMaterialTypes[cellType][connectionType][key].name %></span></div>\
+        </label>\
+        <% }); %>\
+        <br/>\
         <label class="checkbox" for="realisticColorScheme">\
         <input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">\
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-        Use realistic color scheme</label><br/>\
-        \
-        <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
-        <label class="radio">\
-            <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            <%= allMaterialTypes[cellType][connectionType][key].name %>\
-        </label>\
-        <% }); %>\
-        <br/><br/>\
-        <div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType].name %><span class="caret"></span></button>\
-                <ul role="menu" class="dropdown-menu">\
-                    <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
-                        <li><a class="materialType" data-type="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key].name %></a></li>\
-                    <% }); %>\
-                </ul>\
-            </div><br/><br/>\
+        Use realistic color scheme</label>\
         <% } %>\
         <br/>\
         ')
