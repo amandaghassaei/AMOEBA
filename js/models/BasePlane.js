@@ -17,6 +17,7 @@ BasePlane = Backbone.Model.extend({
 
         //bind events
         this.listenTo(this, "change:zIndex", this._renderZIndexChange);
+        this.listenTo(globals.appState, "change:basePlaneIsVisible", this._setVisibility);
 
         //draw mesh
         this.set("mesh", this._makeBasePlaneMesh());
@@ -26,12 +27,20 @@ BasePlane = Backbone.Model.extend({
             globals.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
         });
         globals.three.render();
+        this._setVisibility();
     },
 
     updateXYSeparation: function(xySep) {},
 
     getOrientation: function(){
         return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
+    },
+
+    _setVisibility: function(){
+        _.each(this.get("mesh"), function(mesh){
+            mesh.visible = globals.appState.get("basePlaneIsVisible");
+        });
+        globals.three.render();
     },
 
     ///////////////////////////////////////////////////////////////////////////////////

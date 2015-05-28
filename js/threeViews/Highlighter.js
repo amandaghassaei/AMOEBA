@@ -40,6 +40,7 @@ Highlighter = Backbone.View.extend({
     },
 
     _setVisibility: function(visible, forceRender){
+        visible = globals.appState.get("highlighterIsVisible") && visible;
         if (forceRender || this.isVisible() != visible){
             this.mesh.visible = visible;
             globals.three.render();
