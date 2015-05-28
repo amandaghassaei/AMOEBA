@@ -91,7 +91,7 @@ Cam = Backbone.Model.extend({
         } else if (machineName == "stapler"){
             this.set("assembler", new StaplerAssembler());
         } else if (machineName == "staplerDual"){
-            this.set("assembler", new StaplerAssembler());
+            this.set("assembler", new DualStaplerAssembler());
         } else{
             console.warn("selected assembler not recognized");
         }

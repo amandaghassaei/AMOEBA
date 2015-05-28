@@ -2,24 +2,10 @@
  * Created by aghassaei on 5/28/15.
  */
 
-
-function StaplerAssembler(){
-    Assembler.call(this);
+function DualStaplerAssembler(){
+    StaplerAssembler.call(this);
 }
-StaplerAssembler.prototype = Object.create(Assembler.prototype);
-
-StaplerAssembler.prototype._configureAssemblerMovementDependencies = function(){
-    this.zAxis.add(this.stock.getObject3D());
-    this.xAxis.add(this.zAxis);
-    this.frame.add(this.xAxis);
-    this.frame.add(this.yAxis);
-    this.object3D.add(this.frame);
-    this.object3D.add(this.substrate);
-};
-
-StaplerAssembler.prototype._getTotalNumMeshes = function(){
-    return 5;
-};
+DualStaplerAssembler.prototype = Object.create(StaplerAssembler.prototype);
 
 StaplerAssembler.prototype._loadSTls = function(doAdd){
 
@@ -34,7 +20,7 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
     loader.load("assets/stls/stapler/frame.stl", function(geometry){
         doAdd(geometryScale(geometry), "frame");
     });
-    loader.load("assets/stls/stapler/zStage.stl", function(geometry){
+    loader.load("assets/stls/stapler/zStageDual.stl", function(geometry){
         doAdd(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/stapler/yStage.stl", function(geometry){
