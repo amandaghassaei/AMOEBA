@@ -6,12 +6,29 @@ var allGIKMaterials = {};
 var gikMaterialList = AppPList().allMaterialTypes.cube.gik;
 _.each(_.keys(gikMaterialList), function(material){
     allGIKMaterials[material] = new THREE.MeshLambertMaterial({color:gikMaterialList[material].color});
+    if (gikMaterialList[material].opacity){
+        allGIKMaterials[material].transparent = true;
+        allGIKMaterials[material].opacity = gikMaterialList[material].opacity;
+    } else {
+        allGIKMaterials[material].transparent = false;
+    }
 });
 
 function changeGikMaterials(){
     _.each(_.keys(allGIKMaterials), function(material){
-        if (globals.appState.get("realisticColorScheme")) allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].color);
-        else allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].altColor);
+        if (globals.appState.get("realisticColorScheme")) {
+            allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].color);
+            if (gikMaterialList[material].opacity){
+                allGIKMaterials[material].transparent = true;
+                allGIKMaterials[material].opacity = gikMaterialList[material].opacity;
+            } else {
+                allGIKMaterials[material].transparent = false;
+            }
+        }
+        else {
+            allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].altColor);
+            allGIKMaterials[material].transparent = false;
+        }
     });
 }
 

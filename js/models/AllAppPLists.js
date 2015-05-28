@@ -88,23 +88,42 @@ function AppPList(){
                 brass:{
                     name: "Brass",
                     color: "#b5a642",
-                    altColor: "#e67e22"
+                    altColor: "#857B64"
                 },
                 fiberGlass: {
                     name: "Fiberglass",
                     color: "#fef1b5",
+//                    opacity: "0.9",
                     altColor: "#ecf0f1"
                 },
-                carbonFiber: {
-                    name: "Carbon Fiber",
+                carbon: {
+                    name: "Carbon Composite",
                     color: "#222",
                     altColor: "#000"
                 },
-                silicon: {
-                    name: "Silicon",
+                nType: {
+                    name: "Silicon N-Type",
                     color: "#bcc6cc",
-                    altColor: "#3498db"
+                    altColor: "#9CC9CB"
+                },
+                nTypePlus: {
+                    name: "Silicon Heavily Doped N-Type (N+)",
+                    color: "#c6ccbc",
+                    altColor: "#8391AC"
+                },
+                pType: {
+                    name: "Silicon P-Type",
+                    color: "#ccbcc6",
+                    altColor: "#F5447B"
+                },
+                pTypePlus: {
+                    name: "Silicon Heavily Doped P-Type (P+)",
+                    color: "#ccc2bc",
+                    altColor: "#F99987"
                 }
+                //857B64
+                //FDE2D9
+                //D77948
             }
         },
         truncatedCube: {face: null},

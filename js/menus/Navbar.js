@@ -36,11 +36,9 @@ NavBar = Backbone.View.extend({
 
         _.bindAll(this, "_setMenuVisibility", "_setNavSelection");
 
-        this.listenTo(this.model, "change:menuIsVisible", this._updateShowHideButton);
         this.listenTo(this.model, "change:currentNav", this._updateNavSelectionUI);
 
         this._logo();
-        this._updateShowHideButton();
         this._updateNavSelectionUI();
     },
 
@@ -49,16 +47,6 @@ NavBar = Backbone.View.extend({
         var state = this.model.get("menuIsVisible");
         this.model.set("menuIsVisible", !state);
         $(e.target).blur();
-    },
-
-    _updateShowHideButton: function(){
-        var $button = $("#showHideMenu");
-        var state = this.model.get("menuIsVisible");
-        if(state){
-            $button.html("Hide Menu >>");
-        } else {
-            $button.html("<< Show Menu");
-        }
     },
 
     _setNavSelection: function(e){
