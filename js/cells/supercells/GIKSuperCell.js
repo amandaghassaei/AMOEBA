@@ -70,7 +70,7 @@ GIKSuperCell.prototype._buildWireframe = function(mesh){
 };
 
 GIKSuperCell.prototype.getMaterial = function(){
-    return allGIKMaterials[globals.lattice.get("materialType")];
+    return allGIKMaterials[this.material];
 };
 
 GIKSuperCell.prototype.setMode = function(mode){
