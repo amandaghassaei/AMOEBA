@@ -10,9 +10,10 @@ DualStaplerAssembler.prototype = Object.create(StaplerAssembler.prototype);
 StaplerAssembler.prototype._loadSTls = function(doAdd){
 
     function geometryScale(geometry){
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0, -4.3112));
         var unitScale = 20;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         return geometry;
     }
 
@@ -30,7 +31,6 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
         doAdd(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/stapler/substrate.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 2, 0));
         doAdd(geometryScale(geometry), "substrate");
     });
 };

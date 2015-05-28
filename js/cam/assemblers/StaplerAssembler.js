@@ -45,7 +45,6 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
         doAdd(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/stapler/substrate.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 2, 0));
         doAdd(geometryScale(geometry), "substrate");
     });
 };

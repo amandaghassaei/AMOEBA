@@ -13,7 +13,10 @@ function DMACell(indices){
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
     this.object3D = this._buildObject3D();
     this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
-    if (!this.superCell && this.indices) globals.three.sceneAdd(this.object3D, "cell");
+    if (!this.superCell){
+        if (this.indices) globals.three.sceneAdd(this.object3D, "cell");
+        else this.hide();
+    }
 
     this.setMode();
 }

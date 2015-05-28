@@ -122,7 +122,7 @@ Cam = Backbone.Model.extend({
     },
 
     _updateCellMode: function(){
-        if (this.get("assembler")) this.get("assembler").setVisibility(this.isVisible());
+        if (this.get("assembler")) this.get("assembler").updateCellMode();
         globals.three.render();
     },
 

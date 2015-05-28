@@ -128,6 +128,30 @@ Assembler.prototype._postReleaseStock = function(cellPosition, cell, exporter, r
 
 
 
+Assembler.prototype.updateCellMode = function(){
+    this.stock.setMode();
+};
+
+Assembler.prototype.pickUpStock = function(){
+    this.hasStock = true;
+    this.cell.draw();
+};
+
+Assembler.prototype.releaseStock = function(index){
+    this.hasStock = false;
+    globals.lattice.showCellAtIndex(JSON.parse(index));
+    this.cell.hide();
+};
+
+Assembler.prototype.pause = function(){
+};
+
+
+
+
+
+
+
 Assembler.prototype.destroy = function(){
     this.stock.destroy();
     this.zAxis.parent.remove(this.zAxis);
