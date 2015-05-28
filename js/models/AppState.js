@@ -94,12 +94,18 @@ AppState = Backbone.Model.extend({
     _navChanged: function(){
         //update to last tab open in that section
         var navSelection = this.get("currentNav");
-        if (navSelection == "navDesign") this.set("currentTab",
-            this.get("lastDesignTab"));
-        else if (navSelection == "navSim") this.set("currentTab",
-            this.get("lastSimulationTab"));
-        else if (navSelection == "navAssemble") this.set("currentTab",
-            this.get("lastAssembleTab"));
+        if (navSelection == "navDesign") {
+            this.set("currentTab", this.get("lastDesignTab"));
+            this.set("basePlaneIsVisible", true);
+        }
+        else if (navSelection == "navSim") {
+            this.set("currentTab", this.get("lastSimulationTab"));
+            this.set("basePlaneIsVisible", false);
+        }
+        else if (navSelection == "navAssemble") {
+            this.set("currentTab", this.get("lastAssembleTab"));
+            this.set("basePlaneIsVisible", false);
+        }
     },
 
     _updateColorScheme: function(){
