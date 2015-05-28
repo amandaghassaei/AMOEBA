@@ -25,10 +25,14 @@ NavBar = Backbone.View.extend({
         "click .importJSON":                                    "_importJSON",
         "change #jsonInput":                                    "_selectJSONFiles",
         "click .loadUser":                                      "_loadUser",
-        "click .loadDemo":                                      "_loadDemo"
+        "click .loadDemo":                                      "_loadDemo",
+
+        "click #viewMenuDropdown":                              "_renderViewMenu"
     },
 
     initialize: function(){
+
+        this.viewMenu = new NavViewMenu({model:globals.appState});
 
         _.bindAll(this, "_setMenuVisibility", "_setNavSelection");
 
@@ -100,6 +104,10 @@ NavBar = Backbone.View.extend({
         $(e.target).find("input.filename").blur();
     },
 
+
+    _renderViewMenu: function(){
+        this.viewMenu.render();
+    },
 
 
 

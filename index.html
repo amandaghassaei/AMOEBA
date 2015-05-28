@@ -96,6 +96,7 @@
     <!--views-->
     <script src="js/menus/MenuWrapperView.js"></script>
     <script src="js/menus/Navbar.js"></script>
+    <script src="js/menus/NavViewMenu.js"></script>
     <script src="js/menus/Ribbon.js"></script>
     <script src="js/menus/LatticeMenuView.js"></script>
     <script src="js/menus/ImportMenuView.js"></script>
@@ -157,20 +158,9 @@
           </ul>
         </li>
         <li class="dropdown navDropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">View <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" id="viewMenuDropdown" data-toggle="dropdown">View <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
-          <ul class="dropdown-menu">
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Script</a></li>
-                <li><a href="#">Console</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Ambient Occlusion</a></li>
-                <li><a href="#">Realistic Material Colors</a></li>
-                <li><a href="#">BasePlane</a></li>
-                <li><a href="#">Hover Tool</a></li>
-                <li class="divider"></li>
-                <li><a href="#">Reset 3D Navigation</a></li>
-          </ul>
+          <ul id="navViewMenu" class="dropdown-menu"></ul>
         </li>
         <li><a data-menu-id="about" class="menuHoverControls" target="_blank" href="http://dma.cba.mit.edu/">About</a></li>
        </ul>

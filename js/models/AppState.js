@@ -18,6 +18,11 @@ AppState = Backbone.Model.extend({
         lastAssembleTab: "assembler",
 
         menuIsVisible: true,
+        scriptIsVisible: false,
+        consoleIsVisible: false,
+
+        basePlaneIsVisible:true,
+        highlighterIsVisible:true,
 
         //key bindings
         shift: false,

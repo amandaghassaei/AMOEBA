@@ -7,7 +7,7 @@ function AppPList(){
     allMenuTabs: {
         navDesign:{
             lattice:"Lattice",
-            import:"Import",
+//            import:"Import",
             //sketch:"Sketch",
             part:"Part",
             script:"Script"
@@ -44,24 +44,19 @@ function AppPList(){
         octa:{
             face: {
                 triangle:"Triangle"
-                //beam:"Beam",
-                //truss:"Truss"
             },
             freeformFace: {
                 trox:"Troxes"
-                //beam:"Beam"
             },
             edge: null,
             edgeRot: {
                 vox: "Snap Voxel (high res)",
                 voxLowPoly: "Snap Voxel (low res)"
-                //beam:"Beam"
             },
-            vertex: null//{
-                //beam:"Beam",
-//                    square:"Square",
-//                    xShape:"X"
-//                }
+            vertex: {
+                    square:"Square",
+                    xShape:"X"
+                }
         },
         tetra: {vertex: null},
         cube: {face: null,
@@ -70,7 +65,12 @@ function AppPList(){
                 legoLowPoly: "Micro LEGO (low res)"
             }
         },
-        truncatedCube: {face: null},
+        truncatedCube: {
+            face: {
+                square:"Square",
+                xShape:"X"
+            }
+        },
         kelvin: {face: null}
     },
 
@@ -80,11 +80,7 @@ function AppPList(){
             freeformFace: null,
             edge: null,
             edgeRot: null,
-            vertex: null//{
-                //beam:"Beam",
-//                    square:"Square",
-//                    xShape:"X"
-//                }
+            vertex: null
         },
         tetra: {vertex: null},
         cube: {face: null,

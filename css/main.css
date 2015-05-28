@@ -358,3 +358,7 @@ label {
 label.colorSwatches>span.icons{
     margin: 5px 0;
 }
+
+#navViewMenu span{
+    margin-right:10px;
+}
