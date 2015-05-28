@@ -81,6 +81,7 @@ Cam = Backbone.Model.extend({
         var machineName = this.get("machineName");
         if (this.get("assembler")) this.get("assembler").destroy();
         this.set("assembler", null);
+        this._setMachineDefaults(machineName);
         if (machineName == "shopbot"){
             this.set("assembler", new Shopbot());
         } else if (machineName == "handOfGod"){
@@ -93,6 +94,14 @@ Cam = Backbone.Model.extend({
             this.set("assembler", new DualStaplerAssembler());
         } else{
             console.warn("selected assembler not recognized");
+        }
+    },
+
+    _setMachineDefaults: function(machineName){
+        if (globals.plist.allMachineDefaults[machineName]){
+            _.each(_.keys(globals.plist.allMachineDefaults[machineName]), function(key){
+                globals.cam.set(key, globals.plist.allMachineDefaults[machineName][key], {silent:true});
+            });
         }
     },
 

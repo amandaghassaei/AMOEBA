@@ -177,6 +177,24 @@ function AppPList(){
         staplerDual: {gcode: "G-Code"}
     },
 
+    allMachineDefaults: {
+        shopbot:null,
+        handOfGod:null,
+        oneBitBot:null,
+        stapler: {
+            camStrategy: "raster",
+            placementOrder: "XYZ",//used for raster strategy entry
+            camProcess: "gcode",
+            rapidHeight:3,
+            rapidHeightRelative: true,
+            safeHeight: 0.05,
+            originPosition: new THREE.Vector3(0,0,0),
+            rapidSpeeds:{xy: 3, z: 2},
+            feedRate:{xy: 0.1, z: 0.1}
+        },
+        staplerDual: null
+    },
+
     allScripts: {
         loadFile: "Load From File..."
     },
