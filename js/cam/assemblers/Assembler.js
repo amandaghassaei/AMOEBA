@@ -133,21 +133,119 @@ Assembler.prototype._postReleaseStock = function(cellPosition, cell, exporter, r
 
 
 Assembler.prototype.updateCellMode = function(){
-    this.stock.setMode();
+//    this.stock.setMode();//todo fix this
+    _.each(this.stock.cells, function(cell){
+        cell.setMode();
+    });
 };
 
 Assembler.prototype.pickUpStock = function(){
-    this.hasStock = true;
-    this.cell.draw();
+    this.stock.show();
 };
 
 Assembler.prototype.releaseStock = function(index){
-    this.hasStock = false;
     globals.lattice.showCellAtIndex(JSON.parse(index));
-    this.cell.hide();
+    this.stock.hide();
 };
 
 Assembler.prototype.pause = function(){
+};
+
+Assembler.prototype.moveTo = function(x, y, z, speed, wcs, callback){
+    x = this._makeAbsPosition(x, wcs.x);
+    y = this._makeAbsPosition(y, wcs.y);
+    z = this._makeAbsPosition(z, wcs.z);
+    this._moveTo(x, y, z, speed, wcs, callback);
+};
+
+Assembler.prototype._moveTo = function(x, y, z, speed, wcs, callback){
+    var totalThreads = 3;
+    function sketchyCallback(){
+        totalThreads -= 1;
+        if (totalThreads > 0) return;
+        callback();
+    }
+    var startingPos = this.stock.getPosition();
+    speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
+    this._moveXAxis(startingPos.x, x, speed.x, sketchyCallback);
+    this._moveYAxis(startingPos.y, y, speed.y, sketchyCallback);
+    this._moveZAxis(startingPos.z, z, speed.z, sketchyCallback);
+};
+
+Assembler.prototype._moveXAxis = function(startingPos, target, speed, callback){
+    this._moveAxis(startingPos, target, "x", speed, callback);
+};
+Assembler.prototype._moveYAxis = function(startingPos, target, speed, callback){
+    this._moveAxis(startingPos, target, "y", speed, callback);
+};
+Assembler.prototype._moveZAxis = function(startingPos, target, speed, callback){
+    this._moveAxis(startingPos, target, "z", speed, callback);
+};
+
+Assembler.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
+    if (target == null || target === undefined) {
+        callback();
+        return;
+    }
+    this._animateObjects([this.stock], axis, speed, startingPos, target, callback);
+};
+
+Assembler.prototype._makeAbsPosition = function(target, wcs){
+    if (target == "" || target == null || target === undefined) return null;
+    return parseFloat(target)+wcs;
+};
+
+Assembler.prototype._reorganizeSpeed = function(speed){
+    var newSpeed = {};
+    newSpeed.x = speed.xy;
+    newSpeed.y = speed.xy;
+    newSpeed.z = speed.z;
+    return newSpeed;
+};
+
+Assembler.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy moves need speed normalization
+    var normSpeed = {};
+    if (x == "" || y == "") return speed;
+    var deltaX = x-startingPos.x;
+    var deltaY = y-startingPos.y;
+    var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+    if (totalDistance == 0) return speed;
+    normSpeed.x = Math.abs(deltaX/totalDistance*speed.x);
+    normSpeed.y = Math.abs(deltaY/totalDistance*speed.y);
+    normSpeed.z = speed.z;
+    return normSpeed;
+};
+
+Assembler.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
+    var increment = speed/25*globals.cam.get("simSpeed");
+    if (increment == 0) {
+        if (callback) callback();
+        return;
+    }
+    var direction = 1;
+    if (target-startingPos < 0) direction = -1;
+    increment = Math.max(increment, 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
+    this._incrementalMove(objects, axis, increment, startingPos, target, direction, callback);
+};
+
+Assembler.prototype._incrementalMove = function(objects, axis, increment, currentPos, target, direction, callback){
+    var self = this;
+    setTimeout(function(){
+        if ((target-currentPos)*direction <= 0) {
+            if (callback) callback();
+            return;
+        }
+        var nextPos = currentPos + increment;
+        if (Math.abs(target-currentPos) < Math.abs(increment)) nextPos = target;//don't overshoot
+        self._setPosition(objects, nextPos, axis);
+        self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback)
+    }, 10);
+};
+
+Assembler.prototype._setPosition = function(objects, nextPos, axis){
+    _.each(objects, function(object){
+        object.position[axis] = nextPos;
+    });
 };
 
 

@@ -67,7 +67,6 @@ Cam = Backbone.Model.extend({
                 "change:cellType " +
                 "change:connectionType",
             this._setNeedsPostProcessing);
-        this.listenTo(globals.lattice, "change:scale", this._setCAMScale);
         this.listenTo(globals.appState, "change:stockSimulationPlaying", this._stockSimulation);
 
         this.listenTo(globals.lattice, "change:partType", this._updatePartType);
@@ -124,13 +123,6 @@ Cam = Backbone.Model.extend({
     _updateCellMode: function(){
         if (this.get("assembler")) this.get("assembler").updateCellMode();
         globals.three.render();
-    },
-
-    _setCAMScale: function(){
-        var scale = globals.lattice.get("scale");
-        this.get("origin").scale.set(scale/8, scale/8, scale/8);
-        this.get("stock").scale.set(scale/8, scale/8, scale/8);
-        if (this.get("assembler")) this.get("assembler").setScale(scale);
     },
 
     _tabChanged: function(){
