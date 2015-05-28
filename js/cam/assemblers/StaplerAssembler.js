@@ -17,38 +17,33 @@ StaplerAssembler.prototype._configureAssemblerMovementDependencies = function(){
     this.object3D.add(this.substrate);
 };
 
-StaplerAssembler.prototype._loadStls = function(callback){
-    var meshes = [];
-    var numMeshes = 5;
-    function allLoaded(){
-        numMeshes -= 1;
-        return numMeshes <= 0;
-    }
+StaplerAssembler.prototype._getTotalNumMeshes = function(){
+    return 5;
+};
+
+StaplerAssembler.prototype._loadSTls = function(doAdd){
+
     function geometryScale(geometry){
         var unitScale = 1;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
         return geometry;
     }
-    var material = assemblerMaterial;
-    var self = this;
-    function meshPrep(geometry, name){
-        self[name] = new THREE.Mesh(geometry, material);
-        if (allLoaded()) callback(meshes);
-    }
+
     var loader = new THREE.STLLoader();
     loader.load("assets/stls/stapler/frame.stl", function(geometry){
-        meshPrep(geometryScale(geometry), "frame");
+        doAdd(geometryScale(geometry), "frame");
     });
     loader.load("assets/stls/stapler/zStage.stl", function(geometry){
-        meshPrep(geometryScale(geometry), "zAxis");
+        doAdd(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/stapler/yStage.stl", function(geometry){
-        meshPrep(geometryScale(geometry), "yAxis");
+        doAdd(geometryScale(geometry), "yAxis");
     });
     loader.load("assets/stls/stapler/xStage.stl", function(geometry){
-        meshPrep(geometryScale(geometry), "xAxis");
+        doAdd(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/stapler/substrate.stl", function(geometry){
-        meshPrep(geometryScale(geometry), "substrate");
+        doAdd(geometryScale(geometry), "substrate");
     });
-};
+}

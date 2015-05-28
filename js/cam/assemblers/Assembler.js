@@ -11,8 +11,9 @@ function Assembler(){
     this.object3D = new THREE.Object3D();
     globals.three.sceneAdd(this.object3D);
     var self = this;
-    this._loadStls(function(){
+    this._buildAssemblerMeshes(function(){
         self._configureAssemblerMovementDependencies();
+        globals.three.render();
     });
 }
 
@@ -21,8 +22,28 @@ Assembler.prototype._buildStock = function(){
     return globals.lattice.makeCellForLatticeType(null);
 };
 
-Assembler.prototype._loadStls = function(callback){
-    callback();
+Assembler.prototype._buildAssemblerMeshes = function(callback){
+    var numMeshes = this._getTotalNumMeshes();
+    if (numMeshes == 0) {
+        callback();
+        return;
+    }
+
+    function allLoaded(){
+        numMeshes -= 1;
+        return numMeshes <= 0;
+    }
+
+    var self = this;
+    function doAdd(geometry, name){
+        self[name] = new THREE.Mesh(geometry, assemblerMaterial);
+        if (allLoaded()) callback();
+    }
+    this._loadSTls(doAdd);
+};
+
+Assembler.prototype._getTotalNumMeshes = function(){
+    return 0;
 };
 
 Assembler.prototype._configureAssemblerMovementDependencies = function(){
