@@ -59,27 +59,6 @@ LatticeMenuView = Backbone.View.extend({
         GIK Length:&nbsp;&nbsp;<input data-property="gikLength" value="<%= gikLength %>" placeholder="GIK length" class="form-control intInput lattice" type="text"><br/>\
         <br/>\
         <% } %>\
-        <% if (allMaterialTypes[cellType][connectionType]){ %> \
-        Material Type: &nbsp;&nbsp;<div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialTypes[cellType][connectionType][materialType].name %><span class="caret"></span></button>\
-                <ul role="menu" class="dropdown-menu">\
-                    <% _.each(_.keys(allMaterialTypes[cellType][connectionType]), function(key){ %>\
-                        <li><a class="lattice dropdownSelector" data-property="materialType" data-value="<%= key %>" href="#"><%= allMaterialTypes[cellType][connectionType][key].name %></a></li>\
-                    <% }); %>\
-                </ul>\
-            </div><br/><br/>\
-        <% } %>\
-        <br/>\
-        Units: &nbsp;&nbsp;\
-            <div class="btn-group">\
-                <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units] %><span class="caret"></span></button>\
-                <ul role="menu" class="dropdown-menu">\
-                    <% _.each(_.keys(allUnitTypes), function(key){ %>\
-                        <li><a class="lattice dropdownSelector" data-property="units" data-value="<%= key %>" href="#"><%= allUnitTypes[key] %></a></li>\
-                    <% }); %>\
-                </ul>\
-            </div><br/><br/>\
-        <br/><br/>\
         <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>\
         Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
         ')
