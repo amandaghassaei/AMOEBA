@@ -172,7 +172,9 @@ function AppPList(){
         oneBitBot:{
             gcode: "G-Code",
             tinyG: "TinyG"
-        }
+        },
+        stapler: {gcode: "G-Code"},
+        staplerDual: {gcode: "G-Code"}
     },
 
     allScripts: {

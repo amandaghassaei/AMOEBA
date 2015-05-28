@@ -102,7 +102,7 @@ DMACell.prototype.setSuperCell = function(superCell, index){
 
     if (this.superCellIndex == this.superCell.getLength()) this.mesh.rotateZ(Math.PI);
     if (globals.appState.get("cellMode")=="part") {
-        this.parts = this.__initParts();
+        this.parts = this._initParts();
         this.draw();
     }
 };

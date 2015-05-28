@@ -4,6 +4,7 @@
 
 
 function StaplerAssembler(){
+    this.stockAttachedToEndEffector = true;//no need for "stock position"
     Assembler.call(this);
 }
 StaplerAssembler.prototype = Object.create(Assembler.prototype);

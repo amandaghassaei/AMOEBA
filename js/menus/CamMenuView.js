@@ -77,6 +77,7 @@ CamMenuView = Backbone.View.extend({
             <% if (!(machineName == "handOfGod")){ %>\
             <br/><a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>\
             <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>\
+            <% if (!assembler.stockAttachedToEndEffector){ %>\
             Stock (xyz): &nbsp;&nbsp;<input data-property="stockPosition" data-key="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control floatInput assembler" type="text">\
             &nbsp;<input data-property="stockPosition" data-key="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">\
             &nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
@@ -96,6 +97,7 @@ CamMenuView = Backbone.View.extend({
                 Stock dimensions (xy): &nbsp;&nbsp;<input data-property="stockArraySize" data-key="x" value="<%= stockArraySize.x %>" placeholder="X" class="form-control intInput assembler" type="text">\
                 &nbsp;<input data-property="stockArraySize" data-key="y" value="<%= stockArraySize.y %>" placeholder="Y" class="form-control intInput assembler" type="text"><br/><br/>\
                 Stock separation: &nbsp;&nbsp;<input data-property="stockSeparation" value="<%= stockSeparation %>" placeholder="X" class="form-control floatInput assembler" type="text"><br/><br/>\
+            <% } %>\
             <% } %>\
             Clearance Height: &nbsp;&nbsp;<input data-property="rapidHeight" value="<%= rapidHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>\
             <label class="checkbox" for="rapidPosRel">\
