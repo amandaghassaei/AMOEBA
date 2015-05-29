@@ -3,7 +3,7 @@
  */
 
 
-var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:1});
+var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.5});
 
 function Assembler(){
 
@@ -12,7 +12,7 @@ function Assembler(){
     this.object3D = new THREE.Object3D();
     globals.three.sceneAdd(this.object3D);
     var self = this;
-    this._buildAssemblerMeshes(function(){
+    this._buildAssemblerComponents(function(){
         self._configureAssemblerMovementDependencies();
         globals.three.render();
     });
@@ -26,7 +26,7 @@ Assembler.prototype._buildStock = function(){
 Assembler.prototype._positionStockRelativeToEndEffector = function(){
 };
 
-Assembler.prototype._buildAssemblerMeshes = function(callback){
+Assembler.prototype._buildAssemblerComponents = function(callback){
     var numMeshes = this._getTotalNumMeshes();
     if (numMeshes == 0) {
         callback();
@@ -40,7 +40,7 @@ Assembler.prototype._buildAssemblerMeshes = function(callback){
 
     var self = this;
     function doAdd(geometry, name){
-        self[name] = new THREE.Mesh(geometry, assemblerMaterial);
+        self[name] = new Component(geometry, assemblerMaterial);
         if (allLoaded()) callback();
     }
 
@@ -56,7 +56,17 @@ Assembler.prototype._configureAssemblerMovementDependencies = function(){
 
 Assembler.prototype.setVisibility = function(visible){
     this.object3D.visible = visible;
+    this._setTranslucent();
     globals.three.render();
+};
+
+Assembler.prototype._setTranslucent = function(){
+    //todo make stock transparent
+    if (globals.appState.get("currentTab") == "cam"){
+        assemblerMaterial.transparent = true;
+    } else {
+        assemblerMaterial.transparent = false;
+    }
 };
 
 
@@ -165,29 +175,11 @@ Assembler.prototype._moveTo = function(x, y, z, speed, wcs, callback){
         if (totalThreads > 0) return;
         callback();
     }
-    var startingPos = this.stock.getPosition();
+    var startingPos = {x:this.xAxis.getPosition(), y:this.yAxis.getPosition(), z:this.zAxis.getPosition()};
     speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-    this._moveXAxis(startingPos.x, x, speed.x, sketchyCallback);
-    this._moveYAxis(startingPos.y, y, speed.y, sketchyCallback);
-    this._moveZAxis(startingPos.z, z, speed.z, sketchyCallback);
-};
-
-Assembler.prototype._moveXAxis = function(startingPos, target, speed, callback){
-    this._moveAxis(startingPos, target, "x", speed, callback);
-};
-Assembler.prototype._moveYAxis = function(startingPos, target, speed, callback){
-    this._moveAxis(startingPos, target, "y", speed, callback);
-};
-Assembler.prototype._moveZAxis = function(startingPos, target, speed, callback){
-    this._moveAxis(startingPos, target, "z", speed, callback);
-};
-
-Assembler.prototype._moveAxis = function(startingPos, target, axis, speed, callback){
-    if (target == null || target === undefined) {
-        callback();
-        return;
-    }
-    this._animateObjects([this.stock], axis, speed, startingPos, target, callback);
+    this.xAxis.moveTo(this._makeAxisVector(x, "x"), speed.x, sketchyCallback);
+    this.yAxis.moveTo(this._makeAxisVector(y, "y"), speed.y, sketchyCallback);
+    this.zAxis.moveTo(this._makeAxisVector(z, "z"), speed.z, sketchyCallback);
 };
 
 Assembler.prototype._makeAbsPosition = function(target, wcs){
@@ -216,38 +208,19 @@ Assembler.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy mo
     return normSpeed;
 };
 
-Assembler.prototype._animateObjects = function(objects, axis, speed, startingPos, target, callback){
-    var increment = speed/25*globals.cam.get("simSpeed");
-    if (increment == 0) {
-        if (callback) callback();
-        return;
+Assembler.prototype._makeAxisVector = function(position, axis){
+    switch (axis){
+        case "x":
+            return {x:position, y:0, z:0};
+        case "y":
+            return {x:0, y:position, z:0};
+        case "z":
+            return {x:0, y:0, z:position};
+        default:
+            console.warn(axis + " axis not recognized");
+            return null;
     }
-    var direction = 1;
-    if (target-startingPos < 0) direction = -1;
-    increment = Math.max(increment, 0.00001)*direction;//need to put a min on the increment - other wise this stall out with floating pt tol
-    this._incrementalMove(objects, axis, increment, startingPos, target, direction, callback);
 };
-
-Assembler.prototype._incrementalMove = function(objects, axis, increment, currentPos, target, direction, callback){
-    var self = this;
-    setTimeout(function(){
-        if ((target-currentPos)*direction <= 0) {
-            if (callback) callback();
-            return;
-        }
-        var nextPos = currentPos + increment;
-        if (Math.abs(target-currentPos) < Math.abs(increment)) nextPos = target;//don't overshoot
-        self._setPosition(objects, nextPos, axis);
-        self._incrementalMove(objects, axis, increment, nextPos, target, direction, callback)
-    }, 10);
-};
-
-Assembler.prototype._setPosition = function(objects, nextPos, axis){
-    _.each(objects, function(object){
-        object.position[axis] = nextPos;
-    });
-};
-
 
 
 
@@ -256,11 +229,11 @@ Assembler.prototype._setPosition = function(objects, nextPos, axis){
 
 Assembler.prototype.destroy = function(){
     this.stock.destroy();
-    this.zAxis.parent.remove(this.zAxis);
-    this.xAxis.parent.remove(this.xAxis);
-    this.yAxis.parent.remove(this.yAxis);
-    this.frame.parent.remove(this.frame);
-    this.substrate.parent.remove(this.substrate);
+    this.zAxis.destroy();
+    this.xAxis.destroy();
+    this.yAxis.destroy();
+    this.frame.destroy();
+    this.substrate.destroy();
     globals.three.sceneRemove(this.object3D);
     this.stock = null;
     this.zAxis = null;

@@ -15,12 +15,12 @@ StaplerAssembler.prototype._positionStockRelativeToEndEffector = function(stock)
 };
 
 StaplerAssembler.prototype._configureAssemblerMovementDependencies = function(){
-    this.zAxis.add(this.stock.getObject3D());
-    this.xAxis.add(this.zAxis);
-    this.frame.add(this.xAxis);
-    this.frame.add(this.yAxis);
-    this.object3D.add(this.frame);
-    this.object3D.add(this.substrate);
+    this.zAxis.addChild(this.stock);
+    this.xAxis.addChild(this.zAxis);
+    this.frame.addChild(this.xAxis);
+    this.frame.addChild(this.yAxis);
+    this.object3D.add(this.frame.getObject3D());
+    this.object3D.add(this.substrate.getObject3D());
 };
 
 StaplerAssembler.prototype._getTotalNumMeshes = function(){

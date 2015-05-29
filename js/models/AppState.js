@@ -100,11 +100,9 @@ AppState = Backbone.Model.extend({
         }
         else if (navSelection == "navSim") {
             this.set("currentTab", this.get("lastSimulationTab"));
-            this.set("basePlaneIsVisible", false);
         }
         else if (navSelection == "navAssemble") {
             this.set("currentTab", this.get("lastAssembleTab"));
-            this.set("basePlaneIsVisible", false);
         }
     },
 
