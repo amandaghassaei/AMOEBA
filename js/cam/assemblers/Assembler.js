@@ -16,6 +16,8 @@ function Assembler(){
         self._configureAssemblerMovementDependencies();
         globals.three.render();
     });
+
+    this.setVisibility(globals.cam.isVisible());
 }
 
 Assembler.prototype._buildStock = function(){

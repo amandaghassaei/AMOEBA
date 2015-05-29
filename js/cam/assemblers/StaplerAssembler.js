@@ -43,7 +43,7 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
     loader.load("assets/stls/stapler/frame.stl", function(geometry){
         doAdd(geometryScale(geometry), "frame");
     });
-    loader.load("assets/stls/stapler/zStage.stl", function(geometry){
+    loader.load(this._headSTLFile(), function(geometry){
         doAdd(geometryScale(geometry), "zAxis");
     });
     loader.load("assets/stls/stapler/yStage.stl", function(geometry){
@@ -57,6 +57,10 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 1.8545, -1.2598));
         doAdd(geometryScale(geometry), "substrate");
     });
+};
+
+StaplerAssembler.prototype._headSTLFile = function(){
+    return "assets/stls/stapler/zStage.stl";
 };
 
 StaplerAssembler.prototype._moveXAxis = function(startingPos, target, axis, speed, callback){

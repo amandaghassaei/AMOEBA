@@ -112,7 +112,7 @@ GIKSuperCell.prototype.destroy = function(){
     globals.three.sceneRemove(this.object3D);
     this.object3D = null;
     _.each(this.cells, function(cell){
-        if (cell && !cell.destroyStarted) globals.lattice.removeCell(cell);
+        if (cell && cell.indices && !cell.destroyStarted) globals.lattice.removeCell(cell);
     });
     this.cells = null;
     this.indices = null;

@@ -82,7 +82,6 @@ Cam = Backbone.Model.extend({
         if (this.get("assembler")) this.get("assembler").destroy();
         this.set("assembler", null);
         this._setMachineDefaults(machineName);
-        globals.appState.set("basePlaneIsVisible", false);
         if (machineName == "shopbot"){
             this.set("assembler", new Shopbot());
         } else if (machineName == "handOfGod"){
@@ -146,7 +145,10 @@ Cam = Backbone.Model.extend({
 //        this.get("stock").visible = visible;
         if (visible && !this.get("assembler")) this.selectMachine();
         if (this.get("assembler")) this.get("assembler").setVisibility(visible);
-        if (globals.appState.get("currentNav") == "navAssemble") globals.appState.set("basePlaneIsVisible", !visible);
+        if (globals.appState.get("currentNav") == "navAssemble") {
+            globals.appState.set("basePlaneIsVisible", !visible);
+            globals.appState.set("highlighterIsVisible", !visible);
+        }
         globals.three.render();
     },
 
