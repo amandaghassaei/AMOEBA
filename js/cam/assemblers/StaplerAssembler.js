@@ -30,12 +30,12 @@ StaplerAssembler.prototype._getTotalNumMeshes = function(){
 StaplerAssembler.prototype._loadSTls = function(doAdd){
 
     function geometryScale(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.125, -2.3883, 1.0348));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.075, 0.0375, 0));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-4.0757, -4.3432, -6.2154));
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 
         var unitScale = 20;
         geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));
         return geometry;
     }
 
@@ -46,21 +46,21 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
     loader.load(this._headSTLFile(), function(geometry){
         doAdd(geometryScale(geometry), "zAxis");
     });
-    loader.load("assets/stls/stapler/yStage.stl", function(geometry){
+    loader.load("assets/stls/stapler/yAxis.stl", function(geometry){
         doAdd(geometryScale(geometry), "yAxis");
     });
-    loader.load("assets/stls/stapler/xStage.stl", function(geometry){
+    loader.load("assets/stls/stapler/xAxis.stl", function(geometry){
         doAdd(geometryScale(geometry), "xAxis");
     });
     loader.load("assets/stls/stapler/substrate.stl", function(geometry){
-        geometry.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI/2));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 1.8545, -1.2598));
+//        geometry.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI/2));
+//        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 1.8545, -1.2598));
         doAdd(geometryScale(geometry), "substrate");
     });
 };
 
 StaplerAssembler.prototype._headSTLFile = function(){
-    return "assets/stls/stapler/zStage.stl";
+    return "assets/stls/stapler/zAxis.stl";
 };
 
 StaplerAssembler.prototype._moveXAxis = function(startingPos, target, axis, speed, callback){

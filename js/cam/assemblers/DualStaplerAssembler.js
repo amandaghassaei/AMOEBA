@@ -8,5 +8,5 @@ function DualStaplerAssembler(){
 DualStaplerAssembler.prototype = Object.create(StaplerAssembler.prototype);
 
 DualStaplerAssembler.prototype._headSTLFile = function(){
-    return "assets/stls/stapler/zStageDual.stl";
+    return "assets/stls/stapler/zAxisDual.stl";
 };
