@@ -164,7 +164,6 @@ Cam = Backbone.Model.extend({
         globals.three.sceneAdd(stock);
         this.set("stock", stock);
         this._moveStock();
-        this._setCAMScale();
         this._setCAMVisibility();
     },
 
@@ -173,14 +172,12 @@ Cam = Backbone.Model.extend({
 //        this.get("origin").position.set(position.x, position.y, position.z);
         if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
         globals.three.render();
-        if (this.get("assembler") && this.get("assembler").setMachinePosition) this.get("assembler").setMachinePosition();
+        if (this.get("assembler")) this.get("assembler").moveMachine();
     },
 
     _updateStockPosToOrigin: function(newOrigin, lastOrigin){
         var newStockPosition = _.clone(this.get("stockPosition"));
-        console.log(newStockPosition);
         _.each(_.keys(newStockPosition), function(key){
-            console.log(key);
             newStockPosition[key] += newOrigin[key] - lastOrigin[key];
             newStockPosition[key] = parseFloat(newStockPosition[key].toFixed(4));
         });

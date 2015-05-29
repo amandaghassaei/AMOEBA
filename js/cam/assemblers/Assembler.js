@@ -163,6 +163,12 @@ Assembler.prototype.releaseStock = function(index){
 Assembler.prototype.pause = function(){
 };
 
+Assembler.prototype.moveMachine = function(){
+    var origin = globals.cam.get("originPosition");
+    this.object3D.position.set(origin.x, origin.y, origin.z);
+    globals.three.render();
+};
+
 Assembler.prototype.moveTo = function(x, y, z, speed, wcs, callback){
     x = this._makeAbsPosition(x, wcs.x);
     y = this._makeAbsPosition(y, wcs.y);

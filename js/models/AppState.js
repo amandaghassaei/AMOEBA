@@ -97,6 +97,7 @@ AppState = Backbone.Model.extend({
         if (navSelection == "navDesign") {
             this.set("currentTab", this.get("lastDesignTab"));
             this.set("basePlaneIsVisible", true);
+            this.set("highlighterIsVisible", true);
         }
         else if (navSelection == "navSim") {
             this.set("currentTab", this.get("lastSimulationTab"));

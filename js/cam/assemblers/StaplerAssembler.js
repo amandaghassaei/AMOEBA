@@ -31,7 +31,7 @@ StaplerAssembler.prototype._loadSTls = function(doAdd){
 
     function geometryScale(geometry){
         geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.125, -2.3883, 1.0348));
-        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.0625, -0.025));
+        geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0.075, 0.0375, 0));
         geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
 
         var unitScale = 20;
