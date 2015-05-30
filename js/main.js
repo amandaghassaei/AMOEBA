@@ -26,6 +26,7 @@ $(function(){
     new MenuWrapper({model: globals.appState});
     new NavBar({model:globals.appState});
     new Ribbon({model:globals.appState});
+    new ScriptView({model:globals.appState});
 
     //threeJS View
     new ThreeView({model:globals.three});

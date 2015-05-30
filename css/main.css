@@ -85,16 +85,26 @@ nav .btn {
 
 /*menus*/
 
-#menuWrapper {
-    width: 430px;
+#menuWrapper, #scriptView {
     height: 100%;
     z-index: 1;
     position: absolute;
     display: block;
     background-color: rgba(255,255,255,0.8);
-    right: -430px;/*initially hidden*/
     overflow:hidden;
 }
+
+#menuWrapper{
+    width: 430px;
+    right: -430px;/*initially hidden*/
+}
+
+#scriptView{
+    padding: 30px 20px;
+    left:-820px;
+    width:820px;
+}
+
 
 .slider-selection {
 	background: #BABABA;
@@ -373,4 +383,9 @@ label.colorSwatches>span.icons{
 
 #navViewMenu .dropdown-menu span{
     margin-right:10px;
+}
+
+.CodeMirror {
+    opacity: 0.6;
+    margin: 0 20px 0 -10px;
 }

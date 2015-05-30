@@ -26,7 +26,7 @@ NavViewMenu = Backbone.View.extend({
         var $target = $(e.target);
         var property = $target.data("property");
         var owner = this._getPropertyOwner($target);
-        owner.set(property, !owner.get(property));
+        if (owner) owner.set(property, !owner.get(property));
     },
 
     _getPropertyOwner: function($target){
