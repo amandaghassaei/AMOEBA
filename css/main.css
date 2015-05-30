@@ -193,6 +193,10 @@ input.intInput, input.floatInput{
     padding: 8px 8px;
 }
 
+.dropdown-menu{
+    border-radius: 0!important;
+}
+
 .dropdown-menu, .select2-drop {
     background-color: #fff;
 }
@@ -213,7 +217,13 @@ input.intInput, input.floatInput{
     position: relative;
 }
 
+.dropdown-submenu li {
+    height: 32px;
+}
+
 .dropdown-submenu a{
+    height: 32px;
+    padding-bottom: 16px;
     color: #e1e4e7!important;
     white-space: normal;
 }
@@ -227,9 +237,10 @@ input.intInput, input.floatInput{
     left: 100%;
     margin-top: -6px;
     margin-left: -1px;
-    -webkit-border-radius: 0 6px 6px 6px;
-    -moz-border-radius: 0 6px 6px;
-    border-radius: 0 6px 6px 6px;
+    border-radius: 0;
+    /*-webkit-border-radius: 0 6px 6px 6px;*/
+    /*-moz-border-radius: 0 6px 6px;*/
+    /*border-radius: 0 6px 6px 6px;*/
     background-color: #444;
 }
 
