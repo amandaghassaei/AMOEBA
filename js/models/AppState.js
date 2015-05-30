@@ -20,6 +20,7 @@ AppState = Backbone.Model.extend({
         menuIsVisible: true,
         scriptIsVisible: false,
         consoleIsVisible: false,
+        ribbonIsVisible: true,
 
         basePlaneIsVisible:true,
         highlighterIsVisible:true,

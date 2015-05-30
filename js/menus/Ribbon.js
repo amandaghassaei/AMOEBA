@@ -11,13 +11,14 @@ Ribbon = Backbone.View.extend({
         "click .ribbonCellMode":                                 "_updateCellMode",
         "click .ribbonDeleteMode":                               "_updateDeleteMode",
         "click .highlightMode":                                  "_updateHighlightMode",
-        "click .cellsVisible":                                   "_updateVisibility"
+        "click .cellsVisible":                                   "_updateCellVisibility"
     },
 
     initialize: function(){
 
         _.bindAll(this, "render");
 
+        this.listenTo(this.model, "change:ribbonIsVisible", this._changeVisibility);
         this.listenTo(this.model, "change:cellMode", this.render);
         this.listenTo(this.model, "change:deleteMode", this.render);
         this.listenTo(this.model, "change:highlightMode", this.render);
@@ -41,9 +42,15 @@ Ribbon = Backbone.View.extend({
         globals.appState.set("highlightMode", !globals.appState.get("highlightMode"));
     },
 
-    _updateVisibility: function(e){
+    _updateCellVisibility: function(e){
         e.preventDefault();
         globals.appState.set("cellsVisible", !globals.appState.get("cellsVisible"));
+    },
+
+    _changeVisibility: function(){
+        var state = this.model.get("ribbonIsVisible");
+        if (state) this.$el.show();
+        else this.$el.hide();
     },
 
     render: function(){
