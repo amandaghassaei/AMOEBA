@@ -32,6 +32,12 @@ DMACell.prototype.getObject3D = function(){//careful, used for stock sim only fo
     return this.object3D;
 };
 
+
+
+
+
+
+
 DMACell.prototype._rotateCell = function(object3D){
     return object3D;//by default, no mesh transformations
 };
@@ -95,11 +101,16 @@ DMACell.prototype.getMaterial = function(){
 DMACell.prototype.setOpacity = function(opacity){
 };
 
+
+
+
+
+
 DMACell.prototype._initParts = function(){
     return [];//override in subclasses
 };
 
-DMACell.prototype.setSuperCell = function(superCell, index){
+DMACell.prototype.setSuperCell = function(superCell, index){//todo get rid of this
     this.superCell = superCell;
     this.superCellIndex = index;
 

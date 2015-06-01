@@ -14,11 +14,11 @@ Highlighter = Backbone.View.extend({
         var geometry = this._makeGeometry();
         this.mesh = new THREE.Mesh(geometry,
             new THREE.MeshBasicMaterial({
-                side:THREE.DoubleSide,
+//                side:THREE.DoubleSide,
                 transparent:true,
                 opacity:0.4,
-                color:0xffffff,
-                vertexColors:THREE.FaceColors
+                color:0xffffff
+//                vertexColors:THREE.FaceColors
             }));
 
         globals.three.sceneAdd(this.mesh, null);
@@ -120,7 +120,6 @@ Highlighter = Backbone.View.extend({
     },
 
     addRemoveVoxel: function(shouldAdd){
-
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
             if (globals.lattice.get("connectionType") == "freeformFace"){
@@ -233,7 +232,6 @@ GIKHighlighter = Highlighter.extend({
     },
 
     addRemoveVoxel: function(shouldAdd){
-
         if (shouldAdd){
             if (!this.isVisible() || !this.highlightedObject) return;
             var position = this._getNextCellPosition();
