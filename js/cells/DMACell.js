@@ -6,16 +6,18 @@
 var cellMaterial = new THREE.MeshNormalMaterial();
 var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
-function DMACell(indices){
+function DMACell(index, superCell){
 
-    this.indices = indices;
+    this.index = index;
+    if (superCell) this.superCell = superCell;
 
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
     this.object3D = this._buildObject3D();
     this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
-    if (!this.superCell){
-        if (this.indices) globals.three.sceneAdd(this.object3D, "cell");
-        else this.hide();
+
+    if (superCell === undefined) {
+        if (this.index) globals.three.sceneAdd(this.object3D, "cell");
+        else this.hide();//stock cell
     }
 
     this.setMode();
@@ -28,7 +30,7 @@ DMACell.prototype._buildObject3D = function(){
     return object3D;
 };
 
-DMACell.prototype.getObject3D = function(){//careful, used for stock sim only for now
+DMACell.prototype.getObject3D = function(){//careful, used for stock sim and supercell only for now  todo need this?
     return this.object3D;
 };
 
@@ -43,8 +45,8 @@ DMACell.prototype._rotateCell = function(object3D){
 };
 
 DMACell.prototype._translateCell = function(object3D){
-    if (!this.indices) return object3D;
-    var position = globals.lattice.getPositionForIndex(this.indices);
+    if (!this.index) return object3D;
+    var position = globals.lattice.getPositionForIndex(this.index);
     object3D.position.set(position.x, position.y, position.z);
     return object3D;
 };
@@ -110,21 +112,9 @@ DMACell.prototype._initParts = function(){
     return [];//override in subclasses
 };
 
-DMACell.prototype.setSuperCell = function(superCell, index){//todo get rid of this
-    this.superCell = superCell;
-    this.superCellIndex = index;
-
-    if (this.superCellIndex == this.superCell.getLength()) this.mesh.rotateZ(Math.PI);
-    if (globals.appState.get("cellMode")=="part") {
-        this.parts = this._initParts();
-        this.draw();
-    }
-};
-
 DMACell.prototype.setMode = function(mode){
 
     if (mode === undefined) mode = globals.appState.get("cellMode");
-    if (this.superCell) this.superCell.setMode(mode);
 
     switch(mode) {
         case "cell":
@@ -152,8 +142,16 @@ DMACell.prototype.setMode = function(mode){
 };
 
 DMACell.prototype.getPosition = function(){
-    if (this.superCell && this.indices) return globals.lattice.getPositionForIndex(this.indices);
+    if (this.superCell && this.index) return this.superCell.getSubCellPosition(_.clone(this.index));
     return this.object3D.position.clone();
+};
+
+DMACell.prototype.getSubCellPosition = function(subIndex){
+    var index = _.clone(this.index);
+    _.each(_.keys(index), function(key){
+        index[key] += subIndex[key];
+    });
+    return globals.lattice.getIndexForPosition(index);
 };
 
 DMACell.prototype.getQuaternion = function(){
@@ -191,11 +189,9 @@ DMACell.prototype.zScale = function(){
 };
 
 DMACell.prototype.destroy = function(){
-    if (this.destroyStarted) return;
-    this.destroyStarted = true;
     if (this.object3D) {
         if (this.superCell) this.object3D.parent.remove(this.object3D);
-        if (this.indices) globals.three.sceneRemove(this.object3D, "cell");
+        else if (this.index) globals.three.sceneRemove(this.object3D, "cell");
         this.object3D.myParent = null;
 //            this.object3D.dispose();
 //            geometry.dispose();
@@ -205,12 +201,8 @@ DMACell.prototype.destroy = function(){
     this.destroyParts();
     this.nodes = null;
     this.beams = null;
-    if (this.superCell) {
-        this.superCell.destroy();
-        this.superCell = null;
-    }
-    this.superCellIndex = null;
-    this.indices = null;
+    this.superCell = null;
+    this.index = null;
 };
 
 DMACell.prototype.destroyParts = function(){
@@ -232,7 +224,7 @@ DMACell.prototype.destroyParts = function(){
 
 DMACell.prototype.toJSON = function(){
     var data = {
-        indices:this.indices//todo get rid of this and calculate from min and max
+        index:this.index//todo get rid of this and calculate from min and max
     };
     if (this.parts) data.parts = this.parts;
     return data;

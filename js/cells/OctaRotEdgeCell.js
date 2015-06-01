@@ -5,8 +5,8 @@
 
 var unitVertexOcta = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 
-function OctaRotEdgeCell(indices){
-    DMACell.call(this, indices);
+function OctaRotEdgeCell(index, superCell){
+    DMACell.call(this, index, superCell);
 }
 OctaRotEdgeCell.prototype = Object.create(DMACell.prototype);
 
@@ -52,7 +52,7 @@ OctaRotEdgeCell.prototype.calcHighlighterPosition = function(face, point){
     }
 
     if (direction.z != 0){
-        if (this.indices.z%2 == 0){
+        if (this.index.z%2 == 0){
             if (point.x < position.x) {
                 direction.x -= 1;
                 position.x -= rad;
@@ -87,5 +87,5 @@ OctaRotEdgeCell.prototype.calcHighlighterPosition = function(face, point){
         position.y += direction.y*this.yScale()/2;
     }
 
-    return {index: _.clone(this.indices), direction:direction, position:position};
+    return {index: _.clone(this.index), direction:direction, position:position};
 };

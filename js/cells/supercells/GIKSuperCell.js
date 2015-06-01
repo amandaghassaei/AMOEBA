@@ -33,23 +33,36 @@ function changeGikMaterials(){
 }
 
 
-GIKSuperCell = function(length, range, cells){
-    if (range) this.indices = _.clone(range.max);
+GIKSuperCell = function(indices, length){
+    if (indices) this.indices = indices;
+    if (length === undefined) length = globals.lattice.get("gikLength");
     this.material = globals.lattice.get("materialType");
-    this.cells = cells;
+    this.cells = this._makeChildCells(indices, length);
 
     this.object3D = this._buildObject3D();
     this._addChildren(this._buildMesh(length), this.object3D);
     var self = this;
-    _.each(cells, function(cell, index){
-        self.addChildCell(cell.setSuperCell(self, index));
+    _.each(this.cells, function(cell){
+        self._addChildren(cell.getObject3D());
     });
+
     if (this.indices) globals.three.sceneAdd(this.object3D, "supercell");
     else (this.hide());
 
     this.setMode();
 };
 GIKSuperCell.prototype = Object.create(DMACell.prototype);
+
+GIKSuperCell.prototype._makeChildCells = function(indices, length){
+    var cells = [];
+    for (var i=0;i<length;i++){
+        var childIndices = {x:0, y:0, z:0};
+        if (indices.z == 0) childIndices.x += i;
+        else childIndices.y += i;
+        cells.push(new GIKCell(childIndices, this));
+    }
+    return cells;
+};
 
 GIKSuperCell.prototype._buildObject3D = function(){
     return this._translateCell(this._rotateCell(new THREE.Object3D()));
@@ -58,10 +71,6 @@ GIKSuperCell.prototype._buildObject3D = function(){
 GIKSuperCell.prototype._rotateCell = function(object3D){
     if (this.indices && this.indices.z%2 != 0) object3D.rotateZ(Math.PI/2);
     return object3D;
-};
-
-GIKSuperCell.prototype.addChildCell = function(object3D){
-    this._addChildren(object3D);
 };
 
 GIKSuperCell.prototype._buildMesh = function(length){
@@ -94,6 +103,11 @@ GIKSuperCell.prototype.getMaterial = function(){
 GIKSuperCell.prototype.setMode = function(mode){
 
     if (mode === undefined) mode = globals.appState.get("cellMode");
+
+    _.each(this.cells, function(cell){
+        cell.setMode(mode);
+    });
+
     if (mode == "cell") mode = "supercell";
     if (mode == "part") mode = "object3D";
 

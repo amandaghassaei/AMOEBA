@@ -240,29 +240,19 @@ GIKHighlighter = Highlighter.extend({
         globals.three.render();
     },
 
-    addRemoveVoxel: function(shouldAdd){
-        if (shouldAdd){
-            if (!this.isVisible() || !this.highlightedObject) return;
-            var position = this._getNextCellPosition();
-            var index = globals.appState.get("superCellIndex");
-            var min, max;
-            if (this.mesh.rotation.z == 0) {
-                min = {x:position.x-globals.lattice.get("gikLength")+1+index, y:position.y, z:position.z};
-                max = {x:position.x+index, y:position.y, z:position.z};
-            }
-            else {
-                min = {x:position.x, y:position.y-globals.lattice.get("gikLength")+1+index, z:position.z};
-                max = {x:position.x, y:position.y+index, z:position.z};
-            }
-            var range = {min:min, max:max};
-            globals.lattice.makeSuperCell(range);
-        } else {
-            if (!this.highlightedObject) return;
-            if (!(this.highlightedObject instanceof DMACell)) return;
-            globals.lattice.removeCell(this.highlightedObject);
-        }
-        this.setNothingHighlighted();
+    _getNextCellPosition: function(){//add direction vector to current index
+        var newIndex = _.clone(this.index);
+        var direction = this.direction;
+        _.each(_.keys(newIndex), function(key){
+            newIndex[key] = Math.round(newIndex[key] + direction[key]);
+        });
+
+        var offset = globals.appState.get("superCellIndex");
+        if (newIndex.z%2 == 0) newIndex.x -= offset;
+        else newIndex.y -= offset;
+        return newIndex;
     }
+
 });
 
 

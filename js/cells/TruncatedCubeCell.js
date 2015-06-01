@@ -49,8 +49,8 @@
     ];
     unitCellGeo.computeFaceNormals();
 
-    function TruncatedCubeCell(indices){
-        DMACell.call(this, indices);
+    function TruncatedCubeCell(index, superCell){
+        DMACell.call(this, index, superCell);
     }
     TruncatedCubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -68,14 +68,14 @@
     TruncatedCubeCell.prototype.calcHighlighterPosition = function(face){
 
         var direction = face.normal;
-        if (!(Math.abs(direction.x)>0.9 || Math.abs(direction.y)>0.9 || Math.abs(direction.z)>0.9)) return {index: _.clone(this.indices)};
+        if (!(Math.abs(direction.x)>0.9 || Math.abs(direction.y)>0.9 || Math.abs(direction.z)>0.9)) return {index: _.clone(this.index)};
 
         var position = this.getPosition();
         var scale = this.zScale();
         _.each(_.keys(position), function(key){
             position[key] += direction[key]*scale/2;
         });
-        return {index: _.clone(this.indices), direction:direction, position:position};
+        return {index: _.clone(this.index), direction:direction, position:position};
     };
 
     self.TruncatedCubeCell = TruncatedCubeCell;

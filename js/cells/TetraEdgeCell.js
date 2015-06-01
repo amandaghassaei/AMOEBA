@@ -3,8 +3,8 @@
  */
 
 
-function DMATetraEdgeCell(indices, scale, cellMode, partType){
-    TetraFaceCell.call(this, indices, scale, cellMode, partType);
+function DMATetraEdgeCell(index, superCell){
+    TetraFaceCell.call(this, index, superCell);
 }
 DMATetraEdgeCell.prototype = Object.create(TetraFaceCell.prototype);
 

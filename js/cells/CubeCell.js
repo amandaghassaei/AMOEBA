@@ -7,8 +7,8 @@
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    function CubeCell(indices){
-        DMACell.call(this, indices);
+    function CubeCell(index, superCell){
+        DMACell.call(this, index, superCell);
     }
     CubeCell.prototype = Object.create(DMACell.prototype);
 
@@ -32,7 +32,7 @@
         _.each(_.keys(position), function(key){
             position[key] += direction[key]*scale/2;
         });
-        return {index: _.clone(this.indices), direction:direction, position:position};
+        return {index: _.clone(this.index), direction:direction, position:position};
     };
 
     self.CubeCell = CubeCell;

@@ -3,8 +3,8 @@
  */
 
 
-function OctaVertexCell(indices){
-    DMACell.call(this, indices);
+function OctaVertexCell(index, superCell){
+    DMACell.call(this, index, superCell);
 }
 OctaVertexCell.prototype = Object.create(DMACell.prototype);
 
@@ -47,5 +47,5 @@ OctaVertexCell.prototype.calcHighlighterPosition = function(face, point){
         }
     }
 
-    return {index: _.clone(this.indices), direction:direction, position:position};
+    return {index: _.clone(this.index), direction:direction, position:position};
 };

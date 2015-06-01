@@ -35,22 +35,22 @@ latticeSubclasses["GIKLattice"] = {
         },
 
         makeCellForLatticeType: function(indices){
-            return new GIKCell(indices);
+             return new GIKSuperCell(indices);
         },
 
-        makeSuperCell: function(range){
-            var length = this.get("gikLength");
-            var cells;
-            if (range) cells = this.addCellsInRange(range);
-            else {//this is for assembler stock only
-                cells = [];
-                for (var i=0;i<length;i++){
-                    cells.push(this.makeCellForLatticeType(null));
-                }
-            }
-            if (cells.length < 1) return null;
-            return new GIKSuperCell(length, range, cells);
-        },
+//        makeSuperCell: function(range){
+//            var length = this.get("gikLength");
+//            var cells;
+//            if (range) cells = this.addCellsInRange(range);
+//            else {//this is for assembler stock only
+//                cells = [];
+//                for (var i=0;i<length;i++){
+//                    cells.push(this.makeCellForLatticeType(null));
+//                }
+//            }
+//            if (cells.length < 1) return null;
+//            return new GIKSuperCell(length, range, cells);
+//        },
 
 //        _rasterGikCells: function(order, callback, var1, var2, var3, cells){
 //            for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){

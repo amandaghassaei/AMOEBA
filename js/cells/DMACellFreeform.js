@@ -8,12 +8,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAFreeFormCell(indices, parentCellPos, parentCellQuat, direction, parentType){//no rigid lattice structure for cells
+function DMAFreeFormCell(index, parentCellPos, parentCellQuat, direction, parentType){//no rigid lattice structure for cells
     this.parentPos = parentCellPos;
     this.parentQuaternion = parentCellQuat;
     this.parentDirection = direction;
     this.parentType = parentType;
-    DMACell.call(this, indices);
+    DMACell.call(this, index);
 }
 DMAFreeFormCell.prototype = Object.create(DMACell.prototype);
 
@@ -32,7 +32,7 @@ DMAFreeFormCell.prototype.calcHighlighterPosition = function(face){
     direction.applyQuaternion(this.mesh.quaternion);
     var position = this.getPosition();
     position.add(direction.clone().multiplyScalar(this.zScale()/2));
-    return {index: _.clone(this.indices), direction:direction, position:position};
+    return {index: _.clone(this.index), direction:direction, position:position};
 };
 
 DMAFreeFormCell.prototype.toJSON = function(){
@@ -54,8 +54,8 @@ DMAFreeFormCell.prototype.toJSON = function(){
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 
-function DMAFreeFormOctaCell(indices, parentCellPos, parentCellQuat, direction, parentType){
-    DMAFreeFormCell.call(this, indices, parentCellPos, parentCellQuat, direction, parentType);
+function DMAFreeFormOctaCell(index, parentCellPos, parentCellQuat, direction, parentType){
+    DMAFreeFormCell.call(this, index, parentCellPos, parentCellQuat, direction, parentType);
 }
 DMAFreeFormOctaCell.prototype = Object.create(DMAFreeFormCell.prototype);
 
@@ -122,8 +122,8 @@ var unitCellGeo2 = new THREE.TetrahedronGeometry(Math.sqrt(3/8));
 unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 unitCellGeo2.applyMatrix(new THREE.Matrix4().makeRotationX((Math.PI-Math.atan(2*Math.sqrt(2)))/2));
 
-function DMAFreeFormTetraCell(indices, parentCellPos, parentCellQuat, direction, parentType){
-    DMAFreeFormCell.call(this, indices, parentCellPos, parentCellQuat, direction, parentType);
+function DMAFreeFormTetraCell(index, parentCellPos, parentCellQuat, direction, parentType){
+    DMAFreeFormCell.call(this, index, parentCellPos, parentCellQuat, direction, parentType);
 }
 DMAFreeFormTetraCell.prototype = Object.create(DMAFreeFormCell.prototype);
 

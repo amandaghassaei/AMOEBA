@@ -97,8 +97,8 @@
     ];
     unitCellGeo.computeFaceNormals();
 
-    function KelvinCell(indices, cellMode, partType){
-        TruncatedCubeCell.call(this, indices, cellMode, partType);
+    function KelvinCell(index, superCell){
+        TruncatedCubeCell.call(this, index, superCell);
     }
     KelvinCell.prototype = Object.create(TruncatedCubeCell.prototype);
     

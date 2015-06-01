@@ -7,8 +7,8 @@ var unitFaceOctaGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
 unitFaceOctaGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
-function OctaFaceCell(mode, indices){
-    DMACell.call(this, mode, indices);
+function OctaFaceCell(index, superCell){
+    DMACell.call(this, index, superCell);
 }
 OctaFaceCell.prototype = Object.create(DMACell.prototype);
 
@@ -21,7 +21,7 @@ OctaFaceCell.prototype._initParts = function(){
 };
 
 OctaFaceCell.prototype._rotateCell = function(object3D){
-    if (this.indices && this.indices.z%2!=0) object3D.rotation.set(0, 0, Math.PI);
+    if (this.index && this.index.z%2!=0) object3D.rotation.set(0, 0, Math.PI);
     return object3D;
 };
 
@@ -30,9 +30,9 @@ OctaFaceCell.prototype._getGeometry = function(){
 };
 
 OctaFaceCell.prototype.calcHighlighterPosition = function(face){
-    if (face.normal.z<0.99) return {index: _.clone(this.indices)};//only highlight horizontal faces
+    if (face.normal.z<0.99) return {index: _.clone(this.index)};//only highlight horizontal faces
     var direction = face.normal;
     var position = this.getPosition();
     position.z += face.normal.z*this.zScale()/2;
-    return {index:_.clone(this.indices), direction:direction, position:position};
+    return {index:_.clone(this.index), direction:direction, position:position};
 };
