@@ -53,6 +53,7 @@ function ThreeModel(){
     }
 
     function sceneAdd(object, type){
+
         scene.add(object);
 
         if (type == "cell"){
@@ -65,7 +66,12 @@ function ThreeModel(){
         } else if (type == "part"){//todo change this
 //            parts.push(object);
         } else if (type == "basePlane"){
-            basePlane.push(object);
+            basePlane.push(object.children[0]);
+        } else if (type == "highlighter"){
+
+        } else {
+            console.warn("no recognized type " + type + " for");
+//            console.log(object);
         }
     }
 
@@ -73,11 +79,20 @@ function ThreeModel(){
 
         if (type == "cell"){
             cells.splice(cells.indexOf(object.children[0]), 1);
+        } else if (type == "supercell"){
+            _.each(object.children, function(child){//add cells as hover
+                if (child.name != "object3D") return;
+                cells.splice(cells.indexOf(child.children[0]), 1);
+            });
         } else if (type == "part"){
 //            parts.splice(parts.indexOf(object), 1);
         } else if (type == "basePlane"){
             basePlane.splice(0, basePlane.length);//delete array without removing reference
+        } else {
+//            console.warn("no recognized type " + type + " for");
+//            console.log(object);
         }
+
         scene.remove(object);
     }
 

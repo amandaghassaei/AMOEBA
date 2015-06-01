@@ -7,7 +7,7 @@ BasePlane = Backbone.Model.extend({
 
     defaults: {
         zIndex: 0,
-        mesh: [],
+        object3D: null,
         dimX: 100,
         dimY: 100,
         material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true})
@@ -20,12 +20,14 @@ BasePlane = Backbone.Model.extend({
         this.listenTo(globals.appState, "change:basePlaneIsVisible", this._setVisibility);
 
         //draw mesh
-        this.set("mesh", this._makeBasePlaneMesh());
-
-        var self = this;
-        _.each(this.get("mesh"), function(mesh){
-            globals.three.sceneAdd(mesh, self._checkIsHighlightable(mesh));
+        var meshes = this._makeBasePlaneMesh();
+        var object3D = new THREE.Object3D();
+        _.each(meshes, function(mesh){
+            object3D.add(mesh);
         });
+        object3D.myParent = this;
+        this.set("object3D", object3D);
+        globals.three.sceneAdd(object3D, "basePlane");
         globals.three.render();
         this._setVisibility();
     },
@@ -37,19 +39,8 @@ BasePlane = Backbone.Model.extend({
     },
 
     _setVisibility: function(){
-        _.each(this.get("mesh"), function(mesh){
-            mesh.visible = globals.appState.get("basePlaneIsVisible");
-        });
+        this.get("object3D").visible = globals.appState.get("basePlaneIsVisible");
         globals.three.render();
-    },
-
-    ///////////////////////////////////////////////////////////////////////////////////
-    //////////////////////HIGHLIGHTER FUNCTIONALITY////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////
-
-    _checkIsHighlightable: function(mesh){
-        if (mesh.type == "Mesh") return "basePlane";//don't try to highlight wireframe parts of baseplane
-        return null;
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -57,11 +48,8 @@ BasePlane = Backbone.Model.extend({
     ///////////////////////////////////////////////////////////////////////////////////
 
     _removeMesh: function(){
-        var self = this;
-        _.each(this.get("mesh"), function(mesh){
-            if (mesh.myParent) mesh.myParent = null;
-            globals.three.sceneRemove(mesh, self._checkIsHighlightable(mesh));
-        });
+        this.get("object3D").myParent = null;
+        globals.three.sceneRemove(this.get("object3D"), "basePlane");
         globals.three.render();
     },
 
@@ -69,7 +57,7 @@ BasePlane = Backbone.Model.extend({
         this.stopListening();
         this.set("zIndex", null, {silent:true});
         this._removeMesh();
-        this.set("mesh", null, {silent:true});
+        this.set("object3D", null, {silent:true});
         this.set("material", null, {silent:true});
         this.set("unitGeometry", null, {silent:true});
         this.set("dimX", null, {silent:true});
@@ -113,9 +101,7 @@ OctaBasePlane = BasePlane.extend({
         }
 
         geometry.computeFaceNormals();
-        var mesh = new THREE.Mesh(geometry, this.get("material"));
-        mesh.myParent = this;//reference used for intersection highlighting
-        return [mesh];
+        return [THREE.Mesh(geometry, this.get("material"))];
     },
 
     getType: function(){//todo hack from freeform octa, get rid of this eventually

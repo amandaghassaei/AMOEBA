@@ -21,7 +21,7 @@ Highlighter = Backbone.View.extend({
 //                vertexColors:THREE.FaceColors
             }));
 
-        globals.three.sceneAdd(this.mesh, null);
+        globals.three.sceneAdd(this.mesh, "highlighter");
         this.hide();
 
         //bind events
@@ -66,7 +66,10 @@ Highlighter = Backbone.View.extend({
         if (!intersection.object) return;
         var highlighted = intersection.object;
         if (!(highlighted.parent instanceof THREE.Scene)) highlighted = highlighted.parent;//cell mesh parent is object3d
-        if (!highlighted.myParent) console.warn("no parent for highlighted object");
+        if (!highlighted.myParent) {
+            console.warn("no parent for highlighted object");
+            return;
+        }
 
         this.highlightedObject = highlighted.myParent;
 
