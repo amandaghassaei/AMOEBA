@@ -101,7 +101,7 @@ OctaBasePlane = BasePlane.extend({
         }
 
         geometry.computeFaceNormals();
-        return [THREE.Mesh(geometry, this.get("material"))];
+        return [new THREE.Mesh(geometry, this.get("material"))];
     },
 
     getType: function(){//todo hack from freeform octa, get rid of this eventually
