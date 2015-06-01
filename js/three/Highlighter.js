@@ -25,6 +25,8 @@ Highlighter = Backbone.View.extend({
         this.hide();
 
         //bind events
+        this.listenTo(globals.lattice, "change:gikLength", this._superCellParamDidChange);
+        this.listenTo(globals.appState, "change:superCellIndex", this._superCellParamDidChange);
     },
 
     ///////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +106,10 @@ Highlighter = Backbone.View.extend({
 
     _setRotation: function(direction){
         this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, 0);
+    },
+
+    _superCellParamDidChange: function(){
+        if (this.updateGikLength) this.updateGikLength();
     },
 
     ///////////////////////////////////////////////////////////////////////////////////

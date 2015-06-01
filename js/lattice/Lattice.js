@@ -35,9 +35,6 @@ Lattice = Backbone.Model.extend({
         _.extend(this, latticeSubclasses);
 
         //bind events
-        this.listenTo(this, "change:gikLength", this._gikLengthDidChange);
-        this.listenTo(globals.appState, "change:superCellIndex", this._gikLengthDidChange);
-
         this.listenTo(this, "change:partType", this._updatePartType);
         this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
         this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
@@ -336,10 +333,6 @@ Lattice = Backbone.Model.extend({
             if (cell) cell.updateForScale(cellMode, partType);
         });
         globals.three.render();
-    },
-
-    _gikLengthDidChange: function(){
-        if (globals.highlighter.updateGikLength) globals.highlighter.updateGikLength();
     },
 
     _setCellVisibility: function(){
