@@ -204,7 +204,6 @@ SquareBasePlane = BasePlane.extend({
         planeGeometry.computeFaceNormals();
 
         var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0}));
-        mesh.myParent = this;//reference used for intersection highlighting
         return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}), THREE.LinePieces)];
     },
 
