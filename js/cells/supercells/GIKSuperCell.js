@@ -47,7 +47,7 @@ GIKSuperCell.prototype._rotateCell = function(object3D){
 };
 
 GIKSuperCell.prototype._buildMesh = function(){
-    var length = globals.lattice.get("gikLength");
+    var length = globals.lattice.get("superCellRange").x;
     var meshes = [];
     var superCellGeo = new THREE.BoxGeometry(1,1,1.28);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));

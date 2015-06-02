@@ -21,9 +21,9 @@ DMASuperCell.prototype = Object.create(DMACell.prototype);
 
 DMASuperCell.prototype._makeChildCells = function(index, range){
     var cells = [];//todo make cells a 3d array?
-    for (var x=0;i<range.x;x++){
+    for (var x=0;x<range.x;x++){
         for (var y=0;y<range.y;y++){
-            for (var z=0;i<range.z;z++){
+            for (var z=0;z<range.z;z++){
                 cells.push(this._makeSubCellForIndex({x:x, y:y, z:z}));
             }
         }
@@ -60,7 +60,8 @@ DMASuperCell.prototype.setMode = function(mode){
 };
 
 DMASuperCell.prototype.getLength = function(){
-    return this.cells.length-1;
+    if (this.cells) return this.cells.length-1;
+    return globals.lattice.get("superCellRange").x;
 };
 
 DMASuperCell.prototype.destroy = function(){
