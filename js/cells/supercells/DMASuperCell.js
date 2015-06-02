@@ -5,9 +5,9 @@
 
 DMASuperCell = function(index, superCell){//supercells might have supercells
 
+    this.material = globals.lattice.get("materialType");//todo move to dmacell
     DMACell.call(this, index, superCell);
     var range = globals.lattice.get("superCellRange");
-    this.material = globals.lattice.get("materialType");//todo move to dmacell
     this.cells = this._makeChildCells(index, range);//three dimensional array
 
     var self = this;
@@ -61,7 +61,7 @@ DMASuperCell.prototype.setMode = function(mode){
 
 DMASuperCell.prototype.getLength = function(){
     if (this.cells) return this.cells.length-1;
-    return globals.lattice.get("superCellRange").x;
+    return globals.lattice.get("superCellRange").x-1;
 };
 
 DMASuperCell.prototype.destroy = function(){
