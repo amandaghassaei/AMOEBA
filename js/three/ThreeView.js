@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/16/15.
  */
 
-define(['backbone', 'threeModel', 'orbitControls', 'appState'], function(Backbone, threeModel, THREE, appState){
+define(['backbone', 'threeModel', 'orbitControls', 'appState'], function(Backbone, three, THREE, appState){
 
     var ThreeView = Backbone.View.extend({
 
@@ -154,6 +154,6 @@ define(['backbone', 'threeModel', 'orbitControls', 'appState'], function(Backbon
 
     });
 
-    return new ThreeView({model:threeModel});
+    return new ThreeView({model:three});
 
 });

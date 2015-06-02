@@ -4,7 +4,7 @@
 
 define(['menuParent', 'lattice', 'plist'], function(MenuParentView, lattice, plist){
 
-    var LatticeMenuView = MenuParentView.extend({
+    return MenuParentView.extend({
 
         events: {
         },
@@ -63,9 +63,6 @@ define(['menuParent', 'lattice', 'plist'], function(MenuParentView, lattice, pli
             ')
 
     });
-
-    return LatticeMenuView;
-
 });
 
 //Cell Separation <% if (connectionType != "freeformFace"){ %>(xy, z): &nbsp;&nbsp;<input data-type="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control numberInput cellSeparation" type="text">\

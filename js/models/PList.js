@@ -15,15 +15,15 @@ define(['three'], function(THREE){
             },
             navSim:{
                 physics:"Physics",
-                    part:"Part",
-                    material:"Material",
-                    optimize:"Optimize"
+                part:"Part",
+                material:"Material",
+                optimize:"Optimize"
             },
             navAssemble:{
                 assembler:"Assembler",
-                    cam: "Process",
-                    animate:"Preview",
-                    send: "Send"
+                cam: "Process",
+                animate:"Preview",
+                send: "Send"
             }
         },
 

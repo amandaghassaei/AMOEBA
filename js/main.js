@@ -27,7 +27,19 @@ requirejs.config({
         //UI
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
-        latticeMenu: 'menus/LatticeMenuView'
+        latticeMenu: 'menus/LatticeMenuView',
+        importMenu: 'menus/LatticeMenuView',
+        partMenu: 'menus/PartMenuView',
+        scriptMenu: 'menus/ScriptMenuView',
+        physicsMenu: 'menus/PhysicsMenuView',
+        materialMenu: 'menus/MaterialMenuView',
+        optimizeMenu: 'menus/OptimizationMenuView',
+        assemblerMenu: 'menus/AssemblerMenuView',
+        camMenu: 'menus/CamMenuView',
+        animateMenu: 'menus/AnimationMenuView',
+        sendMenu: 'menus/SendMenuView'
+
+
     },
     shim: {
         three: {

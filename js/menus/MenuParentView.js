@@ -5,7 +5,7 @@
 
 define(['backbone'], function(Backbone){
 
-    var MenuParentView = Backbone.View.extend({
+    return Backbone.View.extend({
 
         el: "#menuContent",
 
@@ -14,7 +14,4 @@ define(['backbone'], function(Backbone){
         }
 
     });
-
-    return MenuParentView;
-
 });

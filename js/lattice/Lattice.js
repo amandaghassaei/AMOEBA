@@ -3,7 +3,7 @@
  */
 
 
-define(['appState', 'plist', 'three'], function(appState, plist, THREE){
+define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, THREE, three){
 
     var Lattice = Backbone.Model.extend({
 
@@ -73,7 +73,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
                     }
                 }
             }
-            globals.three.render();
+            three.render();
             return newCells;
         },
 
@@ -86,7 +86,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             if (!cells[index.x][index.y][index.z]) {
                 cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
                 this.set("numCells", this.get("numCells")+1);
-                if (!noRender) globals.three.render();
+                if (!noRender) three.render();
             } else console.warn("already a cell there");
 
         },
@@ -126,7 +126,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             //todo shrink cells matrix if needed
 
             this.set("numCells", this.get("numCells")-1);
-            globals.three.render();
+            three.render();
         },
 
         //todo send clear all to three and destroy without sceneRemove to cell
@@ -140,7 +140,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             this.set("nodes", []);
             this.set("numCells", 0);
             if (globals.basePlane) globals.basePlane.set("zIndex", 0);
-            globals.three.render();
+            three.render();
         },
 
         calculateBoundingBox: function(){
@@ -193,7 +193,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
                 }
 
             }
-            globals.three.render();
+            three.render();
         },
 
         _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
@@ -321,7 +321,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.setMode(cellMode);
             });
-            globals.three.render();
+            three.render();
         },
 
         _updateCellSeparation: function(){
@@ -333,7 +333,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.updateForScale(cellMode, partType);
             });
-            globals.three.render();
+            three.render();
         },
 
         _setCellVisibility: function(){
@@ -346,7 +346,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.hide();
             });
-            globals.three.render();
+            three.render();
         },
 
         showCells: function(){
@@ -354,7 +354,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell) cell.show(cellMode)
             });
-            globals.three.render();
+            three.render();
         },
 
         showCellAtIndex: function(index){
@@ -416,7 +416,7 @@ define(['appState', 'plist', 'three'], function(appState, plist, THREE){
                 //}
                 cells[x][y][z] = newCell;
             });
-            globals.three.render();
+            three.render();
         },
 
         _getSubclassForLatticeType: function(loadingFromFile){
