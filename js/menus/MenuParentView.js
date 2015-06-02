@@ -9,8 +9,26 @@ define(['backbone'], function(Backbone){
 
         el: "#menuContent",
 
-        destroy: function(){
+        initialize: function(){
 
+            _.bindAll(this, "render");
+
+            if (this._initialize) this._initialize();//call subclass
+        },
+
+        render: function(){
+            if (this.model.changedAttributes()["currentNav"]) return;
+            if ($("input[type=text]").is(":focus")) return;
+            this.$el.html(this.template(this._makeTemplateJSON()));
+            if (this._render) this._render();
+        },
+
+        destroy: function(){
+            this.stopListening();
+//            this.undelegateEvents();
+//            this.$el.removeData().unbind();
+//            this.remove();
+//            Backbone.View.prototype.remove.call(this);
         }
 
     });

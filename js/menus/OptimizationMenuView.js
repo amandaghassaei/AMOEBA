@@ -2,27 +2,22 @@
  * Created by aghassaei on 2/25/15.
  */
 
-OptimizationMenuView = Backbone.View.extend({
+define(['jquery', 'underscore', 'menuParent'], function($, _, MenuParentView){
 
-    el: "#menuContent",
+    return MenuParentView.extend({
 
-    events: {
-    },
+        events: {
+        },
 
-    initialize: function(options){
+        _initialize: function(){
+        },
 
-        _.bindAll(this, "render");
-    },
+        _makeTemplateJSON: function(){
+            return null;
+        },
 
-    render: function(){
-        if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "optimize") return;
-        if ($("input[type=text]").is(":focus")) return;
-        this.$el.html(this.template());
-    },
-
-    template: _.template('\
-        input stiffness requirements of structure\
-        ')
-
+        template: _.template('\
+            input stiffness requirements of structure\
+            ')
+    });
 });

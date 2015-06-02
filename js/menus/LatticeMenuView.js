@@ -10,18 +10,12 @@ define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist'], function($, _
         },
 
 
-        initialize: function(){
-
-            _.bindAll(this, "render");
-            //bind events
+        _initialize: function(){
             this.listenTo(lattice, "change", this.render);
         },
 
-        render: function(){
-            if (this.model.changedAttributes()["currentNav"]) return;
-            if (this.model.get("currentTab") != "lattice") return;
-            if ($("input[type=text]").is(":focus")) return;
-            this.$el.html(this.template(_.extend(lattice.toJSON(), plist)));
+        _makeTemplateJSON: function(){
+            return _.extend(lattice.toJSON(), plist);
         },
 
         template: _.template('\

@@ -2,28 +2,23 @@
  * Created by aghassaei on 3/11/15.
  */
 
-SendMenuView = Backbone.View.extend({
+define(['jquery', 'underscore', 'menuParent', 'cam', 'lattice', 'plist'], function($, _, MenuParentView, cam, lattice, plist){
 
-    el: "#menuContent",
+    return MenuParentView.extend({
 
-    events: {
-    },
+        events: {
+        },
 
-    initialize: function(){
+        _initialize: function(){
+            //bind events
+        },
 
-        //bind events
-
-        _.bindAll(this, "render");
-    },
-
-    render: function(){
-        if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "send") return;
-        if ($("input[type=text]").is(":focus")) return;
-        this.$el.html(this.template(this.model.toJSON()));
-    },
+        _makeTemplateJSON: function(){
+            return null;
+        },
 
 
-    template: _.template('realtime communication with machine')
+        template: _.template('realtime communication with machine')
 
+    });
 });

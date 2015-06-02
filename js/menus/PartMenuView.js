@@ -4,27 +4,19 @@
 
 define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist'], function($, _, MenuParentView, lattice, plist){
 
-    return MenuParentView({
-
-        el: "#menuContent",
+    return MenuParentView.extend({
 
         events: {
         },
 
-        initialize: function(){
-
-            _.bindAll(this, "render");
-
+        _initialize: function(){
             //bind events
             this.listenTo(lattice, "change", this.render);
             this.listenTo(this.model, "change", this.render);
         },
 
-        render: function(){
-            if (this.model.changedAttributes()["currentNav"]) return;
-            if (this.model.get("currentTab") != "part") return;
-            if ($("input[type=text]").is(":focus")) return;
-            this.$el.html(this.template(_.extend(lattice.toJSON(), this.model.toJSON(), plist)));
+        _makeTemplateJSON: function(){
+            return _.extend(lattice.toJSON(), this.model.toJSON(), plist);
         },
 
         template: _.template('\

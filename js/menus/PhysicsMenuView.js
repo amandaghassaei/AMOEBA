@@ -2,31 +2,27 @@
  * Created by aghassaei on 2/25/15.
  */
 
-PhysicsMenuView = Backbone.View.extend({
+define(['jquery', 'underscore', 'menuParent'], function($, _, MenuParentView){
 
-    el: "#menuContent",
+    return MenuParentView.extend({
 
-    events: {
-    },
+        events: {
+        },
 
-    initialize: function(options){
+        _initialize: function(){
+        },
 
-        _.bindAll(this, "render");
-    },
+        _makeTemplateJSON: function(){
+            return null;
+        },
 
-    render: function(){
-        if (this.model.changedAttributes()["currentNav"]) return;
-        if (this.model.get("currentTab") != "physics") return;
-        if ($("input[type=text]").is(":focus")) return;
-        this.$el.html(this.template());
-    },
+        template: _.template('\
+            world physics: gravity, global forces\
+            <br/><br/>\
+            part connection stiffness\
+            <br/><br/>\
+            ground/fixed/boundary conditions definition\
+            ')
 
-    template: _.template('\
-        world physics: gravity, global forces\
-        <br/><br/>\
-        part connection stiffness\
-        <br/><br/>\
-        ground/fixed/boundary conditions definition\
-        ')
-
+    });
 });

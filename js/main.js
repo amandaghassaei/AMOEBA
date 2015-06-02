@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/7/15.
  */
 
-requirejs.config({
+require.config({
     baseUrl: 'js',
     paths: {
         jquery: 'dependencies/jquery-2.1.3',
@@ -41,7 +41,6 @@ requirejs.config({
         animateMenu: 'menus/AnimationMenuView',
         sendMenu: 'menus/SendMenuView'
 
-
     },
     shim: {
         three: {
@@ -61,7 +60,7 @@ requirejs.config({
 });
 
 //init stuff
-requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'flatUI'],
+require(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'flatUI'],
     function(appState, lattice, MenuWrapper, Navbar, Ribbon, three, ThreeView){
 
     new MenuWrapper({model:appState});
