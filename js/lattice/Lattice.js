@@ -41,6 +41,8 @@ Lattice = Backbone.Model.extend({
 
         this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
         this.listenTo(globals.appState, "change:cellsVisible", this._setCellVisibility);
+
+        changeGikMaterials();
     },
 
     delayedInit: function(){

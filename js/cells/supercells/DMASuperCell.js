@@ -8,7 +8,7 @@ DMASuperCell = function(index, superCell){//supercells might have supercells
     this.material = globals.lattice.get("materialType");//todo move to dmacell
     DMACell.call(this, index, superCell);
     var range = globals.lattice.get("superCellRange");
-    this.cells = this._makeChildCells(index, range);//three dimensional array
+    this.cells = this._makeChildCells(index, range);//todo three dimensional array?
 
     var self = this;
     _.each(this.cells, function(cell){
@@ -20,7 +20,7 @@ DMASuperCell = function(index, superCell){//supercells might have supercells
 DMASuperCell.prototype = Object.create(DMACell.prototype);
 
 DMASuperCell.prototype._makeChildCells = function(index, range){
-    var cells = [];//todo make cells a 3d array?
+    var cells = [];
     for (var x=0;x<range.x;x++){
         for (var y=0;y<range.y;y++){
             for (var z=0;z<range.z;z++){

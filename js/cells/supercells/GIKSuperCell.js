@@ -4,20 +4,11 @@
 
 var allGIKMaterials = {};
 var gikMaterialList = AppPList().allMaterialTypes.cube.gik;
-_.each(_.keys(gikMaterialList), function(material){
-    allGIKMaterials[material] = new THREE.MeshLambertMaterial({color:gikMaterialList[material].color});
-    if (gikMaterialList[material].opacity){
-        allGIKMaterials[material].transparent = true;
-        allGIKMaterials[material].opacity = gikMaterialList[material].opacity;
-    } else {
-        allGIKMaterials[material].transparent = false;
-    }
-});
-
 function changeGikMaterials(){
-    _.each(_.keys(allGIKMaterials), function(material){
+    _.each(_.keys(gikMaterialList), function(material){
         if (globals.appState.get("realisticColorScheme")) {
-            allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].color);
+            if (allGIKMaterials[material]) allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].color);
+            else allGIKMaterials[material] = new THREE.MeshLambertMaterial({color:gikMaterialList[material].color});
             if (gikMaterialList[material].opacity){
                 allGIKMaterials[material].transparent = true;
                 allGIKMaterials[material].opacity = gikMaterialList[material].opacity;
@@ -26,7 +17,8 @@ function changeGikMaterials(){
             }
         }
         else {
-            allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].altColor);
+            if (allGIKMaterials[material]) allGIKMaterials[material].color = new THREE.Color(gikMaterialList[material].altColor);
+            else allGIKMaterials[material] = new THREE.MeshLambertMaterial({color:gikMaterialList[material].altColor});
             allGIKMaterials[material].transparent = false;
         }
     });
@@ -44,6 +36,10 @@ GIKSuperCell.prototype._makeSubCellForIndex = function(index){
 GIKSuperCell.prototype._rotateCell = function(object3D){
     if (this.index && this.index.z%2 != 0) object3D.rotateZ(Math.PI/2);
     return object3D;
+};
+
+GIKSuperCell.prototype.getMaterial = function(){
+    return allGIKMaterials[this.material];
 };
 
 GIKSuperCell.prototype._buildMesh = function(){
@@ -68,20 +64,4 @@ GIKSuperCell.prototype._buildWireframe = function(mesh){
     wireframe.matrixWorld = mesh.matrixWorld;
     wireframe.matrixAutoUpdate = true;
     return wireframe;
-};
-
-GIKSuperCell.prototype.getMaterial = function(){
-    return allGIKMaterials[this.material];
-};
-
-GIKSuperCell.prototype.destroy = function(){
-    this.object3D.myParent = null;
-    globals.three.sceneRemove(this.object3D, this._getSceneName());
-    this.object3D = null;
-    _.each(this.cells, function(cell){
-        if (cell) cell.destroy();
-    });
-    this.cells = null;
-    this.index = null;
-    this.material = null;
 };
