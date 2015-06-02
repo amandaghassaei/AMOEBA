@@ -43,9 +43,9 @@ BasePlane = Backbone.Model.extend({
         globals.three.render();
     },
 
-    ///////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////DEALLOC////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////
+    getIndex: function(){
+        return this.index.clone();
+    },
 
     _removeMesh: function(){
         this.get("object3D").myParent = null;
@@ -166,6 +166,7 @@ OctaBasePlane = BasePlane.extend({
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var position = globals.lattice.getPositionForIndex(index);
         position.z += globals.lattice.zScale()/2;
+        this.index = new THREE.Vector3(index.x, index.y, index.z);//todo no!!!
         return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
     }
 
@@ -221,6 +222,7 @@ SquareBasePlane = BasePlane.extend({
         index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
         var latticePosition = globals.lattice.getPositionForIndex(index);
         latticePosition.z += globals.lattice.zScale()/2;
+        this.index = new THREE.Vector3(index.x, index.y, index.z);//todo no!!!
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 
@@ -240,6 +242,7 @@ RotEdgeOctaBasePlane = SquareBasePlane.extend({
         var latticePosition = globals.lattice.getPositionForIndex(index);
         latticePosition.x -= globals.lattice.xScale()/2;
         latticePosition.y -= globals.lattice.yScale()/2;
+        this.index = new THREE.Vector3(index.x, index.y, index.z);//todo no!!!
         return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
     }
 });

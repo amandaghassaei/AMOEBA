@@ -25,7 +25,7 @@ Lattice = Backbone.Model.extend({
         connectionType: "gik",
         partType: "lego",
         materialType: "fiberGlass",
-        gikLength: 4
+        superCellRange: new THREE.Vector3(4,1,1)
     },
 
     //pass in fillGeometry

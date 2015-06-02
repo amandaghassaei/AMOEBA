@@ -6,7 +6,6 @@ Highlighter = Backbone.View.extend({
 
     mesh: null,
     highlightedObject: null,
-    index: null,
     direction: null,
 
     initialize: function(){
@@ -25,7 +24,7 @@ Highlighter = Backbone.View.extend({
         this.hide();
 
         //bind events
-        this.listenTo(globals.lattice, "change:gikLength", this._superCellParamDidChange);
+        this.listenTo(globals.lattice, "change:superCellRange", this._superCellParamDidChange);
         this.listenTo(globals.appState, "change:superCellIndex", this._superCellParamDidChange);
     },
 
@@ -56,7 +55,6 @@ Highlighter = Backbone.View.extend({
 
     setNothingHighlighted: function(){
         this.highlightedObject = null;
-        this.index = null;
         this.direction = null;
         this.position = null;
         this.hide();
@@ -73,8 +71,7 @@ Highlighter = Backbone.View.extend({
 
         this.highlightedObject = highlighted.myParent;
 
-        var highlightedPos = highlighted.myParent.calcHighlighterPosition(intersection.face, intersection.point);
-        this.index = highlightedPos.index;
+        var highlightedPos = this.highlightedObject.calcHighlighterPosition(intersection.face, intersection.point);
         this.position = highlightedPos.position;//todo used just for gik
         if (!highlightedPos.direction) {//may be hovering over a face that we shouldn't highlight
             this.hide();
@@ -82,7 +79,7 @@ Highlighter = Backbone.View.extend({
         }
         this.direction = highlightedPos.direction;
         this._setPosition(highlightedPos.position, this.direction);//position of center point
-        this._setRotation(this.direction, this.index);
+        this._setRotation(this.direction);
 
         this.show(true);
     },
@@ -91,7 +88,7 @@ Highlighter = Backbone.View.extend({
     /////////////////////////////POSITION/SCALE////////////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////////
 
-    getHighlightedObjectPosition: function(){
+    getHighlightedObjectPosition: function(){//origin selection
         if (this.highlightedObject instanceof DMACell) {
             var position = this.highlightedObject.getPosition();
             return {
@@ -120,7 +117,7 @@ Highlighter = Backbone.View.extend({
     ///////////////////////////////////////////////////////////////////////////////////
 
     _getNextCellPosition: function(){//add direction vector to current index
-        var newIndex = _.clone(this.index);
+        var newIndex = _.clone(this.highlightedObject.getIndex());
         var direction = this.direction;
         _.each(_.keys(newIndex), function(key){
             newIndex[key] = Math.round(newIndex[key] + direction[key]);
@@ -168,7 +165,7 @@ OctaFaceHighlighter = Highlighter.extend({
     },
 
     _setRotation: function(){
-        this.mesh.rotation.set(0,0,(this.index.z+1)%2*Math.PI);
+        this.mesh.rotation.set(0,0,(this.highlightedObject.getIndex().z+1)%2*Math.PI);
     }
 
 });
@@ -222,7 +219,9 @@ GIKHighlighter = Highlighter.extend({
         this.mesh.position.set(position.x+direction.x/2, position.y+direction.y/2, position.z+globals.lattice.zScale()*direction.z/2);
     },
 
-    _setRotation: function(direction, index){
+    _setRotation: function(direction){
+        if (!this.highlightedObject) return;
+        var index = this.highlightedObject.getIndex();
         var superCellIndex = globals.appState.get("superCellIndex");
         if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1))
             this.mesh.rotation.set(0, 0, Math.PI/2);
@@ -232,16 +231,16 @@ GIKHighlighter = Highlighter.extend({
 
     updateGikLength: function(){
         if (!this.mesh) return;
-        this.mesh.scale.set(globals.lattice.get("gikLength"), 1, 1);
+        this.mesh.scale.set(globals.lattice.get("superCellRange").x, globals.lattice.get("superCellRange").y, globals.lattice.get("superCellRange").z);
         globals.three.render();
         if (!this.direction) return;
         this._setPosition(this.position, this.direction);//position of center point
-        this._setRotation(this.direction, this.index);
+        this._setRotation(this.direction);
         globals.three.render();
     },
 
     _getNextCellPosition: function(){//add direction vector to current index
-        var newIndex = _.clone(this.index);
+        var newIndex = this.highlightedObject.getIndex();
         var direction = this.direction;
         _.each(_.keys(newIndex), function(key){
             newIndex[key] = Math.round(newIndex[key] + direction[key]);

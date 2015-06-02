@@ -184,19 +184,23 @@ AppState = Backbone.Model.extend({
             case 56:
             case 57:
                 if (globals.lattice.get("connectionType") != "gik") break;
-                if (state) globals.lattice.set("gikLength", e.keyCode-48);
+                if (state) {
+                    var range = globals.lattice.get("superCellRange").clone();
+                    range.x = e.keyCode-48;
+                    globals.lattice.set("superCellRange", range);
+                }
                 break;
             case 81://q - increase supercell index
                 if (state) {
                     var index = this.get("superCellIndex")+1;
-                    if (index > globals.lattice.get("gikLength")-1) index = 0;
+                    if (index > globals.lattice.get("superCellRange").x-1) index = 0;
                     this.set("superCellIndex", index);
                 }
                 break;
             case 65://a - decrease supercell index
                 if (state) {
                     var index = this.get("superCellIndex")-1;
-                    if (index < 0) index = globals.lattice.get("gikLength")-1;
+                    if (index < 0) index = globals.lattice.get("superCellRange").x-1;
                     this.set("superCellIndex", index);
                 }
                 break;

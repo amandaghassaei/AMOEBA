@@ -32,40 +32,13 @@ function changeGikMaterials(){
     });
 }
 
-
-GIKSuperCell = function(index, length){
-    if (index) this.index = index;
-    if (length === undefined) length = globals.lattice.get("gikLength");
-    this.material = globals.lattice.get("materialType");
-    this.cells = this._makeChildCells(index, length);
-
-    this.object3D = this._buildObject3D();
-    this._addChildren(this._buildMesh(length), this.object3D);
-    var self = this;
-    _.each(this.cells, function(cell){
-        self._addChildren(cell.getObject3D());
-    });
-
-    if (this.index) globals.three.sceneAdd(this.object3D, "supercell");
-    else (this.hide());
-
-    this.setMode();
+GIKSuperCell = function(index, superCell){
+    DMASuperCell.call(this, index, superCell);
 };
-GIKSuperCell.prototype = Object.create(DMACell.prototype);
+GIKSuperCell.prototype = Object.create(DMASuperCell.prototype);
 
-GIKSuperCell.prototype._makeChildCells = function(index, length){
-    var cells = [];
-    for (var i=0;i<length;i++){
-        var childIndices = {x:0, y:0, z:0};
-        if (index.z == 0) childIndices.x += i;
-        else childIndices.y += i;
-        cells.push(new GIKCell(childIndices, this));
-    }
-    return cells;
-};
-
-GIKSuperCell.prototype._buildObject3D = function(){//todo merge this with dma cell
-    return this._translateCell(this._rotateCell(new THREE.Object3D()));
+GIKSuperCell.prototype._makeSubCellForIndex = function(index){
+    return new GIKCell(index, this);
 };
 
 GIKSuperCell.prototype._rotateCell = function(object3D){
@@ -73,7 +46,8 @@ GIKSuperCell.prototype._rotateCell = function(object3D){
     return object3D;
 };
 
-GIKSuperCell.prototype._buildMesh = function(length){
+GIKSuperCell.prototype._buildMesh = function(){
+    var length = globals.lattice.get("gikLength");
     var meshes = [];
     var superCellGeo = new THREE.BoxGeometry(1,1,1.28);
     superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
@@ -100,37 +74,14 @@ GIKSuperCell.prototype.getMaterial = function(){
     return allGIKMaterials[this.material];
 };
 
-GIKSuperCell.prototype.setMode = function(mode){
-
-    if (mode === undefined) mode = globals.appState.get("cellMode");
-
-    _.each(this.cells, function(cell){
-        cell.setMode(mode);
-    });
-
-    if (mode == "cell") mode = "supercell";
-    if (mode == "part") mode = "object3D";
-
-    _.each(this.object3D.children, function(child){
-        child.visible = child.name == mode;
-    });
-
-    console.log(this.object3D);
-};
-
-GIKSuperCell.prototype.getLength = function(){
-    return globals.lattice.get("gikLength");
-};
-
 GIKSuperCell.prototype.destroy = function(){
-    if (this.destroyStarted) return;//prevents loop destroy from cells
-    this.destroyStarted = true;
-    globals.three.sceneRemove(this.object3D);
+    this.object3D.myParent = null;
+    globals.three.sceneRemove(this.object3D, this._getSceneName());
     this.object3D = null;
     _.each(this.cells, function(cell){
-        if (cell && cell.index && !cell.destroyStarted) globals.lattice.removeCell(cell);
+        if (cell) cell.destroy();
     });
     this.cells = null;
     this.index = null;
     this.material = null;
-}
+};

@@ -8,7 +8,7 @@ var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:t
 
 function DMACell(index, superCell){
 
-    this.index = index;
+    this.index = new THREE.Vector3(index.x, index.y, index.z);
     if (superCell) this.superCell = superCell;
 
     //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
@@ -16,7 +16,7 @@ function DMACell(index, superCell){
     this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
 
     if (superCell === undefined) {
-        if (this.index) globals.three.sceneAdd(this.object3D, "cell");
+        if (this.index) globals.three.sceneAdd(this.object3D, this._getSceneName());
         else this.hide();//stock cell
     }
 
@@ -26,14 +26,43 @@ function DMACell(index, superCell){
 DMACell.prototype._buildObject3D = function(){
     var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
     object3D.myParent = this;//reference to get mouse raycasting back
-    object3D.name = "object3D";
+    object3D.name = this._getModeName();
     return object3D;
+};
+
+DMACell.prototype._getModeName = function(){
+    return "object3D";
+};
+
+DMACell.prototype._getSceneName = function(){
+    return "cell";
 };
 
 DMACell.prototype.getObject3D = function(){//careful, used for stock sim and supercell only for now  todo need this?
     return this.object3D;
 };
 
+
+DMACell.prototype.getIndex = function(){
+    var index = this.index.clone();
+    console.log(index);
+    index = this.getAbsoluteOrientation(index);
+    if (this.superCell) index.add(this.superCell.getIndex());
+    return index;
+};
+
+DMACell.prototype.getPosition = function(){
+    var position = this.object3D.position.clone();
+    position = this.getAbsoluteOrientation(position);
+    if (this.superCell) position.add(this.superCell.getPosition());
+    return position;
+};
+
+DMACell.prototype.getAbsoluteOrientation = function(vector){
+    vector.applyQuaternion(this.getQuaternion());
+    if (this.superCell) return this.superCell.getAbsoluteOrientation(vector);
+    return vector;
+};
 
 
 
@@ -141,19 +170,6 @@ DMACell.prototype.setMode = function(mode){
     });
 };
 
-DMACell.prototype.getPosition = function(){
-    if (this.superCell && this.index) return this.superCell.getSubCellPosition(_.clone(this.index));
-    return this.object3D.position.clone();
-};
-
-DMACell.prototype.getSubCellPosition = function(subIndex){
-    var index = _.clone(this.index);
-    _.each(_.keys(index), function(key){
-        index[key] += subIndex[key];
-    });
-    return globals.lattice.getIndexForPosition(index);
-};
-
 DMACell.prototype.getQuaternion = function(){
     return this.object3D.quaternion.clone();
 };
@@ -231,20 +247,6 @@ DMACell.prototype.toJSON = function(){
 };
 
 
-
-//DMACell.prototype.moveTo = function(position, axis){//used for stock simulations
-//    this.object3D.position[axis] = position;
-//    if (globals.appState.get("cellMode") == "part"){
-//        _.each(this.parts, function(part){
-//            if (part) part.moveTo(position, axis);
-//        });
-//    }
-//};
-//
-//DMACell.prototype.getType = function(){
-//    return null;//only used in freeform layout
-//};
-//
 //DMACell.prototype._initNodes = function(vertices){
 //    var position = this.getPosition();
 //    var orientation = this.getOrientation();

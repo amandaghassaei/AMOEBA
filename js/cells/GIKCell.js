@@ -19,7 +19,7 @@
 
     GIKCell.prototype._translateCell = function(object3D){
         if (this.index) {
-            var offset = this.index-this.superCell.getLength();
+            var offset = this.index.x-this.superCell.getLength();
             object3D.position.set(offset*this.xScale(),0, 0);
         }
         return object3D;
@@ -27,7 +27,7 @@
 
     GIKCell.prototype._rotateCell = function(object3D){
         var length = this.superCell.getLength();
-        if (this.index.x == length || this.index.y == length) object3D.rotateZ(Math.PI);
+        if (this.index.x == length) object3D.rotateZ(Math.PI);
         return object3D;
     };
 
@@ -38,7 +38,8 @@
     GIKCell.prototype._initParts = function(){
         if (!this.superCell) return null;
         var parts  = [];
-        var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
+        var isEnd = false;
+//        var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
         if (globals.lattice.get("partType") == "lego") {
             if (isEnd) parts.push(new DMAGIKEndPart(0, this));
             else parts.push(new DMAGIKPart(0, this));
@@ -52,7 +53,7 @@
 
     GIKCell.prototype.calcHighlighterPosition = function(face){
         var direction = face.normal.clone().applyEuler(this.object3D.rotation).applyEuler(this.object3D.parent.rotation);
-        var position = globals.lattice.getPositionForIndex(this.index);
+        var position = this.getPosition();
         var self = this;
         _.each(_.keys(position), function(key){
             position[key] += direction[key]*self.axisScale(key)/2;
