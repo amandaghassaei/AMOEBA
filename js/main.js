@@ -25,6 +25,8 @@ requirejs.config({
         fileSaver: 'models/FileSaver',
 
         //UI
+        navbar: 'menus/Navbar',
+        navViewMenu: 'menus/NavViewMenu',//view dropdown
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
         latticeMenu: 'menus/LatticeMenuView',
@@ -58,8 +60,17 @@ requirejs.config({
     }
 });
 
-requirejs(['menuWrapper', 'analytics', 'flatUI'], function(menuWrapper) {
-    console.log(menuWrapper);
+//init stuff
+requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'threeModel', 'threeView', 'analytics', 'flatUI'],
+    function(appState, lattice, MenuWrapper, Navbar, three, ThreeView){
+
+    new MenuWrapper({model:appState});
+    new Navbar({model:appState});
+//    new Ribbon({model:appState});
+
+    new ThreeView({model:three});
+
+//    if (lattice.get("connectionType") != "gik") lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
 });
 
 

@@ -3,9 +3,9 @@
  */
 
 
-define(['jquery', 'backbone', 'appState', 'lattice', 'plist'], function($, Backbone, appState, lattice, plist){
+define(['jquery', 'underscore', 'backbone', 'lattice', 'plist'], function($, _, Backbone, lattice, plist){
 
-    var MenuWrapper = Backbone.View.extend({
+    return Backbone.View.extend({
 
         el: "#menuWrapper",
 
@@ -208,6 +208,4 @@ define(['jquery', 'backbone', 'appState', 'lattice', 'plist'], function($, Backb
             </ul>\
             ')
     });
-
-    return new MenuWrapper({model:appState});
 });

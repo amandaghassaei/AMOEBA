@@ -4,7 +4,7 @@
 
 define(['backbone', 'threeModel', 'orbitControls', 'appState'], function(Backbone, three, THREE, appState){
 
-    var ThreeView = Backbone.View.extend({
+    return Backbone.View.extend({
 
         events: {
             "mousemove":                            "_mouseMoved",
@@ -153,7 +153,4 @@ define(['backbone', 'threeModel', 'orbitControls', 'appState'], function(Backbon
         }
 
     });
-
-    return new ThreeView({model:three});
-
 });
