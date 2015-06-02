@@ -9,6 +9,7 @@ requirejs.config({
         jquery: 'dependencies/jquery-2.1.3',
         underscore: 'dependencies/underscore',
         backbone: 'dependencies/backbone',
+        flatUI: 'dependencies/flatUI/js/flat-ui',
         fileSaverLib: 'dependencies/loaders/FileSaver.min',
 
         //three
@@ -21,12 +22,12 @@ requirejs.config({
         plist: 'models/PList',
         appState: 'models/AppState',
         lattice: 'lattice/Lattice',
-        fileSaver: 'models/FileSaver'
-
-        //views
-
+        fileSaver: 'models/FileSaver',
 
         //UI
+        menuWrapper: 'menus/MenuWrapperView',
+        menuParent: 'menus/MenuParentView',
+        latticeMenu: 'menus/LatticeMenuView'
     },
     shim: {
         three: {
@@ -38,12 +39,15 @@ requirejs.config({
         },
         fileSaverLib: {
             exports: 'saveAs'
+        },
+        flatUI: {
+            deps: ['jquery']
         }
     }
 });
 
-requirejs(['fileSaver', 'analytics'], function(fileSaver) {
-    console.log(fileSaver);
+requirejs(['menuWrapper', 'analytics', 'flatUI'], function(menuWrapper) {
+    console.log(menuWrapper);
 });
 
 
