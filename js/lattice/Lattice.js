@@ -2,592 +2,595 @@
  * Created by aghassaei on 1/16/15.
  */
 
-latticeSubclasses = {};
 
-Lattice = Backbone.Model.extend({
+define(['appState', 'plist', 'three'], function(appState, plist, THREE){
 
-    defaults: {
+    var Lattice = Backbone.Model.extend({
 
-        units: "mm",
+        defaults: {
 
-        nodes: [],
-        cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
-        cellsMin: {x:0, y:0, z:0},//min position of cells matrix
-        cellsMax: {x:0, y:0, z:0},//max position of cells matrix
-        numCells: 0,
+            units: "mm",
 
-        scale: 20,
+            nodes: [],
+            cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
+            cellsMin: {x:0, y:0, z:0},//min position of cells matrix
+            cellsMax: {x:0, y:0, z:0},//max position of cells matrix
+            numCells: 0,
 
-        //spacing for connectors/joints
-        cellSeparation: {xy:0, z:0},
+            scale: 20,
 
-        cellType: "cube",
-        connectionType: "gik",
-        partType: "lego",
-        materialType: "fiberGlass",
-        superCellRange: new THREE.Vector3(4,1,1)
-    },
+            //spacing for connectors/joints
+            cellSeparation: {xy:0, z:0},
 
-    //pass in fillGeometry
+            cellType: "cube",
+            connectionType: "gik",
+            partType: "lego",
+            materialType: "fiberGlass",
+            superCellRange: new THREE.Vector3(4,1,1)
+        },
 
-    initialize: function(){
+        //pass in fillGeometry
 
-        _.extend(this, latticeSubclasses);
+        initialize: function(){
 
-        //bind events
-        this.listenTo(this, "change:partType", this._updatePartType);
-        this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
-        this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
+            //bind events
+            this.listenTo(this, "change:partType", this._updatePartType);
+            this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
+            this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
-        this.listenTo(globals.appState, "change:cellMode", this._updateForMode);
-        this.listenTo(globals.appState, "change:cellsVisible", this._setCellVisibility);
-
-        changeGikMaterials();
-    },
-
-    delayedInit: function(){
-        this._updateLatticeType();
-    },
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    addCellsInRange: function(range){//add a block of cells (extrude)
-        var cells = this.get("cells");
-        var newCells = [];
-        this.checkForMatrixExpansion(cells, range.max, range.min);
-
-        var cellsMin = this.get("cellsMin");
-        var relativeMin = this._subtract(range.min, cellsMin);
-        var relativeMax = this._subtract(range.max, this.get("cellsMin"));
-
-        for (var x=relativeMin.x;x<=relativeMax.x;x++){
-            for (var y=relativeMin.y;y<=relativeMax.y;y++){
-                for (var z=relativeMin.z;z<=relativeMax.z;z++){
-                    if (!cells[x][y][z]) {
-                        var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin));
-                        cells[x][y][z] = cell;
-                        newCells.push(cell);
-                        this.set("numCells", this.get("numCells")+1);
-                    } else console.warn("already a cell there");
-                }
-            }
-        }
-        globals.three.render();
-        return newCells;
-    },
-
-    addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
-
-        var cells = this.get("cells");
-        if (!noCheck) this.checkForMatrixExpansion(cells, indices, indices);
-
-        var index = this._subtract(indices, this.get("cellsMin"));
-        if (!cells[index.x][index.y][index.z]) {
-            cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
-            this.set("numCells", this.get("numCells")+1);
-            if (!noRender) globals.three.render();
-        } else console.warn("already a cell there");
-
-    },
-
-    _indexForPosition: function(absPosition){
-        var position = {};
-        position.x = Math.floor(absPosition.x/this.xScale());
-        position.y = Math.floor(absPosition.y/this.yScale());
-        position.z = Math.floor(absPosition.z/this.zScale());
-        return position;
-    },
-
-    _positionForIndex: function(index){
-        var position = _.clone(index);
-        position.x = (position.x+0.5)*this.xScale();
-        position.y = (position.y+0.5)*this.yScale();
-        position.z = (position.z+0.5)*this.zScale();
-        return position;
-    },
-
-//    removeCellAtIndex: function(indices){
-//
-//        var index = this._subtract(indices, this.get("cellsMin"));
-//        var cells = this.get("cells");
-//        if (index.x<cells.length && index.y<cells[0].length && index.z<cells[0][0].length){
-//            this.removeCell(cells[index.x][index.y][index.z]);
-//        }
-//    },
-
-    removeCell: function(cell){
-        if (!cell) return;
-        var index = this._subtract(cell.indices, this.get("cellsMin"));
-        var cells = this.get("cells");
-        cell.destroy();
-        cells[index.x][index.y][index.z] = null;
-
-        //todo shrink cells matrix if needed
-
-        this.set("numCells", this.get("numCells")-1);
-        globals.three.render();
-    },
-
-    //todo send clear all to three and destroy without sceneRemove to cell
-    clearCells: function(){
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell && cell.destroy) cell.destroy();
-        });
-        this.set("cells", [[[null]]]);
-        this.set("cellsMax", {x:0, y:0, z:0});
-        this.set("cellsMin", {x:0, y:0, z:0});
-        this.set("nodes", []);
-        this.set("numCells", 0);
-        if (globals.basePlane) globals.basePlane.set("zIndex", 0);
-        globals.three.render();
-    },
-
-    calculateBoundingBox: function(){
-        var scale = this._allAxesScales();
-        var min = _.clone(this.get("cellsMin"));
-        var max = _.clone(this.get("cellsMax"));
-        _.each(_.keys(scale), function(key){
-            min[key] *= scale[key];
-            max[key] *= scale[key];
-        });
-        return {min:min, max:max};
-    },
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////FILL GEOMETRY////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    subtractMesh: function(mesh){
-        //todo this is specific to octa face
-
-        var xScale = this.xScale();
-        var yScale = this.yScale();
-        var zScale = this.zScale();
-
-        var cells = this.get("cells");
-        var cellsMin = this.get("cellsMin");
-
-        var allVertexPos = mesh.geometry.attributes.position.array;
-
-        var zHeight = 0;
-        for (var x=0;x<cells.length;x++){
-            for (var y=0;y<cells[0].length;y++){
-                var firstCell = null;
-                for (var z=0;z<cells[0][0].length;z++){
-                    firstCell = cells[x][y][z];
-                    if (firstCell) break;
-                }
-                if (!firstCell) continue;//nothing in col
-
-                var origin = this._positionForIndex(firstCell.indices);
-//                    firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
-                zHeight = this._findIntersectionsInWindow(xScale/2, yScale/2, origin, allVertexPos) || zHeight;
-
-                zHeight = Math.floor(zHeight/zScale);
-                for (var z=0;z<zHeight;z++){
-                    var cell = cells[x][y][z];
-                    if (cell) cell.destroy();
-                    cells[x][y][z] = null;
-                }
-            }
-
-        }
-        globals.three.render();
-    },
-
-    _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
-        for (var i=0;i<allVertexPos.length;i+=3){
-            if (allVertexPos[i] > origin.x-windowX && allVertexPos[i] < origin.x+windowX
-                && allVertexPos[i+1] > origin.y-windowY && allVertexPos[i+1] < origin.y+windowY){
-                return allVertexPos[i+2];
-            }
-        }
-        return null
-    },
+            this.listenTo(appState, "change:cellMode", this._updateForMode);
+            this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
+        },
 
-    checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
+        delayedInit: function(){
+            this._updateLatticeType();
+        },
 
-        if (!cells) cells = this.get("cells");
+        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////ADD/REMOVE CELLS/////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
 
-        var lastMax = this.get("cellsMax");
-        var lastMin = this.get("cellsMin");
-        var newMax = this._updateCellsMax(indicesMax, lastMax);
-        var newMin = this._updateCellsMin(indicesMin, lastMin);
-        if (newMax) {
-            this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
-            this.set("cellsMax", newMax);
-        }
-        if (newMin) {
-            this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
-            this.set("cellsMin", newMin);
-        }
-    },
+        addCellsInRange: function(range){//add a block of cells (extrude)
+            var cells = this.get("cells");
+            var newCells = [];
+            this.checkForMatrixExpansion(cells, range.max, range.min);
 
-    _expandCellsArray: function(cells, expansion, fromFront){
+            var cellsMin = this.get("cellsMin");
+            var relativeMin = this._subtract(range.min, cellsMin);
+            var relativeMax = this._subtract(range.max, this.get("cellsMin"));
 
-        _.each(_.keys(expansion), function(key){
-            if (expansion[key] == 0) return;//no expansion on this axis
-
-            var cellsX = cells.length;
-            var cellsY = cells[0].length;
-            var cellsZ = cells[0][0].length;
-
-            if (key=="x"){
-                for (var x=0;x<expansion[key];x++){
-                    var newLayer = [];
-                    for (var y=0;y<cellsY;y++){
-                        var newCol = [];
-                        for (var z=0;z<cellsZ;z++){
-                            newCol.push(null);
-                        }
-                        newLayer.push(newCol);
-                    }
-                    if (fromFront) cells.unshift(newLayer);
-                    else cells.push(newLayer);
-                }
-            } else if (key=="y"){
-                for (var x=0;x<cellsX;x++){
-                    for (var y=0;y<expansion[key];y++){
-                        var newCol = [];
-                        for (var z=0;z<cellsZ;z++){
-                            newCol.push(null);
-                        }
-                        if (fromFront) cells[x].unshift(newCol);
-                        else cells[x].push(newCol);
-                    }
-                }
-            } else if (key=="z"){
-                for (var x=0;x<cellsX;x++){
-                    for (var y=0;y<cellsY;y++){
-                        for (var z=0;z<expansion[key];z++){
-                            if (fromFront) cells[x][y].unshift(null);
-                            else cells[x][y].push(null);
-                        }
+            for (var x=relativeMin.x;x<=relativeMax.x;x++){
+                for (var y=relativeMin.y;y<=relativeMax.y;y++){
+                    for (var z=relativeMin.z;z<=relativeMax.z;z++){
+                        if (!cells[x][y][z]) {
+                            var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin));
+                            cells[x][y][z] = cell;
+                            newCells.push(cell);
+                            this.set("numCells", this.get("numCells")+1);
+                        } else console.warn("already a cell there");
                     }
                 }
             }
-        });
-    },
+            globals.three.render();
+            return newCells;
+        },
 
-    _updateCellsMin: function(newPosition, currentMin){
-        var newMin = {};
-        var hasChanged = false;
-        _.each(_.keys(newPosition), function(key){
-            if (newPosition[key]<currentMin[key]){
-                hasChanged = true;
-                newMin[key] = newPosition[key];
-            } else {
-                newMin[key] = currentMin[key];
-            }
-        });
-        if (hasChanged) return newMin;
-        return false;
-    },
+        addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
 
-    _updateCellsMax: function(newPosition, currentMax){
-        var newMax = {};
-        var hasChanged = false;
-        _.each(_.keys(newPosition), function(key){
-            if (newPosition[key]>currentMax[key]){
-                hasChanged = true;
-                newMax[key] = newPosition[key];
-            } else {
-                newMax[key] = currentMax[key];
-            }
-        });
-        if (hasChanged) return newMax;
-        return false;
-    },
+            var cells = this.get("cells");
+            if (!noCheck) this.checkForMatrixExpansion(cells, indices, indices);
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////EVENTS//////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
+            var index = this._subtract(indices, this.get("cellsMin"));
+            if (!cells[index.x][index.y][index.z]) {
+                cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
+                this.set("numCells", this.get("numCells")+1);
+                if (!noRender) globals.three.render();
+            } else console.warn("already a cell there");
 
-    _updatePartType: function(){
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.destroyParts();
-        });
-        this._updateForMode();
-    },
+        },
 
-    _updateForMode: function(){
-        var cellMode = globals.appState.get("cellMode");
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.setMode(cellMode);
-        });
-        globals.three.render();
-    },
+        _indexForPosition: function(absPosition){
+            var position = {};
+            position.x = Math.floor(absPosition.x/this.xScale());
+            position.y = Math.floor(absPosition.y/this.yScale());
+            position.z = Math.floor(absPosition.z/this.zScale());
+            return position;
+        },
 
-    _updateCellSeparation: function(){
-        var cellSep = this.get("cellSeparation");
-        globals.basePlane.updateXYSeparation(cellSep.xy);
+        _positionForIndex: function(index){
+            var position = _.clone(index);
+            position.x = (position.x+0.5)*this.xScale();
+            position.y = (position.y+0.5)*this.yScale();
+            position.z = (position.z+0.5)*this.zScale();
+            return position;
+        },
 
-        var cellMode = globals.appState.get("cellMode");
-        var partType = this.get("partType");
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.updateForScale(cellMode, partType);
-        });
-        globals.three.render();
-    },
+    //    removeCellAtIndex: function(indices){
+    //
+    //        var index = this._subtract(indices, this.get("cellsMin"));
+    //        var cells = this.get("cells");
+    //        if (index.x<cells.length && index.y<cells[0].length && index.z<cells[0][0].length){
+    //            this.removeCell(cells[index.x][index.y][index.z]);
+    //        }
+    //    },
 
-    _setCellVisibility: function(){
-        if (globals.appState.get("cellsVisible")) this.showCells();
-        else this.hideCells();
-    },
-
-    //hide/show cells during stock simulation
-    hideCells: function(){
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.hide();
-        });
-        globals.three.render();
-    },
-
-    showCells: function(){
-        var cellMode = globals.appState.get("cellMode");
-        this._iterCells(this.get("cells"), function(cell){
-            if (cell) cell.show(cellMode)
-        });
-        globals.three.render();
-    },
-
-    showCellAtIndex: function(index){
-        var latticeIndex = this._subtract(index, this.get("cellsMin"));
-        var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
-        if (cell) cell.show();
-        else console.warn("placing a cell that does not exist");
-    },
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
-
-        if (this.previous("connectionType") == "gik") this.clearCells();
-
-        this._setToDefaultsSilently();
-        this._setDefaultCellMode();
-
-        if (loadingFromFile === undefined) loadingFromFile = false;
-
-        if (this._undo) this._undo();
-        if (globals.basePlane) globals.basePlane.destroy();
-        if (globals.highlighter) globals.highlighter.destroy();
-        _.extend(this, this._getSubclassForLatticeType(loadingFromFile));
-        this._initLatticeType();
-
-
-
-
-        //todo refactor this eventually
-        var self = this;
-        var cells = this.get("cells");
-        this._loopCells(cells, function(cell, x, y, z){
+        removeCell: function(cell){
             if (!cell) return;
+            var index = this._subtract(cell.indices, this.get("cellsMin"));
+            var cells = this.get("cells");
+            cell.destroy();
+            cells[index.x][index.y][index.z] = null;
 
-            var index = _.clone(cell.indices);
-            //var  parts = null;
-            //if (loadingFromFile) parts = _.clone(cell.parts);
-            if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
-            if (cell.parentPosition) var parentPos = cell.parentPosition;
-            if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
-            if (cell.parentType) var parentType = cell.parentType;
-            if (cell.type) var type = cell.type;
+            //todo shrink cells matrix if needed
 
-            if (cell.destroy) cell.destroy();
-            var newCell = self.makeCellForLatticeType(index, parentPos, parentOrientation, direction, parentType, type);
+            this.set("numCells", this.get("numCells")-1);
+            globals.three.render();
+        },
 
-            //if (parts) {
-            //    //todo make this better
-            //    newCell.parts = newCell._initParts();
-            //    for (var i=0;i<newCell.parts.length;i++){
-            //        if (!parts[i]) {
-            //            newCell.parts[i].destroy();
-            //            newCell.parts[i] = null;
-            //        }
-            //    }
-            //}
-            cells[x][y][z] = newCell;
-        });
-        globals.three.render();
-    },
-
-    _getSubclassForLatticeType: function(loadingFromFile){
-        var cellType = this.get("cellType");
-        var connectionType = this.get("connectionType");
-        if (cellType == "octa"){
-            if (connectionType == "face"){
-                return this.OctaFaceLattice;
-            } else if (connectionType == "freeformFace"){
-                if (!loadingFromFile) this.clearCells();
-                return this.OctaFreeFormFaceLattice;
-            } else if (connectionType == "edge"){
-                return this.OctaEdgeLattice;
-            } else if (connectionType == "edgeRot"){
-                return this.OctaRotEdgeLattice;
-            } else if (connectionType == "vertex"){
-                return this.OctaVertexLattice;
-            }
-        } else if (cellType == "tetra"){
-            return this.CubeLattice;
-        } else if (cellType == "cube"){
-            if (connectionType == "face"){
-                return this.CubeLattice;
-            } else if (connectionType == "gik"){
-                if (!loadingFromFile) this.clearCells();
-                return this.GIKLattice;
-            }
-        } else if (cellType == "truncatedCube"){
-            return this.TruncatedCubeLattice;
-        } else if (cellType == "kelvin"){
-            return this.KelvinLattice;
-        }
-    },
-
-    _setToDefaultsSilently: function(){
-        var newCellType = this.get("cellType");
-        var newConnectionType = this.get("connectionType");
-        if (newConnectionType == this.previous("connectionType")){
-            newConnectionType = _.keys(globals.plist["allConnectionTypes"][newCellType])[0];
-            this.set("connectionType", newConnectionType, {silent:true});
-        }
-        var partType = _.keys(globals.plist["allPartTypes"][newCellType][newConnectionType])[0];
-        this.set("partType", partType, {silent:true});
-    },
-
-    _setDefaultCellMode: function(){//if no part associated with this lattice type
-        if (!globals.plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
-            globals.appState.set("cellMode", "cell");
-        }
-    },
-
-    ////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////UTILS///////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
-
-    _iterCells: function(cells, callback){
-        _.each(cells, function(cellLayer){
-            _.each(cellLayer, function(cellColumn){
-                _.each(cellColumn, function(cell){
-                    callback(cell, cellColumn, cellLayer);
-                });
+        //todo send clear all to three and destroy without sceneRemove to cell
+        clearCells: function(){
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell && cell.destroy) cell.destroy();
             });
+            this.set("cells", [[[null]]]);
+            this.set("cellsMax", {x:0, y:0, z:0});
+            this.set("cellsMin", {x:0, y:0, z:0});
+            this.set("nodes", []);
+            this.set("numCells", 0);
+            if (globals.basePlane) globals.basePlane.set("zIndex", 0);
+            globals.three.render();
+        },
 
-        });
-    },
+        calculateBoundingBox: function(){
+            var scale = this._allAxesScales();
+            var min = _.clone(this.get("cellsMin"));
+            var max = _.clone(this.get("cellsMax"));
+            _.each(_.keys(scale), function(key){
+                min[key] *= scale[key];
+                max[key] *= scale[key];
+            });
+            return {min:min, max:max};
+        },
 
-    _loopCells: function(cells, callback){
-        for (var x=0;x<cells.length;x++){
-            for (var y=0;y<cells[0].length;y++){
-                for (var z=0;z<cells[0][0].length;z++){
-                    callback(cells[x][y][z], x, y, z);
+        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////FILL GEOMETRY////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        subtractMesh: function(mesh){
+            //todo this is specific to octa face
+
+            var xScale = this.xScale();
+            var yScale = this.yScale();
+            var zScale = this.zScale();
+
+            var cells = this.get("cells");
+            var cellsMin = this.get("cellsMin");
+
+            var allVertexPos = mesh.geometry.attributes.position.array;
+
+            var zHeight = 0;
+            for (var x=0;x<cells.length;x++){
+                for (var y=0;y<cells[0].length;y++){
+                    var firstCell = null;
+                    for (var z=0;z<cells[0][0].length;z++){
+                        firstCell = cells[x][y][z];
+                        if (firstCell) break;
+                    }
+                    if (!firstCell) continue;//nothing in col
+
+                    var origin = this._positionForIndex(firstCell.indices);
+    //                    firstCell._calcPosition(0, this._add({x:x,y:y,z:z}, cellsMin));
+                    zHeight = this._findIntersectionsInWindow(xScale/2, yScale/2, origin, allVertexPos) || zHeight;
+
+                    zHeight = Math.floor(zHeight/zScale);
+                    for (var z=0;z<zHeight;z++){
+                        var cell = cells[x][y][z];
+                        if (cell) cell.destroy();
+                        cells[x][y][z] = null;
+                    }
+                }
+
+            }
+            globals.three.render();
+        },
+
+        _findIntersectionsInWindow: function(windowX, windowY, origin, allVertexPos){
+            for (var i=0;i<allVertexPos.length;i+=3){
+                if (allVertexPos[i] > origin.x-windowX && allVertexPos[i] < origin.x+windowX
+                    && allVertexPos[i+1] > origin.y-windowY && allVertexPos[i+1] < origin.y+windowY){
+                    return allVertexPos[i+2];
                 }
             }
-        }
-    },
+            return null
+        },
 
-    rasterCells: function(order, callback, var1, var2, var3, cells){//used for CAM raster x/y/z in any order permutation
-        //order is of form 'XYZ'
-        var firstLetter = order.charAt(0);
-        order = order.substr(1);
-        var isNeg = false;
-        if (firstLetter == "-") {
-            isNeg = true;
-            firstLetter = order.charAt(0);
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////CELLS ARRAY//////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
+
+            if (!cells) cells = this.get("cells");
+
+            var lastMax = this.get("cellsMax");
+            var lastMin = this.get("cellsMin");
+            var newMax = this._updateCellsMax(indicesMax, lastMax);
+            var newMin = this._updateCellsMin(indicesMin, lastMin);
+            if (newMax) {
+                this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
+                this.set("cellsMax", newMax);
+            }
+            if (newMin) {
+                this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
+                this.set("cellsMin", newMin);
+            }
+        },
+
+        _expandCellsArray: function(cells, expansion, fromFront){
+
+            _.each(_.keys(expansion), function(key){
+                if (expansion[key] == 0) return;//no expansion on this axis
+
+                var cellsX = cells.length;
+                var cellsY = cells[0].length;
+                var cellsZ = cells[0][0].length;
+
+                if (key=="x"){
+                    for (var x=0;x<expansion[key];x++){
+                        var newLayer = [];
+                        for (var y=0;y<cellsY;y++){
+                            var newCol = [];
+                            for (var z=0;z<cellsZ;z++){
+                                newCol.push(null);
+                            }
+                            newLayer.push(newCol);
+                        }
+                        if (fromFront) cells.unshift(newLayer);
+                        else cells.push(newLayer);
+                    }
+                } else if (key=="y"){
+                    for (var x=0;x<cellsX;x++){
+                        for (var y=0;y<expansion[key];y++){
+                            var newCol = [];
+                            for (var z=0;z<cellsZ;z++){
+                                newCol.push(null);
+                            }
+                            if (fromFront) cells[x].unshift(newCol);
+                            else cells[x].push(newCol);
+                        }
+                    }
+                } else if (key=="z"){
+                    for (var x=0;x<cellsX;x++){
+                        for (var y=0;y<cellsY;y++){
+                            for (var z=0;z<expansion[key];z++){
+                                if (fromFront) cells[x][y].unshift(null);
+                                else cells[x][y].push(null);
+                            }
+                        }
+                    }
+                }
+            });
+        },
+
+        _updateCellsMin: function(newPosition, currentMin){
+            var newMin = {};
+            var hasChanged = false;
+            _.each(_.keys(newPosition), function(key){
+                if (newPosition[key]<currentMin[key]){
+                    hasChanged = true;
+                    newMin[key] = newPosition[key];
+                } else {
+                    newMin[key] = currentMin[key];
+                }
+            });
+            if (hasChanged) return newMin;
+            return false;
+        },
+
+        _updateCellsMax: function(newPosition, currentMax){
+            var newMax = {};
+            var hasChanged = false;
+            _.each(_.keys(newPosition), function(key){
+                if (newPosition[key]>currentMax[key]){
+                    hasChanged = true;
+                    newMax[key] = newPosition[key];
+                } else {
+                    newMax[key] = currentMax[key];
+                }
+            });
+            if (hasChanged) return newMax;
+            return false;
+        },
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////EVENTS//////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        _updatePartType: function(){
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.destroyParts();
+            });
+            this._updateForMode();
+        },
+
+        _updateForMode: function(){
+            var cellMode = appState.get("cellMode");
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.setMode(cellMode);
+            });
+            globals.three.render();
+        },
+
+        _updateCellSeparation: function(){
+            var cellSep = this.get("cellSeparation");
+            globals.basePlane.updateXYSeparation(cellSep.xy);
+
+            var cellMode = appState.get("cellMode");
+            var partType = this.get("partType");
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.updateForScale(cellMode, partType);
+            });
+            globals.three.render();
+        },
+
+        _setCellVisibility: function(){
+            if (appState.get("cellsVisible")) this.showCells();
+            else this.hideCells();
+        },
+
+        //hide/show cells during stock simulation
+        hideCells: function(){
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.hide();
+            });
+            globals.three.render();
+        },
+
+        showCells: function(){
+            var cellMode = appState.get("cellMode");
+            this._iterCells(this.get("cells"), function(cell){
+                if (cell) cell.show(cellMode)
+            });
+            globals.three.render();
+        },
+
+        showCellAtIndex: function(index){
+            var latticeIndex = this._subtract(index, this.get("cellsMin"));
+            var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+            if (cell) cell.show();
+            else console.warn("placing a cell that does not exist");
+        },
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
+
+            if (this.previous("connectionType") == "gik") this.clearCells();
+
+            this._setToDefaultsSilently();
+            this._setDefaultCellMode();
+
+            if (loadingFromFile === undefined) loadingFromFile = false;
+
+            if (this._undo) this._undo();
+            if (globals.basePlane) globals.basePlane.destroy();
+            if (globals.highlighter) globals.highlighter.destroy();
+            _.extend(this, this._getSubclassForLatticeType(loadingFromFile));
+            this._initLatticeType();
+
+
+
+
+            //todo refactor this eventually
+            var self = this;
+            var cells = this.get("cells");
+            this._loopCells(cells, function(cell, x, y, z){
+                if (!cell) return;
+
+                var index = _.clone(cell.indices);
+                //var  parts = null;
+                //if (loadingFromFile) parts = _.clone(cell.parts);
+                if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
+                if (cell.parentPosition) var parentPos = cell.parentPosition;
+                if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
+                if (cell.parentType) var parentType = cell.parentType;
+                if (cell.type) var type = cell.type;
+
+                if (cell.destroy) cell.destroy();
+                var newCell = self.makeCellForLatticeType(index, parentPos, parentOrientation, direction, parentType, type);
+
+                //if (parts) {
+                //    //todo make this better
+                //    newCell.parts = newCell._initParts();
+                //    for (var i=0;i<newCell.parts.length;i++){
+                //        if (!parts[i]) {
+                //            newCell.parts[i].destroy();
+                //            newCell.parts[i] = null;
+                //        }
+                //    }
+                //}
+                cells[x][y][z] = newCell;
+            });
+            globals.three.render();
+        },
+
+        _getSubclassForLatticeType: function(loadingFromFile){
+            var cellType = this.get("cellType");
+            var connectionType = this.get("connectionType");
+            if (cellType == "octa"){
+                if (connectionType == "face"){
+                    return this.OctaFaceLattice;
+                } else if (connectionType == "freeformFace"){
+                    if (!loadingFromFile) this.clearCells();
+                    return this.OctaFreeFormFaceLattice;
+                } else if (connectionType == "edge"){
+                    return this.OctaEdgeLattice;
+                } else if (connectionType == "edgeRot"){
+                    return this.OctaRotEdgeLattice;
+                } else if (connectionType == "vertex"){
+                    return this.OctaVertexLattice;
+                }
+            } else if (cellType == "tetra"){
+                return this.CubeLattice;
+            } else if (cellType == "cube"){
+                if (connectionType == "face"){
+                    return this.CubeLattice;
+                } else if (connectionType == "gik"){
+                    if (!loadingFromFile) this.clearCells();
+                    return this.GIKLattice;
+                }
+            } else if (cellType == "truncatedCube"){
+                return this.TruncatedCubeLattice;
+            } else if (cellType == "kelvin"){
+                return this.KelvinLattice;
+            }
+        },
+
+        _setToDefaultsSilently: function(){
+            var newCellType = this.get("cellType");
+            var newConnectionType = this.get("connectionType");
+            if (newConnectionType == this.previous("connectionType")){
+                newConnectionType = _.keys(plist["allConnectionTypes"][newCellType])[0];
+                this.set("connectionType", newConnectionType, {silent:true});
+            }
+            var partType = _.keys(plist["allPartTypes"][newCellType][newConnectionType])[0];
+            this.set("partType", partType, {silent:true});
+        },
+
+        _setDefaultCellMode: function(){//if no part associated with this lattice type
+            if (!plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
+                appState.set("cellMode", "cell");
+            }
+        },
+
+        ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////UTILS///////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+
+        _iterCells: function(cells, callback){
+            _.each(cells, function(cellLayer){
+                _.each(cellLayer, function(cellColumn){
+                    _.each(cellColumn, function(cell){
+                        callback(cell, cellColumn, cellLayer);
+                    });
+                });
+
+            });
+        },
+
+        _loopCells: function(cells, callback){
+            for (var x=0;x<cells.length;x++){
+                for (var y=0;y<cells[0].length;y++){
+                    for (var z=0;z<cells[0][0].length;z++){
+                        callback(cells[x][y][z], x, y, z);
+                    }
+                }
+            }
+        },
+
+        rasterCells: function(order, callback, var1, var2, var3, cells){//used for CAM raster x/y/z in any order permutation
+            //order is of form 'XYZ'
+            var firstLetter = order.charAt(0);
             order = order.substr(1);
-        }
-        if (!cells) cells = this.get("cells");//grab cells once at beginning and hold onto it in case changes are made while looping
-        var newVarOrder;
-        var newVarDim;
-        if (firstLetter == 'X'){
-            newVarOrder = 0;
-            newVarDim = cells.length;
-        } else if (firstLetter == 'Y'){
-            newVarOrder = 1;
-            newVarDim = cells[0].length;
-        } else if (firstLetter == 'Z'){
-            newVarOrder = 2;
-            newVarDim = cells[0][0].length;
-        } else if (firstLetter == ""){
-            if (this._rasterGikCells) {
-                this._rasterGikCells(order, callback, var1, var2, var3, cells);
+            var isNeg = false;
+            if (firstLetter == "-") {
+                isNeg = true;
+                firstLetter = order.charAt(0);
+                order = order.substr(1);
+            }
+            if (!cells) cells = this.get("cells");//grab cells once at beginning and hold onto it in case changes are made while looping
+            var newVarOrder;
+            var newVarDim;
+            if (firstLetter == 'X'){
+                newVarOrder = 0;
+                newVarDim = cells.length;
+            } else if (firstLetter == 'Y'){
+                newVarOrder = 1;
+                newVarDim = cells[0].length;
+            } else if (firstLetter == 'Z'){
+                newVarOrder = 2;
+                newVarDim = cells[0][0].length;
+            } else if (firstLetter == ""){
+                if (this._rasterGikCells) {
+                    this._rasterGikCells(order, callback, var1, var2, var3, cells);
+                    return;
+                }
+                this._rasterCells(order, callback, var1, var2, var3, cells);
                 return;
             }
-            this._rasterCells(order, callback, var1, var2, var3, cells);
-            return;
-        }
-        if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
-        else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
-        else var1 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
-        this.rasterCells(order, callback, var1, var2, var3, cells);
-    },
+            if (var3 == null) var3 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+            else if (var2  == null) var2 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+            else var1 = {order: newVarOrder, dim: newVarDim, neg:isNeg};
+            this.rasterCells(order, callback, var1, var2, var3, cells);
+        },
 
-    _rasterCells: function(order, callback, var1, var2, var3, cells){
-        for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
-            for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
-                for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
-                    if (var1.order == 0){
-                        if (var2.order == 1) callback(cells[i][j][k], i, j, k);
-                        else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
-                    } else if (var1.order == 1){
-                        if (var2.order == 0) callback(cells[j][i][k], j, i, k);
-                        else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
-                    } else {
-                        if (var2.order == 0) callback(cells[j][k][i], j, k, i);
-                        else if (var2.order == 1) {
-                            callback(cells[k][j][i], k, j, i);
+        _rasterCells: function(order, callback, var1, var2, var3, cells){
+            for (var i=this._getRasterLoopInit(var1);this._getRasterLoopCondition(i,var1);i+=this._getRasterLoopIterator(var1)){
+                for (var j=this._getRasterLoopInit(var2);this._getRasterLoopCondition(j,var2);j+=this._getRasterLoopIterator(var2)){
+                    for (var k=this._getRasterLoopInit(var3);this._getRasterLoopCondition(k,var3);k+=this._getRasterLoopIterator(var3)){
+                        if (var1.order == 0){
+                            if (var2.order == 1) callback(cells[i][j][k], i, j, k);
+                            else if (var2.order == 2) callback(cells[i][k][j], i, k, j);
+                        } else if (var1.order == 1){
+                            if (var2.order == 0) callback(cells[j][i][k], j, i, k);
+                            else if (var2.order == 2) callback(cells[k][i][j], k, i, j);
+                        } else {
+                            if (var2.order == 0) callback(cells[j][k][i], j, k, i);
+                            else if (var2.order == 1) {
+                                callback(cells[k][j][i], k, j, i);
+                            }
                         }
-                    }
 
+                    }
                 }
             }
-        }
-    },
+        },
 
-    _getRasterLoopInit: function(variable){
-        if (variable.neg) return variable.dim-1;
-        return 0;
-    },
+        _getRasterLoopInit: function(variable){
+            if (variable.neg) return variable.dim-1;
+            return 0;
+        },
 
-    _getRasterLoopCondition: function(iter, variable){
-        if (variable.neg) return iter>=0;
-        return iter<variable.dim;
-    },
+        _getRasterLoopCondition: function(iter, variable){
+            if (variable.neg) return iter>=0;
+            return iter<variable.dim;
+        },
 
-    _getRasterLoopIterator: function(variable){
-        if (variable.neg) return -1;
-        return 1;
-    },
+        _getRasterLoopIterator: function(variable){
+            if (variable.neg) return -1;
+            return 1;
+        },
 
-    _allAxesScales: function(){
-        var xScale = this.xScale();
-        var yScale = this.yScale();
-        var zScale = this.zScale();
-        return {x:xScale, y:yScale, z:zScale};
-    },
+        _allAxesScales: function(){
+            var xScale = this.xScale();
+            var yScale = this.yScale();
+            var zScale = this.zScale();
+            return {x:xScale, y:yScale, z:zScale};
+        },
 
-    _subtract: function(pos1, pos2){
-        return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
-    },
+        _subtract: function(pos1, pos2){
+            return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
+        },
 
-    _add: function(pos1, pos2){
-        return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
-    },
+        _add: function(pos1, pos2){
+            return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
+        },
 
-    ////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////UI///////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////UI///////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////////////
 
-    toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
-        return _.omit(this.attributes, ["cells", "nodes"]);//omit makes a copy
-    }//todo something weird here
+        toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
+            return _.omit(this.attributes, ["cells", "nodes"]);//omit makes a copy
+        }//todo something weird here
+
+    });
+
+    return new Lattice();
 
 });
