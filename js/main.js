@@ -20,8 +20,16 @@ require.config({
         //models
         plist: 'models/PList',
         appState: 'models/AppState',
-        lattice: 'lattice/Lattice',
         fileSaver: 'models/FileSaver',
+
+        //lattice
+        lattice: 'lattice/Lattice',
+
+        //baseplane
+        baseplane: 'baseplane/BasePlane',
+        squareBaseplane: 'baseplane/SquareBasePlane',
+        octaBaseplane: 'baseplane/OctaBasePlane',
+        rotEdgeOctaBaseplane: 'baseplane/RotEdgeOctaBasePlane',
 
         //UI
         navbar: 'menus/Navbar',
