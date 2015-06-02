@@ -5,7 +5,6 @@
 requirejs.config({
     baseUrl: 'js',
     paths: {
-        analytics: 'dependencies/analytics',
         jquery: 'dependencies/jquery-2.1.3',
         underscore: 'dependencies/underscore',
         backbone: 'dependencies/backbone',
@@ -62,7 +61,7 @@ requirejs.config({
 });
 
 //init stuff
-requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'analytics', 'flatUI'],
+requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'flatUI'],
     function(appState, lattice, MenuWrapper, Navbar, Ribbon, three, ThreeView){
 
     new MenuWrapper({model:appState});
