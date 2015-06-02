@@ -3,7 +3,7 @@
  */
 
 
-function GlobalFilesaver(){
+define(['fileSaverLib'], function(saveAs){
 
     function _saveFile(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
@@ -80,4 +80,4 @@ function GlobalFilesaver(){
         loadFile: loadFile,
         loadUser: loadUser
     }
-}
+});

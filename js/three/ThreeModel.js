@@ -3,7 +3,7 @@
  */
 
 
-function ThreeModel(){
+define(['three'], function(THREE){
 
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 10000);
     var scene = new THREE.Scene();
@@ -152,4 +152,5 @@ function ThreeModel(){
         basePlane: basePlane,
         removeAllCells: removeAllCells
     }
-}
+
+});

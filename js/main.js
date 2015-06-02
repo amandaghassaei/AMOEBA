@@ -5,24 +5,45 @@
 requirejs.config({
     baseUrl: 'js',
     paths: {
+        analytics: 'dependencies/analytics',
         jquery: 'dependencies/jquery-2.1.3',
         underscore: 'dependencies/underscore',
         backbone: 'dependencies/backbone',
-        three: 'dependencies/three',
+        fileSaverLib: 'dependencies/loaders/FileSaver.min',
 
-        plist: 'models/AllAppPLists',
+        //three
+        three: 'dependencies/three',
+        orbitControls: 'dependencies/OrbitControls',
+        threeModel: 'three/ThreeModel',
+        threeView: 'three/ThreeView',
+
+        //models
+        plist: 'models/PList',
         appState: 'models/AppState',
-        lattice: 'lattice/Lattice'
+        lattice: 'lattice/Lattice',
+        fileSaver: 'models/FileSaver'
+
+        //views
+
+
+        //UI
     },
     shim: {
         three: {
             exports: 'THREE'
+        },
+        orbitControls: {
+            deps: ['three'],
+            exports: 'THREE'
+        },
+        fileSaverLib: {
+            exports: 'saveAs'
         }
     }
 });
 
-requirejs(['jquery', 'lattice'], function($, lattice) {
-    console.log(lattice);
+requirejs(['fileSaver', 'analytics'], function(fileSaver) {
+    console.log(fileSaver);
 });
 
 
