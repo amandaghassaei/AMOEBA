@@ -27,6 +27,7 @@ requirejs.config({
         //UI
         navbar: 'menus/Navbar',
         navViewMenu: 'menus/NavViewMenu',//view dropdown
+        ribbon: 'menus/Ribbon',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
         latticeMenu: 'menus/LatticeMenuView',
@@ -61,12 +62,12 @@ requirejs.config({
 });
 
 //init stuff
-requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'threeModel', 'threeView', 'analytics', 'flatUI'],
-    function(appState, lattice, MenuWrapper, Navbar, three, ThreeView){
+requirejs(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'analytics', 'flatUI'],
+    function(appState, lattice, MenuWrapper, Navbar, Ribbon, three, ThreeView){
 
     new MenuWrapper({model:appState});
     new Navbar({model:appState});
-//    new Ribbon({model:appState});
+    new Ribbon({model:appState});
 
     new ThreeView({model:three});
 
