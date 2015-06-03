@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'lattice', 'plist'], function($, _, Backbone, lattice, plist){
+define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, plist, Backbone, lattice){
 
     return Backbone.View.extend({
 

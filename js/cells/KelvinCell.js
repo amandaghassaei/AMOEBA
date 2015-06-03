@@ -2,7 +2,6 @@
  * Created by aghassaei on 5/26/15.
  */
 
-
 define(['truncatedCubeCell'], function(TruncatedCubeCell){
 
     var truncOctaRad = Math.sqrt(2);

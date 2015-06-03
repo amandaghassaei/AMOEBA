@@ -2,7 +2,7 @@
  * Created by fab on 3/18/15.
  */
 
-define(['jquery', 'underscore', 'backbone', 'lattice', 'plist'], function($, _, Backbone, lattice, plist){
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice'], function($, _, Backbone, plist, lattice){
 
     return Backbone.View.extend({
 

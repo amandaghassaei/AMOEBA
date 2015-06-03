@@ -3,7 +3,7 @@
  */
 
 
-define(['three'], function(THREE){
+define(['underscore', 'three'], function(_, THREE){
 
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 5000);
     var scene = new THREE.Scene();

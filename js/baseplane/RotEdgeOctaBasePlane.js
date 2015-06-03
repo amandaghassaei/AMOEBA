@@ -3,7 +3,8 @@
  */
 
 
-define(['squareBaseplane', 'lattice'], function(SquareBasePlane, lattice){
+define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 'squareBaseplane'],
+    function(_, Backbone, appState, lattice, three, THREE, SquareBasePlane){
 
     return SquareBasePlane.extend({
 

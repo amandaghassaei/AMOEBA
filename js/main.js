@@ -102,6 +102,12 @@ require.config({
 
 });
 
+require.onError = function (err) {
+    console.log(err.requireType);
+    console.log(err.requireModules);
+    throw err;
+};
+
 //init stuff
 require(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel', 'threeView', 'flatUI'],
     function(appState, lattice, MenuWrapper, Navbar, Ribbon, three, ThreeView){

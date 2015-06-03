@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/16/15.
  */
 
-define(['backbone', 'threeModel', 'orbitControls', 'appState', 'globals'], function(Backbone, three, THREE, appState, globals){
+define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls'], function(_, Backbone, THREE, appState, globals){
 
     return Backbone.View.extend({
 

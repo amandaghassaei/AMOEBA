@@ -5,7 +5,7 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['backbone'], function(Backbone){
+define(['underscore', 'backbone'], function(_, Backbone){
 
     var AppState = Backbone.Model.extend({
 

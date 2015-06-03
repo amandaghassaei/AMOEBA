@@ -3,7 +3,8 @@
  */
 
 
-define(['lattice', 'globals'], function(lattice, globals){
+define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'three', 'threeModel'],
+    function(_, Backbone, appState, lattice, globals, plist, THREE, three){
 
     var KelvinLattice =  {
 

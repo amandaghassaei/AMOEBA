@@ -3,7 +3,8 @@
  */
 
 
-define(['highlighter', 'three'], function(Highlighter, THREE){
+define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three', 'highlighter'],
+    function(_, Backbone, three, appState, lattice, DMACell, THREE, Highlighter){
 
     return Highlighter.extend({
 

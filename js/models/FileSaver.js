@@ -3,7 +3,7 @@
  */
 
 
-define(['fileSaverLib'], function(saveAs){
+define(['underscore', 'fileSaverLib'], function(_, saveAs){
 
     function _saveFile(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});

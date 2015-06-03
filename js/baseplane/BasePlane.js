@@ -2,7 +2,8 @@
  * Created by aghassaei on 1/31/15.
  */
 
-define(['appState', 'threeModel'], function(appState, three){
+define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
+    function(_, Backbone, appState, lattice, three, THREE){
 
     return Backbone.Model.extend({
 

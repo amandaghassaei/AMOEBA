@@ -3,7 +3,8 @@
  */
 
 
-define(['baseplane', 'lattice', 'threeModel'], function(BasePlane, lattice, three){
+define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 'baseplane'],
+    function(_, Backbone, appState, lattice, three, THREE, BasePlane){
 
     return BasePlane.extend({
 
