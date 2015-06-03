@@ -18,6 +18,7 @@ require.config({
         threeView: 'three/ThreeView',
 
         //models
+        globals: 'models/globals',
         plist: 'models/PList',
         appState: 'models/AppState',
         fileSaver: 'models/FileSaver',

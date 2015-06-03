@@ -55,7 +55,7 @@ define(['fileSaverLib'], function(saveAs){
     function loadFile(data){//todo make this better
         globals.lattice.clearCells();
         _setData(data, false);
-        globals.lattice._updateLatticeType(null, null, null, true);
+        globals.lattice._updateLatticeType(true);
         globals.lattice.trigger("change:scale");
     }
 

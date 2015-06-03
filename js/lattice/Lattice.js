@@ -3,7 +3,7 @@
  */
 
 
-define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, THREE, three){
+define(['appState', 'plist', 'three', 'threeModel', 'globals'], function(appState, plist, THREE, three, globals){
 
     var Lattice = Backbone.Model.extend({
 
@@ -35,17 +35,15 @@ define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, T
 
             //bind events
             this.listenTo(this, "change:partType", this._updatePartType);
-            this.listenTo(this, "change:cellType change:connectionType", this._updateLatticeType);
+            this.listenTo(this, "change:cellType change:connectionType", function(){
+                this._updateLatticeType(false);
+            });
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
             this.listenTo(appState, "change:cellMode", this._updateForMode);
             this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 
-
-        },
-
-        delayedInit: function(){
-            this._updateLatticeType();
+            this._updateLatticeType(false);
         },
 
         ////////////////////////////////////////////////////////////////////////////////////
@@ -368,7 +366,7 @@ define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, T
         ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
 
-        _updateLatticeType: function(arg1, arg2, arg3, loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
+        _updateLatticeType: function(loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
 
             if (this.previous("connectionType") == "gik") this.clearCells();
 
@@ -383,38 +381,13 @@ define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, T
             _.extend(this, this._getSubclassForLatticeType(loadingFromFile));
             this._initLatticeType();
 
-
-
-
-            //todo refactor this eventually
-            var self = this;
+            //copy over cells to new lattice type
             var cells = this.get("cells");
-            this._loopCells(cells, function(cell, x, y, z){
+            this._loopCells(cells, function(cell, x, y, z, self){
                 if (!cell) return;
-
-                var index = _.clone(cell.indices);
-                //var  parts = null;
-                //if (loadingFromFile) parts = _.clone(cell.parts);
-                if (cell.parentOrientation) var parentOrientation = new THREE.Quaternion(cell.parentOrientation._x, cell.parentOrientation._y, cell.parentOrientation._z, cell.parentOrientation._w);
-                if (cell.parentPosition) var parentPos = cell.parentPosition;
-                if (cell.direction) var direction = new THREE.Vector3(cell.direction.x, cell.direction.y, cell.direction.z);
-                if (cell.parentType) var parentType = cell.parentType;
-                if (cell.type) var type = cell.type;
-
+                var index = _.clone(cell.index);
                 if (cell.destroy) cell.destroy();
-                var newCell = self.makeCellForLatticeType(index, parentPos, parentOrientation, direction, parentType, type);
-
-                //if (parts) {
-                //    //todo make this better
-                //    newCell.parts = newCell._initParts();
-                //    for (var i=0;i<newCell.parts.length;i++){
-                //        if (!parts[i]) {
-                //            newCell.parts[i].destroy();
-                //            newCell.parts[i] = null;
-                //        }
-                //    }
-                //}
-                cells[x][y][z] = newCell;
+                cells[x][y][z] = self.makeCellForLatticeType(index);// parentPos, parentOrientation, direction, parentType, type)
             });
             three.render();
         },
@@ -487,7 +460,7 @@ define(['appState', 'plist', 'three', 'threeModel'], function(appState, plist, T
             for (var x=0;x<cells.length;x++){
                 for (var y=0;y<cells[0].length;y++){
                     for (var z=0;z<cells[0][0].length;z++){
-                        callback(cells[x][y][z], x, y, z);
+                        callback(cells[x][y][z], x, y, z, this);
                     }
                 }
             }
