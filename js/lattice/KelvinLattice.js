@@ -39,9 +39,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             return 2*Math.sqrt(2)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices){
+        makeCellForLatticeType: function(indices, callback){
             require(['kelvinCell'], function(KelvinCell){
-                return new KelvinCell(indices);
+                var cell = new KelvinCell(indices);
+                if (callback) callback(cell);
+                return cell;
             });
         },
 

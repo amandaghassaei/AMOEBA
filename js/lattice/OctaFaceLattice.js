@@ -47,9 +47,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             return 2/Math.sqrt(6)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices){
+        makeCellForLatticeType: function(indices, callback){
             require(['octaFaceCell'], function(OctaFaceCell){
-                return new OctaFaceCell(indices);
+                var cell = new OctaFaceCell(indices);
+                if (callback) callback(cell);
+                return cell;
             });
         },
 
@@ -60,10 +62,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             });
         }
     };
-
-    _.each(_.keys(OctaFaceLattice), function(key){
-        console.log(key);
-    });
 
     return OctaFaceLattice;
 });

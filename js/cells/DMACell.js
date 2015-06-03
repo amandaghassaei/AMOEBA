@@ -48,7 +48,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
     DMACell.prototype.getIndex = function(){
         var index = this.index.clone();
-        console.log(index);
+//        console.log(index);
         index = this.getAbsoluteOrientation(index);
         if (this.superCell) index.add(this.superCell.getIndex());
         return index;

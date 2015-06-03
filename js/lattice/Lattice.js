@@ -64,10 +64,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 for (var y=relativeMin.y;y<=relativeMax.y;y++){
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
                         if (!cells[x][y][z]) {
-                            var cell = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin));
-                            cells[x][y][z] = cell;
-                            newCells.push(cell);
-                            this.set("numCells", this.get("numCells")+1);
+                            var self = this;
+                            var callback = function(cell){
+                                newCells.push(cell);
+                                self.set("numCells", self.get("numCells")+1);
+                            };
+                            cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), callback);
                         } else console.warn("already a cell there");
                     }
                 }
@@ -79,13 +81,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
 
             var cells = this.get("cells");
-            if (!noCheck) this.checkForMatrixExpansion(cells, indices, indices);
+            if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(cells, indices, indices);
 
             var index = this._subtract(indices, this.get("cellsMin"));
             if (!cells[index.x][index.y][index.z]) {
-                cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
-                this.set("numCells", this.get("numCells")+1);
-                if (!noRender || noRender === undefined) three.render();
+                var self = this;
+                var callback = function(){
+                    self.set("numCells", self.get("numCells")+1);
+                    if (!noRender || noRender === undefined) three.render();
+                };
+                cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, callback);
             } else console.warn("already a cell there");
 
         },

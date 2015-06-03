@@ -39,9 +39,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             return 1.28*(1+2*cellSeparation);
         },
 
-        makeCellForLatticeType: function(indices){
+        makeCellForLatticeType: function(indices, callback){
             require(['gikSuperCell'], function(GIKSuperCell){
-                return new GIKSuperCell(indices);
+                var cell = new GIKSuperCell(indices);
+                if (callback) callback(cell);
+                return cell;
             });
         },
 

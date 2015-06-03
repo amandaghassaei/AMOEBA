@@ -38,9 +38,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             return 1+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices){
+        makeCellForLatticeType: function(indices, callback){
             require(['cubeCell'], function(CubeCell){
-                return new CubeCell(indices);
+                var cell = new CubeCell(indices);
+                if (callback) callback(cell);
+                return cell;
             });
         },
 
