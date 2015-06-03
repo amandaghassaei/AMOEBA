@@ -3,7 +3,7 @@
  */
 
 
-define(['threeModel', 'appState', 'lattice'], function(three, appState, lattice){
+define(['threeModel', 'appState', 'lattice', 'cell'], function(three, appState, lattice, DMACell){
 
     return Backbone.View.extend({
 
