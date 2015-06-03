@@ -3,11 +3,11 @@
  */
 
 
-(function(){
+define(['cell'], function(DMACell){
 
     var truncCubeRad = Math.sqrt(2)/2;
-    var unitCellGeo = new THREE.Geometry();
-    unitCellGeo.vertices = [
+    var unitGeo = new THREE.Geometry();
+    unitGeo.vertices = [
         new THREE.Vector3(truncCubeRad, 0, truncCubeRad),
         new THREE.Vector3(0, truncCubeRad, truncCubeRad),
         new THREE.Vector3(-truncCubeRad, 0, truncCubeRad),
@@ -23,7 +23,7 @@
         new THREE.Vector3(-truncCubeRad, 0, -truncCubeRad),
         new THREE.Vector3(0, -truncCubeRad, -truncCubeRad)
     ];
-    unitCellGeo.faces = [
+    unitGeo.faces = [
         new THREE.Face3(1,0,4),
         new THREE.Face3(2,1,5),
         new THREE.Face3(3,2,6),
@@ -47,7 +47,7 @@
         new THREE.Face3(3,11,7),
         new THREE.Face3(3,6,11)
     ];
-    unitCellGeo.computeFaceNormals();
+    unitGeo.computeFaceNormals();
 
     function TruncatedCubeCell(index, superCell){
         DMACell.call(this, index, superCell);
@@ -55,7 +55,7 @@
     TruncatedCubeCell.prototype = Object.create(DMACell.prototype);
 
     TruncatedCubeCell.prototype._getGeometry = function(){
-        return unitCellGeo;
+        return unitGeo;
     };
 
     TruncatedCubeCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
@@ -78,6 +78,5 @@
         return {index: _.clone(this.index), direction:direction, position:position};
     };
 
-    self.TruncatedCubeCell = TruncatedCubeCell;
-
-})();
+    return TruncatedCubeCell;
+});

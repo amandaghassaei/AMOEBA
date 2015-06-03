@@ -46,7 +46,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new OctaVertexCell(indices);
+            require(['octaVertexCell'], function(OctaVertexCell){
+                return new OctaVertexCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

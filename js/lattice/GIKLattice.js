@@ -39,7 +39,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-             return new GIKSuperCell(indices);
+            require(['gikSuperCell'], function(GIKSuperCell){
+                return new GIKSuperCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

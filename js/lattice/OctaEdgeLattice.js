@@ -64,7 +64,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new DMAEdgeOctaCell(indices);
+            require(['octaEdgeCell'], function(OctaEdgeCell){
+                return new OctaEdgeCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

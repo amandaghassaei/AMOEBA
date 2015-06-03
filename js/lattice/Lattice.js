@@ -84,7 +84,7 @@ define(['appState', 'plist', 'three', 'threeModel', 'globals'], function(appStat
             if (!cells[index.x][index.y][index.z]) {
                 cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices);
                 this.set("numCells", this.get("numCells")+1);
-                if (!noRender) three.render();
+                if (!noRender || noRender === undefined) three.render();
             } else console.warn("already a cell there");
 
         },

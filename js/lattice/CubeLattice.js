@@ -38,7 +38,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new CubeCell(indices);
+            require(['cubeCell'], function(CubeCell){
+                return new CubeCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

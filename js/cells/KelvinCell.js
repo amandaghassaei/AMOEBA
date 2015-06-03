@@ -3,12 +3,12 @@
  */
 
 
-(function(){
+define(['truncatedCubeCell'], function(TruncatedCubeCell){
 
     var truncOctaRad = Math.sqrt(2);
     var pyrRad = 1/Math.sqrt(2);
-    var unitCellGeo = new THREE.Geometry();
-    unitCellGeo.vertices = [
+    var unitGeo = new THREE.Geometry();
+    unitGeo.vertices = [
         new THREE.Vector3(pyrRad, 0, truncOctaRad),
         new THREE.Vector3(0, pyrRad, truncOctaRad),
         new THREE.Vector3(-pyrRad, 0, truncOctaRad),
@@ -39,7 +39,7 @@
         new THREE.Vector3(-pyrRad, -truncOctaRad, 0),
         new THREE.Vector3(0, -truncOctaRad, -pyrRad)
     ];
-    unitCellGeo.faces = [
+    unitGeo.faces = [
         new THREE.Face3(0,1,3),
         new THREE.Face3(2,3,1),
         new THREE.Face3(4,7,5),
@@ -95,7 +95,7 @@
         new THREE.Face3(22, 7, 23),
         new THREE.Face3(22, 14, 7),
     ];
-    unitCellGeo.computeFaceNormals();
+    unitGeo.computeFaceNormals();
 
     function KelvinCell(index, superCell){
         TruncatedCubeCell.call(this, index, superCell);
@@ -103,9 +103,8 @@
     KelvinCell.prototype = Object.create(TruncatedCubeCell.prototype);
     
     KelvinCell.prototype._getGeometry = function(){
-        return unitCellGeo;
+        return unitGeo;
     };
 
-    self.KelvinCell = KelvinCell;
-
-})();
+    return KelvinCell;
+});

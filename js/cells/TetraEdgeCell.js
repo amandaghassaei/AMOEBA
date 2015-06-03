@@ -3,9 +3,14 @@
  */
 
 
-function DMATetraEdgeCell(index, superCell){
-    TetraFaceCell.call(this, index, superCell);
-}
-DMATetraEdgeCell.prototype = Object.create(TetraFaceCell.prototype);
-
-DMATetraEdgeCell.prototype._rotateCell = function(){};
+define(['tetraFaceCell'], function(TetraFaceCell){
+    
+    function TetraEdgeCell(index, superCell){
+        TetraFaceCell.call(this, index, superCell);
+    }
+    TetraEdgeCell.prototype = Object.create(TetraFaceCell.prototype);
+    
+    TetraEdgeCell.prototype._rotateCell = function(){};
+    
+    return TetraEdgeCell;
+});

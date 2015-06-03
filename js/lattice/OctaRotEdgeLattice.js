@@ -50,7 +50,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new OctaRotEdgeCell(indices);
+            require(['octaRotEdgeCell'], function(OctaRotEdgeCell){
+                return new OctaRotEdgeCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins

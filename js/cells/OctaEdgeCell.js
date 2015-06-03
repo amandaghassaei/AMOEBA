@@ -3,20 +3,25 @@
  */
 
 
-function OctaEdgeCell(index, superCell){
-    OctaFaceCell.call(this, index, superCell);
-}
-OctaEdgeCell.prototype = Object.create(OctaFaceCell.prototype);
+define(['octaFaceCell'], function(OctaFaceCell){
 
-OctaEdgeCell.prototype._rotateCell = function(object3D){
-    return object3D;
-};
+    function OctaEdgeCell(index, superCell){
+        OctaFaceCell.call(this, index, superCell);
+    }
+    OctaEdgeCell.prototype = Object.create(OctaFaceCell.prototype);
 
-//todo fix this
-OctaEdgeCell.prototype.calcHighlighterPosition = function(face){
-    var direction = face.normal.clone();
-    direction.applyQuaternion(this.mesh.quaternion);
-    var position = this.getPosition();
-    position.add(direction.clone().multiplyScalar(this.zScale()/2));
-    return {index: _.clone(this.index), direction:direction, position:position};
-};
+    OctaEdgeCell.prototype._rotateCell = function(object3D){
+        return object3D;
+    };
+
+    //todo fix this
+    OctaEdgeCell.prototype.calcHighlighterPosition = function(face){
+        var direction = face.normal.clone();
+        direction.applyQuaternion(this.mesh.quaternion);
+        var position = this.getPosition();
+        position.add(direction.clone().multiplyScalar(this.zScale()/2));
+        return {index: _.clone(this.index), direction:direction, position:position};
+    };
+
+    return OctaEdgeCell;
+});

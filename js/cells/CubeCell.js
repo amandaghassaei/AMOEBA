@@ -3,7 +3,7 @@
  */
 
 
-(function () {
+define(['cell'], function(DMACell){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
@@ -35,6 +35,6 @@
         return {index: _.clone(this.index), direction:direction, position:position};
     };
 
-    self.CubeCell = CubeCell;
+    return CubeCell;
 
-})();
+});

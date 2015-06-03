@@ -10,8 +10,8 @@ define(['lattice', 'globals'], function(lattice, globals){
             require(['octaBaseplane'], function(OctaBasePlane){
                 globals.basePlane = new OctaBasePlane();
             });
-            require(['defaultHighlighter'], function(DefaultHighlighter){
-                globals.highlighter = new DefaultHighlighter();
+            require(['octaFaceHighlighter'], function(OctaFaceHighlighter){
+                globals.highlighter = new OctaFaceHighlighter();
             });
         },
 
@@ -47,7 +47,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new OctaFaceCell(indices);
+            require(['octaFaceCell'], function(OctaFaceCell){
+                return new OctaFaceCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins
@@ -57,6 +59,10 @@ define(['lattice', 'globals'], function(lattice, globals){
             });
         }
     };
+
+    _.each(_.keys(OctaFaceLattice), function(key){
+        console.log(key);
+    });
 
     return OctaFaceLattice;
 });

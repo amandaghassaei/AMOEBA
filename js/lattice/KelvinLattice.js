@@ -39,7 +39,9 @@ define(['lattice', 'globals'], function(lattice, globals){
         },
 
         makeCellForLatticeType: function(indices){
-            return new KelvinCell(indices);
+            require(['kelvinCell'], function(KelvinCell){
+                return new KelvinCell(indices);
+            });
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
