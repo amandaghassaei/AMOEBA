@@ -374,18 +374,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _updateLatticeType: function(loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
 
-            if (this.previous("connectionType") == "gik") this.clearCells();
-
             this._setToDefaultsSilently();
             this._setDefaultCellMode();
 
             if (loadingFromFile === undefined) loadingFromFile = false;
+            if (loadingFromFile) console.warn('loading from file');
+            this.clearCells();
 
             if (this._undo) this._undo();
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
 
-            var subclass = this._getSubclassForLatticeType(loadingFromFile);
+            var subclass = this._getSubclassForLatticeType();
             var self = this;
             require([subclass], function(subclassObject){
 
@@ -404,15 +404,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        _getSubclassForLatticeType: function(loadingFromFile){
+        _getSubclassForLatticeType: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
             if (cellType == "octa"){
                 if (connectionType == "face"){
                     return "octaFaceLattice";
-                } else if (connectionType == "freeformFace"){
-                    if (!loadingFromFile) this.clearCells();
-                    return "octaFreeFormFaceLattice";
                 } else if (connectionType == "edge"){
                     return "octaEdgeLattice";
                 } else if (connectionType == "edgeRot"){
@@ -426,7 +423,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (connectionType == "face"){
                     return "cubeLattice";
                 } else if (connectionType == "gik"){
-                    if (!loadingFromFile) this.clearCells();
                     return "gikLattice";
                 }
             } else if (cellType == "truncatedCube"){

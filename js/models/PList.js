@@ -46,9 +46,6 @@ define(['three'], function(THREE){
                 face: {
                     triangle:"Triangle"
                 },
-                freeformFace: {
-                    trox:"Troxes"
-                },
                 edge: null,
                     edgeRot: {
                     vox: "Snap Voxel (high res)",
@@ -78,7 +75,6 @@ define(['three'], function(THREE){
         allMaterialTypes:{
             octa:{
                 face: null,
-                    freeformFace: null,
                     edge: null,
                     edgeRot: null,
                     vertex: null
@@ -134,7 +130,6 @@ define(['three'], function(THREE){
         allMachineTypes:{
             octa:{
                 face: {handOfGod: "Hand of God"},
-                freeformFace: {handOfGod: "Hand of God"},
                 edgeRot: {
                     shopbot: "Shopbot",
                         oneBitBot: "One Bit Bot",

@@ -37,17 +37,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
                         <% }); %>\
                     </ul>\
                 </div><br/><br/>\
-            <% if (connectionType == "freeformFace") { %>\
-            Current Draw Shape:&nbsp;&nbsp;\
-                <div class="btn-group">\
-                    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= freeformCellType %><span class="caret"></span></button>\
-                    <ul role="menu" class="dropdown-menu">\
-                        <li><a class="lattice dropdownSelector" data-property="freeformCellType" data-value="octa" href="#">octa</a></li>\
-                        <li><a class="lattice dropdownSelector" data-property="freeformCellType" data-value="tetra" href="#">tetra</a></li>\
-                    </ul>\
-                </div>\
-                <br/><br/>\
-            <% } %>\
             <% if (connectionType == "gik") { %>\
             GIK Length:&nbsp;&nbsp;<input data-property="superCellRange" data-key="x" value="<%= superCellRange.x %>" placeholder="GIK length" class="form-control intInput lattice" type="text"><br/>\
             <br/>\

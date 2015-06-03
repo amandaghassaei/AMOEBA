@@ -38,10 +38,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             return [new THREE.Mesh(geometry, this.get("material"))];
         },
 
-        getType: function(){//todo hack from freeform octa, get rid of this eventually
-            return "octa";
-        },
-
         _renderZIndexChange: function(){
             var zIndex = this.get("zIndex");
             var xScale = lattice.xScale();

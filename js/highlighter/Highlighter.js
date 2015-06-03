@@ -132,11 +132,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         addRemoveVoxel: function(shouldAdd){
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                if (lattice.get("connectionType") == "freeformFace"){
-                    //todo make this work for baseplane
-                    lattice.addFreeFormCell(this.mesh.position.clone(), this.highlightedObject.getOrientation(), this.direction, this.highlightedObject.getType());
-                    return;
-                }
                 lattice.addCellAtIndex(this._getNextCellPosition());
             } else {
                 if (!this.highlightedObject) return;

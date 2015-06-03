@@ -29,9 +29,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
                         <% }); %>\
                     </ul>\
                 </div><br/><br/>\
-            <!--Cell Separation <% if (connectionType != "freeformFace"){ %>(xy, z): &nbsp;&nbsp;<input data-property="cellSeparation" data-key="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control floatInput lattice" type="text">\
+            <!--Cell Separation (xy, z): &nbsp;&nbsp;<input data-property="cellSeparation" data-key="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control floatInput lattice" type="text">\
             &nbsp;<input data-property="cellSeparation" data-key="z" value="<%= cellSeparation.z %>" placeholder="Z" class="form-control floatInput lattice" type="text">\
-            <% } else { %>( radial ): &nbsp;&nbsp;<input data-property="cellSeparation" data-key="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control floatInput lattice" type="text"><% } %>\
             <br/><br/>--><br/>\
             <% if (allMaterialTypes[cellType][connectionType]){ %> \
             Materials:<br/>\
