@@ -3,7 +3,8 @@
  */
 
 
-define(['cell'], function(DMACell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
+    function(_, THREE, three, lattice, appState, DMACell){
 
     var truncCubeRad = Math.sqrt(2)/2;
     var unitGeo = new THREE.Geometry();

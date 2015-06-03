@@ -3,7 +3,8 @@
  */
 
 
-define(['cell'], function(DMACell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
+    function(_, THREE, three, lattice, appState, DMACell){
 
     function OctaVertexCell(index, superCell){
         DMACell.call(this, index, superCell);

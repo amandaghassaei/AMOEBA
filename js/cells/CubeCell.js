@@ -3,7 +3,8 @@
  */
 
 
-define(['cell'], function(DMACell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
+    function(_, THREE, three, lattice, appState, DMACell){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 

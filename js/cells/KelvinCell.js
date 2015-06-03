@@ -2,7 +2,8 @@
  * Created by aghassaei on 5/26/15.
  */
 
-define(['truncatedCubeCell'], function(TruncatedCubeCell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'truncatedCubeCell'],
+    function(_, THREE, three, lattice, appState, TruncatedCubeCell){
 
     var truncOctaRad = Math.sqrt(2);
     var pyrRad = 1/Math.sqrt(2);

@@ -3,7 +3,8 @@
  */
 
 
-define(['cell'], function(DMACell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
+    function(_, THREE, three, lattice, appState, DMACell){
 
     var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));

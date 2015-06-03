@@ -3,7 +3,8 @@
  */
 
 
-define(['octaFaceCell'], function(OctaFaceCell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'octaFaceCell'],
+    function(_, THREE, three, lattice, appState, OctaFaceCell){
 
     function OctaEdgeCell(index, superCell){
         OctaFaceCell.call(this, index, superCell);

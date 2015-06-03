@@ -3,7 +3,8 @@
  */
 
 
-define(['three', 'threeModel', 'lattice', 'appState'], function(THREE, three, lattice, appState){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
+    function(_, THREE, three, lattice, appState){
 
     var cellMaterial = new THREE.MeshNormalMaterial();
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
