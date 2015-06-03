@@ -2,45 +2,54 @@
  * Created by aghassaei on 5/26/15.
  */
 
-latticeSubclasses = latticeSubclasses || {};
 
-latticeSubclasses["TruncatedCubeLattice"] = {
+define(['lattice', 'globals'], function(lattice, globals){
 
-        _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane();
-            globals.highlighter = new TruncatedCubeHighlighter();
-        },
+    _.extend(lattice, {
 
-        getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
-        },
+        TruncatedCubeLattice: {
 
-        getPositionForIndex: function(index){
-            return this._positionForIndex(index);
-        },
+            _initLatticeType: function(){
+                require(['squareBaseplane'], function(SquareBasePlane){
+                    globals.basePlane = new SquareBasePlane();
+                });
+                require(['truncatedCubeHighlighter'], function(TruncatedCubeHighlighter){
+                    globals.highlighter = new TruncatedCubeHighlighter();
+                });
+            },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return Math.sqrt(2)+2*cellSeparation;
-        },
+            getIndexForPosition: function(absPosition){
+                return this._indexForPosition(absPosition);
+            },
 
-        yScale: function(cellSeparation){
-            return this.xScale(cellSeparation);
-        },
+            getPositionForIndex: function(index){
+                return this._positionForIndex(index);
+            },
 
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return Math.sqrt(2)+2*cellSeparation;
-        },
+            xScale: function(cellSeparation){
+                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+                return Math.sqrt(2)+2*cellSeparation;
+            },
 
-        makeCellForLatticeType: function(indices){
-            return new TruncatedCubeCell(indices);
-        },
+            yScale: function(cellSeparation){
+                return this.xScale(cellSeparation);
+            },
 
-        _undo: function(){//remove all the mixins, this will help with debugging later
-            var self = this;
-            _.each(_.keys(this.TruncatedCubeLattice), function(key){
-                self[key] = null;
-            });
+            zScale: function(cellSeparation){
+                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+                return Math.sqrt(2)+2*cellSeparation;
+            },
+
+            makeCellForLatticeType: function(indices){
+                return new TruncatedCubeCell(indices);
+            },
+
+            _undo: function(){//remove all the mixins, this will help with debugging later
+                var self = this;
+                _.each(_.keys(this.TruncatedCubeLattice), function(key){
+                    self[key] = null;
+                });
+            }
         }
-    }
+    });
+});

@@ -32,6 +32,14 @@ require.config({
         octaBaseplane: 'baseplane/OctaBasePlane',
         rotEdgeOctaBaseplane: 'baseplane/RotEdgeOctaBasePlane',
 
+        //highlighter
+        highlighter: 'highlighter/Highlighter',
+        defaultHighlighter: 'highlighter/DefaultHighlighter',
+        cubeHighlighter: 'highlighter/CubeHighlighter',
+        gikHighlighter: 'highlighter/GIKHighlighter',
+        octaFaceHighlighter: 'highlighter/OctaFaceHighlighter',
+        truncatedCubeHighlighter: 'highlighter/TruncatedCubeHighlighter',
+
         //UI
         navbar: 'menus/Navbar',
         navViewMenu: 'menus/NavViewMenu',//view dropdown

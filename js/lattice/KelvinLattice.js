@@ -3,45 +3,53 @@
  */
 
 
-latticeSubclasses = latticeSubclasses || {};
+define(['lattice', 'globals'], function(lattice, globals){
 
-latticeSubclasses["KelvinLattice"] = {
+    _.extend(lattice, {
 
-        _initLatticeType: function(){
-            globals.basePlane = new SquareBasePlane();
-            globals.highlighter = new TruncatedCubeHighlighter();
-        },
+        KelvinLattice: {
 
-        getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
-        },
+            _initLatticeType: function(){
+                require(['squareBaseplane'], function(SquareBasePlane){
+                    globals.basePlane = new SquareBasePlane();
+                });
+                require(['truncatedCubeHighlighter'], function(TruncatedCubeHighlighter){
+                    globals.highlighter = new TruncatedCubeHighlighter();
+                });
+            },
 
-        getPositionForIndex: function(index){
-            return this._positionForIndex(index);
-        },
+            getIndexForPosition: function(absPosition){
+                return this._indexForPosition(absPosition);
+            },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 2*Math.sqrt(2)+2*cellSeparation;
-        },
+            getPositionForIndex: function(index){
+                return this._positionForIndex(index);
+            },
 
-        yScale: function(cellSeparation){
-            return this.xScale(cellSeparation);
-        },
+            xScale: function(cellSeparation){
+                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+                return 2*Math.sqrt(2)+2*cellSeparation;
+            },
 
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 2*Math.sqrt(2)+2*cellSeparation;
-        },
+            yScale: function(cellSeparation){
+                return this.xScale(cellSeparation);
+            },
 
-        makeCellForLatticeType: function(indices){
-            return new KelvinCell(indices);
-        },
+            zScale: function(cellSeparation){
+                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+                return 2*Math.sqrt(2)+2*cellSeparation;
+            },
 
-        _undo: function(){//remove all the mixins, this will help with debugging later
-            var self = this;
-            _.each(_.keys(this.KelvinLattice), function(key){
-                self[key] = null;
-            });
+            makeCellForLatticeType: function(indices){
+                return new KelvinCell(indices);
+            },
+
+            _undo: function(){//remove all the mixins, this will help with debugging later
+                var self = this;
+                _.each(_.keys(this.KelvinLattice), function(key){
+                    self[key] = null;
+                });
+            }
         }
-    }
+    });
+});

@@ -9,9 +9,13 @@ define(['lattice', 'globals'], function(lattice, globals){
         GIKLattice: {
 
             _initLatticeType: function(){
-                globals.basePlane = new SquareBasePlane();
-                globals.highlighter = new GIKHighlighter();
-                globals.highlighter.updateGikLength();
+                require(['squareBaseplane'], function(SquareBasePlane){
+                    globals.basePlane = new SquareBasePlane();
+                });
+                require(['gikHighlighter'], function(GIKHighlighter){
+                    globals.highlighter = new GIKHighlighter();
+                    globals.highlighter.updateGikLength();
+                });
             },
 
             getIndexForPosition: function(absPosition){
