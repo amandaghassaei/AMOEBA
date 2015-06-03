@@ -4,52 +4,51 @@
 
 define(['lattice', 'globals'], function(lattice, globals){
 
-    _.extend(lattice, {
+    var CubeLattice = {
 
-        CubeLattice: {
+        _initLatticeType: function(){
+            require(['squareBaseplane'], function(SquareBasePlane){
+                globals.basePlane = new SquareBasePlane();
+            });
+            require(['cubeHighlighter'], function(CubeHighlighter){
+                globals.highlighter = new CubeHighlighter();
+            });
+        },
 
-            _initLatticeType: function(){
-                require(['squareBaseplane'], function(SquareBasePlane){
-                    globals.basePlane = new SquareBasePlane();
-                });
-                require(['cubeHighlighter'], function(CubeHighlighter){
-                    globals.highlighter = new CubeHighlighter();
-                });
-            },
+        getIndexForPosition: function(absPosition){
+            return this._indexForPosition(absPosition);
+        },
 
-            getIndexForPosition: function(absPosition){
-                return this._indexForPosition(absPosition);
-            },
+        getPositionForIndex: function(index){
+            return this._positionForIndex(index);
+        },
 
-            getPositionForIndex: function(index){
-                return this._positionForIndex(index);
-            },
+        xScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1+2*cellSeparation;
+        },
 
-            xScale: function(cellSeparation){
-                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-                return 1+2*cellSeparation;
-            },
+        yScale: function(cellSeparation){
+            return this.xScale(cellSeparation);
+        },
 
-            yScale: function(cellSeparation){
-                return this.xScale(cellSeparation);
-            },
+        zScale: function(cellSeparation){
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
+            return 1+2*cellSeparation;
+        },
 
-            zScale: function(cellSeparation){
-                if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-                return 1+2*cellSeparation;
-            },
+        makeCellForLatticeType: function(indices){
+            return new CubeCell(indices);
+        },
 
-            makeCellForLatticeType: function(indices){
-                return new CubeCell(indices);
-            },
-
-            _undo: function(){//remove all the mixins, this will help with debugging later
-                var self = this;
-                _.each(_.keys(this.CubeLattice), function(key){
-                    self[key] = null;
-                });
-            }
+        _undo: function(){//remove all the mixins, this will help with debugging later
+            var self = this;
+            _.each(_.keys(CubeLattice), function(key){
+                self[key] = null;
+            });
         }
-    });
+    };
+
+    return CubeLattice;
 });
 

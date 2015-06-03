@@ -25,6 +25,15 @@ require.config({
 
         //lattice
         lattice: 'lattice/Lattice',
+        cubeLattice: 'lattice/CubeLattice',
+        gikLattice: 'lattice/GIKLattice',
+        kelvinLattice: 'lattice/KelvinLattice',
+        octaEdgeLattice: 'lattice/OctaEdgeLattice',
+        octaFaceLattice: 'lattice/OctaFaceLattice',
+        octaFreeFormFaceLattice: 'lattice/OctaFreeFormFaceLattice',
+        octaRotEdgeLattice: 'lattice/OctaRotEdgeLattice',
+        octavertexLattice: 'lattice/OctaVertexLattice',
+        truncatedCubeLattice: 'lattice/TruncatedCubeLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',

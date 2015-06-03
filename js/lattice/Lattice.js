@@ -378,18 +378,24 @@ define(['appState', 'plist', 'three', 'threeModel', 'globals'], function(appStat
             if (this._undo) this._undo();
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
-            _.extend(this, this._getSubclassForLatticeType(loadingFromFile));
-            this._initLatticeType();
 
-            //copy over cells to new lattice type
-            var cells = this.get("cells");
-            this._loopCells(cells, function(cell, x, y, z, self){
-                if (!cell) return;
-                var index = _.clone(cell.index);
-                if (cell.destroy) cell.destroy();
-                cells[x][y][z] = self.makeCellForLatticeType(index);// parentPos, parentOrientation, direction, parentType, type)
+            var subclass = this._getSubclassForLatticeType(loadingFromFile);
+            var self = this;
+            require([subclass], function(subclassObject){
+
+                _.extend(self, subclassObject);
+                self._initLatticeType();
+
+                //copy over cells to new lattice type
+                var cells = self.get("cells");
+                self._loopCells(cells, function(cell, x, y, z){
+                    if (!cell) return;
+                    var index = _.clone(cell.index);
+                    if (cell.destroy) cell.destroy();
+                    cells[x][y][z] = self.makeCellForLatticeType(index);// parentPos, parentOrientation, direction, parentType, type)
+                });
+                three.render();
             });
-            three.render();
         },
 
         _getSubclassForLatticeType: function(loadingFromFile){
@@ -397,31 +403,34 @@ define(['appState', 'plist', 'three', 'threeModel', 'globals'], function(appStat
             var connectionType = this.get("connectionType");
             if (cellType == "octa"){
                 if (connectionType == "face"){
-                    return this.OctaFaceLattice;
+                    return "octaFaceLattice";
                 } else if (connectionType == "freeformFace"){
                     if (!loadingFromFile) this.clearCells();
-                    return this.OctaFreeFormFaceLattice;
+                    return "octaFreeFormFaceLattice";
                 } else if (connectionType == "edge"){
-                    return this.OctaEdgeLattice;
+                    return "octaEdgeLattice";
                 } else if (connectionType == "edgeRot"){
-                    return this.OctaRotEdgeLattice;
+                    return "octaRotEdgeLattice";
                 } else if (connectionType == "vertex"){
-                    return this.OctaVertexLattice;
+                    return "octaVertexLattice";
                 }
             } else if (cellType == "tetra"){
-                return this.CubeLattice;
+                return "cubeLattice";
             } else if (cellType == "cube"){
                 if (connectionType == "face"){
-                    return this.CubeLattice;
+                    return "cubeLattice";
                 } else if (connectionType == "gik"){
                     if (!loadingFromFile) this.clearCells();
-                    return this.GIKLattice;
+                    return "gikLattice";
                 }
             } else if (cellType == "truncatedCube"){
-                return this.TruncatedCubeLattice;
+                return "truncatedCubeLattice";
             } else if (cellType == "kelvin"){
-                return this.KelvinLattice;
+                return "kelvinLattice";
+            } else {
+                console.warn("unrecognized cell type " + cellType);
             }
+            return null;
         },
 
         _setToDefaultsSilently: function(){
