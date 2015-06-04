@@ -24,7 +24,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
     //                vertexColors:THREE.FaceColors
                 }));
 
-            three.sceneAdd(this.mesh, "highlighter");
+            three.sceneAdd(this.mesh);
             this.hide();
 
             //bind events
@@ -143,7 +143,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         destroy: function(){
             this.setNothingHighlighted();
-            three.sceneRemove(this.mesh, null);
+            three.sceneRemove(this.mesh);
             this.mesh = null;
             this.stopListening();
         }

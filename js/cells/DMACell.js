@@ -19,7 +19,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
 
         if (superCell === undefined) {
-            if (this.index) three.sceneAdd(this.object3D, this._getSceneName());
+            if (this.index) three.sceneAdd(this.object3D);
             else this.hide();//stock cell
         }
 
@@ -35,10 +35,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
     DMACell.prototype._getModeName = function(){
         return "object3D";
-    };
-
-    DMACell.prototype._getSceneName = function(){
-        return "cell";
     };
 
     DMACell.prototype.getObject3D = function(){//careful, used for stock sim and supercell only for now  todo need this?
@@ -205,7 +201,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     DMACell.prototype.destroy = function(){
         if (this.object3D) {
             if (this.superCell) this.object3D.parent.remove(this.object3D);
-            else if (this.index) three.sceneRemove(this.object3D, "cell");
+            else if (this.index) three.sceneRemove(this.object3D);
             this.object3D.myParent = null;
     //            this.object3D.dispose();
     //            geometry.dispose();

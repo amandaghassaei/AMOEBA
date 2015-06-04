@@ -29,7 +29,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             });
             object3D.myParent = this;
             this.set("object3D", object3D);
-            three.sceneAdd(object3D, "basePlane");
+            three.sceneAddBasePlane(object3D);
             three.render();
             this._setVisibility();
         },
@@ -51,7 +51,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         _removeMesh: function(){
             this.get("object3D").myParent = null;
-            three.sceneRemove(this.get("object3D"), "basePlane");
+            three.sceneRemoveBasePlane(this.get("object3D"));
             three.render();
         },
 

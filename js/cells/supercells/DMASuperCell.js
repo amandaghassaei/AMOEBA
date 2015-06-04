@@ -39,10 +39,6 @@ DMASuperCell.prototype._getModeName = function(){
     return "";
 };
 
-DMASuperCell.prototype._getSceneName = function(){
-    return "supercell";
-};
-
 DMASuperCell.prototype.setMode = function(mode){
 
     if (mode === undefined) mode = globals.appState.get("cellMode");
@@ -66,7 +62,7 @@ DMASuperCell.prototype.getLength = function(){
 
 DMASuperCell.prototype.destroy = function(){
     this.object3D.myParent = null;
-    globals.three.sceneRemove(this.object3D, this._getSceneName());
+    globals.three.sceneRemove(this.object3D);
     this.object3D = null;
     _.each(this.cells, function(cell){
         if (cell) cell.destroy();

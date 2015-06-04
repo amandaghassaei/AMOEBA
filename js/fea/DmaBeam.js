@@ -58,7 +58,7 @@ DmaBeam.prototype.setVisibility = function(visible){
 };
 
 DmaBeam.prototype.destroy = function(){
-    globals.three.sceneRemove(this.mesh, "part");
+    globals.three.sceneRemove(this.mesh);
     this.mesh = null;
     var self = this;
     _.each(this.nodes, function(node){

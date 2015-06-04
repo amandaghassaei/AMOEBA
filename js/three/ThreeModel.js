@@ -52,59 +52,38 @@ define(['underscore', 'three'], function(_, THREE){
         render();
     }
 
-    function sceneAdd(object, type){
-
+    function sceneAdd(object){
         scene.add(object);
-
-        if (type == "cell"){
-            cells.push(object.children[0]);
-        } else if (type == "supercell"){
-            _.each(object.children, function(child){//add cells as hover
-                if (child.name != "object3D") return;
-                cells.push(child.children[0]);
-            });
-        } else if (type == "part"){//todo change this
-//            parts.push(object);
-        } else if (type == "basePlane"){
-            basePlane.push(object.children[0]);
-        } else if (type == "highlighter"){
-
-        } else {
-            console.warn("no recognized type " + type + " for");
-//            console.log(object);
-        }
     }
 
-    function sceneRemove(object, type){
+    function sceneAddBasePlane(object){
+        sceneAdd(object);
+        basePlane.push(object.children[0]);
+    }
 
-        if (type == "cell"){
-            cells.splice(cells.indexOf(object.children[0]), 1);
-        } else if (type == "supercell"){
-            _.each(object.children, function(child){//add cells as hover
-                if (child.name != "object3D") return;
-                cells.splice(cells.indexOf(child.children[0]), 1);
-            });
-        } else if (type == "part"){
-//            parts.splice(parts.indexOf(object), 1);
-        } else if (type == "basePlane"){
-            basePlane.splice(0, basePlane.length);//delete array without removing reference
-        } else {
-//            console.warn("no recognized type " + type + " for");
-//            console.log(object);
-        }
+    function getBasePlane(){
+        return basePlane;
+    }
 
+    function addCell(cell){
+        cells.push(cell);
+    }
+
+    function getCells(){
+        return cells;
+    }
+
+    function sceneRemove(object){
         scene.remove(object);
     }
 
+    function sceneRemoveBasePlane(object){
+        sceneRemove(object);
+        basePlane = [];
+    }
+
     function removeAllCells(){
-        _.each(cells, function(cell){
-            scene.remove(cell);
-        });
-//        _.each(parts, function(part){
-//            scene.remove(part);
-//        });
-        cells.splice(0, cells.length);
-//        parts.splice(0, parts.length);
+        cells = [];
     }
 
     function startAnimationLoop(){
@@ -145,11 +124,13 @@ define(['underscore', 'three'], function(_, THREE){
         stopAnimationLoop: stopAnimationLoop,
         sceneRemove: sceneRemove,
         sceneAdd: sceneAdd,
+        sceneAddBasePlane: sceneAddBasePlane,
+        sceneRemoveBasePlane: sceneRemoveBasePlane,
         domElement: renderer.domElement,
         camera: camera,
-        cells: cells,
-//        parts: parts,
-        basePlane: basePlane,
+        getCells: getCells,
+        addCell: addCell,
+        getBasePlane: getBasePlane,
         removeAllCells: removeAllCells
     }
 

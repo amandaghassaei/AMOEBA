@@ -133,11 +133,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        //todo send clear all to three and destroy without sceneRemove to cell
         clearCells: function(){
             this._iterCells(this.get("cells"), function(cell){
                 if (cell && cell.destroy) cell.destroy();
             });
+            three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.set("cells", [[[null]]]);
             this.set("cellsMax", {x:0, y:0, z:0});
             this.set("cellsMin", {x:0, y:0, z:0});

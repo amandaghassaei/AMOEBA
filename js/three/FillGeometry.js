@@ -32,7 +32,7 @@ FillGeometry = Backbone.Model.extend({
                 side:THREE.DoubleSide}));
         this.makeBoundingBox(mesh);
         this.set({mesh: mesh});
-        globals.three.sceneAdd(mesh, null);
+        globals.three.sceneAdd(mesh);
         globals.three.render();
     },
 
