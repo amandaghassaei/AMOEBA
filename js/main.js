@@ -66,6 +66,7 @@ require.config({
         gikSuperCell: 'cells/supercells/GIKSuperCell',
 
         //materials
+        materials: 'materials/DMAMaterials',
         electronicMaterials: 'materials/ElectronicMaterials',
 
         //UI

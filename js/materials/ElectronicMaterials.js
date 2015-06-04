@@ -3,34 +3,17 @@
  */
 
 
-define(['underscore', 'three', 'appState', 'plist'], function(_, THREE, appState, plist){
+define(['underscore', 'three', 'appState', 'plist', 'materials'], function(_, THREE, appState, plist, DMAMaterials){
     
-    var materials = {};
-    var materialList = plist.allMaterialTypes.cube.gik;
-    
-    function changeMaterials(){
-        _.each(_.keys(materialList), function(material){
-            if (appState.get("realisticColorScheme")) {
-                if (materials[material]) materials[material].color = new THREE.Color(materialList[material].color);
-                else materials[material] = new THREE.MeshLambertMaterial({color:materialList[material].color});
-                if (materialList[material].opacity){
-                    materials[material].transparent = true;
-                    materials[material].opacity = materialList[material].opacity;
-                } else {
-                    materials[material].transparent = false;
-                }
-            }
-            else {
-                if (materials[material]) materials[material].color = new THREE.Color(materialList[material].altColor);
-                else materials[material] = new THREE.MeshLambertMaterial({color:materialList[material].altColor});
-                materials[material].transparent = false;
-            }
-        });
+    function ElectronicMaterials(){
+       DMAMaterials.call(this, plist.allMaterialTypes.cube.gik);
     }
-    changeMaterials();
+    ElectronicMaterials.prototype = Object.create(DMAMaterials.prototype);
+
+    var material = new ElectronicMaterials();
     
     return {
-        changeMaterials: changeMaterials,
-        materials: materials
+        changeMaterials: material.changeMaterials,
+        materials: material.materials
     }
 });
