@@ -3,9 +3,10 @@
  */
 
 
-(function () {
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
+    function(_, THREE, three, lattice, appState, CubeCell){
 
-    var unitCellGeo = new THREE.BoxGeometry(1,1,1.28);
+    var unitGeo = new THREE.BoxGeometry(1,1,1.28);
 
     function GIKCell(index, superCell){
         CubeCell.call(this, index, superCell);
@@ -14,7 +15,7 @@
 
 
     GIKCell.prototype._getGeometry = function(){
-        return unitCellGeo;
+        return unitGeo;
     };
 
     GIKCell.prototype._translateCell = function(object3D){
@@ -61,6 +62,5 @@
         return {index: _.clone(this.index), direction:direction, position:position};
     };
 
-    self.GIKCell = GIKCell;
-
-})();
+    return GIKCell;
+});

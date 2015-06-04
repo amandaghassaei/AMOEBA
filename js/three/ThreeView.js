@@ -95,7 +95,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls
             var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
             this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-            var objsToIntersect = this.model.cells.concat(this.model.basePlane);
+            var objsToIntersect = this.model.getCells().concat(this.model.getBasePlane());
     //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
             if (intersections.length == 0) {//no intersections

@@ -62,6 +62,11 @@ require.config({
         kelvinCell: 'cells/KelvinCell',
         cubeCell: 'cells/CubeCell',
         gikCell: 'cells/GIKCell',
+        superCell: 'cells/supercells/DMASupercell',
+        gikSuperCell: 'cells/supercells/GIKSuperCell',
+
+        //materials
+        electronicMaterials: 'materials/ElectronicMaterials',
 
         //UI
         navbar: 'menus/Navbar',
