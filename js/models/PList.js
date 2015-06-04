@@ -29,10 +29,10 @@ define(['three'], function(THREE){
 
         allCellTypes: {
             octa:"Octahedron",
-                tetra: "Tetrahedron (Coming Soon)",
-                cube:"Cube",
-                truncatedCube:"Cuboctahedron",
-                kelvin:"Kelvin"
+            tetra: "Tetrahedron (Coming Soon)",
+            cube:"Cube",
+            truncatedCube:"Cuboctahedron",
+            kelvin:"Kelvin"
         },
         allConnectionTypes: {
             octa: {face:"Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge", freeformFace:"Freeform Face"
@@ -74,14 +74,22 @@ define(['three'], function(THREE){
 
         allMaterialTypes:{
             octa:{
-                face: null,
-                    edge: null,
-                    edgeRot: null,
-                    vertex: null
+                face: 'mechanical',
+                edge: 'mechanical',
+                edgeRot: 'mechanical',
+                vertex: 'mechanical'
             },
-            tetra: {vertex: null},
-            cube: {face: null,
-                gik: {
+            tetra: {vertex: 'mechanical'},
+            cube: {
+                face: 'mechanical',
+                gik: 'electronic'
+            },
+            truncatedCube: {face: 'mechanical'},
+            kelvin: {face: 'mechanical'}
+        },
+
+        allMaterials:{
+            electronic:{
                 brass:{
                     name: "Brass",
                         color: "#b5a642",
@@ -121,10 +129,19 @@ define(['three'], function(THREE){
                 //857B64
                 //FDE2D9
                 //D77948
-            }
             },
-            truncatedCube: {face: null},
-            kelvin: {face: null}
+            mechanical:{
+                rigid:{
+                    name: "Rigid",
+                        color: "#b5a642",
+                        altColor: "#857B64"
+                },
+                flexure: {
+                    name: "Flexure",
+                        color: "#fef1b5",
+                        altColor: "#ecf0f1"
+                }
+            }
         },
 
         allMachineTypes:{
