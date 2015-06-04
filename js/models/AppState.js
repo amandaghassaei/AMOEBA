@@ -33,7 +33,7 @@ define(['underscore', 'backbone'], function(_, Backbone){
             deleteMode: false,
             highlightMode: true,
             extrudeMode: false,
-            cellMode: "cell",//show cells vs part
+            cellMode: "cell",//supercell, cell, part, node, beam
             cellsVisible: true,
 
             superCellIndex: 0,//offset of superCell adds todo lattice?

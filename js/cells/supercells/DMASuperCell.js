@@ -9,7 +9,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     function DMASuperCell(index, superCell){//supercells might have supercells
 
-        this.material = lattice.get("materialType");//todo move to dmacell
         var range = lattice.get("superCellRange");
         this.cells = this._makeChildCells(index, range);//todo three dimensional array?
         DMACell.call(this, index, superCell);
@@ -51,8 +50,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
             cell.setMode(mode);
         });
 
-        if (mode == "cell") mode = "supercell";
-        if (mode == "part") mode = "object3D";
+        if (mode == "cell" || mode == "supercell") mode = "supercell";
+        else mode = "object3D";
 
         _.each(this.object3D.children, function(child){
             child.visible = child.name == mode;

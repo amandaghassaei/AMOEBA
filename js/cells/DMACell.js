@@ -12,7 +12,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     function DMACell(index, superCell){
 
         this.index = new THREE.Vector3(index.x, index.y, index.z);
-        if (superCell) this.superCell = superCell;
+
+        if (superCell) {
+            this.superCell = superCell;
+        } else if (!this.cells){
+            //lowest level child
+            this.material = lattice.get("materialType");
+        }
 
         //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -120,7 +126,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     };
 
     DMACell.prototype.getMaterial = function(){
-        return cellMaterial;
+        return this.superCell.getMaterial();
     };
 
     DMACell.prototype.setOpacity = function(opacity){
@@ -140,6 +146,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         if (mode === undefined) mode = appState.get("cellMode");
 
         switch(mode) {
+            case "supercell":
+                if (!this.superCell) mode = "cell";
+                break;
             case "cell":
                 break;
             case "part":
@@ -216,6 +225,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     };
 
     DMACell.prototype.destroyParts = function(){
+        if (!this.parts) return;
         _.each(this.parts, function(part){
             if (part) part.destroy();
         });
