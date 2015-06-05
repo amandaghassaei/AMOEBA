@@ -13,8 +13,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             units: "mm",
 
             nodes: [],
-            cellsMin: {x:0, y:0, z:0},//min position of cells matrix
-            cellsMax: {x:0, y:0, z:0},//max position of cells matrix
+            cellsMin: new THREE.Vector3(0,0,0),//min position of cells matrix
+            cellsMax: new THREE.Vector3(0,0,0),//max position of cells matrix
             numCells: 0,
 
             scale: 20,
@@ -35,6 +35,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         initialize: function(){
 
             this.cells = [[[null]]];//3D matrix containing all cells and null, dynamic size
+            this.sparseCells = [[[null]]];//3D matrix containing highest hierarchical level of cells and null
 
             //bind events
             this.listenTo(this, "change:partType", this._updatePartType);
@@ -59,15 +60,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.checkForMatrixExpansion(this.cells, range.max, range.min);
 
             var cellsMin = this.get("cellsMin");
-            var relativeMin = this._subtract(range.min, cellsMin);
-            var relativeMax = this._subtract(range.max, this.get("cellsMin"));
+            var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
+            var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
 
             for (var x=relativeMin.x;x<=relativeMax.x;x++){
                 for (var y=relativeMin.y;y<=relativeMax.y;y++){
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
                         if (!this.cells[x][y][z]) {
                             var self = this;
-                            this.cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), function(){
+                            this.cells[x][y][z] = this.makeCellForLatticeType((new THREE.Vector3(x, y, z)).add(cellsMin), function(){
                                 self.set("numCells", self.get("numCells")+1);
                             });
                         } else console.warn("already a cell there");
@@ -81,7 +82,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.cells, indices, indices);
 
-            var index = this._subtract(indices, this.get("cellsMin"));
+            var index = (new THREE.Vector3()).subVectors(indices, this.get("cellsMin"));
             if (!this.cells[index.x][index.y][index.z]) {
                 var self = this;
                 var callback = function(){
@@ -120,7 +121,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         removeCell: function(cell){
             if (!cell) return;
-            var index = this._subtract(cell.indices, this.get("cellsMin"));
+            var index = (new THREE.Vector3()).subVectors(cell.index, this.get("cellsMin"));
             cell.destroy();
             this.cells[index.x][index.y][index.z] = null;
 
@@ -131,11 +132,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         clearCells: function(){
-            this._iterCells(this.cells, function(cell){
+            this._iterCells(this.sparseCells, function(cell){//send destroy to top level
                 if (cell && cell.destroy) cell.destroy();
             });
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.cells = [[[null]]];
+            this.sparseCells = [[[null]]];
             this.set("cellsMax", {x:0, y:0, z:0});
             this.set("cellsMin", {x:0, y:0, z:0});
             this.set("nodes", []);
@@ -224,11 +226,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var newMax = this._updateCellsMax(indicesMax, lastMax);
             var newMin = this._updateCellsMin(indicesMin, lastMin);
             if (newMax) {
-                this._expandCellsArray(cells, this._subtract(newMax, lastMax), false);
+                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(newMax, lastMax), false);
                 this.set("cellsMax", newMax);
             }
             if (newMin) {
-                this._expandCellsArray(cells, this._subtract(lastMin, newMin), true);
+                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(lastMin, newMin), true);
                 this.set("cellsMin", newMin);
             }
         },
@@ -362,7 +364,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         showCellAtIndex: function(index){
-            var latticeIndex = this._subtract(index, this.get("cellsMin"));
+            var latticeIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
             var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
             if (cell) cell.show();
             else console.warn("placing a cell that does not exist");
@@ -560,14 +562,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var yScale = this.yScale();
             var zScale = this.zScale();
             return {x:xScale, y:yScale, z:zScale};
-        },
-
-        _subtract: function(pos1, pos2){
-            return {x:pos1.x-pos2.x, y:pos1.y-pos2.y, z:pos1.z-pos2.z};
-        },
-
-        _add: function(pos1, pos2){
-            return {x:pos1.x+pos2.x, y:pos1.y+pos2.y, z:pos1.z+pos2.z};
         },
 
         ////////////////////////////////////////////////////////////////////////////////////
