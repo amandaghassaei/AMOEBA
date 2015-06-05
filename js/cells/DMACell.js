@@ -16,7 +16,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
-        this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
+        this.addChildren(this._buildMesh(), this.object3D);//build cell meshes
+        this.superCell.addChildren(this.object3D);//add as child of supercell
 
         if (superCell === undefined) {
             if (this.index) three.sceneAdd(this.object3D);
@@ -34,12 +35,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
     DMACell.prototype._buildObject3D = function(){
         var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
-        if (!this.cells) object3D.myParent = this;//reference to get mouse raycasting back
+        if (!this.cells) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
         object3D.name = "object3D";
         return object3D;
     };
 
-    DMACell.prototype.getObject3D = function(){//careful, used for stock sim and supercell only for now  todo need this?
+    DMACell.prototype.getObject3D = function(){//careful, used for stock sim only for now  todo need this?
         return this.object3D;
     };
 
@@ -73,7 +74,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         return "cell";
     };
 
-    DMACell.prototype._buildWireframe = function(mesh, geometry){//abstract mesh representation of cell
+    DMACell.prototype._buildWireframe = function(mesh, geometry){//for "cell" view
         return new THREE.Mesh(geometry, wireframeMaterial);
     };
 
@@ -128,13 +129,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
 
 
+    //children
 
-
-    DMACell.prototype._addChildren = function(children, object3D){//accepts an array or a single mesh
+    DMACell.prototype.addChildren = function(children, object3D){//accepts an array or a single mesh
         this._addRemoveChildren(true, children, object3D);
     };
 
-    DMACell.prototype._removeChildren = function(children, object3D){//accepts an array or a single mesh
+    DMACell.prototype.removeChildren = function(children, object3D){//accepts an array or a single mesh
         this._addRemoveChildren(false, children, object3D);
     };
 
@@ -148,6 +149,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         } else if (shouldAdd) object3D.add(children);
         else object3D.remove(children);
     };
+
+
+
+
+
+    //visibility
 
     DMACell.prototype.hide = function(){
         this.object3D.visible = false;
@@ -165,15 +172,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     DMACell.prototype.setOpacity = function(opacity){
     };
 
-
-
-
-
-
-    DMACell.prototype._initParts = function(){
-        return [];//override in subclasses
-    };
-
     DMACell.prototype.setMode = function(mode){
 
         if (mode === undefined) mode = appState.get("cellMode");
@@ -189,7 +187,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
                     this.parts = this._initParts();
                     var self = this;
                     _.each(this.parts, function(part){
-                        self._addChildren(part.getMesh());
+                        self.addChildren(part.getMesh());
                     });
                 }
                 break;
@@ -201,11 +199,31 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
                 break;
         }
 
+        var visible = !(this.superCell && this.cells);//middle layers are always hidden
+
         _.each(this.object3D.children, function(child){
             if (child.name == "object3D") return;
-            child.visible = child.name == mode;
+            child.visible = child.name == visible && mode;
         });
     };
+
+
+
+
+
+
+
+    //subcomponents
+
+    DMACell.prototype._initParts = function(){
+        return [];//override in subclasses
+    };
+
+
+
+
+
+    //scale
 
     DMACell.prototype.axisScale = function(axis){
         switch (axis){
@@ -234,9 +252,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         return lattice.zScale(0);
     };
 
+
+
+
+
+
+    //destroy
+
     DMACell.prototype.destroy = function(){
         if (this.object3D) {
-            if (this.superCell) this.object3D.parent.remove(this.object3D);
+            if (this.superCell) this.superCell.removeChildren(this.object3D);
             else if (this.index) three.sceneRemove(this.object3D);
             this.object3D.myParent = null;
     //            this.object3D.dispose();

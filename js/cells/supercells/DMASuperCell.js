@@ -7,16 +7,11 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
-    function DMASuperCell(index, superCell){//supercells might have supercells
+    function DMASuperCell(index, material, superCell){//supercells might have supercells
 
         var range = lattice.get("superCellRange");
         this.cells = this._makeChildCells(index, range);//todo three dimensional array?
         DMACell.call(this, index, superCell);
-
-        var self = this;
-        _.each(this.cells, function(cell){
-            self._addChildren(cell.getObject3D());
-        });
     
         this.setMode();
     }
@@ -27,7 +22,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         for (var x=0;x<range.x;x++){
             for (var y=0;y<range.y;y++){
                 for (var z=0;z<range.z;z++){
-                    cells.push(this._makeSubCellForIndex({x:x, y:y, z:z}));
+                    cells.push(this._makeSubCellForIndex({x:x, y:y, z:z}));//child cells add themselves to object3D
                 }
             }
         }
@@ -43,36 +38,51 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype.setMode = function(mode){
-
-        if (mode === undefined) mode = appState.get("cellMode");
-
+        DMACell.prototype.setMode.call(mode);
         _.each(this.cells, function(cell){
             cell.setMode(mode);
         });
-
-        if (mode == "cell" || mode == "supercell") mode = "supercell";
-        else mode = "object3D";
-
-        _.each(this.object3D.children, function(child){
-            child.visible = child.name == mode;
-        });
     };
+
+
+
+
 
     DMASuperCell.prototype.getLength = function(){
         if (this.cells) return this.cells.length-1;
         return lattice.get("superCellRange").x-1;
     };
 
+    DMASuperCell.prototype._loopCells = function(callback){
+        var cells = this.cells;
+        for (var x=0;x<cells.length;x++){
+            for (var y=0;y<cells[0].length;y++){
+                for (var z=0;z<cells[0][0].length;z++){
+                    callback(cells[x][y][z], x, y, z, this);
+                }
+            }
+        }
+    };
+
+    DMASuperCell.prototype._iterCells = function(callback){
+        var self = this;
+        var cells = this.cells;
+        _.each(cells, function(cellLayer){
+            _.each(cellLayer, function(cellColumn){
+                _.each(cellColumn, function(cell){
+                    callback(self, cell, cellColumn, cellLayer);
+                });
+            });
+
+        });
+    };
+
     DMASuperCell.prototype.destroy = function(){
-        this.object3D.myParent = null;
-        three.sceneRemove(this.object3D);
-        this.object3D = null;
-        _.each(this.cells, function(cell){
+        this._iterCells(function(cell){
             if (cell) cell.destroy();
         });
         this.cells = null;
-        this.index = null;
-        this.material = null;
+        DMACell.prototype.destroy.call();
     };
 
     return DMASuperCell;
