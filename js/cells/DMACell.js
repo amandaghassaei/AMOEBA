@@ -21,7 +21,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
         if (superCell === undefined) {
-            if (this.index) three.sceneAdd(this.object3D);
+            if (this.index) {
+                three.sceneAdd(this.object3D);
+                if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object
+            }
             else this.hide();//stock cell
         }
 
