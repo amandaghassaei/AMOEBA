@@ -6,21 +6,15 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     function(_, THREE, three, lattice, appState){
 
-    var cellMaterial = new THREE.MeshNormalMaterial();
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
     function DMACell(index, superCell){
 
-        this.index = new THREE.Vector3(index.x, index.y, index.z);
+        if (index) this.index = new THREE.Vector3(index.x, index.y, index.z);
+        if (superCell) this.superCell = superCell;
+        this.material = this.getMaterial();//material key, not a Material object
 
-        if (superCell) {
-            this.superCell = superCell;
-        } else if (!this.cells){
-            //lowest level child
-            this.material = lattice.get("materialType");
-        }
-
-        //object 3d is parent to all 3d elements related to cell, parts, beams, nodes, etc
+        //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
         this._addChildren(this._buildMesh(), this.object3D);//build cell meshes
 
@@ -32,41 +26,21 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         this.setMode();
     }
 
+
+
+
+
+    //make 3d stuff
+
     DMACell.prototype._buildObject3D = function(){
         var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
-        object3D.myParent = this;//reference to get mouse raycasting back
-        object3D.name = this._getModeName();
+        if (!this.cells) object3D.myParent = this;//reference to get mouse raycasting back
+        object3D.name = "object3D";
         return object3D;
-    };
-
-    DMACell.prototype._getModeName = function(){
-        return "object3D";
     };
 
     DMACell.prototype.getObject3D = function(){//careful, used for stock sim and supercell only for now  todo need this?
         return this.object3D;
-    };
-
-
-    DMACell.prototype.getIndex = function(){
-        var index = this.index.clone();
-//        console.log(index);
-        index = this.getAbsoluteOrientation(index);
-        if (this.superCell) index.add(this.superCell.getIndex());
-        return index;
-    };
-
-    DMACell.prototype.getPosition = function(){
-        var position = this.object3D.position.clone();
-        position = this.getAbsoluteOrientation(position);
-        if (this.superCell) position.add(this.superCell.getPosition());
-        return position;
-    };
-
-    DMACell.prototype.getAbsoluteOrientation = function(vector){
-        vector.applyQuaternion(this.getQuaternion());
-        if (this.superCell) return this.superCell.getAbsoluteOrientation(vector);
-        return vector;
     };
 
     DMACell.prototype._rotateCell = function(object3D){
@@ -82,27 +56,86 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
     DMACell.prototype._buildMesh = function(){
         var geometry = this._getGeometry();
+
         var meshes = [];
         var mesh = new THREE.Mesh(geometry, this.getMaterial());
-        mesh.name = "cell";
+        mesh.name = this._getMeshName();
         meshes.push(mesh);
+
         var wireframe = this._buildWireframe(mesh, geometry);
         if (!wireframe) return meshes;
-        wireframe.name = "cell";
+        wireframe.name = this._getMeshName();
         meshes.push(wireframe);
         return meshes;
+    };
+
+    DMACell.prototype._getMeshName = function(){
+        return "cell";
     };
 
     DMACell.prototype._buildWireframe = function(mesh, geometry){//abstract mesh representation of cell
         return new THREE.Mesh(geometry, wireframeMaterial);
     };
 
+
+
+
+
+    //position/index/rotation
+
+    DMACell.prototype.getIndex = function(){
+        return this.index.clone();
+    };
+
+    DMACell.prototype.getAbsoluteIndex = function(){
+        if (!this.superCell) return this.getIndex();
+        return this.superCell.getAbsoluteIndex().add(this.superCell.applyRotation(this.getIndex()));
+    };
+
+    DMACell.prototype.getPosition = function(){
+        return this.object3D.position.clone();
+    };
+
+    DMACell.prototype.getAbsolutePosition = function(){
+        if (!this.superCell) return this.getPosition();
+        return this.superCell.getAbsolutePosition().add(this.superCell.applyRotation(this.getPosition()));
+    };
+
+    DMACell.prototype.getOrientation = function(){
+        return this.object3D.quaternion.clone();
+    };
+
+    DMACell.prototype.getAbsoluteOrientation = function(){
+        if (!this.superCell) return this.getOrientation();
+        return this.getOrientation().cross(this.superCell.getAbsoluteOrientation());//order matters!
+    };
+
+    DMACell.prototype.getEuler = function(){
+        return this.object3D.rotation.clone();
+    };
+
+    DMACell.prototype.applyRotation = function(vector){//
+        vector.applyQuaternion(this.getOrientation());
+    };
+
+    DMACell.prototype.applyAbsoluteRotation = function(vector){
+        vector.applyQuaternion(this.getAbsoluteOrientation());
+    };
+
+
+
+
+
+
+
+
+
     DMACell.prototype._addChildren = function(children, object3D){//accepts an array or a single mesh
         this._addRemoveChildren(true, children, object3D);
     };
 
     DMACell.prototype._removeChildren = function(children, object3D){//accepts an array or a single mesh
-        this._addRemoveMeshes(false, children, object3D);
+        this._addRemoveChildren(false, children, object3D);
     };
 
     DMACell.prototype._addRemoveChildren = function(shouldAdd, children, object3D){//accepts an array or a single mesh
@@ -126,7 +159,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     };
 
     DMACell.prototype.getMaterial = function(){
-        return this.superCell.getMaterial();
+        return lattice.get("materialType");
     };
 
     DMACell.prototype.setOpacity = function(opacity){
@@ -147,7 +180,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
         switch(mode) {
             case "supercell":
-                if (!this.superCell) mode = "cell";
+                if (!this.superCell) mode = "cell";//top level item
                 break;
             case "cell":
                 break;
@@ -161,24 +194,17 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
                 }
                 break;
             case "beam":
-                if (!this.beams) this.beams = this._initBeams();
+//                if (!this.beams) this.beams = this._initBeams();
                 break;
             case "node":
-                if (!this.nodes) this.nodes = this._initNodes();
+//                if (!this.nodes) this.nodes = this._initNodes();
                 break;
         }
 
         _.each(this.object3D.children, function(child){
+            if (child.name == "object3D") return;
             child.visible = child.name == mode;
         });
-    };
-
-    DMACell.prototype.getQuaternion = function(){
-        return this.object3D.quaternion.clone();
-    };
-
-    DMACell.prototype.getEuler = function(){
-        return this.object3D.rotation.clone();
     };
 
     DMACell.prototype.axisScale = function(axis){
@@ -193,6 +219,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
                 console.warn(axis + " axis not recognized");
                 break;
         }
+        return null;
     };
 
     DMACell.prototype.xScale = function(){
@@ -221,6 +248,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         this.nodes = null;
         this.beams = null;
         this.superCell = null;
+        this.material = null;
         this.index = null;
     };
 
