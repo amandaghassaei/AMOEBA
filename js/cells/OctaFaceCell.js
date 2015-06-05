@@ -15,21 +15,22 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     }
     OctaFaceCell.prototype = Object.create(DMACell.prototype);
 
+    OctaFaceCell.prototype._getGeometry = function(){
+        return unitGeo;
+    };
+
+    OctaFaceCell.prototype._rotateCell = function(object3D){
+        if (!this.index) return object3D;
+        if (this.getAbsoluteIndex().z%2 != 0) object3D.rotation.set(0, 0, Math.PI);
+        return object3D;
+    };
+
     OctaFaceCell.prototype._initParts = function(){
         var parts  = [];
         for (var i=0;i<3;i++){
             parts.push(new OctaFaceTriPart(i, this));
         }
         return parts;
-    };
-
-    OctaFaceCell.prototype._rotateCell = function(object3D){
-        if (this.index && this.index.z%2!=0) object3D.rotation.set(0, 0, Math.PI);
-        return object3D;
-    };
-
-    OctaFaceCell.prototype._getGeometry = function(){
-        return unitGeo;
     };
 
     OctaFaceCell.prototype.calcHighlighterPosition = function(face){

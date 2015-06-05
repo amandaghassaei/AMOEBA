@@ -33,7 +33,7 @@ require.config({
         octaEdgeLattice: 'lattice/OctaEdgeLattice',
         octaFaceLattice: 'lattice/OctaFaceLattice',
         octaRotEdgeLattice: 'lattice/OctaRotEdgeLattice',
-        octavertexLattice: 'lattice/OctaVertexLattice',
+        octaVertexLattice: 'lattice/OctaVertexLattice',
         truncatedCubeLattice: 'lattice/TruncatedCubeLattice',
 
         //baseplane

@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
-    function(_, THREE, three, lattice, appState){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
+    function(_, THREE, three, lattice, appState, globals){
 
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
@@ -12,12 +12,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
         if (index) this.index = new THREE.Vector3(index.x, index.y, index.z);
         if (superCell) this.superCell = superCell;
-        this.material = this.getMaterial();//material key, not a Material object
+        if (!this.cells) this.material = lattice.get("materialType");
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
         this.addChildren(this._buildMesh(), this.object3D);//build cell meshes
-        this.superCell.addChildren(this.object3D);//add as child of supercell
+
+        if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
         if (superCell === undefined) {
             if (this.index) three.sceneAdd(this.object3D);
@@ -59,7 +60,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         var geometry = this._getGeometry();
 
         var meshes = [];
-        var mesh = new THREE.Mesh(geometry, this.getMaterial());
+        var mesh = new THREE.Mesh(geometry, this._getMaterial());
         mesh.name = this._getMeshName();
         meshes.push(mesh);
 
@@ -85,10 +86,18 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
     //position/index/rotation
 
     DMACell.prototype.getIndex = function(){
+        if (!this.index) {
+            console.warn("no index for this cell");
+            return null;
+        }
         return this.index.clone();
     };
 
     DMACell.prototype.getAbsoluteIndex = function(){
+        if (!this.index) {
+            console.warn("no index for this cell");
+            return null;
+        }
         if (!this.superCell) return this.getIndex();
         return this.superCell.getAbsoluteIndex().add(this.superCell.applyRotation(this.getIndex()));
     };
@@ -165,8 +174,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
         this.setMode(mode);
     };
 
-    DMACell.prototype.getMaterial = function(){
-        return lattice.get("materialType");
+    DMACell.prototype._getMaterial = function(){
+        if (!this.material) console.warn("no material for cell");
+        var materialClass = lattice.get("materialClass");
+        if (!globals.materials[materialClass]) {
+            console.warn("no material class found of type " + materialClass);
+            return null;
+        }
+        var material = globals.materials[materialClass].materials[this.material];
+        if (!material){
+            console.warn("no material "+ this.material + " found for class "+ materialClass);
+            return null;
+        }
+        return material;
     };
 
     DMACell.prototype.setOpacity = function(opacity){
@@ -203,7 +223,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState'],
 
         _.each(this.object3D.children, function(child){
             if (child.name == "object3D") return;
-            child.visible = child.name == visible && mode;
+            child.visible = visible && (child.name == mode);
         });
     };
 

@@ -4,9 +4,9 @@
 
 //globals namespace, not sure if there's a way to get around this
 
-define(function() {
-  return {
+define({
       baseplane: null,
-      highlighter: null
-  };
-});
+      highlighter: null,
+      materials: {}
+  }
+);

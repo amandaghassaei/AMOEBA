@@ -23,10 +23,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             //spacing for connectors/joints
             cellSeparation: {xy:0, z:0},
 
-            cellType: "cube",
-            connectionType: "gik",
-            partType: "lego",
-            materialType: "fiberGlass",
+            cellType: "octa",
+            connectionType: "face",
+            partType: "triangle",
+            materialType: "brass",
+            materialClass: "electronic",
             superCellRange: new THREE.Vector3(4,1,1)
         },
 
@@ -43,6 +44,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this.listenTo(appState, "change:cellMode", this._updateForMode);
             this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
+
+            this.listenTo(this, "change:materialClass", this._loadMaterialClass);
 
             this._updateLatticeType(false);
         },
@@ -368,6 +371,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             else console.warn("placing a cell that does not exist");
         },
 
+        _loadMaterialClass: function(){
+            var materialClass = this.get("materialClass");
+            if (globals.materials[materialClass]) return;//already loaded
+            require([materialClass + "Materials"], function(MaterialClass){
+                globals.materials[materialClass] = MaterialClass;
+            });
+        },
+
         ////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////CONNECTION TYPE//////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////
@@ -376,6 +387,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this._setToDefaultsSilently();
             this._setDefaultCellMode();
+            this._loadMaterialClass();
 
             if (loadingFromFile === undefined) loadingFromFile = false;
             if (loadingFromFile) console.warn('loading from file');
