@@ -69,6 +69,10 @@ define(['underscore', 'three'], function(_, THREE){
         cells.push(cell);
     }
 
+    function removeCell(cell){
+        cells.splice(cells.indexOf(cell), 1);
+    }
+
     function getCells(){
         return cells;
     }
@@ -130,6 +134,7 @@ define(['underscore', 'three'], function(_, THREE){
         camera: camera,
         getCells: getCells,
         addCell: addCell,
+        removeCell: removeCell,
         getBasePlane: getBasePlane,
         removeAllCells: removeAllCells
     }

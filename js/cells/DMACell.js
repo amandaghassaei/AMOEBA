@@ -285,7 +285,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     DMACell.prototype.destroy = function(){
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
-            else if (this.index) three.sceneRemove(this.object3D);
+            else if (this.index) {
+                three.sceneRemove(this.object3D);
+                if (!this.cells) three.removeCell(this.object3D.children[0]);//remove mesh as highlightable object
+            }
             this.object3D.myParent = null;
     //            this.object3D.dispose();
     //            geometry.dispose();
