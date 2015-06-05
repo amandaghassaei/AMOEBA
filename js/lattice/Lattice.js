@@ -138,8 +138,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.cells = [[[null]]];
             this.sparseCells = [[[null]]];
-            this.set("cellsMax", {x:0, y:0, z:0});
-            this.set("cellsMin", {x:0, y:0, z:0});
+            this.set("cellsMax", new THREE.Vector3(0,0,0));
+            this.set("cellsMin", new THREE.Vector3(0,0,0));
             this.set("nodes", []);
             this.set("numCells", 0);
             if (globals.basePlane) globals.basePlane.set("zIndex", 0);
@@ -282,7 +282,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _updateCellsMin: function(newPosition, currentMin){
-            var newMin = {};
+            var newMin = new THREE.Vector3();
             var hasChanged = false;
             _.each(_.keys(newPosition), function(key){
                 if (newPosition[key]<currentMin[key]){
@@ -297,7 +297,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _updateCellsMax: function(newPosition, currentMax){
-            var newMax = {};
+            var newMax = new THREE.Vector3();
             var hasChanged = false;
             _.each(_.keys(newPosition), function(key){
                 if (newPosition[key]>currentMax[key]){
