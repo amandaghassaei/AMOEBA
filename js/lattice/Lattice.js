@@ -13,7 +13,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             units: "mm",
 
             nodes: [],
-            cells: [[[null]]],//3D matrix containing all cells and null, dynamic size
             cellsMin: {x:0, y:0, z:0},//min position of cells matrix
             cellsMax: {x:0, y:0, z:0},//max position of cells matrix
             numCells: 0,
@@ -35,6 +34,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         initialize: function(){
 
+            this.cells = [[[null]]];//3D matrix containing all cells and null, dynamic size
+
             //bind events
             this.listenTo(this, "change:partType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
@@ -55,9 +56,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         ////////////////////////////////////////////////////////////////////////////////////
 
         addCellsInRange: function(range){//add a block of cells (extrude)
-            var cells = this.get("cells");
-            var newCells = [];
-            this.checkForMatrixExpansion(cells, range.max, range.min);
+            this.checkForMatrixExpansion(this.cells, range.max, range.min);
 
             var cellsMin = this.get("cellsMin");
             var relativeMin = this._subtract(range.min, cellsMin);
@@ -66,34 +65,30 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             for (var x=relativeMin.x;x<=relativeMax.x;x++){
                 for (var y=relativeMin.y;y<=relativeMax.y;y++){
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
-                        if (!cells[x][y][z]) {
+                        if (!this.cells[x][y][z]) {
                             var self = this;
-                            var callback = function(cell){
-                                newCells.push(cell);
+                            this.cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), function(){
                                 self.set("numCells", self.get("numCells")+1);
-                            };
-                            cells[x][y][z] = this.makeCellForLatticeType(this._add({x:x, y:y, z:z}, cellsMin), callback);
+                            });
                         } else console.warn("already a cell there");
                     }
                 }
             }
             three.render();
-            return newCells;
         },
 
         addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
 
-            var cells = this.get("cells");
-            if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(cells, indices, indices);
+            if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.cells, indices, indices);
 
             var index = this._subtract(indices, this.get("cellsMin"));
-            if (!cells[index.x][index.y][index.z]) {
+            if (!this.cells[index.x][index.y][index.z]) {
                 var self = this;
                 var callback = function(){
                     self.set("numCells", self.get("numCells")+1);
                     if (!noRender || noRender === undefined) three.render();
                 };
-                cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, callback);
+                this.cells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, callback);
             } else console.warn("already a cell there");
 
         },
@@ -126,9 +121,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         removeCell: function(cell){
             if (!cell) return;
             var index = this._subtract(cell.indices, this.get("cellsMin"));
-            var cells = this.get("cells");
             cell.destroy();
-            cells[index.x][index.y][index.z] = null;
+            this.cells[index.x][index.y][index.z] = null;
 
             //todo shrink cells matrix if needed
 
@@ -137,11 +131,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         clearCells: function(){
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell && cell.destroy) cell.destroy();
             });
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
-            this.set("cells", [[[null]]]);
+            this.cells = [[[null]]];
             this.set("cellsMax", {x:0, y:0, z:0});
             this.set("cellsMin", {x:0, y:0, z:0});
             this.set("nodes", []);
@@ -172,7 +166,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var yScale = this.yScale();
             var zScale = this.zScale();
 
-            var cells = this.get("cells");
+            var cells = this.cells;
             var cellsMin = this.get("cellsMin");
 
             var allVertexPos = mesh.geometry.attributes.position.array;
@@ -220,7 +214,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
 
-            if (!cells) cells = this.get("cells");
+            if (!cells) {
+                console.warn("no cells specified in matrix expansion");
+                return;
+            }
 
             var lastMax = this.get("cellsMax");
             var lastMin = this.get("cellsMin");
@@ -317,7 +314,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         ////////////////////////////////////////////////////////////////////////////////////
 
         _updatePartType: function(){
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell) cell.destroyParts();
             });
             this._updateForMode();
@@ -325,7 +322,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _updateForMode: function(){
             var cellMode = appState.get("cellMode");
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell) cell.setMode(cellMode);
             });
             three.render();
@@ -337,7 +334,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var cellMode = appState.get("cellMode");
             var partType = this.get("partType");
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell) cell.updateForScale(cellMode, partType);
             });
             three.render();
@@ -350,7 +347,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //hide/show cells during stock simulation
         hideCells: function(){
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell) cell.hide();
             });
             three.render();
@@ -358,7 +355,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         showCells: function(){
             var cellMode = appState.get("cellMode");
-            this._iterCells(this.get("cells"), function(cell){
+            this._iterCells(this.cells, function(cell){
                 if (cell) cell.show(cellMode)
             });
             three.render();
@@ -366,7 +363,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         showCellAtIndex: function(index){
             var latticeIndex = this._subtract(index, this.get("cellsMin"));
-            var cell = this.get("cells")[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+            var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
             if (cell) cell.show();
             else console.warn("placing a cell that does not exist");
         },
@@ -405,7 +402,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 self._initLatticeType();
 
                 //copy over cells to new lattice type
-                var cells = self.get("cells");
+                var cells = self.cells;
                 self._loopCells(cells, function(cell, x, y, z){
                     if (!cell) return;
                     var index = _.clone(cell.index);
@@ -499,7 +496,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 firstLetter = order.charAt(0);
                 order = order.substr(1);
             }
-            if (!cells) cells = this.get("cells");//grab cells once at beginning and hold onto it in case changes are made while looping
+            if (!cells) cells = this.cells;//grab cells once at beginning and hold onto it in case changes are made while looping
             var newVarOrder;
             var newVarDim;
             if (firstLetter == 'X'){
@@ -512,10 +509,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 newVarOrder = 2;
                 newVarDim = cells[0][0].length;
             } else if (firstLetter == ""){
-                if (this._rasterGikCells) {
-                    this._rasterGikCells(order, callback, var1, var2, var3, cells);
-                    return;
-                }
                 this._rasterCells(order, callback, var1, var2, var3, cells);
                 return;
             }
