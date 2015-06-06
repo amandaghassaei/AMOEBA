@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'tetraFaceCell'],
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'TetraStackedCell'],
     function(_, THREE, three, lattice, appState, TetraFaceCell){
     
     function TetraEdgeCell(index, superCell){

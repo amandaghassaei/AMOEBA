@@ -29,14 +29,14 @@ define(['three'], function(THREE){
 
         allCellTypes: {
             octa:"Octahedron",
-            tetra: "Tetrahedron (Coming Soon)",
+            tetra: "Tetrahedron",
             cube:"Cube",
             truncatedCube:"Cuboctahedron",
             kelvin:"Kelvin"
         },
         allConnectionTypes: {
-            octa: {face:"Face", edgeRot:"Edge", vertex:"Vertex"},//edge:"Edge", freeformFace:"Freeform Face"
-            tetra: {vertex: "Vertex"},
+            octa: {face:"Face", edge:"Edge", edgeRot:"Edge (Rotated)", vertex:"Vertex"},// freeformFace:"Freeform Face"
+            tetra: {stacked: "Stacked", vertex: "Vertex"},
             cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"}
@@ -79,7 +79,10 @@ define(['three'], function(THREE){
                 edgeRot: 'mechanical',
                 vertex: 'mechanical'
             },
-            tetra: {vertex: 'mechanical'},
+            tetra: {
+                stacked: 'mechanical',
+                vertex: 'mechanical'
+            },
             cube: {
                 face: 'mechanical',
                 gik: 'electronic'

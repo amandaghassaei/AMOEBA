@@ -35,6 +35,8 @@ require.config({
         octaRotEdgeLattice: 'lattice/OctaRotEdgeLattice',
         octaVertexLattice: 'lattice/OctaVertexLattice',
         truncatedCubeLattice: 'lattice/TruncatedCubeLattice',
+        tetraStackedLattice: 'lattice/TetraStackedLattice',
+        tetraVertexLattice: 'lattice/TetraVertexLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',
@@ -56,7 +58,7 @@ require.config({
         octaEdgeCell: 'cells/OctaEdgeCell',
         octaVertexCell: 'cells/OctaVertexCell',
         octaRotEdgeCell: 'cells/OctaRotEdgeCell',
-        tetraEdgeCell: 'cells/TetraEdgeCell',
+        tetraStackedCell: 'cells/TetraStackedCell',
         tetraFaceCell: 'cells/TetraFaceCell',
         truncatedCubeCell: 'cells/TruncatedCubeCell',
         kelvinCell: 'cells/KelvinCell',

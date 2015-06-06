@@ -22,8 +22,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             //spacing for connectors/joints
             cellSeparation: {xy:0, z:0},
 
-            cellType: "cube",
-            connectionType: "face",
+            cellType: "tetra",
+            connectionType: "stacked",
             partType: null,
             materialType: null,
             materialClass: "electronic",
@@ -236,7 +236,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(lastMin, newMin), true);
                 this.set("cellsMin", newMin);
             }
-            console.log(cells);
         },
 
         _expandCellsArray: function(cells, expansion, fromFront){
@@ -438,7 +437,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     return "octaVertexLattice";
                 }
             } else if (cellType == "tetra"){
-                return "cubeLattice";
+                if (connectionType == "stacked") return "tetraStackedLattice";
+                else if (connectionType == "vertex") return "tetraVertexLattice";
             } else if (cellType == "cube"){
                 if (connectionType == "face"){
                     return "cubeLattice";

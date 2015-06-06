@@ -1,11 +1,12 @@
 /**
- * Created by aghassaei on 5/26/15.
+ * Created by aghassaei on 6/5/15.
  */
+
 
 define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'three', 'threeModel'],
     function(_, Backbone, appState, lattice, globals, plist, THREE, three){
 
-    var OctaEdgeLattice = {
+    var TetraVertexLattice = {
 
         _initLatticeType: function(){
             require(['octaBaseplane'], function(OctaBasePlane){
@@ -17,34 +18,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getIndexForPosition: function(absPosition){
-            var yIndex = Math.floor(absPosition.y/this.yScale());
-            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
-            var yScale = 1/Math.sqrt(3);
-            var index = this._indexForPosition(absPosition);
-            if (index.z%3 == 1) {
-                absPosition.x -= this.xScale()/2;
-                absPosition.y += yScale/2;
-            } else if (index.z%3 == 2){
-                absPosition.y += yScale;
-            }
             return this._indexForPosition(absPosition);
         },
 
         getPositionForIndex: function(index){
-            var position = index.clone();
-            var xScale = this.xScale();
-            var yScale = 1/Math.sqrt(3);
-            position.x = (position.x+1/2)*xScale;
-            position.y = position.y*this.yScale()+yScale/2;
-            position.z = (position.z+0.5)*this.zScale();
-            if (index.y%2 != 0) position.x -= this.xScale()/2;
-            if (index.z%3 == 1) {
-                position.x += this.xScale()/2;
-                position.y -= yScale/2;
-            } else if (index.z%3 == 2){
-                position.y -= yScale;
-            }
-            return position;
+            return this._positionForIndex(index);
         },
 
         xScale: function(cellSeparation){
@@ -62,8 +40,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         makeCellForLatticeType: function(indices, callback){
-            require(['octaEdgeCell'], function(OctaEdgeCell){
-                var cell = new OctaEdgeCell(indices);
+            require(['tetraStackedCell'], function(TetraVertexCell){
+                var cell = new TetraVertexCell(indices);
                 if (callback) callback(cell);
                 return cell;
             });
@@ -71,11 +49,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
-            _.each(_.keys(OctaEdgeLattice), function(key){
+            _.each(_.keys(TetraVertexLattice), function(key){
                 self[key] = null;
             });
         }
     };
 
-    return OctaEdgeLattice;
+    return TetraVertexLattice;
 });
