@@ -32,23 +32,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             <!--Cell Separation (xy, z): &nbsp;&nbsp;<input data-property="cellSeparation" data-key="xy" value="<%= cellSeparation.xy %>" placeholder="XY" class="form-control floatInput lattice" type="text">\
             &nbsp;<input data-property="cellSeparation" data-key="z" value="<%= cellSeparation.z %>" placeholder="Z" class="form-control floatInput lattice" type="text">\
             <br/><br/>--><br/>\
-            <% if (allMaterialTypes[cellType][connectionType]){ %> \
-            Materials:<br/>\
-            <% _.each(_.keys(allMaterials[allMaterialTypes[cellType][connectionType]]), function(key){ %>\
-            <label class="radio colorSwatches">\
-                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-                <div class="materialColorSwatch">\
-                <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterials[allMaterialTypes[cellType][connectionType]][key].color %><% }else{ %><%= allMaterials[allMaterialTypes[cellType][connectionType]][key].altColor %><% } %>"></div>\
-                <span><%= allMaterials[allMaterialTypes[cellType][connectionType]][key].name %></span></div>\
-            </label>\
-            <% }); %>\
-            <br/>\
-            <label class="checkbox" for="realisticColorScheme">\
-            <input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">\
-            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
-            Use realistic color scheme</label>\
-            <% } %>\
-            <br/>\
             ')
 
     });

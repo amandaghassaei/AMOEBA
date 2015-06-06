@@ -4,12 +4,22 @@
 
 //globals namespace, not sure if there's a way to get around this
 
-define(['three'], function(THREE){
+define(['underscore', 'three'], function(_, THREE){
+
+    var materials = {
+        deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000"})
+    };
+
+    function changeMaterialColorScheme(){
+        _.each(_.keys(materials), function(material){
+            if (material.changeMaterials) material.changeMaterials();
+        });
+    }
+
     return {
         baseplane: null,
-            highlighter: null,
-        materials: {
-            deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000"})
-        }
+        highlighter: null,
+        materials: materials,
+        changeMaterialColorScheme: changeMaterialColorScheme
     };
 });

@@ -371,6 +371,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _loadMaterialClass: function(){
             var materialClass = this.get("materialClass");
+            this.set("materialType", _.keys(plist.allMaterials[materialClass])[0], {silent:true});//set to default silently
             if (globals.materials[materialClass]) return;//already loaded
             require([materialClass + "Materials"], function(MaterialClass){
                 globals.materials[materialClass] = MaterialClass;
@@ -454,6 +455,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
             var partType = _.keys(plist["allPartTypes"][newCellType][newConnectionType])[0];
             this.set("partType", partType, {silent:true});
+            this.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType], {silent:true});
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type

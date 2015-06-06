@@ -5,7 +5,7 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone'], function(_, Backbone){
+define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
 
     var AppState = Backbone.Model.extend({
 
@@ -111,8 +111,10 @@ define(['underscore', 'backbone'], function(_, Backbone){
         },
 
         _updateColorScheme: function(){
-            changeGikMaterials();
-            globals.three.render();
+            require(['globals'], function(globals){
+                globals.changeMaterialColorScheme();
+                three.render();
+            });
         },
 
         ///////////////////////////////////////////////////////////////////////////////

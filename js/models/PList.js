@@ -8,15 +8,15 @@ define(['three'], function(THREE){
         allMenuTabs: {
             navDesign:{
                 lattice:"Lattice",
-//            import:"Import",
-                    //sketch:"Sketch",
-                    part:"Part",
-                    script:"Script"
+//              import:"Import",
+                //sketch:"Sketch",
+                material:"Material",
+                part:"Part",
+                script:"Script"
             },
             navSim:{
                 physics:"Physics",
                 part:"Part",
-                material:"Material",
                 optimize:"Optimize"
             },
             navAssemble:{
@@ -88,6 +88,11 @@ define(['three'], function(THREE){
             kelvin: {face: 'mechanical'}
         },
 
+        allMaterialClasses:{
+            electronic: "Electronic",
+            mechanical: "Structural"
+        },
+
         allMaterials:{
             electronic:{
                 brass:{
@@ -109,12 +114,12 @@ define(['three'], function(THREE){
                 nType: {
                     name: "Silicon N-Type",
                         color: "#bcc6cc",
-                        altColor: "#9CC9CB"
+                        altColor: "#8391AC"
                 },
                 nTypePlus: {
                     name: "Silicon Heavily Doped N-Type (N+)",
                         color: "#c6ccbc",
-                        altColor: "#8391AC"
+                        altColor: "#9CC9CB"
                 },
                 pType: {
                     name: "Silicon P-Type",
@@ -133,13 +138,13 @@ define(['three'], function(THREE){
             mechanical:{
                 rigid:{
                     name: "Rigid",
-                        color: "#b5a642",
-                        altColor: "#857B64"
+                        color: "#8391AC",
+                        altColor: "#8391AC"
                 },
                 flexure: {
                     name: "Flexure",
-                        color: "#fef1b5",
-                        altColor: "#ecf0f1"
+                        color: "#666",
+                        altColor: "#666"
                 }
             }
         },
