@@ -55,7 +55,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         isVisible: function(){
-            return this.mesh.visible;
+            return this.mesh && this.mesh.visible;
         },
 
         setNothingHighlighted: function(){

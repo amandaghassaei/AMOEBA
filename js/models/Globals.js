@@ -7,19 +7,12 @@
 define(['underscore', 'three'], function(_, THREE){
 
     var materials = {
-        deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000"})
+        deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
     };
-
-    function changeMaterialColorScheme(){
-        _.each(_.keys(materials), function(material){
-            if (material.changeMaterials) material.changeMaterials();
-        });
-    }
 
     return {
         baseplane: null,
         highlighter: null,
         materials: materials,
-        changeMaterialColorScheme: changeMaterialColorScheme
     };
 });

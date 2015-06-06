@@ -12,11 +12,12 @@ define(['underscore', 'three', 'appState'], function(_, THREE, appState){
     }
 
     DMAMaterials.prototype.changeMaterials = function(){
+        console.log("changeMaterials");
         var self = this;
         _.each(_.keys(self.materialList), function(material){
             if (appState.get("realisticColorScheme")) {
                 if (self.materials[material]) self.materials[material].color = new THREE.Color(self.materialList[material].color);
-                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].color});
+                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].color, shading:THREE.FlatShading});
                 if (self.materialList[material].opacity){
                     self.materials[material].transparent = true;
                     self.materials[material].opacity = self.materialList[material].opacity;
@@ -26,7 +27,7 @@ define(['underscore', 'three', 'appState'], function(_, THREE, appState){
             }
             else {
                 if (self.materials[material]) self.materials[material].color = new THREE.Color(self.materialList[material].altColor);
-                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].altColor});
+                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].altColor, shading:THREE.FlatShading});
                 self.materials[material].transparent = false;
             }
         });

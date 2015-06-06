@@ -4603,7 +4603,7 @@ fieldset[disabled] .navbar-default .btn-link:focus {
 .navbar-inverse .navbar-nav > .open > a:hover,
 .navbar-inverse .navbar-nav > .open > a:focus {
   color: #fff;
-  background-color: #80b2f5;
+  background-color: #aaa;
   border-left-color: transparent;
   }
 .navbar-inverse .navbar-nav > .open > a .caret,

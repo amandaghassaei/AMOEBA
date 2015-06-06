@@ -381,6 +381,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (globals.materials[materialClass]) return;//already loaded
             require([materialClass + "Materials"], function(MaterialClass){
                 globals.materials[materialClass] = MaterialClass;
+
             });
         },
 

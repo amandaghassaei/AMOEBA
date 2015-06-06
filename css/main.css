@@ -19,6 +19,10 @@ html, body {
     opacity:0.8;
 }
 
+.navbar-inverse .navbar-nav>li>a:hover {
+    color: #ccc;
+}
+
 .navMenu {
     display: none;
     z-index: 1;
