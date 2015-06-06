@@ -1,7 +1,6 @@
 /**
- * Created by aghassaei on 6/5/15.
+ * Created by aghassaei on 6/4/15.
  */
-
 
 define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'three', 'threeModel'],
     function(_, Backbone, appState, lattice, globals, plist, THREE, three){
@@ -18,11 +17,20 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
+            var yIndex = Math.floor(absPosition.y/this.yScale());
+            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
+            var index = this._indexForPosition(absPosition);
+            if (index.z%2 == 1) index.y += 1;
+            return index;
         },
 
         getPositionForIndex: function(index){
-            return this._positionForIndex(index);
+            var position = index.clone();
+            position.x = (position.x+1/2);
+            position.y = position.y*this.yScale()+1/Math.sqrt(3)/2;
+            position.z = (position.z+0.5)*this.zScale();
+            if ((index.y%2) != 0) position.x -= this.xScale()/2;
+            return position;
         },
 
         xScale: function(cellSeparation){
@@ -40,7 +48,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         makeCellForLatticeType: function(indices, callback){
-            require(['tetraStackedCell'], function(TetraVertexCell){
+            require(['tetraVertexCell'], function(TetraVertexCell){
                 var cell = new TetraVertexCell(indices);
                 if (callback) callback(cell);
                 return cell;

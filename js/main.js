@@ -59,7 +59,7 @@ require.config({
         octaVertexCell: 'cells/OctaVertexCell',
         octaRotEdgeCell: 'cells/OctaRotEdgeCell',
         tetraStackedCell: 'cells/TetraStackedCell',
-        tetraFaceCell: 'cells/TetraFaceCell',
+        tetraVertexCell: 'cells/TetraVertexCell',
         truncatedCubeCell: 'cells/TruncatedCubeCell',
         kelvinCell: 'cells/KelvinCell',
         cubeCell: 'cells/CubeCell',
