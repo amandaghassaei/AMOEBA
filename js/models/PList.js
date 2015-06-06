@@ -89,8 +89,8 @@ define(['three'], function(THREE){
         },
 
         allMaterialClasses:{
-            electronic: "Electronic",
-            mechanical: "Structural"
+            mechanical: "Structural",
+            electronic: "Electronic"
         },
 
         allMaterials:{
