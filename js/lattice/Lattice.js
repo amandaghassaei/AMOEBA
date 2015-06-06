@@ -95,15 +95,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _indexForPosition: function(absPosition){
-            var position = {};
-            position.x = Math.floor(absPosition.x/this.xScale());
-            position.y = Math.floor(absPosition.y/this.yScale());
-            position.z = Math.floor(absPosition.z/this.zScale());
-            return position;
+            return new THREE.Vector3(
+                Math.floor(absPosition.x/this.xScale()),
+                Math.floor(absPosition.y/this.yScale()),
+                Math.floor(absPosition.z/this.zScale()));
         },
 
         _positionForIndex: function(index){
-            var position = _.clone(index);
+            var position = index.clone();
             position.x = (position.x+0.5)*this.xScale();
             position.y = (position.y+0.5)*this.yScale();
             position.z = (position.z+0.5)*this.zScale();
@@ -133,7 +132,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         clearCells: function(){
             this._iterCells(this.sparseCells, function(cell){//send destroy to top level
-                if (cell && cell.destroy) cell.destroy();
+                if (cell) cell.destroy();
             });
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.cells = [[[null]]];

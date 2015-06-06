@@ -17,7 +17,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _setRotation: function(){
-            this.mesh.rotation.set(0,0,(this.highlightedObject.getIndex().z+1)%2*Math.PI);
+            this.mesh.rotation.set(0,0,(this.highlightedObject.getAbsoluteIndex().z+1)%2*Math.PI);
         }
 
     });

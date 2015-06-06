@@ -17,11 +17,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             var geometry = this._makeGeometry();
             this.mesh = new THREE.Mesh(geometry,
                 new THREE.MeshBasicMaterial({
-    //                side:THREE.DoubleSide,
                     transparent:true,
                     opacity:0.4,
                     color:0xffffff
-    //                vertexColors:THREE.FaceColors
                 }));
 
             three.sceneAdd(this.mesh);
@@ -32,9 +30,10 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.listenTo(appState, "change:superCellIndex", this._superCellParamDidChange);
         },
 
-        ///////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////VISIBILITY////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+        //visibility
 
         hide: function(){
             this._setVisibility(false);
@@ -64,47 +63,51 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.hide();
         },
 
+
+
+
+        //highlight
+
         highlight: function(intersection){
             if (!intersection.object) return;
-            var highlighted = intersection.object;
-            if (!(highlighted.parent instanceof THREE.Scene)) highlighted = highlighted.parent;//cell mesh parent is object3d
-            if (!highlighted.myParent) {
+            var highlighted = intersection.object.parent;//cell mesh parent is object3d
+            if (!highlighted.myParent) {//myParent is cell instance
                 console.warn("no parent for highlighted object");
                 return;
             }
 
             this.highlightedObject = highlighted.myParent;
 
-            var highlightedPos = this.highlightedObject.calcHighlighterPosition(intersection.face, intersection.point);
-            this.position = highlightedPos.position;//todo used just for gik
-            if (!highlightedPos.direction) {//may be hovering over a face that we shouldn't highlight
+            var params = this.highlightedObject.calcHighlighterParams(intersection.face, intersection.point);
+            if (!params) {//may be hovering over a face that we shouldn't highlight
                 this.hide();
                 return;
             }
-            this.direction = highlightedPos.direction;
-            this._setPosition(highlightedPos.position, this.direction);//position of center point
-            this._setRotation(this.direction);
+            this.position = params.position;
+            this.direction = params.direction;
+            this._setPosition(params.position, params.direction);//position of center point
+            this._setRotation(params.direction);
 
             this.show(true);
         },
 
-        ///////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////POSITION/SCALE////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+        //position/scale/rotation
 
         getHighlightedObjectPosition: function(){//origin selection
             if (this.highlightedObject instanceof DMACell) {
                 var position = this.highlightedObject.getPosition();
-                return {
-                    x:parseFloat(position.x.toFixed(4)),
-                    y:parseFloat(position.y.toFixed(4)),
-                    z:parseFloat(position.z.toFixed(4))
-                };
+                return new THREE.Vector3(parseFloat(position.x.toFixed(4)),
+                    parseFloat(position.y.toFixed(4)),
+                    parseFloat(position.z.toFixed(4)));
             }
+            console.warn("highlighted object is not a DMACell")
             return null;
         },
 
-        _setPosition: function(position){
+        _setPosition: function(position, direction){
             this.mesh.position.set(position.x, position.y, position.z);
         },
 
@@ -116,12 +119,13 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             if (this.updateGikLength) this.updateGikLength();
         },
 
-        ///////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////ADD REMOVE////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////
+
+
+
+        //add/remove cells
 
         _getNextCellPosition: function(){//add direction vector to current index
-            var newIndex = _.clone(this.highlightedObject.getIndex());
+            var newIndex = this.highlightedObject.getAbsoluteIndex().clone();
             var direction = this.direction;
             _.each(_.keys(newIndex), function(key){
                 newIndex[key] = Math.round(newIndex[key] + direction[key]);

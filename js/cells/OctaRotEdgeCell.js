@@ -7,6 +7,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
     var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+    unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 
     function OctaRotEdgeCell(index, superCell){
         DMACell.call(this, index, superCell);
@@ -31,14 +32,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return unitGeo;
     };
 
-    OctaRotEdgeCell.prototype._rotateCell = function(object3D){
-        object3D.rotation.set(0, 0, Math.PI/4);
-        return object3D;
-    };
+    OctaRotEdgeCell.prototype.calcHighlighterParams = function(face, point){
 
-    OctaRotEdgeCell.prototype.calcHighlighterPosition = function(face, point){
-
-        var position = this.getPosition();
+//        point.applyQuaternion(this.getAbsoluteOrientation());
+        var position = this.getAbsolutePosition();
         var direction = new THREE.Vector3(0,0,0);
         var rad = this.xScale()*Math.sqrt(2)/6;
 
@@ -90,8 +87,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
             position.y += direction.y*this.yScale()/2;
         }
 
-        return {index: _.clone(this.index), direction:direction, position:position};
+        return {direction:direction, position:position};
     };
 
-    return OctaVertexCell;
+    return OctaRotEdgeCell;
 });

@@ -25,7 +25,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getPositionForIndex: function(index){
-            var position = _.clone(index);
+            var position = index.clone();
             position.x = (position.x+1/2);
             position.y = position.y*this.yScale()+1/Math.sqrt(3)/2;
             position.z = (position.z+0.5)*this.zScale();

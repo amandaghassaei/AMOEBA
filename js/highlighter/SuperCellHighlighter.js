@@ -8,7 +8,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
     return Highlighter.extend({
 
         _makeGeometry: function(){
-            return new THREE.BoxGeometry(1,1,lattice.zScale(0));
+            return new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
         },
 
         _setPosition: function(position, direction){

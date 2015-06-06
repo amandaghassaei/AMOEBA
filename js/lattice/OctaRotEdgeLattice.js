@@ -8,7 +8,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
     var OctaRotEdgeLattice = {
 
         _initLatticeType: function(){
-            require(['rotEdgeOctaBasePlane'], function(RotEdgeOctaBasePlane){
+            require(['rotEdgeOctaBaseplane'], function(RotEdgeOctaBasePlane){
                 globals.basePlane = new RotEdgeOctaBasePlane();
             });
             require(['defaultHighlighter'], function(DefaultHighlighter){
@@ -17,15 +17,14 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getIndexForPosition: function(absPosition){
-            var position = {};
-            position.x = Math.floor(absPosition.x/this.xScale()+0.5);
-            position.y = Math.floor(absPosition.y/this.yScale()+0.5);
-            position.z = Math.floor(absPosition.z/this.zScale()+0.5);
-            return position;
+            return new THREE.Vector3(
+                Math.floor(absPosition.x/this.xScale()+0.5),
+                Math.floor(absPosition.y/this.yScale()+0.5),
+                Math.floor(absPosition.z/this.zScale())+0.5);
         },
 
         getPositionForIndex: function(index){
-            var position = _.clone(index);
+            var position = index.clone();
             if (index.z %2 != 0){
                 position.x += 0.5;
                 position.y += 0.5;

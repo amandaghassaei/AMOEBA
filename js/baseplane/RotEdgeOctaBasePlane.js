@@ -8,14 +8,12 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
     return SquareBasePlane.extend({
 
-        calcHighlighterPosition: function(face, position){
-            var index = lattice.getIndexForPosition(position);
-            index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-            var latticePosition = lattice.getPositionForIndex(index);
-            latticePosition.x -= lattice.xScale()/2;
-            latticePosition.y -= lattice.yScale()/2;
-            this.index = new THREE.Vector3(index.x, index.y, index.z);//todo no!!!
-            return {index: index, direction: new THREE.Vector3(0,0,1), position:latticePosition};
+        calcHighlighterParams: function(face, point){
+            var params = SquareBasePlane.prototype.calcHighlighterParams.call(this, face, point);
+            params.position.x -= lattice.xScale()/2;
+            params.position.y -= lattice.yScale()/2;
+            params.position.z -= lattice.zScale()/2;
+            return params;
         }
     });
 });

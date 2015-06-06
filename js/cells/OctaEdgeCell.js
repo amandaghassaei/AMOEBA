@@ -17,6 +17,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'octaFaceCel
 
     //todo fix this
     OctaEdgeCell.prototype.calcHighlighterPosition = function(face){
+//        var direction = face.normal.clone().applyQuaternion(this.getAbsoluteOrientation());
+//        var position = this.getAbsolutePosition();
         var direction = face.normal.clone();
         direction.applyQuaternion(this.mesh.quaternion);
         var position = this.getPosition();

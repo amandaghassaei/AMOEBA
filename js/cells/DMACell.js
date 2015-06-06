@@ -20,7 +20,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
-        if (superCell === undefined) {
+        if (!superCell || superCell === undefined) {
             if (this.index) {
                 three.sceneAdd(this.object3D);
                 if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object
@@ -63,7 +63,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         var geometry = this._getGeometry();
 
         var meshes = [];
-        var mesh = new THREE.Mesh(geometry, this._getMaterial());
+        var mesh = new THREE.Mesh(geometry, this.getMaterial());
         mesh.name = this._getMeshName();
         meshes.push(mesh);
 
@@ -141,6 +141,24 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
 
 
+    //highlighting
+
+    DMACell.prototype.calcHighlighterParams = function(face, point){//this works for rectalinear, override in subclasses
+        var direction = face.normal.clone().applyQuaternion(this.getAbsoluteOrientation());
+        var position = this.getAbsolutePosition();
+        var self  = this;
+        _.each(_.keys(position), function(key){
+            position[key] += direction[key]*self.axisScale(key)/2;
+        });
+        return {direction:direction, position:position};
+    };
+
+
+
+
+
+
+
     //children
 
     DMACell.prototype.addChildren = function(children, object3D){//accepts an array or a single mesh
@@ -177,7 +195,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         this.setMode(mode);
     };
 
-    DMACell.prototype._getMaterial = function(){
+    DMACell.prototype.getMaterial = function(){
         if (!this.material) console.warn("no material for cell");
         var materialClass = lattice.get("materialClass");
         if (!globals.materials[materialClass]) {

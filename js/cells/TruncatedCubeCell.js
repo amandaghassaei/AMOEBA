@@ -66,17 +66,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return wireframe;
     };
 
-    TruncatedCubeCell.prototype.calcHighlighterPosition = function(face){
-
+    TruncatedCubeCell.prototype.calcHighlighterParams = function(face){
         var direction = face.normal;
-        if (!(Math.abs(direction.x)>0.9 || Math.abs(direction.y)>0.9 || Math.abs(direction.z)>0.9)) return {index: _.clone(this.index)};
-
-        var position = this.getPosition();
-        var scale = this.zScale();
-        _.each(_.keys(position), function(key){
-            position[key] += direction[key]*scale/2;
-        });
-        return {index: _.clone(this.index), direction:direction, position:position};
+        if (!(Math.abs(direction.x)>0.9 || Math.abs(direction.y)>0.9 || Math.abs(direction.z)>0.9)) return null;
+        return DMACell.prototype.calcHighlighterParams.call(this, face);
     };
 
     return TruncatedCubeCell;

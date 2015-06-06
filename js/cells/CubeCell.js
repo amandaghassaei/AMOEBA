@@ -25,17 +25,5 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return wireframe;
     };
 
-    CubeCell.prototype.calcHighlighterPosition = function(face){
-
-        var direction = face.normal.clone().applyEuler(this.object3D.rotation);
-        var position = this.getPosition();
-        var scale = this.xScale();
-        _.each(_.keys(position), function(key){
-            position[key] += direction[key]*scale/2;
-        });
-        return {index: _.clone(this.index), direction:direction, position:position};
-    };
-
     return CubeCell;
-
 });

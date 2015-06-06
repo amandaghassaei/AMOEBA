@@ -36,7 +36,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         updateXYSeparation: function(xySep) {},
 
-        getOrientation: function(){
+        getAbsoluteOrientation: function(){
+            console.log("baseplane orientation");
             return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
         },
 
@@ -45,8 +46,18 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             three.render();
         },
 
-        getIndex: function(){
-            return this.index.clone();
+        getAbsoluteIndex: function(){
+            return this.highligherIndex.clone();
+        },
+
+        calcHighlighterParams: function(face, point, index){
+            point.z = 0;//todo this doesn't generalize when baseplane moves
+            if (!index || index === undefined) index = lattice.getIndexForPosition(point);
+            index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
+            var position = lattice.getPositionForIndex(index);
+            position.z += lattice.zScale()/2;
+            this.highligherIndex = index;
+            return {direction: new THREE.Vector3(0,0,1), position:position};
         },
 
         _removeMesh: function(){

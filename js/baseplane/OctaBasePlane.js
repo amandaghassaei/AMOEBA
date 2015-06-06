@@ -89,15 +89,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             geometry.verticesNeedUpdate = true;
         },
 
-        calcHighlighterPosition: function(face, position){
-            position.z = 0;
-            var index = lattice.getIndexForPosition(position);
+        calcHighlighterParams: function(face, point){
+            point.z = 0;
+            var index = lattice.getIndexForPosition(point);
             if (index.z%2 != 0) index.x -= 1;
-            index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
-            var position = lattice.getPositionForIndex(index);
-            position.z += lattice.zScale()/2;
-            this.index = new THREE.Vector3(index.x, index.y, index.z);//todo no!!!
-            return {index: index, direction: new THREE.Vector3(0,0,1), position:position};
+            return BasePlane.prototype.calcHighlighterParams.call(this, face, point, index);
         }
     });
 });

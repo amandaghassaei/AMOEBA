@@ -6,18 +6,21 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
+    var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+
     function OctaVertexCell(index, superCell){
         DMACell.call(this, index, superCell);
     }
     OctaVertexCell.prototype = Object.create(DMACell.prototype);
 
     OctaVertexCell.prototype._getGeometry = function(){
-        return unitVertexOcta;
+        return unitGeo;
     };
 
-    OctaVertexCell.prototype.calcHighlighterPosition = function(face, point){
+    OctaVertexCell.prototype.calcHighlighterParams = function(face, point){
 
-        var position = this.getPosition();
+//        point.applyQuaternion(this.getAbsoluteOrientation());
+        var position = this.getAbsolutePosition();
         var direction = null;
 
         var xScale = this.xScale();
@@ -50,7 +53,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
             }
         }
 
-        return {index: _.clone(this.index), direction:direction, position:position};
+        return {direction:direction, position:position};
     };
 
     return OctaVertexCell;

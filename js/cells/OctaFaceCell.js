@@ -33,12 +33,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return parts;
     };
 
-    OctaFaceCell.prototype.calcHighlighterPosition = function(face){
-        if (face.normal.z<0.99) return {index: _.clone(this.index)};//only highlight horizontal faces
-        var direction = face.normal;
-        var position = this.getPosition();
-        position.z += face.normal.z*this.zScale()/2;
-        return {index:_.clone(this.index), direction:direction, position:position};
+    OctaFaceCell.prototype.calcHighlighterParams = function(face){
+        var direction = face.normal.clone().applyQuaternion(this.getAbsoluteOrientation());
+        if (direction.z<0.99) return null;//only highlight horizontal faces
+        return DMACell.prototype.calcHighlighterParams.call(this, face);
     };
 
     return OctaFaceCell;

@@ -46,7 +46,7 @@ require.config({
         highlighter: 'highlighter/Highlighter',
         defaultHighlighter: 'highlighter/DefaultHighlighter',
         cubeHighlighter: 'highlighter/CubeHighlighter',
-        gikHighlighter: 'highlighter/GIKHighlighter',
+        superCellHighlighter: 'highlighter/SuperCellHighlighter',
         octaFaceHighlighter: 'highlighter/OctaFaceHighlighter',
         truncatedCubeHighlighter: 'highlighter/TruncatedCubeHighlighter',
 

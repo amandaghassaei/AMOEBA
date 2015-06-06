@@ -17,15 +17,14 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getIndexForPosition: function(absPosition){
-            var position = {};
-            position.x = Math.floor(absPosition.x/this.xScale()+0.5);
-            position.y = Math.floor(absPosition.y/this.yScale()+0.5);
-            position.z = Math.floor(absPosition.z/this.zScale()+0.5);
-            return position;
+            return new THREE.Vector3(
+                Math.floor(absPosition.x/this.xScale()+0.5),
+                Math.floor(absPosition.y/this.yScale()+0.5),
+                Math.floor(absPosition.z/this.zScale())+0.5);
         },
 
         getPositionForIndex: function(index){
-            var position = _.clone(index);
+            var position = index.clone();
             position.x = (position.x)*this.xScale();
             position.y = (position.y)*this.yScale();
             position.z = (position.z+0.5)*this.zScale();

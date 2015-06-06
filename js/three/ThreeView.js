@@ -83,6 +83,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls
 
         _mouseMoved: function(e){
 
+            if (!globals.highlighter) return;//highlighter not loaded yet
+
             if (!appState.get("highlightMode") && !(appState.get("manualSelectOrigin"))) return;
 
             if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
