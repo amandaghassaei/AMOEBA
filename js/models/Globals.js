@@ -4,9 +4,12 @@
 
 //globals namespace, not sure if there's a way to get around this
 
-define({
-      baseplane: null,
-      highlighter: null,
-      materials: {}
-  }
-);
+define(['three'], function(THREE){
+    return {
+        baseplane: null,
+            highlighter: null,
+        materials: {
+            deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000"})
+        }
+    };
+});

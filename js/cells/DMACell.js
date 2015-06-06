@@ -153,6 +153,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         return {direction:direction, position:position};
     };
 
+    DMACell.prototype.setDeleteMode = function(state){
+        var material;
+        if (state) material = globals.materials.deleteMaterial;
+        else  material = this.getMaterial();
+        if (!material) return;//cell may be deleted by now
+        if (this.object3D.children[0].material == material) return;
+        this.object3D.children[0].material = material;
+        three.render();
+    };
+
 
 
 
@@ -196,7 +206,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.getMaterial = function(){
-        if (!this.material) console.warn("no material for cell");
+        if (!this.material) return null;
         var materialClass = lattice.get("materialClass");
         if (!globals.materials[materialClass]) {
             console.warn("no material class found of type " + materialClass);

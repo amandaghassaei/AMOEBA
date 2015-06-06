@@ -28,6 +28,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             //bind events
             this.listenTo(lattice, "change:superCellRange", this._superCellParamDidChange);
             this.listenTo(appState, "change:superCellIndex", this._superCellParamDidChange);
+
+            this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
         },
 
 
@@ -57,10 +59,22 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         setNothingHighlighted: function(){
+            this.setDeleteMode(this.highlightedObject, false);
             this.highlightedObject = null;
             this.direction = null;
             this.position = null;
             this.hide();
+        },
+
+        _updateDeleteMode: function(){
+            this.setDeleteMode(this.highlightedObject, appState.get("deleteMode"));
+        },
+
+        setDeleteMode: function(object, state){
+            if (object && object.setDeleteMode) {
+                if (state) this.hide();
+                this.highlightedObject.setDeleteMode(state);
+            }
         },
 
 
@@ -76,7 +90,13 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 return;
             }
 
+            if (this.highlightedObject != highlighted.myParent) this.setDeleteMode(this.highlightedObject, false);
             this.highlightedObject = highlighted.myParent;
+
+            if (appState.get("deleteMode")) {
+                this.setDeleteMode(this.highlightedObject, true);
+                return;
+            }
 
             var params = this.highlightedObject.calcHighlighterParams(intersection.face, intersection.point);
             if (!params) {//may be hovering over a face that we shouldn't highlight

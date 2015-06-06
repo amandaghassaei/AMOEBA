@@ -59,7 +59,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls
         ////////////////////////////////////////////////////////////////////////////////
 
         _mouseOut: function(){
-            globals.highlighter.setNothingHighlighted();
+            if (globals.highlighter) globals.highlighter.setNothingHighlighted();
             this._setNoPartIntersections();
         },
 
