@@ -16,14 +16,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             });
         },
 
-//        getIndexForPosition: function(absPosition){
-//            return this._indexForPosition(absPosition);
-//        },
-//
-//        getPositionForIndex: function(index){
-//            return this._positionForIndex(index);
-//        },
-
         getIndexForPosition: function(absPosition){
             var yIndex = Math.floor(absPosition.y/this.yScale());
             if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
