@@ -217,6 +217,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
             console.warn("no material "+ this.material + " found for class "+ materialClass);
             return null;
         }
+        console.log(material.shading);
         return material;
     };
 

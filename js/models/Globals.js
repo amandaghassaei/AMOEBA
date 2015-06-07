@@ -13,6 +13,6 @@ define(['underscore', 'three'], function(_, THREE){
     return {
         baseplane: null,
         highlighter: null,
-        materials: materials,
+        materials: materials
     };
 });

@@ -10,10 +10,5 @@ define(['underscore', 'three', 'appState', 'plist', 'materials'], function(_, TH
     }
     ElectronicMaterials.prototype = Object.create(DMAMaterials.prototype);
 
-    var material = new ElectronicMaterials();
-    
-    return {
-        changeMaterials: material.changeMaterials,
-        materials: material.materials
-    }
+    return new ElectronicMaterials();
 });

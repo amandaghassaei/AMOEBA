@@ -12,23 +12,24 @@ define(['underscore', 'three', 'appState'], function(_, THREE, appState){
     }
 
     DMAMaterials.prototype.changeMaterials = function(){
-        console.log("changeMaterials");
         var self = this;
-        _.each(_.keys(self.materialList), function(material){
-            if (appState.get("realisticColorScheme")) {
-                if (self.materials[material]) self.materials[material].color = new THREE.Color(self.materialList[material].color);
-                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].color, shading:THREE.FlatShading});
-                if (self.materialList[material].opacity){
-                    self.materials[material].transparent = true;
-                    self.materials[material].opacity = self.materialList[material].opacity;
+        var state = appState.get("realisticColorScheme");
+        _.each(_.keys(self.materialList), function(materialName){
+            var materialData = self.materialList[materialName];
+            if (state) {
+                if (self.materials[materialName]) self.materials[materialName].color = new THREE.Color(materialData.color);
+                else self.materials[materialName] = new THREE.MeshLambertMaterial({color:materialData.color, shading:THREE.FlatShading});
+                if (materialData.opacity){
+                    self.materials[materialName].transparent = true;
+                    self.materials[materialName].opacity = materialData.opacity;
                 } else {
-                    self.materials[material].transparent = false;
+                    self.materials[materialName].transparent = false;
                 }
             }
             else {
-                if (self.materials[material]) self.materials[material].color = new THREE.Color(self.materialList[material].altColor);
-                else self.materials[material] = new THREE.MeshLambertMaterial({color:self.materialList[material].altColor, shading:THREE.FlatShading});
-                self.materials[material].transparent = false;
+                if (self.materials[materialName]) self.materials[materialName].color = new THREE.Color(materialData.altColor);
+                else self.materials[materialName] = new THREE.MeshLambertMaterial({color:materialData.altColor, shading:THREE.FlatShading});
+                self.materials[materialName].transparent = false;
             }
         });
     };

@@ -113,7 +113,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
         _updateColorScheme: function(){
             require(['globals'], function(globals){
                 _.each(_.keys(globals.materials), function(materialClass){
-                    if (materialClass.changeMaterials) materialClass.changeMaterials();
+                    if (globals.materials[materialClass].changeMaterials) globals.materials[materialClass].changeMaterials();
                 });
                 three.render();
             });
