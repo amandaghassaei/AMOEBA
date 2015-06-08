@@ -80,12 +80,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
-            console.log(indices);
 
-            console.log(this.get("cellsMin"));
-            console.log(this.get("cellsMax"));
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, indices, indices);
-            console.log(this.sparseCells);
 
             var index = (new THREE.Vector3()).subVectors(indices, this.get("cellsMin") || indices);
             if (!this.sparseCells[index.x][index.y][index.z]) {
