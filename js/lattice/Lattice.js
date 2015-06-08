@@ -329,7 +329,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //events
 
         _updatePartType: function(){
-            this._iterCells(this.cells, function(cell){
+            this._iterCells(this.sparseCells, function(cell){
                 if (cell) cell.destroyParts();
             });
             this._updateForMode();

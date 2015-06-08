@@ -339,6 +339,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.destroyParts = function(){
+        if (!this.parts && !this.cells) return;
+        if (this.cells){
+            _.each(this.cells, function(cell){
+                if (cell) cell.destroyParts();
+            });
+            return;
+        }
         if (!this.parts) return;
         _.each(this.parts, function(part){
             if (part) part.destroy();

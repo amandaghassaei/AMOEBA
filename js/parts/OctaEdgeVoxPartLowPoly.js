@@ -10,6 +10,7 @@ define(['underscore', 'three', 'part', 'bin!octaEdgeVoxPartLowPolySTL', 'stlLoad
     unitGeo.computeBoundingBox();
     var unitScale = 0.706/unitGeo.boundingBox.max.y;
     unitGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 
     function OctaEdgeVoxPartLowPoly(type, parent){
         DMAPart.call(this, type, parent);
