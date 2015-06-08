@@ -86,10 +86,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var index = (new THREE.Vector3()).subVectors(indices, this.get("cellsMin") || indices);
             if (!this.sparseCells[index.x][index.y][index.z]) {
                 var self = this;
+                if (!noRender || noRender === undefined) three.setRenderFlag();
                 this.makeCellForLatticeType(indices, function(cell){
                     self.sparseCells[index.x][index.y][index.z] = cell;
                     self.set("numCells", self.get("numCells")+1);
-                    if (!noRender || noRender === undefined) three.render();
                 });
             } else console.warn("already a cell there");
 

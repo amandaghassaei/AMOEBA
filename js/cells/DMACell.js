@@ -240,12 +240,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 if (!this.parts) {
                     this._initParts(function(parts){
                         self.parts = parts;
-                        _.each(this.parts, function(part){
-                            self.addChildren(part.getMesh());
-                        });
                         setVisiblity();
                     });
-                }
+                } else setVisiblity();
                 break;
             case "beam":
 //                if (!this.beams) this.beams = this._initBeams();
@@ -264,7 +261,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 if (child.name == "object3D") return;
                 child.visible = visible && (child.name == mode);
             });
-        };
+            three.conditionalRender();
+        }
     };
 
 

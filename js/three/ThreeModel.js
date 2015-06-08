@@ -17,6 +17,8 @@ define(['underscore', 'three'], function(_, THREE){
     var animationLoopRunning = false;
     var stopAnimationFlag = false;
 
+    var shouldRender = false;
+
     initialize();
 
     function initialize(){
@@ -122,8 +124,18 @@ define(['underscore', 'three'], function(_, THREE){
         renderer.render(scene, camera);
     }
 
+    function setRenderFlag(){
+        shouldRender = true;
+    }
+
+    function conditionalRender(){
+        if (shouldRender) render();
+    }
+
     return {//return public properties/methods
         render: render,
+        conditionalRender: conditionalRender,
+        setRenderFlag: setRenderFlag,
         startAnimationLoop: startAnimationLoop,
         stopAnimationLoop: stopAnimationLoop,
         sceneRemove: sceneRemove,
