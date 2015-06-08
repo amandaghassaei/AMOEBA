@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'three', 'part', 'bin!octaFaceTrianglePart', 'stlLoader'], function(_, THREE, DMAPart, trianglePart){
+define(['underscore', 'three', 'part', 'bin!octaFaceTrianglePartSTL', 'stlLoader'], function(_, THREE, DMAPart, trianglePart){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(trianglePart);
@@ -19,7 +19,6 @@ define(['underscore', 'three', 'part', 'bin!octaFaceTrianglePart', 'stlLoader'],
     OctaFaceTriPart.prototype = Object.create(DMAPart.prototype);
 
     OctaFaceTriPart.prototype._getGeometry = function(){
-        if (!unitGeo || unitGeo === undefined) console.warn("geo not loaded yet");
         return unitGeo;
     };
 

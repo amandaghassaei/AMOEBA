@@ -2,22 +2,16 @@
  * Created by aghassaei on 5/26/15.
  */
 
+define(['underscore', 'three', 'part', 'bin!octaEdgeVoxPartSTL', 'stlLoader'], function(_, THREE, DMAPart, voxPart){
 
-(function () {
-
-    var unitPartGeo;
-
-    //import part geometry
     var loader = new THREE.STLLoader();
-    loader.load("assets/stls/parts/edgeVoxPart.stl", function(geometry){
-
-        unitPartGeo = geometry;
-        unitPartGeo.computeBoundingBox();
-        var unitScale = 0.706/unitPartGeo.boundingBox.max.y;
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
-    });
+    var unitGeo = loader.parse(voxPart);
+    unitGeo.computeBoundingBox();
+    var unitScale = 0.706/unitGeo.boundingBox.max.y;
+    unitGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+    unitGeo.applyMatrix(new THREE.Matrix4().makeRotationY(Math.PI));
+    unitGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,0.09));
+    unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 
     function OctaEdgeVoxPart(type, parent){
         DMAPart.call(this, type, parent);
@@ -25,36 +19,8 @@
     OctaEdgeVoxPart.prototype = Object.create(DMAPart.prototype);
 
     OctaEdgeVoxPart.prototype._getGeometry = function(){
-        return unitPartGeo;
+        return unitGeo;
     };
 
-    self.OctaEdgeVoxPart = OctaEdgeVoxPart;
-
-})();
-
-(function () {
-
-    var unitPartGeo;
-
-    //import part geometry
-    var loader = new THREE.STLLoader();
-    loader.load("assets/stls/parts/edgeVoxPartLowPoly.stl", function(geometry){
-
-        unitPartGeo = geometry;
-        unitPartGeo.computeBoundingBox();
-        var unitScale = 0.706/unitPartGeo.boundingBox.max.y;
-        unitPartGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
-    });
-
-    function OctaEdgeVoxPartLowPoly(type, parent){
-        DMAPart.call(this, type, parent);
-    }
-    OctaEdgeVoxPartLowPoly.prototype = Object.create(DMAPart.prototype);
-
-    OctaEdgeVoxPartLowPoly.prototype._getGeometry = function(){
-        return unitPartGeo;
-    };
-
-    self.OctaEdgeVoxPartLowPoly = OctaEdgeVoxPartLowPoly;
-
-})();
+    return OctaEdgeVoxPart;
+});

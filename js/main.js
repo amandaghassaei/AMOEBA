@@ -71,6 +71,8 @@ require.config({
         //parts
         part: 'parts/DMAPart',
         octaFaceTriPart: 'parts/OctaFaceTriPart',
+        octaEdgeVoxPart: 'parts/OctaEdgeVoxPart',
+        octaEdgeVoxPartLowPoly: 'parts/OctaEdgeVoxPartLowPoly',
 
         //materials
         materials: 'materials/DMAMaterials',
@@ -96,7 +98,10 @@ require.config({
         sendMenu: 'menus/SendMenuView',
 
         //stls
-        octaFaceTrianglePart: '../assets/stls/parts/trianglePart.stl'
+        bin: 'bin',
+        octaFaceTrianglePartSTL: '../assets/stls/parts/trianglePart.stl',
+        octaEdgeVoxPartSTL: '../assets/stls/parts/edgeVoxPart.stl',
+        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/edgeVoxPartLowPoly.stl'
 
     },
 

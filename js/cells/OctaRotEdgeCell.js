@@ -14,18 +14,20 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     }
     OctaRotEdgeCell.prototype = Object.create(DMACell.prototype);
 
-    OctaRotEdgeCell.prototype._initParts = function(){
-        var type = globals.lattice.get("partType");
-        var newParts = [];
-        if (type == "vox"){
-            newParts.push(new OctaEdgeVoxPart(0, this));
-        } else if (type == "voxLowPoly"){
-            newParts.push(new OctaEdgeVoxPartLowPoly(0, this));
-        } else {
-            console.warn("part type " + type + " not recognized");
-            return;
-        }
-        return newParts;
+    OctaRotEdgeCell.prototype._initParts = function(callback){
+        var self = this;
+        var type = lattice.get("partType");
+        if (type == "vox") type = "octaEdgeVoxPart";
+        else if (type == "voxLowPoly") type = "octaEdgeVoxPartLowPoly";
+        else console.warn("no part type " + type);
+
+        require([type], function(OctaEdgeVoxPart){
+            var parts  = [];
+            for (var i=0;i<3;i++){
+                parts.push(new OctaEdgeVoxPart(0, self));
+            }
+            callback(parts);
+        });
     };
 
     OctaRotEdgeCell.prototype._getGeometry = function(){
