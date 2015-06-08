@@ -11,6 +11,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'octaFaceCel
     }
     OctaEdgeCell.prototype = Object.create(OctaFaceCell.prototype);
 
+    OctaFaceCell.prototype._rotateCell = function(object3D){
+        return object3D;
+    };
+
     OctaEdgeCell.prototype.calcHighlighterParams = function(face, point){
         var direction = face.normal.clone().applyQuaternion(this.getAbsoluteOrientation());
         var position = this.getAbsolutePosition();

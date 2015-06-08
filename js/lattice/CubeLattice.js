@@ -42,7 +42,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['cubeCell'], function(CubeCell){
                 var cell = new CubeCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

@@ -49,7 +49,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['octaVertexCell'], function(OctaVertexCell){
                 var cell = new OctaVertexCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

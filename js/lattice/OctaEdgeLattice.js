@@ -65,7 +65,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['octaEdgeCell'], function(OctaEdgeCell){
                 var cell = new OctaEdgeCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

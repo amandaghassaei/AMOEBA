@@ -51,7 +51,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['tetraVertexCell'], function(TetraVertexCell){
                 var cell = new TetraVertexCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

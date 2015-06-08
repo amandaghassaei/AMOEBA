@@ -43,7 +43,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['gikSuperCell'], function(GIKSuperCell){
                 var cell = new GIKSuperCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

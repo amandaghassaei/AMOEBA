@@ -51,7 +51,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['tetraStackedCell'], function(TetraStackedCell){
                 var cell = new TetraStackedCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

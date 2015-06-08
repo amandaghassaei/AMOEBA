@@ -53,7 +53,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['octaRotEdgeCell'], function(OctaRotEdgeCell){
                 var cell = new OctaRotEdgeCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

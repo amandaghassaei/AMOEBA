@@ -36,7 +36,7 @@ define(['three'], function(THREE){
         },
         allConnectionTypes: {
             octa: {face:"Face", edge:"Edge", edgeRot:"Edge (Rotated)", vertex:"Vertex"},// freeformFace:"Freeform Face"
-            tetra: {stacked: "Stacked", vertex: "Vertex"},
+            tetra: {stacked: "Stacked"},//vertex: "Vertex"
             cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"}

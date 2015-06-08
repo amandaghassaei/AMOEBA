@@ -43,7 +43,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['truncatedCubeCell'], function(TruncatedCubeCell){
                 var cell = new TruncatedCubeCell(indices);
                 if (callback) callback(cell);
-                return cell;
             });
         },
 

@@ -22,8 +22,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             //spacing for connectors/joints
             cellSeparation: {xy:0, z:0},
 
-            cellType: "tetra",
-            connectionType: "stacked",
+            cellType: "cube",
+            connectionType: "face",
             partType: null,
             materialType: null,
             materialClass: "mechanical",
@@ -68,7 +68,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
                         if (!this.sparseCells[x][y][z]) {
                             var self = this;
-                            this.sparseCells[x][y][z] = this.makeCellForLatticeType((new THREE.Vector3(x, y, z)).add(cellsMin), function(){
+                             this.makeCellForLatticeType((new THREE.Vector3(x, y, z)).add(cellsMin), function(cell){
+                                self.sparseCells[x][y][z] = cell;
                                 self.set("numCells", self.get("numCells")+1);
                             });
                         } else console.warn("already a cell there");
@@ -79,17 +80,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         addCellAtIndex: function(indices, noRender, noCheck){//no render no check from fill
+            console.log(indices);
 
+            console.log(this.get("cellsMin"));
+            console.log(this.get("cellsMax"));
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, indices, indices);
+            console.log(this.sparseCells);
 
             var index = (new THREE.Vector3()).subVectors(indices, this.get("cellsMin") || indices);
             if (!this.sparseCells[index.x][index.y][index.z]) {
                 var self = this;
-                var callback = function(){
+                this.makeCellForLatticeType(indices, function(cell){
+                    self.sparseCells[index.x][index.y][index.z] = cell;
                     self.set("numCells", self.get("numCells")+1);
                     if (!noRender || noRender === undefined) three.render();
-                };
-                this.sparseCells[index.x][index.y][index.z] = this.makeCellForLatticeType(indices, callback);
+                });
             } else console.warn("already a cell there");
 
         },
@@ -131,7 +136,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         clearCells: function(){
-            this._iterCells(this.sparseCells, function(cell){//send destroy to top level
+            this._loopCells(this.sparseCells, function(cell){//send destroy to top level
                 if (cell) cell.destroy();
             });
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
@@ -224,8 +229,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return;
             }
 
-            var lastMax = this.get("cellsMax") || indicesMax;
-            var lastMin = this.get("cellsMin") || indicesMin;
+            if (!this.get("cellsMax") || !this.get("cellsMin")){
+                this.set("cellsMax", indicesMax);
+                this.set("cellsMin", indicesMin);
+                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(indicesMax, indicesMin), false);
+                return;
+            }
+
+            var lastMax = this.get("cellsMax");
+            var lastMin = this.get("cellsMin");
             var newMax = this._updateCellsMax(indicesMax, lastMax);
             var newMin = this._updateCellsMin(indicesMin, lastMin);
             if (newMax) {
@@ -417,7 +429,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     if (!cell) return;
                     var index = _.clone(cell.index);
                     if (cell.destroy) cell.destroy();
-                    cells[x][y][z] = self.makeCellForLatticeType(index);// parentPos, parentOrientation, direction, parentType, type)
+                    self.makeCellForLatticeType(index, function(newCell){
+                        cells[x][y][z] = newCell;
+                    });
                 });
                 three.render();
             });
