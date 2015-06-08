@@ -16,6 +16,7 @@ require.config({
         //three
         three: 'dependencies/three',
         orbitControls: 'dependencies/OrbitControls',
+        stlLoader: 'dependencies/loaders/STLLoader',
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
 
@@ -67,6 +68,10 @@ require.config({
         superCell: 'cells/supercells/DMASupercell',
         gikSuperCell: 'cells/supercells/GIKSuperCell',
 
+        //parts
+        part: 'parts/DMAPart',
+        octaFaceTriPart: 'parts/OctaFaceTriPart',
+
         //materials
         materials: 'materials/DMAMaterials',
         electronicMaterials: 'materials/ElectronicMaterials',
@@ -88,7 +93,10 @@ require.config({
         assemblerMenu: 'menus/AssemblerMenuView',
         camMenu: 'menus/CamMenuView',
         animateMenu: 'menus/AnimationMenuView',
-        sendMenu: 'menus/SendMenuView'
+        sendMenu: 'menus/SendMenuView',
+
+        //stls
+        octaFaceTrianglePart: '../assets/stls/parts/trianglePart.stl'
 
     },
 
@@ -97,6 +105,10 @@ require.config({
             exports: 'THREE'
         },
         orbitControls: {
+            deps: ['three'],
+            exports: 'THREE'
+        },
+        stlLoader: {
             deps: ['three'],
             exports: 'THREE'
         },

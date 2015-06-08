@@ -3,55 +3,48 @@
  */
 
 
-var partMaterial = new THREE.MeshLambertMaterial({ color:0xffffff, shading: THREE.FlatShading });
-    partMaterial.color.setRGB( 0.9619657144369509, 0.6625466032079207, 0.20799727886007258 );
 
-function DMAPart(index, parent) {
-    this.parentCell  = parent;
-    this.index = index;//todo need this?
-    this.mesh = this._buildMesh(index);
-}
+define(['underscore', 'three'], function(_, THREE){
 
-DMAPart.prototype._buildMesh = function(index){
-    var geometry = this._getGeometry(index);
-    var mesh = new THREE.Mesh(geometry, this.getMaterial());
-    mesh.name = "part";
-    return mesh;
-};
-
-DMAPart.prototype.highlight = function(){
-//        this.mesh.material.color.setRGB(1,0,0);
-};
-
-DMAPart.prototype.unhighlight = function(){
-//        if (this.mesh) this.mesh.material.color.setRGB(0.9619657144369509, 0.6625466032079207, 0.20799727886007258);
-};
-
-//DMAPart.prototype.removeFromCell = function(){//send message back to parent cell to destroy this
-//    if (this.parentCell) {
-//        this.parentCell.removePart(this.index);
-//        globals.three.render();
-//    } else console.warn("part has no parent cell");
-//};
-
-DMAPart.prototype.getMesh = function(){//only call by parent cell
-    return this.mesh;
-};
-
-DMAPart.prototype.getMaterial = function(){
-    return partMaterial;
-};
-
-DMAPart.prototype.destroy = function(){
-    if (this.mesh) {
-        this.mesh.parent.remove(this.mesh);
-        this.mesh = null;
+    function DMAPart(index, parent) {
+        this.parentCell  = parent;
+        this.index = index;
+        this.mesh = this._buildMesh();
+        this.parentCell.addChildren(this.mesh);//add itself as child of parent cell
     }
-    this.parentCell = null;
-    this.index = null;
-};
 
-DMAPart.prototype.toJSON = function(){
-    return {
-    }
-};
+    DMAPart.prototype._buildMesh = function(){
+        var mesh = this._translatePart(this._rotatePart(new THREE.Mesh(this._getGeometry(), this.getMaterial())));
+        mesh.name = "part";
+        return mesh;
+    };
+
+    DMAPart.prototype._rotatePart = function(mesh){
+        return mesh;
+    };
+
+    DMAPart.prototype._translatePart = function(mesh){
+        return mesh;
+    };
+
+    DMAPart.prototype.getMaterial = function(){
+        return this.parentCell.getMaterial();
+    };
+
+    DMAPart.prototype.destroy = function(){
+        if (this.mesh) {
+            this.mesh.parent.remove(this.mesh);
+            this.mesh = null;
+        }
+        this.parentCell = null;
+        this.index = null;
+    };
+
+    DMAPart.prototype.toJSON = function(){
+        return {
+        }
+    };
+
+    return DMAPart;
+});
+

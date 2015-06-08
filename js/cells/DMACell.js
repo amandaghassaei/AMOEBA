@@ -226,36 +226,45 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     DMACell.prototype.setMode = function(mode){
 
         if (mode === undefined) mode = appState.get("cellMode");
+        var self = this;
 
         switch(mode) {
             case "supercell":
                 if (!this.superCell) mode = "cell";//top level item
+                setVisiblity();
                 break;
             case "cell":
+                setVisiblity();
                 break;
             case "part":
                 if (!this.parts) {
-                    this.parts = this._initParts();
-                    var self = this;
-                    _.each(this.parts, function(part){
-                        self.addChildren(part.getMesh());
+                    this._initParts(function(parts){
+                        self.parts = parts;
+                        _.each(this.parts, function(part){
+                            self.addChildren(part.getMesh());
+                        });
+                        setVisiblity();
                     });
                 }
                 break;
             case "beam":
 //                if (!this.beams) this.beams = this._initBeams();
+                setVisiblity();
                 break;
             case "node":
 //                if (!this.nodes) this.nodes = this._initNodes();
+                setVisiblity();
                 break;
         }
 
-        var visible = !(this.superCell && this.cells);//middle layers are always hidden
+        function setVisiblity(){
+            var visible = !(self.superCell && self.cells);//middle layers are always hidden
 
-        _.each(this.object3D.children, function(child){
-            if (child.name == "object3D") return;
-            child.visible = visible && (child.name == mode);
-        });
+            _.each(self.object3D.children, function(child){
+                if (child.name == "object3D") return;
+                child.visible = visible && (child.name == mode);
+            });
+        };
     };
 
 

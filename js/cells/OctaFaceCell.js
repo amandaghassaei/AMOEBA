@@ -25,12 +25,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return object3D;
     };
 
-    OctaFaceCell.prototype._initParts = function(){
-        var parts  = [];
-        for (var i=0;i<3;i++){
-            parts.push(new OctaFaceTriPart(i, this));
-        }
-        return parts;
+    OctaFaceCell.prototype._initParts = function(callback){
+        var self = this;
+        require(['octaFaceTriPart'], function(OctaFaceTriPart){
+            var parts  = [];
+            for (var i=0;i<3;i++){
+                parts.push(new OctaFaceTriPart(i, self));
+            }
+            callback(parts);
+        });
     };
 
     OctaFaceCell.prototype.calcHighlighterParams = function(face){
