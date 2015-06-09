@@ -73,6 +73,8 @@ require.config({
         octaFaceTriPart: 'parts/OctaFaceTriPart',
         octaEdgeVoxPart: 'parts/OctaEdgeVoxPart',
         octaEdgeVoxPartLowPoly: 'parts/OctaEdgeVoxPartLowPoly',
+        gikPart: 'parts/GIKPart',
+        gikPartLowPoly: 'parts/GIKPartLowPoly',
 
         //materials
         materials: 'materials/DMAMaterials',
@@ -100,7 +102,11 @@ require.config({
         //stls
         octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',
         octaEdgeVoxPartSTL: '../assets/stls/parts/OctaEdgeVoxPart.stl',
-        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/OctaEdgeVoxPartLowPoly.stl'
+        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/OctaEdgeVoxPartLowPoly.stl',
+        gikPartSTL: '../assets/stls/parts/GIKPart.stl',
+        gikEndPartSTL: '../assets/stls/parts/GIKEndPart.stl',
+        gikPartLowPolySTL: '../assets/stls/parts/GIKPartLowPoly.stl',
+        gikEndPartLowPolySTL: '../assets/stls/parts/GIKEndPartLowPoly.stl'
 
     },
 

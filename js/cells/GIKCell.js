@@ -6,17 +6,10 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
     function(_, THREE, three, lattice, appState, CubeCell){
 
-    var unitGeo = new THREE.BoxGeometry(1,1,1.28);
-
     function GIKCell(index, superCell){
         CubeCell.call(this, index, superCell);
     }
     GIKCell.prototype = Object.create(CubeCell.prototype);
-
-
-    GIKCell.prototype._getGeometry = function(){
-        return unitGeo;
-    };
 
     GIKCell.prototype._translateCell = function(object3D){
         if (this.index) {
@@ -26,30 +19,27 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         return object3D;
     };
 
-    GIKCell.prototype._rotateCell = function(object3D){
-        var length = this.superCell.getLength();
-        if (this.index.x == length) object3D.rotateZ(Math.PI);
-        return object3D;
-    };
-
-    GIKCell.prototype.getMaterial = function(){
-        return this.superCell.getMaterial();
-    };
-
     GIKCell.prototype._initParts = function(){
-        if (!this.superCell) return null;
+        if (!this.superCell) return;
+        var self = this;
         var parts  = [];
-        var isEnd = false;
-//        var isEnd = this.superCellIndex == 0 || this.superCellIndex == this.superCell.getLength();
-        if (globals.lattice.get("partType") == "lego") {
-            if (isEnd) parts.push(new DMAGIKEndPart(0, this));
-            else parts.push(new DMAGIKPart(0, this));
+        var length = this.superCell.getLength()+1;
+
+        if (lattice.get("partType") == "lego") {
+            require(['gikPart'], function(GIKPart){
+                for (var i=0;i<length;i++){
+                    parts.push(new GIKPart(i, self));
+                }
+                self.parts = parts;
+            });
+        } else {
+            require(['gikPartLowPoly'], function(GIKPartLowPoly){
+                for (var i=0;i<length;i++){
+                    parts.push(new GIKPartLowPoly(i, self));
+                }
+                self.parts = parts;
+            });
         }
-        else {
-            if (isEnd) parts.push(new DMAGIKEndPartLowPoly(0, this));
-            else parts.push(new DMAGIKPartLowPoly(0, this));
-        }
-        return parts;
     };
 
     GIKCell.prototype.calcHighlighterPosition = function(face){

@@ -65,18 +65,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         var meshes = [];
         var mesh = new THREE.Mesh(geometry, this.getMaterial());
-        mesh.name = this._getMeshName();
+        mesh.name = "cell";
         meshes.push(mesh);
 
         var wireframe = this._buildWireframe(mesh, geometry);
         if (!wireframe) return meshes;
-        wireframe.name = this._getMeshName();
+        wireframe.name = "cell";
         meshes.push(wireframe);
         return meshes;
-    };
-
-    DMACell.prototype._getMeshName = function(){
-        return "cell";
     };
 
     DMACell.prototype._buildWireframe = function(mesh, geometry){//for "cell" view
@@ -238,7 +234,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 setVisiblity();
                 break;
             case "part":
-                if (!this.parts) {
+                if (!this.cells && !this.parts) {
                     this._initParts(function(parts){
                         self.parts = parts;
                         setVisiblity();
@@ -252,6 +248,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
             case "node":
 //                if (!this.nodes) this.nodes = this._initNodes();
                 setVisiblity();
+                break;
+            default:
                 break;
         }
 

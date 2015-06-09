@@ -21,11 +21,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     DMASuperCell.prototype._makeChildCells = function(range, material){
         var cells = [];
         for (var x=0;x<range.x;x++){
+            cells.push([]);
             for (var y=0;y<range.y;y++){
+                cells[x].push([]);
                 for (var z=0;z<range.z;z++){
                     //child cells add themselves to object3D
-                    if (material.cells) var cellMaterial = material.cells[x][y][z].material;
-                    if (cells[x][y][z]) cells.push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), cellMaterial || material));
+                    if (material.cells && material.cells[x][y][z]) cells[x][y].push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), this, material.cells[x][y][z].material));
+                    else cells[x][y].push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), this, material));
                 }
             }
         }
@@ -37,9 +39,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype.setMode = function(mode){
-        DMACell.prototype.setMode.call(mode);
-        _.each(this.cells, function(cell){
-            cell.setMode(mode);
+        DMACell.prototype.setMode.call(this, mode);
+        this._loopCells(function(cell){
+            if (cell) cell.setMode(mode);
         });
     };
 
@@ -54,6 +56,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     DMASuperCell.prototype._loopCells = function(callback){
         var cells = this.cells;
+        if (!cells || cells === undefined) return;
         for (var x=0;x<cells.length;x++){
             for (var y=0;y<cells[0].length;y++){
                 for (var z=0;z<cells[0][0].length;z++){

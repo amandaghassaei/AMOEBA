@@ -23,11 +23,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return object3D;
     };
 
-    GIKSuperCell.prototype._getGeometry = function(){
+    GIKSuperCell.prototype._getGeometry = function(){//todo , do this to mesh?
         var geo = unitGeo.clone();
         var length = this.getLength() + 1;
         geo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
+        return geo;
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){
