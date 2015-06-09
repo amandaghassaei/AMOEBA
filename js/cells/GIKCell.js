@@ -23,7 +23,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         return null;
     };
 
-    GIKCell.prototype._initParts = function(){
+    GIKCell.prototype._initParts = function(callback){
         if (!this.superCell) return;
         var self = this;
         var parts  = [];
@@ -34,14 +34,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
                 for (var i=0;i<length;i++){
                     parts.push(new GIKPart(i, self));
                 }
-                self.parts = parts;
+                callback(parts);
             });
         } else {
             require(['gikPartLowPoly'], function(GIKPartLowPoly){
                 for (var i=0;i<length;i++){
                     parts.push(new GIKPartLowPoly(i, self));
                 }
-                self.parts = parts;
+                callback(parts);
             });
         }
     };

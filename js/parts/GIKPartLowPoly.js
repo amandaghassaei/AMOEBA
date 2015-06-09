@@ -11,6 +11,7 @@ define(['underscore', 'three', 'gikPart', 'bin!gikPartLowPolySTL', 'bin!gikEndPa
     var unitGeoEnd = preProcessGeo(loader.parse(gikEndPartLowPoly));
 
     function preProcessGeo(geo){
+        geo.computeBoundingBox();
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(-(geo.boundingBox.min.x+0.5),
             -(geo.boundingBox.min.y+geo.boundingBox.max.y)/2, -(geo.boundingBox.min.z+geo.boundingBox.max.z)/2));
         var unitScale = 1/(1.2699999809265137);
@@ -25,7 +26,7 @@ define(['underscore', 'three', 'gikPart', 'bin!gikPartLowPolySTL', 'bin!gikEndPa
     GIKPartLowPoly.prototype = Object.create(GIKPart.prototype);
 
     GIKPartLowPoly.prototype._getGeometry = function(){
-        if (this.index == 0 || this.index == this.superCell.getLength()) return unitGeoEnd;
+        if (this._isEnd()) return unitGeoEnd;
         return unitGeo;
     };
 
