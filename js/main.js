@@ -98,10 +98,9 @@ require.config({
         sendMenu: 'menus/SendMenuView',
 
         //stls
-        bin: 'bin',
-        octaFaceTrianglePartSTL: '../assets/stls/parts/trianglePart.stl',
-        octaEdgeVoxPartSTL: '../assets/stls/parts/edgeVoxPart.stl',
-        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/edgeVoxPartLowPoly.stl'
+        octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',
+        octaEdgeVoxPartSTL: '../assets/stls/parts/OctaEdgeVoxPart.stl',
+        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/OctaEdgeVoxPartLowPoly.stl'
 
     },
 
