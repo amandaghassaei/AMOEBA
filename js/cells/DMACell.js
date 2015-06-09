@@ -8,11 +8,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
-    function DMACell(index, superCell){
+    function DMACell(index, superCell, material){
 
         if (index) this.index = new THREE.Vector3(index.x, index.y, index.z);
         if (superCell) this.superCell = superCell;
-        if (!this.cells) this.material = lattice.get("materialType");
+
+        this.material = material || lattice.get("materialType");
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();

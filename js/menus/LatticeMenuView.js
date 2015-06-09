@@ -15,7 +15,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), plist);
+            return _.extend(_.extend(lattice.toJSON(), this.model.toJSON()), plist);
         },
 
         template: _.template('\
@@ -38,7 +38,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
                     </ul>\
                 </div><br/><br/>\
             <% if (connectionType == "gik") { %>\
-            GIK Length:&nbsp;&nbsp;<input data-property="superCellRange" data-key="x" value="<%= superCellRange.x %>" placeholder="GIK length" class="form-control intInput lattice" type="text"><br/>\
+            GIK Length:&nbsp;&nbsp;<input data-property="superCellRange" data-key="x" value="<%= superCellRange.x %>" placeholder="GIK length" class="form-control intInput appState" type="text"><br/>\
             <br/>\
             <% } %>\
             <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>\

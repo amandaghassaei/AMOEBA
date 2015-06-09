@@ -4,16 +4,18 @@
 
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell', 'electronicMaterials'],
-    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell, electronicMaterials){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell'],
+    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
+
+    var unitGeo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
 
     GIKSuperCell = function(index, superCell){
         DMASuperCell.call(this, index, superCell);
     };
     GIKSuperCell.prototype = Object.create(DMASuperCell.prototype);
 
-    GIKSuperCell.prototype._makeSubCellForIndex = function(index){
-        return new GIKCell(index, this);
+    GIKSuperCell.prototype._makeSubCellForIndex = function(index, material){
+        return new GIKCell(index, material, this);
     };
 
     GIKSuperCell.prototype._rotateCell = function(object3D){
@@ -21,24 +23,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return object3D;
     };
 
-    GIKSuperCell.prototype.getMaterial = function(){
-        return electronicMaterials.materials[this.material];
-    };
-
-    GIKSuperCell.prototype._buildMesh = function(){
-        var length = lattice.get("superCellRange").x;
-        var meshes = [];
-        var superCellGeo = new THREE.BoxGeometry(1,1,1.28);
-        superCellGeo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
-        superCellGeo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
-        var mesh = new THREE.Mesh(superCellGeo, this.getMaterial());
-        mesh.name = "supercell";
-        meshes.push(mesh);
-        var wireframe = this._buildWireframe(mesh);
-        if (!wireframe) return meshes;
-        wireframe.name = "supercell";
-        meshes.push(wireframe);
-        return meshes;
+    GIKSuperCell.prototype._getGeometry = function(){
+        var geo = unitGeo.clone();
+        var length = this.getLength() + 1;
+        geo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){

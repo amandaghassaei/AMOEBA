@@ -17,7 +17,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         _setRotation: function(direction){
             if (!this.highlightedObject) return;
-            var index = this.highlightedObject.getIndex();
+            var index = this.highlightedObject.getAbsoluteIndex();
             var superCellIndex = appState.get("superCellIndex");
             if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1))
                 this.mesh.rotation.set(0, 0, Math.PI/2);
@@ -27,7 +27,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         updateGikLength: function(){
             if (!this.mesh) return;
-            this.mesh.scale.set(lattice.get("superCellRange").x, lattice.get("superCellRange").y, lattice.get("superCellRange").z);
+            this.mesh.scale.set(appState.get("superCellRange").x, appState.get("superCellRange").y, appState.get("superCellRange").z);
             three.render();
             if (!this.direction) return;
             this._setPosition(this.position, this.direction);//position of center point
@@ -36,7 +36,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _getNextCellPosition: function(){//add direction vector to current index
-            var newIndex = this.highlightedObject.getIndex();
+            var newIndex = this.highlightedObject.getAbsoluteIndex();
             var direction = this.direction;
             _.each(_.keys(newIndex), function(key){
                 newIndex[key] = Math.round(newIndex[key] + direction[key]);

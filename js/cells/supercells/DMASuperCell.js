@@ -7,34 +7,33 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
-    function DMASuperCell(index, material, superCell){//supercells might have supercells
+    function DMASuperCell(index, superCell){//supercells might have supercells
 
-        var range = lattice.get("superCellRange");
-        this.cells = this._makeChildCells(index, range);//todo three dimensional array?
         DMACell.call(this, index, superCell);
+
+        var range = appState.get("superCellRange");
+        this.cells = this._makeChildCells(range, this.getMaterial());
     
         this.setMode();
     }
     DMASuperCell.prototype = Object.create(DMACell.prototype);
 
-    DMASuperCell.prototype._makeChildCells = function(index, range){
+    DMASuperCell.prototype._makeChildCells = function(range, material){
         var cells = [];
         for (var x=0;x<range.x;x++){
             for (var y=0;y<range.y;y++){
                 for (var z=0;z<range.z;z++){
-                    cells.push(this._makeSubCellForIndex({x:x, y:y, z:z}));//child cells add themselves to object3D
+                    //child cells add themselves to object3D
+                    if (material.cells) var cellMaterial = material.cells[x][y][z].material;
+                    if (cells[x][y][z]) cells.push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), cellMaterial || material));
                 }
             }
         }
         return cells;
     };
 
-    DMASuperCell.prototype._makeSubCellForIndex = function(index){
+    DMASuperCell.prototype._makeSubCellForIndex = function(index, material){
         return null;//override in subclasses
-    };
-
-    DMASuperCell.prototype._getModeName = function(){
-        return "";
     };
 
     DMASuperCell.prototype.setMode = function(mode){
@@ -50,7 +49,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     DMASuperCell.prototype.getLength = function(){
         if (this.cells) return this.cells.length-1;
-        return lattice.get("superCellRange").x-1;
+        return appState.get("superCellRange").x-1;//zero indexed
     };
 
     DMASuperCell.prototype._loopCells = function(callback){

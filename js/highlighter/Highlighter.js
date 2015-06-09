@@ -26,7 +26,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.hide();
 
             //bind events
-            this.listenTo(lattice, "change:superCellRange", this._superCellParamDidChange);
+            this.listenTo(appState, "change:superCellRange", this._superCellParamDidChange);
             this.listenTo(appState, "change:superCellIndex", this._superCellParamDidChange);
 
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);

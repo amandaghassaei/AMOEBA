@@ -11,8 +11,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             require(['squareBaseplane'], function(SquareBasePlane){
                 globals.basePlane = new SquareBasePlane();
             });
-            require(['gikHighlighter'], function(GIKHighlighter){
-                globals.highlighter = new GIKHighlighter();
+            require(['superCellHighlighter'], function(superCellHighlighter){
+                globals.highlighter = new superCellHighlighter();
                 globals.highlighter.updateGikLength();
             });
         },

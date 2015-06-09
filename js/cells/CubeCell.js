@@ -6,7 +6,7 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
-    var unitCellGeo = new THREE.BoxGeometry(1,1,1);
+    var unitCellGeo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
 
     function CubeCell(index, superCell){
         DMACell.call(this, index, superCell);

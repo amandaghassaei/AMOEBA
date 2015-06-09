@@ -26,8 +26,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             connectionType: "face",
             partType: null,
             materialType: null,
-            materialClass: "mechanical",
-            superCellRange: new THREE.Vector3(4,1,1)
+            materialClass: "mechanical"
         },
 
         initialize: function(){

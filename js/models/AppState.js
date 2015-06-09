@@ -5,7 +5,7 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
+define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, three, THREE){
 
     var AppState = Backbone.Model.extend({
 
@@ -36,7 +36,8 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
             cellMode: "cell",//supercell, cell, part, node, beam
             cellsVisible: true,
 
-            superCellIndex: 0,//offset of superCell adds todo lattice?
+            superCellIndex: 0,//offset of superCell adds
+            superCellRange: new THREE.Vector3(4,1,1),
 
             realisticColorScheme: false,
 
@@ -191,22 +192,22 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
                 case 57:
                     if (globals.lattice.get("connectionType") != "gik") break;
                     if (state) {
-                        var range = globals.lattice.get("superCellRange").clone();
+                        var range = this.get("superCellRange").clone();
                         range.x = e.keyCode-48;
-                        globals.lattice.set("superCellRange", range);
+                        this.set("superCellRange", range);
                     }
                     break;
                 case 81://q - increase supercell index
                     if (state) {
                         var index = this.get("superCellIndex")+1;
-                        if (index > globals.lattice.get("superCellRange").x-1) index = 0;
+                        if (index > this.get("superCellRange").x-1) index = 0;
                         this.set("superCellIndex", index);
                     }
                     break;
                 case 65://a - decrease supercell index
                     if (state) {
                         var index = this.get("superCellIndex")-1;
-                        if (index < 0) index = globals.lattice.get("superCellRange").x-1;
+                        if (index < 0) index = this.get("superCellRange").x-1;
                         this.set("superCellIndex", index);
                     }
                     break;
