@@ -32,8 +32,9 @@ define(['underscore', 'three'], function(_, THREE){
     };
 
     DMAPart.prototype.destroy = function(){
+        console.log("destroy");
         if (this.mesh) {
-            this.mesh.parent.remove(this.mesh);
+            this.parentCell.removeChildren(this.mesh);
             this.mesh = null;
         }
         this.parentCell = null;

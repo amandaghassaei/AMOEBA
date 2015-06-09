@@ -31,16 +31,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
 
         if (lattice.get("partType") == "lego") {
             require(['gikPart'], function(GIKPart){
-                for (var i=0;i<length;i++){
-                    parts.push(new GIKPart(i, self));
-                }
+                parts.push(new GIKPart(self.index.x, self));
                 callback(parts);
             });
         } else {
             require(['gikPartLowPoly'], function(GIKPartLowPoly){
-                for (var i=0;i<length;i++){
-                    parts.push(new GIKPartLowPoly(i, self));
-                }
+                parts.push(new GIKPartLowPoly(self.index.x, self));
                 callback(parts);
             });
         }

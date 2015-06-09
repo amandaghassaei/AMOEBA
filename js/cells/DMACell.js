@@ -276,7 +276,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     //subcomponents
 
-    DMACell.prototype._initParts = function(){
+    DMACell.prototype._initParts = function(callback){
         return [];//override in subclasses
     };
 
