@@ -19,6 +19,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         return object3D;
     };
 
+    GIKCell.prototype._getMeshName = function(){
+        return null;
+    };
+
     GIKCell.prototype._initParts = function(){
         if (!this.superCell) return;
         var self = this;

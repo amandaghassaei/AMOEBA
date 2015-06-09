@@ -38,6 +38,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return null;//override in subclasses
     };
 
+    DMASuperCell.prototype._getMeshName = function(){
+        return "supercell";
+    };
+
     DMASuperCell.prototype.setMode = function(mode){
         DMACell.prototype.setMode.call(this, mode);
         this._loopCells(function(cell){

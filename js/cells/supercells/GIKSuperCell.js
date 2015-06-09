@@ -39,5 +39,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return wireframe;
     };
 
+    GIKSuperCell.prototype._getMeshName = function(){
+        return "cell";
+    };
+
     return GIKSuperCell;
 });

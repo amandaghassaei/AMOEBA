@@ -65,14 +65,18 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         var meshes = [];
         var mesh = new THREE.Mesh(geometry, this.getMaterial());
-        mesh.name = "cell";
+        mesh.name = this._getMeshName();
         meshes.push(mesh);
 
         var wireframe = this._buildWireframe(mesh, geometry);
         if (!wireframe) return meshes;
-        wireframe.name = "cell";
+        wireframe.name = this._getMeshName();
         meshes.push(wireframe);
         return meshes;
+    };
+
+    DMACell.prototype._getMeshName = function(){
+        return "cell";
     };
 
     DMACell.prototype._buildWireframe = function(mesh, geometry){//for "cell" view
