@@ -98,16 +98,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _indexForPosition: function(absPosition){
             return new THREE.Vector3(
-                Math.floor(absPosition.x/this.xScale()),
-                Math.floor(absPosition.y/this.yScale()),
-                Math.floor(absPosition.z/this.zScale()));
+                Math.round(absPosition.x/this.xScale()),
+                Math.round(absPosition.y/this.yScale()),
+                Math.round(absPosition.z/this.zScale()));
         },
 
         _positionForIndex: function(index){
             var position = index.clone();
-            position.x = (position.x+0.5)*this.xScale();
-            position.y = (position.y+0.5)*this.yScale();
-            position.z = (position.z+0.5)*this.zScale();
+            position.x = (position.x)*this.xScale();
+            position.y = (position.y)*this.yScale();
+            position.z = (position.z)*this.zScale();
             return position;
         },
 

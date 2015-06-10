@@ -16,19 +16,19 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
             var geometry = new THREE.Geometry();
 
-            for ( var i = - dimX; i <= dimX; i += scale ) {
-                geometry.vertices.push( new THREE.Vector3(-dimX, i, 0));
-                geometry.vertices.push( new THREE.Vector3(dimX, i, 0));
-                geometry.vertices.push( new THREE.Vector3(i, -dimX, 0));
-                geometry.vertices.push( new THREE.Vector3(i, dimX, 0));
+            for ( var i = - dimX; i <= dimX+1; i += scale ) {
+                geometry.vertices.push( new THREE.Vector3(-dimX-scale/2, i-scale/2, 0));
+                geometry.vertices.push( new THREE.Vector3(dimX-scale/2, i-scale/2, 0));
+                geometry.vertices.push( new THREE.Vector3(i-scale/2, -dimX-scale/2, 0));
+                geometry.vertices.push( new THREE.Vector3(i-scale/2, dimX-scale/2, 0));
 
             }
 
             var planeGeometry = new THREE.Geometry();
-            planeGeometry.vertices.push( new THREE.Vector3(-dimX, -dimX, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(dimX, -dimX, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(-dimX, dimX, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(dimX, dimX, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, -dimX-scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, -dimX-scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, dimX+scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, dimX+scale/2, 0));
             planeGeometry.faces.push(new THREE.Face3(0, 1, 3));
             planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
             planeGeometry.computeFaceNormals();

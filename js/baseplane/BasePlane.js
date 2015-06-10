@@ -24,6 +24,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             //draw mesh
             var meshes = this._makeBasePlaneMesh();
             var object3D = new THREE.Object3D();
+            this._setPosition(object3D, 0);
             _.each(meshes, function(mesh){
                 object3D.add(mesh);
             });
@@ -44,6 +45,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         _setVisibility: function(){
             this.get("object3D").visible = appState.get("basePlaneIsVisible");
             three.render();
+        },
+
+        _setPosition: function(object3D, height){
+            if (!object3D || object3D === undefined) object3D = this.get("object3D");
+            object3D.position.set(0,0,height-lattice.zScale()/2);
         },
 
         getAbsoluteIndex: function(){
