@@ -13,7 +13,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             });
             require(['superCellHighlighter'], function(superCellHighlighter){
                 globals.highlighter = new superCellHighlighter();
-                globals.highlighter.updateGikLength();
             });
         },
 

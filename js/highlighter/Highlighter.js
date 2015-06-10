@@ -26,10 +26,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.hide();
 
             //bind events
-            this.listenTo(appState, "change:superCellRange", this._superCellParamDidChange);
-            this.listenTo(appState, "change:superCellIndex", this._superCellParamDidChange);
-
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
+
+            if (this._initialize) this._initialize();
         },
 
 
@@ -105,6 +104,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             }
             this.position = params.position;
             this.direction = params.direction;
+            this._setScale();
             this._setPosition(params.position, params.direction);//position of center point
             this._setRotation(params.direction);
 
@@ -123,7 +123,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                     parseFloat(position.y.toFixed(4)),
                     parseFloat(position.z.toFixed(4)));
             }
-            console.warn("highlighted object is not a DMACell")
+            console.warn("highlighted object is not a DMACell");
             return null;
         },
 
@@ -135,8 +135,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, 0);
         },
 
-        _superCellParamDidChange: function(){
-            if (this.updateGikLength) this.updateGikLength();
+        _setScale: function(){
         },
 
 

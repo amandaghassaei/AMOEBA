@@ -36,7 +36,7 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
             cellMode: "cell",//supercell, cell, part, node, beam
             cellsVisible: true,
 
-            superCellIndex: 0,//offset of superCell adds
+            superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds
             superCellRange: new THREE.Vector3(4,1,1),
 
             realisticColorScheme: false,
@@ -46,6 +46,8 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
         },
 
         initialize: function(){
+
+            this.lattice = null;
 
              _.bindAll(this, "_handleKeyStroke", "_handleScroll");
 
@@ -65,6 +67,11 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
 
         isMobile: function() {
             return (window.innerWidth <= 700);
+        },
+
+        setLattice: function(lattice){
+            //a little bit hacky, wait for lattice to init then pass reference
+            this.lattice = lattice;
         },
 
 
@@ -190,7 +197,7 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
                 case 55:
                 case 56:
                 case 57:
-                    if (globals.lattice.get("connectionType") != "gik") break;
+                    if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
                         var range = this.get("superCellRange").clone();
                         range.x = e.keyCode-48;
@@ -198,16 +205,20 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
                     }
                     break;
                 case 81://q - increase supercell index
+                    if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
-                        var index = this.get("superCellIndex")+1;
-                        if (index > this.get("superCellRange").x-1) index = 0;
+                        var index = this.get("superCellIndex").clone();
+                        index.x += 1;
+                        if (index.x > this.get("superCellRange").x-1) index.x = 0;
                         this.set("superCellIndex", index);
                     }
                     break;
                 case 65://a - decrease supercell index
+                    if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
-                        var index = this.get("superCellIndex")-1;
-                        if (index < 0) index = this.get("superCellRange").x-1;
+                        var index = this.get("superCellIndex").clone();
+                        index.x -= 1;
+                        if (index.x < 0) index.x = this.get("superCellRange").x-1;
                         this.set("superCellIndex", index);
                     }
                     break;

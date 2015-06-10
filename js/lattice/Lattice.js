@@ -47,6 +47,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.listenTo(this, "change:materialClass", this._loadMaterialClass);
 
             this._updateLatticeType(false);
+
+            appState.setLattice(this);
         },
 
 
