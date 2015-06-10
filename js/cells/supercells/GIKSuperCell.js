@@ -7,7 +7,14 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell'],
     function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
 
-    var unitGeo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
+    var unitGeos = {};
+
+    function makePartWithLength(length){
+        var geo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
+        geo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
+        return geo;
+    }
 
     GIKSuperCell = function(index, superCell){
         DMASuperCell.call(this, index, superCell);
@@ -24,12 +31,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return object3D;
     };
 
-    GIKSuperCell.prototype._getGeometry = function(){//todo , do this to mesh?
-        var geo = unitGeo.clone();
+    GIKSuperCell.prototype._getGeometry = function(){
         var length = this.getLength() + 1;
-        geo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
-        geo.applyMatrix(new THREE.Matrix4().makeTranslation(-length/2+0.5, 0, 0));
-        return geo;
+        var key = "length"+length;
+        if (!unitGeos[key]) unitGeos[key] = makePartWithLength(length);
+        return unitGeos[key];
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){
