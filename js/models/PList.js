@@ -142,12 +142,12 @@ define(['three'], function(THREE){
                 rigid:{
                     name: "Rigid",
                     color: "#aaa",
-                    altColor: "#8391AC"
+                    altColor: "#666"
                 },
                 flexure: {
                     name: "Flexure",
                     color: "#aaa",
-                    altColor: "#666"
+                    altColor: "#8391AC"
                 }
             }
         },

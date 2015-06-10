@@ -85,15 +85,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype._iterCells = function(callback){
-        var self = this;
         var cells = this.cells;
         _.each(cells, function(cellLayer){
             _.each(cellLayer, function(cellColumn){
                 _.each(cellColumn, function(cell){
-                    callback(self, cell, cellColumn, cellLayer);
+                    callback(cell, cellColumn, cellLayer);
                 });
             });
-
         });
     };
 
