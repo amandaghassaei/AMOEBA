@@ -24,10 +24,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _setPosition: function(position, direction){
-            console.log(position);
             this.mesh.position.set(position.x+lattice.xScale()*direction.x/2, position.y+lattice.yScale()*direction.y/2,
                 position.z+lattice.zScale()*direction.z/2);
-            console.log(this.mesh.position);
         },
 
         _setRotation: function(direction){
@@ -39,9 +37,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             else this.mesh.rotation.set(0,0,0);
 
             var superCellIndex = appState.get("superCellIndex");
-            this.mesh.translateX(-((superCellIndex.x + 0.5)*lattice.xScale() - this.mesh.scale.x/2));
-            this.mesh.translateY(-((superCellIndex.y + 0.5)*lattice.yScale() - this.mesh.scale.y/2));
-            this.mesh.translateZ(-((superCellIndex.z + 0.5)*lattice.zScale() - this.mesh.scale.z/2));
+            this.mesh.translateX(-(superCellIndex.x + 0.5 - this.mesh.scale.x/2)*lattice.xScale());
+            this.mesh.translateY(-(superCellIndex.y + 0.5 - this.mesh.scale.y/2)*lattice.yScale());
+            this.mesh.translateZ(-(superCellIndex.z + 0.5 - this.mesh.scale.z/2)*lattice.zScale());
         },
 
         _superCellParamDidChange: function(){
