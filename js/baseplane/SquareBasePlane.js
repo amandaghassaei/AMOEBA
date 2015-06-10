@@ -35,15 +35,15 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
             var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0}));
             return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}), THREE.LinePieces)];
-        },
+        }
 
-        _renderZIndexChange: function(){
-            var zIndex = this.get("zIndex");
-            var zScale = lattice.zScale();
-            _.each(this.get("mesh"), function(mesh){
-                mesh.position.set(0, 0, zIndex*zScale);
-            });
-            three.render();
-        },
+//        _renderZIndexChange: function(){
+//            var zIndex = this.get("zIndex");
+//            var zScale = lattice.zScale();
+//            _.each(this.get("mesh"), function(mesh){
+//                mesh.position.set(0, 0, zIndex*zScale);
+//            });
+//            three.render();
+//        },
     });
 });
