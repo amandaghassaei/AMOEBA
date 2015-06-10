@@ -5,7 +5,7 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, three, THREE){
+define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, Backbone, three, THREE, plist){
 
     var AppState = Backbone.Model.extend({
 
@@ -15,9 +15,7 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
             currentTab:"lattice",
 
             //last tab that one open in each of the main menus
-            lastDesignTab: "lattice",
-            lastSimulationTab: "physics",
-            lastAssembleTab: "assembler",
+            lastNavTab: {},
 
             menuIsVisible: true,
             scriptIsVisible: false,
@@ -85,14 +83,8 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
             if (currentTab != "animate") this.set("stockSimulationPlaying", false);
             if (currentTab != "cam") this.set("manualSelectOrigin", false);
             if (currentTab == "import" && globals.lattice.get("connectionType") == "edgeRot") globals.lattice.set("partType", "voxLowPoly");
-            this._storeTab(this.get("currentNav"), currentTab);
+            this.get("lastNavTab")[this.get("currentNav")] = currentTab;//store tab
             this._updateCellMode(currentTab);
-        },
-
-        _storeTab: function(currentNav, currentTab){
-            if (currentNav == "navDesign") this.set("lastDesignTab", currentTab);
-            else if (currentNav == "navSim") this.set("lastSimulationTab", currentTab);
-            else if (currentNav == "navAssemble") this.set("lastAssembleTab", currentTab);
         },
 
         _updateCellMode: function(currentTab){
@@ -105,16 +97,12 @@ define(['underscore', 'backbone', 'threeModel', 'three'], function(_, Backbone, 
         _navChanged: function(){
             //update to last tab open in that section
             var navSelection = this.get("currentNav");
+            var nextTab = this.get("lastNavTab")[navSelection] || _.keys(plist.allMenuTabs[navSelection])[0];
+            this.set("currentTab", nextTab);
+
             if (navSelection == "navDesign") {
-                this.set("currentTab", this.get("lastDesignTab"));
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", true);
-            }
-            else if (navSelection == "navSim") {
-                this.set("currentTab", this.get("lastSimulationTab"));
-            }
-            else if (navSelection == "navAssemble") {
-                this.set("currentTab", this.get("lastAssembleTab"));
             }
         },
 

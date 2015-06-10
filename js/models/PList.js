@@ -24,6 +24,9 @@ define(['three'], function(THREE){
                 cam: "Process",
                 animate:"Preview",
                 send: "Send"
+            },
+            navComposite:{
+                composite:"Composite"
             }
         },
 

@@ -7,12 +7,18 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
     return MenuParentView.extend({
 
         events: {
+            "click #navToCompositeMenu":                             "_navToCompositeMenu"
         },
 
         _initialize: function(){
             //bind events
             this.listenTo(lattice, "change", this.render);
             this.listenTo(this.model, "change", this.render);
+        },
+
+        _navToCompositeMenu: function(e){
+            e.preventDefault();
+            this.model.set("currentNav", "navComposite");
         },
 
         _makeTemplateJSON: function(){
