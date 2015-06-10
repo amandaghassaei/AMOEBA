@@ -21,15 +21,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
-        if (!superCell || superCell === undefined) {
-            if (this.index) {
-                three.sceneAdd(this.object3D);
-                if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object
-            }
-            else this.hide();//stock cell
-        }
+        if (this.index){
+            if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object
+            if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);
+        } else this.hide();//stock cell
 
-        if ((!stopSetMode || stopSetMode === undefined) && ( !superCell || superCell === undefined)) this.setMode();
+        if (!this.cells && ( !superCell || superCell === undefined)) this.setMode();
     }
 
 
@@ -326,6 +323,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     //destroy
 
     DMACell.prototype.destroy = function(){
+        this.destroyParts();
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
             else if (this.index) {
@@ -338,7 +336,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     //            material.dispose();
             this.object3D = null;
         }
-        this.destroyParts();
         this.nodes = null;
         this.beams = null;
         this.superCell = null;
@@ -347,12 +344,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.destroyParts = function(){
-        if (this.cells){
-            this._loopCells(function(cell){
-                if (cell) cell.destroyParts();
-            });
-            return;
-        }
         if (!this.parts) return;
         _.each(this.parts, function(part){
             if (part) part.destroy();

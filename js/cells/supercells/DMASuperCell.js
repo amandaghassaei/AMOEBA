@@ -9,7 +9,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     function DMASuperCell(index, superCell){//supercells might have supercells
 
-        DMACell.call(this, index, superCell, null, true);
+        this.cells = true;//flag for now
+
+        DMACell.call(this, index, superCell);
 
         var range = appState.get("superCellRange");
         this.cells = this._makeChildCells(range, this.getMaterial());
@@ -66,7 +68,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
 
     DMASuperCell.prototype.getLength = function(){
-        if (this.cells) return this.cells.length-1;
+        if (this.cells && this.cells.length) return this.cells.length-1;
         return appState.get("superCellRange").x-1;//zero indexed
     };
 
@@ -100,7 +102,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
             if (cell) cell.destroy();
         });
         this.cells = null;
-        DMACell.prototype.destroy.call();
+        DMACell.prototype.destroy.call(this);
+    };
+
+    DMASuperCell.prototype.destroyParts = function(){
+        this._loopCells(function(cell){
+            if (cell) cell.destroyParts();
+        });
     };
 
     return DMASuperCell;
