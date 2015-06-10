@@ -65,6 +65,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             var pointVertOffset = 2*baseVertOffset;
             var horizontalOffset = xySep;
 
+            var yOffset = 1/Math.sqrt(3)/2;
+
             for (var j=-dimX;j<=dimX;j++){
                 for (var i=-dimY;i<=dimY;i++){
 
@@ -73,9 +75,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
                         xOffset = 1/2*xScale;
                     }
 
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset - horizontalOffset, j*yScale + baseVertOffset, 0));
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset + horizontalOffset, j*yScale + baseVertOffset, 0));
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset, j*yScale - pointVertOffset, 0));
+                    vertices.push(new THREE.Vector3(i*xScale + xOffset - horizontalOffset - xScale/2, j*yScale + baseVertOffset - yOffset, 0));
+                    vertices.push(new THREE.Vector3(i*xScale + xOffset + horizontalOffset - xScale/2, j*yScale + baseVertOffset - yOffset, 0));
+                    vertices.push(new THREE.Vector3(i*xScale + xOffset - xScale/2, j*yScale - pointVertOffset - yOffset, 0));
 
                 }
 

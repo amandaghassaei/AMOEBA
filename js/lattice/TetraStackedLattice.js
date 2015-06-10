@@ -17,18 +17,16 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         getIndexForPosition: function(absPosition){
-            var yIndex = Math.floor(absPosition.y/this.yScale());
-            if (yIndex%2 != 0) absPosition.x += this.xScale()/2;
             var index = this._indexForPosition(absPosition);
-            if (index.z%2 == 1) index.y += 1;
+            if (index.y%2 != 0) {
+                absPosition.x += this.xScale()/2;
+                index = this._indexForPosition(absPosition);
+            }
             return index;
         },
 
         getPositionForIndex: function(index){
-            var position = index.clone();
-            position.x = (position.x+1/2);
-            position.y = position.y*this.yScale()+1/Math.sqrt(3)/2;
-            position.z = (position.z+0.5)*this.zScale();
+            var position = this._positionForIndex(index);
             if ((index.y%2) != 0) position.x -= this.xScale()/2;
             return position;
         },
