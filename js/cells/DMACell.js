@@ -22,8 +22,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
         if (this.index){
-            if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object
-            if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);
+            if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
+            if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
         } else this.hide();//stock cell
 
         if (!this.cells && ( !superCell || superCell === undefined)) this.setMode();
@@ -118,7 +118,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     DMACell.prototype.getAbsoluteOrientation = function(){
         if (!this.superCell) return this.getOrientation();
-        return this.getOrientation().cross(this.superCell.getAbsoluteOrientation());//order matters!
+        return this.getOrientation().multiply(this.superCell.getAbsoluteOrientation());//order matters!
     };
 
     DMACell.prototype.getEuler = function(){
@@ -126,7 +126,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.applyRotation = function(vector){//
-        vector.applyQuaternion(this.getOrientation());
+        vector.applyQuaternion(this.getAbsoluteOrientation());
+        return vector;
     };
 
     DMACell.prototype.applyAbsoluteRotation = function(vector){
