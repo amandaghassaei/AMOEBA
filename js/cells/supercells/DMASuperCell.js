@@ -9,12 +9,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     function DMASuperCell(index, superCell){//supercells might have supercells
 
-        DMACell.call(this, index, superCell);
+        DMACell.call(this, index, superCell, null, true);
 
         var range = appState.get("superCellRange");
         this.cells = this._makeChildCells(range, this.getMaterial());
     
-        this.setMode();
+        if (!superCell || superCell === undefined) this.setMode();//don't pass a call down to children again
     }
     DMASuperCell.prototype = Object.create(DMACell.prototype);
 
@@ -34,7 +34,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return cells;
     };
 
-    DMASuperCell.prototype._makeSubCellForIndex = function(index, material){
+    DMASuperCell.prototype._makeSubCellForIndex = function(index, supercell, material){
         return null;//override in subclasses
     };
 
@@ -42,11 +42,23 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return "supercell";
     };
 
-    DMASuperCell.prototype.setMode = function(mode){
-        DMACell.prototype.setMode.call(this, mode);
-        this._loopCells(function(cell){
-            if (cell) cell.setMode(mode);
+    DMASuperCell.prototype.setMode = function(mode, callback){
+        var self = this;
+        DMACell.prototype.setMode.call(this, mode, function(){
+            var numChildren = self.object3D.children.length-2;
+            self._loopCells(function(cell){
+                if (cell) cell.setMode(mode, function(){
+                    if (--numChildren <= 0) {
+                        if (callback) {
+                            callback();
+                            return;
+                        }
+                        three.conditionalRender();
+                    }
+                });
+            });
         });
+
     };
 
 

@@ -8,7 +8,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
-    function DMACell(index, superCell, material){
+    function DMACell(index, superCell, material, stopSetMode){
 
         if (index) this.index = new THREE.Vector3(index.x, index.y, index.z);
         if (superCell) this.superCell = superCell;
@@ -29,7 +29,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
             else this.hide();//stock cell
         }
 
-        this.setMode();
+        if ((!stopSetMode || stopSetMode === undefined) && ( !superCell || superCell === undefined)) this.setMode();
     }
 
 
@@ -224,7 +224,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     DMACell.prototype.setOpacity = function(opacity){
     };
 
-    DMACell.prototype.setMode = function(mode){
+    DMACell.prototype.setMode = function(mode, callback){
 
         if (mode === undefined) mode = appState.get("cellMode");
         var self = this;
@@ -238,7 +238,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 setVisiblity();
                 break;
             case "part":
-                if (!this.cells && !this.parts) {
+                if (!this.parts) {
                     this._initParts(function(parts){
                         self.parts = parts;
                         setVisiblity();
@@ -264,6 +264,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 if (child.name == "object3D") return;
                 child.visible = visible && (child.name == mode);
             });
+
+            if (callback) {
+                callback();
+                return;
+            }
             three.conditionalRender();
         }
     };
@@ -277,7 +282,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     //subcomponents
 
     DMACell.prototype._initParts = function(callback){
-        return [];//override in subclasses
+        callback();//override in subclasses
     };
 
 

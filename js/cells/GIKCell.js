@@ -27,7 +27,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         if (!this.superCell) return;
         var self = this;
         var parts  = [];
-        var length = this.superCell.getLength()+1;
 
         if (lattice.get("partType") == "lego") {
             require(['gikPart'], function(GIKPart){

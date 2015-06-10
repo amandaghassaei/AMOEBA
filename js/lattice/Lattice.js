@@ -336,10 +336,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _updateForMode: function(){
             var cellMode = appState.get("cellMode");
+            var numCells = this.get("numCells");
             this._iterCells(this.sparseCells, function(cell){
-                if (cell) cell.setMode(cellMode);
+                if (cell) cell.setMode(cellMode, function(){
+                    if (--numCells <= 0) three.render();
+                });
             });
-            three.render();
         },
 
         _updateCellSeparation: function(){

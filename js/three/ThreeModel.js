@@ -130,6 +130,7 @@ define(['underscore', 'three'], function(_, THREE){
 
     function conditionalRender(){
         if (shouldRender) render();
+        shouldRender = false;
     }
 
     return {//return public properties/methods
