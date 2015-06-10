@@ -13,10 +13,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             object3D.position.set(0,0,height-lattice.zScale());
         },
 
-        calcHighlighterParams: function(face, point, index){
+        calcHighlighterParams: function(face, point){
+            point.z = 0;
+            var index = lattice.getIndexForPosition(point);
+            index.sub(new THREE.Vector3(0.5, 0.5, 0));
             var params = SquareBasePlane.prototype.calcHighlighterParams.call(this, face, point, index);
-            params.position.x -= lattice.xScale()/2;
-            params.position.y -= lattice.yScale()/2;
             params.position.z -= lattice.zScale()/2;
             return params;
         }

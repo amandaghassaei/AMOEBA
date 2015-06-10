@@ -38,18 +38,18 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             return [new THREE.Mesh(geometry, this.get("material"))];
         },
 
-        _renderZIndexChange: function(){
-            var zIndex = this.get("zIndex");
-            var xScale = lattice.xScale();
-            var yScale = lattice.yScale();
-            var zScale = lattice.zScale();
-
-            _.each(this.get("mesh"), function(mesh){
-                mesh.position.set(xScale*(zIndex%2)/2, -yScale/3*(zIndex%2), zIndex*zScale);
-                mesh.rotation.set(Math.PI*(zIndex%2),0,0)
-            });
-            three.render();
-        },
+//        _renderZIndexChange: function(){
+//            var zIndex = this.get("zIndex");
+//            var xScale = lattice.xScale();
+//            var yScale = lattice.yScale();
+//            var zScale = lattice.zScale();
+//
+//            _.each(this.get("mesh"), function(mesh){
+//                mesh.position.set(xScale*(zIndex%2)/2, -yScale/3*(zIndex%2), zIndex*zScale);
+//                mesh.rotation.set(Math.PI*(zIndex%2),0,0)
+//            });
+//            three.render();
+//        },
 
         _calcOctaFaceVertices: function(xySep){
 

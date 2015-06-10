@@ -56,7 +56,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             return this.highligherIndex.clone();
         },
 
-        calcHighlighterParams: function(face, point, index){
+        calcHighlighterParams: function(face, point, index){//index comes from subclass
             point.z = 0;//todo this doesn't generalize when baseplane moves
             if (!index || index === undefined) index = lattice.getIndexForPosition(point);
             index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
