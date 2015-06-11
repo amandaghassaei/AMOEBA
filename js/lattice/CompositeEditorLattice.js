@@ -17,10 +17,13 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
 
         _initCompositeEditor: function(id, data){
 
+            if (!id) id = "composite" + ++compositeId;//todo real unique id here
+            this.set("compositeId", id, {silent:true});
+
             _.extend(defaults, {
-                compositeId: "composite"+compositeId++,//todo real unique id
+                compositeName: "",
                 compositeColor: makeRandomColor(),
-                numCompositeCells:2,
+                compositeNumCells:2,
                 compositeCellsMin: new THREE.Vector3(0,0,0),//null,
                 compositeCellsMax: new THREE.Vector3(2,4,5)//null
             });
@@ -33,10 +36,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
 
             if (data){
                 _.each(_.keys(data), function(key){
-                    self.set(key, defaults[key], {silent:true});
+                    self.set("composite" + key.charAt(0).toUpperCase() + key.slice(1), data[key]);
                 });
                 this.compositeCells = data.cells;//todo parse cells
-                this.set("compositeId", id, {silent:true});
             }
         },
 
@@ -49,6 +51,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 console.warn("no cells in this composite");
                 return;
             }
+            if (name == "") name = "Composite Material " + compositeId;
             var id = this.get("compositeId");
             var data = {
                 name: name,
@@ -61,7 +64,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 dimensions: new THREE.Vector3().subVectors(this.get("compositeCellsMax"), this.get("compositeCellsMin"))
             };
             globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
-            console.log(data);
         },
 
         _undoCompositeEditor: function(){
@@ -73,7 +75,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 self.unset(key, {silent:true});
             });
             this.compositeCells = null;
-        }
+        },
     };
 
     return CompositeEditorLattice;

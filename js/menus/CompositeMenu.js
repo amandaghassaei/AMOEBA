@@ -47,13 +47,14 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         },
 
         _makeTemplateJSON: function(){
+            console.log("render");
             return _.extend(lattice.toJSON());
         },
 
         template: _.template('\
             <a href="#" class="btn btn-halfWidth btn-lg btn-default importJSON">Load Composite</a>\
             <a id="saveComposite" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Composite</a><br/><br/>\
-            Name: &nbsp;&nbsp;<input id="compositeName" value="" placeholder="Enter Name" class="halfWidth form-control" type="text"><br/><br/>\
+            Name: &nbsp;&nbsp;<input id="compositeName" value="<%= compositeName %>" placeholder="Enter Name" class="halfWidth form-control" type="text"><br/><br/>\
             Bounding Box: ()<br/><br/>\
             Display Color: &nbsp;&nbsp;\
             <input style="border-color: <%= compositeColor %> ;" value="<%= compositeColor %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/><br/>\

@@ -329,12 +329,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //composite Cells
 
-        setToCompositeMode: function(callback){
+        setToCompositeMode: function(id, data){
             var self = this;
             require(['compositeEditorLattice'], function(CompositeEditorLattice){
                 _.extend(self, CompositeEditorLattice);
-                self._initCompositeEditor();
-                if (callback) callback();
+                self._initCompositeEditor(id, data);
+                appState.set("currentNav", "navComposite");
             });
         },
 
