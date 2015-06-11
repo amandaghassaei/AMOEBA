@@ -25,9 +25,9 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
 
         destroy: function(){
             this.stopListening();
-//            this.undelegateEvents();
-//            this.$el.removeData().unbind();
-//            this.remove();
+            this.undelegateEvents();
+            this.$el.removeData().unbind();
+//            this.remove();//todo not convinced I have this right yet
 //            Backbone.View.prototype.remove.call(this);
         }
 

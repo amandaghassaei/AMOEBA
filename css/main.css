@@ -285,7 +285,7 @@ input.intInput, input.floatInput{
 
 #navRibbon{
     height: 49px;
-    width: 270px;
+    width: 400px;
     z-index: 1;
     display: block;
     position: absolute;
