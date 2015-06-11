@@ -23,8 +23,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         initialize: function(options){
 
-            console.log(this);
-
             this.cells = [[[null]]];//3D matrix containing all cells and null, dynamic size
             this.sparseCells = [[[null]]];//3D matrix containing highest hierarchical level of cells and null
 

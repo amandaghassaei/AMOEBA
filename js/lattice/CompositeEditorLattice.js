@@ -20,17 +20,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         }),
 
         __initialize: function(options){
-            console.log(options);
-            console.log(this);
-
-            if (options.id) this.set("id", options.id);
-            else this.set("id", this.cid);
-
-            if (options.data){
-                _.each(_.keys(data), function(key){
-                    self.set(key, data[key], {silent:true});
-                });
-            }
+            if (options.id === undefined) this.set("id", this.cid);
         },
 
         initLatticeSubclass: function(subclass){
@@ -54,7 +44,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _changeRandomColor: function(){
-            this.set("compositeColor", makeRandomColor());
+            this.set("color", makeRandomColor());
         },
 
         makeNewCompositeMaterial: function(name){
@@ -84,13 +74,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         destroy: function(){
             var self = this;
-            _.each(_.keys(CompositeEditorLattice), function(key){
-                self[key] = null;
-            });
-            _.each(_.keys(defaults), function(key){
-                self.unset(key, {silent:true});
-            });
-            this.compositeCells = null;
             lattice.showCells();
         }
     });

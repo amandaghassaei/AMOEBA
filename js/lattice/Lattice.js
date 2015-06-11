@@ -8,7 +8,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
     var Lattice = LatticeBase.extend({
 
-        defaults: _.extend(LatticeBase.prototype.defaults, {
+        defaults: _.extend(_.clone(LatticeBase.prototype.defaults), {
 
             units: "mm",
 
@@ -248,10 +248,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     console.warn("composite editor already allocated");
                     self.compositeEditor.destroy();
                 }
-                self.compositeEditor = new CompositeEditorLattice({
-                    id: id,
-                    data: data
-                });
+                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, data));
                 self.compositeEditor.initLatticeSubclass(self._getSubclassForLatticeType());
                 appState.set("currentNav", "navComposite");
             });

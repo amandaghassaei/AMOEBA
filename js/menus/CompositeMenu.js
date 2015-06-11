@@ -78,10 +78,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         template: _.template('\
             <a href="#" class="btn btn-halfWidth btn-lg btn-default importJSON">Load Composite</a>\
             <a id="saveComposite" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Composite</a><br/><br/>\
-            Name: &nbsp;&nbsp;<input id="compositeName" data-property="compositeName" value="<%= compositeName %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput lattice" type="text"><br/><br/>\
+            Name: &nbsp;&nbsp;<input id="compositeName" data-property="name" value="<%= name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput lattice" type="text"><br/><br/>\
             Bounding Box: ()<br/><br/>\
             Display Color: &nbsp;&nbsp;\
-            <input id="compositeColor" style="border-color: <%= compositeColor %> ;" data-property="compositeColor" value="<%= compositeColor %>" placeholder="Enter HEX" class="halfWidth lattice form-control hexInput" type="text"><br/><br/>\
+            <input id="compositeColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth lattice form-control hexInput" type="text"><br/><br/>\
             <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
             <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
             <a id="cancelComposite" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>\
