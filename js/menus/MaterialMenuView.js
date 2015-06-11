@@ -71,7 +71,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
                 <div class="materialColorSwatch">\
                 <div style="background-color:<% if(realisticColorScheme){ %><%= materials.compositeMaterials[key].color %><% }else{ %><%= materials.compositeMaterials[key].altColor %><% } %>"></div>\
-                <span><%= materials.compositeMaterials[key].name %><a data-id="<%= key %>" class="editComposite">Edit</a></span></div>\
+                <span><%= materials.compositeMaterials[key].name %><a data-id="<%= key %>" class="editComposite">Settings...<a/></span></div>\
             </label>\
             <% }); %><br/>\
             <a id="navToCompositeMenu" href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\

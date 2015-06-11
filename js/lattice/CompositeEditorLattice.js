@@ -66,6 +66,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
             globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
         },
 
+        deleteComposite: function(){
+            var id = this.get("compositeId");
+            delete globals.materials.compositeMaterials[id];//todo trigger change on all instances
+        },
+
         _undoCompositeEditor: function(){
             var self = this;
             _.each(_.keys(CompositeEditorLattice), function(key){

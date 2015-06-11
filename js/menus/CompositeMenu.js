@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             "click #newRandomColor":                                  "_changeRandomColor",
             "click #finishComposite":                                 "_finishComposite",
             "click #saveComposite":                                   "_saveComposite",
-            "click #cancelComposite":                                 "_cancelComposite"
+            "click #cancelComposite":                                 "_cancelComposite",
+            "click #deleteComposite":                                 "_deleteComposite"
         },
 
         _initialize: function(){
@@ -33,16 +34,25 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             e.preventDefault();
             this.stopListening();
             lattice.makeNewCompositeMaterial($("#compositeName").val());
-            this.model.set("currentNav", "navDesign");
+            this._exit();
         },
 
         _saveComposite: function(e){
             e.preventDefault();
-
         },
 
         _cancelComposite: function(e){
             e.preventDefault();
+            this._exit();
+        },
+
+        _deleteComposite: function(e){
+            e.preventDefault();
+            lattice.deleteComposite();
+            this._exit();
+        },
+
+        _exit: function(){
             this.model.set("currentNav", "navDesign");
         },
 
@@ -59,9 +69,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             Display Color: &nbsp;&nbsp;\
             <input style="border-color: <%= compositeColor %> ;" value="<%= compositeColor %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/><br/>\
             <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
-            <a id="finishComposite" href="#" class="btn btn-halfWidth btn-lg btn-success">Finish Composite</a>\
-            <a id="cancelComposite" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default">Cancel / Exit</a><br/>\
-            \
+            <a id="cancelComposite" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>\
+            <a id="deleteComposite" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default"><span class="fui-trash"></span> Delete</a><br/><br/>\
+            <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
             ')
 
     });

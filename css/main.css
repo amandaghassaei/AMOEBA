@@ -399,3 +399,7 @@ label.colorSwatches>span.icons{
     opacity: 0.6;
     margin: 0 20px 0 -10px;
 }
+
+.editComposite {
+    margin-left:20px;
+}
