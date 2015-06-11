@@ -253,9 +253,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     console.warn("composite editor already allocated");
                     self.compositeEditor.destroy();
                 }
-                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, data));
-                self.compositeEditor.initLatticeSubclass(self._getSubclassForLatticeType());
-                appState.set("currentNav", "navComposite");
+                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, data), null, function(_self){
+                    _self.initLatticeSubclass(self._getSubclassForLatticeType());
+                    appState.set("currentNav", "navComposite");
+                });
+
             });
         },
 

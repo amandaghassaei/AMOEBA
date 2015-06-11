@@ -19,12 +19,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             color: null
         }),
 
-        __initialize: function(options){
+        __initialize: function(options, callback){
             if (!options.id || options.id == "") this.set("id", this.cid);
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
             this.set("numCells", 3);//todo remove this
             this.set("cellsMin", new THREE.Vector3(0,0,0));
             this.set("cellsMax", new THREE.Vector3(0,0,0));
+            if (callback) callback(this);
         },
 
         initLatticeSubclass: function(subclass){
