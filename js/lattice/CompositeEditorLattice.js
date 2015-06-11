@@ -15,13 +15,22 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
     var CompositeEditorLattice = LatticeBase.extend({
 
         defaults: _.extend(LatticeBase.prototype.defaults, {
-            compositeName: "",
-            compositeColor: makeRandomColor()
+            name: "",
+            color: makeRandomColor()
         }),
 
         __initialize: function(options){
             console.log(options);
-            this.set("id", this.cid);
+            console.log(this);
+
+            if (options.id) this.set("id", options.id);
+            else this.set("id", this.cid);
+
+            if (options.data){
+                _.each(_.keys(data), function(key){
+                    self.set(key, data[key], {silent:true});
+                });
+            }
         },
 
         initLatticeSubclass: function(subclass){
@@ -30,17 +39,17 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
                 _.extend(self, subclassObject);
 
-                //copy over cells to new lattice type
-                var cells = self.cells;
-                self._loopCells(cells, function(cell, x, y, z){
-                    if (!cell) return;
-                    var index = _.clone(cell.index);
-                    if (cell.destroy) cell.destroy();
-                    self.makeCellForLatticeType(index, function(newCell){
-                        cells[x][y][z] = newCell;
-                    });
-                });
-                three.render();
+//                //copy over cells to new lattice type
+//                var cells = self.cells;
+//                self._loopCells(cells, function(cell, x, y, z){
+//                    if (!cell) return;
+//                    var index = _.clone(cell.index);
+//                    if (cell.destroy) cell.destroy();
+//                    self.makeCellForLatticeType(index, function(newCell){
+//                        cells[x][y][z] = newCell;
+//                    });
+//                });
+//                three.render();
             });
         },
 
@@ -57,13 +66,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var id = this.get("id");
             var data = {
                 name: name,
-                color: this.get("compositeColor"),
-                altColor: this.get("compositeColor"),
-                numCells: this.get("numCompositeCells"),
+                color: this.get("color"),
+                altColor: this.get("color"),
+                numCells: this.get("numCells"),
                 cells: JSON.parse(JSON.stringify(this.compositeCells)),
-                cellsMin: this.get("compositeCellsMin").clone(),
-                cellsMax: this.get("compositeCellsMax").clone(),
-                dimensions: new THREE.Vector3().subVectors(this.get("compositeCellsMax"), this.get("compositeCellsMin"))
+                cellsMin: this.get("cellsMin").clone(),
+                cellsMax: this.get("cellsMax").clone(),
+                dimensions: new THREE.Vector3().subVectors(this.get("cellsMax"), this.get("cellsMin"))
             };
             globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
         },
