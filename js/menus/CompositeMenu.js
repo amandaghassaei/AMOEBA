@@ -30,6 +30,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             lattice._changeRandomColor();
         },
 
+        updateHex: function(hex){
+            //update hex without rendering
+            $("#compositeColor").css("border-color", hex);
+        },
+
         _finishComposite: function(e){
             e.preventDefault();
             this.stopListening();
@@ -76,7 +81,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             Name: &nbsp;&nbsp;<input id="compositeName" data-property="compositeName" value="<%= compositeName %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput lattice" type="text"><br/><br/>\
             Bounding Box: ()<br/><br/>\
             Display Color: &nbsp;&nbsp;\
-            <input style="border-color: <%= compositeColor %> ;" value="<%= compositeColor %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/><br/>\
+            <input id="compositeColor" style="border-color: <%= compositeColor %> ;" data-property="compositeColor" value="<%= compositeColor %>" placeholder="Enter HEX" class="halfWidth lattice form-control hexInput" type="text"><br/><br/>\
             <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
             <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
             <a id="cancelComposite" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>\

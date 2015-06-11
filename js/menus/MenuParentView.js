@@ -20,6 +20,7 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
             if (this.model.changedAttributes()["currentNav"]) return;
             if ($("input[type=text]").is(":focus")) return;
             this.$el.html(this.template(this._makeTemplateJSON()));
+            this.$el.html(this.template(this._makeTemplateJSON()));
             if (this._render) this._render();
         },
 

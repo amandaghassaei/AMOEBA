@@ -44,7 +44,8 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             }
             if ($(".floatInput").is(":focus")) this._updateFloat(e);
             if ($(".intInput").is(":focus")) this._updateInt(e);
-            if ($(".textInput").is(":focus")) this._updateString(e);
+            if ($(".textInput").is(":focus")) this._updateString(e)
+            if ($(".hexInput").is(":focus")) this._updateHex(e);
         },
 
         _updateString: function(e){
@@ -56,6 +57,24 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
                 return;
             }
             this._getPropertyOwner($target).set(property, $target.val());
+        },
+
+        _updateHex: function(e){
+            e.preventDefault();
+            var $target = $(e.target);
+            var hex = $target.val();
+            if (!this._isValidHex(hex)) return;
+            var property = $target.data("property");
+            if (!property) {
+                console.warn("no property associated with string input");
+                return;
+            }
+            this._getPropertyOwner($target).set(property, hex);
+            if (this.menu.updateHex) this.menu.updateHex(hex);
+        },
+
+        _isValidHex: function(hex){
+            return hex.match(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i) !== null;
         },
 
         _updateFloat: function(e){
