@@ -44,6 +44,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this.listenTo(this, "change:materialClass", this._loadMaterialClass);
 
+            this.listenTo(appState, "change:currentNav", this._navChanged);
+
             this._updateLatticeType(false);
 
             appState.setLattice(this);
@@ -325,6 +327,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+        //composite Cells
+
+        setToCompositeMode: function(callback){
+            var self = this;
+            require(['compositeEditorLattice'], function(CompositeEditorLattice){
+                _.extend(self, CompositeEditorLattice);
+                self._initCompositeEditor();
+                if (callback) callback();
+            });
+        },
+
+
+
+
+
         //events
 
         _updatePartType: function(){
@@ -391,6 +408,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require([materialClass + "Materials"], function(MaterialClass){
                 globals.materials[materialClass] = MaterialClass;
             });
+        },
+
+        _navChanged: function(){
+            var currentNav = appState.get("currentNav");
+            if (currentNav != "navComposite" && this._undoCompositeEditor) this._undoCompositeEditor();
         },
 
 

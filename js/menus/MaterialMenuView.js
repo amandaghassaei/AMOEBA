@@ -18,7 +18,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _navToCompositeMenu: function(e){
             e.preventDefault();
-            this.model.set("currentNav", "navComposite");
+            var self = this;
+            lattice.setToCompositeMode(function(){
+                self.model.set("currentNav", "navComposite");
+            });
+
         },
 
         _makeTemplateJSON: function(){

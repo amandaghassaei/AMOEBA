@@ -7,9 +7,15 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
     function(_, Backbone, appState, lattice, globals, plist, THREE, three){
 
     var defaults = {
-        compositeCells:[[[null]]],
-        compositeColor: null
+        compositeColor: makeRandomColor(),
+        numCompositeCells:0,
+        compositeCellsMin: null,
+        compositeCellsMax: null
     };
+
+    function makeRandomColor(){
+        return '#' + Math.floor(Math.random()*16777215).toString(16);
+    }
 
     var CompositeEditorLattice = {
 
@@ -17,20 +23,29 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
 
         _initCompositeEditor: function(){
 
+            var self = this;
             _.each(_.keys(defaults), function(key){
-                this.set(key, defaults[key], {silent:true});
+                self.set(key, defaults[key], {silent:true});
             });
+
+            this.compositeCells = [[[null]]];
 
         },
 
+        _changeRandomColor: function(){
+            this.set("compositeColor", makeRandomColor());
+        },
+
         _undoCompositeEditor: function(){
+            console.log("undo");
             var self = this;
             _.each(_.keys(CompositeEditorLattice), function(key){
                 self[key] = null;
             });
             _.each(_.keys(defaults), function(key){
-                this.unset(key, defaults[key], {silent:true});
+                self.unset(key, {silent:true});
             });
+            this.compositeCells = null;
         }
     };
 

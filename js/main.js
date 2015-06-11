@@ -38,6 +38,7 @@ require.config({
         truncatedCubeLattice: 'lattice/TruncatedCubeLattice',
         tetraStackedLattice: 'lattice/TetraStackedLattice',
         tetraVertexLattice: 'lattice/TetraVertexLattice',
+        compositeEditorLattice: 'lattice/CompositeEditorLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',

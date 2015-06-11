@@ -378,6 +378,7 @@ label {
     height: 30px;
     display: inline-block;
     margin-right: 10px;
+    border-radius: 3px;
 }
 
 .materialColorSwatch>span{
@@ -397,11 +398,4 @@ label.colorSwatches>span.icons{
 .CodeMirror {
     opacity: 0.6;
     margin: 0 20px 0 -10px;
-}
-
-#compositeDisplayColor {
-    width: 100px;
-  height: 40px;
-  display: inline-block;
-  margin: 5px;
 }
