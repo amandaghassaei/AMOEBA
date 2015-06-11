@@ -80,6 +80,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 self.unset(key, {silent:true});
             });
             this.compositeCells = null;
+            this.showCells();
         },
     };
 

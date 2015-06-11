@@ -27,6 +27,7 @@ require.config({
         fileSaver: 'models/FileSaver',
 
         //lattice
+        latticeBase: 'lattice/LatticeBase',
         lattice: 'lattice/Lattice',
         cubeLattice: 'lattice/CubeLattice',
         gikLattice: 'lattice/GIKLattice',

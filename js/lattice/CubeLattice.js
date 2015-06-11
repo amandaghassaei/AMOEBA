@@ -2,8 +2,8 @@
  * Created by aghassaei on 5/26/15.
  */
 
-define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'three', 'threeModel'],
-    function(_, Backbone, appState, lattice, globals, plist, THREE, three){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
+    function(_, Backbone, appState, globals, plist, THREE, three){
 
     var CubeLattice = {
 
