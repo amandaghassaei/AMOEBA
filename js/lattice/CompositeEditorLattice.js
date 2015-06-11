@@ -46,7 +46,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
-        
+
 
         //3d ui
 
@@ -67,6 +67,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+        //composite events
 
         _changeRandomColor: function(){
             this.set("color", makeRandomColor());

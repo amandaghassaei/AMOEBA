@@ -190,6 +190,26 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+
+        //3d ui
+
+        addHighlightableCell: function(cell){
+            three.addCell(cell);
+        },
+
+        removeHighlightableCell: function(cell){
+            three.removeCell(cell);
+        },
+
+        getHighlightableCells: function(){
+            return three.getCells();
+        },
+
+
+
+
+
+
         //fill geometry
 
         subtractMesh: function(mesh){
@@ -276,20 +296,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (this.inCompositeMode()) return this.compositeEditor;
             return this;
         },
-
-        addHighlightableCell: function(cell){
-            three.addCell(cell);
-        },
-
-        removeHighlightableCell: function(cell){
-            three.removeCell(cell);
-        },
-
-        getHighlightableCells: function(){
-            return three.getCells();
-        },
-
-
 
 
 
