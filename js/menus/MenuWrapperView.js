@@ -44,6 +44,18 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             }
             if ($(".floatInput").is(":focus")) this._updateFloat(e);
             if ($(".intInput").is(":focus")) this._updateInt(e);
+            if ($(".textInput").is(":focus")) this._updateString(e);
+        },
+
+        _updateString: function(e){
+            e.preventDefault();
+            var $target = $(e.target);
+            var property = $target.data("property");
+            if (!property) {
+                console.warn("no property associated with string input");
+                return;
+            }
+            this._getPropertyOwner($target).set(property, $target.val());
         },
 
         _updateFloat: function(e){

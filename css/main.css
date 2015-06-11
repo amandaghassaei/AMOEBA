@@ -283,6 +283,11 @@ input.intInput, input.floatInput{
     display: inline-block;
 }
 
+.seventyFiveWidth{
+    width: 75%;
+    display: inline-block;
+}
+
 #navRibbon{
     height: 49px;
     width: 400px;
