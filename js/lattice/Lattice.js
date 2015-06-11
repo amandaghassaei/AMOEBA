@@ -12,10 +12,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             units: "mm",
 
+            cellType: "cube",
+            connectionType: "face",
+            partType: null,
+            materialType: null,
+            materialClass: "mechanical",
+
             nodes: [],
 
-            cellSeparation: {xy:0, z:0},//spacing for connectors/joints
-            partType: null
+            cellSeparation: {xy:0, z:0}//spacing for connectors/joints
         }),
 
 
@@ -59,7 +64,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
 
-            this._initLatticeSubclass();
+            this._initLatticeSubclass(this._getSubclassForLatticeType());
         },
 
         _setToDefaultsSilently: function(){
@@ -80,17 +85,59 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
         },
 
-        _updateCellSeparation: function(){
-            var cellSep = this.get("cellSeparation");
-            globals.basePlane.updateXYSeparation(cellSep.xy);
+        _initLatticeSubclass: function(subclass){
+            var self = this;
+            require([subclass], function(subclassObject){
 
-            var cellMode = appState.get("cellMode");
-            var partType = this.get("partType");
-//            this._iterCells(this.cells, function(cell){
-//                if (cell) cell.updateForScale(cellMode, partType);
-//            });
-            three.render();
+                _.extend(self, subclassObject);
+                self._initLatticeType();
+
+                //copy over cells to new lattice type
+                var cells = self.cells;
+                self._loopCells(cells, function(cell, x, y, z){
+                    if (!cell) return;
+                    var index = _.clone(cell.index);
+                    if (cell.destroy) cell.destroy();
+                    self.makeCellForLatticeType(index, function(newCell){
+                        cells[x][y][z] = newCell;
+                    });
+                });
+                three.render();
+            });
         },
+
+        _getSubclassForLatticeType: function(){
+            var cellType = this.get("cellType");
+            var connectionType = this.get("connectionType");
+            if (cellType == "octa"){
+                if (connectionType == "face"){
+                    return "octaFaceLattice";
+                } else if (connectionType == "edge"){
+                    return "octaEdgeLattice";
+                } else if (connectionType == "edgeRot"){
+                    return "octaRotEdgeLattice";
+                } else if (connectionType == "vertex"){
+                    return "octaVertexLattice";
+                }
+            } else if (cellType == "tetra"){
+                if (connectionType == "stacked") return "tetraStackedLattice";
+                else if (connectionType == "vertex") return "tetraVertexLattice";
+            } else if (cellType == "cube"){
+                if (connectionType == "face"){
+                    return "cubeLattice";
+                } else if (connectionType == "gik"){
+                    return "gikLattice";
+                }
+            } else if (cellType == "truncatedCube"){
+                return "truncatedCubeLattice";
+            } else if (cellType == "kelvin"){
+                return "kelvinLattice";
+            } else {
+                console.warn("unrecognized cell type " + cellType);
+            }
+            return null;
+        },
+
 
 
 
@@ -118,6 +165,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
             if (!this.inCompositeMode() && this._undoCompositeEditor) this._undoCompositeEditor();
+        },
+
+        _updateCellSeparation: function(){
+            var cellSep = this.get("cellSeparation");
+            globals.basePlane.updateXYSeparation(cellSep.xy);
+
+            var cellMode = appState.get("cellMode");
+            var partType = this.get("partType");
+//            this._iterCells(this.cells, function(cell){
+//                if (cell) cell.updateForScale(cellMode, partType);
+//            });
+            three.render();
         },
 
 
@@ -185,8 +244,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var self = this;
             require(['compositeEditorLattice'], function(CompositeEditorLattice){
                 self.hideCells();
-                _.extend(self, CompositeEditorLattice);
-                self._initCompositeEditor(id, data);
+                if (self.compositeEditor) {
+                    console.warn("composite editor already allocated");
+                    self.compositeEditor.destroy();
+                }
+                self.compositeEditor = new CompositeEditorLattice();
+                self.compositeEditor.initLatticeSubclass(self._getSubclassForLatticeType());
                 appState.set("currentNav", "navComposite");
             });
         },

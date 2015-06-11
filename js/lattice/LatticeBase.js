@@ -17,16 +17,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             cellsMin: null,//min position of cells matrix
             cellsMax: null,//max position of cells matrix
-            numCells: 0,
-
-            cellType: "cube",
-            connectionType: "face",
-            materialType: null,
-            materialClass: "mechanical"
+            numCells: 0
         },
 
 
-        initialize: function(){
+        initialize: function(options){
 
             this.cells = [[[null]]];//3D matrix containing all cells and null, dynamic size
             this.sparseCells = [[[null]]];//3D matrix containing highest hierarchical level of cells and null
@@ -37,62 +32,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 
             if (this.__bindEvents) this.__bindEvents();
-            if (this.__initialize) this.__initialize();
-        },
-
-
-        _initLatticeSubclass: function(){
-            var subclass = this._getSubclassForLatticeType();
-            var self = this;
-            require([subclass], function(subclassObject){
-
-                _.extend(self, subclassObject);
-                self._initLatticeType();
-
-                //copy over cells to new lattice type
-                var cells = self.cells;
-                self._loopCells(cells, function(cell, x, y, z){
-                    if (!cell) return;
-                    var index = _.clone(cell.index);
-                    if (cell.destroy) cell.destroy();
-                    self.makeCellForLatticeType(index, function(newCell){
-                        cells[x][y][z] = newCell;
-                    });
-                });
-                three.render();
-            });
-        },
-
-        _getSubclassForLatticeType: function(){
-            var cellType = this.get("cellType");
-            var connectionType = this.get("connectionType");
-            if (cellType == "octa"){
-                if (connectionType == "face"){
-                    return "octaFaceLattice";
-                } else if (connectionType == "edge"){
-                    return "octaEdgeLattice";
-                } else if (connectionType == "edgeRot"){
-                    return "octaRotEdgeLattice";
-                } else if (connectionType == "vertex"){
-                    return "octaVertexLattice";
-                }
-            } else if (cellType == "tetra"){
-                if (connectionType == "stacked") return "tetraStackedLattice";
-                else if (connectionType == "vertex") return "tetraVertexLattice";
-            } else if (cellType == "cube"){
-                if (connectionType == "face"){
-                    return "cubeLattice";
-                } else if (connectionType == "gik"){
-                    return "gikLattice";
-                }
-            } else if (cellType == "truncatedCube"){
-                return "truncatedCubeLattice";
-            } else if (cellType == "kelvin"){
-                return "kelvinLattice";
-            } else {
-                console.warn("unrecognized cell type " + cellType);
-            }
-            return null;
+            if (this.__initialize) this.__initialize(options);
         },
 
 

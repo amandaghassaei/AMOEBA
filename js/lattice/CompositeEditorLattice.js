@@ -3,43 +3,45 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'three', 'threeModel'],
-    function(_, Backbone, appState, lattice, globals, plist, THREE, three){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'latticeBase'],
+    function(_, Backbone, appState, globals, plist, THREE, three, LatticeBase){
 
     function makeRandomColor(){
         return '#' + Math.floor(Math.random()*16777215).toString(16);
     }
 
-    var defaults = {};
-    var compositeId = 0;
+    var compositeNum = 1;
 
-    var CompositeEditorLattice = {
+    var CompositeEditorLattice = LatticeBase.extend({
 
-        _initCompositeEditor: function(id, data){
+        defaults: _.extend(LatticeBase.prototype.defaults, {
+            compositeName: "",
+            compositeColor: makeRandomColor()
+        }),
 
-            if (!id) id = "composite" + ++compositeId;//todo real unique id here
-            this.set("compositeId", id, {silent:true});
+        __initialize: function(options){
+            console.log(options);
+            this.set("id", this.cid);
+        },
 
-            _.extend(defaults, {
-                compositeName: "",
-                compositeColor: makeRandomColor(),
-                compositeNumCells:2,
-                compositeCellsMin: new THREE.Vector3(0,0,0),//null,
-                compositeCellsMax: new THREE.Vector3(2,4,5)//null
-            });
-
+        initLatticeSubclass: function(subclass){
             var self = this;
-            _.each(_.keys(defaults), function(key){
-                self.set(key, defaults[key], {silent:true});
-            });
-            this.compositeCells = [[[null]]];
+            require([subclass], function(subclassObject){
 
-            if (data){
-                _.each(_.keys(data), function(key){
-                    self.set("composite" + key.charAt(0).toUpperCase() + key.slice(1), data[key]);
+                _.extend(self, subclassObject);
+
+                //copy over cells to new lattice type
+                var cells = self.cells;
+                self._loopCells(cells, function(cell, x, y, z){
+                    if (!cell) return;
+                    var index = _.clone(cell.index);
+                    if (cell.destroy) cell.destroy();
+                    self.makeCellForLatticeType(index, function(newCell){
+                        cells[x][y][z] = newCell;
+                    });
                 });
-                this.compositeCells = data.cells;//todo parse cells
-            }
+                three.render();
+            });
         },
 
         _changeRandomColor: function(){
@@ -47,12 +49,12 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         makeNewCompositeMaterial: function(name){
-            if (this.get("numCompositeCells") == 0) {
+            if (this.get("numCells") == 0) {
                 console.warn("no cells in this composite");
                 return;
             }
-            if (name == "") name = "Composite Material " + compositeId;
-            var id = this.get("compositeId");
+            if (name == "") name = "Composite Material " + compositeNum++;
+            var id = this.get("id");
             var data = {
                 name: name,
                 color: this.get("compositeColor"),
@@ -67,11 +69,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         },
 
         deleteComposite: function(){
-            var id = this.get("compositeId");
+            var id = this.get("id");
             delete globals.materials.compositeMaterials[id];//todo trigger change on all instances
         },
 
-        _undoCompositeEditor: function(){
+        destroy: function(){
             var self = this;
             _.each(_.keys(CompositeEditorLattice), function(key){
                 self[key] = null;
@@ -80,9 +82,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 self.unset(key, {silent:true});
             });
             this.compositeCells = null;
-            this.showCells();
-        },
-    };
+            lattice.showCells();
+        }
+    });
 
     return CompositeEditorLattice;
 });

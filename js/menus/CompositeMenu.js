@@ -72,7 +72,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON());
+            return _.extend(lattice.compositeEditor.toJSON());
         },
 
         template: _.template('\
