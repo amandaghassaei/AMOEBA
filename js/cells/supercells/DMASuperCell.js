@@ -13,7 +13,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
         DMACell.call(this, index, superCell);
 
-        var range = appState.get("superCellRange");
+        var material = this.getMaterial();
+        var range = material.dimensions || appState.get("superCellRange");
         this.cells = this._makeChildCells(range, this.getMaterial());
     
         if (!superCell || superCell === undefined) this.setMode();//don't pass a call down to children again

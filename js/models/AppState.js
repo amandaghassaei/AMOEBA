@@ -14,8 +14,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             currentNav:"navDesign",// design, sim, assemble
             currentTab:"lattice",
 
-            //last tab that one open in each of the main menus
-            lastNavTab: {},
+            lastNavTab: {},//last tab that one open in each of the main menus
 
             menuIsVisible: true,
             scriptIsVisible: false,
@@ -141,6 +140,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
                     e.stopPropagation();
+                    break;
                 case 16://shift
     //                this.set("shift", state);
                     break;

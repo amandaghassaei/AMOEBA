@@ -53,7 +53,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             <% } %>\
             <br/><br/>\
             Composite Materials:<br/><br/>\
-            <a href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\
+            <a id="navToCompositeMenu" href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\
             ')
 
     });

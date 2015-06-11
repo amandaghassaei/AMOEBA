@@ -98,6 +98,7 @@ require.config({
         camMenu: 'menus/CamMenuView',
         animateMenu: 'menus/AnimationMenuView',
         sendMenu: 'menus/SendMenuView',
+        compositeMenu: 'menus/CompositeMenu',
 
         //stls
         octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',

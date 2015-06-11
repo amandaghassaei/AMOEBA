@@ -278,6 +278,11 @@ input.intInput, input.floatInput{
     width: 47%;
 }
 
+.halfWidth {
+    width: 47%;
+    display: inline-block;
+}
+
 #navRibbon{
     height: 49px;
     width: 270px;
@@ -392,4 +397,11 @@ label.colorSwatches>span.icons{
 .CodeMirror {
     opacity: 0.6;
     margin: 0 20px 0 -10px;
+}
+
+#compositeDisplayColor {
+    width: 100px;
+  height: 40px;
+  display: inline-block;
+  margin: 5px;
 }
