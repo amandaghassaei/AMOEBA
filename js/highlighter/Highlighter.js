@@ -155,11 +155,11 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         addRemoveVoxel: function(shouldAdd){
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                lattice.addCellAtIndex(this._getNextCellPosition());
+                lattice.getUItarget().addCellAtIndex(this._getNextCellPosition());
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;
-                lattice.removeCell(this.highlightedObject);
+                lattice.getUItarget().removeCell(this.highlightedObject);
             }
             this.setNothingHighlighted();
         },

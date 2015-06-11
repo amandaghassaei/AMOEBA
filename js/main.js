@@ -151,5 +151,5 @@ require(['appState', 'lattice', 'menuWrapper', 'navbar', 'ribbon', 'threeModel',
 
     new ThreeView({model:three});
 
-//    if (lattice.get("connectionType") != "gik") lattice.addCellAtIndex({x:0,y:0,z:0});//add a cell
+//    if (lattice.get("connectionType") != "gik") lattice.getUItarget().addCellAtIndex({x:0,y:0,z:0});//add a cell
 });

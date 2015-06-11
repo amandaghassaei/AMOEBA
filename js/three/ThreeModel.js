@@ -11,6 +11,7 @@ define(['underscore', 'three'], function(_, THREE){
 
     //store all meshes to highlight
     var cells = [];
+    var compositeCells = [];
 //    var parts = [];
     var basePlane = [];
 
@@ -71,12 +72,24 @@ define(['underscore', 'three'], function(_, THREE){
         cells.push(cell);
     }
 
+    function addCompositeCell(cell){
+        compositeCells.push(cell);
+    }
+
     function removeCell(cell){
         cells.splice(cells.indexOf(cell), 1);
     }
 
+    function removeCompositeCell(cell){
+        compositeCells.splice(compositeCells.indexOf(cell));
+    }
+
     function getCells(){
         return cells;
+    }
+
+    function getCompositeCells(){
+        return compositeCells;
     }
 
     function sceneRemove(object){
@@ -90,6 +103,10 @@ define(['underscore', 'three'], function(_, THREE){
 
     function removeAllCells(){
         cells = [];
+    }
+
+    function removeAllCompositeCells(){
+        compositeCells = [];
     }
 
     function startAnimationLoop(){
@@ -146,10 +163,14 @@ define(['underscore', 'three'], function(_, THREE){
         domElement: renderer.domElement,
         camera: camera,
         getCells: getCells,
+        getCompositeCells: getCompositeCells,
         addCell: addCell,
+        addCompositeCell: addCompositeCell,
         removeCell: removeCell,
+        removeCompositeCell: removeCompositeCell,
         getBasePlane: getBasePlane,
-        removeAllCells: removeAllCells
+        removeAllCells: removeAllCells,
+        removeAllCompositeCells: removeAllCompositeCells
     }
 
 });

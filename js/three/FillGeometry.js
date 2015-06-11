@@ -78,11 +78,11 @@ FillGeometry = Backbone.Model.extend({
                         if (position.z<nextIntersection) continue;
                         else {
                             inside = true;
-                            globals.lattice.addCellAtIndex(index, true, true);
+                            globals.lattice.getUItarget().addCellAtIndex(index, true, true);
                         }
                     } else {
                         if (position.z<nextIntersection) {
-                            globals.lattice.addCellAtIndex(index, true, true);
+                            globals.lattice.getUItarget().addCellAtIndex(index, true, true);
                             continue;
                         }
                         else inside = false;

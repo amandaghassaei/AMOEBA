@@ -164,7 +164,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
-            if (!this.inCompositeMode() && this.exitCompositeEditing) this.exitCompositeEditing();
+            if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
         },
 
         _updateCellSeparation: function(){
@@ -180,6 +180,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         __clearCells: function(silent){
+            three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.set("nodes", [], {silent:silent});
             if (globals.basePlane) globals.basePlane.set("zIndex", 0, {silent:silent});
         },
@@ -262,13 +263,30 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         inCompositeMode: function(){
-            return appState.get("currentNav") == "navComposite";
+            return appState.get("currentNav") == "navComposite" && this.compositeEditor;
         },
 
         exitCompositeEditing: function(){
             if (this.compositeEditor) this.compositeEditor.destroy();
             this.compositeEditor = null;
             this.showCells();
+        },
+
+        getUItarget: function(){
+            if (this.inCompositeMode()) return this.compositeEditor;
+            return this;
+        },
+
+        addHighlightableCell: function(cell){
+            three.addCell(cell);
+        },
+
+        removeHighlightableCell: function(cell){
+            three.removeCell(cell);
+        },
+
+        getHighlightableCells: function(){
+            return three.getCells();
         },
 
 

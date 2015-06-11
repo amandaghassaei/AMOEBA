@@ -22,7 +22,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
         if (this.index){
-            if (!this.cells) three.addCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
+            if (!this.cells) lattice.getUItarget().addHighlightableCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
             if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
         } else this.hide();//stock cell
 
@@ -329,7 +329,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
             if (this.superCell) this.superCell.removeChildren(this.object3D);
             else if (this.index) {
                 three.sceneRemove(this.object3D);
-                if (!this.cells) three.removeCell(this.object3D.children[0]);//remove mesh as highlightable object
+                if (!this.cells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
             }
             this.object3D.myParent = null;
     //            this.object3D.dispose();

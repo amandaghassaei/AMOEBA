@@ -83,6 +83,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             <a href="#" class="btn btn-halfWidth btn-lg btn-default importJSON">Load Composite</a>\
             <a id="saveComposite" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Composite</a><br/><br/>\
             Name: &nbsp;&nbsp;<input id="compositeName" data-property="name" value="<%= name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput compositeEditor" type="text"><br/><br/>\
+            Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
             Bounding Box: ()<br/><br/>\
             Display Color: &nbsp;&nbsp;\
             <input id="compositeColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth compositeEditor form-control hexInput" type="text"><br/><br/>\

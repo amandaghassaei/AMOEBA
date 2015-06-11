@@ -22,9 +22,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         __initialize: function(options, callback){
             if (!options.id || options.id == "") this.set("id", this.cid);
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
-            this.set("numCells", 3);//todo remove this
-            this.set("cellsMin", new THREE.Vector3(0,0,0));
-            this.set("cellsMax", new THREE.Vector3(0,0,0));
             if (callback) callback(this);
         },
 
@@ -47,6 +44,30 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
+
+
+        
+
+        //3d ui
+
+        addHighlightableCell: function(cell){
+            three.addCompositeCell(cell);
+        },
+
+        removeHighlightableCell: function(cell){
+            three.removeCompositeCell(cell);
+        },
+
+        getHighlightableCells: function(){
+            return three.getCompositeCells();
+        },
+
+
+
+
+
+
+
         _changeRandomColor: function(){
             this.set("color", makeRandomColor());
         },
@@ -63,7 +84,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 color: this.get("color"),
                 altColor: this.get("color"),
                 numCells: this.get("numCells"),
-                cells: JSON.parse(JSON.stringify(this.cells)),
+                cells: JSON.parse(JSON.stringify(this.sparseCells)),
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: new THREE.Vector3().subVectors(this.get("cellsMax"), this.get("cellsMin"))
@@ -74,6 +95,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         deleteComposite: function(){
             var id = this.get("id");
             delete globals.materials.compositeMaterials[id];//todo trigger change on all instances
+        },
+
+
+
+
+
+
+
+        //deallocate
+
+        __clearCells: function(silent){
+            three.removeAllCompositeCells();//todo add flag in cell destroy to avoid redundancy here
         },
 
         destroy: function(){

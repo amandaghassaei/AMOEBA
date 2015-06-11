@@ -157,7 +157,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
 
         _clearCells: function(e){
             e.preventDefault();
-            lattice.clearCells();
+            lattice.getUItarget().clearCells();
         },
 
         _getPropertyOwner: function($target){

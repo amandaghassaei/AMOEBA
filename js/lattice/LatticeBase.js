@@ -121,7 +121,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._loopCells(this.sparseCells, function(cell){//send destroy to top level
                 if (cell) cell.destroy();
             });
-            three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.cells = [[[null]]];
             this.sparseCells = [[[null]]];
             this.set("cellsMax", null, {silent:silent});
@@ -338,7 +337,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //save/load
 
         toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
-            return _.omit(this.attributes, ["cells", "nodes"]);//omit makes a copy
+            return _.omit(this.attributes, ["nodes"]);//omit makes a copy
         }//todo something weird here
 
     });

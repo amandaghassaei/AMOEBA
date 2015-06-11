@@ -2,8 +2,8 @@
  * Created by aghassaei on 1/16/15.
  */
 
-define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls'],
-    function(_, Backbone, THREE, appState, globals){
+define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'orbitControls'],
+    function(_, Backbone, THREE, appState, globals, lattice){
 
     return Backbone.View.extend({
 
@@ -97,7 +97,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'orbitControls
             var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
             this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-            var objsToIntersect = this.model.getCells().concat(this.model.getBasePlane());
+            var objsToIntersect = lattice.getUItarget().getHighlightableCells().concat(this.model.getBasePlane());
     //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
             if (intersections.length == 0) {//no intersections

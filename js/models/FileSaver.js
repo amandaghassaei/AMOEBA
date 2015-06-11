@@ -53,7 +53,7 @@ define(['underscore', 'fileSaverLib'], function(_, saveAs){
     }
 
     function loadFile(data){//todo make this better
-        globals.lattice.clearCells();
+        globals.lattice.getUItarget().clearCells();
         _setData(data, false);
         globals.lattice._updateLatticeType(true);
         globals.lattice.trigger("change:scale");
