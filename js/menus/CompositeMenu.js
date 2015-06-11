@@ -31,6 +31,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _finishComposite: function(e){
             e.preventDefault();
+            console.log("here");
+            lattice.makeNewCompositeMaterial();
             this.model.set("currentNav", "navDesign");
         },
 
