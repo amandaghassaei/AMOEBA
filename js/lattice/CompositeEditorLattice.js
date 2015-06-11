@@ -7,6 +7,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
     function(_, Backbone, appState, lattice, globals, plist, THREE, three){
 
     var defaults = {
+        compositeId: null,
         compositeColor: makeRandomColor(),
         numCompositeCells:0,
         compositeCellsMin: null,
@@ -21,19 +22,37 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
 
 
 
-        _initCompositeEditor: function(){
+        _initCompositeEditor: function(id, data){
 
             var self = this;
             _.each(_.keys(defaults), function(key){
                 self.set(key, defaults[key], {silent:true});
             });
-
             this.compositeCells = [[[null]]];
 
+            if (data){
+                _.each(_.keys(data), function(key){
+                    self.set(key, defaults[key], {silent:true});
+                });
+                this.compositeCells = data.cells;//todo
+                this.set("compositeId", id, {silent:true});
+            }
         },
 
         _changeRandomColor: function(){
             this.set("compositeColor", makeRandomColor());
+        },
+
+        _makeNewCompositeMaterial: function(name){
+            var id = this.get("compositeId");
+            var data = {
+                name: name,
+                color: this.get("compositeColor"),
+                altColor: this.get("compositeColor"),
+                numCells: this.get("numCompositeCells"),
+                dimensions: new THREE.Vector3.subVectors(this.get("compositeCellsMax"), this.get("compositeCellsMin"))
+            };
+            globals.materials.id = data;//todo trigger change on all instances
         },
 
         _undoCompositeEditor: function(){
