@@ -26,7 +26,7 @@ define(['three'], function(THREE){
                 send: "Send"
             },
             navComposite:{
-                composite:"Composite"
+                composite:"Composite Editor"
             }
         },
 
