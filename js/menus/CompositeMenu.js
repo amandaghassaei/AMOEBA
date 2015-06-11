@@ -9,7 +9,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         events: {
             "click #newRandomColor":                                  "_changeRandomColor",
             "click #finishComposite":                                 "_finishComposite",
-            "click #saveComposite":                                   "_saveComposite"
+            "click #saveComposite":                                   "_saveComposite",
+            "click #cancelComposite":                                 "_cancelComposite"
         },
 
         _initialize: function(){
@@ -37,12 +38,17 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _finishComposite: function(e){
             e.preventDefault();
-
+            this.model.set("currentNav", "navDesign");
         },
 
         _saveComposite: function(e){
             e.preventDefault();
 
+        },
+
+        _cancelComposite: function(e){
+            e.preventDefault();
+            this.model.set("currentNav", "navDesign");
         },
 
         _makeTemplateJSON: function(){
@@ -59,6 +65,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             <input value="<%= color %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/>\
             <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
             <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
+            <a id="cancelComposite" href="#" class="btn btn-block btn-lg btn-danger">Cancel / Exit</a><br/>\
             \
             ')
 

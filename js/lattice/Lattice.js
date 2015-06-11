@@ -17,8 +17,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             cellsMax: null,//max position of cells matrix
             numCells: 0,
 
-            scale: 20,
-
             //spacing for connectors/joints
             cellSeparation: {xy:0, z:0},
 

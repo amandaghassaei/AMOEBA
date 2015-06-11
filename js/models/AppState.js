@@ -97,7 +97,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             //update to last tab open in that section
             var navSelection = this.get("currentNav");
             var nextTab = this.get("lastNavTab")[navSelection] || _.keys(plist.allMenuTabs[navSelection])[0];
-            this.set("currentTab", nextTab);
+            this.set("currentTab", nextTab, {silent:true});
 
             if (navSelection == "navDesign") {
                 this.set("basePlaneIsVisible", true);
