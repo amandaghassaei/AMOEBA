@@ -60,12 +60,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             <a id="saveComposite" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Composite</a><br/><br/>\
             Name: &nbsp;&nbsp;<input value="" placeholder="Enter Name" class="halfWidth form-control" type="text"><br/><br/>\
             Bounding Box: ()<br/><br/>\
-            Display Color:<br/>\
-            <div style="background-color: <%= color %> ;" id="compositeDisplayColor"></div>\
-            <input value="<%= color %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/>\
+            Display Color: &nbsp;&nbsp;\
+            <!--<div style="background-color: <%= color %> ;" id="compositeDisplayColor"></div>-->\
+            <input style="border-color: <%= color %> ;" value="<%= color %>" placeholder="Enter HEX" class="halfWidth form-control" type="text"><br/><br/>\
             <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
-            <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
-            <a id="cancelComposite" href="#" class="btn btn-block btn-lg btn-danger">Cancel / Exit</a><br/>\
+            <a id="finishComposite" href="#" class="btn btn-halfWidth btn-lg btn-success">Finish Composite</a>\
+            <a id="cancelComposite" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default">Cancel / Exit</a><br/>\
             \
             ')
 
