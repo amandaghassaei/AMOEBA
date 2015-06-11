@@ -18,11 +18,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
         _initCompositeEditor: function(id, data){
 
             _.extend(defaults, {
-                compositeId: "composite" + compositeId++,//todo real unique id
+                compositeId: "composite"+compositeId++,//todo real unique id
                 compositeColor: makeRandomColor(),
-                numCompositeCells:0,
-                compositeCellsMin: null,
-                compositeCellsMax: null
+                numCompositeCells:2,
+                compositeCellsMin: new THREE.Vector3(0,0,0),//null,
+                compositeCellsMax: new THREE.Vector3(2,4,5)//null
             });
 
             var self = this;
@@ -55,16 +55,16 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 color: this.get("compositeColor"),
                 altColor: this.get("compositeColor"),
                 numCells: this.get("numCompositeCells"),
-                cells: JSON.stringify(this.get("compositeCells")),
+                cells: JSON.parse(JSON.stringify(this.compositeCells)),
                 cellsMin: this.get("compositeCellsMin").clone(),
                 cellsMax: this.get("compositeCellsMax").clone(),
-                dimensions: new THREE.Vector3.subVectors(this.get("compositeCellsMax"), this.get("compositeCellsMin"))
+                dimensions: new THREE.Vector3().subVectors(this.get("compositeCellsMax"), this.get("compositeCellsMin"))
             };
-            globals.materials.id = data;//todo trigger change on all instances
+            globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
+            console.log(data);
         },
 
         _undoCompositeEditor: function(){
-            console.log("undo");
             var self = this;
             _.each(_.keys(CompositeEditorLattice), function(key){
                 self[key] = null;
@@ -73,7 +73,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'globals', 'plist', 'th
                 self.unset(key, {silent:true});
             });
             this.compositeCells = null;
-            console.log("done undo");
         }
     };
 

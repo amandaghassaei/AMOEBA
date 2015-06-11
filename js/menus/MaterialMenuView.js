@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], function($, _, MenuParentView, plist, lattice, globals){
 
     return MenuParentView.extend({
 
@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), this.model.toJSON(), plist);
+            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals);
         },
 
         template: _.template('\
@@ -56,7 +56,15 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             Use realistic color scheme</label>\
             <% } %>\
             <br/><br/>\
-            Composite Materials:<br/><br/>\
+            Composite Materials:<br/>\
+            <% _.each(_.keys(materials.compositeMaterials), function(key){ %>\
+            <label class="radio colorSwatches">\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <div class="materialColorSwatch">\
+                <div style="background-color:<% if(realisticColorScheme){ %><%= materials.compositeMaterials[key].color %><% }else{ %><%= materials.compositeMaterials[key].altColor %><% } %>"></div>\
+                <span><%= materials.compositeMaterials[key].name %></span></div>\
+            </label>\
+            <% }); %><br/>\
             <a id="navToCompositeMenu" href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\
             ')
 

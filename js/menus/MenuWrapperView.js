@@ -27,7 +27,10 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             //bind events
             this.listenTo(this.model, "change:currentNav", this.render);
             this.listenTo(lattice, "change:cellType change:connectionType", this._populateAndShow);
-            this.listenTo(this.model, "change:currentTab", this._updateCurrentTab);
+            this.listenTo(this.model, "change:currentTab", function(){
+                if (!this.model.changedAttributes() || this.model.changedAttributes()["currentNav"]) return;
+                this._updateCurrentTab();
+            });
             this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
             if (this.model.get("menuIsVisible")) this._populateAndShow();

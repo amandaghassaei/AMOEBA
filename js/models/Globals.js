@@ -7,7 +7,8 @@
 define(['underscore', 'three'], function(_, THREE){
 
     var materials = {
-        deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
+        deleteMaterial: new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading}),
+        compositeMaterials: {}
     };
 
     return {
