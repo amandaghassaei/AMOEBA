@@ -116,18 +116,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        clearCells: function(){
+        clearCells: function(silent){
+            if (silent === undefined) silent = false;
             this._loopCells(this.sparseCells, function(cell){//send destroy to top level
                 if (cell) cell.destroy();
             });
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.cells = [[[null]]];
             this.sparseCells = [[[null]]];
-            this.set("cellsMax", null);
-            this.set("cellsMin", null);
-            this.set("nodes", []);
-            this.set("numCells", 0);
-            if (globals.basePlane) globals.basePlane.set("zIndex", 0);
+            this.set("cellsMax", null, {silent:silent});
+            this.set("cellsMin", null, {silent:silent});
+            this.set("numCells", 0, {silent:silent});
+            if (this.__clearCells) this.__clearCells(silent);
             three.render();
         },
 

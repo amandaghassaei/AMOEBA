@@ -164,7 +164,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
-            if (!this.inCompositeMode() && this._undoCompositeEditor) this._undoCompositeEditor();
+            if (!this.inCompositeMode() && this.exitCompositeEditing) this.exitCompositeEditing();
         },
 
         _updateCellSeparation: function(){
@@ -177,6 +177,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 //                if (cell) cell.updateForScale(cellMode, partType);
 //            });
             three.render();
+        },
+
+        __clearCells: function(silent){
+            this.set("nodes", [], {silent:silent});
+            if (globals.basePlane) globals.basePlane.set("zIndex", 0, {silent:silent});
         },
 
 
@@ -258,8 +263,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return appState.get("currentNav") == "navComposite";
         },
 
-        clearCompositeCells: function(){
-
+        exitCompositeEditing: function(){
+            if (this.compositeEditor) this.compositeEditor.destroy();
+            this.compositeEditor = null;
+            this.showCells();
         },
 
 

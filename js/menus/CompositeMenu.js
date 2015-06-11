@@ -16,7 +16,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _initialize: function(){
 
-            this.listenTo(lattice, "change", this.render);
+            if (!lattice.compositeEditor) {
+                console.warn("no composite editor inited");
+                return;
+            }
+            this.listenTo(lattice.compositeEditor, "change", this.render);
         },
 
         _updateDimensions: function(cells){
@@ -27,7 +31,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _changeRandomColor: function(e){
             e.preventDefault();
-            lattice._changeRandomColor();
+            lattice.compositeEditor._changeRandomColor();
         },
 
         updateHex: function(hex){
@@ -38,12 +42,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         _finishComposite: function(e){
             e.preventDefault();
             this.stopListening();
-            if (!lattice.makeNewCompositeMaterial){
+            if (!lattice.compositeEditor){
                 console.warn("lattice not in composite mode for finish composite call");
                 this._exit();
                 return;
             }
-            lattice.makeNewCompositeMaterial($("#compositeName").val());
+            lattice.compositeEditor.makeNewCompositeMaterial($("#compositeName").val());
             this._exit();
         },
 
@@ -58,12 +62,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
 
         _deleteComposite: function(e){
             e.preventDefault();
-            if (!lattice.deleteComposite){
+            if (!lattice.compositeEditor){
                 console.warn("lattice not in composite mode for delete composite call");
                 this._exit();
                 return;
             }
-            lattice.deleteComposite();
+            lattice.compositeEditor.deleteComposite();
             this._exit();
         },
 

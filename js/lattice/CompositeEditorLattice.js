@@ -16,11 +16,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         defaults: _.extend(LatticeBase.prototype.defaults, {
             name: "",
-            color: makeRandomColor()
+            color: null
         }),
 
         __initialize: function(options){
-            if (options.id === undefined) this.set("id", this.cid);
+            if (!options.id || options.id == "") this.set("id", this.cid);
+            if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
+            this.set("numCells", 3);//todo remove this
+            this.set("cellsMin", new THREE.Vector3(0,0,0));
+            this.set("cellsMax", new THREE.Vector3(0,0,0));
         },
 
         initLatticeSubclass: function(subclass){
@@ -59,7 +63,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 color: this.get("color"),
                 altColor: this.get("color"),
                 numCells: this.get("numCells"),
-                cells: JSON.parse(JSON.stringify(this.compositeCells)),
+                cells: JSON.parse(JSON.stringify(this.cells)),
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: new THREE.Vector3().subVectors(this.get("cellsMax"), this.get("cellsMin"))
@@ -73,8 +77,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         destroy: function(){
+            this.clearCells(true);
             var self = this;
-            lattice.showCells();
+            _.each(_.keys(this.attributes), function(key){
+                self.set(key, null, {silent:true});
+                self.unset(key, {silent:true});
+            });
         }
     });
 
