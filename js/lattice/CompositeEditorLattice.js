@@ -30,7 +30,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         initLatticeSubclass: function(subclass){
             var self = this;
             require([subclass], function(subclassObject){
-
                 _.extend(self, subclassObject);
 
 //                //copy over cells to new lattice type

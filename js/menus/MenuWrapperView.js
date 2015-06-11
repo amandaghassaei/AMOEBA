@@ -162,6 +162,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
 
         _getPropertyOwner: function($target){
             if ($target.hasClass("lattice")) return lattice;
+            if ($target.hasClass("compositeEditor")) return lattice.compositeEditor;
             if ($target.hasClass("assembler")) return globals.cam;
             if ($target.hasClass("appState")) return this.model;
             console.warn("no owner found for " + $target);
