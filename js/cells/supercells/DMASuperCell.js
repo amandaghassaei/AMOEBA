@@ -98,10 +98,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     DMASuperCell.prototype.destroy = function(){
         this._iterCells(function(cell){
-            if (cell) cell.destroy();
+            if (cell) {
+                cell.destroy();
+                cell = null;
+            }
         });
-        this.cells = null;
         DMACell.prototype.destroy.call(this);
+        this.cells = null;
     };
 
     DMASuperCell.prototype.destroyParts = function(){

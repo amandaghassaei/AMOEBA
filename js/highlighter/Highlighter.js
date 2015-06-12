@@ -86,6 +86,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             var highlighted = intersection.object.parent;//cell mesh parent is object3d
             if (!highlighted.myParent) {//myParent is cell instance
                 console.warn("no parent for highlighted object");
+                console.warn(highlighted);
                 return;
             }
 
@@ -159,7 +160,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;
-                lattice.getUItarget().removeCell(this.highlightedObject);
+                lattice.getUItarget().removeCell(this.highlightedObject.getParent());
             }
             this.setNothingHighlighted();
         },

@@ -156,6 +156,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
     //    },
 
         removeCell: function(cell){
+
             if (!cell) return;
             var index = (new THREE.Vector3()).subVectors(cell.index, this.get("cellsMin"));
             cell.destroy();

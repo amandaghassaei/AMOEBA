@@ -153,6 +153,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.setDeleteMode = function(state){
+        if (this.superCell) {
+            this.superCell.setDeleteMode(state);
+            return;
+        }
         var material;
         if (state) material = globals.materials.deleteMaterial;
         else  material = this.getMaterial();
@@ -160,6 +164,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         if (this.object3D.children[0].material == material) return;
         this.object3D.children[0].material = material;
         three.render();
+    };
+
+    DMACell.prototype.getParent = function(){
+        if (this.superCell) return this.superCell.getParent();
+        return this;
     };
 
 
@@ -327,10 +336,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         this.destroyParts();
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
-            else if (this.index) {
-                three.sceneRemove(this.object3D);
-                if (!this.cells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
-            }
+            else if (this.index) three.sceneRemove(this.object3D);
+            if (!this.cells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
             this.object3D.myParent = null;
     //            this.object3D.dispose();
     //            geometry.dispose();
