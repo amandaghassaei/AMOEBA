@@ -29,12 +29,24 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                 cells[x].push([]);
                 for (var z=0;z<range.z;z++){
                     //child cells add themselves to object3D
-                    var material = this.material;
-                    if (material.cells && material.cells[x][y][z]) material = material.cells[x][y][z].material;
+
+                    var cellMaterial = this.material;
                     cells[x][y].push(null);
-                    this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z)}, function(cell){
-                        cells[x][y][z] = cell;
-                    });
+
+                    if (material.sparseCells){
+                        if (material.sparseCells[x][y][z]){
+                            if (material.sparseCells[x][y][z].material) {
+                                cellMaterial = material.sparseCells[x][y][z].material;
+                                this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
+                                    cells[x][y][z] = cell;
+                                });
+                            } else console.warn("no material for composite cell definition subcell");
+                        }//else no cell in this spot
+                    } else {//if not from composite definition, add subcell at all possible indices in supercell range
+                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
+                            cells[x][y][z] = cell;
+                        });
+                    }
                 }
             }
         }

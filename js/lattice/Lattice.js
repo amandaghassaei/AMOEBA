@@ -108,9 +108,27 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //events
 
+//        _materialTypeChanged: function(){
+//            var materialType = this.get("materialType");
+//            //verify that correct class is in sync
+//            if (materialType.substr(0,5) == "super"){
+//                this.set("materialClass", "compositeMaterials");
+//                return;
+//            } else {
+//                var materialClass = null;
+//                _.each(_.keys(plist.allMaterials), function(key){
+//                    if (_.keys(plist.allMaterials[key]).indexOf(materialType) > -1) materialClass = key;
+//                });
+//            }
+//            console.log(materialClass);
+//            if (!materialClass) console.warn("material class not found for material " + materialType);
+//            else this.set("materialClass", materialClass);
+//        },
+
         _loadMaterialClass: function(){
             var materialClass = this.get("materialClass");
-            this.set("materialType", _.keys(plist.allMaterials[materialClass])[0], {silent:true});//set to default silently
+            var materialType = this.get("materialType");
+            if (!plist.allMaterials[materialClass].materialType) this.set("materialType", _.keys(plist.allMaterials[materialClass])[0], {silent:true});//set to default silently
             if (globals.materials[materialClass]) return;//already loaded
             require([materialClass + "Materials"], function(MaterialClass){
                 globals.materials[materialClass] = MaterialClass;

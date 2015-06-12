@@ -12,9 +12,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     CompositeCell.prototype = Object.create(DMASuperCell.prototype);
 
     CompositeCell.prototype._makeSubCellForIndex = function(json, callback){
-        require([], function(){
-
-        });
+//        require([], function(){
+//
+//        });
     };
 
     CompositeCell.prototype._getGeometry = function(){
