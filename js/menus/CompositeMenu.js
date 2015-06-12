@@ -105,7 +105,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 <span><%= materials.compositeMaterials[key].name %></span></div>\
             </label>\
             <% }); %><br/>\
-            <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
+            <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Save Composite</a><br/>\
             <a id="cancelComposite" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>\
             <a id="deleteComposite" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default"><span class="fui-trash"></span> Delete</a><br/>\
             ')

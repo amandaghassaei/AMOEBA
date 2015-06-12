@@ -30,14 +30,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                 for (var z=0;z<range.z;z++){
                     //child cells add themselves to object3D
                     if (material.cells && material.cells[x][y][z]) cells[x][y].push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), this, material.cells[x][y][z].material));
-                    else cells[x][y].push(this._makeSubCellForIndex(new THREE.Vector3(x, y, z), this, material));
+                    else cells[x][y].push(this._makeSubCellForIndex({index: new THREE.Vector3(x, y, z), material:this.material}));
                 }
             }
         }
         return cells;
     };
 
-    DMASuperCell.prototype._makeSubCellForIndex = function(index, supercell, material){
+    DMASuperCell.prototype._makeSubCellForIndex = function(json){
         return null;//override in subclasses
     };
 
