@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], function($, _, MenuParentView, plist, lattice, globals){
 
     return MenuParentView.extend({
 
@@ -21,12 +21,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
                 return;
             }
             this.listenTo(lattice.compositeEditor, "change", this.render);
-        },
-
-        _updateDimensions: function(cells){
-            this.material.dimensions.x = cells.length;
-            this.material.dimensions.y = cells[0].length;
-            this.material.dimensions.z = cells[0][0].length;
         },
 
         _changeRandomColor: function(e){
@@ -76,18 +70,41 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.compositeEditor.toJSON());
+            return _.extend(plist, this.model.toJSON(), globals, lattice.compositeEditor.toJSON(),
+                {
+                    materialClass:lattice.get("materialClass"),
+                    materialType:lattice.get("materialType"),
+                    dimensions: lattice.compositeEditor.calculateBoundingBox()
+                });
         },
 
         template: _.template('\
             <a href="#" class="btn btn-halfWidth btn-lg btn-default importJSON">Load Composite</a>\
             <a id="saveComposite" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Composite</a><br/><br/>\
             Name: &nbsp;&nbsp;<input id="compositeName" data-property="name" value="<%= name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput compositeEditor" type="text"><br/><br/>\
-            Num Cells:&nbsp;&nbsp;<%= numCells %><br/><br/>\
-            Bounding Box: ()<br/><br/>\
+            Num Cells: &nbsp;&nbsp;<%= numCells %><br/><br/>\
+            Bounding Box: &nbsp;&nbsp;<%= dimensions.x %> x <%= dimensions.y %> x <%= dimensions.z %><br/><br/>\
             Display Color: &nbsp;&nbsp;\
             <input id="compositeColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth compositeEditor form-control hexInput" type="text"><br/><br/>\
-            <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/><br/>\
+            <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/>\
+            Available Materials:<br/>\
+            <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>\
+            <label class="radio colorSwatches">\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <div class="materialColorSwatch">\
+                <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterials[materialClass][key].color %><% }else{ %><%= allMaterials[materialClass][key].altColor %><% } %>"></div>\
+                <span><%= allMaterials[materialClass][key].name %></span></div>\
+            </label>\
+            <% }); %>\
+            <% _.each(_.keys(materials.compositeMaterials), function(key){ \
+                if (key == id) return; %>\
+            <label class="radio colorSwatches">\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <div class="materialColorSwatch">\
+                <div style="background-color:<% if(realisticColorScheme){ %><%= materials.compositeMaterials[key].color %><% }else{ %><%= materials.compositeMaterials[key].altColor %><% } %>"></div>\
+                <span><%= materials.compositeMaterials[key].name %></span></div>\
+            </label>\
+            <% }); %><br/>\
             <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Finish Composite</a><br/>\
             <a id="cancelComposite" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>\
             <a id="deleteComposite" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default"><span class="fui-trash"></span> Delete</a><br/>\

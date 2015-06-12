@@ -182,14 +182,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         calculateBoundingBox: function(){
-            var scale = this._allAxesScales();
-            var min = _.clone(this.get("cellsMin"));
-            var max = _.clone(this.get("cellsMax"));
-            _.each(_.keys(scale), function(key){
-                min[key] *= scale[key];
-                max[key] *= scale[key];
-            });
-            return {min:min, max:max};
+            if (!this.get("cellsMax") || !this.get("cellsMin")) return new THREE.Vector3(0,0,0);
+            return (new THREE.Vector3()).subVectors(this.get("cellsMax"), this.get("cellsMin")).add(new THREE.Vector3(1,1,1));
         },
 
 
