@@ -162,7 +162,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             cell.destroy();
             this.sparseCells[index.x][index.y][index.z] = null;
 
-            //todo shrink cells matrix if needed
+            this._checkForMatrixContraction(this.sparseCells);
 
             this.set("numCells", this.get("numCells")-1);
             three.render();
@@ -298,6 +298,89 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
             if (hasChanged) return newMax;
             return false;
+        },
+
+        _checkForMatrixContraction: function(cells, deletedIndex){//this could be more efficient
+
+            var cellsMax = this.get("cellsMax");
+            var cellsMin = this.get("cellsMin");
+            if (!cells || !cellsMin || !cellsMax) {
+                console.warn("missing param for cells contraction");
+                return;
+            }
+
+            var newMin = this._contractCellsArray(cells, true, cellsMin.clone(), cellsMax.clone());
+            var newMax = null;
+            if (newMin) newMax = this._contractCellsArray(cells, false, newMin.clone(), cellsMax.clone());
+
+            this.set("cellsMax", newMax, {silent:true});
+            this.set("cellsMin", newMin);
+
+            if (!newMin || !newMax){
+                cells = [[[null]]];
+            }
+
+        },
+
+        _contractCellsArray: function(cells, fromFront, cellsMin, cellsMax){
+
+            if (cellsMax.x < cellsMin.x || cellsMax.y < cellsMin.y || cellsMax.z < cellsMin.z) return null;
+
+            var xTrim = true;
+            var yTrim = true;
+            var zTrim = true;
+            this._loopCells(cells, function(cell, x, y, z){
+                if (cell){
+                    if (fromFront){
+                        if (x == 0) xTrim = false;
+                        if (y == 0) yTrim = false;
+                        if (z == 0) zTrim = false;
+                    } else {
+                        if (x == cellsMax.x-cellsMin.x) xTrim = false;
+                        if (y == cellsMax.y-cellsMin.y) yTrim = false;
+                        if (z == cellsMax.z-cellsMin.z) zTrim = false;
+                    }
+                }
+            });
+
+            if (!xTrim && !yTrim && !zTrim) {
+                if (fromFront) return cellsMin;
+                return cellsMax;
+            }
+            if (xTrim) {
+                if (fromFront) {
+                    cellsMin.x += 1;
+                    cells.shift();
+                }
+                else {
+                    cellsMax.x -= 1;
+                    cells.pop();
+                }
+            }
+            if (yTrim || zTrim) {
+                if (yTrim){
+                    if (fromFront) cellsMin.y += 1;
+                    else cellsMax.y -= 1;
+                }
+                if (zTrim){
+                    if (fromFront) cellsMin.z += 1;
+                    else cellsMax.z -= 1;
+                }
+                _.each(cells, function(cellLayer){
+                    if (yTrim) {
+                        if (fromFront) cellLayer.shift();
+                        else cellLayer.pop();
+                    }
+                    if (!zTrim) return;
+                    _.each(cellLayer, function(cellColumn){
+                        if (zTrim) {
+                            if (fromFront) cellColumn.shift();
+                            else cellColumn.pop();
+                        }
+                    });
+                });
+            }
+            return this._contractCellsArray(cells, fromFront, cellsMin, cellsMax);
         },
 
 
