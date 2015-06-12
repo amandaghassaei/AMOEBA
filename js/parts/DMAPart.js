@@ -31,8 +31,12 @@ define(['underscore', 'three'], function(_, THREE){
         return this.parentCell.getMaterial();
     };
 
+    DMAPart.prototype.setMaterial = function(material){
+        this.mesh.material = material;
+    };
+
     DMAPart.prototype.destroy = function(){
-        if (this.mesh) {
+        if (this.mesh) {d
             this.parentCell.removeChildren(this.mesh);
             this.mesh = null;
         }

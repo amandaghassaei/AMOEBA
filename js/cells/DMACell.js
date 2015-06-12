@@ -153,15 +153,23 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.setDeleteMode = function(state){
-        if (this.superCell) {
-            this.superCell.setDeleteMode(state);
-            return;
-        }
+
         var material;
         if (state) material = globals.materials.deleteMaterial;
         else  material = this.getMaterial();
         if (!material) return;//cell may be deleted by now
         if (this.object3D.children[0].material == material) return;
+
+        if (this.cells){
+            this._loopCells(function(cell){
+                if (cell) cell.setDeleteMode(state);
+            });
+        }
+        if (this.parts){
+            _.each(this.parts, function(part){
+                if (part) part.setMaterial(material);
+            });
+        }
         this.object3D.children[0].material = material;
         three.render();
     };

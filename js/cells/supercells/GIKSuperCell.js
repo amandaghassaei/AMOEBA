@@ -21,8 +21,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     };
     GIKSuperCell.prototype = Object.create(DMASuperCell.prototype);
 
-    GIKSuperCell.prototype._makeSubCellForIndex = function(json){
-        return new GIKCell(json, this);
+    GIKSuperCell.prototype._makeSubCellForIndex = function(json, callback){
+        callback(new GIKCell(json, this));
     };
 
     GIKSuperCell.prototype._rotateCell = function(object3D){

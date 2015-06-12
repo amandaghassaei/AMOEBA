@@ -72,7 +72,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         setDeleteMode: function(object, state){
             if (object && object.setDeleteMode) {
                 if (state) this.hide();
-                this.highlightedObject.setDeleteMode(state);
+                object.getParent().setDeleteMode(state);
             }
         },
 

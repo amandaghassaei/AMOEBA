@@ -14,6 +14,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require(['superCellHighlighter'], function(superCellHighlighter){
                 globals.highlighter = new superCellHighlighter();
             });
+            appState.set("superCellRange", new THREE.Vector3(4, 1, 1));
+
         },
 
         getIndexForPosition: function(absPosition){

@@ -11,14 +11,17 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     };
     CompositeCell.prototype = Object.create(DMASuperCell.prototype);
 
-    CompositeCell.prototype._makeSubCellForIndex = function(json){
-        return null;
+    CompositeCell.prototype._makeSubCellForIndex = function(json, callback){
+        require([], function(){
+
+        });
     };
 
-
-
     CompositeCell.prototype._getGeometry = function(){
-        return new THREE.BoxGeometry();
+        var dimensions = appState.get("superCellRange");
+        var geo = new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z);
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(dimensions.x/2-0.5, dimensions.y/2-0.5, dimensions.z/2-0.5));
+        return geo;
     };
 
     CompositeCell.prototype._buildWireframe = function(mesh){
