@@ -39,6 +39,57 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+
+        //lattice type
+
+        _updateLatticeType: function(cells, subclass){//do not clear cells if loading from file (cells array contains important metadata)
+
+            if (!cells) {
+                if (this._setToDefaultsSilently) this._setToDefaultsSilently();
+                cells = JSON.parse(JSON.stringify(this.sparseCells));
+            }
+
+            if (this._setDefaultCellMode) this._setDefaultCellMode();
+            if (this._loadMaterialClass) this._loadMaterialClass();
+
+            var cellsMin = this.get("cellsMin");
+            var cellsMax = this.get("cellsMax");
+            this._bindRenderToNumCells(this.get("numCells"));
+            this.clearCells();
+
+            if (this._undo) this._undo();
+            if (this._isSingltonLattice()){
+                if (globals.basePlane) globals.basePlane.destroy();
+                if (globals.highlighter) globals.highlighter.destroy();
+            }
+
+            if (cellsMax && cellsMin) this.checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
+            var self = this;
+            require([subclass || this._getSubclassForLatticeType()], function(subclassObject){
+                _.extend(self, subclassObject);
+                if (self._isSingltonLattice()) self._initLatticeType();//only do this for the lattice singleton
+                if (self.get("cellsMin")) self.parseCellsJSON(cells);
+            });
+        },
+
+        _isSingltonLattice: function(){
+            return false;
+        },
+
+        _bindRenderToNumCells: function(numCells){
+            var self = this;
+            if (numCells > 0) this.listenTo(this, "change:numCells", function(){
+                if (self.get("numCells") >= numCells){
+                    self.stopListening(self, "change:numCells");
+                    three.render();
+                }
+            });
+        },
+
+
+
+
+
         //add/remove cells
 
         addCellsInRange: function(range){//add a block of cells (extrude)

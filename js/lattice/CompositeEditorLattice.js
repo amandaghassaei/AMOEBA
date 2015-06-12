@@ -73,7 +73,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 color: this.get("color"),
                 altColor: this.get("color"),
                 numCells: this.get("numCells"),
-                cells: JSON.parse(JSON.stringify(this.sparseCells)),
+                sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: new THREE.Vector3().subVectors(this.get("cellsMax"), this.get("cellsMin"))

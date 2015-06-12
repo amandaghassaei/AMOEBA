@@ -48,45 +48,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
-        //lattice type
-
-        _updateLatticeType: function(cells){//do not clear cells if loading from file (cells array contains important metadata)
-
-            if (!cells) {
-                this._setToDefaultsSilently();
-                cells = JSON.parse(JSON.stringify(this.sparseCells));
-            }
-
-            this._setDefaultCellMode();
-            this._loadMaterialClass();
-
-            var cellsMin = this.get("cellsMin");
-            var cellsMax = this.get("cellsMax");
-            this._bindRenderToNumCells(this.get("numCells"));
-            this.clearCells();
-
-            if (this._undo) this._undo();
-            if (globals.basePlane) globals.basePlane.destroy();
-            if (globals.highlighter) globals.highlighter.destroy();
-
-            if (cellsMax && cellsMin) this.checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
-            var self = this;
-            require([this._getSubclassForLatticeType()], function(subclassObject){
-                _.extend(self, subclassObject);
-                self._initLatticeType();
-                if (self.get("cellsMin")) self.parseCellsJSON(cells);
-            });
-        },
-
-        _bindRenderToNumCells: function(numCells){
-            var self = this;
-            if (numCells > 0) this.listenTo(this, "change:numCells", function(){
-                if (self.get("numCells") >= numCells){
-                    self.stopListening(self, "change:numCells");
-                    three.render();
-                }
-            });
-        },
+        //latticeType
 
         _setToDefaultsSilently: function(){
             var newCellType = this.get("cellType");
@@ -259,6 +221,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+
+
         //composite Cells
 
         _navChanged: function(){
@@ -274,8 +238,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     console.warn("composite editor already allocated");
                     self.compositeEditor.destroy();
                 }
-                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, data), null, function(_self){
-                    _self.initLatticeSubclass(self._getSubclassForLatticeType());
+                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
+                    var cells = null;
+                    if (data) cells = data.sparseCells;
+                    _self._updateLatticeType(cells, self._getSubclassForLatticeType());
                     appState.set("currentNav", "navComposite");
                 });
 
@@ -284,6 +250,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         inCompositeMode: function(){
             return appState.get("currentNav") == "navComposite" && this.compositeEditor;
+        },
+
+        _isSingltonLattice: function(){
+            return true;
         },
 
         exitCompositeEditing: function(){
