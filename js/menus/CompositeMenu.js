@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 return;
             }
             this.listenTo(lattice.compositeEditor, "change", this.render);
+            this.listenTo(lattice, "change", this.render);
         },
 
         _changeRandomColor: function(e){
@@ -70,7 +71,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(plist, this.model.toJSON(), globals, lattice.compositeEditor.toJSON(),
+            return _.extend(this.model.toJSON(), plist, globals, lattice.compositeEditor.toJSON(),
                 {
                     materialClass:lattice.get("materialClass"),
                     materialType:lattice.get("materialType"),

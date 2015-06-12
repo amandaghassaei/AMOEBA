@@ -249,7 +249,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         inCompositeMode: function(){
-            return appState.get("currentNav") == "navComposite" && this.compositeEditor;
+            if (this.compositeEditor) return true;
+            return false;
         },
 
         _isSingltonLattice: function(){
