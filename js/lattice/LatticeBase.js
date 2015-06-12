@@ -93,7 +93,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //add/remove cells
 
         makeCellForLatticeType: function(json, callback){
-            require([this.getCellSubclassFile()], function(CellSubclass){
+            var subclassFile = this.getCellSubclassFile();
+            if (appState.lattice.get("materialType").substr(0,5) == "super") subclassFile = "compositeCell";
+            require([subclassFile], function(CellSubclass){
                 var cell = new CellSubclass(json);
                 if (callback) callback(cell);
             });

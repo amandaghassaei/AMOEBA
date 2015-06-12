@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell'],
-    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'globals'],
+    function(_, THREE, three, lattice, appState, DMASuperCell, globals){
 
     CompositeCell = function(json, superCell){
         DMASuperCell.call(this, json, superCell);
@@ -30,6 +30,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         wireframe.matrixWorld = mesh.matrixWorld;
         wireframe.matrixAutoUpdate = true;
         return wireframe;
+    };
+
+    CompositeCell.prototype.getMaterial = function(){
+        if (!this.material) return null;
+        var material = globals.materials.compositeMaterials[this.material];
+        if (!material){
+            console.warn("no material "+ this.material + " found");
+            return null;
+        }
+        return material;
     };
 
     return CompositeCell;
