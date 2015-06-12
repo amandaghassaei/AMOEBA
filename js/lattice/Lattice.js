@@ -29,7 +29,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this.listenTo(this, "change:partType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
-                this._updateLatticeType(false);
+                this._updateLatticeType();
             });
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
@@ -39,7 +39,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         __initialize: function(){
-            this._updateLatticeType(false);
+            this._updateLatticeType();
         },
 
 
@@ -50,19 +50,31 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //lattice type
 
-        _updateLatticeType: function(){//do not clear cells if loading from file (cells array contains important metadata)
+        _updateLatticeType: function(cells){//do not clear cells if loading from file (cells array contains important metadata)
 
-            this._setToDefaultsSilently();
+            if (!cells) {
+                this._setToDefaultsSilently();
+                cells = JSON.parse(JSON.stringify(this.sparseCells));
+            }
+
             this._setDefaultCellMode();
             this._loadMaterialClass();
 
+            var cellsMin = this.get("cellsMin");
+            var cellsMax = this.get("cellsMax");
             this.clearCells();
 
             if (this._undo) this._undo();
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
 
-            this._initLatticeSubclass(this._getSubclassForLatticeType());
+            if (cellsMax && cellsMin) this.checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
+            var self = this;
+            require([this._getSubclassForLatticeType()], function(subclassObject){
+                _.extend(self, subclassObject);
+                self._initLatticeType();
+                if (self.get("cellsMin")) self.parseCellsJSON(cells);
+            });
         },
 
         _setToDefaultsSilently: function(){
@@ -81,28 +93,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (!plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
                 appState.set("cellMode", "cell");
             }
-        },
-
-        _initLatticeSubclass: function(subclass){
-            var self = this;
-            require([subclass], function(subclassObject){
-
-                _.extend(self, subclassObject);
-                self._initLatticeType();
-
-                //todo parse cells?
-                //copy over cells to new lattice type
-                var cells = self.cells;
-                self._loopCells(cells, function(cell, x, y, z){
-                    if (!cell) return;
-                    var index = _.clone(cell.index);
-                    if (cell.destroy) cell.destroy();
-                    self.makeCellForLatticeType({index:index}, function(newCell){
-                        cells[x][y][z] = newCell;
-                    });
-                });
-                three.render();
-            });
         },
 
         _getSubclassForLatticeType: function(){
@@ -159,11 +149,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
             if (cell) cell.show();
             else console.warn("placing a cell that does not exist");
-        },
-
-        _navChanged: function(){
-            var currentNav = appState.get("currentNav");
-            if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
         },
 
         _updateCellSeparation: function(){
@@ -264,6 +249,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
         //composite Cells
+
+        _navChanged: function(){
+            var currentNav = appState.get("currentNav");
+            if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
+        },
 
         setToCompositeMode: function(id, data){
             var self = this;

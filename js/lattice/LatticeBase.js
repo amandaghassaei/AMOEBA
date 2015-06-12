@@ -339,12 +339,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         parseJSON: function(json){
             var self = this;
             _.each(_.keys(json), function(key){
-                if (key == "cellsMin" || key == "cellsMax" || key == "numCells") return;
                 self.set(key, json[key], {silent:true});
             });
-            this.checkForMatrixExpansion(this.sparseCells, new THREE.Vector3(json.cellsMax.x, json.cellsMax.y, json.cellsMax.z),
-                new THREE.Vector3(json.cellsMin.x, json.cellsMin.y, json.cellsMin.z));
-            this.trigger("change");
         },
 
         parseCellsJSON: function(sparseCells){

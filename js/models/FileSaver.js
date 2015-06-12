@@ -60,7 +60,7 @@ define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
         lattice.clearCells();
         var sparseCells = data.assembly.sparseCells;
         lattice.parseJSON(_.omit(data.assembly, sparseCells), false);
-        if (sparseCells) lattice.parseCellsJSON(sparseCells);
+        if (sparseCells) lattice._updateLatticeType(sparseCells);
     }
 
     function loadUser(data){
