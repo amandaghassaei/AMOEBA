@@ -336,13 +336,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //save/load
 
-        parseJSON: function(json){
-            var self = this;
-            _.each(_.keys(json), function(key){
-                self.set(key, json[key], {silent:true});
-            });
-        },
-
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){

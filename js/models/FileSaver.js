@@ -59,7 +59,7 @@ define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
         }
         lattice.clearCells();
         var sparseCells = data.assembly.sparseCells;
-        lattice.parseJSON(_.omit(data.assembly, sparseCells), false);
+        _setData(lattice, _.omit(data.assembly, "sparseCells"), false);
         if (sparseCells) lattice._updateLatticeType(sparseCells);
     }
 
@@ -67,14 +67,11 @@ define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
         _setData(data, false);
     }
 
-    function _setData(data, silent){
-        if (silent === undefined) silent = false;
-        _.each(_.keys(data.assembly), function(key){
-            lattice.set(key, data.assembly[key], {silent:silent});
+    function _setData(object, data, silent){
+        _.each(_.keys(data), function(key){
+            object.set(key, data[key], {silent:true});
         });
-        _.each(_.keys(data.cam), function(key){
-            cam.set(key, data.assembler[key]);
-        });
+        if (!silent || silent === undefined) object.trigger("change");
     }
 
     return {//return public methods
