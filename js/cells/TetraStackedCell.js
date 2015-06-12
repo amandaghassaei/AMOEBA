@@ -12,8 +12,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     unitGeo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,Math.sqrt(3/8)-2/Math.sqrt(6)));
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI));
 
-    function TetraStackedCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function TetraStackedCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     TetraStackedCell.prototype = Object.create(DMACell.prototype);
 

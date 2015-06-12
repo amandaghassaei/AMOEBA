@@ -7,11 +7,11 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
-    function DMASuperCell(index, superCell){//supercells might have supercells
+    function DMASuperCell(json, superCell){//supercells might have supercells
 
         this.cells = true;//flag for now
 
-        DMACell.call(this, index, superCell);
+        DMACell.call(this, json, superCell);
 
         var material = this.getMaterial();
         var range = material.dimensions || appState.get("superCellRange");

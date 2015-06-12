@@ -8,8 +8,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    function CubeCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function CubeCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     CubeCell.prototype = Object.create(DMACell.prototype);
 

@@ -16,8 +16,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return geo;
     }
 
-    GIKSuperCell = function(index, superCell){
-        DMASuperCell.call(this, index, superCell);
+    GIKSuperCell = function(json, superCell){
+        DMASuperCell.call(this, json, superCell);
     };
     GIKSuperCell.prototype = Object.create(DMASuperCell.prototype);
 

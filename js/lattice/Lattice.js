@@ -50,14 +50,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //lattice type
 
-        _updateLatticeType: function(loadingFromFile){//do not clear cells if loading from file (cells array contains important metadata)
+        _updateLatticeType: function(){//do not clear cells if loading from file (cells array contains important metadata)
 
             this._setToDefaultsSilently();
             this._setDefaultCellMode();
             this._loadMaterialClass();
 
-            if (loadingFromFile === undefined) loadingFromFile = false;
-            if (loadingFromFile) console.warn('loading from file');
             this.clearCells();
 
             if (this._undo) this._undo();
@@ -92,13 +90,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 _.extend(self, subclassObject);
                 self._initLatticeType();
 
+                //todo parse cells?
                 //copy over cells to new lattice type
                 var cells = self.cells;
                 self._loopCells(cells, function(cell, x, y, z){
                     if (!cell) return;
                     var index = _.clone(cell.index);
                     if (cell.destroy) cell.destroy();
-                    self.makeCellForLatticeType(index, function(newCell){
+                    self.makeCellForLatticeType({index:index}, function(newCell){
                         cells[x][y][z] = newCell;
                     });
                 });

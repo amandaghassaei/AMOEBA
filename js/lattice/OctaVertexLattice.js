@@ -38,9 +38,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return Math.sqrt(2)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices, callback){
+        makeCellForLatticeType: function(json, callback){
             require(['octaVertexCell'], function(OctaVertexCell){
-                var cell = new OctaVertexCell(indices);
+                var cell = new OctaVertexCell(json);
                 if (callback) callback(cell);
             });
         },

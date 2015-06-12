@@ -6,8 +6,8 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'octaFaceCell'],
     function(_, THREE, three, lattice, appState, OctaFaceCell){
 
-    function OctaEdgeCell(index, superCell){
-        OctaFaceCell.call(this, index, superCell);
+    function OctaEdgeCell(json, superCell){
+        OctaFaceCell.call(this, json, superCell);
     }
     OctaEdgeCell.prototype = Object.create(OctaFaceCell.prototype);
 

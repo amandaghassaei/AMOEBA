@@ -45,9 +45,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 2/Math.sqrt(6)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices, callback){
+        makeCellForLatticeType: function(json, callback){
             require(['octaFaceCell'], function(OctaFaceCell){
-                var cell = new OctaFaceCell(indices);
+                var cell = new OctaFaceCell(json);
                 if (callback) callback(cell);
             });
         },

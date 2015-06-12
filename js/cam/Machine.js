@@ -70,7 +70,7 @@ Machine.prototype.setScale = function(scale){
 
 Machine.prototype._makeStockCell = function(){
     if (globals.lattice.makeSuperCell) return globals.lattice.makeSuperCell();
-    return globals.lattice.makeCellForLatticeType(null, globals.lattice.get("scale"));
+    return globals.lattice.makeCellForLatticeType({}, globals.lattice.get("scale"));
 };
 
 Machine.prototype.updateCellType = function(){

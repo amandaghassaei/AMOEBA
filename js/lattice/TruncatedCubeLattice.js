@@ -39,9 +39,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return Math.sqrt(2)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices, callback){
+        makeCellForLatticeType: function(json, callback){
             require(['truncatedCubeCell'], function(TruncatedCubeCell){
-                var cell = new TruncatedCubeCell(indices);
+                var cell = new TruncatedCubeCell(json);
                 if (callback) callback(cell);
             });
         },

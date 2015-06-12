@@ -47,9 +47,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 2/Math.sqrt(6)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(indices, callback){
+        makeCellForLatticeType: function(json, callback){
             require(['tetraVertexCell'], function(TetraVertexCell){
-                var cell = new TetraVertexCell(indices);
+                var cell = new TetraVertexCell(json);
                 if (callback) callback(cell);
             });
         },

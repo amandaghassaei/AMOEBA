@@ -22,7 +22,7 @@ function Assembler(){
 
 Assembler.prototype._buildStock = function(){
     if (globals.lattice.makeSuperCell) return globals.lattice.makeSuperCell();
-    return globals.lattice.makeCellForLatticeType(null);
+    return globals.lattice.makeCellForLatticeType({});
 };
 
 Assembler.prototype._positionStockRelativeToEndEffector = function(){

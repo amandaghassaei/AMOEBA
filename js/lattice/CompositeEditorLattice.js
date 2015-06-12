@@ -20,7 +20,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         }),
 
         __initialize: function(options, callback){
-            if (!options.id || options.id == "") this.set("id", this.cid);
+            if (!options.id || options.id == "") this.set("id", "super" + this.cid);
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
             if (callback) callback(this);
         },
@@ -29,18 +29,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var self = this;
             require([subclass], function(subclassObject){
                 _.extend(self, subclassObject);
-
-//                //copy over cells to new lattice type
-//                var cells = self.cells;
-//                self._loopCells(cells, function(cell, x, y, z){
-//                    if (!cell) return;
-//                    var index = _.clone(cell.index);
-//                    if (cell.destroy) cell.destroy();
-//                    self.makeCellForLatticeType(index, function(newCell){
-//                        cells[x][y][z] = newCell;
-//                    });
-//                });
-//                three.render();
             });
         },
 

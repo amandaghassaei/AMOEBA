@@ -8,12 +8,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
-    function DMACell(index, superCell, material, stopSetMode){
+    function DMACell(json, superCell){
 
-        if (index) this.index = new THREE.Vector3(index.x, index.y, index.z);
+        if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
 
-        this.material = material || lattice.get("materialType");
+        this.material = json.material || lattice.get("materialType");
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -354,9 +354,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     DMACell.prototype.toJSON = function(){
         var data = {
-            index:this.index//todo get rid of this and calculate from min and max
+            material: this.material
         };
-        if (this.parts) data.parts = this.parts;
+        if (globals.materials.compositeMaterials[this.material]) return data;//material definition in material composites
+        if (this.cells) data.cells = this.cells;
         return data;
     };
 

@@ -10,8 +10,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
-    function OctaFaceCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function OctaFaceCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     OctaFaceCell.prototype = Object.create(DMACell.prototype);
 

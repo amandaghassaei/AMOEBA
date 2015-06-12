@@ -50,8 +50,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     ];
     unitGeo.computeFaceNormals();
 
-    function TruncatedCubeCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function TruncatedCubeCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     TruncatedCubeCell.prototype = Object.create(DMACell.prototype);
 

@@ -97,8 +97,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'truncatedCu
     ];
     unitGeo.computeFaceNormals();
 
-    function KelvinCell(index, superCell){
-        TruncatedCubeCell.call(this, index, superCell);
+    function KelvinCell(json, superCell){
+        TruncatedCubeCell.call(this, json, superCell);
     }
     KelvinCell.prototype = Object.create(TruncatedCubeCell.prototype);
     

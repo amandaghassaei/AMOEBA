@@ -6,8 +6,8 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
     function(_, THREE, three, lattice, appState, CubeCell){
 
-    function GIKCell(index, superCell){
-        CubeCell.call(this, index, superCell);
+    function GIKCell(json, superCell){
+        CubeCell.call(this, json, superCell);
     }
     GIKCell.prototype = Object.create(CubeCell.prototype);
 

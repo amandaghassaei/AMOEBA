@@ -9,8 +9,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/4));
 
-    function OctaRotEdgeCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function OctaRotEdgeCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     OctaRotEdgeCell.prototype = Object.create(DMACell.prototype);
 

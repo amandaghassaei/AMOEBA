@@ -8,8 +8,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
 
-    function OctaVertexCell(index, superCell){
-        DMACell.call(this, index, superCell);
+    function OctaVertexCell(json, superCell){
+        DMACell.call(this, json, superCell);
     }
     OctaVertexCell.prototype = Object.create(DMACell.prototype);
 

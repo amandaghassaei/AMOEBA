@@ -3,26 +3,26 @@
  */
 
 
-define(['underscore', 'fileSaverLib'], function(_, saveAs){
+define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
 
     function _saveFile(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + extension);
     }
 
-    function save(name){
-        if (!name || name == "" || name == undefined) name = "file";
-        var data = JSON.stringify({
-            lattice:_getLatticeDataToSave(),
-            assembler:_getAssemblerDataToSave()
-        });
-        _saveFile(data, name, ".json");
-    }
+//    function save(name){
+//        if (!name || name == "" || name == undefined) name = "file";
+//        var data = JSON.stringify({
+//            lattice:_getLatticeDataToSave(),
+////            assembler:_getAssemblerDataToSave()
+//        });
+//        _saveFile(data, name, ".json");
+//    }
 
-    function saveLattice(name){
-        if (!name || name == "" || name == undefined) name = "lattice";
+    function save(name){
+        if (!name || name == "" || name == undefined) name = "DM Assembly";
         var data = JSON.stringify({
-            lattice:_getLatticeDataToSave()
+            assembly:_getLatticeDataToSave()
         });
         _saveFile(data, name, ".json");
     }
@@ -49,14 +49,18 @@ define(['underscore', 'fileSaverLib'], function(_, saveAs){
     }
 
     function _getLatticeDataToSave(){
-        return globals.lattice.attributes;
+        return lattice.getSaveJSON();
     }
 
-    function loadFile(data){//todo make this better
-        globals.lattice.getUItarget().clearCells();
-        _setData(data, false);
-        globals.lattice._updateLatticeType(true);
-        globals.lattice.trigger("change:scale");
+    function loadFile(data){//parsed json todo make this better - load composite
+        if (!data.assembly){
+            console.warn("no assembly in this file");
+            return;
+        }
+        lattice.clearCells();
+        var sparseCells = data.assembly.sparseCells;
+        lattice.parseJSON(_.omit(data.assembly, sparseCells), false);
+        if (sparseCells) lattice.parseCellsJSON(sparseCells);
     }
 
     function loadUser(data){
@@ -64,20 +68,21 @@ define(['underscore', 'fileSaverLib'], function(_, saveAs){
     }
 
     function _setData(data, silent){
-        _.each(_.keys(data.lattice), function(key){
-            globals.lattice.set(key, data.lattice[key], {silent:silent});
+        if (silent === undefined) silent = false;
+        _.each(_.keys(data.assembly), function(key){
+            lattice.set(key, data.assembly[key], {silent:silent});
         });
-        _.each(_.keys(data.assembler), function(key){
-            globals.cam.set(key, data.assembler[key]);
+        _.each(_.keys(data.cam), function(key){
+            cam.set(key, data.assembler[key]);
         });
     }
 
     return {//return public methods
+//        save: save,
         save: save,
-        saveLattice: saveLattice,
 //        saveAssembler: saveAssembler,
-        saveUser: saveUser,
-        loadFile: loadFile,
-        loadUser: loadUser
+//        saveUser: saveUser,
+        loadFile: loadFile
+//        loadUser: loadUser
     }
 });
