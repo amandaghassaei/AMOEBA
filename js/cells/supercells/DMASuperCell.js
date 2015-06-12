@@ -38,7 +38,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                             if (material.sparseCells[x][y][z].material) {
                                 cellMaterial = material.sparseCells[x][y][z].material;
                                 this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
-                                    cells[x][y][z] = cell;
+                                    var index = cell.getIndex();
+                                    console.log(index);
+                                    cells[index.x][index.y][index.z] = cell;
                                 });
                             } else console.warn("no material for composite cell definition subcell");
                         }//else no cell in this spot
@@ -54,7 +56,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
-        return null;//override in subclasses
+        var subclassFile = lattice.getCellSubclassFile();
+        if (json.material && json.material.substr(0,5) == "super") subclassFile = "compositeCell";
+        var self = this;
+        require([subclassFile], function(CellSubclass){
+            var cell = new CellSubclass(json, self);
+            if (callback) callback(cell);
+        });
     };
 
     DMASuperCell.prototype._getMeshName = function(){
