@@ -11,9 +11,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require(['squareBaseplane'], function(SquareBasePlane){
                 globals.basePlane = new SquareBasePlane();
             });
-            require(['cubeHighlighter'], function(CubeHighlighter){
+            require([this.getHighlighterFile()], function(CubeHighlighter){
                 globals.highlighter = new CubeHighlighter();
             });
+        },
+
+        getHighlighterFile: function(){
+            return "cubeHighlighter";
         },
 
         getIndexForPosition: function(absPosition){

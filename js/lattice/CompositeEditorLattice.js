@@ -76,7 +76,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),
-                dimensions: new THREE.Vector3().subVectors(this.get("cellsMax"), this.get("cellsMin"))
+                dimensions: this.calculateBoundingBox()
             };
             globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
         },

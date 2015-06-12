@@ -11,9 +11,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require(['octaBaseplane'], function(OctaBasePlane){
                 globals.basePlane = new OctaBasePlane();
             });
-            require(['octaFaceHighlighter'], function(OctaFaceHighlighter){
+            require([this.getHighlighterFile()], function(OctaFaceHighlighter){
                 globals.highlighter = new OctaFaceHighlighter();
             });
+        },
+
+        getHighlighterFile: function(){
+            return "octaFaceHighlighter";
         },
 
         getIndexForPosition: function(absPosition){

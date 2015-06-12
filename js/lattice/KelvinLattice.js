@@ -12,9 +12,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require(['squareBaseplane'], function(SquareBasePlane){
                 globals.basePlane = new SquareBasePlane();
             });
-            require(['truncatedCubeHighlighter'], function(TruncatedCubeHighlighter){
+            require([this.getHighlighterFile()], function(TruncatedCubeHighlighter){
                 globals.highlighter = new TruncatedCubeHighlighter();
             });
+        },
+
+        getHighlighterFile: function(){
+            return "truncatedCubeHighlighter";
         },
 
         getIndexForPosition: function(absPosition){

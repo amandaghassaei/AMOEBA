@@ -33,6 +33,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
+            this.listenTo(this, "change:materialType", this._materialTypeChanged);
             this.listenTo(this, "change:materialClass", this._loadMaterialClass);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
@@ -108,22 +109,24 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //events
 
-//        _materialTypeChanged: function(){
-//            var materialType = this.get("materialType");
-//            //verify that correct class is in sync
-//            if (materialType.substr(0,5) == "super"){
-//                this.set("materialClass", "compositeMaterials");
-//                return;
-//            } else {
-//                var materialClass = null;
-//                _.each(_.keys(plist.allMaterials), function(key){
-//                    if (_.keys(plist.allMaterials[key]).indexOf(materialType) > -1) materialClass = key;
-//                });
-//            }
-//            console.log(materialClass);
-//            if (!materialClass) console.warn("material class not found for material " + materialType);
-//            else this.set("materialClass", materialClass);
-//        },
+        _materialTypeChanged: function(){
+            var materialType = this.get("materialType");
+            //verify that correct class is in sync
+            if (materialType.substr(0,5) != "super") {
+                if (this.previous("materialType").substr(0,5) != "super") return;
+                //re init highlighter
+                require([this.getHighlighterFile()], function(HighlighterClass){
+                    globals.highlighter = new HighlighterClass();
+                });
+                return;
+            }
+
+            appState.set("superCellRange", globals.materials.compositeMaterials[materialType].dimensions.clone());
+            appState.set("superCellIndex", new THREE.Vector3(0,0,0));
+            require(['superCellHighlighter'], function(SuperCellHighlighter){
+                globals.highlighter = new SuperCellHighlighter();
+            });
+        },
 
         _loadMaterialClass: function(){
             var materialClass = this.get("materialClass");

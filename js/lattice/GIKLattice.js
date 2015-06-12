@@ -11,11 +11,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             require(['squareBaseplane'], function(SquareBasePlane){
                 globals.basePlane = new SquareBasePlane();
             });
-            require(['superCellHighlighter'], function(superCellHighlighter){
+            require([this.getHighlighterFile()], function(superCellHighlighter){
                 globals.highlighter = new superCellHighlighter();
             });
             appState.set("superCellRange", new THREE.Vector3(4, 1, 1));
 
+        },
+
+        getHighlighterFile: function(){
+            return "superCellHighlighter";
         },
 
         getIndexForPosition: function(absPosition){

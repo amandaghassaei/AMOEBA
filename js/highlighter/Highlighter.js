@@ -23,6 +23,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 }));
 
             three.sceneAdd(this.mesh);
+            this._setScale();
             this.hide();
 
             //bind events
@@ -105,7 +106,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             }
             this.position = params.position;
             this.direction = params.direction;
-            this._setScale();
             this._setPosition(params.position, params.direction);//position of center point
             this._setRotation(params.direction);
 
