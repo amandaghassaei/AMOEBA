@@ -47,11 +47,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return Math.sqrt(2)/2 + 2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(json, callback){
-            require(['octaRotEdgeCell'], function(OctaRotEdgeCell){
-                var cell = new OctaRotEdgeCell(json);
-                if (callback) callback(cell);
-            });
+        getCellSubclassFile: function(){
+            return "octaRotEdgeCell";
         },
 
         _undo: function(){//remove all the mixins

@@ -42,11 +42,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return Math.sqrt(2)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(json, callback){
-            require(['octaVertexCell'], function(OctaVertexCell){
-                var cell = new OctaVertexCell(json);
-                if (callback) callback(cell);
-            });
+        getCellSubclassFile: function(){
+            return "octaVertexCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

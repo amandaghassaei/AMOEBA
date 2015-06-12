@@ -92,6 +92,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //add/remove cells
 
+        makeCellForLatticeType: function(json, callback){
+            require([this.getCellSubclassFile()], function(CellSubclass){
+                var cell = new CellSubclass(json);
+                if (callback) callback(cell);
+            });
+        },
+
         addCellsInRange: function(range){//add a block of cells (extrude)
             this.checkForMatrixExpansion(this.sparseCells, range.max, range.min);
 

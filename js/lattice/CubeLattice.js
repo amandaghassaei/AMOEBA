@@ -42,11 +42,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 1+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(json, callback){
-            require(['cubeCell'], function(CubeCell){
-                var cell = new CubeCell(json);
-                if (callback) callback(cell);
-            });
+        getCellSubclassFile: function(){
+            return "cubeCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

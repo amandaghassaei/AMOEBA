@@ -44,11 +44,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 1.28*(1+2*cellSeparation);
         },
 
-        makeCellForLatticeType: function(json, callback){
-            require(['gikSuperCell'], function(GIKSuperCell){
-                var cell = new GIKSuperCell(json);
-                if (callback) callback(cell);
-            });
+        getCellSubclassFile: function(){
+            return "gikSuperCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later

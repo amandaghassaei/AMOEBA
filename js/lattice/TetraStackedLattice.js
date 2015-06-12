@@ -49,11 +49,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 2/Math.sqrt(6)+2*cellSeparation;
         },
 
-        makeCellForLatticeType: function(json, callback){
-            require(['tetraStackedCell'], function(TetraStackedCell){
-                var cell = new TetraStackedCell(json);
-                if (callback) callback(cell);
-            });
+        getCellSubclassFile: function(){
+            return "tetraStackedCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
