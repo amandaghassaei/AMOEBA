@@ -341,7 +341,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._loopCells(sparseCells, function(cell, x, y, z, self){
                 if (cell) self.addCellAtIndex((new THREE.Vector3(x, y, z)).add(cellsMin), true, true, cell.material);
             });
-            three.render();//todo in callback
         },
 
         getSaveJSON: function(){

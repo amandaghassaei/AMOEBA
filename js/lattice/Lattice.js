@@ -62,6 +62,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
+            this._bindRenderToNumCells(this.get("numCells"));
             this.clearCells();
 
             if (this._undo) this._undo();
@@ -74,6 +75,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 _.extend(self, subclassObject);
                 self._initLatticeType();
                 if (self.get("cellsMin")) self.parseCellsJSON(cells);
+            });
+        },
+
+        _bindRenderToNumCells: function(numCells){
+            var self = this;
+            if (numCells > 0) this.listenTo(this, "change:numCells", function(){
+                if (self.get("numCells") >= numCells){
+                    self.stopListening(self, "change:numCells");
+                    three.render();
+                }
             });
         },
 
