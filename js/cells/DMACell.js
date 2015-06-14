@@ -26,7 +26,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
             if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
         } else this.hide();//stock cell
 
-        if (!this.cells && ( !superCell || superCell === undefined)) this.setMode();
+        if (!this.cells) this.setMode();
     }
 
 
@@ -61,7 +61,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         var geometry = this._getGeometry();
 
         var meshes = [];
-        var mesh = new THREE.Mesh(geometry, this.getMaterial());
+        var mesh = new THREE.Mesh(geometry, this.getMaterial(true));
         mesh.name = this._getMeshName();
         meshes.push(mesh);
 
@@ -156,7 +156,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         var material;
         if (state) material = globals.materials.deleteMaterial;
-        else  material = this.getMaterial();
+        else  material = this.getMaterial(true);
         if (!material) return;//cell may be deleted by now
         if (this.object3D.children[0].material == material) return;
 
@@ -221,7 +221,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         this.setMode(mode);
     };
 
-    DMACell.prototype.getMaterial = function(){
+    DMACell.prototype.getMaterial = function(returnTHREEObject){
         if (!this.material) return null;
         var materialClass = lattice.get("materialClass");
         if (!globals.materials[materialClass]) {
@@ -246,7 +246,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
         switch(mode) {
             case "supercell":
-                if (!this.superCell) mode = "cell";//top level item
+                if (!this.superCell && !this.cells) mode = "cell";//top level item
                 setVisiblity();
                 break;
             case "cell":

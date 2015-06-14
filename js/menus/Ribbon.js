@@ -61,7 +61,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice'], function($, _, 
         template: _.template('\
             <div class="btn-toolbar">\
                 <div class="btn-group">\
-                  <!--<a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#">Super</a>-->\
+                  <a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#">Super</a>\
                   <a data-type="cell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "cell"){ %> ribbon-selected<% } %>" href="#"><img data-type="cell" src="assets/imgs/cell-sm.png"></a>\
                   <% if (allPartTypes[cellType][connectionType]){ %>\
                   <a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>\

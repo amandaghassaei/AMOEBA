@@ -10,7 +10,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     function CubeCell(json, superCell){
         DMACell.call(this, json, superCell);
-        console.log("init cube cell");
     }
     CubeCell.prototype = Object.create(DMACell.prototype);
 

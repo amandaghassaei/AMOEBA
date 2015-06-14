@@ -8,12 +8,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     CompositeCell = function(json, superCell){
         DMASuperCell.call(this, json, superCell);
-        console.log("initComposite");
     };
     CompositeCell.prototype = Object.create(DMASuperCell.prototype);
 
     CompositeCell.prototype._getGeometry = function(){
-        var dimensions = appState.get("superCellRange");
+        var dimensions = globals.materials.compositeMaterials[this.material].dimensions;
         var geo = new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z);
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(dimensions.x/2-0.5, dimensions.y/2-0.5, dimensions.z/2-0.5));
         return geo;
@@ -27,12 +26,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return wireframe;
     };
 
-    CompositeCell.prototype.getMaterial = function(){
+    CompositeCell.prototype.getMaterial = function(returnTHREEObject){
         if (!this.material) return null;
         var material = globals.materials.compositeMaterials[this.material];
         if (!material){
             console.warn("no material "+ this.material + " found");
             return null;
+        }
+        if (returnTHREEObject){
+            if (material.material) return material.material;
+            else {
+                material.material = new THREE.MeshLambertMaterial({color:material.color, shading:THREE.FlatShading});
+                return material.material;
+            }
         }
         return material;
     };

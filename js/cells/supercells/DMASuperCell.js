@@ -15,9 +15,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
         var material = this.getMaterial();
         var range = material.dimensions || appState.get("superCellRange");
-        this.cells = this._makeChildCells(range, this.getMaterial());
+        this.cells = this._makeChildCells(range, material);
 
-        if (!superCell || superCell === undefined) this.setMode(null, function(){
+        DMACell.prototype.setMode.call(this, null, function(){
             three.conditionalRender();
         });//don't pass a call down to children again
     }
@@ -59,7 +59,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
         var subclassFile = lattice.getCellSubclassFile();
         if (json.material && json.material.substr(0,5) == "super") subclassFile = "compositeCell";
-        console.log(subclassFile);
         var self = this;
         require([subclassFile], function(CellSubclass){
             var cell = new CellSubclass(json, self);
@@ -100,6 +99,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype._loopCells = function(callback){
+        console.log(this.cells);
         var cells = this.cells;
         if (!cells || cells === undefined) return;
         for (var x=0;x<cells.length;x++){

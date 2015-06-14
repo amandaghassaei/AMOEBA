@@ -14,7 +14,7 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     DMAPart.prototype._buildMesh = function(){
-        var mesh = this._translatePart(this._rotatePart(new THREE.Mesh(this._getGeometry(), this.getMaterial())));
+        var mesh = this._translatePart(this._rotatePart(new THREE.Mesh(this._getGeometry(), this.getMaterial(true))));
         mesh.name = "part";
         return mesh;
     };
@@ -27,8 +27,8 @@ define(['underscore', 'three'], function(_, THREE){
         return mesh;
     };
 
-    DMAPart.prototype.getMaterial = function(){
-        return this.parentCell.getMaterial();
+    DMAPart.prototype.getMaterial = function(returnTHREEObject){
+        return this.parentCell.getMaterial(returnTHREEObject);
     };
 
     DMAPart.prototype.setMaterial = function(material){

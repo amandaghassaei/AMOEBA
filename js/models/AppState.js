@@ -87,10 +87,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
         },
 
         _updateCellMode: function(currentTab){
-            if (currentTab == "lattice" || currentTab == "import") this.set("cellMode", "cell");
+//            if (currentTab == "lattice" || currentTab == "import") this.set("cellMode", "cell");
             //else if (currentTab == "import") this.set("cellMode", "cell");
             //else if (currentTab == "sketch") this.set("cellMode", "cell");
-            else if (currentTab == "part") this.set("cellMode", "part");
+            if (currentTab == "part") this.set("cellMode", "part");
         },
 
         _navChanged: function(){
