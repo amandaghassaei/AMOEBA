@@ -65,6 +65,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
             if (!plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
+                var currentMode = appState.get("cellMode");
+                if (currentMode == "cell" || currentMode == "supercell") return;
                 appState.set("cellMode", "cell");
             }
         },

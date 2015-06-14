@@ -13,7 +13,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     CompositeCell.prototype._getGeometry = function(){
         var dimensions = globals.materials.compositeMaterials[this.material].dimensions;
-        var geo = new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z);
+        var geo = new THREE.BoxGeometry(dimensions.x*lattice.xScale(), dimensions.y*lattice.yScale(), dimensions.z*lattice.zScale());
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(dimensions.x/2-0.5, dimensions.y/2-0.5, dimensions.z/2-0.5));
         return geo;
     };
