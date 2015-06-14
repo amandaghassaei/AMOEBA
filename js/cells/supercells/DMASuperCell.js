@@ -16,8 +16,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         var material = this.getMaterial();
         var range = material.dimensions || appState.get("superCellRange");
         this.cells = this._makeChildCells(range, this.getMaterial());
-    
-        if (!superCell || superCell === undefined) this.setMode();//don't pass a call down to children again
+
+        if (!superCell || superCell === undefined) this.setMode(null, function(){
+            three.conditionalRender();
+        });//don't pass a call down to children again
     }
     DMASuperCell.prototype = Object.create(DMACell.prototype);
 
@@ -39,7 +41,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                                 cellMaterial = material.sparseCells[x][y][z].material;
                                 this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
                                     var index = cell.getIndex();
-                                    console.log(index);
                                     cells[index.x][index.y][index.z] = cell;
                                 });
                             } else console.warn("no material for composite cell definition subcell");
@@ -58,6 +59,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
         var subclassFile = lattice.getCellSubclassFile();
         if (json.material && json.material.substr(0,5) == "super") subclassFile = "compositeCell";
+        console.log(subclassFile);
         var self = this;
         require([subclassFile], function(CellSubclass){
             var cell = new CellSubclass(json, self);

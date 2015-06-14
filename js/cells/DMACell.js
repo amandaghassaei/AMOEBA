@@ -241,7 +241,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     DMACell.prototype.setMode = function(mode, callback){
 
-        if (mode === undefined) mode = appState.get("cellMode");
+        if (!mode || mode === undefined) mode = appState.get("cellMode");
         var self = this;
 
         switch(mode) {
@@ -284,7 +284,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
                 callback();
                 return;
             }
-            three.conditionalRender();
+            if (!self.superCell) three.conditionalRender();
         }
     };
 

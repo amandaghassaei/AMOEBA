@@ -21,6 +21,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                     opacity:0.4,
                     color:0xffffff
                 }));
+            if (this._makeWireframe) this._makeWireframe();
 
             three.sceneAdd(this.mesh);
             this._setScale();

@@ -18,6 +18,14 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             return new THREE.BoxGeometry(lattice.xScale(),lattice.yScale(),lattice.zScale());
         },
 
+        _makeWireframe: function(mesh){
+//            var wireframe = new THREE.BoxHelper(mesh);
+//            wireframe.material.color.set(0x000000);
+//            wireframe.matrixWorld = mesh.matrixWorld;
+//            wireframe.matrixAutoUpdate = true;
+//            mesh.add(wireframe);
+        },
+
         _setScale: function(){
             this.mesh.scale.set(appState.get("superCellRange").x, appState.get("superCellRange").y,
                 appState.get("superCellRange").z);
