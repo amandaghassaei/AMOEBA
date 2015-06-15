@@ -31,6 +31,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
         },
 
         _latticeToComposite: function(e){
+            lattice.setToCompositeMode(null, lattice.getCompositeData());
+            lattice.clearCells();
             e.preventDefault();
         },
 

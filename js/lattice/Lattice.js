@@ -253,6 +253,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
         },
 
+        getCompositeData: function(){
+            return {
+                cellsMin: this.get("cellsMin").clone(),
+                cellsMax: this.get("cellsMax").clone(),
+                sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
+                numCells: this.get("numCells")
+            };
+        },
+
         setToCompositeMode: function(id, data){
             var self = this;
             require(['compositeEditorLattice'], function(CompositeEditorLattice){
