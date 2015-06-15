@@ -99,7 +99,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     };
 
     DMASuperCell.prototype._loopCells = function(callback){
-        console.log(this.cells);
         var cells = this.cells;
         if (!cells || cells === undefined) return;
         for (var x=0;x<cells.length;x++){
