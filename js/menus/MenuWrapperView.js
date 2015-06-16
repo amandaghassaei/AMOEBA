@@ -121,9 +121,10 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             newVal = parseFloat(newVal);
 
             if (key){
-                var value = _.clone(this._getPropertyOwner($target).get(property));
+                var value = this._getPropertyOwner($target).get(property).clone();
                 value[key] = newVal;
                 this._getPropertyOwner($target).set(property, value);
+                return;
             }
             this._getPropertyOwner($target).set(property, newVal);
         },

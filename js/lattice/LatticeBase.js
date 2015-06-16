@@ -200,7 +200,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     if (material.dimensions){
                         var subCellMax = (new THREE.Vector3(x, y, z)).add(material.dimensions);
                         dimVector.max(subCellMax);
-                        console.log(dimVector);
                     }
                 }
             });

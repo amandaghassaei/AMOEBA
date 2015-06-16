@@ -123,6 +123,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return;
             }
 
+            //composite material
             appState.set("superCellRange", globals.materials.compositeMaterials[materialType].dimensions.clone());
             appState.set("superCellIndex", new THREE.Vector3(0,0,0));
             require(['superCellHighlighter'], function(SuperCellHighlighter){

@@ -79,6 +79,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 <span><%= materials.compositeMaterials[key].name %><a data-id="<%= key %>" class="editComposite">Settings...<a/></span></div>\
             </label>\
             <% }); %><br/>\
+            <% if (_.keys(materials.compositeMaterials).length > 0) { %>\
+            Offset (xyz): &nbsp;&nbsp;<input data-property="superCellIndex" data-key="x" value="<%= superCellIndex.x %>" placeholder="X" class="form-control intInput appState" type="text">\
+                &nbsp;<input data-property="superCellIndex" data-key="y" value="<%= superCellIndex.y %>" placeholder="Y" class="form-control intInput appState" type="text">\
+                &nbsp;<input data-property="superCellIndex" data-key="z" value="<%= superCellIndex.z %>" placeholder="Z" class="form-control intInput appState" type="text"><br/><br/>\
+            <% } %>\
             <a id="navToCompositeMenu" href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\
             <a id="compositeFromLattice" href="#" class="btn btn-block btn-lg btn-default">New Composite From Current Assembly</a><br/>\
             <% } %>\

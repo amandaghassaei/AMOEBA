@@ -34,7 +34,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             cellsVisible: true,
 
             superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds
-            superCellRange: new THREE.Vector3(4,1,1),
+            superCellRange: new THREE.Vector3(1,1,1),
 
             realisticColorScheme: false,
 
@@ -135,7 +135,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             } else this.downKeys[e.keyCode] = false;
 
     //        console.log(e);
-    //        console.log(e.keyCode);
+//            console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
@@ -165,6 +165,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
                         } else {
                             globals.fileSaver.save();
                         }
+                    } else {
+                        if (state) this.set("superCellIndex", this._incrementSuperCellIndex("y", this.get("superCellIndex").clone()));
                     }
                     break;
                 case 79://o open
@@ -192,27 +194,37 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
                         this.set("superCellRange", range);
                     }
                     break;
-                case 81://q - increase supercell index
-                    if (this.lattice.get("connectionType") != "gik") break;
-                    if (state) {
-                        var index = this.get("superCellIndex").clone();
-                        index.x += 1;
-                        if (index.x > this.get("superCellRange").x-1) index.x = 0;
-                        this.set("superCellIndex", index);
-                    }
+                case 87://w - increase supercell index
+                    console.log(this.get("superCellIndex"));
+                    if (state) this.set("superCellIndex", this._incrementSuperCellIndex("x", this.get("superCellIndex").clone()));
+                    break;
+                case 81://q - decrease supercell index
+                    if (state) this.set("superCellIndex", this._decrementSuperCellIndex("x", this.get("superCellIndex").clone()));
                     break;
                 case 65://a - decrease supercell index
-                    if (this.lattice.get("connectionType") != "gik") break;
-                    if (state) {
-                        var index = this.get("superCellIndex").clone();
-                        index.x -= 1;
-                        if (index.x < 0) index.x = this.get("superCellRange").x-1;
-                        this.set("superCellIndex", index);
-                    }
+                    if (state) this.set("superCellIndex", this._decrementSuperCellIndex("y", this.get("superCellIndex").clone()));
+                    break;
+                case 88://x - increase supercell index
+                    if (state) this.set("superCellIndex", this._incrementSuperCellIndex("z", this.get("superCellIndex").clone()));
+                    break;
+                case 90://z - decrease supercell index
+                    if (state) this.set("superCellIndex", this._decrementSuperCellIndex("z", this.get("superCellIndex").clone()));
                     break;
                 default:
                     break;
             }
+        },
+
+        _incrementSuperCellIndex: function(key, object){
+            object[key] += 1;
+            if (object[key] > this.get("superCellRange")[key]-1) object[key] = 0;
+            return object;
+        },
+
+        _decrementSuperCellIndex: function(key, object){
+            object[key] -= 1;
+            if (object[key] < 0) object[key] = this.get("superCellRange")[key]-1;
+            return object;
         },
 
         _handleScroll: function(e){//disable two finger swipe back
