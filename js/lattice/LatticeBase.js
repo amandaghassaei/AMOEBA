@@ -125,6 +125,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         addCellAtIndex: function(index, noRender, noCheck, material){//no render no check from fill/load
+            console.log(this.sparseCells);
 
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, index, index);
 
@@ -368,6 +369,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return cellsMax;
             }
             if (xTrim) {
+                if (cells.length == 1) return null;
                 if (fromFront) {
                     cellsMin.x += 1;
                     cells.shift();
@@ -388,12 +390,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 }
                 _.each(cells, function(cellLayer){
                     if (yTrim) {
+                        if (cellLayer.length == 1) return null;
                         if (fromFront) cellLayer.shift();
                         else cellLayer.pop();
                     }
                     if (!zTrim) return;
                     _.each(cellLayer, function(cellColumn){
                         if (zTrim) {
+                            if (cellColumn.length == 1) return null;
                             if (fromFront) cellColumn.shift();
                             else cellColumn.pop();
                         }
