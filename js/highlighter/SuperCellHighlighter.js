@@ -19,6 +19,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _makeWireframe: function(mesh){
+//            console.log(mesh);
 //            var wireframe = new THREE.BoxHelper(mesh);
 //            wireframe.material.color.set(0x000000);
 //            wireframe.matrixWorld = mesh.matrixWorld;
