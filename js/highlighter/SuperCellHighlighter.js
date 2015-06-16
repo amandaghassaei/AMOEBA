@@ -37,12 +37,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _setRotation: function(direction){
-            if (!this.highlightedObject) return;
-            var index = this.highlightedObject.getAbsoluteIndex();
 
-            if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1))
-                this.mesh.rotation.set(0, 0, Math.PI/2);
-            else this.mesh.rotation.set(0,0,0);
+            if (lattice.connectionType == "gik"){
+                if (!this.highlightedObject) return;
+                var index = this.highlightedObject.getAbsoluteIndex();
+
+                if ((index.z%2 == 0 && Math.abs(direction.z) > 0.9) || (index.z%2 != 0 && Math.abs(direction.z) < 0.1))
+                    this.mesh.rotation.set(0, 0, Math.PI/2);
+                else this.mesh.rotation.set(0,0,0);
+            }
 
             var superCellIndex = appState.get("superCellIndex");
             this.mesh.translateX(-(superCellIndex.x + 0.5 - this.mesh.scale.x/2)*lattice.xScale());

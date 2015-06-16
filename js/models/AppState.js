@@ -195,7 +195,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
                     }
                     break;
                 case 87://w - increase supercell index
-                    console.log(this.get("superCellIndex"));
                     if (state) this.set("superCellIndex", this._incrementSuperCellIndex("x", this.get("superCellIndex").clone()));
                     break;
                 case 81://q - decrease supercell index
