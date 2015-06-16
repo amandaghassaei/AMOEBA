@@ -19,17 +19,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             color: null
         }),
 
+        __bindEvents: function(){
+        },
+
         __initialize: function(options, callback){
             if (!options.id || options.id == "") this.set("id", "super" + this.cid);
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
             if (callback) callback(this);
-        },
-
-        initLatticeSubclass: function(subclass){
-            var self = this;
-            require([subclass], function(subclassObject){
-                _.extend(self, subclassObject);
-            });
         },
 
 

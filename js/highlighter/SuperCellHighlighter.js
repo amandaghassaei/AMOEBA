@@ -38,7 +38,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         _setRotation: function(direction){
 
-            if (lattice.connectionType == "gik"){
+            if (lattice.get("connectionType") == "gik"){
                 if (!this.highlightedObject) return;
                 var index = this.highlightedObject.getAbsoluteIndex();
 

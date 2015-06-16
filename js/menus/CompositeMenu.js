@@ -4,6 +4,8 @@
 
 define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], function($, _, MenuParentView, plist, lattice, globals){
 
+    var dimensions;
+
     return MenuParentView.extend({
 
         events: {
@@ -20,8 +22,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 console.warn("no composite editor inited");
                 return;
             }
-            this.listenTo(lattice.compositeEditor, "change", this.render);
+            this.listenTo(lattice.compositeEditor, "change", function(){
+                if (lattice.compositeEditor.changedAttributes().numCells !== undefined) dimensions = lattice.compositeEditor.calculateBoundingBox();
+                this.render();
+            });
             this.listenTo(lattice, "change", this.render);
+
+            dimensions = lattice.compositeEditor.calculateBoundingBox();
         },
 
         _changeRandomColor: function(e){
@@ -75,7 +82,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 {
                     materialClass:lattice.get("materialClass"),
                     materialType:lattice.get("materialType"),
-                    dimensions: lattice.compositeEditor.calculateBoundingBox()
+                    dimensions: dimensions
                 });
         },
 
