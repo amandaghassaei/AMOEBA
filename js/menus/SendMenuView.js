@@ -2,7 +2,7 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice'], function($, _, MenuParentView, plist, cam, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
 
     return MenuParentView.extend({
 

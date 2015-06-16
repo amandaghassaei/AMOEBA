@@ -22,11 +22,15 @@ define(['three'], function(THREE){
             navAssemble:{
                 assembler:"Assembler",
                 cam: "Process",
-                animate:"Preview",
-                send: "Send"
+                animate:"Preview"
             },
             navComposite:{
                 composite:"Composite Editor"
+            },
+            navComm:{
+                setupComm: "Setup",
+                discovery: "Discovery",
+                send: "Send"
             }
         },
 

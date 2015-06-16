@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu'], functio
 
         _setNavSelection: function(e){
             var navSelection = $(e.target).data("menuId");
-            if (navSelection == "about") {
+            if (navSelection == "about" || navSelection == "navAssemble") {
                 $(e.target).blur();
                 return;
             }
