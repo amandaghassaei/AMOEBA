@@ -14,7 +14,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         DMACell.call(this, json, superCell);
 
         var material = this.getMaterial();
-        var range = material.dimensions || appState.get("superCellRange");
+        var range = (new THREE.Vector3(1,1,1)).add(material.cellsMax).sub(material.cellsMin);
         this.cells = this._makeChildCells(range, material);
 
         DMACell.prototype.setMode.call(this, null, function(){
