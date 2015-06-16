@@ -125,7 +125,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         addCellAtIndex: function(index, noRender, noCheck, material){//no render no check from fill/load
-            console.log(this.sparseCells);
 
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, index, index);
 

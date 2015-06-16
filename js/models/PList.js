@@ -38,7 +38,7 @@ define(['three'], function(THREE){
             kelvin:"Kelvin"
         },
         allConnectionTypes: {
-            octa: {face:"Face", edge:"Edge", edgeRot:"Edge (Rotated)", vertex:"Vertex"},// freeformFace:"Freeform Face"
+            octa: {face:"Face",  edgeRot:"Edge", vertex:"Vertex"},// freeformFace:"Freeform Face"  edge:"Edge",   (Rotated)
             tetra: {stacked: "Stacked"},//vertex: "Vertex"
             cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
@@ -52,25 +52,25 @@ define(['three'], function(THREE){
                 edge: null,
                     edgeRot: {
                     vox: "Snap Voxel (high res)",
-                        voxLowPoly: "Snap Voxel (low res)"
+                    voxLowPoly: "Snap Voxel (low res)"
                 },
-                vertex: {
-                    square:"Square",
-                        xShape:"X"
-                }
+                vertex: null,//{
+//                    square:"Square",
+//                   xShape:"X"
+//                }
             },
             tetra: {vertex: null},
             cube: {face: null,
                 gik: {
                 lego: "Micro LEGO (high res)",
-                    legoLowPoly: "Micro LEGO (low res)"
+                legoLowPoly: "Micro LEGO (low res)"
             }
             },
             truncatedCube: {
-                face: {
-                    square:"Square",
-                        xShape:"X"
-                }
+                face: null,//{
+//                    square:"Square",
+//                    xShape:"X"
+//                }
             },
             kelvin: {face: null}
         },

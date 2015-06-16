@@ -68,6 +68,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             <% } %>\
             <br/>\
             Composite Materials:<br/>\
+            <% if ((cellType == "octa" && connectionType != "vertex") || cellType == "tetra"){ %>\
+            not available for this lattice type\
+            <%  } else { %> \
             <% _.each(_.keys(materials.compositeMaterials), function(key){ %>\
             <label class="radio colorSwatches">\
                 <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
@@ -78,6 +81,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             <% }); %><br/>\
             <a id="navToCompositeMenu" href="#" class="btn btn-block btn-lg btn-default">+ Create New Composite Material</a><br/>\
             <a id="compositeFromLattice" href="#" class="btn btn-block btn-lg btn-default">New Composite From Current Assembly</a><br/>\
+            <% } %>\
             ')
 
     });
