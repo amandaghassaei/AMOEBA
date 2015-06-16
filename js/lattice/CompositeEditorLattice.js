@@ -57,7 +57,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.set("color", makeRandomColor());
         },
 
-        makeNewCompositeMaterial: function(name){
+        makeNewCompositeMaterial: function(name, dimensions){
             if (this.get("numCells") == 0) {
                 console.warn("no cells in this composite");
                 return;
@@ -72,7 +72,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),
-                dimensions: this.calculateBoundingBox()
+                dimensions: dimensions
             };
             globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
         },

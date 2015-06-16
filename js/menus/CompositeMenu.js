@@ -49,7 +49,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                 this._exit();
                 return;
             }
-            lattice.compositeEditor.makeNewCompositeMaterial($("#compositeName").val());
+            lattice.compositeEditor.makeNewCompositeMaterial($("#compositeName").val(), dimensions.clone());
             this._exit();
         },
 
