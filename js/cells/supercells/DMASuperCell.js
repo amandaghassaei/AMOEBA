@@ -40,6 +40,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                         if (material.sparseCells[x][y][z]){
                             if (material.sparseCells[x][y][z].material) {
                                 cellMaterial = material.sparseCells[x][y][z].material;
+                                console.log(cellMaterial);
                                 this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
                                     var index = cell.getIndex();
                                     cells[index.x][index.y][index.z] = cell;

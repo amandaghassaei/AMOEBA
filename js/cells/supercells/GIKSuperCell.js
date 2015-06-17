@@ -43,16 +43,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         if (returnTHREEObject){
             return DMASuperCell.prototype.getMaterial.call(this, returnTHREEObject);
         }
-        return {
-//                name: name,
-            material: this.material,
-//                color: this.get("color"),
-//                altColor: this.get("color"),
-//                numCells: this.get("numCells"),
-            cellsMin: new THREE.Vector3(0,0,0),
-            cellsMax: new THREE.Vector3(this.getLength(), 0, 0),
-            dimensions: new THREE.Vector3(this.getLength()+1, 1, 1)
-        };
+        if (!materials[this.material]) materials[this.material] = {};
+        var length = this.getLength();
+        if (!materials[this.material]["length" + (length+1)]) {
+            materials[this.material]["length" + (length+1)] =
+            {
+                material: this.material,
+                cellsMin: new THREE.Vector3(0,0,0),
+                cellsMax: new THREE.Vector3(length, 0, 0),
+                dimensions: new THREE.Vector3(length+1, 1, 1)
+            };
+        }
+        console.log(materials[this.material]);
+        return materials[this.material]["length" + (length+1)];
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){
