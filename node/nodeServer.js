@@ -4,26 +4,32 @@
 
 
 var serialport = require('serialport');
-SerialPort = serialport.SerialPort;// make a local instance of it
+SerialPort = serialport.SerialPort;// make a local instance
 
 // list serial ports:
 serialport.list(function (err, ports) {
     ports.forEach(function(port) {
         console.log(port.comName);
     });
-    var portName = ports[4].comName;
-    console.log("opening port " + portName);
-    var myPort = new SerialPort(portName, {
-       baudRate: 9600,
-       // look for return and newline at the end of each data packet:
-       parser: serialport.parsers.readline("\r\n")
-    });
-
-    myPort.on('open', onPortOpen);
-    myPort.on('data', onPortData);
-    myPort.on('close', onPortClose);
-    myPort.on('error', onPortError);
 });
+
+//defualts
+var portName = '/dev/cu.usbserial-DA01L12I';
+var baudRate = 9600;
+
+var myPort = new SerialPort(portName, {
+   baudRate: baudRate,
+   parser:serialport.parsers.readline("\n")
+//       parser: serialport.parsers.raw
+});
+
+myPort.on('open', onPortOpen);
+myPort.on('data', onPortData);
+myPort.on('close', onPortClose);
+myPort.on('error', onPortError);
+
+
+
 
 function onPortOpen(){
     console.log("port open");
