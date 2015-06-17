@@ -200,6 +200,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     if (material.dimensions){
                         var subCellMax = (new THREE.Vector3(x, y, z)).add(material.dimensions);
                         dimVector.max(subCellMax);
+                    } else if (cell.getLength){
+                        var subCellMax = (new THREE.Vector3(x, y, z)).add(new THREE.Vector3(cell.getLength()+1, 1, 1));
+                        dimVector.max(subCellMax);
                     }
                 }
             });
@@ -388,14 +391,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 }
                 _.each(cells, function(cellLayer){
                     if (yTrim) {
-                        if (cellLayer.length == 1) return null;
+                        if (cellLayer.length == 1) return;
                         if (fromFront) cellLayer.shift();
                         else cellLayer.pop();
                     }
                     if (!zTrim) return;
                     _.each(cellLayer, function(cellColumn){
                         if (zTrim) {
-                            if (cellColumn.length == 1) return null;
+                            if (cellColumn.length == 1) return;
                             if (fromFront) cellColumn.shift();
                             else cellColumn.pop();
                         }

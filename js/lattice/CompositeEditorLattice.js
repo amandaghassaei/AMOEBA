@@ -74,7 +74,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: dimensions
             };
-            globals.materials.compositeMaterials[id] = data;//todo trigger change on all instances
+            if (!globals.materials.compositeMaterials[id]) globals.materials.compositeMaterials[id] = {};
+            _.extend(globals.materials.compositeMaterials[id], data);//todo trigger change on all instances
+            if (globals.materials.compositeMaterials[id].material) globals.materials.compositeMaterials[id].material.color = new THREE.Color(this.get("color"));
         },
 
         deleteComposite: function(){
