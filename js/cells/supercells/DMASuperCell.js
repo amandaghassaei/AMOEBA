@@ -47,7 +47,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                             } else console.warn("no material for composite cell definition subcell");
                         }//else no cell in this spot
                     } else {//if not from composite definition, add subcell at all possible indices in supercell range
-                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:cellMaterial}, function(cell){
+                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), material:this.material}, function(cell){
                             cells[x][y][z] = cell;
                         });
                     }

@@ -8,6 +8,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
 
     var unitGeos = {};
+    var materials = {};
 
     function makePartWithLength(length){
         var geo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
@@ -36,6 +37,22 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         var key = "length"+length;
         if (!unitGeos[key]) unitGeos[key] = makePartWithLength(length);
         return unitGeos[key];
+    };
+
+    GIKSuperCell.prototype.getMaterial = function(returnTHREEObject){
+        if (returnTHREEObject){
+            return DMASuperCell.prototype.getMaterial.call(this, returnTHREEObject);
+        }
+        return {
+//                name: name,
+            material: this.material,
+//                color: this.get("color"),
+//                altColor: this.get("color"),
+//                numCells: this.get("numCells"),
+            cellsMin: new THREE.Vector3(0,0,0),
+            cellsMax: new THREE.Vector3(this.getLength(), 0, 0),
+            dimensions: new THREE.Vector3(this.getLength()+1, 1, 1)
+        };
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){

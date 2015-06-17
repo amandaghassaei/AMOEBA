@@ -273,7 +273,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         }
 
         function setVisiblity(){
-            var visible = !(self.superCell && self.cells);//middle layers are always hidden
+            var visible = true;
+            if (mode == "supercell") visible = !(self.superCell && self.cells);//middle layers are always hidden in supercell mode
 
             _.each(self.object3D.children, function(child){
                 if (child.name == "object3D") return;
