@@ -7,16 +7,16 @@ require.config({
     baseUrl: 'js',
 
     paths: {
-        jquery: 'dependencies/jquery-2.1.3',
-        underscore: 'dependencies/underscore',
-        backbone: 'dependencies/backbone',
-        flatUI: 'dependencies/flatUI/js/flat-ui',
-        fileSaverLib: 'dependencies/loaders/FileSaver.min',
+        jquery: '../dependencies/jquery-2.1.3',
+        underscore: '../dependencies/underscore',
+        backbone: '../dependencies/backbone',
+        flatUI: '../dependencies/flatUI/js/flat-ui',
+        fileSaverLib: '../dependencies/loaders/FileSaver.min',
 
         //three
-        three: 'dependencies/three',
-        orbitControls: 'dependencies/OrbitControls',
-        stlLoader: 'dependencies/loaders/STLLoader',
+        three: '../dependencies/three',
+        orbitControls: '../dependencies/OrbitControls',
+        stlLoader: '../dependencies/loaders/STLLoader',
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
 
