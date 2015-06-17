@@ -134,7 +134,8 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             var property = $target.data("property");
             var value = $target.data("value");
             if (!property || !value) return;
-            this._getPropertyOwner($target).set(property, value);
+            var owner = this._getPropertyOwner($target, property, value);
+            if (owner) owner.set(property, value);
         },
 
         _clickCheckbox: function(e){
@@ -161,11 +162,17 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             lattice.getUItarget().clearCells();
         },
 
-        _getPropertyOwner: function($target){
+        _getPropertyOwner: function($target, property, value){
             if ($target.hasClass("lattice")) return lattice;
             if ($target.hasClass("compositeEditor")) return lattice.compositeEditor;
             if ($target.hasClass("assembler")) return globals.cam;
             if ($target.hasClass("appState")) return this.model;
+            if ($target.hasClass("serialComm")) {
+                require(['serialComm'], function(serialComm){
+                    serialComm._changeProperty(property, value);
+                });
+                return null;
+            }
             console.warn("no owner found for " + $target);
             return null;
         },

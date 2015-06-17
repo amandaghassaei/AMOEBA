@@ -123,7 +123,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam'], function($, _, Me
             <br/><a href="#" id="animationMenuSave" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
             <!--Assembly Time:&nbsp;&nbsp;<br/><br/>-->\
             <% if (editsMadeToProgram && needsPostProcessing){ %>\
-            <div id="postWarning">You have made the following changes that require post processing:<br/>\
+            <div class="postWarning">You have made the following changes that require post processing:<br/>\
             This will override edits you have made to the G-code.  OK to override? <a href="#" class="overrideEdits btn btn-block btn-lg btn-danger">OK</a></div>\
             <% } %>\
             <div id="gcodeEditor"><%= dataOut %></div><br/>\
