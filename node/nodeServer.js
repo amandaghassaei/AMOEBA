@@ -2,9 +2,15 @@
  * Created by aghassaei on 6/17/15.
  */
 
-
 var serialport = require('serialport');
 SerialPort = serialport.SerialPort;// make a local instance
+
+//var http = require('http');
+//var app = http.createServer();
+var io = require('socket.io').listen(8080);
+//var app = require('express')();
+//var http = require('http').Server(app);
+//var io = require('socket.io')(http);
 
 // list serial ports:
 serialport.list(function (err, ports) {
@@ -16,6 +22,18 @@ serialport.list(function (err, ports) {
 //defualts
 var portName = '/dev/cu.usbserial-DA01L12I';
 var baudRate = 9600;
+
+//io.sockets.on('connection', function (socket) {
+//    socket.emit('baudRate', baudRate);
+//});
+
+
+
+io.on('connection', function(socket){
+  console.log('a user connected');
+    io.emit('connected');
+});
+
 
 var myPort = new SerialPort(portName, {
    baudRate: baudRate,
@@ -36,7 +54,7 @@ function onPortOpen(){
 }
 
 function onPortData(data){
-    console.log(data);
+//    console.log(data);
 }
 
 function onPortClose(){

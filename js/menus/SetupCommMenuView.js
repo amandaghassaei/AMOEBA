@@ -3,7 +3,10 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParentView, plist){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($, _, MenuParentView, plist, serialComm){
+
+
+
 
     return MenuParentView.extend({
 
@@ -12,10 +15,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParen
 
 
         _initialize: function(){
+
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist);
+            return _.extend(this.model.toJSON(), serialComm.toJSON());
         },
 
         template: _.template('\

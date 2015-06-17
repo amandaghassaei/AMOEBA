@@ -26,6 +26,10 @@ require.config({
         appState: 'models/AppState',
         fileSaver: 'models/FileSaver',
 
+        //communication
+        socketio: '../dependencies/socket.io-1.3.5',
+        serialComm: 'models/SerialComm',
+
         //lattice
         latticeBase: 'lattice/LatticeBase',
         lattice: 'lattice/Lattice',
@@ -133,6 +137,9 @@ require.config({
         },
         flatUI: {
             deps: ['jquery']
+        },
+        'socketio': {
+            exports: 'io'
         }
     }
 
