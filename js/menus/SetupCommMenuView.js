@@ -35,10 +35,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
 
         _setupInstructions: function(e){
             e.preventDefault();
+            var self = this;
             require(['modalView'], function(ModalView){
                 new ModalView({
-                    title: "myTitle",
-                    text: "some html"
+                    title: "Node Setup",
+                    text: self.helpFile
                 });
             })
         },
@@ -79,7 +80,33 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
         No node server found.<br/><br/>\
         <a href="#" id="nodeSetupInstructions" class="btn btn-block btn-lg btn-default">Setup Instructions</a><br/>\
         <% } %>\
-            ')
+            '),
+
+        helpFile: "" +
+            "Download and install node.js and npm either via the installer:<br/>" +
+            "<a href='https://nodejs.org/download/' target='_blank'>https://nodejs.org/download/</a><br/><br/>" +
+            "or via <a href='http://brew.sh/' target='_blank'>homebrew</a> (recommended for OS X)<br/>" +
+            "<b>update homebrew<br/>" +
+            "brew install node<br/></b>" +
+            "(with homebrew, if you run into errors, <a href='https://github.com/Homebrew/homebrew/issues/32621' target='_blank'>this thread</a> might help you)<br/><br/>" +
+            "once installed, check the versions:<br/>" +
+            "<b>node -v<br/>" +
+            "npm -v<br/></b>" +
+            "I'm using node v0.12.4 and npm v2.10.1<br/><br/>" +
+            "to upgrade your version of node use:<br/>" +
+            "<b>update homebrew<br/>" +
+            "brew upgrade node<br/></b><br/>" +
+            "create a folder somewhere on your filesystem:<br/>" +
+            "<b>mkdir myNodeDirectory<br/>" +
+            "cd myNodeDirectory</b><br/><br/>" +
+            "once inside, install the <a href='https://github.com/voodootikigod/node-serialport' target='_blank'>serialport</a> module:<br/>" +
+            "<b>npm install serialport<br/><br/></b>" +
+            "and <a href='http://socket.io/' target='_blank'>socket.io</a>:<br/>" +
+            "<b>npm install socket.io</b><br/><br/>" +
+            "download <a href='/node/nodeServer.js' target='_blank'>this</a> file and save it as nodeServer.js in myNodeDirectory<br/><br/>" +
+            "to run:<br/>" +
+            "<b>node nodeServer.js</b><br/><br/>"
+
 
     });
 });
