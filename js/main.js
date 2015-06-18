@@ -92,6 +92,7 @@ require.config({
         navbar: 'menus/Navbar',
         navViewMenu: 'menus/NavViewMenu',//view dropdown
         ribbon: 'menus/Ribbon',
+        modalView: 'menus/ModalView',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
         latticeMenu: 'menus/LatticeMenuView',

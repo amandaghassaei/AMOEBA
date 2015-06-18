@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
 
         events: {
             "click #serialFlushBuffer":                         "_flushBuffer",
-            "click #sendTestMessage":                           "_sendTestMessage"
+            "click #sendTestMessage":                           "_sendTestMessage",
+            "click #nodeSetupInstructions":                     "_setupInstructions"
         },
 
 
@@ -30,6 +31,16 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
         _flushBuffer: function(e){
             e.preventDefault();
             serialComm.flushBuffer();
+        },
+
+        _setupInstructions: function(e){
+            e.preventDefault();
+            require(['modalView'], function(ModalView){
+                new ModalView({
+                    title: "myTitle",
+                    text: "some html"
+                });
+            })
         },
 
         _makeTemplateJSON: function(){
@@ -60,11 +71,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                         <% }); %>\
                     </ul>\
                 </div><br/><br/><br/>\
+        Stream: &nbsp;&nbsp;<span id="serialDataStream"></span>\
         <a href="#" id="sendTestMessage" class="btn btn-block btn-lg btn-default">Send Test Message:</a><br/>\
         <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Test Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
         <a href="#" id="serialFlushBuffer" class="btn btn-block btn-lg btn-danger">Flush Buffer</a><br/>\
         <% }else{ %>\
-        No node server found.\
+        No node server found.<br/><br/>\
+        <a href="#" id="nodeSetupInstructions" class="btn btn-block btn-lg btn-default">Setup Instructions</a><br/>\
         <% } %>\
             ')
 

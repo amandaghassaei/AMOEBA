@@ -42,7 +42,6 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
     var serialComm = new SerialComm();
 
     socket.on('connected', function(data){
-        console.log(data);
         serialComm.set("connected", true, {silent:true});
         _.each(_.keys(data), function(key){
             if (data[key] !== null) serialComm.set(key, data[key], {silent:true});
