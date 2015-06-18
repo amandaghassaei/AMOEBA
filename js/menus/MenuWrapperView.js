@@ -37,6 +37,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
         },
 
         _onKeyUp: function(e){
+            if ($(".unresponsiveInput").is(":focus")) return;
             if ($("input").is(":focus") && e.keyCode == 13) {//enter key
                 $(e.target).blur();
                 this._renderTab();
@@ -169,7 +170,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             if ($target.hasClass("appState")) return this.model;
             if ($target.hasClass("serialComm")) {
                 require(['serialComm'], function(serialComm){
-                    serialComm._changeProperty(property, value);
+                    serialComm.changeProperty(property, value);
                 });
                 return null;
             }

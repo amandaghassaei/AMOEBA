@@ -12,9 +12,10 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             connected: false,
             portConnected: false,
             availablePorts: [],
-            portName: null,
+            portName: "Select Port",
             baudRate: 200,
-            error: null
+            error: null,
+            testMessage: ""
         },
 
         initialize: function(){
@@ -22,10 +23,17 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
 
         },
 
-        _changeProperty: function(property, value){
+        send: function(data){
+            socket.emit("dataOut", data);
+        },
+
+        flushBuffer: function(){
+            socket.emit("flush");
+        },
+
+        changeProperty: function(property, value){
             if (property === null || property === undefined || value === null || value === undefined) return;
-            if (this.get(property) == value) return;
-            socket.emit(property, value);
+            socket.emit(property, value);//always pass user interaction on
             this.set(property, value);
         }
 
@@ -37,7 +45,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         console.log(data);
         serialComm.set("connected", true, {silent:true});
         _.each(_.keys(data), function(key){
-            serialComm.set(key, data[key], {silent:true});
+            if (data[key] !== null) serialComm.set(key, data[key], {silent:true});
         });
         serialComm.trigger("change");
     });
@@ -46,13 +54,15 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         serialComm.set("connected", false);
     });
 
-    socket.on('portConnected', function(baudRate){
-        serialComm.set("baudRate", baudRate);
+    socket.on('portConnected', function(data){
+        serialComm.set("baudRate", data.baudRate);
+        serialComm.set("portName", data.portName)
         serialComm.set("portConnected", true);
     });
 
-    socket.on('portDisconnected', function(baudRate){
-        if (serialComm.get("baudRate") != baudRate) return;
+    socket.on('portDisconnected', function(data){
+        if (serialComm.get("baudRate") != data.baudRate) return;
+        if (serialComm.get("portName") != data.portName) return;
         serialComm.set("portConnected", false);
     });
 
