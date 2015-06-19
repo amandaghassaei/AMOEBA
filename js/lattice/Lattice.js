@@ -220,6 +220,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getCompositeData: function(){
+            if (this.get("numCells") == 0) return null;
             return {
                 cellsMin: this.get("cellsMin").clone(),
                 cellsMax: this.get("cellsMax").clone(),

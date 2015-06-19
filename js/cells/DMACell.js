@@ -226,7 +226,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("no material type set for cell");
             return null;
         }
-        if (!returnTHREEObject) return this.material;
+        if (!returnTHREEObject) return materials[this.material];
         if (!materials[this.material]) {
             console.warn("no material object found of type " + this.materials);
             return null;

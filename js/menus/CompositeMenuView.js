@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 if (lattice.compositeEditor.changedAttributes().numCells !== undefined) dimensions = lattice.compositeEditor.calculateBoundingBox();
                 this.render();
             });
-            this.listenTo(lattice, "change", this.render);
+            this.listenTo(this.model, "change", this.render);
 
             dimensions = lattice.compositeEditor.calculateBoundingBox();
         },

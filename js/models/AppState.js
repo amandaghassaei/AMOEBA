@@ -113,7 +113,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             if (materialType.substr(0,5) != "super") {
                 if (this.previous("materialType").substr(0,5) != "super") return;
                 //re init highlighter
-                require([this.getHighlighterFile()], function(HighlighterClass){
+                require([this.lattice.getHighlighterFile()], function(HighlighterClass){
                     globals.highlighter = new HighlighterClass();
                 });
                 return;
