@@ -80,8 +80,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
         _makeTemplateJSON: function(){
             return _.extend(this.model.toJSON(), plist, globals, lattice.compositeEditor.toJSON(),
                 {
-                    materialClass:lattice.get("materialClass"),
-                    materialType:lattice.get("materialType"),
                     dimensions: dimensions
                 });
         },

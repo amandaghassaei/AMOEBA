@@ -157,7 +157,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         addRemoveVoxel: function(shouldAdd){
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                lattice.getUItarget().addCellAtIndex(this._getNextCellPosition(), false, false, lattice.get("materialType"));
+                lattice.getUItarget().addCellAtIndex(this._getNextCellPosition(), false, false, appState.get("materialType"));
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;

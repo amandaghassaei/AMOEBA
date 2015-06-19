@@ -13,7 +13,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
 
-        this.material = json.material || lattice.get("materialType");
+        this.material = json.material || appState.get("materialType");
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -223,7 +223,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
 
     DMACell.prototype.getMaterial = function(returnTHREEObject){
         if (!this.material) return null;
-        var materialClass = lattice.get("materialClass");
+        var materialClass = appState.get("materialClass");
         if (!globals.materials[materialClass]) {
             console.warn("no material class found of type " + materialClass);
             return null;

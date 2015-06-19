@@ -15,8 +15,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             cellType: "cube",
             connectionType: "face",
             partType: null,
-            materialType: null,
-            materialClass: "mechanical",
 
             nodes: [],
 
@@ -32,9 +30,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 this._updateLatticeType();
             });
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
-
-            this.listenTo(this, "change:materialType", this._materialTypeChanged);
-            this.listenTo(this, "change:materialClass", this._loadMaterialClass);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
         },
@@ -60,7 +55,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
             var partType = _.keys(plist["allPartTypes"][newCellType][newConnectionType])[0];
             this.set("partType", partType, {silent:true});
-            this.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType], {silent:true});
+            appState.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType], {silent:true});
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
@@ -110,36 +105,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
         //events
-
-        _materialTypeChanged: function(){
-            var materialType = this.get("materialType");
-            //verify that correct class is in sync
-            if (materialType.substr(0,5) != "super") {
-                if (this.previous("materialType").substr(0,5) != "super") return;
-                //re init highlighter
-                require([this.getHighlighterFile()], function(HighlighterClass){
-                    globals.highlighter = new HighlighterClass();
-                });
-                return;
-            }
-
-            //composite material
-            appState.set("superCellRange", globals.materials.compositeMaterials[materialType].dimensions.clone());
-            appState.set("superCellIndex", new THREE.Vector3(0,0,0));
-            require(['superCellHighlighter'], function(SuperCellHighlighter){
-                globals.highlighter = new SuperCellHighlighter();
-            });
-        },
-
-        _loadMaterialClass: function(){
-            var materialClass = this.get("materialClass");
-            var materialType = this.get("materialType");
-            if (!plist.allMaterials[materialClass].materialType) this.set("materialType", _.keys(plist.allMaterials[materialClass])[0], {silent:true});//set to default silently
-            if (globals.materials[materialClass]) return;//already loaded
-            require([materialClass + "Materials"], function(MaterialClass){
-                globals.materials[materialClass] = MaterialClass;
-            });
-        },
 
         showCellAtIndex: function(index){
             var latticeIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment

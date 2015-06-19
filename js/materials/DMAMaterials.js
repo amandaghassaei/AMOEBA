@@ -3,7 +3,46 @@
  */
 
 
-define(['underscore', 'three', 'appState'], function(_, THREE, appState){
+define(['underscore', 'three', 'appState', 'globals'], function(_, THREE, appState, globals){
+
+    var materials = {
+        deleteMaterial: {
+            color: "#ff0000",
+            threeMaterial:new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
+        }
+    };
+
+    _.extend(materials, Backbone.Events);
+
+    materials.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
+    materials.listenTo(appState, "change:materialClass", loadMaterialClass);
+
+    globals.materials = materials;
+
+    function loadMaterialClass(){
+        var materialClass = appState.get("materialClass");
+        var materialType = appState.get("materialType");
+        if (!plist.allMaterials[materialClass].materialType) this.set("materialType", _.keys(plist.allMaterials[materialClass])[0], {silent:true});//set to default silently
+        if (globals.materials[materialClass]) return;//already loaded
+        require([materialClass + "Materials"], function(MaterialClass){
+            globals.materials[materialClass] = MaterialClass;
+        });
+    }
+
+    function changeColorScheme(){
+        var state = appState.get("realisticColorScheme");
+        _.each(_.keys(materials), function(name){
+            var materialInfo = materials[name];
+
+            var color = materialInfo.color;
+            if (!color) console.warn("no color for material type " + name);
+            if (!state && materialInfo.altColor) color = materialInfo.altColor;
+
+            if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
+            else materialInfo.threeMaterial = new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading});
+        });
+    }
+
 
     function DMAMaterials(materialList){
         this.materials = {};
@@ -34,5 +73,5 @@ define(['underscore', 'three', 'appState'], function(_, THREE, appState){
         });
     };
 
-    return DMAMaterials;
+    return materials;
 });

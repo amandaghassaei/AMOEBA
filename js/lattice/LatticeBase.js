@@ -50,7 +50,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             if (this._setDefaultCellMode) this._setDefaultCellMode();
-            if (this._loadMaterialClass) this._loadMaterialClass();
+            appState._loadMaterialClass();
 
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");

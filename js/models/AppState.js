@@ -5,7 +5,7 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, Backbone, three, THREE, plist){
+define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], function(_, Backbone, three, THREE, plist, globals){
 
     var AppState = Backbone.Model.extend({
 
@@ -37,6 +37,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             superCellRange: new THREE.Vector3(1,1,1),
 
             realisticColorScheme: false,
+            materialType: null,
+            materialClass: "mechanical",
 
             stockSimulationPlaying: false,
             manualSelectOrigin: false//mode that allows user ot select origin from existing cell
@@ -56,6 +58,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
             this.listenTo(this, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:realisticColorScheme", this._updateColorScheme);
+            this.listenTo(this, "change:materialType", this._materialTypeChanged);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
@@ -111,6 +114,26 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist'], function(_, B
                     if (globals.materials[materialClass].changeMaterials) globals.materials[materialClass].changeMaterials();
                 });
                 three.render();
+            });
+        },
+
+        _materialTypeChanged: function(){
+            var materialType = this.get("materialType");
+            //verify that correct class is in sync
+            if (materialType.substr(0,5) != "super") {
+                if (this.previous("materialType").substr(0,5) != "super") return;
+                //re init highlighter
+                require([this.getHighlighterFile()], function(HighlighterClass){
+                    globals.highlighter = new HighlighterClass();
+                });
+                return;
+            }
+
+            //composite material
+            this.set("superCellRange", globals.materials.compositeMaterials[materialType].dimensions.clone());
+            this.set("superCellIndex", new THREE.Vector3(0,0,0));
+            require(['superCellHighlighter'], function(SuperCellHighlighter){
+                globals.highlighter = new SuperCellHighlighter();
             });
         },
 
