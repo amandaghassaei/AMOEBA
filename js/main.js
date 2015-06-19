@@ -85,8 +85,6 @@ require.config({
 
         //materials
         materials: 'materials/DMAMaterials',
-        electronicMaterials: 'materials/ElectronicMaterials',
-        mechanicalMaterials: 'materials/MechanicalMaterials',
 
         //UI
         navbar: 'menus/Navbar',

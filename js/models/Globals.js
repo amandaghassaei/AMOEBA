@@ -9,6 +9,5 @@ define([], function(){
     return {
         baseplane: null,
         highlighter: null,
-        materials: null
     };
 });

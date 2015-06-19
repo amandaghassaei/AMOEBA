@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
-    function(_, THREE, three, lattice, appState, globals){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', 'materials'],
+    function(_, THREE, three, lattice, appState, globals, materials){
 
     var wireframeMaterial = new THREE.MeshBasicMaterial({color:0x000000, wireframe:true});
 
@@ -155,7 +155,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     DMACell.prototype.setDeleteMode = function(state){
 
         var material;
-        if (state) material = globals.materials.deleteMaterial;
+        if (state) material = materials.deleteMaterial;
         else  material = this.getMaterial(true);
         if (!material) return;//cell may be deleted by now
         if (this.object3D.children[0].material == material) return;
@@ -222,18 +222,20 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
     };
 
     DMACell.prototype.getMaterial = function(returnTHREEObject){
-        if (!this.material) return null;
-        var materialClass = appState.get("materialClass");
-        if (!globals.materials[materialClass]) {
-            console.warn("no material class found of type " + materialClass);
+        if (!this.material) {
+            console.warn("no material type set for cell");
             return null;
         }
-        var material = globals.materials[materialClass].materials[this.material];
-        if (!material){
-            console.warn("no material "+ this.material + " found for class "+ materialClass);
+        if (!returnTHREEObject) return this.material;
+        if (!materials[this.material]) {
+            console.warn("no material object found of type " + this.materials);
             return null;
         }
-        return material;
+        if (!materials[this.material].threeMaterial){
+            console.warn("no three material object found for type "+ this.material);
+            return null;
+        }
+        return materials[this.material].threeMaterial;
     };
 
     DMACell.prototype.setOpacity = function(opacity){
@@ -372,7 +374,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals'],
         var data = {
             material: this.material
         };
-        if (globals.materials.compositeMaterials[this.material]) return data;//material definition in material composites
+        if (materials[this.material].cells) return data;//material definition in material composites
         if (this.cells) data.cells = this.cells;
         return data;
     };

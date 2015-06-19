@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], function($, _, MenuParentView, plist, lattice, globals){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials'], function($, _, MenuParentView, plist, lattice, globals, materials){
 
     return MenuParentView.extend({
 
@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             e.stopPropagation();
             e.preventDefault();
             var id = $(e.target).data("id");
-            lattice.setToCompositeMode(id, globals.materials.compositeMaterials[id]);
+            lattice.setToCompositeMode(id, materials[id]);
         },
 
         _latticeToComposite: function(e){
@@ -37,7 +37,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals);
+            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {materials:materials});
         },
 
         template: _.template('\
@@ -46,7 +46,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
                     <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialClasses[materialClass] %><span class="caret"></span></button>\
                     <ul role="menu" class="dropdown-menu">\
                         <% _.each(_.keys(allMaterialClasses), function(key){ %>\
-                            <li><a class="lattice dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= allMaterialClasses[key] %></a></li>\
+                            <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= allMaterialClasses[key] %></a></li>\
                         <% }); %>\
                     </ul>\
                 </div><br/><br/>\
@@ -54,7 +54,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             Materials:<br/>\
             <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>\
             <label class="radio colorSwatches">\
-                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
                 <div class="materialColorSwatch">\
                 <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterials[materialClass][key].color %><% }else{ %><%= allMaterials[materialClass][key].altColor %><% } %>"></div>\
                 <span><%= allMaterials[materialClass][key].name %></span></div>\
@@ -71,15 +71,16 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             <% if ((cellType == "octa" && connectionType != "vertex") || cellType == "tetra"){ %>\
             not available for this lattice type\
             <%  } else { %> \
-            <% _.each(_.keys(materials.compositeMaterials), function(key){ %>\
+            <% _.each(_.keys(materials), function(key){ \
+            if (key.substr(0,5) != "super") return; %>\
             <label class="radio colorSwatches">\
-                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
                 <div class="materialColorSwatch">\
-                <div style="background-color:<% if(realisticColorScheme){ %><%= materials.compositeMaterials[key].color %><% }else{ %><%= materials.compositeMaterials[key].altColor %><% } %>"></div>\
-                <span><%= materials.compositeMaterials[key].name %><a data-id="<%= key %>" class="editComposite">Settings...<a/></span></div>\
+                <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>\
+                <span><%= materials[key].name %><a data-id="<%= key %>" class="editComposite">Settings...<a/></span></div>\
             </label>\
             <% }); %><br/>\
-            <% if (_.keys(materials.compositeMaterials).length > 0) { %>\
+            <% if (_.keys(materials).length > 0) { %>\
             Offset (xyz): &nbsp;&nbsp;<input data-property="superCellIndex" data-key="x" value="<%= superCellIndex.x %>" placeholder="X" class="form-control intInput appState" type="text">\
                 &nbsp;<input data-property="superCellIndex" data-key="y" value="<%= superCellIndex.y %>" placeholder="Y" class="form-control intInput appState" type="text">\
                 &nbsp;<input data-property="superCellIndex" data-key="z" value="<%= superCellIndex.z %>" placeholder="Z" class="form-control intInput appState" type="text"><br/><br/>\

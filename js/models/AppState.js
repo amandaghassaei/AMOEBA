@@ -57,7 +57,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
 
             this.listenTo(this, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:currentNav", this._navChanged);
-            this.listenTo(this, "change:realisticColorScheme", this._updateColorScheme);
             this.listenTo(this, "change:materialType", this._materialTypeChanged);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
@@ -108,15 +107,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             }
         },
 
-        _updateColorScheme: function(){
-            require(['globals'], function(globals){
-                _.each(_.keys(globals.materials), function(materialClass){
-                    if (globals.materials[materialClass].changeMaterials) globals.materials[materialClass].changeMaterials();
-                });
-                three.render();
-            });
-        },
-
         _materialTypeChanged: function(){
             var materialType = this.get("materialType");
             //verify that correct class is in sync
@@ -130,8 +120,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             }
 
             //composite material
-            this.set("superCellRange", globals.materials.compositeMaterials[materialType].dimensions.clone());
-            this.set("superCellIndex", new THREE.Vector3(0,0,0));
             require(['superCellHighlighter'], function(SuperCellHighlighter){
                 globals.highlighter = new SuperCellHighlighter();
             });

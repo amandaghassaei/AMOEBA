@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'latticeBase'],
-    function(_, Backbone, appState, globals, plist, THREE, three, LatticeBase){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'latticeBase', 'materials'],
+    function(_, Backbone, appState, globals, plist, THREE, three, LatticeBase, materials){
 
     function makeRandomColor(){
         return '#' + Math.floor(Math.random()*16777215).toString(16);
@@ -74,14 +74,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: dimensions
             };
-            if (!globals.materials.compositeMaterials[id]) globals.materials.compositeMaterials[id] = {};
-            _.extend(globals.materials.compositeMaterials[id], data);//todo trigger change on all instances
-            if (globals.materials.compositeMaterials[id].material) globals.materials.compositeMaterials[id].material.color = new THREE.Color(this.get("color"));
+            if (!materials[id]) materials[id] = {};
+            _.extend(materials[id], data);//todo trigger change on all instances
+            if (materials[id].threeMaterial) materials[id].threeMaterial.color = new THREE.Color(this.get("color"));
         },
 
         deleteComposite: function(){
             var id = this.get("id");
-            delete globals.materials.compositeMaterials[id];//todo trigger change on all instances
+            delete materials[id];//todo check if being used first
         },
 
 

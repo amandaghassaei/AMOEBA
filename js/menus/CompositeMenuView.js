@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], function($, _, MenuParentView, plist, lattice, globals){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials'], function($, _, MenuParentView, plist, lattice, globals, materials){
 
     var dimensions;
 
@@ -80,7 +80,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
         _makeTemplateJSON: function(){
             return _.extend(this.model.toJSON(), plist, globals, lattice.compositeEditor.toJSON(),
                 {
-                    dimensions: dimensions
+                    dimensions: dimensions,
+                    materials: materials
                 });
         },
 
@@ -96,19 +97,19 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals'], fu
             Available Materials:<br/>\
             <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>\
             <label class="radio colorSwatches">\
-                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
                 <div class="materialColorSwatch">\
                 <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterials[materialClass][key].color %><% }else{ %><%= allMaterials[materialClass][key].altColor %><% } %>"></div>\
                 <span><%= allMaterials[materialClass][key].name %></span></div>\
             </label>\
             <% }); %>\
-            <% _.each(_.keys(materials.compositeMaterials), function(key){ \
-                if (key == id) return; %>\
+            <% _.each(_.keys(materials), function(key){ \
+                if (key == id || key.substr(0,5) != "super") return; %>\
             <label class="radio colorSwatches">\
-                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio lattice"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
+                <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>\
                 <div class="materialColorSwatch">\
-                <div style="background-color:<% if(realisticColorScheme){ %><%= materials.compositeMaterials[key].color %><% }else{ %><%= materials.compositeMaterials[key].altColor %><% } %>"></div>\
-                <span><%= materials.compositeMaterials[key].name %></span></div>\
+                <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>\
+                <span><%= materials[key].name %></span></div>\
             </label>\
             <% }); %><br/>\
             <a id="finishComposite" href="#" class="btn btn-block btn-lg btn-success">Save Composite</a><br/>\
