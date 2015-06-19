@@ -50,7 +50,8 @@ io.on('connection', function(socket){
     });
 
     socket.on('dataOut', function(data){
-        console.log(data);
+        console.log("Sending data: " + data);
+        currentPort.write(new Buffer([parseInt(data)]));
     });
 
     socket.on('flush', function(){
