@@ -12,9 +12,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
 
         events: {
             "click #serialFlushBuffer":                         "_flushBuffer",
-            "click #sendTestMessage":                           "_sendTestMessage",
             "click #nodeSetupInstructions":                     "_setupInstructions",
-            "click #refreshPorts":                              "_refreshPorts"
+            "click #refreshPorts":                              "_refreshPorts",
+            "change #seriallTestMessage":                       "_sendTestMessage"
         },
 
 
@@ -29,6 +29,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
         _sendTestMessage: function(e){
             e.preventDefault();
             var message = $("#seriallTestMessage").val();
+            $("#seriallTestMessage").val("");
+            if (message == "") return;
             serialComm.send(message);
         },
 
@@ -96,10 +98,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                         <% }); %>\
                     </ul>\
                 </div>\
-            &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a><br/><br/>\
+            &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default btn-icon"><img src="assets/imgs/refreshIcon.png"></a><br/><br/>\
         Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>\
         Stream: &nbsp;&nbsp;<span id="serialDataStream"></span>\
-        <a href="#" id="sendTestMessage" class="btn btn-block btn-lg btn-default">Send Test Message:</a><br/>\
         <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Test Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
         <a href="#" id="serialFlushBuffer" class="btn btn-block btn-lg btn-danger">Flush Buffer</a><br/>\
         <% }else{ %>\

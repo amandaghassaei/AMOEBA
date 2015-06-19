@@ -29,7 +29,6 @@ define(['three'], function(THREE){
             },
             navComm:{
                 setupComm: "Setup",
-                discovery: "Discovery",
                 send: "Send"
             }
         },

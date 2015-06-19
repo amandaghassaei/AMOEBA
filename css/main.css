@@ -29,6 +29,14 @@ pre {
     color: #ccc;
 }
 
+.btn {
+    height:45px;
+}
+
+.btn-icon{
+    padding:9px;
+}
+
 .navMenu {
     display: none;
     z-index: 1;

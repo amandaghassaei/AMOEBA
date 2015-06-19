@@ -43,6 +43,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
                 this._renderTab();
                 return;
             }
+
             if ($(".floatInput").is(":focus")) this._updateFloat(e);
             if ($(".intInput").is(":focus")) this._updateInt(e);
             if ($(".textInput").is(":focus")) this._updateString(e)
