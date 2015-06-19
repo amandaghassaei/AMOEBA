@@ -80,7 +80,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 <span><%= materials[key].name %><a data-id="<%= key %>" class="editComposite">Settings...<a/></span></div>\
             </label>\
             <% }); %><br/>\
-            <% if (_.keys(materials).length > 0) { %>\
+            <% if (_.filter(_.keys(materials), function(name){return name.substr(0,5) == "super"; }).length > 0) { %>\
             Offset (xyz): &nbsp;&nbsp;<input data-property="superCellIndex" data-key="x" value="<%= superCellIndex.x %>" placeholder="X" class="form-control intInput appState" type="text">\
                 &nbsp;<input data-property="superCellIndex" data-key="y" value="<%= superCellIndex.y %>" placeholder="Y" class="form-control intInput appState" type="text">\
                 &nbsp;<input data-property="superCellIndex" data-key="z" value="<%= superCellIndex.z %>" placeholder="Z" class="form-control intInput appState" type="text"><br/><br/>\
