@@ -99,9 +99,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                     </ul>\
                 </div>\
             &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default btn-icon"><img src="assets/imgs/refreshIcon.png"></a><br/><br/>\
-        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>\
-        Stream: &nbsp;&nbsp;<span id="serialDataStream"></span>\
-        <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Test Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
+        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/>\
+        <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Send Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
         <a href="#" id="serialFlushBuffer" class="btn btn-block btn-lg btn-danger">Flush Buffer</a><br/>\
         <% }else{ %>\
         No node server found.<br/><br/>\
