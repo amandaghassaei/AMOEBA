@@ -12,6 +12,12 @@ html, body {
     color: #888;
 }
 
+pre {
+    display: inline;
+  border: none;
+  background-color: rgba(0,0,0,0);
+}
+
 .navbar {
     margin-bottom:0;
     z-index: 2;

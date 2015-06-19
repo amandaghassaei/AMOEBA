@@ -13,24 +13,48 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
         events: {
             "click #serialFlushBuffer":                         "_flushBuffer",
             "click #sendTestMessage":                           "_sendTestMessage",
-            "click #nodeSetupInstructions":                     "_setupInstructions"
+            "click #nodeSetupInstructions":                     "_setupInstructions",
+            "click #refreshPorts":                              "_refreshPorts"
         },
 
 
         _initialize: function(){
 
             this.listenTo(serialComm, "change", this.render);
+            this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMesage);
+
+            this.inTimeout = false;
         },
 
-        _sendTestMessage:function(e){
+        _sendTestMessage: function(e){
             e.preventDefault();
             var message = $("#seriallTestMessage").val();
             serialComm.send(message);
         },
 
+        _updateIncomingMesage: function(){
+            var message = serialComm.get("lastMessageReceived");
+            var $message = $("#incomingSerialMessage");
+            $message.html(message);
+            $message.css("background", "#ffff99");
+            if (!this.inTimeout) {
+                this.inTimeout = true;
+                var self = this;
+                setTimeout(function(){
+                    $message.css("background", "white");
+                    self.inTimeout = false;
+                }, 100);
+            }
+        },
+
         _flushBuffer: function(e){
             e.preventDefault();
             serialComm.flushBuffer();
+        },
+
+        _refreshPorts: function(e){
+            e.preventDefault();
+            serialComm.refreshPorts();
         },
 
         _setupInstructions: function(e){
@@ -50,7 +74,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
 
         template: _.template('\
         <% if(error){ %> \
-        <div class="postWarning"><%= error%></div>\
+        <div class="postWarning"><%= error %></div>\
         <% } %>\
         <% if(connected){ %>\
         Status: &nbsp;&nbsp;<% if (portConnected){ %> Connected <% } else { %> <span class="red">Disconnected</span> <% } %><br/><br/>\
@@ -71,7 +95,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                             <li><a class="serialComm dropdownSelector" data-property="portName" data-value="<%= port %>" href="#"><%= port %></a></li>\
                         <% }); %>\
                     </ul>\
-                </div><br/><br/><br/>\
+                </div>\
+            &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></a><br/><br/>\
+        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>\
         Stream: &nbsp;&nbsp;<span id="serialDataStream"></span>\
         <a href="#" id="sendTestMessage" class="btn btn-block btn-lg btn-default">Send Test Message:</a><br/>\
         <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Test Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\

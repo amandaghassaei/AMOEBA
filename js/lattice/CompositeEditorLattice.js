@@ -77,6 +77,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (!materials[id]) materials[id] = {};
             _.extend(materials[id], data);//todo trigger change on all instances
             if (materials[id].threeMaterial) materials[id].threeMaterial.color = new THREE.Color(this.get("color"));
+            else materials[id].threeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color(this.get("color")), shading:THREE.FlatShading})
         },
 
         deleteComposite: function(){

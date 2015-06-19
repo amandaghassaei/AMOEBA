@@ -15,12 +15,15 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             portName: "Select Port",
             baudRate: 200,
             error: null,
-            testMessage: ""
+            testMessage: "",
+            lastMessageReceived: ""
         },
 
         initialize: function(){
+        },
 
-
+        refreshPorts: function(){
+            socket.emit('refreshPorts');
         },
 
         send: function(data){
@@ -31,7 +34,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             socket.emit("flush");
         },
 
-        changeProperty: function(property, value){
+        changeProperty: function(property, value){//portName, baudRate
             if (property === null || property === undefined || value === null || value === undefined) return;
             socket.emit(property, value);//always pass user interaction on
             this.set(property, value);
@@ -49,23 +52,31 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         serialComm.trigger("change");
     });
 
-    socket.on('disconnected', function(){
+    socket.on('disconnected', function(){//todo this never happens
         serialComm.set("connected", false);
     });
 
+    socket.on('dataIn', function(data){
+        serialComm.set("lastMessageReceived", data, {silent:true});
+        serialComm.trigger("change:lastMessageReceived");
+    });
+
     socket.on('portConnected', function(data){
+        console.log("connected port " + data.portName + " at " + data.baudRate);
         serialComm.set("baudRate", data.baudRate);
         serialComm.set("portName", data.portName)
         serialComm.set("portConnected", true);
+        serialComm.set("error", false);
     });
 
     socket.on('portDisconnected', function(data){
+        console.log("disconnected port " + data.portName + " at " + data.baudRate);
         if (serialComm.get("baudRate") != data.baudRate) return;
         if (serialComm.get("portName") != data.portName) return;
         serialComm.set("portConnected", false);
     });
 
-    socket.on("error", function(error){
+    socket.on("errorMsg", function(error){
         serialComm.set("error", error);
     });
 

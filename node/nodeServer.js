@@ -28,33 +28,25 @@ var baudRate = 9600;
 io.on('connection', function(socket){
 
     var allPorts = [];
-    serialport.list(function(err, ports){
-        ports.forEach(function(port) {
-            allPorts.push(port.comName);
-        });
-
-        if (!portName && allPorts.length>0) portName = allPorts[0];
-        if (portName) currentPort = changePort(portName, baudRate);
-
-        socket.emit('connected', {
-            baudRate: baudRate,
-            portName: portName,
-            availablePorts: allPorts
-        });
+    refreshAvailablePorts(function(_allPorts, _portName, _baudRate){
+        currentPort = changePort(_portName, _baudRate);
     });
 
+
     socket.on('baudRate', function(value){
-        baudRate = value;
-        currentPort = changePort(portName, baudRate);
+        refreshAvailablePorts(function(){
+            if (!checkThatPortExists(portName)) return;
+            currentPort = changePort(portName, value);
+            baudRate = value;
+        });
     });
 
     socket.on('portName', function(value){
-        if (allPorts.indexOf(value) < 0) {
-            onPortError("no available port called " + value);
-            return;
-        }
-        portName = value;
-        currentPort = changePort(portName, baudRate);
+        refreshAvailablePorts(function(){
+            if (!checkThatPortExists(value)) return;
+            currentPort = changePort(value, baudRate);
+            portName = value;
+        });
     });
 
     socket.on('dataOut', function(data){
@@ -62,13 +54,50 @@ io.on('connection', function(socket){
     });
 
     socket.on('flush', function(){
-        console.log("flush");
+        if (currentPort) currentPort.flush(function(){
+            console.log("port " + portName + " flushed");
+        });
     });
 
+    socket.on('refreshPorts', function(){
+        console.log("refreshing ports list");
+        allPorts = refreshAvailablePorts();
+    });
+
+    function checkThatPortExists(_portName){
+        if (allPorts.indexOf(_portName) < 0) {
+            onPortError("no available port called " + _portName);
+            return false;
+        }
+        return true;
+    }
 
 
+
+
+    function refreshAvailablePorts(callback){
+        var _allPorts = [];
+        serialport.list(function(err, ports){
+            ports.forEach(function(port) {
+                _allPorts.push(port.comName);
+            });
+
+            allPorts = _allPorts;
+
+            if (!portName && _allPorts.length>0) portName = _allPorts[0];
+            if (callback) callback(allPorts, portName, baudRate);
+
+            socket.emit('connected', {
+                baudRate: baudRate,
+                portName: portName,
+                availablePorts: _allPorts
+            });
+        });
+    }
 
     function initPort(_portName, _baudRate){
+
+        console.log("initing port " + _portName + " at " + _baudRate);
         var port = new SerialPort(_portName, {
            baudRate: _baudRate,
            parser:serialport.parsers.readline("\n")
@@ -81,7 +110,7 @@ io.on('connection', function(socket){
                 currentPort = null;
                 return;
             }
-            onPortOpen();
+            onPortOpen(_portName, _baudRate);
             port.on('data', onPortData);
             port.on('close', onPortClose);
             port.on('error', onPortError);
@@ -90,35 +119,42 @@ io.on('connection', function(socket){
     }
 
     function changePort(_portName, _baudRate){
-        if (!portName) {
+        console.log("change");
+        if (!_portName) {
             onPortError("no port name specified");
             return null;
         }
-        if (currentPort) currentPort.close(function(error){
-            if (error) {
-                onPortError(error);
-                return null;
-            }
-            return initPort(_portName, _baudRate);
-        });
-        else return initPort(_portName, _baudRate);
+        if (currentPort) {
+            var oldBaud = baudRate;
+            var oldName = portName;
+            console.log("disconnecting port " + oldName + " at " + oldBaud);
+            if (currentPort.isOpen()) currentPort.close(function(error){
+                if (error) {
+                    onPortError(error);
+                    return null;
+                }
+                socket.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
+            });
+        }
+        return initPort(_portName, _baudRate);
     }
 
-    function onPortOpen(){
-        socket.emit("portConnected", {baudRate: baudRate, portName:portName});
+    function onPortOpen(name, baud){
+        socket.emit("portConnected", {baudRate:baud, portName:name});
     }
 
     function onPortData(data){
-    //    console.log(data);
+//        console.log(data);
+        socket.emit("dataIn", data);
     }
 
     function onPortClose(){
-        socket.emit("portDisconnected", {baudRate: baudRate, portName:portName});
+//        console.log("port closed");
     }
 
     function onPortError(error){
         console.log("Serial port error " + error);
-        socket.emit("error", error);
+        socket.emit("errorMsg", error);
     }
 
 });
