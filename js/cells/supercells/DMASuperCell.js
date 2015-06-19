@@ -15,6 +15,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
         var material = this.getMaterial();
         var range = appState.get("superCellRange");
+        console.log(material);
+        if (material.dimensions) range = material.dimensions;
         if (material.cellsMax) range = (new THREE.Vector3(1,1,1)).add(material.cellsMax).sub(material.cellsMin);
         this.cells = this._makeChildCells(range, material);
 
@@ -25,6 +27,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     DMASuperCell.prototype = Object.create(DMACell.prototype);
 
     DMASuperCell.prototype._makeChildCells = function(range, material){
+        console.log(range);
         var cells = [];
         for (var x=0;x<range.x;x++){
             cells.push([]);
@@ -33,7 +36,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                 for (var z=0;z<range.z;z++){
                     //child cells add themselves to object3D
 
-                    var cellMaterial = this.material;
+                    var cellMaterial = this.materialName;
                     cells[x][y].push(null);
 
                     if (material.sparseCells){
@@ -59,7 +62,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
         var subclassFile = lattice.getCellSubclassFile();
-        if (json.material && json.material.substr(0,5) == "super") subclassFile = "compositeCell";
+        if (json.materialName && json.materialName.substr(0,5) == "super") subclassFile = "compositeCell";
         var self = this;
         require([subclassFile], function(CellSubclass){
             var cell = new CellSubclass(json, self);

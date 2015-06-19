@@ -4,11 +4,11 @@
 
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell'],
-    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell', 'materials'],
+    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell, materials){
 
     var unitGeos = {};
-    var materials = {};
+    var gikMaterials = {};
 
     function makePartWithLength(length){
         var geo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
@@ -43,19 +43,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         if (returnTHREEObject){
             return DMASuperCell.prototype.getMaterial.call(this, returnTHREEObject);
         }
-        if (!materials[this.material]) materials[this.material] = {};
         var length = this.getLength();
-        if (!materials[this.material]["length" + (length+1)]) {
-            materials[this.material]["length" + (length+1)] =
-            {
-                material: this.material,
-                cellsMin: new THREE.Vector3(0,0,0),
-                cellsMax: new THREE.Vector3(length, 0, 0),
-                dimensions: new THREE.Vector3(length+1, 1, 1)
+        var name = this.materialName + "length" + (length+1);
+        if (!gikMaterials[name]) {
+            gikMaterials[name] = {
+                materialName: this.materialName,
+                dimensions: new THREE.Vector3(length+1, 1, 1),
+                threeMaterial: materials[this.materialName].threeMaterial
             };
         }
-        console.log(materials[this.material]);
-        return materials[this.material]["length" + (length+1)];
+        return gikMaterials[name];
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){

@@ -12,7 +12,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     CompositeCell.prototype = Object.create(DMASuperCell.prototype);
 
     CompositeCell.prototype._getGeometry = function(){
-        var dimensions = materials[this.material].dimensions;
+        var dimensions = materials[this.materialName].dimensions;
         var geo = new THREE.BoxGeometry(dimensions.x*lattice.xScale(), dimensions.y*lattice.yScale(), dimensions.z*lattice.zScale());
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(dimensions.x/2-0.5, dimensions.y/2-0.5, dimensions.z/2-0.5));
         return geo;

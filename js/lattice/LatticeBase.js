@@ -93,7 +93,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         makeCellForLatticeType: function(json, callback){
             var subclassFile = this.getCellSubclassFile();
-            if (json.material && json.material.substr(0,5) == "super") subclassFile = "compositeCell";
+            if (json.materialName && json.materialName.substr(0,5) == "super") subclassFile = "compositeCell";
             require([subclassFile], function(CellSubclass){
                 var cell = new CellSubclass(json);
                 if (callback) callback(cell);
@@ -131,7 +131,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (!this.sparseCells[relIndex.x][relIndex.y][relIndex.z]) {
                 var self = this;
                 if (!noRender || noRender === undefined) three.setRenderFlag();
-                this.makeCellForLatticeType({index:index, material:material}, function(cell){
+                this.makeCellForLatticeType({index:index, materialName:material}, function(cell){
                     self.sparseCells[relIndex.x][relIndex.y][relIndex.z] = cell;
                     self.set("numCells", self.get("numCells")+1);
                 });
