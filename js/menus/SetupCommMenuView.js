@@ -14,7 +14,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
             "click #serialFlushBuffer":                         "_flushBuffer",
             "click #nodeSetupInstructions":                     "_setupInstructions",
             "click #refreshPorts":                              "_refreshPorts",
-            "change #seriallTestMessage":                       "_sendTestMessage"
+            "change #seriallTestMessage":                       "_sendTestMessage",
+            "click #reconnectToNode":                           "_reconnectToNode"
         },
 
 
@@ -70,6 +71,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
             })
         },
 
+        _reconnectToNode: function(){
+            serialComm.attemptToConnectToNode();
+        },
+
         _makeTemplateJSON: function(){
             return _.extend(this.model.toJSON(), serialComm.toJSON(), {allBaudRates: [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200]});
         },
@@ -99,12 +104,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                     </ul>\
                 </div>\
             &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default btn-icon"><img src="assets/imgs/refreshIcon.png"></a><br/><br/>\
-        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/>\
+        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>\
         <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Send Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
         <a href="#" id="serialFlushBuffer" class="btn btn-block btn-lg btn-danger">Flush Buffer</a><br/>\
         <% }else{ %>\
         No node server found.<br/><br/>\
         <a href="#" id="nodeSetupInstructions" class="btn btn-block btn-lg btn-default">Setup Instructions</a><br/>\
+        <a href="#" id="reconnectToNode" class="btn btn-block btn-lg btn-success">Reconnect</a><br/>\
         <% } %>\
             '),
 
