@@ -199,9 +199,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     if (material.dimensions){
                         var subCellMax = (new THREE.Vector3(x, y, z)).add(material.dimensions);
                         dimVector.max(subCellMax);
-                    } else if (cell.getLength){
-                        var subCellMax = (new THREE.Vector3(x, y, z)).add(new THREE.Vector3(cell.getLength()+1, 1, 1));
-                        dimVector.max(subCellMax);
                     }
                 }
             });

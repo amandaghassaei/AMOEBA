@@ -373,7 +373,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.toJSON = function(){
         var data = {
-            material: this.materialName
+            materialName: this.materialName
         };
         if (materials[this.materialName].cells) return data;//material definition in material composites
         if (this.cells) data.cells = this.cells;

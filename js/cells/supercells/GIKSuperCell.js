@@ -41,18 +41,22 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     GIKSuperCell.prototype.getMaterial = function(returnTHREEObject){
         if (returnTHREEObject){
-            return DMASuperCell.prototype.getMaterial.call(this, returnTHREEObject);
+            return materials[this.materialName].threeMaterial
         }
-        var length = this.getLength();
-        var name = this.materialName + "length" + (length+1);
-        if (!gikMaterials[name]) {
-            gikMaterials[name] = {
+        var name = this._makeMaterialKey();
+        if (!gikMaterials[this.materialName]) gikMaterials[this.materialName] = {};
+        if (!gikMaterials[this.materialName][name]) {
+            gikMaterials[this.materialName][name] = {
                 materialName: this.materialName,
-                dimensions: new THREE.Vector3(length+1, 1, 1),
-                threeMaterial: materials[this.materialName].threeMaterial
+                dimensions: new THREE.Vector3(length+1, 1, 1)
             };
         }
-        return gikMaterials[name];
+        return gikMaterials[this.materialName][name];
+    };
+
+    GIKSuperCell.prototype._makeMaterialKey = function(){
+        var length = this.getLength();
+        return "length" + (length+1);
     };
 
     GIKSuperCell.prototype._buildWireframe = function(mesh){
@@ -65,6 +69,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     GIKSuperCell.prototype._getMeshName = function(){
         return "cell";
+    };
+
+    GIKSuperCell.prototype.toJSON = function(){
+        return gikMaterials[this.materialName][this._makeMaterialKey()];
     };
 
     return GIKSuperCell;
