@@ -22,7 +22,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
         _initialize: function(){
 
             this.listenTo(serialComm, "change", this.render);
-            this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMesage);
+            this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMessage);
 
             this.inTimeout = false;
         },
@@ -35,9 +35,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
             serialComm.send(message);
         },
 
-        _updateIncomingMesage: function(){
+        _updateIncomingMessage: function(){
             var message = serialComm.get("lastMessageReceived");
             var $message = $("#incomingSerialMessage");
+            console.log(message);
             $message.html(message);
             $message.css("background", "#ffff99");
             if (!this.inTimeout) {
@@ -104,7 +105,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm'], function($
                     </ul>\
                 </div>\
             &nbsp;&nbsp;<a href="#" id="refreshPorts" class="btn btn-lg btn-default btn-icon"><img src="assets/imgs/refreshIcon.png"></a><br/><br/>\
-        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>\
+        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/>\
         <input id="seriallTestMessage" value="<%= testMessage %>" placeholder="Send Message" class="form-control fullWidth unresponsiveInput" type="text"><br/><br/>\
         <a href="#" id="serialFlushBuffer" class="btn btn-block btn-lg btn-danger">Flush Buffer</a><br/>\
         <% }else{ %>\
