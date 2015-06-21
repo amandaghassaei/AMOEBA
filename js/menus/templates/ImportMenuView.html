@@ -1,0 +1,24 @@
+Filename: &nbsp;&nbsp;<%= filename %><br/><br/>
+<% if (mesh){ %>
+    Scale:<br/><br/>
+        <a href="#" id="doFillGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>
+        <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>
+        <hr>
+<% } %>
+<a href="#" class=" btn btn-block btn-lg btn-danger clearCells">Clear All Cells</a><br/><br/>
+<br/><span class="btn btn-default btn-lg btn-file fullWidth">
+    Upload STL<input id="importMenuUploadSTL" type="file">
+</span><br/>
+<div class="text-center">OR</div>
+<div class="btn-group fullWidth">
+    <button data-toggle="dropdown" class="btn btn-lg btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>
+    <ul role="menu" class="dropdown-menu">
+        <li><a class="importMenuSelectMesh" data-file="meshes-airbus/wingCrossSection.stl" href="#">Wing</a></li>
+        <li><a id="importMenuSelectWall" href="#">Block</a></li>
+    </ul>
+</div><!-- /btn-group -->
+<!--//<a href="#" id="doSubtractGeo" class=" btn btn-block btn-lg btn-default">Subtract Mesh</a><br/>-->
+<!--//<li><a id="selectWall" href="#">Wall</a></li>-->
+<!--//<li><a class="selectMesh cutTerrain" data-file="river.stl" href="#">Landscape 1</a></li>-->
+<!--//<li><a class="selectMesh cutTerrain" data-file="terrain.stl" href="#">Landscape 2</a></li>-->
+<!--//<li><a class="selectMesh" data-file="meshes-airbus/Airbus_A300-600.stl" href="#">Plane</a></li>-->

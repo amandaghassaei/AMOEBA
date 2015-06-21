@@ -2,7 +2,7 @@
  * Created by fab on 3/18/15.
  */
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'lattice'], function($, _, Backbone, plist, lattice){
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!ribbonTemplate'], function($, _, Backbone, plist, lattice, template){
 
     return Backbone.View.extend({
 
@@ -58,20 +58,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice'], function($, _, 
             this.$el.html(this.template(_.extend(lattice.toJSON(), this.model.toJSON(), plist)));
         },
 
-        template: _.template('\
-            <div class="btn-toolbar">\
-                <div class="btn-group">\
-                  <a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#"><img data-type="supercell" src="assets/imgs/super-sm.png"></a>\
-                  <a data-type="cell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "cell"){ %> ribbon-selected<% } %>" href="#"><img data-type="cell" src="assets/imgs/cell-sm.png"></a>\
-                  <% if (allPartTypes[cellType][connectionType]){ %>\
-                  <a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>\
-                  <% } %>\
-                  <!--<a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>-->\
-                  <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>\
-                </div>\
-            </div>\
-            ')
-
+        template: _.template(template)
     });
 });
 

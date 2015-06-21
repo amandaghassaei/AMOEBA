@@ -2,7 +2,8 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'importMenuTemplate'],
+    function($, _, MenuParentView, plist, lattice, template){
 
     return MenuParentView.extend({
 
@@ -83,28 +84,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             return _.extend(this.model.toJSON(), this.fillGeometry.toJSON());
         },
 
-        template: _.template('\
-            Filename: &nbsp;&nbsp;<%= filename %><br/><br/>\
-            <% if (mesh){ %>\
-            Scale:<br/><br/>\
-            <a href="#" id="doFillGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>\
-            <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>\
-            <hr>\
-            <% } %>\
-            <a href="#" class=" btn btn-block btn-lg btn-danger clearCells">Clear All Cells</a><br/><br/>\
-            <br/><span class="btn btn-default btn-lg btn-file fullWidth">\
-                Upload STL<input id="importMenuUploadSTL" type="file">\
-           </span><br/>\
-           <div class="text-center">OR</div>\
-            <div class="btn-group fullWidth">\
-                <button data-toggle="dropdown" class="btn btn-lg btn-default dropdown-toggle fullWidth" type="button">Select Model <span class="caret"></span></button>\
-                <ul role="menu" class="dropdown-menu">\
-                  <li><a class="importMenuSelectMesh" data-file="meshes-airbus/wingCrossSection.stl" href="#">Wing</a></li>\
-                  <li><a id="importMenuSelectWall" href="#">Block</a></li>\
-                </ul>\
-            </div><!-- /btn-group -->\
-            ')
-
+        template: _.template(template)
     });
 });
 

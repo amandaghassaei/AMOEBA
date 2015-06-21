@@ -108,6 +108,26 @@ require.config({
         setupCommMenu: 'menus/SetupCommMenuView',
         discoveryMenu: 'menus/DiscoveryMenuView',
 
+        //templates
+        navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
+        ribbonTemplate: 'menus/templates/Ribbon.html',
+        modalViewTemplate: 'menus/templates/ModalView.html',
+        menuWrapperTemplate: 'menus/templates/MenuWrapperView.html',
+        latticeMenuTemplate: 'menus/templates/LatticeMenuView.html',
+        importMenuTemplate: 'menus/templates/LatticeMenuView.html',
+        partMenuTemplate: 'menus/templates/PartMenuView.html',
+        scriptMenuTemplate: 'menus/templates/ScriptMenuView.html',
+        physicsMenuTemplate: 'menus/templates/PhysicsMenuView.html',
+        materialMenuTemplate: 'menus/templates/MaterialMenuView.html',
+        optimizeMenuTemplate: 'menus/templates/OptimizationMenuView.html',
+        assemblerMenuTemplate: 'menus/templates/AssemblerMenuView.html',
+        camMenuTemplate: 'menus/templates/CamMenuView.html',
+        animateMenuTemplate: 'menus/templates/AnimationMenuView.html',
+        sendMenuTemplate: 'menus/templates/SendMenuView.html',
+        compositeMenuTemplate: 'menus/templates/CompositeMenuView.html',
+        setupCommMenuTemplate: 'menus/templates/SetupCommMenuView.html',
+        discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
+
         //stls
         octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',
         octaEdgeVoxPartSTL: '../assets/stls/parts/OctaEdgeVoxPart.stl',

@@ -1,0 +1,18 @@
+<div class="modal-dialog modal-med">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <p class="modal-title" ><%= title %></p>
+        </div>
+        <div class="modal-body">
+            <% if (typeof img !== "undefined") {%>
+                <img class="fullWidth" src="<%= img %>"><br/><br/>
+            <% } %>
+            <% if (text == ""){ %>
+                Need something here.
+            <% } else { %>
+                <%= text %>
+            <% } %>
+        </div>
+    </div>
+</div>

@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/1/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam'], function($, _, MenuParentView, plist, cam){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!animationMenuTemplate'], function($, _, MenuParentView, plist, cam, template){
 
     return MenuParentView.extend({
 
@@ -108,27 +108,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam'], function($, _, Me
             });
         },
 
-        template: _.template('\
-            <% if (stockSimulationPlaying){ %>\
-            <a href="#" id="pauseStockSim" class=" btn btn-block btn-lg btn-warning">Pause</a>\
-            <% } else { %>\
-                <% if (simLineNumber != 0){ %>\
-                    <a href="#" id="playStockSim" class=" btn btn-lg btn-halfWidth btn-success">Play</a>\
-                    <a href="#" id="resetStockSim" class=" btn btn-lg btn-halfWidth pull-right btn-default">Reset</a><br/>\
-                <% } else { %>\
-                    <a href="#" id="playStockSim" class=" btn btn-block btn-lg btn-success">Play</a>\
-                <% } %>\
-            <% } %>\
-            <input id="speedSlider" data-slider-id="speedSlider" type="text" data-slider-min="0" data-slider-max="6" data-slider-step="1" data-slider-value="<%= Math.log2(simSpeed) %>"/>\
-            <br/><a href="#" id="animationMenuSave" class=" btn btn-block btn-lg btn-default">Save</a><br/>\
-            <!--Assembly Time:&nbsp;&nbsp;<br/><br/>-->\
-            <% if (editsMadeToProgram && needsPostProcessing){ %>\
-            <div class="postWarning">You have made the following changes that require post processing:<br/>\
-            This will override edits you have made to the G-code.  OK to override? <a href="#" class="overrideEdits btn btn-block btn-lg btn-danger">OK</a></div>\
-            <% } %>\
-            <div id="gcodeEditor"><%= dataOut %></div><br/>\
-            <a href="#" class="overrideEdits btn btn-block btn-lg btn-default">Undo Changes</a><br/>\
-            ')
-
+        template: _.template(template)
     });
 });

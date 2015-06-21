@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParentView, plist){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!optimizeMenuTemplate'], function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 
@@ -16,8 +16,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParen
             return null;
         },
 
-        template: _.template('\
-            input stiffness requirements of structure\
-            ')
+        template: _.template(template)
     });
 });

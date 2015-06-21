@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, plist, Backbone, lattice){
+define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrapperTemplate'], function($, _, plist, Backbone, lattice, template){
 
     return Backbone.View.extend({
 
@@ -244,13 +244,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice'], function($, _, 
             this.model.set("menuIsVisible", true);
         },
 
-        template: _.template('\
-            <ul class="nav nav-tabs nav-justified">\
-            <% _.each(_.keys(allMenuTabs[currentNav]), function(key){\
-                if (key == "part" && !(allPartTypes[cellType][connectionType])) return;  %>\
-              <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= allMenuTabs[currentNav][key] %></a></li>\
-            <% }); %>\
-            </ul>\
-            ')
+        template: _.template(template)
     });
 });

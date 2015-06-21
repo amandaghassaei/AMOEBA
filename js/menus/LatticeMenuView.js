@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!latticeMenuTemplate'], function($, _, MenuParentView, plist, lattice, template){
 
     return MenuParentView.extend({
 
@@ -18,33 +18,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             return _.extend(_.extend(lattice.toJSON(), this.model.toJSON()), plist);
         },
 
-        template: _.template('\
-            Cell Type: &nbsp;&nbsp;\
-                <div class="btn-group">\
-                    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCellTypes[cellType] %><span class="caret"></span></button>\
-                    <ul role="menu" class="dropdown-menu">\
-                        <% _.each(_.keys(allCellTypes), function(key){ %>\
-                            <li><a class="lattice dropdownSelector" data-property="cellType" data-value="<%= key %>" href="#"><%= allCellTypes[key] %></a></li>\
-                        <% }); %>\
-                    </ul>\
-                </div><br/><br/>\
-            Cell Connection:&nbsp;&nbsp;\
-                <div class="btn-group">\
-                    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allConnectionTypes[cellType][connectionType] %>-Connected<span class="caret"></span></button>\
-                    <ul role="menu" class="dropdown-menu">\
-                        <% _.each(_.keys(allConnectionTypes[cellType]), function(key){ %>\
-                            <li><a class="lattice dropdownSelector" data-property="connectionType" data-value="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>\
-                        <% }); %>\
-                    </ul>\
-                </div><br/><br/>\
-            <% if (connectionType == "gik") { %>\
-            GIK Length:&nbsp;&nbsp;<input data-property="superCellRange" data-key="x" value="<%= superCellRange.x %>" placeholder="GIK length" class="form-control intInput appState" type="text"><br/>\
-            <br/>\
-            <% } %>\
-            <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>\
-            Num Cells:&nbsp;&nbsp;<%= numCells %><br/>\
-            ')
-
+        template: _.template(template)
     });
 });
 

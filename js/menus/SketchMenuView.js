@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParentView, plist){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!sketchMenuTemplate'], function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 
@@ -30,11 +30,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParen
             });
         },
 
-        template: _.template('\
-            Sketch Plane Height:&nbsp;&nbsp;<input id="zHeightSlider" data-slider-id="ex1Slider" type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="<%= zIndex %>"/>\
-            <br/><br/>\
-            todo: Sketch and extrude/cut commands\
-            ')
-
+        template: _.template(template)
     });
 });

@@ -1,0 +1,13 @@
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#"><img data-type="supercell" src="assets/imgs/super-sm.png"></a>
+        <a data-type="cell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "cell"){ %> ribbon-selected<% } %>" href="#"><img data-type="cell" src="assets/imgs/cell-sm.png"></a>
+        <% if (allPartTypes[cellType][connectionType]){ %>
+            <a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>
+        <% } %>
+        <!--<a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>-->
+        <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>
+    </div>
+</div>
+<!--//<a class="btn btn-primary btn-ribbon highlightMode<% if (highlightMode){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/cursor-light.png"></a>-->
+<!--//<a class="btn btn-primary btn-ribbon cellsVisible<% if (!cellsVisible){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/hide.png"></a>-->

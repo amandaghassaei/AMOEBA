@@ -2,7 +2,7 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!sendMenuTemplate'], function($, _, MenuParentView, plist, lattice, template){
 
     return MenuParentView.extend({
 
@@ -17,8 +17,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             return null;
         },
 
-
-        template: _.template('realtime communication with machine')
-
+        template: _.template(template)
     });
 });

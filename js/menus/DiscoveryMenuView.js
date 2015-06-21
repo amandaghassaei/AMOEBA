@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _, MenuParentView, plist, lattice){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!discoveryMenuTemplate'],
+    function($, _, MenuParentView, plist, lattice, template){
 
     var log = "testing<br/>hello";
 
@@ -27,11 +28,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice'], function($, _
             return _.extend({log: log}, this.model.toJSON(), plist);
         },
 
-        template: _.template('\
-        Log:\
-        <div id="gcodeEditor"><%= log %></div><br/>\
-        <a id="discoveryLogClear" href="#" class="btn btn-block btn-lg btn-danger">Clear Log</a><br/>\
-            ')
-
+        template: _.template(template)
     });
 });

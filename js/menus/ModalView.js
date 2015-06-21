@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
+define(['jquery', 'underscore', 'backbone', 'text!modalViewTemplate'], function($, _, Backbone, template){
 
     return Backbone.View.extend({
 
@@ -30,26 +30,6 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
 //            Backbone.View.prototype.remove.call(this);
         },
 
-        template: _.template('\
-            <div class="modal-dialog modal-med">\
-                <div class="modal-content">\
-                    <div class="modal-header">\
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\
-                    <p class="modal-title" ><%= title %></p>\
-                    </div>\
-                    <div class="modal-body">\
-                    <% if (typeof img !== "undefined") {%>\
-                    <img class="fullWidth" src="<%= img %>"><br/><br/>\
-                    <% } %>\
-                    <% if (text == ""){ %>\
-                    Need something here.\
-                    <% } else { %>\
-                        <%= text %>\
-                    <% } %>\
-                    </div>\
-                </div>\
-            </div>\
-        ')
-
+        template: _.template(template)
     });
 });

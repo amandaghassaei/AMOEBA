@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
+define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], function($, _, Backbone, template){
 
     return Backbone.View.extend({
 
@@ -48,34 +48,6 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
             })
         },
 
-        template: _.template('\
-            <li class="dropdown-submenu">\
-            <a tabindex="-1">UI<span class="pull-right fui-arrow-right"></span></a>\
-            <ul class="dropdown-menu">\
-                <li><a class="appState boolProperty" data-property="menuIsVisible" href="#">Menu</a></li>\
-                <li><a class="appState boolProperty" data-property="scriptIsVisible" href="#">Script</a></li>\
-                <li><a class="appState boolProperty" data-property="consoleIsVisible" href="#">Console</a></li>\
-                <li><a class="appState boolProperty" data-property="ribbonIsVisible" href="#">Ribbon</a></li>\
-            </ul></li>\
-            <li class="dropdown-submenu">\
-            <a tabindex="-1">3D UI<span class="pull-right fui-arrow-right"></span></a>\
-            <ul class="dropdown-menu">\
-                <li><a class="appState boolProperty" data-property="basePlaneIsVisible" href="#">Sketch Plane</a></li>\
-                <li><a class="appState boolProperty" data-property="highlighterIsVisible" href="#">Hover Tool</a></li>\
-            </ul></li>\
-            <li class="dropdown-submenu">\
-            <a tabindex="-1">Rendering<span class="pull-right fui-arrow-right"></span></a>\
-            <ul class="dropdown-menu">\
-                <li><a class="appState boolProperty" data-property="renderAmbientOcclusion" href="#">Ambient Occlusion</a></li>\
-                <li><a class="appState boolProperty" data-property="realisticColorScheme" href="#">Realistic Color Scheme</a></li>\
-            </ul></li>\
-            <li class="dropdown-submenu">\
-            <a tabindex="-1">3D<span class="pull-right fui-arrow-right"></span></a>\
-            <ul class="dropdown-menu">\
-                <li><a class="appState boolProperty" data-property="axesAreVisible" href="#">Axes</a></li>\
-                <li><a id="reset3DView" href="#">Reset 3D Navigation</a></li>\
-            </ul></li>\
-            ')
-
+        template: _.template(template)
     });
 });

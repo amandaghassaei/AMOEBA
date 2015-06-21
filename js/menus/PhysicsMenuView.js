@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParentView, plist){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!physicsMenuTemplate'], function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 
@@ -16,13 +16,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist'], function($, _, MenuParen
             return null;
         },
 
-        template: _.template('\
-            world physics: gravity, global forces\
-            <br/><br/>\
-            part connection stiffness\
-            <br/><br/>\
-            ground/fixed/boundary conditions definition\
-            ')
-
+        template: _.template(template)
     });
 });
