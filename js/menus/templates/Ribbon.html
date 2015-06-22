@@ -5,7 +5,7 @@
         <% if (allPartTypes[cellType][connectionType]){ %>
             <a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>
         <% } %>
-        <!--<a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>-->
+        <a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>
         <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>
     </div>
 </div>

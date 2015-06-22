@@ -19,6 +19,7 @@ require.config({
         stlLoader: '../dependencies/loaders/STLLoader',
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
+        fillGeometry: 'three/FillGeometry',
 
         //models
         globals: 'models/globals',
@@ -94,7 +95,7 @@ require.config({
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
         latticeMenu: 'menus/LatticeMenuView',
-        importMenu: 'menus/LatticeMenuView',
+        importMenu: 'menus/ImportMenuView',
         partMenu: 'menus/PartMenuView',
         scriptMenu: 'menus/ScriptMenuView',
         physicsMenu: 'menus/PhysicsMenuView',
@@ -114,7 +115,7 @@ require.config({
         modalViewTemplate: 'menus/templates/ModalView.html',
         menuWrapperTemplate: 'menus/templates/MenuWrapperView.html',
         latticeMenuTemplate: 'menus/templates/LatticeMenuView.html',
-        importMenuTemplate: 'menus/templates/LatticeMenuView.html',
+        importMenuTemplate: 'menus/templates/ImportMenuView.html',
         partMenuTemplate: 'menus/templates/PartMenuView.html',
         scriptMenuTemplate: 'menus/templates/ScriptMenuView.html',
         physicsMenuTemplate: 'menus/templates/PhysicsMenuView.html',

@@ -83,7 +83,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             var currentTab = this.get("currentTab");
             if (currentTab != "animate") this.set("stockSimulationPlaying", false);
             if (currentTab != "cam") this.set("manualSelectOrigin", false);
-            if (currentTab == "import" && globals.lattice.get("connectionType") == "edgeRot") globals.lattice.set("partType", "voxLowPoly");
+            if (currentTab == "import" && this.lattice.get("connectionType") == "edgeRot") this.lattice.set("partType", "voxLowPoly");
             this.get("lastNavTab")[this.get("currentNav")] = currentTab;//store tab
             this._updateCellMode(currentTab);
         },

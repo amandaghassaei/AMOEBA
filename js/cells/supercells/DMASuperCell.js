@@ -76,7 +76,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     DMASuperCell.prototype.setMode = function(mode, callback){
         var self = this;
         DMACell.prototype.setMode.call(this, mode, function(){
-            var numChildren = self.object3D.children.length-2;
+            var numChildren = _.filter(self.object3D.children, function(child){
+                return child.name == "object3D";
+            }).length;//todo this is weird
             self._loopCells(function(cell){
                 if (cell) cell.setMode(mode, function(){
                     if (--numChildren <= 0) {

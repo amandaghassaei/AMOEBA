@@ -12,7 +12,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
         if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
-
         this.materialName = json.materialName || appState.get("materialType");
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
@@ -121,17 +120,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return this.getOrientation().multiply(this.superCell.getAbsoluteOrientation());//order matters!
     };
 
-    DMACell.prototype.getEuler = function(){
-        return this.object3D.rotation.clone();
-    };
-
-    DMACell.prototype.applyRotation = function(vector){//
+    DMACell.prototype.applyRotation = function(vector){//todo local rotation?
         vector.applyQuaternion(this.getAbsoluteOrientation());
         return vector;
     };
 
     DMACell.prototype.applyAbsoluteRotation = function(vector){
         vector.applyQuaternion(this.getAbsoluteOrientation());
+        return vector;
     };
 
 
@@ -143,7 +139,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //highlighting
 
     DMACell.prototype.calcHighlighterParams = function(face, point){//this works for rectalinear, override in subclasses
-        var direction = face.normal.clone().applyQuaternion(this.getAbsoluteOrientation());
+        var direction = this.applyAbsoluteRotation(face.normal.clone());//todo local orientation?
         var position = this.getAbsolutePosition();
         var self  = this;
         _.each(_.keys(position), function(key){
@@ -153,12 +149,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setDeleteMode = function(state){
-
         var material;
         if (!state && !this.materialName) return;//cell may be deleted by now
         if (state) material = materials.deleteMaterial.threeMaterial;
         else  material = this.getMaterial(true);
-        if (!material) return;//cell may be deleted by now
+        if (!material) return;//no material object found
         if (this.object3D.children[0].material == material) return;
 
         if (this.cells){
@@ -264,8 +259,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 } else setVisiblity();
                 break;
             case "beam":
-//                if (!this.beams) this.beams = this._initBeams();
-                setVisiblity();
+                if (!this.beams) this.beams = this._initBeams(function(){
+                    if (!this.nodes) this.nodes = self._initNodes(function(){
+                        setVisiblity();
+                    });
+                    else setVisiblity();
+                });
+                else setVisiblity();
                 break;
             case "node":
 //                if (!this.nodes) this.nodes = this._initNodes();
@@ -301,7 +301,40 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //subcomponents
 
     DMACell.prototype._initParts = function(callback){
-        callback();//override in subclasses
+        if (callback) callback();//override in subclasses
+        return [];
+    };
+
+    DMACell.prototype._initNodes = function(callback){
+//        var PI2 = Math.PI * 2;
+//        var material = new THREE.SpriteCanvasMaterial({
+//            color: 0xffffff,
+//            program: function ( context ) {
+//                context.beginPath();
+//                context.arc( 0, 0, 2, 0, PI2, true );
+//                context.fill();
+//             }
+//        });
+//
+//        var particle = new THREE.Sprite(material);
+//        particle.name = "beam";
+//        this.addChildren(particle);
+        if (callback) callback();
+        return true;
+    };
+
+    DMACell.prototype._initBeams = function(callback){
+        if (this.cells) {
+            _.each(this.cells)
+        }
+        var wireframe = this._buildWireframe(this.object3D.children[0], this._getGeometry());
+        wireframe.name = "beam";
+        if (wireframe.material.wireframeLinewidth) wireframe.material.wireframeLinewidth = 5;
+        else wireframe.material.linewidth = 5;
+        wireframe.material.color = this.getMaterial(true).color;
+        this.addChildren(wireframe);
+        if (callback) callback();
+        return true;
     };
 
 
