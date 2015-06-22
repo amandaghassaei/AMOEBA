@@ -16,6 +16,10 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
             if (this._initialize) this._initialize();//call subclass
         },
 
+        getPropertyOwner: function($target){
+            return null;//override in subclasses
+        },
+
         render: function(){
             if (this.model.changedAttributes()["currentNav"]) return;
             if ($("input[type=text]").is(":focus")) return;

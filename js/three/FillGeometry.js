@@ -17,6 +17,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
         initialize: function(){
     
             //bind events
+            this.listenTo(this, "change:scale", this._changeScale);
         },
     
         buildNewMesh:function(geometry){
@@ -125,7 +126,8 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             three.render();
         },
     
-        scale: function(scale){
+        _changeScale: function(){
+            console.log(this.get("scale"));
     //        var currentScale = this.get("scale");
     //        for (var i=0;i<currentScale.length;i++){
     //            if (!scale[i]) scale[i] = currentScale[i];

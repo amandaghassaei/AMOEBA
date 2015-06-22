@@ -24,6 +24,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMe
             this.listenTo(this.fillGeometry, "change", this.render);
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("fillGeometry")) return this.fillGeometry;
+        },
+
         _uploadSTL: function(e){//select a mesh to upload
             e.preventDefault();
             var input = $(e.target),

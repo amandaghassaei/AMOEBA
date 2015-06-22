@@ -46,7 +46,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             this.socket.emit("flush");
         },
 
-        changeProperty: function(property, value){//portName, baudRate
+        setProperty: function(property, value){//portName, baudRate
             if (property === null || property === undefined || value === null || value === undefined) return;
             this.socket.emit(property, value);//always pass user interaction on
             this.set(property, value);
@@ -74,7 +74,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         socket.on('portConnected', function(data){
             console.log("connected port " + data.portName + " at " + data.baudRate);
             serialComm.set("baudRate", data.baudRate);
-            serialComm.set("portName", data.portName)
+            serialComm.set("portName", data.portName);
             serialComm.set("portConnected", true);
             serialComm.set("error", false);
         });

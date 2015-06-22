@@ -1,9 +1,9 @@
 Filename: &nbsp;&nbsp;<%= filename %><br/><br/>
 <% if (mesh){ %>
-    Scale:<br/><br/>
-        <a href="#" id="doFillGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>
-        <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>
-        <hr>
+    Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput fillGeometry" type="text"><br/><br/>
+    <a href="#" id="doFillGeo" class=" btn btn-block btn-lg btn-default">Fill Mesh</a><br/>
+    <a href="#" id="removeFillGeo" class=" btn btn-block btn-lg btn-default">Remove Mesh</a><br/>
+    <hr>
 <% } %>
 <a href="#" class=" btn btn-block btn-lg btn-danger clearCells">Clear All Cells</a><br/><br/>
 <br/><span class="btn btn-default btn-lg btn-file fullWidth">

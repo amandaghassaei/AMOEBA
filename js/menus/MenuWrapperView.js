@@ -46,7 +46,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
 
             if ($(".floatInput").is(":focus")) this._updateFloat(e);
             if ($(".intInput").is(":focus")) this._updateInt(e);
-            if ($(".textInput").is(":focus")) this._updateString(e)
+            if ($(".textInput").is(":focus")) this._updateString(e);
             if ($(".hexInput").is(":focus")) this._updateHex(e);
         },
 
@@ -58,7 +58,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
                 console.warn("no property associated with string input");
                 return;
             }
-            this._getPropertyOwner($target).set(property, $target.val());
+            this._setProperty($target, $target.val());
         },
 
         _updateHex: function(e){
@@ -71,8 +71,8 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
                 console.warn("no property associated with string input");
                 return;
             }
-            this._getPropertyOwner($target).set(property, hex);
-            if (this.menu.updateHex) this.menu.updateHex(hex);
+            this._setProperty($target, property, hex);
+            if (this.menu.updateHex) this.menu.updateHex(hex);//no render when input in focus, this forces update of the inputs color
         },
 
         _isValidHex: function(hex){
@@ -121,14 +121,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
             //remove trailing zeros
             newVal = newVal.toString();
             newVal = parseFloat(newVal);
-
-            if (key){
-                var value = this._getPropertyOwner($target).get(property).clone();
-                value[key] = newVal;
-                this._getPropertyOwner($target).set(property, value);
-                return;
-            }
-            this._getPropertyOwner($target).set(property, newVal);
+            this._setProperty($target, property, newVal, key);
         },
 
         _makeDropdownSelection: function(e){
@@ -136,8 +129,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
             var property = $target.data("property");
             var value = $target.data("value");
             if (!property || !value) return;
-            var owner = this._getPropertyOwner($target, property, value);
-            if (owner) owner.set(property, value);
+            this._setProperty($target, property, value);
         },
 
         _clickCheckbox: function(e){
@@ -149,13 +141,15 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
                 console.warn("no property associated with checkbox input");
                 return;
             }
-           this._getPropertyOwner($target).set(property, !this._getPropertyOwner($target).get(property));
+            this._toggleProperty($target, property);
         },
 
         _radioSelection: function(e){
             e.preventDefault();
             var $target = $(e.target);
-            this._getPropertyOwner($target).set($target.attr("name"), $target.val());
+            var property = $target.attr("name");
+            var newVal = $target.val();
+            this._setProperty($target, property, newVal);
             $target.blur();
         },
 
@@ -164,19 +158,39 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
             lattice.getUItarget().clearCells();
         },
 
-        _getPropertyOwner: function($target, property, value){
+        _getPropertyOwner: function($target){
             if ($target.hasClass("lattice")) return lattice;
-            if ($target.hasClass("compositeEditor")) return lattice.compositeEditor;
             if ($target.hasClass("assembler")) return globals.cam;
             if ($target.hasClass("appState")) return this.model;
-            if ($target.hasClass("serialComm")) {
-                require(['serialComm'], function(serialComm){
-                    serialComm.changeProperty(property, value);
-                });
-                return null;
+            if (this.menu) {
+                var owner = this.menu.getPropertyOwner($target);
+                if (owner) return owner;
             }
-            console.warn("no owner found for " + $target);
+            else console.warn("no menu found for ui change");
+            console.warn("no owner found for target");
+            console.warn($target);
             return null;
+        },
+
+        _toggleProperty: function($target, property){ //val = !val
+            var owner = this._getPropertyOwner($target);
+            if (owner) owner.set(property, !owner.get(property));
+        },
+
+        _setProperty: function($target, property, newVal, key){
+            var owner = this._getPropertyOwner($target);
+            if (!owner) return;
+            if (owner.setProperty){
+                owner.setProperty(property, newVal, key);
+                return;
+            }
+            if (key){
+                var propObject = owner.get(property).clone();
+                propObject[key] = newVal;
+                owner.set(property, propObject);
+            } else {
+                owner.set(property, newVal);
+            }
         },
 
 

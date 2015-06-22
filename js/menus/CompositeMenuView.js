@@ -32,6 +32,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             dimensions = lattice.compositeEditor.calculateBoundingBox();
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("compositeEditor")) return lattice.compositeEditor;
+            return null;
+        },
+
         _changeRandomColor: function(e){
             e.preventDefault();
             lattice.compositeEditor._changeRandomColor();
