@@ -88,6 +88,10 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveA
 
     function _setData(object, data, silent){
         _.each(_.keys(data), function(key){
+            if (data[key] && data[key].x){//vector object
+                object.set(key, new THREE.Vector3(data[key].x, data[key].y, data[key].z));
+                return;
+            }
             object.set(key, data[key], {silent:true});
         });
         if (!silent || silent === undefined) object.trigger("change");
