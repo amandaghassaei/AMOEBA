@@ -71,10 +71,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 cellsMax: this.get("cellsMax").clone(),
                 dimensions: dimensions
             };
-            if (!materials[id]) materials[id] = {};
-            _.extend(materials[id], data);//todo trigger change on all instances
-            if (materials[id].threeMaterial) materials[id].threeMaterial.color = new THREE.Color(this.get("color"));
-            else materials[id].threeMaterial = new THREE.MeshLambertMaterial({color:new THREE.Color(this.get("color")), shading:THREE.FlatShading})
+            materials.setMaterial(id, data);
         },
 
         deleteComposite: function(){

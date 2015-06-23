@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
+define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveAs, lattice, materials){
 
     function _saveFile(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
@@ -22,7 +22,8 @@ define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
     function save(name){
         if (!name || name == "" || name == undefined) name = "DM Assembly";
         var data = JSON.stringify({
-            assembly:_getLatticeDataToSave()
+            assembly:_getLatticeDataToSave(),
+            materials:_getMaterialsDataToSave()
         });
         _saveFile(data, name, ".json");
     }
@@ -52,7 +53,25 @@ define(['underscore', 'fileSaverLib', 'lattice'], function(_, saveAs, lattice){
         return lattice.getSaveJSON();
     }
 
+    function _getMaterialsDataToSave(){
+        var data = {};
+        var compositeKeys = _.filter(_.keys(materials), function(key){
+            return key.substr(0,5) == "super";
+        });
+        _.each(compositeKeys, function(key){
+            data[key] = _.omit(materials[key], "threeMaterial");
+        });
+        return data;
+    }
+
     function loadFile(data){//parsed json todo make this better - load composite
+        if (!data.materials){
+            console.warn("no material definitions in this file")
+            return;
+        }
+        _.each(_.keys(data.materials), function(key){
+            materials.setMaterial(key, data.materials[key]);
+        });
         if (!data.assembly){
             console.warn("no assembly in this file");
             return;

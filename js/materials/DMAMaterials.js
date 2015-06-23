@@ -9,6 +9,12 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         deleteMaterial: {
             color: "#ff0000",
             threeMaterial:new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
+        },
+        setMaterial: function(id, data){
+            if (!materials[id]) materials[id] = {};
+            var oldColor = materials[id].color;
+            _.extend(materials[id], data);//todo trigger change on all instances
+            if (materials[id].threeMaterial || oldColor != materials[id].color) changeSingleMaterialColorScheme(id);
         }
     };
 
@@ -44,12 +50,17 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     function changeColorScheme(){
         var state = appState.get("realisticColorScheme");
         _.each(_.keys(materials), function(name){
-            var materialInfo = materials[name];
-            var color = getMaterialColorForState(state, materialInfo, name);
-            if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
-            else materialInfo.threeMaterial = makeMaterialObject(color);
+            changeSingleMaterialColorScheme(name, state);
         });
         three.render();
+    }
+
+    function changeSingleMaterialColorScheme(name, state){
+        if (!state) state = appState.get("realisticColorScheme");
+        var materialInfo = materials[name];
+        var color = getMaterialColorForState(state, materialInfo, name);
+        if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
+        else materialInfo.threeMaterial = makeMaterialObject(color);
     }
 
     function getMaterialColorForState(state, definition, key){
