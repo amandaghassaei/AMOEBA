@@ -75,7 +75,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return "cell";
     };
 
-    DMACell.prototype._buildWireframe = function(mesh, geometry){//for "cell" view
+    DMACell.prototype._buildWireframe = function(mesh, geometry, isBeam){//for "cell" view
+        if (isBeam) new THREE.Mesh(geometry, wireframeMaterial.clone());//todo fix this
         return new THREE.Mesh(geometry, wireframeMaterial);
     };
 
@@ -252,6 +253,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 break;
             case "part":
                 if (!this.parts) {
+                    console.log(this);
                     this._initParts(function(parts){
                         self.parts = parts;
                         setVisiblity();
@@ -324,10 +326,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype._initBeams = function(callback){
-        if (this.cells) {
-            _.each(this.cells)
-        }
-        var wireframe = this._buildWireframe(this.object3D.children[0], this._getGeometry());
+        var wireframe = this._buildWireframe(this.object3D.children[0], this._getGeometry(), true);
         wireframe.name = "beam";
         if (wireframe.material.wireframeLinewidth) wireframe.material.wireframeLinewidth = 5;
         else wireframe.material.linewidth = 5;
@@ -408,8 +407,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var data = {
             materialName: this.materialName
         };
-        if (materials[this.materialName].cells) return data;//material definition in material composites
-        if (this.cells) data.cells = this.cells;
+//        if (materials[this.materialName].sparseCells) return data;//material definition in material composites
+//        if (this.cells) data.cells = this.cells;
         return data;
     };
 

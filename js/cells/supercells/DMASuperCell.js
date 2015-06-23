@@ -143,11 +143,5 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         });
     };
 
-    DMASuperCell.prototype.toJSON = function(){
-        var data = DMACell.prototype.toJSON.call(this);
-        if (this.cells) data.cells = this.cells;
-        return data;
-    };
-
     return DMASuperCell;
 });

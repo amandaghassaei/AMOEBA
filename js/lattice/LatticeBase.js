@@ -489,7 +489,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){
-                if (cell) self.addCellAtIndex((new THREE.Vector3(x, y, z)).add(cellsMin), true, true, cell.material);
+                if (cell) self.addCellAtIndex((new THREE.Vector3(x, y, z)).add(cellsMin), true, true, cell.materialName);
             });
         },
 
