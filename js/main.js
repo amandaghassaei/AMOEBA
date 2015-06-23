@@ -31,20 +31,24 @@ require.config({
         socketio: '../dependencies/socket.io-1.3.5',
         serialComm: 'models/SerialComm',
 
-        //lattice
+        //lattice classes and extra methods
         latticeBase: 'lattice/LatticeBase',
         lattice: 'lattice/Lattice',
-        cubeLattice: 'lattice/CubeLattice',
-        gikLattice: 'lattice/GIKLattice',
-        kelvinLattice: 'lattice/KelvinLattice',
-        octaEdgeLattice: 'lattice/OctaEdgeLattice',
-        octaFaceLattice: 'lattice/OctaFaceLattice',
-        octaRotEdgeLattice: 'lattice/OctaRotEdgeLattice',
-        octaVertexLattice: 'lattice/OctaVertexLattice',
-        truncatedCubeLattice: 'lattice/TruncatedCubeLattice',
-        tetraStackedLattice: 'lattice/TetraStackedLattice',
-        tetraVertexLattice: 'lattice/TetraVertexLattice',
         compositeEditorLattice: 'lattice/CompositeEditorLattice',
+        latticeImportGeo: 'lattice/ImportGeo',
+        latticeCAM: 'lattice/latticeCAM',
+
+        //lattice "subclasses"
+        cubeLattice: 'lattice/latticeSubclasses/CubeLattice',
+        gikLattice: 'lattice/latticeSubclasses/GIKLattice',
+        kelvinLattice: 'lattice/latticeSubclasses/KelvinLattice',
+        octaEdgeLattice: 'lattice/latticeSubclasses/OctaEdgeLattice',
+        octaFaceLattice: 'lattice/latticeSubclasses/OctaFaceLattice',
+        octaRotEdgeLattice: 'lattice/latticeSubclasses/OctaRotEdgeLattice',
+        octaVertexLattice: 'lattice/latticeSubclasses/OctaVertexLattice',
+        truncatedCubeLattice: 'lattice/latticeSubclasses/TruncatedCubeLattice',
+        tetraStackedLattice: 'lattice/latticeSubclasses/TetraStackedLattice',
+        tetraVertexLattice: 'lattice/latticeSubclasses/TetraVertexLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',
