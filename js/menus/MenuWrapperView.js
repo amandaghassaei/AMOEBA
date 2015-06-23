@@ -13,8 +13,8 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
             "click .menuWrapperTab>a":                     "_tabWasSelected",
             "click .dropdownSelector":                     "_makeDropdownSelection",
             "click .clearCells":                           "_clearCells",
-            "focusout .floatInput":                        "_renderTab",//force rounding if needed
-            "focusout .intInput":                          "_renderTab",
+            "focusout .floatInput":                        "_softRenderTab",//force rounding if needed
+            "focusout .intInput":                          "_softRenderTab",
             "change input:checkbox":                       "_clickCheckbox",
             "click input:radio":                           "_radioSelection"
         },
@@ -40,7 +40,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
             if ($(".unresponsiveInput").is(":focus")) return;
             if ($("input").is(":focus") && e.keyCode == 13) {//enter key
                 $(e.target).blur();
-                this._renderTab();
+                this._softRenderTab();
                 return;
             }
 
@@ -213,6 +213,11 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
                 }
             });
             this._renderTab(tabName);
+        },
+
+        _softRenderTab: function(){
+            if (this.menu) this.menu.render();
+            else console.warn("no menu found");
         },
 
         _renderTab: function(tabName){

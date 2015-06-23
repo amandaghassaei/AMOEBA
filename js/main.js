@@ -133,6 +133,9 @@ require.config({
         setupCommMenuTemplate: 'menus/templates/SetupCommMenuView.html',
         discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
 
+        //assemblers
+        crab: 'cam/assemblers/crab',
+
         //stls
         octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',
         octaEdgeVoxPartSTL: '../assets/stls/parts/OctaEdgeVoxPart.stl',
@@ -140,7 +143,8 @@ require.config({
         gikPartSTL: '../assets/stls/parts/GIKPart.stl',
         gikEndPartSTL: '../assets/stls/parts/GIKEndPart.stl',
         gikPartLowPolySTL: '../assets/stls/parts/GIKPartLowPoly.stl',
-        gikEndPartLowPolySTL: '../assets/stls/parts/GIKEndPartLowPoly.stl'
+        gikEndPartLowPolySTL: '../assets/stls/parts/GIKEndPartLowPoly.stl',
+        crabSTL: '../assets/stls/crab/crab.stl'
 
     },
 

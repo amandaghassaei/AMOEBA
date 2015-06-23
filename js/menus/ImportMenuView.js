@@ -26,6 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMe
 
         getPropertyOwner: function($target){
             if ($target.hasClass("fillGeometry")) return this.fillGeometry;
+            return null;
         },
 
         _uploadSTL: function(e){//select a mesh to upload

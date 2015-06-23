@@ -100,6 +100,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         addCellsInRange: function(range){//add a block of cells (extrude)
+
             this.checkForMatrixExpansion(this.sparseCells, range.max, range.min);
 
             var cellsMin = this.get("cellsMin");

@@ -99,7 +99,8 @@ define(['three'], function(THREE){
 
         allMaterialClasses:{
             mechanical: "Structural",
-            electronic: "Electronic"
+            electronic: "Electronic",
+            space: "Space Structures"
         },
 
         allMaterials:{
@@ -155,6 +156,47 @@ define(['three'], function(THREE){
                     color: "#aaa",
                     altColor: "#8391AC"
                 }
+            },
+            space:{
+                fiberGlass: {
+                    name: "Glass Filled Nylon",
+                    color: "#fef1b5",
+//                    opacity: "0.9",
+                    altColor: "#ecf0f1"
+                },
+                carbon: {
+                    name: "Carbon Composite",
+                    color: "#222",
+                    altColor: "#000"
+                },
+                nType: {
+                    name: "Aluminum",
+                    color: "#bcc6cc",
+                    altColor: "#8391AC"
+                },
+                brass:{
+                    name: "Brass",
+                    color: "#b5a642",
+                    altColor: "#857B64"
+                },
+                nTypePlus: {
+                    name: "Power Storage",
+                    color: "#c6ccbc",
+                    altColor: "#9CC9CB"
+                },
+                pType: {
+                    name: "Logic",
+                    color: "#ccbcc6",
+                    altColor: "#F5447B"
+                },
+                pTypePlus: {
+                    name: "Solar Panel",
+                    color: "#ccc2bc",
+                    altColor: "#F99987"
+                }
+                //857B64
+                //FDE2D9
+                //D77948
             }
         },
 

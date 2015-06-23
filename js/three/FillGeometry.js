@@ -28,47 +28,42 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             geometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-geometry.boundingBox.min.z));//set on top of baseplane
             geometry.computeBoundingBox();
     
-            var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial(
-                {color:0xf25536,
-                    shading: THREE.FlatShading,
-                    transparent:true,
-                    opacity:0.4,
-                    side:THREE.DoubleSide}));
-            this.makeBoundingBox(mesh);
+            var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
+                color:0xf25536,
+                shading: THREE.FlatShading,
+                transparent:true,
+                opacity:0.4,
+                side:THREE.DoubleSide
+            }));
             this.set({mesh: mesh});
             three.sceneAdd(mesh);
             three.render();
         },
     
-        makeBoundingBox: function(mesh){
-            var box = new THREE.BoxHelper(mesh);
-            box.material.color.setRGB(0,0,0);
-            box.material.opacity = 0.4;
-            box.material.transparent = true;
-            this.set("boundingBox", box);
-    //        three.sceneAdd(box);
-        },
-    
         fillGeo: function(){
-            var boundingBox = this.get("boundingBox");
-            boundingBox.geometry.computeBoundingBox();
-            var bounds = boundingBox.geometry.boundingBox;
+            var boundingBox = this.get("mesh").geometry.boundingBox;
     
             var scale = this.get("scale");
+            var scaledMin = boundingBox.min.clone().multiplyScalar(scale);
+            var scaledMax = boundingBox.max.clone().multiplyScalar(scale);
+            console.log(scaledMin);
+            console.log(scaledMax);
     
-            var minIndex = lattice.getIndexForPosition(bounds.min);
-            var maxIndex = lattice.getIndexForPosition(bounds.max);
+            var minIndex = lattice.getIndexForPosition(scaledMin);
+            var maxIndex = lattice.getIndexForPosition(scaledMax);
+            console.log(minIndex);
+            console.log(maxIndex);
             lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
     
             var raycaster = new THREE.Raycaster();
             var direction = new THREE.Vector3(0,0,1);
             var mesh = this.get("mesh");
             raycaster.near = 0;
-            raycaster.far = bounds.max-bounds.min+2;//add some padding just in case
+            raycaster.far = scaledMax.z-scaledMin.z+2;//add some padding just in case
             for (var x=minIndex.x;x<=maxIndex.x;x++){
                 for (var y=minIndex.y;y<=maxIndex.y;y++){
-                    var origin = lattice.getPositionForIndex({x:x, y:y, z:minIndex.z});
-                    origin.z = bounds.min.z-1;//more padding
+                    var origin = lattice.getPositionForIndex(new THREE.Vector3(x, y, minIndex.z));
+                    origin.z = scaledMin.z-1;//more padding
                     raycaster.set(origin, direction);
                     var intersections = raycaster.intersectObject(mesh);
                     if (intersections.length == 0) continue;
@@ -76,7 +71,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
                     var nextIntersectionIndex = 0;
                     var nextIntersection = intersections[nextIntersectionIndex].distance;
                     for (var z=minIndex.z;z<=maxIndex.z;z++){
-                        var index = {x:x,y:y,z:z};
+                        var index = new THREE.Vector3(x, y, z);
                         var position = lattice.getPositionForIndex(index);
                         if (!inside){
                             if (position.z<nextIntersection) continue;
@@ -95,7 +90,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
                         if (!next) break;
                         inside = next.inside;
                         nextIntersection = next.nextIntersection;
-                        nextIntersectionIndex = next.nextIntersetcionIndex;
+                        nextIntersectionIndex = next.nextIntersectionIndex;
                     }
                 }
             }
@@ -107,7 +102,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             if (nextIntersectionIndex < intersections.length) {
                 var nextIntersection = intersections[nextIntersectionIndex].distance;
                 if (nextIntersection < position.z) return this._getNextIntersection(position, intersections, nextIntersectionIndex, !inside);
-                return {nextIntersection:nextIntersection, nextIntersetcionIndex: nextIntersectionIndex, inside:inside};
+                return {nextIntersection:nextIntersection, nextIntersectionIndex: nextIntersectionIndex, inside:inside};
             }
             else return null;
         },
@@ -127,13 +122,9 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
         },
     
         _changeScale: function(){
-            console.log(this.get("scale"));
-    //        var currentScale = this.get("scale");
-    //        for (var i=0;i<currentScale.length;i++){
-    //            if (!scale[i]) scale[i] = currentScale[i];
-    //        }
-    //        this.get("mesh").scale.set(scale[0], scale[1], scale[2]);
-    //        this.set("scale", scale);
+            var scale = this.get("scale");
+            this.get("mesh").scale.set(scale, scale, scale);
+            three.render();
         }
     });
 });
