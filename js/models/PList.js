@@ -8,9 +8,9 @@ define(['three'], function(THREE){
         allMenuTabs: {
             navDesign:{
                 lattice:"Lattice",
-                import:"Import",
                 //sketch:"Sketch",
                 material:"Material",
+                import:"Import",
                 part:"Part",
                 script:"Script"
             },

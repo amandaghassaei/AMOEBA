@@ -31,7 +31,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.listenTo(appState, "change:cellMode", this._updateForMode);
             this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 
-            if (this.__bindEvents) this.__bindEvents();
             if (this.__initialize) this.__initialize(options, callback);
         },
 

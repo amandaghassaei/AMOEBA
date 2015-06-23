@@ -22,8 +22,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         }),
 
 
-
-        __bindEvents: function(){
+        __initialize: function(){
 
             this.listenTo(this, "change:partType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
@@ -32,9 +31,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
-        },
 
-        __initialize: function(){
             this._updateLatticeType();
         },
 
@@ -248,8 +245,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         inCompositeMode: function(){
-            if (this.compositeEditor) return true;
-            return false;
+            return this.compositeEditor != null;
         },
 
         _isSingltonLattice: function(){
