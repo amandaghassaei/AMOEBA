@@ -100,7 +100,7 @@ define(['three'], function(THREE){
         allMaterialClasses:{
             mechanical: "Structural",
             electronic: "Electronic",
-            space: "Space Structures"
+//            space: "Space Structures"
         },
 
         allMaterials:{

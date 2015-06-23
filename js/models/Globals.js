@@ -8,6 +8,6 @@ define([], function(){
 
     return {
         baseplane: null,
-        highlighter: null,
+        highlighter: null
     };
 });

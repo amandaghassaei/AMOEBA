@@ -133,6 +133,9 @@ require.config({
         setupCommMenuTemplate: 'menus/templates/SetupCommMenuView.html',
         discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
 
+        //cam
+        cam: 'cam/cam.js',
+
         //assemblers
         crab: 'cam/assemblers/crab',
 
