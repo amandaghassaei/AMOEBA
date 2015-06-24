@@ -40,17 +40,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
                     cells[x][y].push(null);
 
+                    var json = {index: new THREE.Vector3(x,y,z)};
+                    var callback = function(cell){
+                        var cellIndex = cell.getIndex();//x,y,z have changed by now
+                        cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
+                    };
+
                     if (material.sparseCells){
                         if (material.sparseCells[x][y][z]){
-                            this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:material.sparseCells[x][y][z].materialName}, function(cell){
-                                var cellIndex = cell.getIndex();//x,y,z have changed by now
-                                cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
-                            });
+                            json = _.extend(json, material.sparseCells[x][y][z]);
+                            this._makeSubCellForIndex(json, callback);
                         }//else no cell in this spot
                     } else {//if not from composite definition, add subcell at all possible indices in supercell range
-                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:this.materialName}, function(cell){
-                            cells[x][y][z] = cell;
-                        });
+                        this._makeSubCellForIndex(json, callback);
                     }
                 }
             }
