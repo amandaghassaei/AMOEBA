@@ -417,6 +417,14 @@ label.colorSwatches>span.icons{
     margin-left:20px;
 }
 
+.materialListTitle{
+      display: inline-flex;
+      max-width: 220px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+}
+
 .red {
     color:red;
 }
