@@ -35,7 +35,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     GIKSuperCell.prototype._rotateCell = function(object3D){
         if (!this.index) return object3D;
-        if (this.getAbsoluteIndex().z%2 != 0) object3D.rotateZ(Math.PI/2);
+        if (this.index.z%2 != 0) object3D.rotateZ(Math.PI/2);
         return object3D;
     };
 

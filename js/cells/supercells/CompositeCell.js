@@ -18,6 +18,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return geo;
     };
 
+    CompositeCell.prototype._rotateCell = function(object3D){
+        if (lattice.get("connectionType") == "gik") {
+            if (this.index.z %2 != 0) return object3D.rotateZ(Math.PI/2);
+            return object3D;
+        }
+        return DMASuperCell.prototype._rotateCell.call(this, object3D);
+    };
+
     CompositeCell.prototype._buildWireframe = function(mesh){
         var wireframe = new THREE.BoxHelper(mesh);
         wireframe.material.color.set(0x000000);
