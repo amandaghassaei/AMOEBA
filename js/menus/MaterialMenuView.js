@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         events: {
             "click #navToCompositeMenu":                             "_navToCompositeMenu",
             "click #compositeFromLattice":                           "_latticeToComposite",
-            "click .editComposite":                                  "_editComposite"
+            "click .editComposite":                                  "_editComposite",
+            "click .editMaterial":                                   "_editMaterial"
         },
 
         _initialize: function(){
@@ -30,6 +31,15 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             var id = $(e.target).data("id");
             lattice.setToCompositeMode(id, materials[id]);
         },
+
+        _editMaterial: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            var id = $(e.target).data("id");
+            this.model.set("currentTab", "materialEditor", {silent:true});
+            this.model.set("currentNav", "navMaterial");
+        },
+
 
         _latticeToComposite: function(e){
             lattice.setToCompositeMode(null, lattice.getCompositeData());

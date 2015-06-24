@@ -110,6 +110,7 @@ require.config({
         animateMenu: 'menus/AnimationMenuView',
         sendMenu: 'menus/SendMenuView',
         compositeMenu: 'menus/CompositeMenuView',
+        materialEditorMenu: 'menus/MaterialEditorMenuView',
         setupCommMenu: 'menus/SetupCommMenuView',
         discoveryMenu: 'menus/DiscoveryMenuView',
 
@@ -130,6 +131,7 @@ require.config({
         animateMenuTemplate: 'menus/templates/AnimationMenuView.html',
         sendMenuTemplate: 'menus/templates/SendMenuView.html',
         compositeMenuTemplate: 'menus/templates/CompositeMenuView.html',
+        materialEditorMenuTemplate: 'menus/templates/MaterialEditorMenuView.html',
         setupCommMenuTemplate: 'menus/templates/SetupCommMenuView.html',
         discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
 

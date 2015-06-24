@@ -413,7 +413,7 @@ label.colorSwatches>span.icons{
     margin: 0 20px 0 -10px;
 }
 
-.editComposite {
+.editComposite, .editMaterial {
     margin-left:20px;
 }
 

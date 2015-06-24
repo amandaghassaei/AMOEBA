@@ -30,6 +30,9 @@ define(['three'], function(THREE){
             navComm:{
                 setupComm: "Setup",
                 send: "Send"
+            },
+            navMaterial:{
+                materialEditor: "Material Editor"
             }
         },
 

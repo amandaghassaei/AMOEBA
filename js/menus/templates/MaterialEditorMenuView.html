@@ -1,0 +1,12 @@
+<a href="#" class="btn btn-halfWidth btn-lg btn-default importJSON">Load Material</a>
+<a id="saveMaterial" href="#" class="btn btn-halfWidth btn-lg pull-right btn-default">Save Material</a><br/><br/>
+Name: &nbsp;&nbsp;<input id="materialName" data-property="name" value="<%= name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput materialEditor" type="text"><br/><br/>
+Display Color: &nbsp;&nbsp;
+    <input id="materialColor" style="border-color: <%= altColor %> ;" data-property="altColor" value="<%= color %>" placeholder="Enter HEX" class="halfWidth materialEditor form-control hexInput" type="text"><br/><br/>
+<a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Display Color</a><br/>
+Realistic Color: &nbsp;&nbsp;
+    <input id="materialAltColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth materialEditor form-control hexInput" type="text"><br/><br/>
+Material Properties:<br/><br/>add properties here<br/><br/>
+<a id="finishMaterial" href="#" class="btn btn-block btn-lg btn-success">Save Material</a><br/>
+<a id="cancelMaterial" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>
+<a id="deleteMaterial" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default"><span class="fui-trash"></span> Delete</a><br/>

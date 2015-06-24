@@ -11,12 +11,19 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             threeMaterial:new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
         },
         setMaterial: function(id, data){
+            if (id && data === null) return deleteMaterial(id);
             if (!materials[id]) materials[id] = {};
             var oldColor = materials[id].color;
             _.extend(materials[id], data);//todo trigger change on all instances
             if (materials[id].threeMaterial || oldColor != materials[id].color) changeSingleMaterialColorScheme(id);
+            return false;
         }
     };
+
+    function deleteMaterial(id){
+        delete materials[id];//todo check if being used first
+        return true;
+    }
 
     var listener = {};
     _.extend(listener, Backbone.Events);

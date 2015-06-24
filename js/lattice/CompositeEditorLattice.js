@@ -75,8 +75,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         deleteComposite: function(){
-            var id = this.get("id");
-            delete materials[id];//todo check if being used first
+            return materials.setMaterial(this.get("id"), null);
         },
 
 
