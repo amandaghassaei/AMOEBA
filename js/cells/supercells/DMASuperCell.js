@@ -95,6 +95,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     };
 
+    DMASuperCell.prototype._isMiddleLayer = function(){
+        return this.superCell !== null && this.superCell !== undefined;
+    };
+
+    DMASuperCell.prototype._isTopLayerCell = function(){
+        return false;
+    };
+
 
 
 

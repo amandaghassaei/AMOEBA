@@ -245,7 +245,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
         switch(mode) {
             case "supercell":
-                if (!this.superCell && !this.cells) mode = "cell";//top level item
+                if (this._isTopLayerCell()) mode = "cell";//top level item
                 setVisiblity();
                 break;
             case "cell":
@@ -278,7 +278,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
         function setVisiblity(){
             var visible = true;
-            if (mode == "supercell") visible = !(self.superCell && self.cells);//middle layers are always hidden in supercell mode
+            if (mode == "supercell") visible = !self._isMiddleLayer();//middle layers are always hidden in supercell mode
 
             _.each(self.object3D.children, function(child){
                 if (child.name == "object3D") return;
@@ -292,6 +292,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             if (!self.superCell) three.conditionalRender();
         }
     };
+
+    DMACell.prototype._isMiddleLayer = function(){
+        return false;
+    };
+
+    DMACell.prototype._isTopLayerCell = function(){
+        return this.superCell === null || this.superCell === undefined;
+    };
+
 
 
 

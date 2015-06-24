@@ -39,6 +39,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             lattice.compositeEditor._changeRandomColor();
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("compositeEditor")) return lattice.compositeEditor;
+            return null;
+        },
+
         updateHex: function(hex){
             //update hex without rendering
             $("#compositeColor").css("border-color", hex);

@@ -61,6 +61,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return "cell";
     };
 
+    GIKSuperCell.prototype._isMiddleLayer = function(){
+        return false;
+    };
+
+    GIKSuperCell.prototype._isTopLayerCell = function(){
+        return this.superCell === null || this.superCell === undefined;
+    };
+
     GIKSuperCell.prototype.toJSON = function(){
         var data = DMASuperCell.prototype.toJSON.call(this);
         if (!this.length) console.warn("no length assigned to gik supercell");
