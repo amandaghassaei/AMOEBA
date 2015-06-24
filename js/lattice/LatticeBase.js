@@ -204,7 +204,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (cell){
                     var material = cell.getMaterial();
                     if (material.dimensions){
-                        var subCellMax = (new THREE.Vector3(x, y, z)).add(material.dimensions);
+                        var subCellMax = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(material.dimensions));
                         dimVector.max(subCellMax);
                     } else if (cell.length){
                         var subCellMax = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(new THREE.Vector3(cell.length, 1, 1)));

@@ -40,9 +40,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
                     cells[x][y].push(null);
 
-                    var json = {index: new THREE.Vector3(x,y,z)};
+                    var json = {index: new THREE.Vector3(x, y, z)};
                     var callback = function(cell){
-                        var cellIndex = cell.getIndex();//x,y,z have changed by now
+                        var cellIndex = cell.getIndex();//x, y, z have changed by now
                         cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
                     };
 
