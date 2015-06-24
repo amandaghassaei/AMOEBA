@@ -6,9 +6,9 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'globals', 'materials'],
     function(_, THREE, three, lattice, appState, DMASuperCell, globals, materials){
 
-    CompositeCell = function(json, superCell){
+    function CompositeCell(json, superCell){
         DMASuperCell.call(this, json, superCell);
-    };
+    }
     CompositeCell.prototype = Object.create(DMASuperCell.prototype);
 
     CompositeCell.prototype._getGeometry = function(){

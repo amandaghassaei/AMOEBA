@@ -133,7 +133,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
             if (!noRender || noRender === undefined) three.setRenderFlag();
-            this.addCellWithJson({index: index}, relIndex);
+            this.addCellWithJson({index: index, materialName:appState.get("materialType")}, relIndex);
         },
 
         addCellWithJson: function(json, index){

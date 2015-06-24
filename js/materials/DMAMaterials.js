@@ -57,6 +57,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     function changeColorScheme(){
         var state = appState.get("realisticColorScheme");
         _.each(_.keys(materials), function(name){
+            if (name == "setMaterial") return;
             changeSingleMaterialColorScheme(name, state);
         });
         three.render();
