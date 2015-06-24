@@ -13,11 +13,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
         DMACell.call(this, json, superCell);
 
+        var range;
         var material = this.getMaterial();
-        var range = appState.get("superCellRange");
-        console.log(material);
-        if (material.dimensions) range = material.dimensions;
         if (material.cellsMax) range = (new THREE.Vector3(1,1,1)).add(material.cellsMax).sub(material.cellsMin);
+        else range = this._getSuperCellRange();
         this.cells = this._makeChildCells(range, material);
 
         DMACell.prototype.setMode.call(this, null, function(){
@@ -25,6 +24,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         });//don't pass a call down to children again
     }
     DMASuperCell.prototype = Object.create(DMACell.prototype);
+
+    DMASuperCell.prototype._getSuperCellRange = function(){
+        return appState.get("superCellRange").clone();
+    };
 
     DMASuperCell.prototype._makeChildCells = function(range, material){
         var cells = [];
@@ -35,21 +38,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
                 for (var z=0;z<range.z;z++){
                     //child cells add themselves to object3D
 
-                    var cellMaterialName = this.materialName;
                     cells[x][y].push(null);
 
                     if (material.sparseCells){
                         if (material.sparseCells[x][y][z]){
-                            if (material.sparseCells[x][y][z].materialName) {
-                                cellMaterialName = material.sparseCells[x][y][z].materialName;
-                                this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:cellMaterialName}, function(cell){
-                                    var index = cell.getIndex();
-                                    cells[index.x][index.y][index.z] = cell;
-                                });
-                            } else console.warn("no material for composite cell definition subcell");
+                            this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:material.sparseCells[x][y][z].materialName}, function(cell){
+                                cells[x][y][z] = cell;
+                            });
                         }//else no cell in this spot
                     } else {//if not from composite definition, add subcell at all possible indices in supercell range
-                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:cellMaterialName}, function(cell){
+                        this._makeSubCellForIndex({index: new THREE.Vector3(x,y,z), materialName:this.materialName}, function(cell){
                             cells[x][y][z] = cell;
                         });
                     }

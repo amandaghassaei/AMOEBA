@@ -107,15 +107,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
             var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
 
+            var materialName = appState.get("materialType");
             for (var x=relativeMin.x;x<=relativeMax.x;x++){
                 for (var y=relativeMin.y;y<=relativeMax.y;y++){
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
                         if (!this.sparseCells[x][y][z]) {
                             var self = this;
-                             this.makeCellForLatticeType({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, function(cell){
-                                self.sparseCells[x][y][z] = cell;
-                                self.set("numCells", self.get("numCells")+1);
-                            });
+                             this.makeCellForLatticeType({
+                                     index: (new THREE.Vector3(x, y, z)).add(cellsMin),
+                                     materialName: materialName
+                                 }, function(cell){
+                                    self.sparseCells[x][y][z] = cell;
+                                    self.set("numCells", self.get("numCells")+1);
+                                 });
                         } else console.warn("already a cell there");
                     }
                 }
@@ -123,20 +127,23 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        addCellAtIndex: function(index, noRender, noCheck, material){//no render no check from fill/load
+        addCellAtIndex: function(index, noRender, noCheck){//no render no check from fill/load
 
             if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, index, index);
 
             var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
-            if (!this.sparseCells[relIndex.x][relIndex.y][relIndex.z]) {
-                var self = this;
-                if (!noRender || noRender === undefined) three.setRenderFlag();
-                this.makeCellForLatticeType({index:index, materialName:material}, function(cell){
-                    self.sparseCells[relIndex.x][relIndex.y][relIndex.z] = cell;
+            if (!noRender || noRender === undefined) three.setRenderFlag();
+            this.addCellWithJson({index: index}, relIndex);
+        },
+
+        addCellWithJson: function(json, index){
+            var self = this;
+            if (!this.sparseCells[index.x][index.y][index.z]) {
+                this.makeCellForLatticeType(json, function(cell){
+                    self.sparseCells[index.x][index.y][index.z] = cell;
                     self.set("numCells", self.get("numCells")+1);
                 });
             } else console.warn("already a cell there");
-
         },
 
         _indexForPosition: function(absPosition){
@@ -489,7 +496,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){
-                if (cell) self.addCellAtIndex((new THREE.Vector3(x, y, z)).add(cellsMin), true, true, cell.materialName);
+                if (cell) {
+                    cell.index = (new THREE.Vector3(x, y, z)).add(cellsMin);
+                    self.addCellWithJson(cell, new THREE.Vector3(x, y, z));
+                }
             });
         },
 

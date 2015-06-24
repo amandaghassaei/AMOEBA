@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveAs, lattice, materials){
+define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWrapper'], function(_, saveAs, lattice, materials, ribbon, menuWrapper){
 
     function _saveFile(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
@@ -55,10 +55,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveA
 
     function _getMaterialsDataToSave(){
         var data = {};
-        var compositeKeys = _.filter(_.keys(materials), function(key){
-            return key.substr(0,5) == "super";
-        });
-        _.each(compositeKeys, function(key){
+        _.each(_.keys(materials), function(key){
             data[key] = _.omit(materials[key], "threeMaterial");
         });
         return data;
@@ -66,7 +63,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveA
 
     function loadFile(data){//parsed json todo make this better - load composite
         if (!data.materials){
-            console.warn("no material definitions in this file")
+            console.warn("no material definitions in this file");
             return;
         }
         _.each(_.keys(data.materials), function(key){
@@ -78,23 +75,25 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials'], function(_, saveA
         }
         lattice.clearCells();
         var sparseCells = data.assembly.sparseCells;
-        _setData(lattice, _.omit(data.assembly, "sparseCells"), false);
+        _setData(lattice, _.omit(data.assembly, "sparseCells"));
         if (sparseCells) lattice._updateLatticeType(sparseCells);
+        ribbon.render();
+        menuWrapper.render();
     }
 
     function loadUser(data){
-        _setData(data, false);
+        _setData(data);
     }
 
-    function _setData(object, data, silent){
+    function _setData(object, data){
         _.each(_.keys(data), function(key){
             if (data[key] && data[key].x){//vector object
-                object.set(key, new THREE.Vector3(data[key].x, data[key].y, data[key].z));
+                object.set(key, new THREE.Vector3(data[key].x, data[key].y, data[key].z), {silent:true});
                 return;
             }
             object.set(key, data[key], {silent:true});
         });
-        if (!silent || silent === undefined) object.trigger("change");
+        object.trigger("change");
     }
 
     return {//return public methods

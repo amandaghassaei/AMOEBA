@@ -225,7 +225,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         }
         if (!returnTHREEObject) return materials[this.materialName];
         if (!materials[this.materialName]) {
-            console.warn("no material object found of type " + this.materialNames);
+            console.warn("no material object found of type " + this.materialName);
             return null;
         }
         if (!materials[this.materialName].threeMaterial){
@@ -393,6 +393,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.superCell = null;
         this.materialName = null;
         this.index = null;
+        this.length = null;
     };
 
     DMACell.prototype.destroyParts = function(){

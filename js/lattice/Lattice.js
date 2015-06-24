@@ -26,7 +26,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this.listenTo(this, "change:partType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
-                this._updateLatticeType();
+                this._updateLatticeType();//pass no params
             });
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 

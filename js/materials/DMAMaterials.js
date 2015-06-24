@@ -29,6 +29,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     loadMaterialClass();
 
     function loadMaterialClass(){
+        console.log(appState.get("materialClass"));
         var materialClass = appState.get("materialClass");
         var newDefaultType = _.keys(plist.allMaterials[materialClass])[0];
         if (!materials[newDefaultType]) _.extend(materials, parseClassFromDefinitions(plist.allMaterials[materialClass]));

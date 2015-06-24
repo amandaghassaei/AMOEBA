@@ -2,9 +2,9 @@
  * Created by fab on 3/18/15.
  */
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!ribbonTemplate'], function($, _, Backbone, plist, lattice, template){
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'text!ribbonTemplate'], function($, _, Backbone, plist, lattice, appState, template){
 
-    return Backbone.View.extend({
+    var Ribbon = Backbone.View.extend({
 
         el: "#navRibbon",
 
@@ -60,6 +60,8 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!ribbonTemp
 
         template: _.template(template)
     });
+
+    return new Ribbon({model:appState});
 });
 
 //<a class="btn btn-primary btn-ribbon highlightMode<% if (highlightMode){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/cursor-light.png"></a>\

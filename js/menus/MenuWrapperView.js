@@ -3,9 +3,10 @@
  */
 
 
-define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrapperTemplate'], function($, _, plist, Backbone, lattice, template){
+define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'text!menuWrapperTemplate'],
+    function($, _, plist, Backbone, lattice, appState, template){
 
-    return Backbone.View.extend({
+    var MenuWrapperView = Backbone.View.extend({
 
         el: "#menuWrapper",
 
@@ -265,4 +266,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'text!menuWrappe
 
         template: _.template(template)
     });
+
+    return new MenuWrapperView({model:appState});
 });
