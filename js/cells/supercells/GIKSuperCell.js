@@ -17,7 +17,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     }
 
     function GIKSuperCell(json, superCell){
-        console.log(json.length);
         this.length  = json.length || appState.get("superCellRange").x;
         DMASuperCell.call(this, json, superCell);
     }
@@ -30,7 +29,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     };
 
     GIKSuperCell.prototype._makeSubCellForIndex = function(json, callback){
-        console.log(json);
         json.materialName = this.materialName;
         callback(new GIKCell(json, this));
     };
@@ -41,10 +39,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return object3D;
     };
 
+    GIKSuperCell.prototype.getLength = function(){
+        return this.length;
+    };
+
     GIKSuperCell.prototype._getGeometry = function(){
-        var length = this.getLength() + 1;
-        var key = "length"+length;
-        if (!unitGeos[key]) unitGeos[key] = makePartWithLength(length);
+        var key = "length"+this.length;
+        if (!unitGeos[key]) unitGeos[key] = makePartWithLength(this.length);
         return unitGeos[key];
     };
 

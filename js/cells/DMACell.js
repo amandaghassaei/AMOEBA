@@ -252,8 +252,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 setVisiblity();
                 break;
             case "part":
-                if (!this.parts) {
-                    console.log(this);
+                if (!this.cells && !this.parts) {
                     this._initParts(function(parts){
                         self.parts = parts;
                         setVisiblity();
@@ -261,7 +260,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 } else setVisiblity();
                 break;
             case "beam":
-                if (!this.beams) this.beams = this._initBeams(function(){
+                if (!this.cells && !this.beams) this.beams = this._initBeams(function(){
                     if (!this.nodes) this.nodes = self._initNodes(function(){
                         setVisiblity();
                     });

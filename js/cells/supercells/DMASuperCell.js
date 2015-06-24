@@ -96,11 +96,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
 
 
-    DMASuperCell.prototype.getLength = function(){
-        if (this.cells && this.cells.length) return this.cells.length-1;
-        return appState.get("superCellRange").x-1;//zero indexed
-    };
-
     DMASuperCell.prototype._loopCells = function(callback){
         var cells = this.cells;
         if (!cells || cells === undefined) return;

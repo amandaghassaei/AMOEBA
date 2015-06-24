@@ -47,6 +47,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _setVisibility: function(visible, forceRender){
+            if (!this.mesh) return;
             visible = appState.get("highlighterIsVisible") && visible;
             if (forceRender || this.isVisible() != visible){
                 this.mesh.visible = visible;

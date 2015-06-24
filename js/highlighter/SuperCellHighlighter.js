@@ -28,8 +28,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _setScale: function(){
-            this.mesh.scale.set(appState.get("superCellRange").x, appState.get("superCellRange").y,
-                appState.get("superCellRange").z);
+            var superCellRange = appState.get("superCellRange");
+            this.mesh.scale.set(superCellRange.x, superCellRange.y, superCellRange.z);
         },
 
         _setPosition: function(position, direction){
@@ -55,8 +55,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         _superCellParamDidChange: function(){
-            if (!this.mesh || !this.direction) return;
+            if (!this.mesh) return;
             this._setScale();
+            if (!this.direction) return;
             this._setPosition(this.position, this.direction);//position of center point
             this._setRotation(this.direction);
             three.render();

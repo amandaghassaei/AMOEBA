@@ -32,12 +32,12 @@ define(['underscore', 'three', 'part', 'bin!gikPartSTL', 'bin!gikEndPartSTL', 's
     };
 
     GIKPart.prototype._rotatePart = function(mesh){
-        if (this._getGIKLength() == this.index) mesh.rotateZ(Math.PI);
+        if (this._getGIKLength()-1 == this.index) mesh.rotateZ(Math.PI);
         return mesh;
     };
 
     GIKPart.prototype._isEnd = function(){
-        return this.index == 0 || this.index == this._getGIKLength();
+        return this.index == 0 || this.index == this._getGIKLength()-1;
     };
 
     GIKPart.prototype._getGIKLength = function(){

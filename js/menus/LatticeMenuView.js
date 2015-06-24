@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!latticeM
 
         _initialize: function(){
             this.listenTo(lattice, "change", this.render);
+            this.listenTo(this.model, "change:superCellRange", this.render);
         },
 
         _makeTemplateJSON: function(){
