@@ -84,9 +84,12 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     function setMaterialDefaults(){
         var materialType = appState.get("materialType");
-        if (!materials[materialType].dimensions) return;
-        appState.set("superCellRange", materials[materialType].dimensions.clone());
         appState.set("superCellIndex", new THREE.Vector3(0,0,0));
+        if (materials[materialType].dimensions){
+            appState.set("superCellRange", materials[materialType].dimensions.clone());
+        } else if (lattice.get("connectionType") == "gik"){
+            appState.set("superCellRange", new THREE.Vector3(appState.get("gikLength"), 1, 1));
+        }
     }
 
     return materials;

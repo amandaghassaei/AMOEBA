@@ -34,6 +34,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             cellsVisible: true,
 
             superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds
+            gikLength: 4,//this updates super cell range when using non-composite materials
             superCellRange: new THREE.Vector3(1,1,1),
 
             realisticColorScheme: false,
@@ -58,6 +59,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             this.listenTo(this, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:materialType", this._materialTypeChanged);
+            this.listenTo(this, "change:gikLength", this._gikLengthChanged);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
 
@@ -123,6 +125,12 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             require(['superCellHighlighter'], function(SuperCellHighlighter){
                 globals.highlighter = new SuperCellHighlighter();
             });
+        },
+
+        _gikLengthChanged: function(){
+            if (this.get("materialType").substr(0,5) != "super"){
+                this.set("superCellRange", new THREE.Vector3(this.get("gikLength"), 1, 1));
+            }
         },
 
         ///////////////////////////////////////////////////////////////////////////////
@@ -200,9 +208,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 case 57:
                     if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
-                        var range = this.get("superCellRange").clone();
-                        range.x = e.keyCode-48;
-                        this.set("superCellRange", range);
+                        this.set("gikLength", e.keyCode-48);
                     }
                     break;
                 case 87://w - increase supercell index
