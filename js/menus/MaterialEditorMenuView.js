@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(plist, {name:"name", color:"#ffff00", altColor:"#00ffff"});
+            return _.extend({name:"name", color:"#ffff00", altColor:"#00ffff"}, plist);
         },
 
         template: _.template(template)
