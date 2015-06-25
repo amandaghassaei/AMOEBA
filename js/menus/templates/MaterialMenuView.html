@@ -27,8 +27,7 @@ Composite Materials:<br/>
 <% if ((cellType == "octa" && connectionType != "vertex") || cellType == "tetra"){ %>
     not available for this lattice type
 <%  } else { %>
-    <% _.each(_.keys(materials), function(key){
-        if (key.substr(0,5) != "super") return; %>
+    <% _.each(compositeMaterialsKeys, function(key){ %>
         <label class="radio colorSwatches">
             <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             <div class="materialColorSwatch">

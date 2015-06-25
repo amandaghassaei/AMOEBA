@@ -12,6 +12,16 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         }
     };
 
+    var listener = {};
+    _.extend(listener, Backbone.Events);
+
+    listener.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
+    listener.listenTo(appState, "change:materialClass", loadMaterialClass);
+    listener.listenTo(lattice, "change:connectionType cellType", loadMaterialClass);
+    listener.listenTo(appState, "change:materialType", setMaterialDefaults);
+
+    loadMaterialClass();
+
 
 
 
@@ -38,6 +48,25 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         return false;
     }
 
+    function deleteMaterial(id){
+        if (materialsList[id].noDelete) {
+            console.warn("no delete flag on this material type");
+            return false;
+        }
+        delete materialsList[id];//todo check if being used first
+        var deleted = true;
+        if (deleted) loadMaterialClass();//set to defaults
+        return deleted;
+    }
+
+
+
+
+
+
+
+
+
 
     function findAllChangedmaterialsList(runningList){
 //        _.each(getCompositeKeys(), function(key){
@@ -51,26 +80,26 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         });
     }
 
-    function deleteMaterial(id){
-        if (materialsList[id].noDelete) {
-            console.warn("no delete flag on this material type");
-            return false;
-        }
-        delete materialsList[id];//todo check if being used first
-        var deleted = true;
-        if (deleted) loadMaterialClass();//set to defaults
-        return deleted;
+    function getVaildCompositeKeys(id){//for "available materials" list in composite editor
+        var compositeKeys = getCompositeKeys();
+        var invalidKeys = getAllParentComposites(id);
+        invalidKeys.push(id);
+        return _.difference(compositeKeys, invalidKeys);
     }
 
-    var listener = {};
-    _.extend(listener, Backbone.Events);
+    function getAllParentComposites(id){
+        var parentComposites = [];
+        _.each(_.keys(materialsList), function(key){
+            if (materialsList[key].compositeChildren && materialsList[key].compositeChildren.indexOf(id)>-1){
+                parentComposites.push(key);
+            }
+        });
+        return parentComposites;
+    }
 
-    listener.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
-    listener.listenTo(appState, "change:materialClass", loadMaterialClass);
-    listener.listenTo(lattice, "change:connectionType cellType", loadMaterialClass);
-    listener.listenTo(appState, "change:materialType", setMaterialDefaults);
+    
 
-    loadMaterialClass();
+
 
 
 
@@ -149,6 +178,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     return {
         list:materialsList,
-        setMaterial: setMaterial
+        setMaterial: setMaterial,
+        getCompositeKeys: getCompositeKeys,
+        getVaildCompositeKeys: getVaildCompositeKeys
     };
 });

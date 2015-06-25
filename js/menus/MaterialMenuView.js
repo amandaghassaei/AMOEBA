@@ -69,7 +69,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {materials:materials.list});
+            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {materials:materials.list, compositeMaterialsKeys:materials.getCompositeKeys()});
         },
 
         template: _.template(template)

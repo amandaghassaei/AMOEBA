@@ -90,7 +90,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             return _.extend(this.model.toJSON(), plist, globals, lattice.compositeEditor.toJSON(),
                 {
                     dimensions: dimensions,
-                    materials: materials.list
+                    materials: materials.list,
+                    validCompositeMaterials: materials.getVaildCompositeKeys(lattice.compositeEditor.get("id"))
                 });
         },
 
