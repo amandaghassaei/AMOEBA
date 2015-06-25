@@ -205,12 +205,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (cell){
                     var material = cell.getMaterial();
                     if (material.dimensions){
-                        console.log(cell.applyAbsoluteRotation(material.dimensions.clone()));
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(material.dimensions.clone()));
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(material.dimensions.clone()));
                         dimMax.max(subCellRange);
                         dimMin.min(subCellRange);
                     } else if (cell.length){
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(new THREE.Vector3(cell.length, 1, 1)));
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(new THREE.Vector3(cell.length, 1, 1)));
                         dimMax.max(subCellRange);
                         dimMin.min(subCellRange);
                     }
