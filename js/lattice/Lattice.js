@@ -208,7 +208,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     var json = cell.toJSON();
                     json.index = cell.getIndex();
                     self.makeCellForLatticeType(json, function(newCell){
-                        console.log(newCell);
                         self.sparseCells[x][y][z] = newCell;
                         cell.destroy();
                     });

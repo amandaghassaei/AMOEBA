@@ -16,11 +16,11 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     _.extend(listener, Backbone.Events);
 
     listener.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
-    listener.listenTo(appState, "change:materialClass", loadMaterialClass);
-    listener.listenTo(lattice, "change:connectionType cellType", loadMaterialClass);
+    listener.listenTo(appState, "change:materialClass", function(){setToDefaultMaterial()});//pass no params
+    listener.listenTo(lattice, "change:connectionType cellType", function(){setToDefaultMaterial()});
     listener.listenTo(appState, "change:materialType", setMaterialDefaults);
 
-    loadMaterialClass();
+    setToDefaultMaterial();
 
 
 
@@ -61,7 +61,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         }
         delete materialsList[id];//todo check if being used first
         var deleted = true;
-        if (deleted) loadMaterialClass();//set to defaults
+        if (deleted) setToDefaultMaterial();
         return deleted;
     }
 
@@ -139,12 +139,13 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
 
-    function loadMaterialClass(){
+    function setToDefaultMaterial(triggerEvent){
         var materialClass = appState.get("materialClass");
         var newDefaultType = _.keys(plist.allMaterials[materialClass])[0];
         if (!materialsList[newDefaultType]) _.extend(materialsList, parseClassFromDefinitions(plist.allMaterials[materialClass]));
         if (!materialsList[newDefaultType]) console.warn("material type " + newDefaultType + "  not in definition for " + materialClass);
-        appState.set("materialType", newDefaultType, {silent:true});//set to default silently
+        if (triggerEvent === undefined) triggerEvent = false;
+        appState.set("materialType", newDefaultType, {silent:!triggerEvent});
     }
 
     function parseClassFromDefinitions(definitions){
@@ -210,6 +211,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         setMaterial: setMaterial,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
-        getChildCellTypes:getChildCellTypes
+        getChildCellTypes:getChildCellTypes,
+        setToDefaultMaterial: setToDefaultMaterial
     };
 });

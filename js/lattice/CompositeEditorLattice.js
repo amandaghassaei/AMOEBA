@@ -20,7 +20,20 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         }),
 
         __initialize: function(options, callback){
+
             if (!options.id || options.id == "") this.set("id", "super" + this.cid);
+            else {
+                //change material type to allowed type
+                var currentMaterial = appState.get("materialType");
+                if (currentMaterial.substr(0,5) == "super"){
+                    if (materials.getVaildAvailableCompositeKeys(options.id).indexOf(currentMaterial) < 0){
+                        materials.setToDefaultMaterial(true);
+                    }
+                }
+            }
+
+
+
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
 
             if (callback) callback(this);
