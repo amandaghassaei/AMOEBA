@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         events: {
             "click #cancelMaterial":                             "_cancelMaterial",
             "click #deleteMaterial":                             "_deleteMaterial",
-            "click #finishMaterial":                             "_save"
+            "click #finishMaterial":                             "_save",
+            "click #newRandomColor":                             "_changeRandomColor"
         },
 
         _initialize: function(){
@@ -29,6 +30,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         updateHex: function(hex, $target){
             //update hex without rendering
             $target.css("border-color", hex);
+        },
+
+        _changeRandomColor: function(e){
+            e.preventDefault();
+            var color = '#' + Math.floor(Math.random()*16777215).toString(16);
+            this.material.altColor = color;
+            this.render();
         },
 
         _save: function(e){
