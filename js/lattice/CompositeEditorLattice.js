@@ -54,24 +54,34 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.set("color", makeRandomColor());
         },
 
-        makeNewCompositeMaterial: function(name, dimensions){
+        makeNewCompositeMaterial: function(dimensions){
             if (this.get("numCells") == 0) {
                 console.warn("no cells in this composite");
                 return;
             }
-            if (name == "") name = "Composite Material " + compositeNum++;
             var id = this.get("id");
+            materials.setMaterial(id, this.toJSONForSave(dimensions));
+        },
+
+        toJSONForSave: function(dimensions){
+            var name = this.get("name");
+            if (name == "") name = "Composite Material " + compositeNum++;
+            if (dimensions) var _dimensions = dimensions.clone();
+            var cellsMin = this.get("cellsMin");
+            if (cellsMin) cellsMin = cellsMin.clone();
+            var cellsMax = this.get("cellsMax");
+            if (cellsMax) cellsMax = cellsMax.clone();
             var data = {
                 name: name,
                 color: this.get("color"),
                 altColor: this.get("color"),
                 numCells: this.get("numCells"),
                 sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
-                cellsMin: this.get("cellsMin").clone(),
-                cellsMax: this.get("cellsMax").clone(),
-                dimensions: dimensions
+                cellsMin: cellsMin,
+                cellsMax: cellsMax,
+                dimensions: _dimensions
             };
-            materials.setMaterial(id, data);
+            return data;
         },
 
 

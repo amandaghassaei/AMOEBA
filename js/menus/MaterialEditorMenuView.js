@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materialEditorMenuTemplate'],
-    function($, _, MenuParentView, plist, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materialEditorMenuTemplate', 'fileSaver'],
+    function($, _, MenuParentView, plist, materials, template, fileSaver){
 
     var materialNameIndex = 1;
 
@@ -14,7 +14,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
             "click #cancelMaterial":                             "_cancelMaterial",
             "click #deleteMaterial":                             "_deleteMaterial",
             "click #finishMaterial":                             "_save",
-            "click #newRandomColor":                             "_changeRandomColor"
+            "click #newRandomColor":                             "_changeRandomColor",
+            "click #saveMaterial":                               "_saveMaterialToFile"
         },
 
         _initialize: function(){
@@ -49,6 +50,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
                 altColor: this.material.altColor
             });
             this._exit();
+        },
+
+        _saveMaterialToFile: function(e){
+            e.preventDefault();
+            fileSaver.saveMaterial(this.model.get("materialType"));
         },
 
         _deleteMaterial: function(e){

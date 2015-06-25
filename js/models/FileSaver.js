@@ -43,6 +43,12 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         _saveFile(data, name, ".user");
     }
 
+    function saveMaterial(id, material){
+        var data = {materials:{}};
+        data.materials[id] = material || _getMaterialDataToSave(id);
+        _saveFile(JSON.stringify(data), data.materials[id].name, ".json");
+    }
+
     function _getAssemblerDataToSave(){
         var assemblerData = _.omit(globals.cam.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
         if (!globals.cam.get("editsMadeToProgram")) assemblerData.dataOut = "";
@@ -56,9 +62,13 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     function _getMaterialsDataToSave(){
         var data = {};
         _.each(_.keys(materials), function(key){
-            data[key] = _.omit(materials[key], "threeMaterial");
+            data[key] = _getMaterialDataToSave(key);
         });
         return data;
+    }
+
+    function _getMaterialDataToSave(id){
+        return _.omit(materials[id], "threeMaterial");
     }
 
     function loadFile(data){//parsed json todo make this better - load composite
@@ -99,6 +109,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     return {//return public methods
 //        save: save,
         save: save,
+        saveMaterial: saveMaterial,
 //        saveAssembler: saveAssembler,
 //        saveUser: saveUser,
         loadFile: loadFile

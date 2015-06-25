@@ -2,8 +2,8 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate'],
-    function($, _, MenuParentView, plist, lattice, globals, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate', 'fileSaver'],
+    function($, _, MenuParentView, plist, lattice, globals, materials, template, fileSaver){
 
     var dimensions;
 
@@ -57,13 +57,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 this._exit();
                 return;
             }
-            lattice.compositeEditor.makeNewCompositeMaterial($("#compositeName").val(), dimensions.clone());
+            lattice.compositeEditor.makeNewCompositeMaterial(dimensions.clone());
             this._exit();
         },
 
         _saveComposite: function(e){
             e.preventDefault();
-            //save as file
+            fileSaver.saveMaterial(lattice.compositeEditor.get("id"), lattice.compositeEditor.toJSONForSave(dimensions));
         },
 
         _cancelComposite: function(e){
