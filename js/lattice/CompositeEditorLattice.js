@@ -84,9 +84,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (name == "") name = "Composite Material " + compositeNum++;
             if (dimensions) var _dimensions = dimensions.clone();
             var cellsMin = this.get("cellsMin");
-            if (cellsMin) cellsMin = cellsMin.clone();
             var cellsMax = this.get("cellsMax");
-            if (cellsMax) cellsMax = cellsMax.clone();
+            if (cellsMax) {
+                cellsMax = cellsMax.clone();
+                cellsMax.sub(cellsMin);
+                cellsMin = new THREE.Vector3(0,0,0);
+            }
             var data = {
                 name: name,
                 color: this.get("color"),
