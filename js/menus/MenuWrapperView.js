@@ -245,6 +245,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         render: function(){
             var self = this;
             this._hide(function(){
+                $("#menuContent").html("");//clear current menu
                 self._populateAndShow();
                 self.model.trigger("change:currentTab");//this was updated silently before todo need this?
             }, true);
