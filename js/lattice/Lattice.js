@@ -174,7 +174,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 }
                 self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
                     var cells = null;
-                    if (data) cells = data.sparseCells;
+                    if (data) cells = JSON.parse(JSON.stringify(data.sparseCells));
                     _self._updateLatticeType(cells, self._getSubclassForLatticeType());
                     appState.set("currentNav", "navComposite");
                 });

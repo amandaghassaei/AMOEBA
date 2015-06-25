@@ -16,12 +16,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         defaults: _.extend(LatticeBase.prototype.defaults, {
             name: "",
-            color: null,
+            color: null
         }),
 
         __initialize: function(options, callback){
             if (!options.id || options.id == "") this.set("id", "super" + this.cid);
             if (!options.color || options.color == "") this.set("color",  makeRandomColor(), {silent:true});
+
             if (callback) callback(this);
         },
 
@@ -54,13 +55,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.set("color", makeRandomColor());
         },
 
+
         makeNewCompositeMaterial: function(dimensions){
             if (this.get("numCells") == 0) {
                 console.warn("no cells in this composite");
                 return;
             }
             var id = this.get("id");
-            materials.setMaterial(id, this.toJSONForSave(dimensions));
+            var data = this.toJSONForSave(dimensions);
+            materials.setMaterial(id, data);
         },
 
         toJSONForSave: function(dimensions){

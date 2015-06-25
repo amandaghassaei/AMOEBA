@@ -61,14 +61,14 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     function _getMaterialsDataToSave(){
         var data = {};
-        _.each(_.keys(materials), function(key){
+        _.each(_.keys(materials.list), function(key){
             data[key] = _getMaterialDataToSave(key);
         });
         return data;
     }
 
     function _getMaterialDataToSave(id){
-        return _.omit(materials[id], "threeMaterial");
+        return _.omit(materials.list[id], "threeMaterial");
     }
 
     function loadFile(data){//parsed json todo make this better - load composite

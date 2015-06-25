@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _initialize: function(){
             //bind events
-            this.material = _.clone(materials[this.model.get("materialType")]);
+            this.material = _.clone(materials.list[this.model.get("materialType")]);
         },
 
         getPropertyOwner: function($target){

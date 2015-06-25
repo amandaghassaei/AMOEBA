@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             e.stopPropagation();
             e.preventDefault();
             var id = $(e.target).data("id");
-            lattice.setToCompositeMode(id, materials[id]);
+            lattice.setToCompositeMode(id,materials.list[id]);
         },
 
         _editMaterial: function(e){
@@ -69,7 +69,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {materials:materials});
+            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {materials:materials.list});
         },
 
         template: _.template(template)

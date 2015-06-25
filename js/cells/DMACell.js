@@ -152,7 +152,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype.setDeleteMode = function(state){
         var material;
         if (!state && !this.materialName) return;//cell may be deleted by now
-        if (state) material = materials.deleteMaterial.threeMaterial;
+        if (state) material = materials.list.deleteMaterial.threeMaterial;
         else  material = this.getMaterial(true);
         if (!material) return;//no material object found
         if (this.object3D.children[0].material == material) return;
@@ -223,16 +223,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("no material type set for cell");
             return null;
         }
-        if (!returnTHREEObject) return materials[this.materialName];
-        if (!materials[this.materialName]) {
+        if (!returnTHREEObject) return materials.list[this.materialName];
+        if (!materials.list[this.materialName]) {
             console.warn("no material object found of type " + this.materialName);
             return null;
         }
-        if (!materials[this.materialName].threeMaterial){
+        if (!materials.list[this.materialName].threeMaterial){
             console.warn("no three material object found for type "+ this.materialName);
             return null;
         }
-        return materials[this.materialName].threeMaterial;
+        return materials.list[this.materialName].threeMaterial;
     };
 
     DMACell.prototype.setOpacity = function(opacity){
@@ -416,7 +416,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var data = {
             materialName: this.materialName
         };
-//        if (materials[this.materialName].sparseCells) return data;//material definition in material composites
+//        if (materials.list[this.materialName].sparseCells) return data;//material definition in material composites
 //        if (this.cells) data.cells = this.cells;
         return data;
     };
