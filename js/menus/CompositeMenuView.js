@@ -78,7 +78,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 this._exit();
                 return;
             }
-            var deleted = materials.setMaterial(this.get("id"), null);
+            var deleted = materials.setMaterial(lattice.compositeEditor.get("id"), null);
             if (deleted) this._exit();
         },
 
@@ -91,7 +91,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 {
                     dimensions: dimensions,
                     materials: materials.list,
-                    validCompositeMaterials: materials.getVaildCompositeKeys(lattice.compositeEditor.get("id"))
+                    validCompositeMaterials: materials.getVaildAvailableCompositeKeys(lattice.compositeEditor.get("id"))
                 });
         },
 

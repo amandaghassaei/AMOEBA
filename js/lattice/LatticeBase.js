@@ -503,8 +503,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){
                 if (cell) {
-                    cell.index = (new THREE.Vector3(x, y, z)).add(cellsMin);
-                    self.addCellWithJson(cell, new THREE.Vector3(x, y, z));
+                    var json = _.extend({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, cell);
+                    self.addCellWithJson(json, new THREE.Vector3(x, y, z));
                 }
             });
         },

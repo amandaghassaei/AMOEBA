@@ -174,7 +174,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 }
                 self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
                     var cells = null;
-                    if (data) cells = JSON.parse(JSON.stringify(data.sparseCells));
+                    if (data) cells = data.sparseCells;
                     _self._updateLatticeType(cells, self._getSubclassForLatticeType());
                     appState.set("currentNav", "navComposite");
                 });
@@ -199,6 +199,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         getUItarget: function(){
             if (this.inCompositeMode()) return this.compositeEditor;
             return this;
+        },
+
+        reinitAllCellsOfTypes: function(types){
+            this._loopCells(this.sparseCells, function(cell, x, y, z, self){
+                if (cell && cell.materialName.substr(0,5) == "super" && types.indexOf(cell.materialName) > -1){
+                    //re-init cell;
+                    var json = cell.toJSON();
+                    json.index = cell.getIndex();
+                    self.makeCellForLatticeType(json, function(newCell){
+                        console.log(newCell);
+                        self.sparseCells[x][y][z] = newCell;
+                        cell.destroy();
+                    });
+                }
+            });
         }
     });
 

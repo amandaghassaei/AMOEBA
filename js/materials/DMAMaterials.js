@@ -32,19 +32,25 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         var oldColor = materialsList[id].color;
 
         var edited = false;
-        if (materialsList[id].sparseCells) edited = _.isEqual(data.sparseCells, materialsList[id].sparseCells);
+        if (materialsList[id].sparseCells) edited = !(_.isEqual(data.sparseCells, materialsList[id].sparseCells));
 
         _.each(_.keys(data), function(key){
             if (data[key] && data[key].x) materialsList[id][key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
             else materialsList[id][key] = data[key];
         });
 
-        if (edited){
-            //todo trigger change on all instances
-            var allChangedmaterialsList = findAllChangedmaterialsList([id]);
-        }
-
         if (materialsList[id].threeMaterial || oldColor != materialsList[id].color) changeSingleMaterialColorScheme(id);
+        if (edited){
+            var allChangedMaterialsList = getAllParentComposites(id);
+            allChangedMaterialsList.push(id);
+
+            _.each(allChangedMaterialsList, function(key){
+                materialsList[key].compositeChildren = getChildCellTypes(materialsList[key].sparseCells, false);
+                materialsList[key].elementaryChildren = getChildCellTypes(materialsList[key].sparseCells, true);
+            });
+
+            lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
+        }
         return false;
     }
 
@@ -68,19 +74,13 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
 
-    function findAllChangedmaterialsList(runningList){
-//        _.each(getCompositeKeys(), function(key){
-//            if (materialsList[key].compositeChildren.indexOf())
-//        });
-    }
-
     function getCompositeKeys(){
         return _.filter(_.keys(materialsList), function(key){
             return key.substr(0,5) == "super";
         });
     }
 
-    function getVaildCompositeKeys(id){//for "available materials" list in composite editor
+    function getVaildAvailableCompositeKeys(id){//for "available materials" list in composite editor
         var compositeKeys = getCompositeKeys();
         var invalidKeys = getAllParentComposites(id);
         invalidKeys.push(id);
@@ -89,15 +89,44 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     function getAllParentComposites(id){
         var parentComposites = [];
-        _.each(_.keys(materialsList), function(key){
-            if (materialsList[key].compositeChildren && materialsList[key].compositeChildren.indexOf(id)>-1){
+        _.each(materialsList, function(material, key){
+            if (key == id) return;
+            if (material.compositeChildren && material.compositeChildren.indexOf(id)>-1){
                 parentComposites.push(key);
             }
         });
         return parentComposites;
     }
 
-    
+    function getChildCellTypes(cells, elementaryTypes){//deep search to find all sub sub components
+        var children = [];
+        loopCells(cells, function(cell){
+            if (!cell) return;
+            var isComposite = cell.materialName.substr(0,5) == "super";
+            if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialName);
+            if (isComposite){
+                if (elementaryTypes && materialsList[cell.materialName].elementaryChildren) {
+                    Array.prototype.push.apply(children, materialsList[cell.materialName].elementaryChildren);
+                }
+                else if (!elementaryTypes && materialsList[cell.materialName].compositeChildren) {
+                    Array.prototype.push.apply(children, materialsList[cell.materialName].compositeChildren);
+                }
+            }
+        });
+        if (children.length == 0) return null;
+        return _.uniq(children);//remove duplicates
+    }
+
+    function loopCells(cells, callback){
+        for (var x=0;x<cells.length;x++){
+            for (var y=0;y<cells[0].length;y++){
+                for (var z=0;z<cells[0][0].length;z++){
+                    callback(cells[x][y][z], x, y, z);
+                }
+            }
+        }
+    }
+
 
 
 
@@ -180,6 +209,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         list:materialsList,
         setMaterial: setMaterial,
         getCompositeKeys: getCompositeKeys,
-        getVaildCompositeKeys: getVaildCompositeKeys
+        getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
+        getChildCellTypes:getChildCellTypes
     };
 });
