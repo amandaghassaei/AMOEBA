@@ -14,10 +14,12 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             if (id && data === null) return deleteMaterial(id);
             if (!materials[id]) materials[id] = {};
             var oldColor = materials[id].color;
+
             _.each(_.keys(data), function(key){//todo trigger change on all instances
                 if (data[key] && data[key].x) materials[id][key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
                 else materials[id][key] = data[key];
             });
+
             if (materials[id].threeMaterial || oldColor != materials[id].color) changeSingleMaterialColorScheme(id);
             return false;
         }

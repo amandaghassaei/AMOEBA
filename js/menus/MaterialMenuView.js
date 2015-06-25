@@ -5,13 +5,16 @@
 define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!materialMenuTemplate'],
     function($, _, MenuParentView, plist, lattice, globals, materials, template){
 
+    var materialID = 0;
+
     return MenuParentView.extend({
 
         events: {
             "click #navToCompositeMenu":                             "_navToCompositeMenu",
             "click #compositeFromLattice":                           "_latticeToComposite",
             "click .editComposite":                                  "_editComposite",
-            "click .editMaterial":                                   "_editMaterial"
+            "click .editMaterial":                                   "_editMaterial",
+            "click #newElementaryMaterial":                          "_newMaterial"
         },
 
         _initialize: function(){
@@ -36,6 +39,23 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             e.stopPropagation();
             e.preventDefault();
             var id = $(e.target).data("id");
+            this._openMaterialEditor(id);
+        },
+
+        _newMaterial: function(e){
+            e.preventDefault();
+            //first create dummy material
+            var id = "material" + this.cid + materialID++;
+            materials.setMaterial(id, {
+                name: "",
+                color: '#000000',
+                altColor: '#000000',
+                noDelete: false
+            });
+            this._openMaterialEditor(id);
+        },
+
+        _openMaterialEditor: function(id){
             this.model.set("materialType", id);
             this.model.set("currentTab", "materialEditor", {silent:true});
             this.model.set("currentNav", "navMaterial");
