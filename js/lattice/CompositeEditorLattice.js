@@ -16,7 +16,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         defaults: _.extend(LatticeBase.prototype.defaults, {
             name: "",
-            color: null
+            color: null,
         }),
 
         __initialize: function(options, callback){

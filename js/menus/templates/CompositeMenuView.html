@@ -14,7 +14,20 @@ Available Materials:<br/>
         </label>
     <% }); %>
 <% _.each(_.keys(materials), function(key){
-    if (key == id || key.substr(0,5) != "super") return; %>
+    <!--if (key == id || key.substr(0,5) != "super") return;-->
+    <!--if (checkForLoops(key)) return;-->
+    <!--function checkForLoops(_key){-->
+        <!--console.log(materials[_key].compositeChildren);-->
+        <!--if (materials[_key].compositeChildren) {-->
+            <!--if (materials[_key].compositeChildren.indexOf(id)>0) return true;-->
+            <!--var childMatches = _.filter(materials[_key].compositeChildren, function(childKey){-->
+                <!--return checkForLoops(childKey);-->
+            <!--});-->
+            <!--if (childMatches.length>0) return true;-->
+        <!--}-->
+        <!--return false;-->
+    <!--}-->
+    %>
     <label class="radio colorSwatches">
         <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         <div class="materialColorSwatch">
