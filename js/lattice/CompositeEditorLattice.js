@@ -79,9 +79,22 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
                 cellsMin: cellsMin,
                 cellsMax: cellsMax,
+                elementaryChildren: this._getChildCellTypes(true),
+                compositeChildren: this._getChildCellTypes(false),
                 dimensions: _dimensions
             };
             return data;
+        },
+
+        _getChildCellTypes: function(elementaryTypes){
+            var children = [];
+            this._loopCells(this.sparseCells, function(cell){
+                if (!cell) return;
+                var isComposite = cell.materialName.substr(0,5) == "super";
+                if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialName);
+            });
+            if (children.length == 0) return null;
+            return _.uniq(children);//remove duplicates
         },
 
 
