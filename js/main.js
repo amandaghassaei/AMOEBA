@@ -22,7 +22,7 @@ require.config({
         fillGeometry: 'three/FillGeometry',
 
         //models
-        globals: 'models/globals',
+        globals: 'models/Globals',
         plist: 'models/PList',
         appState: 'models/AppState',
         fileSaver: 'models/FileSaver',
@@ -76,7 +76,7 @@ require.config({
         kelvinCell: 'cells/KelvinCell',
         cubeCell: 'cells/CubeCell',
         gikCell: 'cells/GIKCell',
-        superCell: 'cells/supercells/DMASupercell',
+        superCell: 'cells/supercells/DMASuperCell',
         gikSuperCell: 'cells/supercells/GIKSuperCell',
         compositeCell: "cells/supercells/CompositeCell",
 
@@ -141,15 +141,15 @@ require.config({
         //assemblers
         crab: 'cam/assemblers/crab',
 
-        //stls
-        octaFaceTrianglePartSTL: '../assets/stls/parts/OctaFaceTrianglePart.stl',
-        octaEdgeVoxPartSTL: '../assets/stls/parts/OctaEdgeVoxPart.stl',
-        octaEdgeVoxPartLowPolySTL: '../assets/stls/parts/OctaEdgeVoxPartLowPoly.stl',
-        gikPartSTL: '../assets/stls/parts/GIKPart.stl',
-        gikEndPartSTL: '../assets/stls/parts/GIKEndPart.stl',
-        gikPartLowPolySTL: '../assets/stls/parts/GIKPartLowPoly.stl',
-        gikEndPartLowPolySTL: '../assets/stls/parts/GIKEndPartLowPoly.stl',
-        crabSTL: '../assets/stls/crab/crab.stl'
+        //stls (not sure why ../ is not working here?)
+        octaFaceTrianglePartSTL: 'assets/stls/parts/OctaFaceTrianglePart.stl',
+        octaEdgeVoxPartSTL: 'assets/stls/parts/OctaEdgeVoxPart.stl',
+        octaEdgeVoxPartLowPolySTL: 'assets/stls/parts/OctaEdgeVoxPartLowPoly.stl',
+        gikPartSTL: 'assets/stls/parts/GIKPart.stl',
+        gikEndPartSTL: 'assets/stls/parts/GIKEndPart.stl',
+        gikPartLowPolySTL: 'assets/stls/parts/GIKPartLowPoly.stl',
+        gikEndPartLowPolySTL: 'assets/stls/parts/GIKEndPartLowPoly.stl',
+        crabSTL: 'assets/stls/crab/crab.stl'
 
     },
 

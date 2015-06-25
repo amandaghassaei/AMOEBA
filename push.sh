@@ -1,6 +1,6 @@
 #!/bin/sh
 
-cp -R ~/Research/WebApps/DMDesign ~/Projects/dma/Web/
+rsync -r -v --exclude=".*" ~/Research/WebApps/DMDesign ~/Projects/dma/Web/
 
 cd ~/Projects/dma
 hg addremove .
