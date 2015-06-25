@@ -121,7 +121,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         getHighlightedObjectPosition: function(){//origin selection
             if (this.highlightedObject instanceof DMACell) {
-                var position = this.highlightedObject.getPosition();
+                var position = this.highlightedObject.getAbsolutePosition();
                 return new THREE.Vector3(parseFloat(position.x.toFixed(4)),
                     parseFloat(position.y.toFixed(4)),
                     parseFloat(position.z.toFixed(4)));

@@ -199,20 +199,24 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         calculateBoundingBox: function(){
             if (!this.get("cellsMax") || !this.get("cellsMin")) return new THREE.Vector3(0,0,0);
-            var dimVector = this.get("cellsMax").clone().sub(this.get("cellsMin")).add(new THREE.Vector3(1,1,1));
+            var dimMax = this.get("cellsMax").clone().sub(this.get("cellsMin")).add(new THREE.Vector3(1,1,1));
+            var dimMin = new THREE.Vector3(0,0,0);
             this._loopCells(this.sparseCells, function(cell, x, y, z){
                 if (cell){
                     var material = cell.getMaterial();
                     if (material.dimensions){
-                        var subCellMax = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(material.dimensions.clone()));
-                        dimVector.max(subCellMax);
+                        console.log(cell.applyAbsoluteRotation(material.dimensions.clone()));
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(material.dimensions.clone()));
+                        dimMax.max(subCellRange);
+                        dimMin.min(subCellRange);
                     } else if (cell.length){
-                        var subCellMax = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(new THREE.Vector3(cell.length, 1, 1)));
-                        dimVector.max(subCellMax);
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyAbsoluteRotation(new THREE.Vector3(cell.length, 1, 1)));
+                        dimMax.max(subCellRange);
+                        dimMin.min(subCellRange);
                     }
                 }
             });
-            return dimVector
+            return dimMax.sub(dimMin);
         },
 
 
