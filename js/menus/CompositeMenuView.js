@@ -44,9 +44,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             return null;
         },
 
-        updateHex: function(hex){
+        updateHex: function(hex, $target){
             //update hex without rendering
-            $("#compositeColor").css("border-color", hex);
+            $target.css("border-color", hex);
         },
 
         _finishComposite: function(e){
@@ -63,6 +63,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
 
         _saveComposite: function(e){
             e.preventDefault();
+            //save as file
         },
 
         _cancelComposite: function(e){
@@ -77,8 +78,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 this._exit();
                 return;
             }
-            lattice.compositeEditor.deleteComposite();
-            this._exit();
+            var deleted = materials.setMaterial(this.get("id"), null);
+            if (deleted) this._exit();
         },
 
         _exit: function(){

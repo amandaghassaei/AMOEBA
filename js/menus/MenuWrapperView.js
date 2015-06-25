@@ -59,7 +59,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 console.warn("no property associated with string input");
                 return;
             }
-            this._setProperty($target, $target.val());
+            this._setProperty($target, property, $target.val());
         },
 
         _updateHex: function(e){
@@ -73,7 +73,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 return;
             }
             this._setProperty($target, property, hex);
-            if (this.menu.updateHex) this.menu.updateHex(hex);//no render when input in focus, this forces update of the inputs color
+            if (this.menu.updateHex) this.menu.updateHex(hex, $target);//no render when input in focus, this forces update of the inputs color
         },
 
         _isValidHex: function(hex){
@@ -175,7 +175,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _toggleProperty: function($target, property){ //val = !val
             var owner = this._getPropertyOwner($target);
-            if (owner) owner.set(property, !owner.get(property));
+            if (owner) this._setOwnerProperty(owner, property, !this._getOwnerProperty(owner, property));
         },
 
         _setProperty: function($target, property, newVal, key){
@@ -186,12 +186,22 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 return;
             }
             if (key){
-                var propObject = owner.get(property).clone();
+                var propObject = this._getOwnerProperty(owner, property).clone();
                 propObject[key] = newVal;
-                owner.set(property, propObject);
+                this._setOwnerProperty(owner, property, newVal);
             } else {
-                owner.set(property, newVal);
+                this._setOwnerProperty(owner, property, newVal);
             }
+        },
+
+        _getOwnerProperty: function(owner, property){
+            if (owner instanceof Backbone.Model) return owner.get(property);
+            return owner[property];
+        },
+
+        _setOwnerProperty: function(owner, property, value){
+            if (owner instanceof Backbone.Model) owner.set(property, value);
+            else owner[property] = value;
         },
 
 

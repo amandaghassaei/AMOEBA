@@ -29,6 +29,7 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
         },
 
         destroy: function(){
+            if (this._destroy) this._destroy();
             this.stopListening();
             this.undelegateEvents();
             this.$el.removeData().unbind();

@@ -21,8 +21,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     };
 
     function deleteMaterial(id){
+        if (materials[id].noDelete) {
+            console.warn("no delete flag on this material type");
+            return false;
+        }
         delete materials[id];//todo check if being used first
-        return true;
+        var deleted = true;
+        if (deleted) loadMaterialClass();//set to defaults
+        return deleted;
     }
 
     var listener = {};
@@ -50,6 +56,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             newMaterials[key] = definitions[key];
             var color = getMaterialColorForState(state, definitions[key], key);
             newMaterials[key].threeMaterial = makeMaterialObject(color);
+            newMaterials[key].noDelete = true;//don't delete the predefined materials
         });
         return newMaterials;
     }

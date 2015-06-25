@@ -74,10 +74,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             materials.setMaterial(id, data);
         },
 
-        deleteComposite: function(){
-            return materials.setMaterial(this.get("id"), null);
-        },
-
 
 
 

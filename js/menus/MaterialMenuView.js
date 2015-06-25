@@ -36,6 +36,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             e.stopPropagation();
             e.preventDefault();
             var id = $(e.target).data("id");
+            this.model.set("materialType", id);
             this.model.set("currentTab", "materialEditor", {silent:true});
             this.model.set("currentNav", "navMaterial");
         },
