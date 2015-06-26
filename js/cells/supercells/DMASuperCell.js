@@ -42,12 +42,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
                     var json = {index: new THREE.Vector3(x, y, z)};
                     var callback = function(cell){
-                        var cellIndex = cell.getIndex();//x, y, z have changed by now
+                        var cellIndex = cell.getIndex();
+                        if (material.cellsMin) cellIndex.sub(material.cellsMin);
                         cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
                     };
 
                     if (material.sparseCells){
                         if (material.sparseCells[x][y][z]){
+                            json.index.add(material.cellsMin);
                             json = _.extend(json, material.sparseCells[x][y][z]);
                             this._makeSubCellForIndex(json, callback);
                         }//else no cell in this spot

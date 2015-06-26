@@ -16,7 +16,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         defaults: _.extend(LatticeBase.prototype.defaults, {
             name: "",
-            color: null
+            color: null,
+            origin: new THREE.Vector3(0,0,0)
         }),
 
         __initialize: function(options, callback){
@@ -69,26 +70,27 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
 
-        makeNewCompositeMaterial: function(dimensions){
+        makeNewCompositeMaterial: function(bounds){
             if (this.get("numCells") == 0) {
                 console.warn("no cells in this composite");
                 return;
             }
             var id = this.get("id");
-            var data = this.toJSONForSave(dimensions);
+            var data = this.toJSONForSave(bounds);
             materials.setMaterial(id, data);
         },
 
-        toJSONForSave: function(dimensions){
+        toJSONForSave: function(bounds){
             var name = this.get("name");
             if (name == "") name = "Composite Material " + compositeNum++;
-            if (dimensions) var _dimensions = dimensions.clone();
+            if (bounds) var _dimensions = bounds.max.clone().sub(bounds.min);
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
             if (cellsMax) {
+                console.log(bounds.min);
                 cellsMax = cellsMax.clone();
-                cellsMax.sub(cellsMin);
-                cellsMin = new THREE.Vector3(0,0,0);
+                cellsMax.sub(cellsMin).sub(bounds.min);
+                cellsMin = new THREE.Vector3(0,0,0).sub(bounds.min);
             }
             var data = {
                 name: name,

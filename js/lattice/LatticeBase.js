@@ -198,7 +198,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         calculateBoundingBox: function(){
-            if (!this.get("cellsMax") || !this.get("cellsMin")) return new THREE.Vector3(0,0,0);
+            if (!this.get("cellsMax") || !this.get("cellsMin")) return {max:new THREE.Vector3(0,0,0), min:new THREE.Vector3(0,0,0)};
             var dimMax = this.get("cellsMax").clone().sub(this.get("cellsMin")).add(new THREE.Vector3(1,1,1));
             var dimMin = new THREE.Vector3(0,0,0);
             this._loopCells(this.sparseCells, function(cell, x, y, z){
@@ -215,7 +215,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     }
                 }
             });
-            return dimMax.sub(dimMin);
+            return {max:dimMax, min:dimMin};
         },
 
 

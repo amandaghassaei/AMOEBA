@@ -5,7 +5,7 @@
 define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate', 'fileSaver'],
     function($, _, MenuParentView, plist, lattice, globals, materials, template, fileSaver){
 
-    var dimensions;
+    var bounds;
 
     return MenuParentView.extend({
 
@@ -24,12 +24,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 return;
             }
             this.listenTo(lattice.compositeEditor, "change", function(){
-                if (lattice.compositeEditor.changedAttributes().numCells !== undefined) dimensions = lattice.compositeEditor.calculateBoundingBox();
+                if (lattice.compositeEditor.changedAttributes().numCells !== undefined) bounds = lattice.compositeEditor.calculateBoundingBox();
                 this.render();
             });
             this.listenTo(this.model, "change", this.render);
 
-            dimensions = lattice.compositeEditor.calculateBoundingBox();
+            bounds = lattice.compositeEditor.calculateBoundingBox();
         },
 
 
@@ -57,13 +57,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
                 this._exit();
                 return;
             }
-            lattice.compositeEditor.makeNewCompositeMaterial(dimensions.clone());
+            lattice.compositeEditor.makeNewCompositeMaterial(bounds);
             this._exit();
         },
 
         _saveComposite: function(e){
             e.preventDefault();
-            fileSaver.saveMaterial(lattice.compositeEditor.get("id"), lattice.compositeEditor.toJSONForSave(dimensions));
+            fileSaver.saveMaterial(lattice.compositeEditor.get("id"), lattice.compositeEditor.toJSONForSave(bounds));
         },
 
         _cancelComposite: function(e){
@@ -89,7 +89,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         _makeTemplateJSON: function(){
             return _.extend(this.model.toJSON(), plist, globals, lattice.compositeEditor.toJSON(),
                 {
-                    dimensions: dimensions,
+                    dimensions: bounds.max.clone().sub(bounds.min),
                     materials: materials.list,
                     validCompositeMaterials: materials.getVaildAvailableCompositeKeys(lattice.compositeEditor.get("id"))
                 });
