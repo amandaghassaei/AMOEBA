@@ -87,7 +87,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
             if (cellsMax) {
-                console.log(bounds.min);
+//                console.log(bounds.min);
                 cellsMax = cellsMax.clone();
                 cellsMax.sub(cellsMin).sub(bounds.min);
                 cellsMin = new THREE.Vector3(0,0,0).sub(bounds.min);

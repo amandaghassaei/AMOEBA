@@ -60,10 +60,11 @@ define(['three'], function(THREE){
                     vox: "Snap Voxel (high res)",
                     voxLowPoly: "Snap Voxel (low res)"
                 },
-                vertex: null,//{
+                vertex: {
+                    kennyTeq: "Kenny Teq"
 //                    square:"Square",
 //                   xShape:"X"
-//                }
+                }
             },
             tetra: {vertex: null},
             cube: {face: null,

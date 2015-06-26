@@ -87,6 +87,7 @@ require.config({
         octaEdgeVoxPartLowPoly: 'parts/OctaEdgeVoxPartLowPoly',
         gikPart: 'parts/GIKPart',
         gikPartLowPoly: 'parts/GIKPartLowPoly',
+        kennyTeqPart: 'parts/KennyTeqPart',
 
         //materials
         materials: 'materials/DMAMaterials',
@@ -149,6 +150,7 @@ require.config({
         gikEndPartSTL: 'assets/stls/parts/GIKEndPart.stl',
         gikPartLowPolySTL: 'assets/stls/parts/GIKPartLowPoly.stl',
         gikEndPartLowPolySTL: 'assets/stls/parts/GIKEndPartLowPoly.stl',
+        kennyTeqPartSTL: 'assets/stls/parts/KennyTeqPart.stl',
         crabSTL: 'assets/stls/crab/crab.stl'
 
     },
