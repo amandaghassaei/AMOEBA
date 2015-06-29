@@ -146,10 +146,7 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     
     Assembler.prototype.updateCellMode = function(){
-    //    this.stock.setMode();//todo fix this
-        _.each(this.stock.cells, function(cell){
-            cell.setMode();
-        });
+        this.stock.setMode();
     };
     
     Assembler.prototype.pickUpStock = function(){
