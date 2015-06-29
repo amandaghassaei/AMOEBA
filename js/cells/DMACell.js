@@ -284,7 +284,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 if (child.name == "object3D") return;
                 child.visible = visible && (child.name == mode);
             });
-            console.log(self.object3D.children);
             if (callback) {
                 callback();
                 return;
