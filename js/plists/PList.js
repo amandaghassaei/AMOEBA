@@ -222,8 +222,7 @@ define(['three'], function(THREE){
             cube:{
                 face:{handOfGod: "Hand of God"},
                 gik: {
-                    stapler: "Stapler",
-                        staplerDual: "Dual Head Stapler"
+                    stapler: "Dual Head Stapler"
 //                handOfGod: "Hand of God"
                 }
             },
@@ -240,12 +239,12 @@ define(['three'], function(THREE){
         allCamProcesses: {
             shopbot:{
                 shopbot: "Shopbot (sbp)",
-                    gcode: "G-Code"
+                gcode: "G-Code"
             },
             handOfGod:{gcode: "G-Code"},
             oneBitBot:{
                 gcode: "G-Code",
-                    tinyG: "TinyG"
+                tinyG: "TinyG"
             },
             stapler: {gcode: "G-Code"},
             staplerDual: {gcode: "G-Code"}
@@ -253,20 +252,19 @@ define(['three'], function(THREE){
 
         allMachineDefaults: {
             shopbot:null,
-                handOfGod:null,
-                oneBitBot:null,
-                stapler: {
+            handOfGod:null,
+            oneBitBot:null,
+            stapler: {
                 camStrategy: "raster",
-                    placementOrder: "XYZ",//used for raster strategy entry
-                    camProcess: "gcode",
-                    rapidHeight:3,
-                    rapidHeightRelative: true,
-                    safeHeight: 0.05,
-                    originPosition: new THREE.Vector3(0,0,0),
-                    rapidSpeeds:{xy: 3, z: 2},
+                placementOrder: "XYZ",//used for raster strategy entry
+                camProcess: "gcode",
+                rapidHeight:3,
+                rapidHeightRelative: true,
+                safeHeight: 0.05,
+                originPosition: new THREE.Vector3(0,0,0),
+                rapidSpeeds:{xy: 3, z: 2},
                 feedRate:{xy: 0.1, z: 0.1}
-            },
-            staplerDual: null
+            }
         },
 
         allScripts: {

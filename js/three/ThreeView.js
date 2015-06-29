@@ -68,8 +68,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             if (appState.get("currentTab") == "cam" && appState.get("manualSelectOrigin")){
                 var position = globals.highlighter.getHighlightedObjectPosition();
                 if (position){
-                    globals.cam.set("originPosition", position);
-                    appState.set("manualSelectOrigin", false);
+                    require(['cam'], function(cam){
+                        cam.set("originPosition", position);
+                        appState.set("manualSelectOrigin", false);
+                    });
                     return;
                 }
             }

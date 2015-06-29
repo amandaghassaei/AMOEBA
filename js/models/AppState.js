@@ -106,6 +106,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             if (navSelection == "navDesign") {
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", true);
+            } else if (navSelection == "navAssemble"){
+                require(['cam']);
             }
         },
 

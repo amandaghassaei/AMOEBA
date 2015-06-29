@@ -11,6 +11,7 @@ require.config({
         underscore: '../dependencies/underscore',
         backbone: '../dependencies/backbone',
         flatUI: '../dependencies/flatUI/js/flat-ui',
+        bootstrapSlider: '../dependencies/bootstrap-slider/bootstrap-slider',
         fileSaverLib: '../dependencies/loaders/FileSaver.min',
 
         //three
@@ -21,9 +22,11 @@ require.config({
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
 
+        //plists
+        plist: 'plists/PList',
+
         //models
         globals: 'models/Globals',
-        plist: 'models/PList',
         appState: 'models/AppState',
         fileSaver: 'models/FileSaver',
 
@@ -131,7 +134,7 @@ require.config({
         optimizeMenuTemplate: 'menus/templates/OptimizationMenuView.html',
         assemblerMenuTemplate: 'menus/templates/AssemblerMenuView.html',
         camMenuTemplate: 'menus/templates/CamMenuView.html',
-        animateMenuTemplate: 'menus/templates/AnimationMenuView.html',
+        animationMenuTemplate: 'menus/templates/AnimationMenuView.html',
         sendMenuTemplate: 'menus/templates/SendMenuView.html',
         compositeMenuTemplate: 'menus/templates/CompositeMenuView.html',
         materialEditorMenuTemplate: 'menus/templates/MaterialEditorMenuView.html',
@@ -139,10 +142,19 @@ require.config({
         discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
 
         //cam
-        cam: 'cam/cam.js',
+        cam: 'cam/cam',
 
         //assemblers
+        assembler: 'cam/assemblers/Assembler',
+        component: 'cam/assemblers/Component',
+        stapler: 'cam/assemblers/StaplerAssembler',
+        dualStapler: 'cam/assemblers/DualStaplerAssembler',
         crab: 'cam/assemblers/crab',
+
+        //processes
+        gcode: 'cam/processes/GCodeExporter',
+        shopbot: 'cam/processes/ShopbotExporter',
+        tinyG: 'cam/processes/TinyGExporter',
 
         //stls (not sure why ../ is not working here?)
         octaFaceTrianglePartSTL: 'assets/stls/parts/OctaFaceTrianglePart.stl',
@@ -177,6 +189,10 @@ require.config({
         flatUI: {
             deps: ['jquery']
         },
+        bootstrapSlider:{
+            deps: ['jquery'],
+            exports: '$'
+        },
         'socketio': {
             exports: 'io'
         }
@@ -191,7 +207,7 @@ require.config({
 //};
 
 //init stuff
-require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'flatUI', 'ribbon', 'menuWrapper'],
+require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper'],
     function(appState, lattice, Navbar, three, ThreeView){
 
     new Navbar({model:appState});

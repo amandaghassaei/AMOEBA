@@ -15,14 +15,14 @@ Units: &nbsp;&nbsp;<div class="btn-group">
             <% }); %>
         </ul>
     </div><br/><br/>
-Origin (xyz): &nbsp;&nbsp;
+Origin (xyz):&nbsp;&nbsp;
     <input data-property="originPosition" data-key="x" value="<%= originPosition.x %>" placeholder="X" class="form-control floatInput assembler" type="text">&nbsp;
     <input data-property="originPosition" data-key="y" value="<%= originPosition.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">&nbsp;
     <input data-property="originPosition" data-key="z" value="<%= originPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text">
 <% if (!(machineName == "handOfGod")){ %><br/>
     <a id="manualSelectOrigin" class=" btn btn-lg btn-default btn-imageCustom<% if (manualSelectOrigin){ %> btn-selected<% } %>"><img src="assets/imgs/cursor.png"></a>
     <label>&nbsp;&nbsp;&nbsp;Manually select origin from existing cell</label><br/><br/>
-    <% if (!assembler.stockAttachedToEndEffector){ %>
+    <% if (assembler && !assembler.stockAttachedToEndEffector){ %>
         Stock (xyz): &nbsp;&nbsp;
             <input data-property="stockPosition" data-key="x" value="<%= stockPosition.x %>" placeholder="X" class="form-control floatInput assembler" type="text">&nbsp;
             <input data-property="stockPosition" data-key="y" value="<%= stockPosition.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">&nbsp;
