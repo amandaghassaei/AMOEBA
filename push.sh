@@ -1,6 +1,6 @@
 #!/bin/sh
 
-rsync -r -v --exclude=".*" ~/Research/WebApps/DMDesign ~/Projects/dma/Web/
+rsync -r -v --exclude=".*" --exclude='node/node_modules/' ~/Research/WebApps/DMDesign ~/Projects/dma/Web/
 
 cd ~/Projects/dma
 hg addremove .
