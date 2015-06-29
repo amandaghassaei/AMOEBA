@@ -19,11 +19,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     OctaVertexCell.prototype._initParts = function(callback){
         var self = this;
-        var type = lattice.get("partType");
-        if (type == "kennyTeq") type = "kennyTeqPart";
-        else console.warn("no part type " + type);
-
-        require([type], function(PartClass){
+        require([lattice.get("partType") + "Part"], function(PartClass){
             var parts  = [];
             for (var i=0;i<3;i++){
                 parts.push(new PartClass(0, self));

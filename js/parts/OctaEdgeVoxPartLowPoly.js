@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'three', 'part', 'bin!octaEdgeVoxPartLowPolySTL', 'stlLoader'], function(_, THREE, DMAPart, voxLowPoly){
+define(['underscore', 'stlLoader', 'part', 'bin!octaEdgeVoxPartLowPolySTL'], function(_, THREE, DMAPart, voxLowPoly){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(voxLowPoly);

@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'three', 'part', 'bin!octaFaceTrianglePartSTL', 'stlLoader'], function(_, THREE, DMAPart, trianglePart){
+define(['underscore', 'stlLoader', 'part', 'bin!octaFaceTrianglePartSTL'], function(_, THREE, DMAPart, trianglePart){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(trianglePart);

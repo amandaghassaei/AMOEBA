@@ -4,7 +4,7 @@
 
 
 
-define(['underscore', 'three', 'gikPart', 'bin!gikPartLowPolySTL', 'bin!gikEndPartLowPolySTL', 'stlLoader'], function(_, THREE, GIKPart, gikPartLowPoly, gikEndPartLowPoly){
+define(['underscore', 'stlLoader', 'gikPart', 'bin!gikPartLowPolySTL', 'bin!gikEndPartLowPolySTL'], function(_, THREE, GIKPart, gikPartLowPoly, gikEndPartLowPoly){
 
     var loader = new THREE.STLLoader();
     var unitGeo = preProcessGeo(loader.parse(gikPartLowPoly));

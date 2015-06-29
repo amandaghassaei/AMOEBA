@@ -88,6 +88,8 @@ require.config({
         gikPart: 'parts/GIKPart',
         gikPartLowPoly: 'parts/GIKPartLowPoly',
         kennyTeqPart: 'parts/KennyTeqPart',
+        kennyTeqHighResPart: 'parts/KennyTeqHighResPart',
+        samTeqPart: 'parts/SamTeqPart',
 
         //materials
         materials: 'materials/DMAMaterials',
@@ -151,6 +153,8 @@ require.config({
         gikPartLowPolySTL: 'assets/stls/parts/GIKPartLowPoly.stl',
         gikEndPartLowPolySTL: 'assets/stls/parts/GIKEndPartLowPoly.stl',
         kennyTeqPartSTL: 'assets/stls/parts/KennyTeqPart.stl',
+        kennyTeqPartHighResSTL: 'assets/stls/parts/KennyTeqPartHighRes.stl',
+        samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl',
         crabSTL: 'assets/stls/crab/crab.stl'
 
     },

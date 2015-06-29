@@ -2,7 +2,7 @@
  * Created by aghassaei on 5/26/15.
  */
 
-define(['underscore', 'three', 'part', 'bin!octaEdgeVoxPartSTL', 'stlLoader'], function(_, THREE, DMAPart, voxPart){
+define(['underscore', 'stlLoader', 'part', 'bin!octaEdgeVoxPartSTL'], function(_, THREE, DMAPart, voxPart){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(voxPart);

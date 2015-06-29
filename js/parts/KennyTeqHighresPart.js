@@ -1,8 +1,8 @@
 /**
- * Created by aghassaei on 6/26/15.
+ * Created by aghassaei on 6/29/15.
  */
 
-define(['underscore', 'stlLoader', 'part', 'bin!kennyTeqPartSTL'], function(_, THREE, DMAPart, stl){
+define(['underscore', 'stlLoader', 'part', 'bin!kennyTeqPartHighResSTL'], function(_, THREE, DMAPart, stl){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(stl);

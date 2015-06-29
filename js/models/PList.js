@@ -61,8 +61,9 @@ define(['three'], function(THREE){
                     voxLowPoly: "Snap Voxel (low res)"
                 },
                 vertex: {
-                    kennyTeq: "Kenny Teq"
-//                    square:"Square",
+                    kennyTeq: "Kenny Teq",
+                    kennyTeqHighRes: "Kenny Teq (High Res)",
+                    samTeq: "Square"
 //                   xShape:"X"
                 }
             },
@@ -74,7 +75,7 @@ define(['three'], function(THREE){
             }
             },
             truncatedCube: {
-                face: null,//{
+                face: null//{
 //                    square:"Square",
 //                    xShape:"X"
 //                }
