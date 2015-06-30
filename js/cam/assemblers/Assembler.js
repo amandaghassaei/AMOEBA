@@ -8,17 +8,15 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     function Assembler(){
 
-        var self = this;
         this.stock = this._buildStock();
         this._positionStockRelativeToEndEffector(this.stock);
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
-        this._buildAssemblerComponents(function(){
-            self._configureAssemblerMovementDependencies();
-            three.render();
-        });
-    
+        this._buildAssemblerComponents();
+        this._configureAssemblerMovementDependencies();
+        three.render();
+
         this.setVisibility(cam.isVisible());
     }
     
@@ -29,32 +27,16 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     Assembler.prototype._positionStockRelativeToEndEffector = function(stock){
     };
     
-    Assembler.prototype._buildAssemblerComponents = function(callback){
-        var numMeshes = this._getTotalNumMeshes();
-        if (numMeshes == 0) {
-            callback();
-            return;
-        }
-    
-        function allLoaded(){
-            numMeshes -= 1;
-            return numMeshes <= 0;
-        }
-    
+    Assembler.prototype._buildAssemblerComponents = function(){
+        var allSTLs = this._getSTLs();
         var self = this;
-        function doAdd(geometry, name){
+        _.each(allSTLs, function(geometry, name){
             self[name] = new Component(geometry, assemblerMaterial);
-            if (allLoaded()) callback();
-        }
-    
-        this._loadSTls(doAdd);
-    };
-    
-    Assembler.prototype._getTotalNumMeshes = function(){
-        return 0;
+        });
     };
     
     Assembler.prototype._configureAssemblerMovementDependencies = function(){
+        //override in subclasses
     };
     
     Assembler.prototype.setVisibility = function(visible){
@@ -64,12 +46,7 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     };
     
     Assembler.prototype._setTranslucent = function(){
-        //todo make stock transparent
-        if (appState.get("currentTab") == "cam"){
-            assemblerMaterial.transparent = true;
-        } else {
-            assemblerMaterial.transparent = false;
-        }
+        assemblerMaterial.transparent = (appState.get("currentTab") == "cam");
     };
     
     
@@ -143,9 +120,9 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     
     
+    //animation methods
     
-    
-    Assembler.prototype.updateCellMode = function(){
+    Assembler.prototype.updateCellMode = function(){//message from cam
         this.stock.setMode();
     };
     
