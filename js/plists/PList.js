@@ -23,7 +23,9 @@ define(['three'], function(THREE){
             mechanicalNavSim:{
                 mSetup:"Setup",
                 mStatic:"Statics",
-                mDynamic:"Dynamics",
+                mDynamic:"Dynamics"
+            },
+            navOptimize:{
                 optimize:"Optimize"
             },
             navAssemble:{
