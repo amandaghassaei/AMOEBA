@@ -65,6 +65,8 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
         _updateNavSelectionUI: function(){
             this._deselectAllNavItems();
             var navSelection = this.model.get("currentNav");
+            if (navSelection == "electronicNavSim" || navSelection == "mechanicalNavSim") navSelection = "navSim";
+            if (navSelection == "navComposite" || navSelection == "navMaterial") navSelection = "navDesign";
             _.each($(".menuHoverControls"), function(link){
                 var $link = $(link);
                 if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight

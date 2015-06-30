@@ -10,4 +10,6 @@ hierarchical
     - change bounding box
     - placement ui 3D
 
+material transformations -> change material of a cell, change in bulk
+
 rendering callbacks
