@@ -3,7 +3,7 @@
  */
 
 define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMenuTemplate', 'fillGeometry', 'stlLoader'],
-    function($, _, MenuParentView, plist, lattice, template, FillGeometry, THREE){
+    function($, _, MenuParentView, plist, lattice, template, fillGeometry, THREE){
 
     return MenuParentView.extend({
 
@@ -20,12 +20,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMe
 
         _initialize: function(){
 
-            this.fillGeometry = new FillGeometry();
-            this.listenTo(this.fillGeometry, "change", this.render);
+            this.listenTo(fillGeometry, "change", this.render);
         },
 
         getPropertyOwner: function($target){
-            if ($target.hasClass("fillGeometry")) return this.fillGeometry;
+            if ($target.hasClass("fillGeometry")) return fillGeometry;
             return null;
         },
 
@@ -62,31 +61,30 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMe
         },
 
         _loadMeshFromURL: function(url, filename){
-            var self = this;
             var loader = new THREE.STLLoader();
             loader.load(url, function(geometry){
-                self.fillGeometry.buildNewMesh(geometry);
-                self.fillGeometry.set("filename", filename);
+                fillGeometry.buildNewMesh(geometry);
+                fillGeometry.set("filename", filename);
             });
         },
 
         _subtractGeo: function(e){
             e.preventDefault();
-            this.fillGeometry.subtractGeo();
+            fillGeometry.subtractGeo();
         },
 
         _fillGeo: function(e){
             e.preventDefault();
-            this.fillGeometry.fillGeo();
+            fillGeometry.fillGeo();
         },
 
         _removeMesh: function(e){
             e.preventDefault();
-            this.fillGeometry.removeMesh();
+            fillGeometry.removeMesh();
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), this.fillGeometry.toJSON());
+            return _.extend(this.model.toJSON(), fillGeometry.toJSON());
         },
 
         template: _.template(template)

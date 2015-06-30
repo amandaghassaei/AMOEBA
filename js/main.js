@@ -108,7 +108,6 @@ require.config({
         importMenu: 'menus/ImportMenuView',
         partMenu: 'menus/PartMenuView',
         scriptMenu: 'menus/ScriptMenuView',
-        physicsMenu: 'menus/PhysicsMenuView',
         materialMenu: 'menus/MaterialMenuView',
         optimizeMenu: 'menus/OptimizationMenuView',
         assemblerMenu: 'menus/AssemblerMenuView',
@@ -119,6 +118,12 @@ require.config({
         materialEditorMenu: 'menus/MaterialEditorMenuView',
         setupCommMenu: 'menus/SetupCommMenuView',
         discoveryMenu: 'menus/DiscoveryMenuView',
+        eSetupMenu: 'menus/ESetupMenuView',
+        eStaticMenu: 'menus/EStaticMenuView',
+        eDynamicMenu: 'menus/EDynamicMenuView',
+        mSetupMenu: 'menus/MSetupMenuView',
+        mStaticMenu: 'menus/MStaticMenuView',
+        mDynamicMenu: 'menus/MDynamicMenuView',
 
         //templates
         navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
@@ -129,7 +134,6 @@ require.config({
         importMenuTemplate: 'menus/templates/ImportMenuView.html',
         partMenuTemplate: 'menus/templates/PartMenuView.html',
         scriptMenuTemplate: 'menus/templates/ScriptMenuView.html',
-        physicsMenuTemplate: 'menus/templates/PhysicsMenuView.html',
         materialMenuTemplate: 'menus/templates/MaterialMenuView.html',
         optimizeMenuTemplate: 'menus/templates/OptimizationMenuView.html',
         assemblerMenuTemplate: 'menus/templates/AssemblerMenuView.html',
@@ -140,6 +144,12 @@ require.config({
         materialEditorMenuTemplate: 'menus/templates/MaterialEditorMenuView.html',
         setupCommMenuTemplate: 'menus/templates/SetupCommMenuView.html',
         discoveryMenuTemplate: 'menus/templates/DiscoveryMenuView.html',
+        eSetupMenuTemplate: 'menus/templates/ESetupMenuView.html',
+        eStaticMenuTemplate: 'menus/templates/EStaticMenuView.html',
+        eDynamicMenuTemplate: 'menus/templates/EDynamicMenuView.html',
+        mSetupMenuTemplate: 'menus/templates/MSetupMenuView.html',
+        mStaticMenuTemplate: 'menus/templates/MStaticMenuView.html',
+        mDynamicMenuTemplate: 'menus/templates/MDynamicMenuView.html',
 
         //cam
         cam: 'cam/cam',

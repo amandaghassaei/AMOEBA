@@ -14,9 +14,16 @@ define(['three'], function(THREE){
                 part:"Part",
                 script:"Script"
             },
-            navSim:{
-                physics:"Physics",
-                part:"Part",
+            electronicNavSim:{
+                eSetup:"Connectivity",
+                eStatic:"Statics",
+                eDynamic:"Dynamics",
+                optimize:"Optimize"
+            },
+            mechanicalNavSim:{
+                mSetup:"Setup",
+                mStatic:"Statics",
+                mDynamic:"Dynamics",
                 optimize:"Optimize"
             },
             navAssemble:{
@@ -24,12 +31,13 @@ define(['three'], function(THREE){
                 cam: "Process",
                 animate:"Preview"
             },
-            navComposite:{
-                composite:"Composite Editor"
-            },
             navComm:{
                 setupComm: "Setup",
                 send: "Send"
+            },
+            //maybe do something different here?
+            navComposite:{
+                composite:"Composite Editor"
             },
             navMaterial:{
                 materialEditor: "Material Editor"

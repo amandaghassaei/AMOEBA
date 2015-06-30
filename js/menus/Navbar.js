@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu'], function($, _, Backbone, fileSaver, NavViewMenu){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState'], function($, _, Backbone, fileSaver, NavViewMenu, appState){
 
     return Backbone.View.extend({
 
@@ -55,6 +55,10 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu'], functio
                 return;
             }
             e.preventDefault();
+            if (navSelection == "navSim"){//choose which simulation package to pull up
+                this.model.set("currentNav", appState.get("materialClass") + "NavSim");
+                return;
+            }
             if (navSelection) this.model.set("currentNav", navSelection);
         },
 

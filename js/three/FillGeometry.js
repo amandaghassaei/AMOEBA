@@ -5,7 +5,7 @@
 define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
     function(THREE, _, Backbone, lattice, three){
 
-    return Backbone.Model.extend({
+    var FillGeometry = Backbone.Model.extend({
     
         defaults: {
             filename: "No File Loaded",
@@ -128,5 +128,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             three.render();
         }
     });
+
+    return new FillGeometry();
 });
 

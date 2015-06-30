@@ -1,8 +1,9 @@
 /**
- * Created by aghassaei on 2/25/15.
+ * Created by aghassaei on 6/30/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!physicsMenuTemplate'], function($, _, MenuParentView, plist, template){
+
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eDynamicMenuTemplate'], function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 
