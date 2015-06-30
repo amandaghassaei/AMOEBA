@@ -127,6 +127,28 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+        //cells array
+
+        _parseSparseCell: function(){
+            this.cells = [[[null]]];
+            if (this.get("numCells") == 0) {
+                console.warn("no cells in assembly");
+                return;
+            }
+
+            var bounds = this.calculateBoundingBox();
+            var size = bounds.max.sub(bounds.min);
+            console.log(size);
+
+        },
+
+
+
+
+
+
+
+
         //3d ui
 
         addHighlightableCell: function(cell){
@@ -152,6 +174,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
             if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
+            if ((currentNav == "electronicNavSim" || currentNav == "mechanicalNavSim" || currentNav == "navAssemble")
+                && appState.previous("currentNav") == "navDesign") this._parseSparseCell();
         },
 
         getCompositeData: function(){

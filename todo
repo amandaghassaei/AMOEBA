@@ -12,3 +12,6 @@ hierarchical
 material transformations -> change material of a cell, change in bulk
 
 rendering callbacks
+
+
+highligher - check mode, do not add cells except in design/composite/material modes

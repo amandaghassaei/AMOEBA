@@ -105,7 +105,7 @@ define(['three'], function(THREE){
                 vertex: 'mechanical'
             },
             cube: {
-                face: 'mechanical',
+                face: 'electronic',
                 gik: 'electronic'
             },
             truncatedCube: {face: 'mechanical'},

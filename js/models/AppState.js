@@ -39,7 +39,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
 
             realisticColorScheme: false,
             materialType: null,
-            materialClass: "mechanical",
+            materialClass: null,
 
             stockSimulationPlaying: false,
             manualSelectOrigin: false//mode that allows user ot select origin from existing cell
@@ -106,10 +106,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             if (navSelection == "navDesign") {
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", true);
+            } else if (navSelection == "electronicNavSim" || navSelection == "mechanicalNavSim"){
+                this.set("highlighterIsVisible", false);
             } else if (navSelection == "navAssemble"){
-                require(['cam']);
             }
-        },
 
         _materialTypeChanged: function(){
             var materialType = this.get("materialType");
