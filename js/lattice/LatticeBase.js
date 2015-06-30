@@ -231,7 +231,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             if (!cells) {
                 console.warn("no cells specified in matrix expansion");
-                return;
+                cells = this.sparseCells;
             }
 
             if (!this.get("cellsMax") || !this.get("cellsMin")){

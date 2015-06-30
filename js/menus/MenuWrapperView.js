@@ -161,7 +161,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _getPropertyOwner: function($target){
             if ($target.hasClass("lattice")) return lattice;
-            if ($target.hasClass("assembler")) return globals.cam;
             if ($target.hasClass("appState")) return this.model;
             if (this.menu) {
                 var owner = this.menu.getPropertyOwner($target);
@@ -186,9 +185,10 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 return;
             }
             if (key){
+                console.log(this._getOwnerProperty(owner, property));
                 var propObject = this._getOwnerProperty(owner, property).clone();
                 propObject[key] = newVal;
-                this._setOwnerProperty(owner, property, newVal);
+                this._setOwnerProperty(owner, property, propObject);
             } else {
                 this._setOwnerProperty(owner, property, newVal);
             }

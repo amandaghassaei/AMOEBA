@@ -62,28 +62,6 @@ define(['underscore', 'assembler', 'stlLoader', 'gikSuperCell',
         }
     };
 
-    StaplerAssembler.prototype._moveXAxis = function(startingPos, target, axis, speed, callback){
-        if (target == null || target === undefined) {
-            callback();
-            return;
-        }
-        this._animateObjects([this.xAxis], axis, speed, startingPos, target, callback);
-    };
-    StaplerAssembler.prototype._moveYAxis = function(startingPos, target, axis, speed, callback){
-        if (target == null || target === undefined) {
-            callback();
-            return;
-        }
-        this._animateObjects([this.yAxis], axis, speed, startingPos, target, callback);
-    };
-    StaplerAssembler.prototype._moveZAxis = function(startingPos, target, axis, speed, callback){
-        if (target == null || target === undefined) {
-            callback();
-            return;
-        }
-        this._animateObjects([this.zAxis], axis, speed, startingPos, target, callback);
-    };
-
 
     return StaplerAssembler;
 });

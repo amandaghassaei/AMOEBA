@@ -209,10 +209,11 @@ define(['three'], function(THREE){
             octa:{
                 face: {handOfGod: "Hand of God"},
                 edgeRot: {
+                    crab: "Crab",
                     shopbot: "Shopbot",
-                        oneBitBot: "One Bit Bot",
-                        oneBitBotLegs: "One Bit Bot with Legs",
-                        handOfGod: "Hand of God"
+                    oneBitBot: "One Bit Bot",
+                    oneBitBotLegs: "One Bit Bot with Legs",
+                    handOfGod: "Hand of God"
                 },
                 vertex: {handOfGod: "Hand of God"}
             },
@@ -247,7 +248,8 @@ define(['three'], function(THREE){
                 tinyG: "TinyG"
             },
             stapler: {gcode: "G-Code"},
-            staplerDual: {gcode: "G-Code"}
+            staplerDual: {gcode: "G-Code"},
+            crab: {gcode: "G-Code"}
         },
 
         allMachineDefaults: {
@@ -264,7 +266,8 @@ define(['three'], function(THREE){
                 originPosition: new THREE.Vector3(0,0,0),
                 rapidSpeeds:{xy: 3, z: 2},
                 feedRate:{xy: 0.1, z: 0.1}
-            }
+            },
+            crab: null
         },
 
         allScripts: {
@@ -273,7 +276,7 @@ define(['three'], function(THREE){
 
         allUnitTypes: {
             inches: "Inches",
-                mm: "mm"
+            mm: "mm"
             //um: "micron"
         }
 

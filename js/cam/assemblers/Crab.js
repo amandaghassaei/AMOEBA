@@ -3,7 +3,7 @@
  */
 
 
-define(['stlLoader', 'bin!crabSTL', 'threeModel'], function(THREE, geometry, three){
+define(['stlLoader', 'bin!assets/stls/crab/crab.stl', 'threeModel', 'assembler'], function(THREE, geometry, three, Assembler){
 
 
     var loader = new THREE.STLLoader();
@@ -16,8 +16,26 @@ define(['stlLoader', 'bin!crabSTL', 'threeModel'], function(THREE, geometry, thr
         return geo;
     }
 
-    var mesh = new THREE.Mesh(unitGeo, new THREE.MeshLambertMaterial({color:0x777777, shading:THREE.FlatShading}));
-    three.sceneAdd(mesh);
-    three.render();
+    function CrabAssembler(){
+        this.stockAttachedToEndEffector = true;//no need for "stock position"
+        Assembler.call(this);
+    }
+    CrabAssembler.prototype = Object.create(Assembler.prototype);
 
+    CrabAssembler.prototype._buildStock = function(){
+        return null;
+//        return new StockClass({});
+    };
+
+    CrabAssembler.prototype._configureAssemblerMovementDependencies = function(){
+        this.object3D.add(this.frame.getObject3D());
+    };
+
+    CrabAssembler.prototype._getSTLs = function(){
+        return {
+            frame: unitGeo
+        }
+    };
+
+    return CrabAssembler;
 });

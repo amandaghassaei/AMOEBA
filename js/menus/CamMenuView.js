@@ -19,6 +19,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!c
             this.listenTo(lattice, "change", this.render);
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("assembler")) return cam;
+            return null;
+        },
+
         _selectOrigin: function(e){
             e.preventDefault();
             this.model.set("manualSelectOrigin", !this.model.get("manualSelectOrigin"));

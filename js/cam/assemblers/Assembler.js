@@ -48,6 +48,12 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     Assembler.prototype._setTranslucent = function(){
         assemblerMaterial.transparent = (appState.get("currentTab") == "cam");
     };
+
+    Assembler.prototype.moveMachine = function(){//origin selection
+        var origin = cam.get("originPosition");
+        this.object3D.position.set(origin.x, origin.y, origin.z);
+        three.render();
+    };
     
     
     
@@ -136,12 +142,6 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     };
     
     Assembler.prototype.pause = function(){
-    };
-    
-    Assembler.prototype.moveMachine = function(){
-        var origin = cam.get("originPosition");
-        this.object3D.position.set(origin.x, origin.y, origin.z);
-        three.render();
     };
     
     Assembler.prototype.moveTo = function(x, y, z, speed, wcs, callback){

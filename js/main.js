@@ -167,7 +167,6 @@ require.config({
         kennyTeqPartSTL: 'assets/stls/parts/KennyTeqPart.stl',
         kennyTeqPartHighResSTL: 'assets/stls/parts/KennyTeqPartHighRes.stl',
         samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl',
-        crabSTL: 'assets/stls/crab/crab.stl'
 
     },
 

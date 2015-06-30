@@ -15,6 +15,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!a
             this.listenTo(cam, "change", this.render);//todo handle this in wrapper
             $(document).bind('keyup', {}, this._onKeyup);
         },
+
+        getPropertyOwner: function($target){
+            if ($target.hasClass("assembler")) return cam;
+            return null;
+        },
     
         _onKeyup: function(e){
             if (this.model.get("currentTab") != "assembler") return;

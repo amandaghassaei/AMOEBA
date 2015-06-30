@@ -35,6 +35,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
                 opacity:0.4,
                 side:THREE.DoubleSide
             }));
+            mesh.position.set(0,0,-0.5);
             this.set({mesh: mesh});
             three.sceneAdd(mesh);
             three.render();
@@ -44,13 +45,14 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             var boundingBox = this.get("mesh").geometry.boundingBox;
     
             var scale = this.get("scale");
-            var scaledMin = boundingBox.min.clone().multiplyScalar(scale);
+            var offset = this.get("mesh").position.clone();
+            console.log(offset);
+            var scaledMin = boundingBox.min.clone().multiplyScalar(scale);//.add(offset)
             var scaledMax = boundingBox.max.clone().multiplyScalar(scale);
-            console.log(scaledMin);
-            console.log(scaledMax);
     
             var minIndex = lattice.getIndexForPosition(scaledMin);
             var maxIndex = lattice.getIndexForPosition(scaledMax);
+            minIndex.z -= 1;
             console.log(minIndex);
             console.log(maxIndex);
             lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
@@ -73,15 +75,16 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
                     for (var z=minIndex.z;z<=maxIndex.z;z++){
                         var index = new THREE.Vector3(x, y, z);
                         var position = lattice.getPositionForIndex(index);
+                        index.z -= 1;
                         if (!inside){
                             if (position.z<nextIntersection) continue;
                             else {
                                 inside = true;
-                                lattice.getUItarget().addCellAtIndex(index, true, true);
+                                lattice.addCellAtIndex(index, true, true);
                             }
                         } else {
                             if (position.z<nextIntersection) {
-                                lattice.getUItarget().addCellAtIndex(index, true, true);
+                                lattice.addCellAtIndex(index, true, true);
                                 continue;
                             }
                             else inside = false;
