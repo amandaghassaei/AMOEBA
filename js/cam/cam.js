@@ -77,6 +77,7 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
             this.listenTo(appState, "change:cellMode", this._updateCellMode);
             this.listenTo(this, "change:machineName", this.selectMachine);
 
+            this._navChanged();
     //        this._initOriginAndStock();
         },
 
@@ -126,7 +127,7 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
             //call this each time we switch to assemble tab
             var availableMachines = _.keys(plist.allMachineTypes[lattice.get("cellType")][lattice.get("connectionType")]);
             if (availableMachines.indexOf(this.get("machineName")) < 0){
-                this.set("machineName", availableMachines[0]);
+                this.set("machineName", availableMachines[0], {silent:true});
             }
         },
 

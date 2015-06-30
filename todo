@@ -1,4 +1,13 @@
-fix parse int/float/lattice/appstate - put in menu wrapper
-color swatch menu
-gik position z scale
-giz end positions
+import - offset, scale, rotation
+fill geometry persists
+parse sparseCells -> cells
+
+hierarchical
+    - gik dimensions
+    - origin
+    - rotation
+    - load composite materials
+    - change bounding box
+    - placement ui 3D
+
+rendering callbacks

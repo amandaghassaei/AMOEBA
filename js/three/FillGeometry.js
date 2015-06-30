@@ -47,12 +47,11 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             var scale = this.get("scale");
             var offset = this.get("mesh").position.clone();
             console.log(offset);
-            var scaledMin = boundingBox.min.clone().multiplyScalar(scale);//.add(offset)
-            var scaledMax = boundingBox.max.clone().multiplyScalar(scale);
+            var scaledMin = boundingBox.min.clone().multiplyScalar(scale).add(offset);
+            var scaledMax = boundingBox.max.clone().multiplyScalar(scale).add(offset);
     
             var minIndex = lattice.getIndexForPosition(scaledMin);
             var maxIndex = lattice.getIndexForPosition(scaledMax);
-            minIndex.z -= 1;
             console.log(minIndex);
             console.log(maxIndex);
             lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
@@ -75,7 +74,6 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
                     for (var z=minIndex.z;z<=maxIndex.z;z++){
                         var index = new THREE.Vector3(x, y, z);
                         var position = lattice.getPositionForIndex(index);
-                        index.z -= 1;
                         if (!inside){
                             if (position.z<nextIntersection) continue;
                             else {
