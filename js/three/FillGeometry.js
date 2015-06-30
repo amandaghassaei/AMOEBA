@@ -10,7 +10,6 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
         defaults: {
             filename: "No File Loaded",
             mesh: null,
-            boundingBox: null,//show bounding box for mesh
             scale: 1
         },
     
@@ -47,8 +46,8 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             var scale = this.get("scale");
             var offset = this.get("mesh").position.clone();
             console.log(offset);
-            var scaledMin = boundingBox.min.clone().multiplyScalar(scale).add(offset);
-            var scaledMax = boundingBox.max.clone().multiplyScalar(scale).add(offset);
+            var scaledMin = boundingBox.min.clone().multiplyScalar(scale);//.add(offset)
+            var scaledMax = boundingBox.max.clone().multiplyScalar(scale);
     
             var minIndex = lattice.getIndexForPosition(scaledMin);
             var maxIndex = lattice.getIndexForPosition(scaledMax);
@@ -115,9 +114,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
         removeMesh: function(){
             if (!this.get("mesh")) return;
             three.sceneRemove(this.get("mesh"));
-            three.sceneRemove(this.get("boundingBox"));
             this.set("mesh", null);
-            this.set("boundingBox", null);
             this.set("filename", this.defaults.filename);
             three.render();
         },

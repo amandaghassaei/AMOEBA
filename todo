@@ -1,5 +1,4 @@
 import - offset, scale, rotation
-fill geometry persists
 parse sparseCells -> cells
 
 hierarchical
