@@ -109,6 +109,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
 
 
+     //parse
+    DMASuperCell.prototype.addToDenseArray = function(cellsArray, min){
+        this._loopCells(function(cell){
+            if (cell) cell.addToDenseArray(cellsArray, min);
+        });
+    };
+
+
+
+
+
+
+
     DMASuperCell.prototype._loopCells = function(callback){
         var cells = this.cells;
         if (!cells || cells === undefined) return;

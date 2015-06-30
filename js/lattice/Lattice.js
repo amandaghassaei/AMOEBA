@@ -130,16 +130,35 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //cells array
 
         _parseSparseCell: function(){
-            this.cells = [[[null]]];
+
             if (this.get("numCells") == 0) {
                 console.warn("no cells in assembly");
+                this.cells = [[[null]]];
                 return;
             }
 
             var bounds = this.calculateBoundingBox();
             var size = bounds.max.sub(bounds.min);
-            console.log(size);
 
+            //create array of nulls
+            var cells = [];
+            for (var x=0;x<size.x;x++){
+                cells.push([]);
+                for (var y=0;y<size.y;y++){
+                    cells[x].push([]);
+                    for (var z=0;z<size.z;z++){
+                        cells[x][y].push(null);
+                    }
+                }
+            }
+
+            var min = this.get("cellsMin").sub(bounds.min);
+            this._loopCells(this.sparseCells, function(cell){
+                if (!cell) return;
+                cell.addToDenseArray(cells, min);
+            });
+
+            this.cells = cells;
         },
 
 

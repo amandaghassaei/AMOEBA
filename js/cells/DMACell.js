@@ -381,10 +381,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
 
 
+    //parse
+    DMACell.prototype.addToDenseArray = function(cellsArray, min){
+        var index = this.getAbsoluteIndex().sub(min);
+        cellsArray[index.x][index.y][index.z] = this;
+    };
+
+
+
+
 
     //destroy
 
-    DMACell.prototype.destroy = function(){
+    DMACell.prototype.destroy = function(){//todo remove reference from lattice.cells
         this.destroyParts();
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);

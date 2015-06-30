@@ -110,6 +110,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 this.set("highlighterIsVisible", false);
             } else if (navSelection == "navAssemble"){
             }
+        },
 
         _materialTypeChanged: function(){
             var materialType = this.get("materialType");
