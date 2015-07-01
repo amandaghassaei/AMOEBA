@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'text!setup
 
         getPropertyOwner: function($target){
             if ($target.hasClass("serialComm")) return serialComm;
-            return null
+            return null;
         },
 
         _sendTestMessage: function(e){

@@ -13,6 +13,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
         this.materialName = json.materialName || appState.get("materialType");
+        this.isTransparent = false;
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -167,7 +168,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 if (part) part.setMaterial(material);
             });
         }
-        this.object3D.children[0].material = material;
+        this.setMaterial(material);
         three.render();
     };
 
@@ -236,10 +237,18 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("no three material object found for type "+ this.materialName);
             return null;
         }
+        if (this.isTransparent) return materials.list[this.materialName].transparentMaterial;
         return materials.list[this.materialName].threeMaterial;
     };
 
-    DMACell.prototype.setOpacity = function(opacity){
+    DMACell.prototype.setMaterial = function(material){
+        this.object3D.children[0].material = material;
+    };
+
+    DMACell.prototype.setTransparent = function(transparent){
+        if (transparent == this.isTransparent) return;
+        this.isTransparent = transparent;
+        this.setMaterial(this.getMaterial(true));
     };
 
     DMACell.prototype.setMode = function(mode, callback){

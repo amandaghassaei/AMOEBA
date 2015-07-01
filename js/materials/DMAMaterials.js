@@ -39,7 +39,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             else materialsList[id][key] = data[key];
         });
 
-        if (materialsList[id].threeMaterial || oldColor != materialsList[id].color) changeSingleMaterialColorScheme(id);
+        if (!materialsList[id].threeMaterial || oldColor != materialsList[id].color) changeSingleMaterialColorScheme(id);
         if (edited){
             var allChangedMaterialsList = getAllParentComposites(id);
             allChangedMaterialsList.push(id);
@@ -183,6 +183,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         var color = getMaterialColorForState(state, materialInfo, name);
         if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
         else materialInfo.threeMaterial = makeMaterialObject(color);
+        if (materialInfo.transparentMaterial) materialInfo.transparentMaterial.color = new THREE.Color(color);
+        else materialInfo.transparentMaterial = makeMaterialObject(color, true);
     }
 
     function getMaterialColorForState(state, definition, key){
@@ -192,7 +194,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         return color;
     }
 
-    function makeMaterialObject(color){
+    function makeMaterialObject(color, transparent){
+        if (transparent) return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading, transparent: true, opacity:0.4});
         return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading});
     }
 

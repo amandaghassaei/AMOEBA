@@ -123,38 +123,47 @@ define(['three'], function(THREE){
                 brass:{
                     name: "Brass",
                     color: "#b5a642",
-                    altColor: "#857B64"
+                    altColor: "#857B64",
+                    properties:{
+                        conductive: true
+                    }
                 },
                 fiberGlass: {
                     name: "Fiberglass",
                     color: "#fef1b5",
 //                    opacity: "0.9",
-                    altColor: "#ecf0f1"
+                    altColor: "#ecf0f1",
+                    properties:{}
                 },
                 carbon: {
                     name: "Carbon Composite",
                     color: "#222",
-                    altColor: "#000"
+                    altColor: "#000",
+                    properties:{}
                 },
                 nType: {
                     name: "Silicon N-Type",
                     color: "#bcc6cc",
-                    altColor: "#8391AC"
+                    altColor: "#8391AC",
+                    properties:{}
                 },
                 nTypePlus: {
                     name: "Silicon Heavily Doped N-Type (N+)",
                     color: "#c6ccbc",
-                    altColor: "#9CC9CB"
+                    altColor: "#9CC9CB",
+                    properties:{}
                 },
                 pType: {
                     name: "Silicon P-Type",
                     color: "#ccbcc6",
-                    altColor: "#F5447B"
+                    altColor: "#F5447B",
+                    properties:{}
                 },
                 pTypePlus: {
                     name: "Silicon Heavily Doped P-Type (P+)",
                     color: "#ccc2bc",
-                    altColor: "#F99987"
+                    altColor: "#F99987",
+                    properties:{}
                 }
                 //857B64
                 //FDE2D9
@@ -164,12 +173,14 @@ define(['three'], function(THREE){
                 rigid:{
                     name: "Rigid",
                     color: "#aaa",
-                    altColor: "#666"
+                    altColor: "#666",
+                    properties:{}
                 },
                 flexure: {
                     name: "Flexure",
                     color: "#aaa",
-                    altColor: "#8391AC"
+                    altColor: "#8391AC",
+                    properties:{}
                 }
             },
             space:{
@@ -177,37 +188,46 @@ define(['three'], function(THREE){
                     name: "Glass Filled Nylon",
                     color: "#fef1b5",
 //                    opacity: "0.9",
-                    altColor: "#ecf0f1"
+                    altColor: "#ecf0f1",
+                    properties:{}
                 },
                 carbon: {
                     name: "Carbon Composite",
                     color: "#222",
-                    altColor: "#000"
+                    altColor: "#000",
+                    properties:{}
                 },
                 nType: {
                     name: "Aluminum",
                     color: "#bcc6cc",
-                    altColor: "#8391AC"
+                    altColor: "#8391AC",
+                    properties:{}
                 },
                 brass:{
                     name: "Brass",
                     color: "#b5a642",
-                    altColor: "#857B64"
+                    altColor: "#857B64",
+                    properties:{
+                        conductive: true
+                    }
                 },
                 nTypePlus: {
                     name: "Power Storage",
                     color: "#c6ccbc",
-                    altColor: "#9CC9CB"
+                    altColor: "#9CC9CB",
+                    properties:{}
                 },
                 pType: {
                     name: "Logic",
                     color: "#ccbcc6",
-                    altColor: "#F5447B"
+                    altColor: "#F5447B",
+                    properties:{}
                 },
                 pTypePlus: {
                     name: "Solar Panel",
                     color: "#ccc2bc",
-                    altColor: "#F99987"
+                    altColor: "#F99987",
+                    properties:{}
                 }
                 //857B64
                 //FDE2D9

@@ -6,24 +6,24 @@ define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
 
     var eSimMethods = {
 
-        calculateConnectivity: function(){
+        calculateConductorConnectivity: function(){
             var num = 1;
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.setConnectivityGroupNum(num++);
+                if (cell) cell.setConductorGroupNum(num++, true);
             });
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.propagateConnectivityGroupNum();
+                if (cell) cell.propagateConductorGroupNum();
             });
             this._calcNumberConnectedComponents();
         },
 
         _calcNumberConnectedComponents: function(){
-            var groups = {};
+            var groups = [];
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
-                if (!groups[cell.getConnectivityGroupNum()] && cell.getMaterialName() == "brass") groups[cell.getConnectivityGroupNum()] = cell.getMaterialName();
+                if (groups.indexOf(cell.getConductorGroupNum()) < 0 && cell.isConductive()) groups.push(cell.getConductorGroupNum());
             });
-            eSim.set("numConnectedComponents", _.keys(groups).length);
+            eSim.set("conductorGroups", _.keys(groups));
         },
 
         propagateToNeighbors: function(index, callback){

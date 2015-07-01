@@ -8,7 +8,8 @@ define(['underscore', 'backbone'], function(_, Backbone){
     var eSim = Backbone.Model.extend({
 
         defaults:{
-            numConnectedComponents: null
+            conductorGroups: null,
+            visibleConductorGroup: -1
         }
 
 

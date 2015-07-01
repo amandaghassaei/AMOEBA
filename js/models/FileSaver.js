@@ -68,7 +68,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     }
 
     function _getMaterialDataToSave(id){
-        return _.omit(materials.list[id], "threeMaterial");
+        return _.omit(materials.list[id], "threeMaterial", "transparentMaterial");
     }
 
     function loadFile(data){//parsed json todo make this better - load composite

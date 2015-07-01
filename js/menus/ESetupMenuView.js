@@ -16,6 +16,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eSetupMenuTemplate'
             this.listenTo(this.model, "change:materialClass", this._changeSimNav);
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("eSim")) return eSim;
+            return null;
+        },
+
         _changeSimNav: function(){
             var materialClass = this.model.get("materialClass");
             this.model.set("currentNav", materialClass + "NavSim");
@@ -23,7 +28,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eSetupMenuTemplate'
 
         _calcConnectivity: function(e){
             e.preventDefault();
-            lattice.calculateConnectivity();
+            lattice.calculateConductorConnectivity();
         },
 
         _makeTemplateJSON: function(){

@@ -5,25 +5,30 @@
 //assume latticeESim has loaded?
 define(['cell', 'lattice'], function(DMACell, lattice){
 
-    DMACell.prototype.setConnectivityGroupNum = function(num, materialName){
-        if (!materialName) this._eSimConnectivityGroup = num;
-        else if (this._eSimConnectivityGroup>num){
-            this._eSimConnectivityGroup = num;
-            this.propagateConnectivityGroupNum(num, materialName);
+    DMACell.prototype.isConductive = function(){
+        return this.getMaterial().properties.conductive;
+    };
+
+    DMACell.prototype.setConductorGroupNum = function(num, force){
+        if (force) this._eSimConductorGroup = num;
+        else if (this._eSimConductorGroup>num){
+            this._eSimConductorGroup = num;
+            this.propagateConductorGroupNum(num);
         }
     };
 
-    DMACell.prototype.getConnectivityGroupNum = function(){
-        return this._eSimConnectivityGroup;
+    DMACell.prototype.getConductorGroupNum = function(){
+        return this._eSimConductorGroup;
     };
 
-    DMACell.prototype.propagateConnectivityGroupNum = function(num, materialName){
-        if (materialName === undefined) materialName = this.materialName;
-        if (materialName != "brass") return;
-        if (num === undefined) num = this._eSimConnectivityGroup;
+    DMACell.prototype.propagateConductorGroupNum = function(num){
+        if (!this.isConductive()) return;
+        if (num === undefined) num = this._eSimConductorGroup;
         lattice.propagateToNeighbors(this.getAbsoluteIndex(), function(neighbor){
-            if (neighbor) neighbor.setConnectivityGroupNum(num, materialName);
+            if (neighbor) neighbor.setConductorGroupNum(num);
         });
     };
+
+
 
 });
