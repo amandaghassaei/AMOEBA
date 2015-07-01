@@ -131,6 +131,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _parseSparseCell: function(){
 
+            console.log("parse cells");
+
             if (this.get("numCells") == 0) {
                 console.warn("no cells in assembly");
                 this.cells = [[[null]]];

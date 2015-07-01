@@ -151,6 +151,12 @@ require.config({
         mStaticMenuTemplate: 'menus/templates/MStaticMenuView.html',
         mDynamicMenuTemplate: 'menus/templates/MDynamicMenuView.html',
 
+        //electronic sim
+        eSim: 'simulation/electronics/eSim',
+        latticeESim: 'lattice/latticeESim',
+        eSimCell: 'simulation/electronics/eSimCell',
+
+
         //cam
         cam: 'cam/cam',
 
