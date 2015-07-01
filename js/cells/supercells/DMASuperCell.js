@@ -105,6 +105,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return false;
     };
 
+    DMASuperCell.prototype.setTransparent = function(evalFunction){
+        DMACell.prototype.setTransparent.call(this, evalFunction);
+        this._loopCells(function(cell){
+            if (cell) cell.setTransparent(evalFunction);
+        })
+    };
+
 
 
 

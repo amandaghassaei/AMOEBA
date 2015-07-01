@@ -245,10 +245,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.object3D.children[0].material = material;
     };
 
-    DMACell.prototype.setTransparent = function(transparent){
+    DMACell.prototype.setWireframeVisibility = function(visible){
+        this.object3D.children[1].visible = visible;
+    };
+
+    DMACell.prototype.setTransparent = function(evalFunction){
+        var transparent = evalFunction(this);
         if (transparent == this.isTransparent) return;
         this.isTransparent = transparent;
         this.setMaterial(this.getMaterial(true));
+        this.setWireframeVisibility(!this.isTransparent);
     };
 
     DMACell.prototype.setMode = function(mode, callback){
@@ -292,6 +298,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         function setVisiblity(){
             var visible = true;
             if (mode == "supercell") visible = !self._isMiddleLayer();//middle layers are always hidden in supercell mode
+
+            self.setWireframeVisibility(!self.isTransparent);
 
             _.each(self.object3D.children, function(child){
                 if (child.name == "object3D") return;
@@ -399,6 +407,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var index = this.getAbsoluteIndex().sub(min);
         cellsArray[index.x][index.y][index.z] = this;
     };
+
+    DMACell.prototype.removeFromDenseArray = function(cellsArray, min){
+        var index = this.getAbsoluteIndex().sub(min);
+        cellsArray[index.x][index.y][index.z] = null;
+    };
+
 
 
 

@@ -461,6 +461,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
+        setOpaque: function(){
+            this._loopCells(this.sparseCells, function(cell){
+                if (cell) cell.setTransparent(function(){
+                    return false;
+                });
+            });
+            three.render();
+        },
+
 
 
 

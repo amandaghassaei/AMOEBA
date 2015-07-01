@@ -8,7 +8,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     var materialsList = {
         deleteMaterial: {
             color: "#ff0000",
-            threeMaterial:new THREE.MeshLambertMaterial({color:"#ff0000", shading:THREE.FlatShading})
+            threeMaterial: makeMaterialObject("#ff0000")
         }
     };
 
@@ -155,6 +155,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             newMaterials[key] = definitions[key];
             var color = getMaterialColorForState(state, definitions[key], key);
             newMaterials[key].threeMaterial = makeMaterialObject(color);
+            newMaterials[key].transparentMaterial = makeMaterialObject(color, true);
             newMaterials[key].noDelete = true;//don't delete the predefined materials
         });
         return newMaterials;
@@ -181,8 +182,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         if (!state) state = appState.get("realisticColorScheme");
         var materialInfo = materialsList[name];
         var color = getMaterialColorForState(state, materialInfo, name);
+
         if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
         else materialInfo.threeMaterial = makeMaterialObject(color);
+
         if (materialInfo.transparentMaterial) materialInfo.transparentMaterial.color = new THREE.Color(color);
         else materialInfo.transparentMaterial = makeMaterialObject(color, true);
     }
@@ -195,7 +198,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     }
 
     function makeMaterialObject(color, transparent){
-        if (transparent) return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading, transparent: true, opacity:0.4});
+        if (transparent) return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading, transparent: true, opacity:0.1});
         return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading});
     }
 

@@ -2,9 +2,30 @@
  * Created by aghassaei on 6/30/15.
  */
 
-define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
+define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(lattice, appState, three, eSim){
+
+
 
     var eSimMethods = {
+
+        _eSimTabChanged: function(){
+            var currentTab = appState.get("currentTab");
+            if (currentTab == "eSetup") this._showConductors();
+            else this.setOpaque();
+        },
+
+        _showConductors: function(){
+            var groupNum = eSim.get("visibleConductorGroup");
+            console.log(eSim.get("conductorGroups"));
+            console.log(groupNum);
+            var allVisible = groupNum < 0;
+            this._loopCells(this.sparseCells, function(cell){
+                if (cell) cell.setTransparent(function(evalCell){
+                    return !evalCell.isConductive() || (!allVisible && groupNum != evalCell.getConductorGroupNum())
+                });
+            });
+            three.render();
+        },
 
         calculateConductorConnectivity: function(){
             var num = 1;
@@ -23,7 +44,7 @@ define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
                 if (!cell) return;
                 if (groups.indexOf(cell.getConductorGroupNum()) < 0 && cell.isConductive()) groups.push(cell.getConductorGroupNum());
             });
-            eSim.set("conductorGroups", _.keys(groups));
+            eSim.set("conductorGroups", groups);
         },
 
         propagateToNeighbors: function(index, callback){
@@ -42,5 +63,9 @@ define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
     };
 
     _.extend(lattice, eSimMethods);
+    lattice.listenTo(appState, "change:currentTab", lattice._eSimTabChanged);
+    lattice.listenTo(eSim, "change:visibleConductorGroup", lattice._showConductors);
+
+
     return lattice;
 });
