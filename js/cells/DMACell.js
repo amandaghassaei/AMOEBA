@@ -218,6 +218,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.setMode(mode);
     };
 
+    DMACell.prototype.getMaterialName = function(){
+        return this.materialName;
+    };
+
     DMACell.prototype.getMaterial = function(returnTHREEObject){
         if (!this.materialName) {
             console.warn("no material type set for cell");

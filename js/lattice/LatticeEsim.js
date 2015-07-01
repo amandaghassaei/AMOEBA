@@ -9,7 +9,7 @@ define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
         calculateConnectivity: function(){
             var num = 1;
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.setConnectivityGroupNum(num++, true);
+                if (cell) cell.setConnectivityGroupNum(num++);
             });
             this._loopCells(this.cells, function(cell){
                 if (cell) cell.propagateConnectivityGroupNum();
@@ -18,16 +18,16 @@ define(['lattice', 'eSim', 'eSimCell'], function(lattice, eSim){
         },
 
         _calcNumberConnectedComponents: function(){
-            var groups = [];
+            var groups = {};
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
-                if (groups.indexOf(cell.getConnectivityGroupNum())<0) groups.push(cell.getConnectivityGroupNum());
+                if (!groups[cell.getConnectivityGroupNum()] && cell.getMaterialName() == "brass") groups[cell.getConnectivityGroupNum()] = cell.getMaterialName();
             });
-            eSim.set("numConnectedComponents", groups.length);
+            eSim.set("numConnectedComponents", _.keys(groups).length);
         },
 
         propagateToNeighbors: function(index, callback){
-            index.sub(this.get("cellsMin"));//todo wrong
+            index.sub(this.get("denseCellsMin"));
             var xLength = this.cells.length;
             var yLength = this.cells[0].length;
             var zLength = this.cells[0][0].length;

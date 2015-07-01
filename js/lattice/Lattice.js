@@ -16,6 +16,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             connectionType: "face",
             partType: null,
 
+            denseCellsMin: null,
+
             nodes: [],
 
             cellSeparation: {xy:0, z:0}//spacing for connectors/joints
@@ -140,6 +142,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var bounds = this.calculateBoundingBox();
+            this.set("denseCellsMin", bounds.min.clone().add(this.get("cellsMin")));
             var size = bounds.max.sub(bounds.min);
 
             //create array of nulls
