@@ -245,8 +245,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.object3D.children[0].material = material;
     };
 
-    DMACell.prototype.setWireframeVisibility = function(visible){
-        this.object3D.children[1].visible = visible;
+    DMACell.prototype.setWireframeVisibility = function(visible, mode){
+        if (visible && mode === undefined) mode = this.getConditionalMode(appState.get("cellMode"));
+        console.log(visible && this.object3D.children[1].name == mode);
+        this.object3D.children[1].visible = visible && this.object3D.children[1].name == mode;
     };
 
     DMACell.prototype.setTransparent = function(evalFunction){
@@ -257,14 +259,20 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.setWireframeVisibility(!this.isTransparent);
     };
 
+    DMACell.prototype.getConditionalMode = function(mode){
+        if (mode == "supercell" && this._isTopLayerCell()) return "cell";
+        return mode;
+    };
+
     DMACell.prototype.setMode = function(mode, callback){
 
         if (!mode || mode === undefined) mode = appState.get("cellMode");
         var self = this;
 
+        mode = this.getConditionalMode(mode);
+
         switch(mode) {
             case "supercell":
-                if (this._isTopLayerCell()) mode = "cell";//top level item
                 setVisiblity();
                 break;
             case "cell":
@@ -299,12 +307,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             var visible = true;
             if (mode == "supercell") visible = !self._isMiddleLayer();//middle layers are always hidden in supercell mode
 
-            self.setWireframeVisibility(!self.isTransparent);
-
             _.each(self.object3D.children, function(child){
                 if (child.name == "object3D") return;
                 child.visible = visible && (child.name == mode);
             });
+            self.setWireframeVisibility(!self.isTransparent, mode);
+
             if (callback) {
                 callback();
                 return;

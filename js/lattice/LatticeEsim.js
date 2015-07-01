@@ -65,6 +65,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(latti
     _.extend(lattice, eSimMethods);
     lattice.listenTo(appState, "change:currentTab", lattice._eSimTabChanged);
     lattice.listenTo(eSim, "change:visibleConductorGroup", lattice._showConductors);
+    lattice._showConductors();
 
 
     return lattice;

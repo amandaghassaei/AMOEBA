@@ -102,7 +102,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 cellsMax: cellsMax,
                 elementaryChildren: materials.getChildCellTypes(this.sparseCells, true),
                 compositeChildren: materials.getChildCellTypes(this.sparseCells, false),
-                dimensions: _dimensions
+                dimensions: _dimensions,
+                properties: {
+
+                }
             };
             return data;
         },
