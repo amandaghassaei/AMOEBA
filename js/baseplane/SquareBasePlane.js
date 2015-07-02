@@ -17,10 +17,10 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             var geometry = new THREE.Geometry();
 
             for ( var i = - dimX; i <= dimX+1; i += scale ) {
-                geometry.vertices.push( new THREE.Vector3(-dimX-scale/2, i-scale/2, 0));
-                geometry.vertices.push( new THREE.Vector3(dimX-scale/2, i-scale/2, 0));
-                geometry.vertices.push( new THREE.Vector3(i-scale/2, -dimX-scale/2, 0));
-                geometry.vertices.push( new THREE.Vector3(i-scale/2, dimX-scale/2, 0));
+                geometry.vertices.push( new THREE.Vector3(-dimX-scale/2, i-scale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(dimX-scale/2, i-scale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(i-scale/2, -dimX-scale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(i-scale/2, dimX-scale/2, 0.01));
 
             }
 
