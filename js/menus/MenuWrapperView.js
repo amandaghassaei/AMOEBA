@@ -185,7 +185,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 return;
             }
             if (key){
-                console.log(this._getOwnerProperty(owner, property));
                 var propObject = this._getOwnerProperty(owner, property).clone();
                 propObject[key] = newVal;
                 this._setOwnerProperty(owner, property, propObject);

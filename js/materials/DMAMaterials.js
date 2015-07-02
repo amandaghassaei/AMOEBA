@@ -209,7 +209,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     }
 
     function makeMaterialObject(color, transparent){
-//        return new THREE.MeshNormalMaterial({shading:THREE.FlatShading});
         if (transparent) return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading, transparent: true, opacity:0.1});
         return new THREE.MeshLambertMaterial({color:color, shading:THREE.FlatShading});
     }
@@ -225,7 +224,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     }
 
     return {
-        list:materialsList,
+        list: materialsList,
         setMaterial: setMaterial,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,

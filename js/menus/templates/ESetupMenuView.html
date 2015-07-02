@@ -13,7 +13,7 @@ Simulation Type: &nbsp;&nbsp;
     <% if(conductorGroups.length > 0){ %>
         <label class="radio">
             <input type="radio" <% if (visibleConductorGroup < 0){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-            Show All
+            Show All Conducting Groups
         </label>
         <% _.each(conductorGroups, function(groupNum, index){ %>
             <label class="radio">

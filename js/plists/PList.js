@@ -17,8 +17,7 @@ define(['three'], function(THREE){
             electronicNavSim:{
                 eSetup:"Connectivity",
                 eStatic:"Statics",
-                eDynamic:"Dynamics",
-                optimize:"Optimize"
+                eDynamic:"Dynamics"
             },
             mechanicalNavSim:{
                 mSetup:"Setup",
