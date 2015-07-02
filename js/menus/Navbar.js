@@ -17,7 +17,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
 
             "click .saveJSON":                                      "_save",
             "click .saveAsJSON":                                    "_saveAs",
-            "change #saveAsFileName":                               "_saveAs",//detect enter key
+//            "change #saveAsFileName":                               "_saveAs",//detect enter key
             "click .saveUser":                                      "_saveUser",
             "change #saveUserFileName":                             "_saveUser",//detect enter key
 
