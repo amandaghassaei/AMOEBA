@@ -247,7 +247,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.setWireframeVisibility = function(visible, mode){
         if (visible && mode === undefined) mode = this.getConditionalMode(appState.get("cellMode"));
-        console.log(visible && this.object3D.children[1].name == mode);
         this.object3D.children[1].visible = visible && this.object3D.children[1].name == mode;
     };
 
@@ -257,6 +256,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.isTransparent = transparent;
         this.setMaterial(this.getMaterial(true));
         this.setWireframeVisibility(!this.isTransparent);
+        if (this.parts) {
+            _.each(this.parts, function(part){
+                part.updateMaterial();
+            });
+        }
     };
 
     DMACell.prototype.getConditionalMode = function(mode){

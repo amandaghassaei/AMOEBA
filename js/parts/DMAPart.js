@@ -28,11 +28,16 @@ define(['underscore', 'three'], function(_, THREE){
     };
 
     DMAPart.prototype.getMaterial = function(returnTHREEObject){
+//        return new THREE.MeshLambertMaterial({color:'#aaaaaa', shading:THREE.FlatShading});
         return this.parentCell.getMaterial(returnTHREEObject);
     };
 
     DMAPart.prototype.setMaterial = function(material){
         this.mesh.material = material;
+    };
+
+    DMAPart.prototype.updateMaterial = function(){
+        this.mesh.material = this.getMaterial(true);
     };
 
     DMAPart.prototype.destroy = function(){

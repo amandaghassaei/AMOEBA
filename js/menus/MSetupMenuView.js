@@ -11,10 +11,16 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!mSetupMenuTemplate'
         },
 
         _initialize: function(){
+            this.listenTo(this.model, "change:materialClass", this._changeSimNav);
+        },
+
+        _changeSimNav: function(){
+            var materialClass = this.model.get("materialClass");
+            this.model.set("currentNav", materialClass + "NavSim");
         },
 
         _makeTemplateJSON: function(){
-            return null;
+            return _.extend(this.model.toJSON(), plist);
         },
 
         template: _.template(template)

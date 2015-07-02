@@ -7,7 +7,7 @@ Simulation Type: &nbsp;&nbsp;
             <% }); %>
         </ul>
     </div><br/><br/>
-<a href="#" id="calcConnectivity" class="btn btn-block btn-lg btn-default">Calculate Connectivity</a><br/>
+<a href="#" id="calcConnectivity" class="btn btn-block btn-lg btn-default"><% if(conductorGroups){ %>Re-<% } %>Calculate Connectivity</a><br/>
 <% if(conductorGroups){ %>
     Num Connected Conductors: &nbsp;&nbsp<%= conductorGroups.length %><br/>
     <label class="radio">
