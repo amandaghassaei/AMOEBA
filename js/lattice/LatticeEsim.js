@@ -15,9 +15,12 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(latti
         },
 
         _showConductors: function(){
+            if (!eSim.get("conductorGroups") || eSim.get("conductorGroups").length == 0){
+                this.setOpaque();
+                three.render();
+                return;
+            }
             var groupNum = eSim.get("visibleConductorGroup");
-            console.log(eSim.get("conductorGroups"));
-            console.log(groupNum);
             var allVisible = groupNum < 0;
             this._loopCells(this.sparseCells, function(cell){
                 if (cell) cell.setTransparent(function(evalCell){
@@ -36,6 +39,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(latti
                 if (cell) cell.propagateConductorGroupNum();
             });
             this._calcNumberConnectedComponents();
+            this._showConductors();
         },
 
         _calcNumberConnectedComponents: function(){
