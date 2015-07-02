@@ -34,6 +34,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         var edited = false;
         if (materialsList[id].sparseCells) edited = !(_.isEqual(data.sparseCells, materialsList[id].sparseCells));
 
+        if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
+
         _.each(_.keys(data), function(key){
             if (data[key] && data[key].x) materialsList[id][key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
             else materialsList[id][key] = data[key];
@@ -51,6 +53,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
             lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
         }
+
         return false;
     }
 
@@ -115,6 +118,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         });
         if (children.length == 0) return null;
         return _.uniq(children);//remove duplicates
+    }
+
+    function getPropertiesFromChildren(children){
+        var properties = {};
+        _.each(children, function(child){
+            if (materialsList[child].properties.conductive) properties.conductive = true;
+        });
+        return properties;
     }
 
     function loopCells(cells, callback){
