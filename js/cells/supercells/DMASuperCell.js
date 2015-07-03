@@ -72,10 +72,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         });
     };
 
-    DMASuperCell.prototype._getMeshName = function(){
-        return "supercell";
-    };
-
     DMASuperCell.prototype.setMode = function(mode, callback){
         var self = this;
         DMACell.prototype.setMode.call(this, mode, function(){
@@ -97,16 +93,17 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
     };
 
+    DMASuperCell.prototype._isBottomLayer = function(){
+        return false;
+    };
+
     DMASuperCell.prototype._isMiddleLayer = function(){
         return this.superCell !== null && this.superCell !== undefined;
     };
 
-    DMASuperCell.prototype._isTopLayerCell = function(){
-        return false;
-    };
 
     DMASuperCell.prototype.setTransparent = function(evalFunction){
-        DMACell.prototype.setTransparent.call(this, evalFunction);
+        DMACell.prototype.setTransparent.call(this, evalFunction);//todo don't pass down to cells if no change
         this._loopCells(function(cell){
             if (cell) cell.setTransparent(evalFunction);
         })

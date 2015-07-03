@@ -12,7 +12,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
     GIKCell.prototype = Object.create(CubeCell.prototype);
 
     GIKCell.prototype._getMeshName = function(){
-        return null;
+        return null;//never show the gik cell
     };
 
     GIKCell.prototype._initParts = function(callback){

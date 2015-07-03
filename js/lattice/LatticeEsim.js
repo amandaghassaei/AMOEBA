@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/30/15.
  */
 
-define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(lattice, appState, three, eSim){
+define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'], function(lattice, appState, three, eSim){
 
 
 
@@ -24,7 +24,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell'], function(latti
             var allVisible = groupNum < 0;
             this._loopCells(this.sparseCells, function(cell){
                 if (cell) cell.setTransparent(function(evalCell){
-                    return !evalCell.isConductive() || (!allVisible && groupNum != evalCell.getConductorGroupNum())
+                    return evalCell.conductiveGroupVisible(allVisible, groupNum);
                 });
             });
             three.render();

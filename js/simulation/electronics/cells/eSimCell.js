@@ -6,8 +6,7 @@
 define(['cell', 'lattice'], function(DMACell, lattice){
 
     DMACell.prototype.isConductive = function(){
-        var material = this.getMaterial();
-        return material.properties.conductive;
+        return this.getMaterial().properties.conductive;
     };
 
     DMACell.prototype.setConductorGroupNum = function(num, force){
@@ -30,6 +29,10 @@ define(['cell', 'lattice'], function(DMACell, lattice){
         });
     };
 
+    DMACell.prototype.conductiveGroupVisible = function(allVisible, groupNum){
+        console.log(allVisible);
+        return !this.isConductive() || (!allVisible && groupNum != this._eSimConductorGroup);
+    };
 
 
 });

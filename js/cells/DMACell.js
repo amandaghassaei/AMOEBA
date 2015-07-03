@@ -73,7 +73,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype._getMeshName = function(){
-        return "cell";
+        if (this._isBottomLayer()) return "cell";
+        return "supercell";
     };
 
     DMACell.prototype._buildWireframe = function(mesh, geometry, isBeam){//for "cell" view
@@ -264,7 +265,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.getConditionalMode = function(mode){
-        if (mode == "supercell" && this._isTopLayerCell()) return "cell";
+        if (mode == "supercell" && this._isBottomLayer() && this._isTopLayer()) return "cell";
         return mode;
     };
 
@@ -326,11 +327,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         }
     };
 
+    DMACell.prototype._isBottomLayer = function(){
+        return true;
+    };
+
     DMACell.prototype._isMiddleLayer = function(){
         return false;
     };
 
-    DMACell.prototype._isTopLayerCell = function(){
+    DMACell.prototype._isTopLayer = function(){
         return this.superCell === null || this.superCell === undefined;
     };
 

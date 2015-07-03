@@ -57,16 +57,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return wireframe;
     };
 
-    GIKSuperCell.prototype._getMeshName = function(){
-        return "cell";
+    GIKSuperCell.prototype._isBottomLayer = function(){
+        return true;
     };
 
     GIKSuperCell.prototype._isMiddleLayer = function(){
         return false;
-    };
-
-    GIKSuperCell.prototype._isTopLayerCell = function(){
-        return this.superCell === null || this.superCell === undefined;
     };
 
     GIKSuperCell.prototype.toJSON = function(){
