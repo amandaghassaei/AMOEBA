@@ -24,7 +24,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             var allVisible = groupNum < 0;
             this._loopCells(this.sparseCells, function(cell){
                 if (cell) cell.setTransparent(function(evalCell){
-                    return evalCell.conductiveGroupVisible(allVisible, groupNum);
+                    return !(evalCell.conductiveGroupVisible(allVisible, groupNum));
                 });
             });
             three.render();

@@ -30,8 +30,7 @@ define(['cell', 'lattice'], function(DMACell, lattice){
     };
 
     DMACell.prototype.conductiveGroupVisible = function(allVisible, groupNum){
-        console.log(allVisible);
-        return !this.isConductive() || (!allVisible && groupNum != this._eSimConductorGroup);
+        return this.isConductive() && (allVisible || groupNum == this._eSimConductorGroup);
     };
 
 
