@@ -50,7 +50,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         },
 
         _openMaterialEditor: function(id){
-            console.log(id);
             materials.setEditingMaterial(id);
             this.model.set("currentTab", "materialEditor", {silent:true});
             this.model.set("currentNav", "navMaterial");

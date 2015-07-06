@@ -57,7 +57,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
             lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
         }
-        console.log(materialsList);
 
         return false;
     }

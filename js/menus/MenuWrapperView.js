@@ -138,11 +138,12 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var $target = $(e.target);
             $target.blur();
             var property = $target.data("property");
+            var key = $target.data("key");
             if (!property) {
                 console.warn("no property associated with checkbox input");
                 return;
             }
-            this._toggleProperty($target, property);
+            this._toggleProperty($target, property, key);
         },
 
         _radioSelection: function(e){
@@ -172,9 +173,9 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             return null;
         },
 
-        _toggleProperty: function($target, property){ //val = !val
+        _toggleProperty: function($target, property, key){ //val = !val
             var owner = this._getPropertyOwner($target);
-            if (owner) this._setOwnerProperty(owner, property, !this._getOwnerProperty(owner, property));
+            if (owner) this._setProperty($target, property, !(this._getOwnerProperty(owner, property)[key]), key);
         },
 
         _setProperty: function($target, property, newVal, key){
@@ -185,7 +186,9 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 return;
             }
             if (key){
-                var propObject = this._getOwnerProperty(owner, property).clone();
+                var propObject = this._getOwnerProperty(owner, property);
+                if (propObject.clone) propObject = propObject.clone();
+                else propObject = _.clone(propObject);
                 propObject[key] = newVal;
                 this._setOwnerProperty(owner, property, propObject);
             } else {

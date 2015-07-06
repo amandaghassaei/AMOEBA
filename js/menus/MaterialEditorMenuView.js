@@ -62,7 +62,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _deleteMaterial: function(e){
             e.preventDefault();
-            if (!materials.list(materials.getEditingMaterial())) this.exit();
+            if (!materials.list[materials.getEditingMaterial()]) {
+                this._exit();
+                return;
+            }
             var deleted = materials.setMaterial(materials.getEditingMaterial(), null);
             if (deleted) this._exit();
         },
