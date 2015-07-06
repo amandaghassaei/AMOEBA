@@ -46,17 +46,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             e.preventDefault();
             //first create dummy material
             var id = "material" + this.cid + materialID++;
-            materials.setMaterial(id, {
-                name: "",
-                color: '#000000',
-                altColor: '#000000',
-                noDelete: false
-            });
             this._openMaterialEditor(id);
         },
 
         _openMaterialEditor: function(id){
-            this.model.set("materialType", id);
+            console.log(id);
+            materials.setEditingMaterial(id);
             this.model.set("currentTab", "materialEditor", {silent:true});
             this.model.set("currentNav", "navMaterial");
         },

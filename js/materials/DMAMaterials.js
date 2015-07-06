@@ -8,7 +8,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     var materialsList = {
         deleteMaterial: {
             color: "#ff0000",
-            threeMaterial: makeMaterialObject("#ff0000")
+            threeMaterial: makeMaterialObject("#ff0000"),
+            noDelete: true
         }
     };
 
@@ -29,7 +30,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     function setMaterial(id, data){
         if (id && data === null) return deleteMaterial(id);
         if (!materialsList[id]) materialsList[id] = {};
+
+        //check if colors have changed
         var oldColor = materialsList[id].color;
+        var oldAltColor = materialsList[id].altColor;
 
         var edited = false;
         if (materialsList[id].sparseCells) edited = !(_.isEqual(data.sparseCells, materialsList[id].sparseCells));
@@ -41,7 +45,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             else materialsList[id][key] = data[key];
         });
 
-        if (!materialsList[id].threeMaterial || oldColor != materialsList[id].color) changeSingleMaterialColorScheme(id);
+        if (!materialsList[id].threeMaterial || oldColor != materialsList[id].color || oldAltColor != materialsList[id].altColor) changeSingleMaterialColorScheme(id);
         if (edited){
             var allChangedMaterialsList = getAllParentComposites(id);
             allChangedMaterialsList.push(id);
@@ -53,6 +57,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
             lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
         }
+        console.log(materialsList);
 
         return false;
     }
@@ -62,7 +67,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             console.warn("no delete flag on this material type");
             return false;
         }
-        delete materialsList[id];//todo check if being used first
+        delete materialsList[id];//todo check if being used first (instances)
         var deleted = true;
         if (deleted) setToDefaultMaterial();
         return deleted;
@@ -223,12 +228,35 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         }
     }
 
+
+
+
+
+    //edit material definition
+
+    var editingMaterial = null;//material definition currently being edited
+
+    function setEditingMaterial(id){
+        editingMaterial = id;
+    }
+
+    function getEditingMaterial(){
+        return editingMaterial;
+    }
+
+
+
+
+
+
     return {
         list: materialsList,
         setMaterial: setMaterial,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,
-        setToDefaultMaterial: setToDefaultMaterial
+        setToDefaultMaterial: setToDefaultMaterial,
+        setEditingMaterial: setEditingMaterial,
+        getEditingMaterial: getEditingMaterial
     };
 });

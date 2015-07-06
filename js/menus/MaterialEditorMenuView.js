@@ -20,7 +20,15 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _initialize: function(){
             //bind events
-            this.material = _.clone(materials.list[this.model.get("materialType")]);
+            if (!materials.getEditingMaterial()) console.warn("no editing material id set");
+            this.material = _.clone(materials.list[materials.getEditingMaterial()]);
+            if (!this.material) this.material = {
+                name: "Material " + materialNameIndex++,
+                color: '#000000',
+                altColor: '#000000',
+                noDelete: false
+            };
+
         },
 
         getPropertyOwner: function($target){
@@ -42,24 +50,20 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _save: function(e){
             e.preventDefault();
-            var name = this.material.name;
-            if (name == "") name = "Material " + materialNameIndex++;
-            materials.setMaterial(this.model.get("materialType"), {
-                name: name,
-                color: this.material.color,
-                altColor: this.material.altColor
-            });
+            if (this.material.name == "") this.material.name = "Material " + materialNameIndex++;
+            materials.setMaterial(materials.getEditingMaterial(), _.clone(this.material));
             this._exit();
         },
 
         _saveMaterialToFile: function(e){
             e.preventDefault();
-            fileSaver.saveMaterial(this.model.get("materialType"));
+            fileSaver.saveMaterial(materials.getEditingMaterial(), this.material);
         },
 
         _deleteMaterial: function(e){
             e.preventDefault();
-            var deleted = materials.setMaterial(this.model.get("materialType"), null);
+            if (!materials.list(materials.getEditingMaterial())) this.exit();
+            var deleted = materials.setMaterial(materials.getEditingMaterial(), null);
             if (deleted) this._exit();
         },
 
@@ -69,6 +73,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         },
 
         _exit: function(){
+            this.material = null;
+            materials.setEditingMaterial(null);
             this.model.set("currentNav", "navDesign");
         },
 
