@@ -26,7 +26,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
                 name: "Material " + materialNameIndex++,
                 color: '#000000',
                 altColor: '#000000',
-                noDelete: false
+                noDelete: false,
+                properties: {}
             };
 
         },
