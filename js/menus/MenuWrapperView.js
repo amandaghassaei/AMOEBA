@@ -138,12 +138,11 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var $target = $(e.target);
             $target.blur();
             var property = $target.data("property");
-            var key = $target.data("key");
             if (!property) {
                 console.warn("no property associated with checkbox input");
                 return;
             }
-            this._toggleProperty($target, property, key);
+            this._toggleProperty($target, property);
         },
 
         _radioSelection: function(e){
@@ -173,9 +172,9 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             return null;
         },
 
-        _toggleProperty: function($target, property, key){ //val = !val
+        _toggleProperty: function($target, property){ //val = !val
             var owner = this._getPropertyOwner($target);
-            if (owner) this._setProperty($target, property, !(this._getOwnerProperty(owner, property)[key]), key);
+            if (owner) this._setOwnerProperty(owner, property, !(this._getOwnerProperty(owner, property)));
         },
 
         _setProperty: function($target, property, newVal, key){

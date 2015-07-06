@@ -34,6 +34,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         getPropertyOwner: function($target){
             if ($target.hasClass("materialEditor")) return this.material;
+            else if ($target.hasClass("materialProperties")) return this.material.properties;
             return null;
         },
 

@@ -6,7 +6,7 @@ Realistic Color: &nbsp;&nbsp;
     <input id="materialAltColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth materialEditor form-control hexInput" type="text"><br/><br/>
 Material Properties:<br/>
     <label class="checkbox" for="conductive">
-    <input id="conductive" data-property="properties" data-key="conductive" type="checkbox" <% if (properties.conductive){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="materialEditor custom-checkbox">
+    <input id="conductive" data-property="conductive" type="checkbox" <% if (properties.conductive){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="materialProperties custom-checkbox">
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
     Conductive</label><br/>
 <br/>
