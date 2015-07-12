@@ -1,9 +1,9 @@
 Machine: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachineTypes[cellType][connectionType][machineName] %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachines[machineName].name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(_.keys(allMachineTypes[cellType][connectionType]), function(key){ %>
-                <li><a class="assembler dropdownSelector" data-property="machineName" data-value="<%= key %>" href="#"><%= allMachineTypes[cellType][connectionType][key] %></a></li>
+            <% _.each(machineTypesForLattice[cellType][connectionType], function(machine){ %>
+                <li><a class="assembler dropdownSelector" data-property="machineName" data-value="<%= machine %>" href="#"><%= allMachines[machine].name %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>
@@ -11,8 +11,8 @@ Strategy: &nbsp;&nbsp;
     <div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allAssemblyStrategies[camStrategy] %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(_.keys(allAssemblyStrategies), function(key){ %>
-                <li><a class="assembler dropdownSelector" data-property="camStrategy" data-value="<%= key %>" href="#"><%= allAssemblyStrategies[key] %></a></li>
+            <% _.each(allAssemblyStrategies, function(strategy, key){ %>
+                <li><a class="assembler dropdownSelector" data-property="camStrategy" data-value="<%= key %>" href="#"><%= strategy %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>

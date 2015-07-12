@@ -30,6 +30,7 @@ define(['three'], function(THREE){
             navAssemble:{
                 assembler:"Assembler",
                 cam: "Process",
+                editCamOutput: "Edit",
                 animate:"Preview"
             },
             navComm:{
@@ -113,8 +114,7 @@ define(['three'], function(THREE){
 
         allMaterialClasses:{
             mechanical: "Structural",
-            electronic: "Electronic",
-//            space: "Space Structures"
+            electronic: "Electronic"
         },
 
         allMaterials:{
@@ -181,122 +181,83 @@ define(['three'], function(THREE){
                     altColor: "#8391AC",
                     properties:{}
                 }
-            },
-            space:{
-                fiberGlass: {
-                    name: "Glass Filled Nylon",
-                    color: "#fef1b5",
-//                    opacity: "0.9",
-                    altColor: "#ecf0f1",
-                    properties:{}
-                },
-                carbon: {
-                    name: "Carbon Composite",
-                    color: "#222",
-                    altColor: "#000",
-                    properties:{}
-                },
-                nType: {
-                    name: "Aluminum",
-                    color: "#bcc6cc",
-                    altColor: "#8391AC",
-                    properties:{}
-                },
-                brass:{
-                    name: "Brass",
-                    color: "#b5a642",
-                    altColor: "#857B64",
-                    properties:{
-                        conductive: true
-                    }
-                },
-                nTypePlus: {
-                    name: "Power Storage",
-                    color: "#c6ccbc",
-                    altColor: "#9CC9CB",
-                    properties:{}
-                },
-                pType: {
-                    name: "Logic",
-                    color: "#ccbcc6",
-                    altColor: "#F5447B",
-                    properties:{}
-                },
-                pTypePlus: {
-                    name: "Solar Panel",
-                    color: "#ccc2bc",
-                    altColor: "#F99987",
-                    properties:{}
-                }
-                //857B64
-                //FDE2D9
-                //D77948
             }
         },
 
-        allMachineTypes:{
-            octa:{
-                face: {handOfGod: "Hand of God"},
-                edgeRot: {
-                    crab: "Crab",
-                    shopbot: "Shopbot",
-                    oneBitBot: "One Bit Bot",
-                    oneBitBotLegs: "One Bit Bot with Legs",
-                    handOfGod: "Hand of God"
-                },
-                vertex: {handOfGod: "Hand of God"}
+
+        allMachines:{
+            handOfGod: {
+                name: "Hand of God",
+                shouldPickUpStock: false,
+                relative: false,
+                camProcesses: ["gcode"]
             },
-            tetra: {
-                vertex:{handOfGod: "Hand of God"}
+            crab: {
+                name: "Crab",
+                shouldPickUpStock: true,
+                relative: true,
+                camProcesses: ["gcode"]
             },
-            cube:{
-                face:{handOfGod: "Hand of God"},
-                gik: {
-                    stapler: "Dual Head Stapler"
-//                handOfGod: "Hand of God"
+            shopbot: {
+                name: "Shopbot",
+                shouldPickUpStock: true,
+                relative: false,
+                camProcesses: ["shopbot", "gcode"]
+            },
+            oneBitBot: {
+                name: "One Bit Bot",
+                shouldPickUpStock: true,
+                relative: true,
+                camProcesses: ["gcode", "tinyG"]
+            },
+            stapler: {
+                name: "Dual Head Stapler",
+                shouldPickUpStock: false,
+                relative: false,
+                camProcesses: ["gcode"],
+                defaults: {
+                    camStrategy: "raster",
+                    placementOrder: "XYZ",//used for raster strategy entry
+                    camProcess: "gcode",
+                    rapidHeight:3,
+                    rapidHeightRelative: true,
+                    safeHeight: 0.05,
+                    originPosition: new THREE.Vector3(0,0,0),
+                    rapidSpeeds:{xy: 3, z: 2},
+                    feedRate:{xy: 0.1, z: 0.1}
                 }
-            },
-            truncatedCube:{
-                face:{handOfGod: "Hand of God"}
-            },
-            kelvin:{
-                face:{handOfGod: "Hand of God"}
             }
         },
+
+        machineTypesForLattice:{
+            octa:{
+                face: ["handOfGod"],
+                edgeRot: ["crab", "shopbot", "oneBitBot", "handOfGod"],
+                vertex: ["handOfGod"]
+            },
+            tetra: {
+                vertex: ["handOfGod"]
+            },
+            cube:{
+                face: ["handOfGod"],
+                gik: ["stapler", "handOfGod"]
+            },
+            truncatedCube:{
+                face:["handOfGod"]
+            },
+            kelvin:{
+                face:["handOfGod"]
+            }
+        },
+
         allAssemblyStrategies: {
             raster: "Raster"
         },
-        allCamProcesses: {
-            shopbot:{
-                shopbot: "Shopbot (sbp)",
-                gcode: "G-Code"
-            },
-            handOfGod:{gcode: "G-Code"},
-            oneBitBot:{
-                gcode: "G-Code",
-                tinyG: "TinyG"
-            },
-            stapler: {gcode: "G-Code"},
-            staplerDual: {gcode: "G-Code"},
-            crab: {gcode: "G-Code"}
-        },
 
-        allMachineDefaults: {
-            shopbot:null,
-            handOfGod:null,
-            oneBitBot:null,
-            stapler: {
-                camStrategy: "raster",
-                placementOrder: "XYZ",//used for raster strategy entry
-                camProcess: "gcode",
-                rapidHeight:3,
-                rapidHeightRelative: true,
-                safeHeight: 0.05,
-                originPosition: new THREE.Vector3(0,0,0),
-                rapidSpeeds:{xy: 3, z: 2},
-                feedRate:{xy: 0.1, z: 0.1}
-            },
-            crab: null
+        allCamProcesses: {
+            shopbot: "Shopbot (sbp)",
+            gcode: "G-Code",
+            tinyG: "TinyG"
         },
 
         allScripts: {
@@ -305,8 +266,8 @@ define(['three'], function(THREE){
 
         allUnitTypes: {
             inches: "Inches",
-            mm: "mm"
-            //um: "micron"
+            mm: "mm",
+            um: "Micron"
         }
 
     }

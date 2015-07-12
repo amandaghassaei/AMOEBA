@@ -100,9 +100,9 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
 
         _setMachineDefaults: function(machineName){
             var self = this;
-            if (plist.allMachineDefaults[machineName]){
-                _.each(_.keys(plist.allMachineDefaults[machineName]), function(key){
-                    self.set(key, plist.allMachineDefaults[machineName][key], {silent:true});
+            if (plist.allMachines[machineName].defaults){
+                _.each(plist.allMachines[machineName].defaults, function(value, key){
+                    self.set(key, value, {silent:true});
                 });
             }
         },
@@ -125,7 +125,7 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
 
         _setToDefaults: function(){
             //call this each time we switch to assemble tab
-            var availableMachines = _.keys(plist.allMachineTypes[lattice.get("cellType")][lattice.get("connectionType")]);
+            var availableMachines = plist.machineTypesForLattice[lattice.get("cellType")][lattice.get("connectionType")];
             if (availableMachines.indexOf(this.get("machineName")) < 0){
                 this.set("machineName", availableMachines[0], {silent:true});
             }
