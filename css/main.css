@@ -216,7 +216,7 @@ hr {
 }
 
 input.intInput, input.floatInput{
-    width:22%;
+    width:21%;
     display: inline;
     padding: 8px 8px;
 }

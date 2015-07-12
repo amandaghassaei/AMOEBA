@@ -16,7 +16,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!latticeM
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(_.extend(lattice.toJSON(), this.model.toJSON()), plist);
+            var aspectRatio = {aspectRatio: {x:1,y:1,z:1}};
+            if (lattice.xScale) aspectRatio = {aspectRatio: {x:lattice.xScale(0), y:lattice.yScale(0), z:lattice.zScale(0)}};
+            return _.extend(_.extend(lattice.toJSON(), this.model.toJSON()), plist, aspectRatio);
         },
 
         template: _.template(template)
