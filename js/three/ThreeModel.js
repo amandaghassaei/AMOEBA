@@ -29,7 +29,8 @@ define(['underscore', 'three'], function(_, THREE){
         camera.position.z = 12;
         camera.up.set(0,0,1);//set z axis as "up"
 
-        scene.fog = new THREE.FogExp2(0xcccccc, 0.000);
+        var fogColor = 0xcccccc;
+//        scene.fog = new THREE.FogExp2(fogColor, 0.001);
 
         // lights
         var light = new THREE.DirectionalLight(0xffffff);
@@ -42,7 +43,7 @@ define(['underscore', 'three'], function(_, THREE){
         scene.add(light);
 
         // renderer
-        renderer.setClearColor(scene.fog.color, 1);
+        renderer.setClearColor(fogColor, 1);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
         window.addEventListener('resize', onWindowResize, false);
