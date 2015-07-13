@@ -24,8 +24,8 @@ define(['underscore', 'three'], function(_, THREE){
 
     function initialize(){
 
-        camera.position.x = 15;
-        camera.position.y = 12;
+        camera.position.x = -15;
+        camera.position.y = -12;
         camera.position.z = 12;
         camera.up.set(0,0,1);//set z axis as "up"
 

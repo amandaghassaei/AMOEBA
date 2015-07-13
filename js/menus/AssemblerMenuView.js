@@ -18,6 +18,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!a
 
         getPropertyOwner: function($target){
             if ($target.hasClass("assembler")) return cam;
+            if ($target.hasClass("machine")) return plist.allMachines[cam.get("machineName")];
             return null;
         },
     
