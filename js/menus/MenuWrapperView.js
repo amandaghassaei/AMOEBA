@@ -112,11 +112,12 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var key = $target.data("key");
 
             //some numbers are relative
-            if (property == "stockPosition" && globals.cam.get(property + "Relative")){
-                if (key) newVal = parseFloat((newVal + globals.cam.get("originPosition")[key]).toFixed(4));
+            var owner = this._getPropertyOwner($target);//todo not great here
+            if (property == "stockPosition" && owner.get(property + "Relative")){
+                if (key) newVal = parseFloat((newVal + owner.get("originPosition")[key]).toFixed(4));
                 else console.warn("no key found for " + property);
-            } else if (property == "rapidHeight" && !globals.cam.get(property + "Relative")){
-                newVal = parseFloat((newVal - globals.cam.get("originPosition")["z"]).toFixed(4));
+            } else if (property == "rapidHeight" && !owner.get(property + "Relative")){
+                newVal = parseFloat((newVal - owner.get("originPosition")["z"]).toFixed(4));
             }
 
             //remove trailing zeros

@@ -13,7 +13,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             units: "mm",
 
             cellType: "cube",
-            connectionType: "face",
+            connectionType: "gik",
             partType: null,
 
             denseCellsMin: null,
