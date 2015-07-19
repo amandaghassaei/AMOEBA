@@ -56,12 +56,13 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             var xLength = this.cells.length;
             var yLength = this.cells[0].length;
             var zLength = this.cells[0][0].length;
+            if (index.z+1 < zLength) callback(this.cells[index.x][index.y][index.z+1]);
+            if (index.z-1 >= 0) callback(this.cells[index.x][index.y][index.z-1]);
+            if (this.get("connectionType") == "gik") return;
             if (index.x+1 < xLength) callback(this.cells[index.x+1][index.y][index.z]);
             if (index.x-1 >= 0) callback(this.cells[index.x-1][index.y][index.z]);
             if (index.y+1 < yLength) callback(this.cells[index.x][index.y+1][index.z]);
             if (index.y-1 >= 0) callback(this.cells[index.x][index.y-1][index.z]);
-            if (index.z+1 < zLength) callback(this.cells[index.x][index.y][index.z+1]);
-            if (index.z-1 >= 0) callback(this.cells[index.x][index.y][index.z-1]);
         }
 
     };

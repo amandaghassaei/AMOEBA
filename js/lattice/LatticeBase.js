@@ -215,7 +215,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                             if (element == -1) padding[key] = 1;
                         });
                         subCellRange.add(padding);
-                        console.log(subCellRange);
                         dimMax.max(subCellRange);
                         dimMin.min(subCellRange);
                     }

@@ -143,7 +143,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var bounds = this.calculateBoundingBox();
-            console.log(bounds);
             this.set("denseCellsMin", bounds.min.clone().add(this.get("cellsMin")));
             var size = bounds.max.sub(bounds.min);
 

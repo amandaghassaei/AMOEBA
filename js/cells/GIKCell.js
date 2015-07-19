@@ -33,5 +33,17 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         }
     };
 
+    //todo move this somewhere else
+    GIKCell.prototype.propagateConductorGroupNum = function(num){
+        if (!this.isConductive()) return;
+        if (num === undefined) num = this._eSimConductorGroup;
+        var self = this;
+        this.superCell._loopCells(function(cell){
+            if (cell == self) return;
+            if (cell) cell.setConductorGroupNum(num);
+        });
+        CubeCell.prototype.propagateConductorGroupNum.call(this, num);
+    };
+
     return GIKCell;
 });
