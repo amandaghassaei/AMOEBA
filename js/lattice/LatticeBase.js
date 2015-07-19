@@ -205,11 +205,17 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (cell){
                     var material = cell.getMaterial();
                     if (material.dimensions){
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(material.dimensions.clone()));
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(material.dimensions.clone()).round());
                         dimMax.max(subCellRange);
                         dimMin.min(subCellRange);
-                    } else if (cell.length){
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(new THREE.Vector3(cell.length, 1, 1)));
+                    } else if (cell.length){//gik
+                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(new THREE.Vector3(cell.length, 0, 0)).round());
+                        var padding = cell.applyRotation(new THREE.Vector3(0,1,1)).round();
+                        _.each(padding, function(element, key){
+                            if (element == -1) padding[key] = 1;
+                        });
+                        subCellRange.add(padding);
+                        console.log(subCellRange);
                         dimMax.max(subCellRange);
                         dimMin.min(subCellRange);
                     }

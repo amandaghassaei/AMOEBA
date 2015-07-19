@@ -143,6 +143,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var bounds = this.calculateBoundingBox();
+            console.log(bounds);
             this.set("denseCellsMin", bounds.min.clone().add(this.get("cellsMin")));
             var size = bounds.max.sub(bounds.min);
 
@@ -159,12 +160,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var min = this.get("cellsMin").sub(bounds.min);
-            var self = this;
+            var overlap = false;
             this._loopCells(this.sparseCells, function(cell){
                 if (!cell) return;
-                var overlap = cell.addToDenseArray(cells, min);
-                if (overlap) self.set("overlapDetected", true);
+                overlap |= cell.addToDenseArray(cells, min);
             });
+            this.set("overlapDetected", overlap);
 
             this.cells = cells;
         },
