@@ -39,7 +39,7 @@ require.config({
         lattice: 'lattice/Lattice',
         compositeEditorLattice: 'lattice/CompositeEditorLattice',
         latticeImportGeo: 'lattice/ImportGeo',
-        latticeCAM: 'lattice/latticeCAM',
+        latticeCAM: 'lattice/LatticeCAM',
 
         //lattice "subclasses"
         cubeLattice: 'lattice/latticeSubclasses/CubeLattice',
@@ -155,7 +155,7 @@ require.config({
 
         //electronic sim
         eSim: 'simulation/electronics/eSim',
-        latticeESim: 'lattice/LatticeESim',
+        latticeESim: 'lattice/LatticeEsim',
         eSimCell: 'simulation/electronics/cells/eSimCell',
         eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
 

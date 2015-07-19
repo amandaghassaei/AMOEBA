@@ -30,7 +30,7 @@ define(['three'], function(THREE){
             navAssemble:{
                 assembler:"Assembler",
                 cam: "Process",
-                editCamOutput: "Edit",
+//                editCamOutput: "Edit",
                 animate:"Preview"
             },
             navComm:{
