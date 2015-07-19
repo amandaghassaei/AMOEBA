@@ -4,11 +4,11 @@
 
 
 define(['underscore', 'assembler', 'stlLoader', 'gikSuperCell',
-    'bin!../assets/stls/stapler/frame.stl',
-    'bin!../assets/stls/stapler/xAxis.stl',
-    'bin!../assets/stls/stapler/yAxis.stl',
-    'bin!../assets/stls/stapler/zAxis.stl',
-    'bin!../assets/stls/stapler/substrate.stl'],
+    'bin!assets/stls/stapler/frame.stl',
+    'bin!assets/stls/stapler/xAxis.stl',
+    'bin!assets/stls/stapler/yAxis.stl',
+    'bin!assets/stls/stapler/zAxis.stl',
+    'bin!assets/stls/stapler/substrate.stl'],
     function(_, Assembler, THREE, StockClass, frame, xAxis, yAxis, zAxis, substrate){
 
     function geometryPreProcess(geometry){
