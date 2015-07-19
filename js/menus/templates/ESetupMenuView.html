@@ -1,3 +1,6 @@
+<% if (overlapDetected) { %>
+    <div class="postWarning">Overlapping cells detected, check that hierarchical cells are not placed on top of one another.  Simulation results may be inaccurate.</div>
+<% } %>
 Simulation Type: &nbsp;&nbsp;
     <div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialClasses[materialClass] %><span class="caret"></span></button>

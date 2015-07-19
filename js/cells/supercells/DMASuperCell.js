@@ -115,9 +115,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
      //parse
     DMASuperCell.prototype.addToDenseArray = function(cellsArray, min){
+        var overlap = false;
         this._loopCells(function(cell){
-            if (cell) cell.addToDenseArray(cellsArray, min);
+            if (cell) overlap |= cell.addToDenseArray(cellsArray, min);
         });
+        return overlap;
     };
 
 

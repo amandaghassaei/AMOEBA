@@ -155,7 +155,7 @@ require.config({
 
         //electronic sim
         eSim: 'simulation/electronics/eSim',
-        latticeESim: 'lattice/latticeESim',
+        latticeESim: 'lattice/LatticeESim',
         eSimCell: 'simulation/electronics/cells/eSimCell',
         eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
 

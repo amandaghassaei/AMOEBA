@@ -316,7 +316,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 if (child.name == "object3D") return;
                 child.visible = visible && (child.name == mode);
             });
-            self.setWireframeVisibility(!self.isTransparent, mode);
+            self.setWireframeVisibility(!self.isTransparent && visible, mode);
 
             if (callback) {
                 callback();
@@ -422,7 +422,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //parse
     DMACell.prototype.addToDenseArray = function(cellsArray, min){
         var index = this.getAbsoluteIndex().sub(min);
+        if (cellsArray[index.x][index.y][index.z]) return true;
         cellsArray[index.x][index.y][index.z] = this;
+        return false;
     };
 
     DMACell.prototype.removeFromDenseArray = function(cellsArray, min){

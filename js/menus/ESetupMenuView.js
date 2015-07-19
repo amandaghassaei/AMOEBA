@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eSetupMenuTemplate'
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), eSim.toJSON(), plist);
+            return _.extend(this.model.toJSON(), eSim.toJSON(), plist, {overlapDetected:lattice.get("overlapDetected")});
         },
 
         template: _.template(template)

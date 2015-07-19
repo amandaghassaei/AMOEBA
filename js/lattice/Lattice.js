@@ -17,6 +17,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             partType: null,
 
             denseCellsMin: null,
+            overlapDetected: false,
 
             nodes: [],
 
@@ -158,9 +159,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var min = this.get("cellsMin").sub(bounds.min);
+            var self = this;
             this._loopCells(this.sparseCells, function(cell){
                 if (!cell) return;
-                cell.addToDenseArray(cells, min);
+                var overlap = cell.addToDenseArray(cells, min);
+                if (overlap) self.set("overlapDetected", true);
             });
 
             this.cells = cells;
