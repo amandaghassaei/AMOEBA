@@ -55,7 +55,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
             var partType = _.keys(plist["allPartTypes"][newCellType][newConnectionType])[0];
             this.set("partType", partType, {silent:true});
-            appState.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType], {silent:true});
+            appState.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType]);
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
