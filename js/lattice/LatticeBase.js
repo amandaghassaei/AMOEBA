@@ -204,20 +204,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._loopCells(this.sparseCells, function(cell, x, y, z){
                 if (cell){
                     var material = cell.getMaterial();
-                    if (material.dimensions){
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(material.dimensions.clone()).round());
-                        dimMax.max(subCellRange);
-                        dimMin.min(subCellRange);
-                    } else if (cell.length){//gik
-                        var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(new THREE.Vector3(cell.length, 0, 0)).round());
-                        var padding = cell.applyRotation(new THREE.Vector3(0,1,1)).round();
-                        _.each(padding, function(element, key){
-                            if (element == -1) padding[key] = 1;
-                        });
-                        subCellRange.add(padding);
-                        dimMax.max(subCellRange);
-                        dimMin.min(subCellRange);
-                    }
+                    var dimensions = material.dimensions;
+                    if (dimensions) dimensions.clone();
+                    else dimensions = new THREE.Vector3(cell.length, 1, 1);
+                    dimensions.sub(new THREE.Vector3(1,1,1));
+                    var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(dimensions).round().add(new THREE.Vector3(1,1,1)));
+                    dimMax.max(subCellRange);
+                    dimMin.min(subCellRange);
                 }
             });
             return {max:dimMax, min:dimMin};

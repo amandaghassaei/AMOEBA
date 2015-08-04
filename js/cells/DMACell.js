@@ -102,7 +102,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             return null;
         }
         if (!this.superCell) return this.getIndex();
-        return this.superCell.getAbsoluteIndex().add(this.superCell.applyRotation(this.getIndex()));
+        return this.superCell.getAbsoluteIndex().add(this.superCell.applyRotation(this.getIndex()).round());
     };
 
     DMACell.prototype.getPosition = function(){
