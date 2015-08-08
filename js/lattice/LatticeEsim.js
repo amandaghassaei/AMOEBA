@@ -46,7 +46,9 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             var groups = [];
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
-                if (groups.indexOf(cell.getConductorGroupNum()) < 0 && cell.isConductive()) groups.push(cell.getConductorGroupNum());
+                if (groups.indexOf(cell.getConductorGroupNum()) < 0 && cell.isConductive()) {
+                    groups.push({id:cell.getConductorGroupNum(), current: null, voltage: null});
+                }
             });
             eSim.set("conductorGroups", groups);
         },

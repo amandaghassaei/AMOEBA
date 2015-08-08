@@ -18,10 +18,10 @@ Simulation Type: &nbsp;&nbsp;
             <input type="radio" <% if (visibleConductorGroup < 0){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Show All Conducting Groups
         </label>
-        <% _.each(conductorGroups, function(groupNum, index){ %>
+        <% _.each(conductorGroups, function(groupData, index){ %>
             <label class="radio">
-                <input type="radio" <% if (groupNum == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= groupNum %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-                Group Num <%= index + 1 %>
+                <input type="radio" <% if (groupData.id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= groupData.id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                Group <%= index + 1 %>
             </label>
         <% }); %>
     <% } %>

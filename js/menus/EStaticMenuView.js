@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate', 'eSim'],
+    function($, _, MenuParentView, plist, template, eSim){
 
     return MenuParentView.extend({
 
@@ -11,10 +12,17 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate
         },
 
         _initialize: function(){
+            this.listenTo(eSim, "change", this.render);
+        },
+
+        getPropertyOwner: function($target){
+            if ($target.hasClass("eSim")) return eSim;
+            return null;
         },
 
         _makeTemplateJSON: function(){
-            return null;
+            console.log(eSim.get("conductorGroups"));
+            return _.extend(this.model.toJSON(), eSim.toJSON());
         },
 
         template: _.template(template)
