@@ -52,7 +52,8 @@ define(['underscore', 'threeModel'], function(_, threeModel){
     };
 
     ESimField.prototype._colorForVal = function(val){
-        return new THREE.Color(val, 0, 0);
+        if (val == 1) console.log("here");
+        return new THREE.Color(1-val, val, val);
         var scaledVal = (val - this._min)/(this._max - this._min) * (1-0)+ 0;
         console.log(scaledVal);
         console.log(this._min);
@@ -60,13 +61,18 @@ define(['underscore', 'threeModel'], function(_, threeModel){
     };
 
     ESimField.prototype.show = function(height){
-        if (height){
-            for (var x=0;x<this._threeObjects.length;x++){
-                for (var y=0;y<this._threeObjects[x].length;y++){
-                    this._threeObjects[x][y].material.color = this._colorForVal(this._data[x][y][height]);
-                }
+        console.log(height);
+        if (height < 0 || this._data[0][0][height] === undefined) {
+            console.warn("height " + height + " is out of range");
+            return;
+        }
+
+        for (var x=0;x<this._threeObjects.length;x++){
+            for (var y=0;y<this._threeObjects[x].length;y++){
+                this._threeObjects[x][y].material.color.set(this._colorForVal(this._data[x][y][height]));
             }
         }
+
         this._setObject3DPosition(this._offset, this._resolution, height);
         this._object3D.visible = true;
         threeModel.render();
