@@ -16,6 +16,13 @@ define([], function(){
         allVoltageUnits:{
             1: "V",
             0.001: "mV"
+        },
+
+        visibleStaticSimTypes: {
+            none: "None",
+            eField: "Electric Field",
+            charge: "Charge Distribution",
+            capacitance: "Capacitance"
         }
     }
 
