@@ -1,4 +1,5 @@
 <% if(conductorGroups && conductorGroups.length > 0){ %>
+    Dielectric Permittivity (k): &nbsp;&nbsp;<input data-property="dielectricPerm" value="<%= dielectricPerm %>" placeholder="k" class="form-control floatInput eSim voltageInput" type="text"><br/>
     <label class="radio">
         <input type="radio" <% if (visibleConductorGroup == -2){ %>checked<% } %> name="visibleConductorGroup" value="-2" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show Everything
@@ -32,6 +33,7 @@
             <% }); %>
         </ul>
     </div><br/><br/>
+
     <div class="inlineSwatch capacitance"></div>Capacitance:<br/>
     <div class="inlineSwatch inductance"></div>Inductance:<br/><br/>
     <a href="#" id="calcCapacitance" class="btn btn-block btn-lg btn-default"><% if(globalCapacitance){ %>Re-<% } %>Calculate Capacitance</a><br/>

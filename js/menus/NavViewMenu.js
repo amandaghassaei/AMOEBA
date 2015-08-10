@@ -3,14 +3,14 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], function($, _, Backbone, template){
+define(['jquery', 'underscore', 'backbone', 'plist', 'text!navViewMenuTemplate'], function($, _, Backbone, plist, template){
 
     return Backbone.View.extend({
 
         el: "#navViewMenu",
 
         events: {
-            "click a.boolProperty":                              "_makeSelection",
+            "click a":                                       "_makeSelection",
             "click #reset3DView":                            "_reset3DNavigation"
         },
 
@@ -25,8 +25,12 @@ define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], functio
             var $target = $(e.target);
             if ($target.prop("tagName") == "SPAN") $target = $target.parent();
             var property = $target.data("property");
+            var value = $target.data("value");
             var owner = this._getPropertyOwner($target);
-            if (owner) owner.set(property, !owner.get(property));
+            if (owner) {
+                if (value) owner.set(property, value);
+                else owner.set(property, !owner.get(property));
+            }
         },
 
         _getPropertyOwner: function($target){
@@ -41,7 +45,7 @@ define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], functio
         },
 
         render: function(){
-            this.$el.html(this.template(this.model.toJSON()));
+            this.$el.html(this.template(_.extend(this.model.toJSON(), plist)));
 
             var self = this;
             _.each($(".boolProperty"), function(item){

@@ -13,7 +13,8 @@ define(['underscore', 'backbone'], function(_, Backbone){
             globalCapacitance: null,
             globalInductance: null,
             voltageUnits: "1",
-            currentUnits: "0.001"
+            currentUnits: "0.001",
+            dielectricPerm: 1.00
         }
 
 

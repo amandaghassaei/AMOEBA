@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemp
 
         _calcCapacitance: function(e){
             e.preventDefault();
-            if (this._checkGroupData("voltage")) lattice.calcCapacitance();
+            if (this._checkGroupData("voltage") && !isNaN(parseFloat(eSim.get("dielectricConst")))) lattice.calcCapacitance();
             else console.warn("voltage data missing");
         },
 

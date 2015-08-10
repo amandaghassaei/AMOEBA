@@ -16,13 +16,13 @@ define(['three'], function(THREE){
             },
             electronicNavSim:{
                 eSetup:"Connectivity",
-                materialProperties: "Materials",
+//                materialProperties: "Materials",
                 eStatic:"Statics",
                 eDynamic:"Dynamics"
             },
             mechanicalNavSim:{
                 mSetup:"Setup",
-                materialProperties: "Materials",
+//                materialProperties: "Materials",
                 mStatic:"Statics",
                 mDynamic:"Dynamics"
             },
@@ -93,6 +93,13 @@ define(['three'], function(THREE){
 //                }
             },
             kelvin: {face: null}
+        },
+
+        allCellModes:{//supercell, cell, part, node, beam
+            supercell: "Hierarchical Mode",
+            cell: "Voxel Mode",
+            part: "Part Mode",
+            hide: "Hide Cells"
         },
 
         allMaterialTypes:{

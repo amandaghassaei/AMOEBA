@@ -12,6 +12,8 @@
     <ul class="dropdown-menu">
         <li><a class="appState boolProperty" data-property="basePlaneIsVisible" href="#">Sketch Plane</a></li>
         <li><a class="appState boolProperty" data-property="highlighterIsVisible" href="#">Hover Tool</a></li>
+        <li><a class="appState boolProperty" data-property="axesAreVisible" href="#">Axes</a></li>
+        <li><a id="reset3DView" href="#">Reset 3D Navigation</a></li>
     </ul>
 </li>
 <li class="dropdown-submenu">
@@ -22,9 +24,10 @@
     </ul>
 </li>
 <li class="dropdown-submenu">
-    <a tabindex="-1">3D<span class="pull-right fui-arrow-right"></span></a>
+    <a tabindex="-1">Cells<span class="pull-right fui-arrow-right"></span></a>
     <ul class="dropdown-menu">
-        <li><a class="appState boolProperty" data-property="axesAreVisible" href="#">Axes</a></li>
-        <li><a id="reset3DView" href="#">Reset 3D Navigation</a></li>
+        <% _.each(allCellModes, function(mode, key){ %>
+            <li><a class="appState" data-property="cellMode" data-value="<%= key %>" href="#"><% if (cellMode == key) { %><span class="fui-check"></span><% } %><%= mode %></a></li>
+        <% }); %>
     </ul>
 </li>
