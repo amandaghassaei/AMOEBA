@@ -10,7 +10,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
 
         _eSimTabChanged: function(){
             var currentTab = appState.get("currentTab");
-            if (currentTab == "eSetup") this._showConductors();
+            if (currentTab == "eSetup" || currentTab == "eStatic") this._showConductors();
             else this.setOpaque();
         },
 
@@ -46,7 +46,9 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             var groups = [];
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
-                if (groups.indexOf(cell.getConductorGroupNum()) < 0 && cell.isConductive()) {
+                if (_.filter(groups, function(group){
+                    return group.id == cell.getConductorGroupNum();
+                }).length == 0 && cell.isConductive()) {
                     groups.push({id:cell.getConductorGroupNum(), current: null, voltage: null});
                 }
             });

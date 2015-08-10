@@ -400,10 +400,6 @@ label {
     padding-bottom: 20px;
 }
 
-label.colorSwatches>span.icons{
-    margin: 5px 0;
-}
-
 #navViewMenu .dropdown-menu span{
     margin-right:10px;
 }
@@ -427,4 +423,23 @@ label.colorSwatches>span.icons{
 
 .red {
     color:red;
+}
+
+
+.checkbox .icons, .radio .icons, .checkbox input[type="checkbox"].custom-checkbox, .radio input[type="checkbox"].custom-checkbox, .checkbox input[type="radio"].custom-radio, .radio input[type="radio"].custom-radio {
+    margin-top: -10px;
+    top:50%;
+}
+
+.voltageInput, .voltageInput:focus{
+    border-color: #f4d313;
+}
+
+.currentInput, .currentInput:focus{
+    border-color: #58d68d;
+}
+
+.voltageInput, .currentInput {
+    margin-left: 15px;
+    width: 30%!important;
 }

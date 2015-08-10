@@ -21,7 +21,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate
         },
 
         _makeTemplateJSON: function(){
-            console.log(eSim.get("conductorGroups"));
             return _.extend(this.model.toJSON(), eSim.toJSON());
         },
 
