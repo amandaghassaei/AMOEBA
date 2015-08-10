@@ -15,7 +15,11 @@ Simulation Type: &nbsp;&nbsp;
     Num Connected Conductors: &nbsp;&nbsp<%= conductorGroups.length %><br/>
     <% if(conductorGroups.length > 0){ %>
         <label class="radio">
-            <input type="radio" <% if (visibleConductorGroup < 0){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            <input type="radio" <% if (visibleConductorGroup == -2){ %>checked<% } %> name="visibleConductorGroup" value="-2" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Show Everything
+        </label>
+        <label class="radio">
+            <input type="radio" <% if (visibleConductorGroup == -1){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Show All Conducting Groups
         </label>
         <% _.each(conductorGroups, function(groupData, index){ %>

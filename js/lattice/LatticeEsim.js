@@ -15,13 +15,13 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
         },
 
         _showConductors: function(){
-            if (!eSim.get("conductorGroups") || eSim.get("conductorGroups").length == 0){
+            var groupNum = eSim.get("visibleConductorGroup");
+            if (!eSim.get("conductorGroups") || eSim.get("conductorGroups").length == 0 || groupNum == -2){
                 this.setOpaque();
                 three.render();
                 return;
             }
-            var groupNum = eSim.get("visibleConductorGroup");
-            var allVisible = groupNum < 0;
+            var allVisible = groupNum == -1;
             this._loopCells(this.sparseCells, function(cell){
                 if (cell) cell.setTransparent(function(evalCell){
                     return !(evalCell.conductiveGroupVisible(allVisible, groupNum));

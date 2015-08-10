@@ -1,6 +1,10 @@
 <% if(conductorGroups && conductorGroups.length > 0){ %>
     <label class="radio">
-        <input type="radio" <% if (visibleConductorGroup < 0){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <input type="radio" <% if (visibleConductorGroup == -2){ %>checked<% } %> name="visibleConductorGroup" value="-2" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        Show Everything
+    </label>
+    <label class="radio">
+        <input type="radio" <% if (visibleConductorGroup == -1){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show All Conducting Groups
     </label>
     <% _.each(conductorGroups, function(groupData, index){ %>
@@ -11,8 +15,10 @@
             <input data-property="current" data-index="<%= index %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>
     <% }); %><br/>
-    <div class="inlineSwatch capacitance"></div>Capacitance:<br/><br/>
-    <div class="inlineSwatch inductance"></div>Inductance:<br/>
+    <div class="inlineSwatch capacitance"></div>Capacitance:<br/>
+    <div class="inlineSwatch inductance"></div>Inductance:<br/><br/>
+    <a href="#" id="calcCapacitance" class="btn btn-block btn-lg btn-default"><% if(globalCapacitance){ %>Re-<% } %>Calculate Capacitance</a><br/>
+    <a href="#" id="calcInductance" class="btn btn-block btn-lg btn-default"><% if(globalInductance){ %>Re-<% } %>Calculate Inductance</a><br/>
 <% } else { %>
     <div class="inlineWarning">No conductive groups detected, please navigate to previous tab and calculate.</div>
 <% } %>
