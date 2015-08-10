@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'backbone'], function(_, Backbone){
+define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
 
     var eSim = Backbone.Model.extend({
 
@@ -35,9 +35,9 @@ define(['underscore', 'backbone'], function(_, Backbone){
         },
 
         _hideAllFields: function(){
-            if (this.get("electricField")) this.get("electricField").hide();
-            if (this.get("chargeField")) this.get("chargeField").hide();
-            if (this.get("capacitanceField")) this.get("capacitanceField").hide();
+            if (this.get("electricField")) this.get("electricField").hide(true);
+            if (this.get("chargeField")) this.get("chargeField").hide(true);
+            if (this.get("capacitanceField")) this.get("capacitanceField").hide(true);
         },
 
         _refreshVisibleField: function(){
@@ -45,10 +45,11 @@ define(['underscore', 'backbone'], function(_, Backbone){
             var height = this.get("simZHeight");
             var visibleSim = this.get("visibleStaticSim");
             if (visibleSim == "none") {
+                three.render();
                 console.warn("no visible simulation selected");
                 return;
             }
-            this.get(visibleSim).show(height);
+            if (this.get(visibleSim)) this.get(visibleSim).show(height);
         }
 
 

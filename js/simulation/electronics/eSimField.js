@@ -5,14 +5,14 @@
 
 //hold and display data for various fields
 
-define(['underscore', 'threeModel'], function(_, threeModel){
+define(['underscore', 'threeModel'], function(_, three){
 
     function ESimField(data, offset, resolution, height){
 
         this._object3D = new THREE.Object3D();
         this._setData(data, offset, resolution, height);
 
-        threeModel.sceneAdd(this._object3D);
+        three.sceneAdd(this._object3D);
         this.hide();
     }
 
@@ -75,11 +75,12 @@ define(['underscore', 'threeModel'], function(_, threeModel){
 
         this._setObject3DPosition(this._offset, this._resolution, height);
         this._object3D.visible = true;
-        threeModel.render();
+        three.render();
     };
 
-    ESimField.prototype.hide = function(){
+    ESimField.prototype.hide = function(noRender){
         this._object3D.visible = false;
+        if (!noRender) three.render();
     };
 
     ESimField.prototype._loop = function(data, callback){
@@ -94,7 +95,7 @@ define(['underscore', 'threeModel'], function(_, threeModel){
 
     ESimField.prototype.destroy = function(){
         this._destroyData();
-        threeModel.sceneRemove(this._object3D);
+        three.sceneRemove(this._object3D);
         this._object3D = null;
     };
 
