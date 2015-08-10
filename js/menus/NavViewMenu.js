@@ -23,6 +23,7 @@ define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], functio
         _makeSelection: function(e){
             e.preventDefault();
             var $target = $(e.target);
+            if ($target.prop("tagName") == "SPAN") $target = $target.parent();
             var property = $target.data("property");
             var owner = this._getPropertyOwner($target);
             if (owner) owner.set(property, !owner.get(property));
@@ -30,7 +31,8 @@ define(['jquery', 'underscore', 'backbone', 'text!navViewMenuTemplate'], functio
 
         _getPropertyOwner: function($target){
             if ($target.hasClass("appState")) return this.model;
-            console.warn("no owner found for " + $target);
+            console.warn("no owner found for:");
+            console.warn($target);
             return null;
         },
 
