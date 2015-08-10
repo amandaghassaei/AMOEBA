@@ -67,6 +67,14 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             if (index.x-1 >= 0) callback(this.cells[index.x-1][index.y][index.z]);
             if (index.y+1 < yLength) callback(this.cells[index.x][index.y+1][index.z]);
             if (index.y-1 >= 0) callback(this.cells[index.x][index.y-1][index.z]);
+        },
+
+        calcCapacitance: function(){
+
+        },
+
+        calcInductance: function(){
+
         }
 
     };
