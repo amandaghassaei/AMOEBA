@@ -7,49 +7,76 @@
 
 define(['underscore', 'threeModel'], function(_, threeModel){
 
-    function ESimField(data, offset, resolution){
+    function ESimField(data, offset, resolution, height){
 
-        this._data = data;
-        this._offset = offset;
+        this._object3D = new THREE.Object3D();
+        this._setData(data, offset, resolution, height);
 
-        this._createThreeObjects(data, offset, 1/resolution);
-
+        threeModel.sceneAdd(this._object3D);
+        this.hide();
     }
 
-    ESimField.prototype._createThreeObjects = function(data, offset, size){
+    ESimField.prototype._setData = function(data, offset, resolution, height){
+        this._destroyData();
+        this._data = data;
+        this._max = _.max(data);
+        this._min = _.min(data);
+        this._resolution = resolution;
+
+        this._offset = offset;
+        this._setObject3DPosition(offset, resolution, height);
+
+        this._threeObjects = this._createThreeObjects(data, offset, 1/resolution, height, this._object3D);
+    };
+
+    ESimField.prototype._setObject3DPosition = function(offset, resolution, height){
+        this._object3D.position.set(offset.x, offset.y, offset.z+height/resolution);
+    };
+
+    ESimField.prototype._createThreeObjects = function(data, offset, size, height, object3D){
         var threeObjects = [];
         for (var x=0;x<data.length;x++){
             threeObjects.push([]);
             for (var y=0;y<data[0].length;y++){
-                threeObjects[x].push([]);
-                for (var z=0;z<data[0][0].length;z++){
-                    var box = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), new THREE.MeshLambertMaterial({color:"#ff0000"}));
-                    box.position.set(x*size+offset.x, y*size+offset.y, z*size+offset.z);
-                    threeModel.sceneAdd(box);
-                    threeObjects[x][y].push(box);
-                }
+                var box = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), this._materialForVal(data[x][y][height]));
+                box.position.set(x*size, y*size, 0);
+                object3D.add(box);
+                threeObjects[x].push(box);
             }
         }
-        threeModel.render();
+        return threeObjects;
+    };
+
+    ESimField.prototype._materialForVal = function(val){
+        return new THREE.MeshLambertMaterial({color:this._colorForVal(val)});
+    };
+
+    ESimField.prototype._colorForVal = function(val){
+        return new THREE.Color(val, 0, 0);
+        var scaledVal = (val - this._min)/(this._max - this._min) * (1-0)+ 0;
+        console.log(scaledVal);
+        console.log(this._min);
+        console.log(this._max);
     };
 
     ESimField.prototype.show = function(height){
-        var data = [];
-        for (var x=0;x<this._data.length;x++){
-            data.push([]);
-            for (var y=0;y<this._data[x].length;y++){
-                data[x].push(this._data[x][y][height]);
+        if (height){
+            for (var x=0;x<this._threeObjects.length;x++){
+                for (var y=0;y<this._threeObjects[x].length;y++){
+                    this._threeObjects[x][y].material.color = this._colorForVal(this._data[x][y][height]);
+                }
             }
         }
-
+        this._setObject3DPosition(this._offset, this._resolution, height);
+        this._object3D.visible = true;
+        threeModel.render();
     };
 
     ESimField.prototype.hide = function(){
-
-
+        this._object3D.visible = false;
     };
 
-    ESimField.prototype._loopCells = function(data, callback){
+    ESimField.prototype._loop = function(data, callback){
         for (var x=0;x<data.length;x++){
             for (var y=0;y<data[0].length;y++){
                 for (var z=0;z<data[0][0].length;z++){
@@ -57,6 +84,24 @@ define(['underscore', 'threeModel'], function(_, threeModel){
                 }
             }
         }
+    };
+
+    ESimField.prototype.destroy = function(){
+        this._destroyData();
+        threeModel.sceneRemove(this._object3D);
+        this._object3D = null;
+    };
+
+    ESimField.prototype._destroyData = function(){
+        if (this._data) this._loop(this._data, function(data){
+            data = null;
+        });
+        this._data = null;
+        this._min = null;
+        this._max = null;
+        this._offset = null;
+        this._resolution = null;
+
     };
 
 

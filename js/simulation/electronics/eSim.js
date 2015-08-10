@@ -25,6 +25,30 @@ define(['underscore', 'backbone'], function(_, Backbone){
             globalCapacitance: null,
             numRelaxationSteps: 5,
             visibleStaticSim: "none"//eField, charge, capacitance
+        },
+
+        initialize: function(){
+
+            this.listenTo(this, "change:simZHeight", this._refreshVisibleField);
+            this.listenTo(this, "change:visibleStaticSim", this._refreshVisibleField);
+
+        },
+
+        _hideAllFields: function(){
+            if (this.get("electricField")) this.get("electricField").hide();
+            if (this.get("chargeField")) this.get("chargeField").hide();
+            if (this.get("capacitanceField")) this.get("capacitanceField").hide();
+        },
+
+        _refreshVisibleField: function(){
+            this._hideAllFields();
+            var height = this.get("simZHeight");
+            var visibleSim = this.get("visibleStaticSim");
+            if (visibleSim == "none") {
+                console.warn("no visible simulation selected");
+                return;
+            }
+            this.get(visibleSim).show(height);
         }
 
 
