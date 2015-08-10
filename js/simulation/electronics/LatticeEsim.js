@@ -69,6 +69,33 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
             if (index.y-1 >= 0) callback(this.cells[index.x][index.y-1][index.z]);
         },
 
+        calcEField: function(conductorGroups, resolution){
+            var eFieldMat = [];
+            //init size of field mat and fill with zeros, +2 puts a shell of zeros at boundary (infinity)
+            for (var x=0;x<resolution*this.cells.length+2;x++){
+                eFieldMat.push([]);
+                for (var y=0;y<resolution*this.cells[0].length+2;y++){
+                    eFieldMat[x].push([]);
+                    for (var z=0;z<resolution*this.cells[0][0].length+2;z++){
+                        eFieldMat[x][y].push(0);
+                    }
+                }
+            }
+
+            this._loopCells(this.cells, function(cell, x, y, z){
+                if (!cell) return;
+                for (var i=0;i<resolution;i++){
+                    for (var j=0;j<resolution;j++){
+                        for (var k=0;k<resolution;k++){
+                            if (cell) eFieldMat[x+i+1][y+j+1][z+k+1] = 1;
+                        }
+                    }
+                }
+            });
+            console.log(eFieldMat);
+
+        },
+
         calcCapacitance: function(){
 
         },

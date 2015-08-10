@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemp
 
         events: {
             "click #calcCapacitance":                               "_calcCapacitance",
-            "click #calcInductance":                                "_calcInductance"
+            "click #calcInductance":                                "_calcInductance",
+            "click #calcEField":                                    "_calcEField"
         },
 
         _initialize: function(){
@@ -21,6 +22,11 @@ define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemp
             if ($target.hasClass("eSim")) return eSim;
             if ($target.hasClass("eSimGroup")) return eSim.get("conductorGroups")[$target.data("index")];
             return null;
+        },
+
+        _calcEField: function(e){
+            e.preventDefault();
+            lattice.calcEField(eSim.get("conductorGroups"), eSim.get("simulationRes"));
         },
 
         _calcCapacitance: function(e){

@@ -157,10 +157,9 @@ require.config({
         //electronic sim
         eSimPlist: 'plists/ESimPlist',
         eSim: 'simulation/electronics/eSim',
-        latticeESim: 'lattice/LatticeEsim',
+        latticeESim: 'simulation/electronics/LatticeEsim',
         eSimCell: 'simulation/electronics/cells/eSimCell',
         eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
-
 
 
         //cam
