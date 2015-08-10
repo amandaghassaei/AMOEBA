@@ -9,18 +9,20 @@ define(['three'], function(THREE){
             navDesign:{
                 lattice:"Lattice",
                 //sketch:"Sketch",
-                material:"Material",
+                material:"Materials",
                 import:"Import",
                 part:"Part",
                 script:"Script"
             },
             electronicNavSim:{
                 eSetup:"Connectivity",
+                materialProperties: "Materials",
                 eStatic:"Statics",
                 eDynamic:"Dynamics"
             },
             mechanicalNavSim:{
                 mSetup:"Setup",
+                materialProperties: "Materials",
                 mStatic:"Statics",
                 mDynamic:"Dynamics"
             },

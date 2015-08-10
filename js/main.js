@@ -109,6 +109,7 @@ require.config({
         partMenu: 'menus/PartMenuView',
         scriptMenu: 'menus/ScriptMenuView',
         materialMenu: 'menus/MaterialMenuView',
+        materialPropertiesMenu: 'menus/MaterialPropertiesMenuView',
         optimizeMenu: 'menus/OptimizationMenuView',
         assemblerMenu: 'menus/AssemblerMenuView',
         camMenu: 'menus/CamMenuView',
