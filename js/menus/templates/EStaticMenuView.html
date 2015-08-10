@@ -7,12 +7,12 @@
         <label class="radio">
             <input type="radio" <% if (groupData.id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= groupData.id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Group <%= index + 1 %>
-            <input data-property="voltage" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSim voltageInput" type="text">
-            <input data-property="current" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSim currentInput" type="text">
+            <input data-property="voltage" data-index="<%= index %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
+            <input data-property="current" data-index="<%= index %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>
-    <% }); %>
+    <% }); %><br/>
+    <div class="inlineSwatch capacitance"></div>Capacitance:<br/><br/>
+    <div class="inlineSwatch inductance"></div>Inductance:<br/>
+<% } else { %>
+    <div class="inlineWarning">No conductive groups detected, please navigate to previous tab and calculate.</div>
 <% } %>
-
-Capacitance:<br/>
-
-Inductance:<br/>

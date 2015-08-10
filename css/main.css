@@ -209,10 +209,10 @@ hr {
     background-color: rgba(255, 255, 0, 0.35);
 }
 
-.postWarning {
+.inlineWarning {
     background-color: rgba(255,0,0,0.15);
     padding: 10px 15px 15px 15px;
-    margin: 20px 0;
+    margin: 0 0 20px 0;
 }
 
 input.intInput, input.floatInput{
@@ -434,12 +434,25 @@ label {
 .voltageInput, .voltageInput:focus{
     border-color: #f4d313;
 }
+.capacitance{
+    background: #f4d313;
+}
 
 .currentInput, .currentInput:focus{
     border-color: #58d68d;
+}
+.inductance{
+    background: #58d68d;
 }
 
 .voltageInput, .currentInput {
     margin-left: 15px;
     width: 30%!important;
+}
+
+.inlineSwatch{
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    margin-right: 10px;
 }
