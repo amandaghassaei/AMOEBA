@@ -2,7 +2,8 @@
  * Created by aghassaei on 6/30/15.
  */
 
-define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'], function(lattice, appState, three, eSim){
+define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'],
+    function(lattice, appState, THREE, three, eSim){
 
 
 
@@ -70,6 +71,12 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
         },
 
         calcEField: function(conductorGroups, resolution){
+
+            if (this.numCells == 0){
+                console.warn("no cells!");
+                return;
+            }
+
             var eFieldMat = [];
             //init size of field mat and fill with zeros, +2 puts a shell of zeros at boundary (infinity)
             for (var x=0;x<resolution*this.cells.length+2;x++){
@@ -82,6 +89,7 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
                 }
             }
 
+            //input conductor potentials
             this._loopCells(this.cells, function(cell, x, y, z){
                 if (!cell) return;
                 for (var i=0;i<resolution;i++){
@@ -93,6 +101,13 @@ define(['lattice', 'appState', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'
                 }
             });
             console.log(eFieldMat);
+
+            console.log(this.get("cellsMin"));
+            var offset = this.get("cellsMin").clone().sub(new THREE.Vector3(1/(2*resolution)+this.xScale(0)/2, 1/(2*resolution)+this.yScale(0)/2, 1/(2*resolution)+this.zScale(0)/2));
+            console.log(offset);
+            require(['eSimField'], function(ESimField){
+                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution));
+            });
 
         },
 

@@ -160,6 +160,7 @@ require.config({
         latticeESim: 'simulation/electronics/LatticeEsim',
         eSimCell: 'simulation/electronics/cells/eSimCell',
         eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
+        eSimField: 'simulation/electronics/eSimField',
 
 
         //cam
