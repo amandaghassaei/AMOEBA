@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate', 'eSim', 'latticeESim'],
-    function($, _, MenuParentView, plist, template, eSim, lattice){
+define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemplate', 'eSim', 'latticeESim'],
+    function($, _, MenuParentView, eSimPlist, template, eSim, lattice){
 
     return MenuParentView.extend({
 
@@ -43,7 +43,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eStaticMenuTemplate
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), eSim.toJSON());
+            return _.extend(this.model.toJSON(), eSim.toJSON(), eSimPlist);
         },
 
         template: _.template(template)

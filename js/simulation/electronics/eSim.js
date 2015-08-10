@@ -11,7 +11,9 @@ define(['underscore', 'backbone'], function(_, Backbone){
             conductorGroups: null,//[{id: xx, current:xx, voltage:xx}]
             visibleConductorGroup: -1,
             globalCapacitance: null,
-            globalInductance: null
+            globalInductance: null,
+            voltageUnits: "1",
+            currentUnits: "0.001"
         }
 
 

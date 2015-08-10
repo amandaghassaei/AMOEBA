@@ -154,10 +154,12 @@ require.config({
         mDynamicMenuTemplate: 'menus/templates/MDynamicMenuView.html',
 
         //electronic sim
+        eSimPlist: 'plists/ESimPlist',
         eSim: 'simulation/electronics/eSim',
         latticeESim: 'lattice/LatticeEsim',
         eSimCell: 'simulation/electronics/cells/eSimCell',
         eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
+
 
 
         //cam

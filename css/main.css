@@ -456,3 +456,12 @@ label {
     display: inline-block;
     margin-right: 10px;
 }
+
+#voltageUnits {
+    position: absolute;
+    left: 131px;
+}
+#currentUnits{
+    position: absolute;
+    left: 245px;
+}

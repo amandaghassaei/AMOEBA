@@ -14,7 +14,24 @@
             <input data-property="voltage" data-index="<%= index %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
             <input data-property="current" data-index="<%= index %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>
-    <% }); %><br/>
+    <% }); %>
+    Units:
+        <div class="btn-group" id="voltageUnits">
+            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allVoltageUnits[voltageUnits] %><span class="caret"></span></button>
+            <ul role="menu" class="dropdown-menu">
+                <% _.each(allVoltageUnits, function(unit, key){ %>
+                    <li><a class="eSim dropdownSelector" data-property="voltageUnits" data-value="<%= key %>" href="#"><%= unit %></a></li>
+                <% }); %>
+            </ul>
+        </div>
+        <div class="btn-group" id="currentUnits">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCurrentUnits[currentUnits] %><span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <% _.each(allCurrentUnits, function(unit, key){ %>
+                <li><a class="eSim dropdownSelector" data-property="currentUnits" data-value="<%= key %>" href="#"><%= unit %></a></li>
+            <% }); %>
+        </ul>
+    </div><br/><br/>
     <div class="inlineSwatch capacitance"></div>Capacitance:<br/>
     <div class="inlineSwatch inductance"></div>Inductance:<br/><br/>
     <a href="#" id="calcCapacitance" class="btn btn-block btn-lg btn-default"><% if(globalCapacitance){ %>Re-<% } %>Calculate Capacitance</a><br/>
