@@ -75,12 +75,10 @@ define(['underscore', 'threeModel'], function(_, three){
 
         this._setObject3DPosition(this._offset, this._resolution, height);
         this._object3D.visible = true;
-        three.render();
     };
 
-    ESimField.prototype.hide = function(noRender){
+    ESimField.prototype.hide = function(){
         this._object3D.visible = false;
-        if (!noRender) three.render();
     };
 
     ESimField.prototype._loop = function(data, callback){

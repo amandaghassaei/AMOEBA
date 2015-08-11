@@ -50,6 +50,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
                 return;
             }
             if (this.get(visibleSim)) this.get(visibleSim).show(height);
+            three.render();
         }
 
 
