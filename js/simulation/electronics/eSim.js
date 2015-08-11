@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
+define(['underscore', 'backbone', 'threeModel', 'appState'], function(_, Backbone, three, appState){
 
     var eSim = Backbone.Model.extend({
 
@@ -32,6 +32,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
 
             this.listenTo(this, "change:simZHeight", this._refreshVisibleField);
             this.listenTo(this, "change:visibleStaticSim", this._refreshVisibleField);
+            this.listenTo(appState, "change:currentNav", this._navChanged);
 
         },
 
@@ -39,6 +40,11 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
             if (height < 0) return;
             var field = this.get(this.get("visibleStaticSim"));
             if (field && height<field.getMaxHeight()) this.set("simZHeight", height);
+        },
+
+        _navChanged: function(){
+            if (appState.get("currentNav") != "electronicNavSim") this._hideAllFields();
+            else this._refreshVisibleField();
         },
 
         _hideAllFields: function(){
