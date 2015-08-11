@@ -31,6 +31,7 @@ define(['three'], function(THREE){
             },
             navAssemble:{
                 assembler:"Assembler",
+                assemblerSetup: "Setup",
                 cam: "Process",
 //                editCamOutput: "Edit",
                 animate:"Preview"
