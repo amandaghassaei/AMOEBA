@@ -2,8 +2,8 @@
  * Created by aghassaei on 6/30/15.
  */
 
-define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimSuperCell'],
-    function(lattice, appState, THREE, three, eSim){
+define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimField', 'eSimCell', 'eSimSuperCell'],
+    function(lattice, appState, THREE, three, eSim, ESimField){
 
 
 
@@ -103,10 +103,27 @@ define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimS
             });
 
             var offset = this.get("cellsMin").clone().sub(new THREE.Vector3(1/(2*resolution)+this.xScale(0)/2, 1/(2*resolution)+this.yScale(0)/2, 1/(2*resolution)+this.zScale(0)/2));
-            require(['eSimField'], function(ESimField){
-                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), _.keys(conductorGroups)));
-                eSim.set("visibleStaticSim", "electricField");
+            var dataRange = [];
+            _.each(conductorGroups, function(group){
+                dataRange.push(group.voltage);
             });
+
+
+            //create potential field
+            if (eSim.get("potentialField")){
+                eSim.get("potentialField").setData(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange);
+            } else {
+                eSim.set("potentialField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange));
+            }
+
+            //create electric field from potential
+            if (eSim.get("electricField")){
+                eSim.get("electricField").setData(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange);
+            } else {
+                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange));
+            }
+            eSim.set("visibleStaticSim", "electricField");//will cause render
+
 
         },
 

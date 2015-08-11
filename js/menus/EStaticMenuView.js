@@ -26,6 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemp
 
         _calcEField: function(e){
             e.preventDefault();
+            console.log("here");
             lattice.calcEField(eSim.get("conductorGroups"), eSim.get("simulationRes"));
         },
 

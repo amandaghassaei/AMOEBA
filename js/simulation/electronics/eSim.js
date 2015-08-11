@@ -19,6 +19,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
             simZHeight: 1,
 
             //statics
+            potentialField: null,
             electricField: null,
             chargeField: null,
             capacitanceField: null,

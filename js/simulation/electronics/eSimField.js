@@ -10,17 +10,18 @@ define(['underscore', 'threeModel'], function(_, three){
     function ESimField(data, offset, resolution, height, dataRange){
 
         this._object3D = new THREE.Object3D();
-        this._setData(data, offset, resolution, height, dataRange);
+        this.setData(data, offset, resolution, height, dataRange);
 
         three.sceneAdd(this._object3D);
         this.hide();
     }
 
-    ESimField.prototype._setData = function(data, offset, resolution, height, dataRange){
+    ESimField.prototype.setData = function(data, offset, resolution, height, dataRange){
         this._destroyData();
         this._data = data;
         this._max = _.max(dataRange);
-        this._min = 0;
+        console.log(this._max);
+        this._min = Math.min(0, _.min(dataRange));
         this._resolution = resolution;
 
         this._offset = offset;
@@ -59,7 +60,6 @@ define(['underscore', 'threeModel'], function(_, three){
     };
 
     ESimField.prototype.show = function(height){
-        console.log(height);
         if (height < 0 || this._data[0][0][height] === undefined) {
             console.warn("height " + height + " is out of range");
             return;

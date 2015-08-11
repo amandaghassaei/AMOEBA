@@ -20,7 +20,7 @@ define([], function(){
 
         visibleStaticSimTypes: {
             none: "None",
-            voltageField: "Input Potentials",
+            potentialField: "Input Potentials",
             electricField: "Electric Field",
             chargeField: "Charge Distribution",
             capacitanceField: "Capacitance"
