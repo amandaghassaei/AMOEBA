@@ -157,7 +157,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 this.downKeys[e.keyCode] = true;
             } else this.downKeys[e.keyCode] = false;
 
-    //        console.log(e);
+//            console.log(e);
 //            console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
@@ -229,6 +229,18 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                     break;
                 case 90://z - decrease supercell index
                     if (state) this.set("superCellIndex", this._decrementSuperCellIndex("z", this.get("superCellIndex").clone()));
+                    break;
+                case 38://up arrow
+                    if (!state || this.get("currentNav") != "electronicNavSim") return;
+                    require(['eSim'], function(eSim){
+                        eSim.setZSimHeight(eSim.get("simZHeight")+1);
+                    });
+                    break;
+                case 40://down arrow
+                    if (!state || this.get("currentNav") != "electronicNavSim") return;
+                    require(['eSim'], function(eSim){
+                        eSim.setZSimHeight(eSim.get("simZHeight")-1);
+                    });
                     break;
                 default:
                     break;

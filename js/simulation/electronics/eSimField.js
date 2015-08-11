@@ -30,6 +30,11 @@ define(['underscore', 'threeModel'], function(_, three){
         this._threeObjects = this._createThreeObjects(data, offset, 1/resolution, height, this._object3D);
     };
 
+    ESimField.prototype.getMaxHeight = function(){
+        if (!this._data) return 0;
+        return this._data[0][0].length;
+    };
+
     ESimField.prototype._setObject3DPosition = function(offset, resolution, height){
         this._object3D.position.set(offset.x, offset.y, offset.z+height/resolution);
     };

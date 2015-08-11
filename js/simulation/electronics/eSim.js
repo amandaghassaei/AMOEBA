@@ -35,6 +35,12 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
 
         },
 
+        setZSimHeight: function(height){
+            if (height < 0) return;
+            var field = this.get(this.get("visibleStaticSim"));
+            if (field && height<field.getMaxHeight()) this.set("simZHeight", height);
+        },
+
         _hideAllFields: function(){
             if (this.get("rawPotentialField")) this.get("rawPotentialField").hide();
             if (this.get("potentialField")) this.get("potentialField").hide();

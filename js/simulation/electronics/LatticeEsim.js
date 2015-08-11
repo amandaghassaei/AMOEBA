@@ -188,8 +188,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             } else {
                 eSim.set("chargeField", new ESimField(chargeMat, offset, resolution, eSim.get("simZHeight"), dataRange));
             }
-            eSim.set("visibleStaticSim", "chargeField");//will cause render
-//            -10*(P15+Q14+R15+Q16-4*Q15)
+//            eSim.set("visibleStaticSim", "chargeField");//will cause render
 
         },
 
