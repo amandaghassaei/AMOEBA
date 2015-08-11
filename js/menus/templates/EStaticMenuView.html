@@ -1,6 +1,6 @@
 <% if(conductorGroups && _.keys(conductorGroups).length > 0){ %>
-    Simulation Resolution: &nbsp;&nbsp;<input data-property="simulationRes" value="<%= simulationRes %>" placeholder="Resolution" class="form-control intInput eSim voltageInput" type="text"><br/><br/>
-    Dielectric Permittivity (k): &nbsp;&nbsp;<input data-property="dielectricPerm" value="<%= dielectricPerm %>" placeholder="k" class="form-control floatInput eSim voltageInput" type="text"><br/>
+    Simulation Resolution: &nbsp;&nbsp;<input data-property="simulationRes" value="<%= simulationRes %>" placeholder="Resolution" class="form-control intInput eSim" type="text"><br/><br/>
+    Dielectric Permittivity (k): &nbsp;&nbsp;<input data-property="dielectricPerm" value="<%= dielectricPerm %>" placeholder="k" class="form-control floatInput eSim" type="text"><br/>
     <label class="radio">
         <input type="radio" <% if (visibleConductorGroup == -2){ %>checked<% } %> name="visibleConductorGroup" value="-2" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show Everything
@@ -13,7 +13,7 @@
         <label class="radio">
             <input type="radio" <% if (id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Group <%= ++index %>
-            <input data-property="voltage" data-id="<%= id %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
+            <input data-property="voltage" data-id="<%= id %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput voltageInput eSimGroup" type="text">
             <input data-property="current" data-id="<%= id %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>
     <% }); %>
@@ -38,7 +38,7 @@
     Num Relaxation Steps: &nbsp;&nbsp;<input data-property="numRelaxationSteps" value="<%= numRelaxationSteps %>" placeholder="Num Steps" class="form-control floatInput eSim" type="text"><br/><br/>
     <a href="#" id="calcEField" class="btn btn-block btn-lg btn-default"><% if(electricField){ %>Re-<% } %>Calculate Electric Field</a><br/>
     <a href="#" id="calcCapacitance" class="btn btn-block btn-lg btn-default"><% if(globalCapacitance){ %>Re-<% } %>Calculate Capacitance</a><br/>
-    <div class="inlineSwatch capacitance"></div>Global Capacitance:<br/><br/>
+    Global Capacitance:<br/><br/>
     <!--<a href="#" id="calcInductance" class="btn btn-block btn-lg btn-default"><% if(globalInductance){ %>Re-<% } %>Calculate Inductance</a><br/>-->
     Visible Field:
     <% _.each(visibleStaticSimTypes, function(simType, key){ %>

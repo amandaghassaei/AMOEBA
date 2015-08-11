@@ -24,7 +24,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
             chargeField: null,
             capacitanceField: null,
             globalCapacitance: null,
-            numRelaxationSteps: 5,
+            numRelaxationSteps: 10,
             visibleStaticSim: "none"//eField, charge, capacitance
         },
 
@@ -36,9 +36,11 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
         },
 
         _hideAllFields: function(){
-            if (this.get("electricField")) this.get("electricField").hide(true);
-            if (this.get("chargeField")) this.get("chargeField").hide(true);
-            if (this.get("capacitanceField")) this.get("capacitanceField").hide(true);
+            if (this.get("rawPotentialField")) this.get("rawPotentialField").hide();
+            if (this.get("potentialField")) this.get("potentialField").hide();
+            if (this.get("electricField")) this.get("electricField").hide();
+            if (this.get("chargeField")) this.get("chargeField").hide();
+            if (this.get("capacitanceField")) this.get("capacitanceField").hide();
         },
 
         _refreshVisibleField: function(){

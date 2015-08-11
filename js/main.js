@@ -13,6 +13,7 @@ require.config({
         flatUI: '../dependencies/flatUI/js/flat-ui',
         bootstrapSlider: '../dependencies/bootstrap-slider/bootstrap-slider',
         fileSaverLib: '../dependencies/loaders/FileSaver.min',
+        numeric: '../dependencies/numeric-1.2.6',
 
         //three
         three: '../dependencies/three',
@@ -188,7 +189,7 @@ require.config({
         gikEndPartLowPolySTL: 'assets/stls/parts/GIKEndPartLowPoly.stl',
         kennyTeqPartSTL: 'assets/stls/parts/KennyTeqPart.stl',
         kennyTeqPartHighResSTL: 'assets/stls/parts/KennyTeqPartHighRes.stl',
-        samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl',
+        samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl'
 
     },
 
@@ -216,6 +217,9 @@ require.config({
         },
         'socketio': {
             exports: 'io'
+        },
+        'numeric': {
+            exports: 'numeric'
         }
     }
 
