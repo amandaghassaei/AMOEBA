@@ -201,12 +201,6 @@ define(['three'], function(THREE){
                 relative: false,
                 camProcesses: ["gcode"]
             },
-            crab: {
-                name: "Crab",
-                shouldPickUpStock: true,
-                relative: true,
-                camProcesses: ["gcode"]
-            },
             shopbot: {
                 name: "Shopbot",
                 shouldPickUpStock: true,
@@ -241,7 +235,7 @@ define(['three'], function(THREE){
         machineTypesForLattice:{
             octa:{
                 face: ["handOfGod"],
-                edgeRot: ["crab", "shopbot", "oneBitBot", "handOfGod"],
+                edgeRot: ["shopbot", "oneBitBot", "handOfGod"],
                 vertex: ["handOfGod"]
             },
             tetra: {

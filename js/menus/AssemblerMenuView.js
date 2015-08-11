@@ -32,7 +32,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!a
             var newVal = $(e.target).val();
             if (newVal.length<3) return;//todo this isn't quite right
             cam.set("placementOrder", newVal);
-    //        cam.trigger("change:placementOrder");
         },
 
         _makeTemplateJSON: function(){

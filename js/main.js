@@ -165,14 +165,13 @@ require.config({
 
 
         //cam
-        cam: 'cam/cam',
+        cam: 'cam/CAM',
 
         //assemblers
         assembler: 'cam/assemblers/Assembler',
         component: 'cam/assemblers/Component',
         stapler: 'cam/assemblers/StaplerAssembler',
         dualStapler: 'cam/assemblers/DualStaplerAssembler',
-        crab: 'cam/assemblers/crab',
 
         //processes
         gcode: 'cam/processes/GCodeExporter',
