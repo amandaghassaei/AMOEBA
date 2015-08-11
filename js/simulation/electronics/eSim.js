@@ -8,7 +8,7 @@ define(['underscore', 'backbone', 'threeModel'], function(_, Backbone, three){
     var eSim = Backbone.Model.extend({
 
         defaults:{
-            conductorGroups: null,//[{id: xx, current:xx, voltage:xx}]
+            conductorGroups: null,//{{current:xx, voltage:xx}, ...}
             visibleConductorGroup: -1,//-2 = show everything, -1 = show all conductors
             globalInductance: null,
             voltageUnits: "1",

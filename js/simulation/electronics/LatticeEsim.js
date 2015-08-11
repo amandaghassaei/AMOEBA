@@ -17,7 +17,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimS
 
         _showConductors: function(){
             var groupNum = eSim.get("visibleConductorGroup");
-            if (!eSim.get("conductorGroups") || eSim.get("conductorGroups").length == 0 || groupNum == -2){
+            if (!eSim.get("conductorGroups") || _.keys(eSim.get("conductorGroups")).length == 0 || groupNum == -2){
                 this.setOpaque();
                 three.render();
                 return;
@@ -44,13 +44,13 @@ define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimS
         },
 
         _calcNumberConnectedComponents: function(){
-            var groups = [];
+            var groups = {};
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
                 if (_.filter(groups, function(group){
                     return group.id == cell.getConductorGroupNum();
                 }).length == 0 && cell.isConductive()) {
-                    groups.push({id:cell.getConductorGroupNum(), current: null, voltage: null});
+                    groups[cell.getConductorGroupNum()] = {current: null, voltage: null};
                 }
             });
             eSim.set("conductorGroups", groups);

@@ -1,4 +1,4 @@
-<% if(conductorGroups && conductorGroups.length > 0){ %>
+<% if(conductorGroups && _.keys(conductorGroups).length > 0){ %>
     Simulation Resolution: &nbsp;&nbsp;<input data-property="simulationRes" value="<%= simulationRes %>" placeholder="Resolution" class="form-control intInput eSim voltageInput" type="text"><br/><br/>
     Dielectric Permittivity (k): &nbsp;&nbsp;<input data-property="dielectricPerm" value="<%= dielectricPerm %>" placeholder="k" class="form-control floatInput eSim voltageInput" type="text"><br/>
     <label class="radio">
@@ -9,10 +9,10 @@
         <input type="radio" <% if (visibleConductorGroup == -1){ %>checked<% } %> name="visibleConductorGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show All Conducting Groups
     </label>
-    <% _.each(conductorGroups, function(groupData, index){ %>
+    <% var index = 0; _.each(conductorGroups, function(groupData, id){ %>
         <label class="radio">
-            <input type="radio" <% if (groupData.id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= groupData.id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-            Group <%= index + 1 %>
+            <input type="radio" <% if (id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Group <%= ++index %>
             <input data-property="voltage" data-index="<%= index %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
             <input data-property="current" data-index="<%= index %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>

@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemp
 
         getPropertyOwner: function($target){
             if ($target.hasClass("eSim")) return eSim;
-            if ($target.hasClass("eSimGroup")) return eSim.get("conductorGroups")[$target.data("index")];
+            if ($target.hasClass("eSimGroup")) return eSim.get("conductorGroups")[$target.data("id")];
             return null;
         },
 
