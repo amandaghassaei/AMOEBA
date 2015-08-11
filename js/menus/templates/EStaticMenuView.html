@@ -13,8 +13,8 @@
         <label class="radio">
             <input type="radio" <% if (id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Group <%= ++index %>
-            <input data-property="voltage" data-index="<%= index %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
-            <input data-property="current" data-index="<%= index %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
+            <input data-property="voltage" data-id="<%= id %>" value="<%= groupData.voltage %>" placeholder="Voltage" class="form-control floatInput eSimGroup voltageInput" type="text">
+            <input data-property="current" data-id="<%= id %>" value="<%= groupData.current %>" placeholder="Current" class="form-control floatInput eSimGroup currentInput" type="text">
         </label>
     <% }); %>
     Units:

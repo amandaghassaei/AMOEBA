@@ -95,7 +95,8 @@ define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimS
                 for (var i=0;i<resolution;i++){
                     for (var j=0;j<resolution;j++){
                         for (var k=0;k<resolution;k++){
-                            if (cell) eFieldMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] = 1;
+                            if (cell) eFieldMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] =
+                                conductorGroups[cell.getConductorGroupNum()].voltage;
                         }
                     }
                 }
@@ -103,7 +104,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'eSim', 'eSimCell', 'eSimS
 
             var offset = this.get("cellsMin").clone().sub(new THREE.Vector3(1/(2*resolution)+this.xScale(0)/2, 1/(2*resolution)+this.yScale(0)/2, 1/(2*resolution)+this.zScale(0)/2));
             require(['eSimField'], function(ESimField){
-                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight")));
+                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), _.keys(conductorGroups)));
                 eSim.set("visibleStaticSim", "electricField");
             });
 

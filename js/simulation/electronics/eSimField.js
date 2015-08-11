@@ -7,20 +7,20 @@
 
 define(['underscore', 'threeModel'], function(_, three){
 
-    function ESimField(data, offset, resolution, height){
+    function ESimField(data, offset, resolution, height, dataRange){
 
         this._object3D = new THREE.Object3D();
-        this._setData(data, offset, resolution, height);
+        this._setData(data, offset, resolution, height, dataRange);
 
         three.sceneAdd(this._object3D);
         this.hide();
     }
 
-    ESimField.prototype._setData = function(data, offset, resolution, height){
+    ESimField.prototype._setData = function(data, offset, resolution, height, dataRange){
         this._destroyData();
         this._data = data;
-        this._max = _.max(data);
-        this._min = _.min(data);
+        this._max = _.max(dataRange);
+        this._min = 0;
         this._resolution = resolution;
 
         this._offset = offset;
@@ -52,12 +52,10 @@ define(['underscore', 'threeModel'], function(_, three){
     };
 
     ESimField.prototype._colorForVal = function(val){
-        if (val == 1) console.log("here");
-        return new THREE.Color(1-val, val, val);
-        var scaledVal = (val - this._min)/(this._max - this._min) * (1-0)+ 0;
-        console.log(scaledVal);
-        console.log(this._min);
-        console.log(this._max);
+        var scaledVal = (1-(val - this._min)/(this._max - this._min)) * 0.7;
+        var color = new THREE.Color();
+        color.setHSL(scaledVal, 1, 0.5);
+        return color;
     };
 
     ESimField.prototype.show = function(height){
