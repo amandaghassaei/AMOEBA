@@ -95,8 +95,10 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
                 for (var i=0;i<resolution;i++){
                     for (var j=0;j<resolution;j++){
                         for (var k=0;k<resolution;k++){
-                            if (cell) potentialMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] =
-                                conductorGroups[cell.getConductorGroupNum()].voltage;
+                            if (cell && conductorGroups[cell.getConductorGroupNum()]) {
+                                potentialMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] =
+                                    conductorGroups[cell.getConductorGroupNum()].voltage;
+                            }
                         }
                     }
                 }
