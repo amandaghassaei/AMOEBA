@@ -90,10 +90,9 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
 
 
-        _calculateNumMaterials: function(){
+        _calculateNumMaterials: function(){//todo calc length of gik cells as separate material types
             this.set("allCAMMaterialTypes", materials.getChildCellTypes(lattice.sparseCells, true));
         },
-
 
 
         selectMachine: function(){
