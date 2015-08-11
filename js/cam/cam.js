@@ -2,11 +2,13 @@
  * Created by aghassaei on 3/10/15.
  */
 
-define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist'], function(_, Backbone, appState, lattice, three, plist){
+define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist', 'materials'],
+    function(_, THREE, Backbone, appState, lattice, three, plist, materials){
 
     var Cam = Backbone.Model.extend({
 
         defaults: {
+
             camStrategy: "raster",
             placementOrder: "XYZ",//used for raster strategy entry
             camProcess: "gcode",
@@ -36,7 +38,9 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
             feedRate:{xy: 0.1, z: 0.1},//speed when heading towards assembly
 
             simLineNumber: 0,//used for stock simulation, reading through gcode
-            simSpeed: 4//#X times real speed
+            simSpeed: 4,//#X times real speed
+
+            allCAMMaterialTypes: []//all types of stock needed
         },
 
         initialize: function(){
@@ -64,9 +68,9 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
                     "change:machineName",
                 this._setNeedsPostProcessing);
             this.listenTo(lattice,
+                    "change:scale" +
+                    "change:units" +
                     "change:numCells " +
-                    "change:units " +
-                    "change:scale " +
                     "change:cellType " +
                     "change:connectionType",
                 this._setNeedsPostProcessing);
@@ -79,11 +83,16 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
 
             this._navChanged();
     //        this._initOriginAndStock();
+
+
         },
 
 
 
 
+        _calculateNumMaterials: function(){
+            this.set("allCAMMaterialTypes", materials.getChildCellTypes(lattice.sparseCells, true));
+        },
 
 
 
@@ -120,7 +129,10 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
         //events
 
         _navChanged: function(){
-            if (appState.get("currentNav") == "navAssemble") this._setToDefaults();
+            if (appState.get("currentNav") == "navAssemble") {
+                this._setToDefaults();
+                this._calculateNumMaterials();
+            }
         },
 
         _setToDefaults: function(){
@@ -144,7 +156,6 @@ define(['underscore', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist
             if (this.get("assembler")) this.get("assembler").setVisibility(visible);
             if (appState.get("currentNav") == "navAssemble") {
                 appState.set("basePlaneIsVisible", !visible);
-                appState.set("highlighterIsVisible", !visible);
             }
             three.render();
         },

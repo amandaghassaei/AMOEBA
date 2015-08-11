@@ -11,6 +11,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         defaults: _.extend(_.clone(LatticeBase.prototype.defaults), {
 
             units: "mm",
+            scale: 1.0,
 
             cellType: "cube",
             connectionType: "gik",

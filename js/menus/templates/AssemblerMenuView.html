@@ -25,6 +25,16 @@ Strategy: &nbsp;&nbsp;
         </ul>
     </div><br/><br/>
 <% if (camStrategy == "raster"){ %>
-    Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/><br/>
+    Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/>
 <% } %>
-Num Materials: &nbsp;&nbsp;
+<% if (allMachines[machineName].numMaterials > -1 && allMachines[machineName].numMaterials < allCAMMaterialTypes.length){ %>
+    <div class="inlineWarning">Number of materials in assembly exceeds available materials ( <%= allMachines[machineName].numMaterials %> ) for assembler type.</div>
+<% } %>
+Num Materials: &nbsp;&nbsp;<%= allCAMMaterialTypes.length %><br/>
+<% _.each(allCAMMaterialTypes, function(material){ %>
+    <label class="radio colorSwatches">
+        <div class="materialColorSwatch">
+        <div style="background-color:<% if(realisticColorScheme){ %><%= materials[material].color %><% }else{ %><%= materials[material].altColor %><% } %>"></div>
+        <span><span class="materialListTitle"><%= materials[material].name %></span></span></div>
+    </label>
+<% }) %>

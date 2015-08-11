@@ -199,13 +199,15 @@ define(['three'], function(THREE){
                 name: "Hand of God",
                 shouldPickUpStock: false,
                 relative: false,
-                camProcesses: ["gcode"]
+                camProcesses: ["gcode"],
+                numMaterials: -1//-1 == infinite
             },
             shopbot: {
                 name: "Shopbot",
                 shouldPickUpStock: true,
                 relative: false,
-                camProcesses: ["shopbot", "gcode"]
+                camProcesses: ["shopbot", "gcode"],
+                numMaterials: -1
             },
             oneBitBot: {
                 name: "One Bit Bot",
@@ -218,6 +220,7 @@ define(['three'], function(THREE){
                 shouldPickUpStock: false,
                 relative: false,
                 camProcesses: ["gcode"],
+                numMaterials: 2,
                 defaults: {
                     camStrategy: "raster",
                     placementOrder: "XYZ",//used for raster strategy entry
