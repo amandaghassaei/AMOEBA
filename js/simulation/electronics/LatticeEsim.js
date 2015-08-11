@@ -126,7 +126,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
                 for (var x=0;x<temp.length;x++){
                     for (var y=0;y<temp[x].length;y++){
                         for (var z=0;z<temp[x][y].length;z++){
-                            if (potentialData[x][y][z] != 0) continue;
+                            if (potentialData[x][y][z] != 0) continue;//todo fix this for 0V
                             var avg = 0;
                             if (x > 0) avg += potentialMat[x-1][y][z];
                             if (x < temp.length-1) avg += potentialMat[x+1][y][z];
@@ -166,7 +166,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             } else {
                 eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange));
             }
-            eSim.set("visibleStaticSim", "electricField");//will cause render
+//            eSim.set("visibleStaticSim", "electricField");//will cause render
 
 
             //create charge distribution
