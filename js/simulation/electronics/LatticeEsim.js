@@ -77,14 +77,14 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
                 return;
             }
 
-            var eFieldMat = [];
+            var potentialMat = [];
             //init size of field mat and fill with zeros, +2 puts a shell of zeros at boundary (infinity)
             for (var x=0;x<resolution*this.cells.length+2;x++){
-                eFieldMat.push([]);
+                potentialMat.push([]);
                 for (var y=0;y<resolution*this.cells[0].length+2;y++){
-                    eFieldMat[x].push([]);
+                    potentialMat[x].push([]);
                     for (var z=0;z<resolution*this.cells[0][0].length+2;z++){
-                        eFieldMat[x][y].push(0);
+                        potentialMat[x][y].push(0);
                     }
                 }
             }
@@ -95,7 +95,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
                 for (var i=0;i<resolution;i++){
                     for (var j=0;j<resolution;j++){
                         for (var k=0;k<resolution;k++){
-                            if (cell) eFieldMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] =
+                            if (cell) potentialMat[resolution*x+i+1][resolution*y+j+1][resolution*z+k+1] =
                                 conductorGroups[cell.getConductorGroupNum()].voltage;
                         }
                     }
@@ -109,8 +109,8 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             });
 
 
-            //create potential field
-            var potentialData = numeric.clone(eFieldMat);
+            //create raw potential field
+            var potentialData = numeric.clone(potentialMat);
             if (eSim.get("rawPotentialField")){
                 eSim.get("rawPotentialField").setData(potentialData, offset, resolution, eSim.get("simZHeight"), dataRange);
             } else {
@@ -120,35 +120,76 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
 
 
             for (var i=0;i<numRelaxationSteps;i++){
-                var temp = numeric.clone(eFieldMat);
-                console.log(temp[5][5][4]);
+                var temp = numeric.clone(potentialMat);
                 for (var x=0;x<temp.length;x++){
                     for (var y=0;y<temp[x].length;y++){
                         for (var z=0;z<temp[x][y].length;z++){
                             if (potentialData[x][y][z] != 0) continue;
                             var avg = 0;
-                            if (x > 0) avg += eFieldMat[x-1][y][z];
-                            if (x < temp.length-1) avg += eFieldMat[x+1][y][z];
-                            if (y > 0) avg += eFieldMat[x][y-1][z];
-                            if (y < temp[x].length-1) avg += eFieldMat[x][y+1][z];
-                            if (z > 0) avg += eFieldMat[x][y][z-1];
-                            if (z < temp[x][y].length-1) avg += eFieldMat[x][y][z+1];
+                            if (x > 0) avg += potentialMat[x-1][y][z];
+                            if (x < temp.length-1) avg += potentialMat[x+1][y][z];
+                            if (y > 0) avg += potentialMat[x][y-1][z];
+                            if (y < temp[x].length-1) avg += potentialMat[x][y+1][z];
+                            if (z > 0) avg += potentialMat[x][y][z-1];
+                            if (z < temp[x][y].length-1) avg += potentialMat[x][y][z+1];
                             temp[x][y][z] = avg/6.0;
                         }
                     }
                 }
-                eFieldMat = numeric.clone(temp);
+                potentialMat = temp;
                 console.log("hi");
             }
 
-            //create electric field
+            //create potential field
             if (eSim.get("potentialField")){
-                eSim.get("potentialField").setData(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange);
+                eSim.get("potentialField").setData(potentialMat, offset, resolution, eSim.get("simZHeight"), dataRange);
             } else {
-                eSim.set("potentialField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange));
+                eSim.set("potentialField", new ESimField(potentialMat, offset, resolution, eSim.get("simZHeight"), dataRange));
             }
             eSim.set("visibleStaticSim", "potentialField");//will cause render
 
+
+            //create electric field
+            var eFieldMat = numeric.clone(potentialMat);
+            for (var x=0;x<eFieldMat.length-1;x++){
+                for (var y=0;y<eFieldMat[x].length-1;y++){
+                    for (var z=0;z<eFieldMat[x][y].length-1;z++){
+                        var currentVal = eFieldMat[x][y][z];
+                        eFieldMat[x][y][z] = Math.sqrt(Math.pow(eFieldMat[x+1][y][z]-currentVal, 2) + Math.pow(eFieldMat[x][y+1][z]-currentVal, 2) + Math.pow(eFieldMat[x][y][z+1]-currentVal, 2))
+                    }
+                }
+            }
+            if (eSim.get("electricField")){
+                eSim.get("electricField").setData(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange);
+            } else {
+                eSim.set("electricField", new ESimField(eFieldMat, offset, resolution, eSim.get("simZHeight"), dataRange));
+            }
+            eSim.set("visibleStaticSim", "electricField");//will cause render
+
+
+            //create charge distribution
+            var chargeMat = numeric.clone(potentialMat);
+            for (var x=0;x<eFieldMat.length-1;x++){
+                for (var y=0;y<eFieldMat[x].length-1;y++){
+                    for (var z=0;z<eFieldMat[x][y].length-1;z++){
+                        var sum = 0;
+                        if (x > 0) sum += potentialMat[x-1][y][z];
+                        if (x < temp.length-1) sum += potentialMat[x+1][y][z];
+                        if (y > 0) sum += potentialMat[x][y-1][z];
+                        if (y < temp[x].length-1) sum += potentialMat[x][y+1][z];
+                        if (z > 0) sum += potentialMat[x][y][z-1];
+                        if (z < temp[x][y].length-1) sum += potentialMat[x][y][z+1];
+                        chargeMat[x][y][z] = 10*(sum + 6*eFieldMat[x][y][z]);
+                    }
+                }
+            }
+            if (eSim.get("chargeField")){
+                eSim.get("chargeField").setData(chargeMat, offset, resolution, eSim.get("simZHeight"), dataRange);
+            } else {
+                eSim.set("chargeField", new ESimField(chargeMat, offset, resolution, eSim.get("simZHeight"), dataRange));
+            }
+            eSim.set("visibleStaticSim", "chargeField");//will cause render
+//            -10*(P15+Q14+R15+Q16-4*Q15)
 
         },
 
