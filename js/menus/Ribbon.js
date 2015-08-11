@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
 
             this.listenTo(this.model, "change:ribbonIsVisible", this._changeVisibility);
             this.listenTo(this.model, "change:cellMode", this.render);
+            this.listenTo(this.model, "change:currentNav", this.render);
             this.listenTo(this.model, "change:deleteMode", this.render);
             this.listenTo(this.model, "change:highlightMode", this.render);
             this.listenTo(this.model, "change:cellsVisible", this.render);
