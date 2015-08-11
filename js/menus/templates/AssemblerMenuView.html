@@ -1,3 +1,6 @@
+<% if (numCells == 0){ %>
+    <div class="inlineWarning">No cells in assembly!</div>
+<% } %>
 Machine: &nbsp;&nbsp;
     <div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachines[machineName].name %><span class="caret"></span></button>

@@ -91,7 +91,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
 
         _calculateNumMaterials: function(){//todo calc length of gik cells as separate material types
-            this.set("allCAMMaterialTypes", materials.getChildCellTypes(lattice.sparseCells, true));
+            this.set("allCAMMaterialTypes", materials.getChildCellTypes(lattice.sparseCells, true) || []);
         },
 
 
