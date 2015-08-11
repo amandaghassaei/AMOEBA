@@ -432,6 +432,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _updateForMode: function(){
             var cellMode = appState.get("cellMode");
             var numCells = this.get("numCells");
+            if (cellMode == "hide"){
+                this._iterCells(this.sparseCells, function(cell){
+                    if (cell) cell.hide();
+                });
+                three.render();
+                return;
+            }
+            if (appState.previous("cellMode") == "hide"){
+                this._iterCells(this.sparseCells, function(cell){
+                    if (cell) cell.show();
+                });
+            }
             this._iterCells(this.sparseCells, function(cell){
                 if (cell) cell.setMode(cellMode, function(){
                     if (--numCells <= 0) three.render();

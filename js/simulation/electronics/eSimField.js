@@ -5,7 +5,7 @@
 
 //hold and display data for various fields
 
-define(['underscore', 'threeModel'], function(_, three){
+define(['underscore', 'threeModel', 'lattice'], function(_, three, lattice){
 
     function ESimField(data, offset, resolution, height, dataRange){
 
@@ -36,7 +36,7 @@ define(['underscore', 'threeModel'], function(_, three){
     };
 
     ESimField.prototype._setObject3DPosition = function(offset, resolution, height){
-        this._object3D.position.set(offset.x, offset.y, offset.z+height/resolution);
+        this._object3D.position.set(offset.x, offset.y, offset.z+height*lattice.zScale()/resolution);
     };
 
     ESimField.prototype._createThreeObjects = function(data, offset, size, height, object3D){

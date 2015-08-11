@@ -61,7 +61,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             this.listenTo(this, "change:materialType", this._materialTypeChanged);
             this.listenTo(this, "change:gikLength", this._gikLengthChanged);
 
-            this.downKeys = {};//track keypresses to prevent repeat keystrokeson hold
+            this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
+            this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
 
             if (this.isMobile()) this.set("menuIsVisible", false);
         },
@@ -169,6 +170,13 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                     break;
                 case 68://d delete mode
                     this.set("deleteMode", state);
+                    break;
+                case 72://h hide mode
+                    if (state) {
+                        this.lastCellMode = this.get("cellMode");
+                        this.set("cellMode", "hide");
+                    }
+                    else this.set("cellMode", this.lastCellMode);
                     break;
                 case 69://e
     //                if (currentTab != "sketch") return;
