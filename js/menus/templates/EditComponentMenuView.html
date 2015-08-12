@@ -1,2 +1,33 @@
-<a href="#" id="exitComponentEdit" class=" btn btn-block btn-lg btn-default">Cancel / Exit</a><br/>
-
+Parent: &nbsp;&nbsp;
+    <div class="btn-group">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">my parent<span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <li><a class="component dropdownSelector" data-property="parent" data-value="thing" href="#">thing 1</a></li>
+            <li><a class="component dropdownSelector" data-property="parent" data-value="thing" href="#">thing 2</a></li>
+        </ul>
+    </div><br/><br/>
+Children: &nbsp;&nbsp;
+<div class="btn-group">
+    <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">+ Add Child<span class="caret"></span></button>
+    <ul role="menu" class="dropdown-menu">
+        <li><a class="component dropdownSelector" data-property="parent" data-value="thing" href="#">thing 1</a></li>
+        <li><a class="component dropdownSelector" data-property="parent" data-value="thing" href="#">thing 2</a></li>
+    </ul>
+</div><br/>
+    child 1 <a href="#" class="removeChild">Remove Child</a><br/>
+    child 2 <a href="#" class="removeChild">Remove Child</a><br/><br/>
+STL: &nbsp;&nbsp;STL Name<br/><br/>
+<a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>
+Offset (xyz):&nbsp;&nbsp;
+    <input data-property="translation" data-key="x" value="<%= translation.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
+    <input data-property="translation" data-key="y" value="<%= translation.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
+    <input data-property="translation" data-key="z" value="<%= translation.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
+Rotation (xyz):&nbsp;&nbsp;
+    <input data-property="rotation" data-key="x" value="<%= rotation.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
+    <input data-property="rotation" data-key="y" value="<%= rotation.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
+    <input data-property="rotation" data-key="z" value="<%= rotation.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
+Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput component" type="text"><br/><br/>
+<a id="finishComponent" href="#" class="btn btn-block btn-lg btn-success">Save Component</a><br/>
+<a id="cancelComponent" href="#" class="btn btn-halfWidth btn-lg btn-default">Cancel / Exit</a>
+<a id="deleteComponent" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default"><span class="fui-trash"></span> Delete</a><br/><br/>
+<a id="saveComponent" href="#" class="btn btn-block btn-lg pull-right btn-default">Save Component To File</a><br/><br/>

@@ -9,7 +9,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!assemblerSet
     return MenuParentView.extend({
 
         events: {
-            "click .editMachineComponent":                          "_editMachineComponent"
+            "click .editMachineComponent":                          "_editMachineComponent",
+            "click .editMachineCode":                               "_editMachineCode"
         },
 
         _initialize: function(){
@@ -19,6 +20,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!assemblerSet
         _editMachineComponent: function(e){
             e.preventDefault();
             this.model.set("currentNav", "navMachineComponent");
+        },
+
+        _editMachineCode: function(e){
+            e.preventDefault();
+            console.log("edit code");
         },
 
         _makeTemplateJSON: function(){
