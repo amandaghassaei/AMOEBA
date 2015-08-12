@@ -1,4 +1,4 @@
-/**
+ /**
  * Created by aghassaei on 1/7/15.
  */
 
@@ -67,6 +67,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             var navSelection = this.model.get("currentNav");
             if (navSelection == "electronicNavSim" || navSelection == "mechanicalNavSim") navSelection = "navSim";
             if (navSelection == "navComposite" || navSelection == "navMaterial") navSelection = "navDesign";
+            if (navSelection == "navMachineComponent") navSelection = "navAssemble";
             _.each($(".menuHoverControls"), function(link){
                 var $link = $(link);
                 if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight
