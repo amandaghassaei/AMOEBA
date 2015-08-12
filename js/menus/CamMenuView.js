@@ -2,7 +2,8 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!camMenuTemplate'], function($, _, MenuParentView, plist, cam, lattice, template){
+define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'text!camMenuTemplate'],
+    function($, _, MenuParentView, camPlist, cam, lattice, template){
 
     return MenuParentView.extend({
 
@@ -35,7 +36,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'text!c
         },
 
         _makeTemplateJSON: function(){
-            var data = _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), plist);
+            var data = _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), camPlist);
             if (cam.get("stockPositionRelative")){
                 var relStockPos = {};
                 relStockPos.x = data.stockPosition.x - data.originPosition.x;

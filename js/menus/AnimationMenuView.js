@@ -2,8 +2,8 @@
  * Created by aghassaei on 2/1/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!animationMenuTemplate'],
-    function($, _, MenuParentView, plist, cam, template){
+define(['jquery', 'underscore', 'menuParent', 'cam', 'text!animationMenuTemplate'],
+    function($, _, MenuParentView, cam, template){
 
     return MenuParentView.extend({
 

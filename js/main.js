@@ -23,7 +23,7 @@ require.config({
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
 
-        //plists
+        //plist
         plist: 'plists/PList',
 
         //models
@@ -170,6 +170,7 @@ require.config({
 
         //cam
         cam: 'cam/CAM',
+        camPlist: 'plists/CamPList',
 
         //assemblers
         assembler: 'cam/assemblers/Assembler',

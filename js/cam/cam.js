@@ -2,8 +2,8 @@
  * Created by aghassaei on 3/10/15.
  */
 
-define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'plist', 'materials'],
-    function(_, THREE, Backbone, appState, lattice, three, plist, materials){
+define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel', 'camPlist', 'materials'],
+    function(_, THREE, Backbone, appState, lattice, three, camPlist, materials){
 
     var Cam = Backbone.Model.extend({
 
@@ -110,8 +110,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         _setMachineDefaults: function(machineName){
             var self = this;
-            if (plist.allMachines[machineName].defaults){
-                _.each(plist.allMachines[machineName].defaults, function(value, key){
+            if (camPlist.allMachines[machineName].defaults){
+                _.each(camPlist.allMachines[machineName].defaults, function(value, key){
                     self.set(key, value, {silent:true});
                 });
             }
@@ -138,7 +138,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         _setToDefaults: function(){
             //call this each time we switch to assemble tab
-            var availableMachines = plist.machineTypesForLattice[lattice.get("cellType")][lattice.get("connectionType")];
+            var availableMachines = camPlist.machineTypesForLattice[lattice.get("cellType")][lattice.get("connectionType")];
             if (availableMachines.indexOf(this.get("machineName")) < 0){
                 this.set("machineName", availableMachines[0], {silent:true});
             }

@@ -2,7 +2,8 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'materials', 'text!assemblerMenuTemplate'], function($, _, MenuParentView, plist, cam, lattice, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'materials', 'text!assemblerMenuTemplate'],
+    function($, _, MenuParentView, camPlist, cam, lattice, materials, template){
 
     return MenuParentView.extend({
     
@@ -35,7 +36,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'lattice', 'materi
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), plist, {materials:materials.list});
+            return _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), camPlist, {materials:materials.list});
         },
     
         template: _.template(template)
