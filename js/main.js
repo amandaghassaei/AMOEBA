@@ -169,7 +169,7 @@ require.config({
 
 
         //cam
-        cam: 'cam/CAM',
+        cam: 'cam/Cam',
         camPlist: 'plists/CamPList',
 
         //assemblers
