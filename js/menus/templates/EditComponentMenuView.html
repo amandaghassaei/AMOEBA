@@ -1,7 +1,7 @@
 Name: &nbsp;&nbsp;<input data-property="name" value="<%= components[editingComponent].name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput component" type="text"><br/><br/>
 Parent: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= components[editingComponent].parent || "No Parent Selected" %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= components[components[editingComponent].parent].name || "No Parent Selected" %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <% _.each(components, function(component){ %>
                 <% if (component.id == editingComponent) return; %>

@@ -157,17 +157,17 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
 
     Component.prototype.toJSON = function(){
-        var childIds = [];
+        var childIDs = [];
         _.each(this.children, function(child){
-            childIds.push(child.id);
+            childIDs.push(child.id);
         });
-        var parentName = "";
-        if (this.parent) parentName = this.parent.name;
+        var parentID = "";
+        if (this.parent) parentID = this.parent.id;
         return {
             id: this.id,
             name: this.name,
-            children: childIds,
-            parent: parentName,
+            children: childIDs,
+            parent: parentID,
             translation: this.object3D.position,
             scale: this.object3D.scale.x,
             rotation: this.object3D.rotation
