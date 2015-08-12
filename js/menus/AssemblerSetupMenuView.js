@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!assemblerSet
 
         _editMachineComponent: function(e){
             e.preventDefault();
+            cam.set("editingComponent", $(e.target).data("id"));
             this.model.set("currentNav", "navMachineComponent");
         },
 
@@ -28,7 +29,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!assemblerSet
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), cam.toJSON());
+            return _.extend(this.model.toJSON(), cam.toJSON(), cam.get("assembler").toJSON());
         },
 
         template: _.template(template)

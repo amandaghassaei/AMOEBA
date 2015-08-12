@@ -8,6 +8,7 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     function Assembler(){
 
+        this.components = {};
         this.stock = this._buildStock();
         this._positionStockRelativeToEndEffector(this.stock);
 
@@ -31,8 +32,19 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
         var allSTLs = this._getSTLs();
         var self = this;
         _.each(allSTLs, function(geometry, name){
-            self[name] = new Component(geometry, assemblerMaterial);
+            var component = new Component(geometry, assemblerMaterial, name);
+            self.components[component.getID()] = component;
         });
+    };
+
+    Assembler.prototype.getComponentByName = function(name){
+        return _.find(_.values(this.components), function(component){
+            return component.name == name;
+        });
+    };
+
+    Assembler.prototype.getComponentById = function(id){
+        return this.components[id];
     };
     
     Assembler.prototype._configureAssemblerMovementDependencies = function(){
@@ -46,7 +58,7 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     };
     
     Assembler.prototype._setTranslucent = function(){
-        assemblerMaterial.transparent = (appState.get("currentTab") == "cam");
+        assemblerMaterial.transparent = (appState.get("currentTab") == "cam" || appState.get("currentTab") == "assemblerSetup");
     };
 
     Assembler.prototype.moveMachine = function(){//origin selection
@@ -208,15 +220,15 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     
     
-    
+    //helper
     
     Assembler.prototype.destroy = function(){
-        this.stock.destroy();
-        this.zAxis.destroy();
-        this.xAxis.destroy();
-        this.yAxis.destroy();
-        this.frame.destroy();
-        this.substrate.destroy();
+        var self = this;
+        _.each(this.components, function(component, index){
+            component.destroy();
+            self[index] = null;
+        });
+        this.components = null;
         three.sceneRemove(this.object3D);
         this.stock = null;
         this.zAxis = null;
@@ -226,6 +238,21 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
         this.substrate = null;
         this.object3D = null;
     };
+
+    Assembler.prototype.toJSON = function(){
+        var componentsJSON = {};
+        _.each(this.components, function(component, id){
+            componentsJSON[id] = component.toJSON();
+        });
+        return {
+            components: componentsJSON,
+            translation: this.object3D.position,
+            scale: this.object3D.scale.x,
+            rotation: this.object3D.rotation
+        }
+    };
+
+
 
     return Assembler;
 });

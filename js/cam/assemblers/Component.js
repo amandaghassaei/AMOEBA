@@ -5,9 +5,66 @@
 
 define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
-    function Component(geometry, material){
+    var id = 0;
+
+    function Component(geometry, material, name){
         this.object3D = new THREE.Mesh(geometry, material);
+        this.id = "id" + id++;
+        this.name = name || "";
+        this.parent = null;
+        this.children = [];
     }
+
+    //assembler setup
+
+    Component.prototype.addChild = function(child){
+        if (this.checkAncestry(child)){
+            console.warn("can't add parent as child");
+            return;
+        }
+        if (this.children.indexOf(child)>-1){
+            console.warn("already added as a child");
+            return;
+        }
+        if (child.addParent){//todo stock has no "addParent" or id
+            this.children.push(child);
+            child.addParent(this);
+        }
+        this.object3D.add(child.getObject3D());
+    };
+
+    Component.prototype.checkAncestry = function(component){//return true if this is a parent/grandparent/great-grandparent...
+        if (this.parent){
+            if (this.parent === component) return true;
+            else return this.parent.checkAncestry(component);
+        }
+        return false;
+    };
+
+    Component.prototype.removeChild = function(child){
+        if (this.children.indexOf(child) == -1){
+            console.warn("not a child");
+            return;
+        }
+        this.children.splice(this.children.indexOf(child),1);
+        this.object3D.remove(child.getObject3D());
+    };
+
+    Component.prototype.addParent = function(parent){
+        if (this.parent) {
+            this.parent.removeChild(this);
+            this.parent = null;
+        }
+        this.parent = parent;
+    };
+
+    Component.prototype.getID = function(){
+        return this.id;
+    };
+
+
+
+    //simulation animation
 
     Component.prototype.getPosition = function(){
         return this.object3D.position.clone();
@@ -15,10 +72,6 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
     Component.prototype.getObject3D = function(){
         return this.object3D;
-    };
-
-    Component.prototype.addChild = function(child){
-        this.object3D.add(child.getObject3D());
     };
 
     Component.prototype.moveTo = function(target, speed, callback){
@@ -84,9 +137,41 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         }, 10);
     };
 
+
+
+
+
+    //helper
+
     Component.prototype.destroy = function(){
-        if (this.object3D && this.object3D.parent) this.object3D.parent.remove(this.object3D);
+        if (this.parent) this.parent.removeChild(this);
+        this.parent = null;
+        var self = this;
+        _.each(this.children, function(child){
+            self.removeChild(child);
+        });
+        this.children = null;
+        this.name = null;
         this.object3D = null;
+    };
+
+
+    Component.prototype.toJSON = function(){
+        var childIds = [];
+        _.each(this.children, function(child){
+            childIds.push(child.id);
+        });
+        var parentName = "";
+        if (this.parent) parentName = this.parent.name;
+        return {
+            id: this.id,
+            name: this.name,
+            children: childIds,
+            parent: parentName,
+            translation: this.object3D.position,
+            scale: this.object3D.scale.x,
+            rotation: this.object3D.rotation
+        }
     };
 
     return Component;

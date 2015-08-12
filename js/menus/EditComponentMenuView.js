@@ -17,27 +17,33 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
         },
 
         _initialize: function(){
-
         },
 
         _save: function(e){
             e.preventDefault();
             console.log("save component");
+            this._stopEditing();
         },
 
         _cancel: function(e){
             e.preventDefault();
-            this.model.set("currentNav", "navAssemble");
+            this._stopEditing();
         },
 
         _delete: function(e){
             e.preventDefault();
             console.log("delete component");
+            this._stopEditing();
         },
 
         _saveToFile: function(e){
             e.preventDefault();
             console.log("save component to file");
+        },
+
+        _stopEditing: function(){
+            cam.set("editingComponent", null);
+            this.model.set("currentNav", "navAssemble");
         },
 
         _removeChild: function(e){
@@ -46,9 +52,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), cam.toJSON(), {translation:{x:1, y:2, z:3}, scale:2, rotation:{x:0,y:90,z:127}});
+            return _.extend(this.model.toJSON(), cam.toJSON(), cam.get("assembler").toJSON());
         },
 
         template: _.template(template)
+
     });
 });

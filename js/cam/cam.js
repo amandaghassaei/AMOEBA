@@ -16,6 +16,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             assembler: null,
             exporter: null,
 
+            editingComponent: null,
+
             dataOut: "",
             needsPostProcessing: true,
             editsMadeToProgram: false,//warn the user that they will override changes
@@ -84,7 +86,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             this._navChanged();
     //        this._initOriginAndStock();
 
-
+            this.selectMachine();
         },
 
 
@@ -186,7 +188,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         isVisible: function(){
             var currentTab = appState.get("currentTab");
-            return (currentTab == "cam" || currentTab == "animate" || currentTab == "send");
+            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animate" || currentTab == "send");
         },
 
 
