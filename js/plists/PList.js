@@ -36,6 +36,9 @@ define(['three'], function(THREE){
 //                editCamOutput: "Edit",
                 animate:"Preview"
             },
+            navMachineComponent:{
+                editComponent: "Edit Component"
+            },
             navComm:{
                 setupComm: "Setup",
                 send: "Send"

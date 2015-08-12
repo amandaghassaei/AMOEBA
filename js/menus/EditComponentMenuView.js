@@ -1,24 +1,24 @@
 /**
- * Created by aghassaei on 8/11/15.
+ * Created by aghassaei on 8/12/15.
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!assemblerSetupMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponentMenuTemplate'],
     function($, _, MenuParentView, plist, cam, template){
 
     return MenuParentView.extend({
 
         events: {
-            "click .editMachineComponent":                          "_editMachineComponent"
+            "click #exitComponentEdit":                                 "_exit"
         },
 
         _initialize: function(){
 
         },
 
-        _editMachineComponent: function(e){
+        _exit: function(e){
             e.preventDefault();
-            this.model.set("currentNav", "navMachineComponent");
+            this.model.set("currentNav", "navAssemble");
         },
 
         _makeTemplateJSON: function(){

@@ -128,6 +128,7 @@ require.config({
         mStaticMenu: 'menus/MStaticMenuView',
         mDynamicMenu: 'menus/MDynamicMenuView',
         assemblerSetupMenu: 'menus/AssemblerSetupMenuView',
+        editComponentMenu: 'menus/EditComponentMenuView',
 
         //templates
         navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
@@ -156,6 +157,7 @@ require.config({
         mStaticMenuTemplate: 'menus/templates/MStaticMenuView.html',
         mDynamicMenuTemplate: 'menus/templates/MDynamicMenuView.html',
         assemblerSetupMenuTemplate: 'menus/templates/AssemblerSetupMenuView.html',
+        editComponentMenuTemplate: 'menus/templates/EditComponentMenuView.html',
 
         //electronic sim
         eSimPlist: 'plists/ESimPlist',
