@@ -12,7 +12,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
             "click #finishComponent":                                 "_save",
             "click #cancelComponent":                                 "_cancel",
             "click #deleteComponent":                                 "_delete",
-            "click #saveComponent":                                   "_saveToFile",
             "click .removeChild":                                     "_removeChild"
         },
 
@@ -34,11 +33,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
             e.preventDefault();
             console.log("delete component");
             this._stopEditing();
-        },
-
-        _saveToFile: function(e){
-            e.preventDefault();
-            console.log("save component to file");
         },
 
         _stopEditing: function(){

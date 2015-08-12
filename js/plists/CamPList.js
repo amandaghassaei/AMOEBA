@@ -3,7 +3,7 @@
  */
 
 
-define(['three'], function(THREE){
+define([], function(){
 
     return {
 
@@ -34,6 +34,83 @@ define(['three'], function(THREE){
                 relative: false,
                 camProcesses: ["gcode"],
                 numMaterials: 2,
+                components: {
+                    xAxis: {
+                        name: "X Axis",
+                        isLinear: true,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        children: [],
+                        stl: {
+                            filename: "jflsdkjfsd.stl",
+                            offset: {x:0,y:0,z:0},
+                            scale: 1.0,
+                            rotation: {x:0,y:0,z:0}
+                        }
+                    },
+                    yAxis: {
+                        name: "Y Axis",
+                        isLinear: true,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        children: ["zAxis"],
+                        stl: {
+                            filename: "jflsdkjfsd.stl",
+                            offset: {x:0,y:0,z:0},
+                            scale: 1.0,
+                            rotation: {x:0,y:0,z:0}
+                        }
+                    },
+                    zAxis: {
+                        name: "Z Axis",
+                        isLinear: true,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        children: [],
+                        stl: {
+                            filename: "jflsdkjfsd.stl",
+                            offset: {x:0,y:0,z:0},
+                            scale: 1.0,
+                            rotation: {x:0,y:0,z:0}
+                        }
+                    },
+                    frame: {
+                        name: "Frame",
+                        isLinear: true,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        children: [],
+                        stl: {
+                            filename: "jflsdkjfsd.stl",
+                            offset: {x:0,y:0,z:0},
+                            scale: 1.0,
+                            rotation: {x:0,y:0,z:0}
+                        }
+                    },
+                    substrate: {
+                        name: "Substrate",
+                        isLinear: true,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        children: [],
+                        stl: {
+                            filename: "jflsdkjfsd.stl",
+                            offset: {x:0,y:0,z:0},
+                            scale: 1.0,
+                            rotation: {x:0,y:0,z:0}
+                        }
+                    }
+                },
                 defaults: {
                     camStrategy: "raster",
                     placementOrder: "XYZ",//used for raster strategy entry
@@ -41,7 +118,7 @@ define(['three'], function(THREE){
                     rapidHeight:3,
                     rapidHeightRelative: true,
                     safeHeight: 0.05,
-                    originPosition: new THREE.Vector3(0,0,0),
+                    originPosition: {x:0,y:0,z:0},
                     rapidSpeeds:{xy: 3, z: 2},
                     feedRate:{xy: 0.1, z: 0.1}
                 }
