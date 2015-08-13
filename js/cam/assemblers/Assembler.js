@@ -15,6 +15,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.rotation = json.rotation;
         this.translation = json.translation;
         this.scale = json.scale;
+        this.shouldPickUpStock = json.shouldPickUpStock;
+        this.relative = json.relative;
+        this.camProcesses = json.camProcesses;
+        this.numMaterials = json.numMaterials;
+
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
@@ -118,8 +123,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         assemblerMaterial.transparent = (appState.get("currentTab") == "cam" || appState.get("currentTab") == "assemblerSetup");
     };
 
-    Assembler.prototype.moveMachine = function(){//origin selection
-        var origin = cam.get("originPosition");
+    Assembler.prototype.moveMachine = function(origin){//origin selection
         this.object3D.position.set(origin.x, origin.y, origin.z);
         three.render();
     };
@@ -305,7 +309,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             components: componentsJSON,
             translation: this.translation,
             scale: this.scale,
-            rotation: this.rotation
+            rotation: this.rotation,
+            shouldPickUpStock: this.shouldPickUpStock,
+            relative: this.relative,
+            camProcesses: this.camProcesses,
+            numMaterials: this.numMaterials
         }
     };
 

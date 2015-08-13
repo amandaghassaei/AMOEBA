@@ -52,7 +52,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             //bind events
             this.listenTo(appState, "change:currentTab", this._tabChanged);
             this.listenTo(appState, "change:currentNav", this._navChanged);
-//            this.listenTo(this, "change:originPosition", this._moveOrigin);
+            this.listenTo(this, "change:originPosition", this._moveOrigin);
 //            this.listenTo(this, "change:stockPosition", this._moveStock);
 //            this.listenTo(this,
 //                    "change:originPosition " +
@@ -216,7 +216,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
     //        this.get("origin").position.set(position.x, position.y, position.z);
             if (this.get("stockFixed")) this._updateStockPosToOrigin(position, this.previous("originPosition"));
             three.render();
-            if (this.get("assembler")) this.get("assembler").moveMachine();
+            if (this.get("assembler")) this.get("assembler").moveMachine(position);
         },
 
         _updateStockPosToOrigin: function(newOrigin, lastOrigin){

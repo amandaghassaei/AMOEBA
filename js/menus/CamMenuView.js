@@ -36,7 +36,7 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'tex
         },
 
         _makeTemplateJSON: function(){
-            var data = _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), camPlist);
+            var data = _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), camPlist, cam.get("assembler").toJSON());
             if (cam.get("stockPositionRelative")){
                 var relStockPos = {};
                 relStockPos.x = data.stockPosition.x - data.originPosition.x;

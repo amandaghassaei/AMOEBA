@@ -118,9 +118,9 @@ define([], function(){
                     camStrategy: "raster",
                     placementOrder: "XYZ",//used for raster strategy entry
                     camProcess: "gcode",
-                    rapidHeight:3,
+                    rapidHeight:10,
                     rapidHeightRelative: true,
-                    safeHeight: 0.05,
+                    safeHeight: 0.5,
                     originPosition: {x:0,y:0,z:0},
                     rapidSpeeds:{xy: 3, z: 2},
                     feedRate:{xy: 0.1, z: 0.1}
