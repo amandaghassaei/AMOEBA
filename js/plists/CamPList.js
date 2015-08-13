@@ -59,8 +59,8 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: "frame",
-                        children: [],
+                        parent: "substrate",
+                        children: ["frame"],
                         stl: {
                             filename: "assets/stls/stapler/yAxis.stl",
                             offset: {x:0,y:0,z:0},
@@ -89,8 +89,8 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: "substrate",
-                        children: ["xAxis", "yAxis"],
+                        parent: "yAxis",
+                        children: ["xAxis"],
                         stl: {
                             filename: "assets/stls/stapler/frame.stl",
                             offset: {x:0,y:0,z:0},
