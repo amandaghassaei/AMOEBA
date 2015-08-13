@@ -175,8 +175,6 @@ require.config({
         //assemblers
         assembler: 'cam/assemblers/Assembler',
         component: 'cam/assemblers/Component',
-        stapler: 'cam/assemblers/StaplerAssembler',
-        dualStapler: 'cam/assemblers/DualStaplerAssembler',
 
         //processes
         gcode: 'cam/processes/GCodeExporter',

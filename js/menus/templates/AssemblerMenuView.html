@@ -31,7 +31,7 @@ Strategy: &nbsp;&nbsp;
         </ul>
     </div><br/><br/>
 <% if (camStrategy == "raster"){ %>
-    Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder" type="text"><br/>
+    Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder halfWidth" type="text"><br/><br/>
 <% } %>
 <% if (allMachines[machineName].numMaterials > -1 && allMachines[machineName].numMaterials < allCAMMaterialTypes.length){ %>
     <div class="inlineWarning">Number of materials in assembly exceeds available materials ( <%= allMachines[machineName].numMaterials %> ) for assembler type.</div>
