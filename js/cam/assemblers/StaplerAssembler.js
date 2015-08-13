@@ -44,12 +44,7 @@ define(['underscore', 'assembler', 'stlLoader', 'gikSuperCell',
     };
 
     StaplerAssembler.prototype._configureAssemblerMovementDependencies = function(){
-        this.getComponentByName("zAxis").addChild(this.stock);
-        this.getComponentByName("xAxis").addChild(this.getComponentByName("zAxis"));
-        this.getComponentByName("frame").addChild(this.getComponentByName("xAxis"));
-        this.getComponentByName("frame").addChild(this.getComponentByName("yAxis"));
-        this.getComponentByName("substrate").addChild(this.getComponentByName("frame"));
-        this.object3D.add(this.getComponentByName("substrate").getObject3D());
+
     };
 
     StaplerAssembler.prototype._getSTLs = function(){

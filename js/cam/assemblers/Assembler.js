@@ -2,24 +2,93 @@
  * Created by aghassaei on 5/28/15.
  */
 
-define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'component'], function(_, appState, lattice, THREE, three, cam, Component){
+define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component'],
+    function(_, appState, lattice, THREE, three, cam, Component){
     
     var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.5});
-    
-    function Assembler(){
+    var stlLoader = new THREE.STLLoader();
 
+    function Assembler(id, json){
+
+        this.id = id;
         this.components = {};
-        this.stock = this._buildStock();
-        this._positionStockRelativeToEndEffector(this.stock);
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
-        this._buildAssemblerComponents();
-        this._configureAssemblerMovementDependencies();
-        three.render();
+
+//        var self = this;
+//        this._buildStock(function(stock){
+//            self.stock = stock;
+//            self._positionStockRelativeToEndEffector(stock);
+//        });
+
+        if (json.components && _.keys(json.components).length > 0) {
+            var componentsJSON = json.components;
+            this.components = this._buildAssemblerComponents(componentsJSON);
+            this._loadSTLs(componentsJSON, this.components);
+            this._configureAssemblerMovementDependencies(componentsJSON, this.components, this.object3D);
+        }
 
         this.setVisibility(cam.isVisible());
+        three.render();
     }
+
+    Assembler.prototype.getID = function(){
+        return this.id;
+    };
+
+    Assembler.prototype._getStlNames = function(json){
+        var stls = {};
+        _.each(json, function(component, id){
+            if (component === undefined || component.stl === undefined || component.stl.filename === undefined){
+                console.warn("no stl found for component " + component.name);
+            }
+            stls[id] = "bin!" + component.stl.filename;
+        });
+        return stls;
+    };
+
+    Assembler.prototype._loadSTLs = function(json, components){
+        var stlFilenames = this._getStlNames(json);
+
+        function geometryPreProcess(geometry){//todo do this better
+            if(geometry === undefined || (geometry.vertices && geometry.vertices.length == 0)) return null;
+
+            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-4.0757, -4.3432, -6.2154));
+            geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+
+            var unitScale = 20;
+            geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
+            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));
+            return geometry;
+        }
+
+        _.each(stlFilenames, function(filename, id){
+            require([filename], function(geo){
+                geo = geometryPreProcess(stlLoader.parse(geo));
+                if (geo === null) {
+                    console.warn("no geometry loaded for " + filename);
+                    return;
+                }
+                components[id].makeGeometry(geo, assemblerMaterial);
+            });
+        });
+    };
+
+    Assembler.prototype._buildAssemblerComponents = function(componentsJSON){
+        var components = [];
+        _.each(componentsJSON, function(componentJSON, id){
+            components[id] = new Component(id);
+        });
+        return components;
+    };
+
+    Assembler.prototype._configureAssemblerMovementDependencies = function(json, components, object3D){
+        _.each(json, function(componentJSON, id){
+            if (componentJSON.parent) components[componentJSON.parent].addChild(components[id]);
+            else object3D.add(components[id].getObject3D());
+        });
+    };
     
     Assembler.prototype._buildStock = function(callback){
         lattice.makeCellForLatticeType({}, callback);
@@ -27,29 +96,9 @@ define(['underscore', 'appState', 'lattice', 'three', 'threeModel', 'cam', 'comp
     
     Assembler.prototype._positionStockRelativeToEndEffector = function(stock){
     };
-    
-    Assembler.prototype._buildAssemblerComponents = function(){
-        var allSTLs = this._getSTLs();
-        var self = this;
-        _.each(allSTLs, function(geometry, name){
-            var component = new Component(geometry, assemblerMaterial, name);
-            self.components[component.getID()] = component;
-        });
-    };
 
-    Assembler.prototype.getComponentByName = function(name){
-        return _.find(_.values(this.components), function(component){
-            return component.name == name;
-        });
-    };
-
-    Assembler.prototype.getComponentById = function(id){
-        return this.components[id];
-    };
     
-    Assembler.prototype._configureAssemblerMovementDependencies = function(){
-        //override in subclasses
-    };
+
     
     Assembler.prototype.setVisibility = function(visible){
         this.object3D.visible = visible;

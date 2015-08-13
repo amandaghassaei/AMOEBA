@@ -52,35 +52,34 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             //bind events
             this.listenTo(appState, "change:currentTab", this._tabChanged);
             this.listenTo(appState, "change:currentNav", this._navChanged);
-            this.listenTo(this, "change:originPosition", this._moveOrigin);
-            this.listenTo(this, "change:stockPosition", this._moveStock);
-            this.listenTo(this,
-                    "change:originPosition " +
-                    "change:stockPosition " +
-                    "change:feedRate " +
-                    "change:rapidSpeeds " +
-                    "change:camProcess " +
-                    "change:camStrategy " +
-                    "change:placementOrder " +
-                    "change:safeHeight " +
-                    "change:stockArraySize " +
-                    "change:stockSeparation " +
-                    "change:multipleStockPositions " +
-                    "change:rapidHeight " +
-                    "change:machineName",
-                this._setNeedsPostProcessing);
-            this.listenTo(lattice,
-                    "change:scale" +
-                    "change:units" +
-                    "change:numCells " +
-                    "change:cellType " +
-                    "change:connectionType",
-                this._setNeedsPostProcessing);
-            this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
+//            this.listenTo(this, "change:originPosition", this._moveOrigin);
+//            this.listenTo(this, "change:stockPosition", this._moveStock);
+//            this.listenTo(this,
+//                    "change:originPosition " +
+//                    "change:stockPosition " +
+//                    "change:feedRate " +
+//                    "change:rapidSpeeds " +
+//                    "change:camProcess " +
+//                    "change:camStrategy " +
+//                    "change:placementOrder " +
+//                    "change:safeHeight " +
+//                    "change:stockArraySize " +
+//                    "change:stockSeparation " +
+//                    "change:multipleStockPositions " +
+//                    "change:rapidHeight " +
+//                    "change:machineName",
+//                this._setNeedsPostProcessing);
+//            this.listenTo(lattice,
+//                    "change:scale" +
+//                    "change:units" +
+//                    "change:numCells " +
+//                    "change:cellType " +
+//                    "change:connectionType",
+//                this._setNeedsPostProcessing);
+//            this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
 
-            this.listenTo(lattice, "change:partType", this._updatePartType);
-            this.listenTo(lattice, "change:cellType change:connectionType", this._updateCellType);
-            this.listenTo(appState, "change:cellMode", this._updateCellMode);
+//            this.listenTo(lattice, "change:partType", this._updatePartType);
+//            this.listenTo(appState, "change:cellMode", this._updateCellMode);
             this.listenTo(this, "change:machineName", this.selectMachine);
 
             this._navChanged();
@@ -98,23 +97,29 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
 
         selectMachine: function(){
+
             var machineName = this.get("machineName");
-            if (this.get("assembler")) this.get("assembler").destroy();
-            this.set("assembler", null);
-            this._setMachineDefaults(machineName);
+            if (this.get("assembler")){
+                if (this.get("assembler").getID() == machineName) return;
+                else {
+                    this.get("assembler").destroy();
+                    this.set("assembler", null);
+                }
+            }
+            var machineJSON = camPlist.allMachines[machineName];
+            if (machineJSON.defaults) this._setMachineDefaults(machineJSON.defaults);
+
             var self = this;
-            require([machineName], function(MachineClass){
-                self.set('assembler', new MachineClass());
+            require(['assembler'], function(Assembler){
+                self.set('assembler', new Assembler(machineName, machineJSON));
             });
         },
 
-        _setMachineDefaults: function(machineName){
+        _setMachineDefaults: function(defaults){
             var self = this;
-            if (camPlist.allMachines[machineName].defaults){
-                _.each(camPlist.allMachines[machineName].defaults, function(value, key){
-                    self.set(key, value, {silent:true});
-                });
-            }
+            _.each(defaults, function(value, key){
+                self.set(key, value, {silent:true});
+            });
         },
 
         makeProgramEdits: function(data){
@@ -127,16 +132,21 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
 
 
+
+
+
+
+
         //events
 
         _navChanged: function(){
             if (appState.get("currentNav") == "navAssemble") {
-                this._setToDefaults();
+                this._setDefaultMachineForLatticeType();
                 this._calculateNumMaterials();
             }
         },
 
-        _setToDefaults: function(){
+        _setDefaultMachineForLatticeType: function(){
             //call this each time we switch to assemble tab
             var availableMachines = camPlist.machineTypesForLattice[lattice.get("cellType")][lattice.get("connectionType")];
             if (availableMachines.indexOf(this.get("machineName")) < 0){
@@ -159,12 +169,6 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                 appState.set("basePlaneIsVisible", !visible);
             }
             three.render();
-        },
-
-        _updateCellType: function(){
-            if (this.get("assembler")) this.get("assembler").updateCellType();
-            this.set("machineName", "handOfGod");//todo this should go away with dynamic allocation of this model
-
         },
 
         _updatePartType: function(){
@@ -230,9 +234,18 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             three.render();
         },
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    ///////////////////////////////SIMULATION//////////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+        //simulation
 
         resetSimulation: function(){
             this.set("simLineNumber", 0, {silent:true});
@@ -266,9 +279,19 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         },
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////POST PROCESSING////////////////////////////////////////////////
-    ///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
+
+        //post processing
 
         _setNeedsPostProcessing: function(){
             this.set("needsPostProcessing", true);

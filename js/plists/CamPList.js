@@ -41,10 +41,10 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: null,
-                        children: [],
+                        parent: "frame",
+                        children: ["zAxis"],
                         stl: {
-                            filename: "jflsdkjfsd.stl",
+                            filename: "assets/stls/stapler/xAxis.stl",
                             offset: {x:0,y:0,z:0},
                             scale: 1.0,
                             rotation: {x:0,y:0,z:0}
@@ -56,10 +56,10 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: null,
-                        children: ["zAxis"],
+                        parent: "frame",
+                        children: [],
                         stl: {
-                            filename: "jflsdkjfsd.stl",
+                            filename: "assets/stls/stapler/yAxis.stl",
                             offset: {x:0,y:0,z:0},
                             scale: 1.0,
                             rotation: {x:0,y:0,z:0}
@@ -71,10 +71,10 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: null,
-                        children: [],
+                        parent: "xAxis",
+                        children: [],//stock
                         stl: {
-                            filename: "jflsdkjfsd.stl",
+                            filename: "assets/stls/stapler/zAxis.stl",
                             offset: {x:0,y:0,z:0},
                             scale: 1.0,
                             rotation: {x:0,y:0,z:0}
@@ -86,10 +86,10 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: null,
-                        children: [],
+                        parent: "substrate",
+                        children: ["xAxis", "yAxis"],
                         stl: {
-                            filename: "jflsdkjfsd.stl",
+                            filename: "assets/stls/stapler/frame.stl",
                             offset: {x:0,y:0,z:0},
                             scale: 1.0,
                             rotation: {x:0,y:0,z:0}
@@ -102,9 +102,9 @@ define([], function(){
                         //minBound
                         //maxBound
                         parent: null,
-                        children: [],
+                        children: ["frame"],
                         stl: {
-                            filename: "jflsdkjfsd.stl",
+                            filename: "assets/stls/stapler/substrate.stl",
                             offset: {x:0,y:0,z:0},
                             scale: 1.0,
                             rotation: {x:0,y:0,z:0}

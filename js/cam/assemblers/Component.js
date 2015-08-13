@@ -8,7 +8,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     var id = 0;
 
     function Component(geometry, material, name){
-        this.object3D = new THREE.Mesh(geometry, material);
+        this.object3D = new THREE.Object3D();
         this.id = "id" + id++;
         this.name = name || "";
         this.parent = null;
@@ -16,6 +16,11 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     }
 
     //assembler setup
+
+
+    Component.prototype.makeGeometry = function(geo, material){
+        this.object3D.add(new THREE.Mesh(geo, material));
+    };
 
     Component.prototype.addChild = function(child){
         if (this.checkAncestry(child)){
