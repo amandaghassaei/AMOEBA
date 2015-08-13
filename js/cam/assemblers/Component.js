@@ -7,10 +7,10 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
     var id = 0;
 
-    function Component(geometry, material, name){
+    function Component(id, json){
         this.object3D = new THREE.Object3D();
-        this.id = "id" + id++;
-        this.name = name || "";
+        this.id = id || "id" + id++;
+        this.name = json.name || "";
         this.parent = null;
         this.children = [];
     }

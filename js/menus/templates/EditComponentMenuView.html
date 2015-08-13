@@ -19,7 +19,7 @@ Children: &nbsp;&nbsp;
         <% }); %>
     </ul>
 </div><br/>
-    <% _.each(components[editingComponent].children, function(childID){ console.log(components[editingComponent].children);%>
+    <% _.each(components[editingComponent].children, function(childID){ %>
         <%= components[childID].name %> <a class="removeChild" data-id="<%= childID %>" href="#">Remove</a><br/>
     <% }); %><br/>
 STL: &nbsp;&nbsp;STL Name<br/><br/>

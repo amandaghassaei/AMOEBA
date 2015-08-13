@@ -79,9 +79,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
 
     Assembler.prototype._buildAssemblerComponents = function(componentsJSON){
-        var components = [];
+        var components = {};
         _.each(componentsJSON, function(componentJSON, id){
-            components[id] = new Component(id);
+            components[id] = new Component(id, componentJSON);
         });
         return components;
     };
