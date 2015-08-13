@@ -34,6 +34,9 @@ define([], function(){
                 relative: false,
                 camProcesses: ["gcode"],
                 numMaterials: 2,
+                translation: {x:-4.0757,y: -4.3432,z: -6.2154},
+                rotation: {x:Math.PI/2,y:0,z:0},
+                scale: 20,
                 components: {
                     xAxis: {
                         name: "X Axis",

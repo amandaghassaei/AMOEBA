@@ -25,7 +25,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         if (json.components && _.keys(json.components).length > 0) {
             var componentsJSON = json.components;
             this.components = this._buildAssemblerComponents(componentsJSON);
-            this._loadSTLs(componentsJSON, this.components);
+            this._loadSTLs(json, this.components);
             this._configureAssemblerMovementDependencies(componentsJSON, this.components, this.object3D);
         }
 
@@ -49,16 +49,19 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
 
     Assembler.prototype._loadSTLs = function(json, components){
-        var stlFilenames = this._getStlNames(json);
+        var stlFilenames = this._getStlNames(json.components);
 
         function geometryPreProcess(geometry){//todo do this better
             if(geometry === undefined || (geometry.vertices && geometry.vertices.length == 0)) return null;
 
-            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-4.0757, -4.3432, -6.2154));
-            geometry.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+            if (json.translation) geometry.applyMatrix(new THREE.Matrix4().makeTranslation(json.translation.x, json.translation.y, json.translation.z));
+            if (json.rotation) {
+                if (json.rotation.x) geometry.applyMatrix(new THREE.Matrix4().makeRotationX(json.rotation.x));
+                if (json.rotation.y) geometry.applyMatrix(new THREE.Matrix4().makeRotationY(json.rotation.y));
+                if (json.rotation.z) geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(json.rotation.z));
+            }
+            if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
-            var unitScale = 20;
-            geometry.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
             geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));
             return geometry;
         }
