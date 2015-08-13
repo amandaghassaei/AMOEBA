@@ -12,6 +12,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 
         this.id = id;
         this.components = {};
+        this.rotation = json.rotation;
+        this.translation = json.translation;
+        this.scale = json.scale;
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
@@ -300,9 +303,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
         return {
             components: componentsJSON,
-            translation: this.object3D.position,
-            scale: this.object3D.scale.x,
-            rotation: this.object3D.rotation
+            translation: this.translation,
+            scale: this.scale,
+            rotation: this.rotation
         }
     };
 

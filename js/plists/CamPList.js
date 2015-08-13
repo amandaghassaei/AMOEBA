@@ -100,7 +100,7 @@ define([], function(){
                     },
                     substrate: {
                         name: "Substrate",
-                        isLinear: true,
+                        isLinear: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound

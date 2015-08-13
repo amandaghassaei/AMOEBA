@@ -17,6 +17,11 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
 
         },
 
+        getPropertyOwner: function($target){
+            if ($target.hasClass("assembler")) return cam.get("assembler");
+            return null;
+        },
+
         _editMachineComponent: function(e){
             e.preventDefault();
             cam.set("editingComponent", $(e.target).data("id"));
