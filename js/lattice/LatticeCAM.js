@@ -24,7 +24,7 @@ define(['lattice', 'three'], function(lattice, THREE){
                 firstLetter = order.charAt(0);
                 order = order.substr(1);
             }
-            if (!cells) cells = this.cells;//grab cells once at beginning and hold onto it in case changes are made while looping
+            if (!cells) cells = this.sparseCells;//grab cells once at beginning and hold onto it in case changes are made while looping
             var newVarOrder;
             var newVarDim;
             if (firstLetter == 'X'){

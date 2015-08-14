@@ -81,7 +81,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         var currentPosition = this.getPosition();
         var diff = _.clone(target);
         _.each(_.keys(target), function(key){
-            diff[key] -= currentPosition[key];
+            if (target[key] === null) diff[key] = 0;
+            else diff[key] -= currentPosition[key];
         });
 
         var diffLength = this._getLength(diff);
@@ -97,7 +98,6 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         _.each(_.keys(incrementVector), function(key){
             incrementVector[key] *= increment/diffLength;
         });
-
         this._incrementalMove(incrementVector, target, callback);
     };
 

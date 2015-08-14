@@ -44,7 +44,7 @@ define([], function(){
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: "frame",
+                        parent: "yAxis",
                         children: ["zAxis"],
                         stl: {
                             filename: "assets/stls/stapler/xAxis.stl",
@@ -53,14 +53,14 @@ define([], function(){
                             rotation: {x:0,y:0,z:0}
                         }
                     },
-                    yAxis: {
+                    frame: {
                         name: "Y Axis",
                         isLinear: true,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "substrate",
-                        children: ["frame"],
+                        children: ["yAxis"],
                         stl: {
                             filename: "assets/stls/stapler/yAxis.stl",
                             offset: {x:0,y:0,z:0},
@@ -83,13 +83,13 @@ define([], function(){
                             rotation: {x:0,y:0,z:0}
                         }
                     },
-                    frame: {
+                    yAxis: {
                         name: "Frame",
                         isLinear: true,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: "yAxis",
+                        parent: "frame",
                         children: ["xAxis"],
                         stl: {
                             filename: "assets/stls/stapler/frame.stl",
@@ -105,7 +105,7 @@ define([], function(){
                         //minBound
                         //maxBound
                         parent: null,
-                        children: ["frame"],
+                        children: ["yAxis"],
                         stl: {
                             filename: "assets/stls/stapler/substrate.stl",
                             offset: {x:0,y:0,z:0},

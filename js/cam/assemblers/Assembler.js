@@ -151,8 +151,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
                 data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
                 data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            var cellPosition = cell.getPosition();//todo cell.getAbsolutePosition();
-            console.log(cellPosition);
+            var cellPosition = cell.getAbsolutePosition();
             data += self._postMoveXY(exporter, cellPosition.x-wcs.x, cellPosition.y-wcs.y);
             data += self._postReleaseStock(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight);
             data += "\n";
@@ -182,7 +181,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         var data = "";
         data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.moveZ(cellPosition.z-wcs.z);
-        data += exporter.addComment(JSON.stringify(cell.index));
+        data += exporter.addComment(JSON.stringify(cell.getAbsoluteIndex()));
         data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.rapidZ(rapidHeight);
         return data;
@@ -212,8 +211,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
     
     Assembler.prototype.releaseStock = function(index){
+        console.log(index);
         lattice.showCellAtIndex(JSON.parse(index));
-        this.stock.hide();
+        _.each(this.stock, function(stock){
+            stock.hide();
+        });
     };
     
     Assembler.prototype.pause = function(){
@@ -233,7 +235,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             if (totalThreads > 0) return;
             callback();
         }
-        var startingPos = {x:this.components.xAxis.getPosition(), y:this.components.yAxis.getPosition(), z:this.components.zAxis.getPosition()};
+        var startingPos = {x:this.components.xAxis.getPosition().x, y:this.components.yAxis.getPosition().y, z:this.components.zAxis.getPosition().z};
         speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
         this.components.xAxis.moveTo(this._makeAxisVector(x, "x"), speed.x, sketchyCallback);
         this.components.yAxis.moveTo(this._makeAxisVector(y, "y"), speed.y, sketchyCallback);
@@ -255,7 +257,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
     Assembler.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy moves need speed normalization
         var normSpeed = {};
-        if (x == "" || y == "") return speed;
+        if (x == "" || y == "" || x === null || y === null) return speed;
         var deltaX = x-startingPos.x;
         var deltaY = y-startingPos.y;
         var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
