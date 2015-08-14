@@ -78,55 +78,33 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.moveTo = function(target, speed, callback){
+        if (target === null){
+            if (callback) callback();
+            return;
+        }
         var currentPosition = this.getPosition();
-        var diff = _.clone(target);
-        _.each(_.keys(target), function(key){
-            if (target[key] === null) diff[key] = 0;
-            else diff[key] -= currentPosition[key];
-        });
-
-        var diffLength = this._getLength(diff);
         var increment = speed/25*cam.get("simSpeed");
+        var incrVector = target.clone().sub(currentPosition);
 
-        if (increment == 0 || diffLength == 0) {
+        if (increment == 0 || incrVector.length() == 0) {
             if (callback) callback();
             return;
         }
         increment = Math.max(increment, 0.00001);//need to put a min on the increment - otherwise this stalls out with floating pt tol
 
-        var incrementVector = diff;
-        _.each(_.keys(incrementVector), function(key){
-            incrementVector[key] *= increment/diffLength;
-        });
-        this._incrementalMove(incrementVector, target, callback);
-    };
-
-    Component.prototype._remainingDistanceToTarget = function(target){
-        var position = this.getPosition();
-        var dist = 0;
-        _.each(_.keys(target), function(key){
-            dist += Math.pow(target[key] - position[key], 2);
-        });
-        return dist;
-    };
-
-    Component.prototype._getLength = function(vector){
-        var length = 0;
-        _.each(_.keys(vector), function(key){
-            length += Math.pow(vector[key], 2);
-        });
-        return length;
+        incrVector.normalize().multiplyScalar(increment);
+        this._incrementalMove(incrVector, target, callback);
     };
 
     Component.prototype._incrementalMove = function(increment, target, callback){
         var self = this;
         setTimeout(function(){
-            var remainingDist = Math.abs(self._remainingDistanceToTarget(target));
+            var remainingDist = (target.clone().sub(self.getPosition())).length();
             var nextPos;
             if (remainingDist == 0) {
                 if (callback) callback();
                 return;
-            } else if (remainingDist < self._getLength(increment)){
+            } else if (remainingDist < increment.length()){
                 nextPos = target;//don't overshoot
             } else {
                 nextPos = self.getPosition();

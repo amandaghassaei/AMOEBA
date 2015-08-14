@@ -23,7 +23,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
 
-
         var componentsJSON = json.components;
         this.components = this._buildAssemblerComponents(componentsJSON);
         this._loadSTLs(json, this.components);
@@ -99,11 +98,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
 
-
-
-    
-
-    
     Assembler.prototype.setVisibility = function(visible){
         this.object3D.visible = visible;
         this._setTranslucent();
@@ -113,17 +107,33 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     Assembler.prototype._setTranslucent = function(){
         assemblerMaterial.transparent = (appState.get("currentTab") == "cam" || appState.get("currentTab") == "assemblerSetup");
     };
+    
+    
+    
 
-    Assembler.prototype.moveMachine = function(origin){//origin selection
-        this.object3D.position.set(origin.x, origin.y, origin.z);
-        three.render();
+
+
+
+    //post process
+
+    Assembler.prototype.postProcess = function(settings, exporter){
+        var data = "";
+        data += exporter.makeHeader(settings);
+        data += "\n\n";
+        data += exporter.addComment("begin program");
+        data += "\n";
+
+        data += this._postProcessCells(settings, exporter);
+
+        data += "\n\n";
+        data += exporter.addComment("end program");
+        data += "\n";
+        data += exporter.makeFooter(settings);
+
+        return data;
     };
     
-    
-    
-    
-    
-    Assembler.prototype.postProcess = function(settings, exporter){//override in subclasses
+    Assembler.prototype._postProcessCells = function(settings, exporter){
         var data = "";
         var self = this;
     
@@ -145,15 +155,16 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
 //                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            data += self._postMoveXY(cellPosition.x-settings.originPosition.x, cellPosition.y-settings.originPosition.y, settings, exporter);
-            data += self._postReleaseStock(cellPosition, cell, settings, exporter);
+            data += self._postMoveXY(cellPosition.clone().sub(settings.originPosition), settings, exporter);
+            data += self._postReleaseStock(cellIndex, cellPosition, settings, exporter);
             data += "\n";
         });
+
         return data;
     };
     
-    Assembler.prototype._postMoveXY = function(x, y, settings, exporter){
-        return exporter.rapidXY(x, y, settings);
+    Assembler.prototype._postMoveXY = function(position, settings, exporter){
+        return exporter.rapidXY(position, settings);
     };
     
 //    Assembler.prototype._postMoveToStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
@@ -167,23 +178,38 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //    };
     
     Assembler.prototype._postGetStock = function(index, position, settings, exporter){
-        return exporter.addComment("get stock");
+        var json = {
+            index:index,
+            position: position
+        };
+        return exporter.addComment("get stock " + JSON.stringify(json));
     };
     
-    Assembler.prototype._postReleaseStock = function(cellPosition, cell, settings, exporter){
+    Assembler.prototype._postReleaseStock = function(index, position, settings, exporter){
+        var json = {
+            index:index,
+            position: position
+        };
         var data = "";
-        data += exporter.rapidZ(cellPosition.z-settings.originPosition.z+settings.safeHeight, settings);
-        data += exporter.moveZ(cellPosition.z-settings.originPosition.z, settings);
-        data += exporter.addComment(JSON.stringify(cell.getAbsoluteIndex()));
-        data += exporter.moveZ(cellPosition.z-settings.originPosition.z+settings.safeHeight, settings);
+        data += exporter.rapidZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
+        data += exporter.moveZ(position.z-settings.originPosition.z, settings);
+        data += exporter.addComment(JSON.stringify(json));
+        data += exporter.moveZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
         data += exporter.rapidZ(settings.rapidHeight, settings);
         return data;
     };
+
+
     
     
     
     
     //animation methods
+
+    Assembler.prototype.moveMachine = function(origin){//origin selection
+        this.object3D.position.set(origin.x, origin.y, origin.z);
+        three.render();
+    };
     
     Assembler.prototype.updateCellMode = function(){//message from cam
         _.each(this.stock, function(stock){
@@ -203,9 +229,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
     
-    Assembler.prototype.releaseStock = function(index, settings){
-        console.log(index);
-        lattice.showCellAtIndex(JSON.parse(index));
+    Assembler.prototype.releaseStock = function(json, settings){
+        json = JSON.parse(json);
+        console.log(json.index);
+        lattice.showCellAtIndex(json.index);
         _.each(this.stock, function(stock){
             stock.hide();
         });
@@ -214,14 +241,8 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     Assembler.prototype.pause = function(){
     };
     
-    Assembler.prototype.moveTo = function(x, y, z, speed, settings, callback){
-        x = this._makeAbsPosition(x, settings.originPosition.x);
-        y = this._makeAbsPosition(y, settings.originPosition.y);
-        z = this._makeAbsPosition(z, settings.originPosition.z);
-        this._moveTo(x, y, z, speed, callback);
-    };
-    
-    Assembler.prototype._moveTo = function(x, y, z, speed, callback){
+    Assembler.prototype.moveTo = function(position, speed, settings, callback){
+
         var totalThreads = 3;
         function sketchyCallback(){
             totalThreads -= 1;
@@ -229,54 +250,35 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             callback();
         }
         var startingPos = {x:this.components.xAxis.getPosition().x, y:this.components.yAxis.getPosition().y, z:this.components.zAxis.getPosition().z};
-        speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-        this.components.xAxis.moveTo(this._makeAxisVector(x, "x"), speed.x, sketchyCallback);
-        this.components.yAxis.moveTo(this._makeAxisVector(y, "y"), speed.y, sketchyCallback);
-        this.components.zAxis.moveTo(this._makeAxisVector(z, "z"), speed.z, sketchyCallback);
+        speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));
+        this.components.xAxis.moveTo(this._makeAxisVector(position, "x"), speed.x, sketchyCallback);
+        this.components.yAxis.moveTo(this._makeAxisVector(position, "y"), speed.y, sketchyCallback);
+        this.components.zAxis.moveTo(this._makeAxisVector(position, "z"), speed.z, sketchyCallback);
     };
     
-    Assembler.prototype._makeAbsPosition = function(target, origin){
-        if (target == "" || target == null || target === undefined) return null;
-        return parseFloat(target)+origin;
-    };
-    
-    Assembler.prototype._reorganizeSpeed = function(speed){
-        var newSpeed = {};
-        newSpeed.x = speed.xy;
-        newSpeed.y = speed.xy;
-        newSpeed.z = speed.z;
-        return newSpeed;
-    };
-    
-    Assembler.prototype._normalizeSpeed = function(startingPos, x, y, speed){//xy moves need speed normalization
-        var normSpeed = {};
-        if (x == "" || y == "" || x === null || y === null) return speed;
-        var deltaX = x-startingPos.x;
-        var deltaY = y-startingPos.y;
+    Assembler.prototype._normalizeSpeed = function(startingPos, position, speed){//todo make this more general
+        if (position.x === null && position.y === null) return speed;
+        var deltaX = position.x-startingPos.x;
+        var deltaY = position.y-startingPos.y;
         var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         if (totalDistance == 0) return speed;
-        normSpeed.x = Math.abs(deltaX/totalDistance*speed.x);
-        normSpeed.y = Math.abs(deltaY/totalDistance*speed.y);
-        normSpeed.z = speed.z;
-        return normSpeed;
+        speed.x = Math.abs(deltaX/totalDistance*speed.x);
+        speed.y = Math.abs(deltaY/totalDistance*speed.y);
+        return speed;
     };
     
     Assembler.prototype._makeAxisVector = function(position, axis){
-        switch (axis){
-            case "x":
-                return {x:position, y:0, z:0};
-            case "y":
-                return {x:0, y:position, z:0};
-            case "z":
-                return {x:0, y:0, z:position};
-            default:
-                console.warn(axis + " axis not recognized");
-                return null;
-        }
+        if (position[axis] == null) return null;
+        var vector = new THREE.Vector3(0,0,0);
+        vector[axis] = position[axis];
+        return vector;
     };
     
     
-    
+
+
+
+
     
     //helper
     

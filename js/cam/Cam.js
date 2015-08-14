@@ -324,20 +324,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
             var self = this;
             this._getExporter(function(exporter){
-                var data = "";
-                data += exporter.makeHeader(scaledSettings);
-                data += "\n\n";
-                data += exporter.addComment("begin program");
-                data += "\n";
-
-                data += self.get("assembler").postProcess(scaledSettings, exporter);
-
-                data += "\n\n";
-                data += exporter.addComment("end program");
-                data += "\n";
-                data += exporter.makeFooter(scaledSettings);
-
-                self.set("dataOut", data);
+                self.set("dataOut", self.get("assembler").postProcess(scaledSettings, exporter));
                 self.set("editsMadeToProgram", false);
                 self.set("exporter", exporter);
                 if (!appState.get("stockSimulationPlaying")) self.resetSimulation();

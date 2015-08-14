@@ -43,16 +43,16 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
 
     GCodeExporter.prototype._setSpeed = function(speed){
         return "F"+ speed + "\n";
-    }
+    };
 
     //GCodeExporter.prototype._rapidXYZ = function(x, y, z){
     //    return this._goXYZ(x,y,z);
     //};
 
-    GCodeExporter.prototype.rapidXY = function(x, y, settings){
+    GCodeExporter.prototype.rapidXY = function(position, settings){
         var data = "";
         if (this.postSpeed != settings.rapidSpeeds.x) data += this._setSpeed(settings.rapidSpeeds.x);
-        return data + this._goXYZ(x, y, null);
+        return data + this._goXYZ(position.x, position.y, null);
     };
 
     GCodeExporter.prototype.rapidZ = function(z, settings){
@@ -97,7 +97,7 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     };
 
     GCodeExporter.prototype.simulate = function(line, machine, settings,  callback){
-        if (line == "(get stock)"){
+        if (line.substr(0,11) == "(get stock)"){
             machine.pickUpStock(settings);
             return callback();
         }
@@ -113,24 +113,27 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
             return callback();
         }
         if (line.substr(0,3) == "G01"){
-            return this._simulateGetPosition(line, {xy:this.animationSpeed, z:this.animationSpeed}, machine, settings, callback);
+            return this._simulateG01(line, this.animationSpeed, machine, settings, callback);
         } else {
             console.warn("problem parsing gcode: " + line);
             return callback();
         }
     };
 
-    GCodeExporter.prototype._simulateGetPosition = function(line, speed, machine, settings, callback){
+    GCodeExporter.prototype._simulateG01 = function(line, speed, machine, settings, callback){
         var data = line.split(" ");
-        var position = {x:"",y:"",z:""};
-        if (data.length<2) console.warn("problem parsing gcode " + line);
+        var position = {x:null,y:null,z:null};
+        if (data.length<2) {
+            console.warn("problem parsing gcode " + line);
+            return callback();
+        }
         for (var i=1;i<data.length;i++){
             var item = data[i];
-            if (item[0] == "X") position.x = item.substr(1) / settings.scale;
-            if (item[0] == "Y") position.y = item.substr(1) / settings.scale;
-            if (item[0] == "Z") position.z = item.substr(1) / settings.scale;
+            if (item[0] == "X") position.x = parseFloat(item.substr(1)) / settings.scale;
+            if (item[0] == "Y") position.y = parseFloat(item.substr(1)) / settings.scale;
+            if (item[0] == "Z") position.z = parseFloat(item.substr(1)) / settings.scale;
         }
-        machine.moveTo(position.x, position.y, position.z, speed, settings, callback);
+        machine.moveTo(position, speed, settings, callback);
     };
 
     return GCodeExporter;
