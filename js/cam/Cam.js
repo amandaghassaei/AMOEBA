@@ -76,7 +76,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 //                    "change:cellType " +
 //                    "change:connectionType",
 //                this._setNeedsPostProcessing);
-//            this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
+            this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
 
             this.listenTo(lattice, "change:partType", this._updatePartType);
             this.listenTo(appState, "change:cellMode", this._updateCellMode);

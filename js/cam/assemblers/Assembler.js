@@ -138,7 +138,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
         lattice.rasterCells(cam._getOrder(cam.get("camStrategy")), function(cell){
             if (!cell) return;
-            if (this.stockAttachedToEndEffector){
+            if (!self.shouldPickUpStock){
                 data += self._postGetStock(exporter);
             } else {
                 var thisStockPosition = _.clone(stockPosition);
@@ -149,9 +149,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
                     if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
                 }
                 data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
-                data += self._postPickUpStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
+                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            var cellPosition = cell.getPosition();
+            var cellPosition = cell.getPosition();//todo cell.getAbsolutePosition();
+            console.log(cellPosition);
             data += self._postMoveXY(exporter, cellPosition.x-wcs.x, cellPosition.y-wcs.y);
             data += self._postReleaseStock(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight);
             data += "\n";
@@ -163,7 +164,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         return exporter.rapidXY(x, y);
     };
     
-    Assembler.prototype._postPickUpStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
+    Assembler.prototype._postMoveToStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
         var data = "";
         data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
         data += exporter.moveZ(stockPosition.z-wcs.z);
@@ -181,7 +182,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         var data = "";
         data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.moveZ(cellPosition.z-wcs.z);
-        data += exporter.addComment(JSON.stringify(cell.indices));
+        data += exporter.addComment(JSON.stringify(cell.index));
         data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
         data += exporter.rapidZ(rapidHeight);
         return data;
@@ -232,11 +233,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             if (totalThreads > 0) return;
             callback();
         }
-        var startingPos = {x:this.xAxis.getPosition(), y:this.yAxis.getPosition(), z:this.zAxis.getPosition()};
+        var startingPos = {x:this.components.xAxis.getPosition(), y:this.components.yAxis.getPosition(), z:this.components.zAxis.getPosition()};
         speed = this._normalizeSpeed(startingPos, x, y, this._reorganizeSpeed(speed));
-        this.xAxis.moveTo(this._makeAxisVector(x, "x"), speed.x, sketchyCallback);
-        this.yAxis.moveTo(this._makeAxisVector(y, "y"), speed.y, sketchyCallback);
-        this.zAxis.moveTo(this._makeAxisVector(z, "z"), speed.z, sketchyCallback);
+        this.components.xAxis.moveTo(this._makeAxisVector(x, "x"), speed.x, sketchyCallback);
+        this.components.yAxis.moveTo(this._makeAxisVector(y, "y"), speed.y, sketchyCallback);
+        this.components.zAxis.moveTo(this._makeAxisVector(z, "z"), speed.z, sketchyCallback);
     };
     
     Assembler.prototype._makeAbsPosition = function(target, wcs){
@@ -293,9 +294,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.components = null;
         three.sceneRemove(this.object3D);
         this.stock = null;
-        this.zAxis = null;
-        this.xAxis = null;
-        this.yAxis = null;
+        this.components.zAxis = null;
+        this.components.xAxis = null;
+        this.components.yAxis = null;
         this.frame = null;
         this.substrate = null;
         this.object3D = null;
