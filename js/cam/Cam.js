@@ -259,7 +259,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             if (appState.get("stockSimulationPlaying")){
                 three.startAnimationLoop();
                 var currentLine = this.get("simLineNumber");
-                if (currentLine == 0) lattice.hideCells();
+                if (currentLine == 0) lattice.hideCells("cells");
                 var allLines = this.get("dataOut").split("\n");
                 if(currentLine<allLines.length){
                     var self = this;

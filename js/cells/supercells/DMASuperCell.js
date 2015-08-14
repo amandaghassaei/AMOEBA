@@ -114,10 +114,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
 
 
      //parse
-    DMASuperCell.prototype.addToDenseArray = function(cellsArray, min){
+    DMASuperCell.prototype.addToDenseArray = function(cellsArray, min, forCAM){
+        if (forCAM && this._isBottomLayer()) return DMACell.prototype.addToDenseArray.call(this, cellsArray, min);//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
         var overlap = false;
         this._loopCells(function(cell){
-            if (cell) overlap |= cell.addToDenseArray(cellsArray, min);
+            if (cell) overlap |= cell.addToDenseArray(cellsArray, min, forCAM);
         });
         return overlap;
     };

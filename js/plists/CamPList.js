@@ -138,7 +138,7 @@ define(['three'], function(THREE){
                     camStrategy: "raster",
                     placementOrder: "XYZ",//used for raster strategy entry
                     camProcess: "gcode",
-                    rapidHeight:10,
+                    rapidHeight:40,
                     rapidHeightRelative: true,
                     safeHeight: 0.5,
                     originPosition: new THREE.Vector3(0,0,0),

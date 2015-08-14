@@ -9,7 +9,7 @@ define(['lattice', 'three'], function(lattice, THREE){
 
         showCellAtIndex: function(index){
             var latticeIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
-            var cell = this.sparseCells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+            var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
             if (cell) cell.show();
             else console.warn("placing a cell that does not exist");
         },
@@ -24,7 +24,7 @@ define(['lattice', 'three'], function(lattice, THREE){
                 firstLetter = order.charAt(0);
                 order = order.substr(1);
             }
-            if (!cells) cells = this.sparseCells;//grab cells once at beginning and hold onto it in case changes are made while looping
+            if (!cells) cells = this.cells;//grab cells once at beginning and hold onto it in case changes are made while looping
             var newVarOrder;
             var newVarDim;
             if (firstLetter == 'X'){

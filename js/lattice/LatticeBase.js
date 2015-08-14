@@ -456,8 +456,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             else this.hideCells();
         },
 
-        hideCells: function(){
-            this._iterCells(this.sparseCells, function(cell){
+        hideCells: function(whichArray){
+            if (!whichArray) whichArray = "sparseCells";
+            this._iterCells(this[whichArray], function(cell){
                 if (cell) cell.hide();
             });
             three.render();
