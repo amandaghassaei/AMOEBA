@@ -10,7 +10,7 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         this.animationSpeed = null;
     }
 
-    GCodeExporter.prototype.makeHeader = function(){
+    GCodeExporter.prototype.makeHeader = function(settings){
         var data = "";
         if (lattice.get("units") == "inches") data += this.addLine("G20", [], "units inches");
         else data += this.addLine("G21", [], "units mm");
@@ -20,7 +20,7 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     //    data += this.addLine("G40", [], "cancel tool radius comp");
     ////    data += this.addLine("M09", [], "coolant off");
 
-        data += this.goHome();
+        data += this.goHome(settings);
 
         return data;
     };
@@ -49,15 +49,15 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     //    return this._goXYZ(x,y,z);
     //};
 
-    GCodeExporter.prototype.rapidXY = function(x, y){
+    GCodeExporter.prototype.rapidXY = function(x, y, settings){
         var data = "";
-        if (this.postSpeed != cam.get("rapidSpeeds").xy) data += this._setSpeed(cam.get("rapidSpeeds").xy);
+        if (this.postSpeed != settings.rapidSpeeds.x) data += this._setSpeed(settings.rapidSpeeds.x);
         return data + this._goXYZ(x, y, null);
     };
 
-    GCodeExporter.prototype.rapidZ = function(z){
+    GCodeExporter.prototype.rapidZ = function(z, settings){
         var data = "";
-        if (this.postSpeed != cam.get("rapidSpeeds").z) data += this._setSpeed(cam.get("rapidSpeeds").z);
+        if (this.postSpeed != settings.rapidSpeeds.z) data += this._setSpeed(settings.rapidSpeeds.z);
         return data + this._goXYZ(null, null, z);
     };
 
@@ -68,24 +68,24 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         return this.addLine("G01", [x,y,z]);
     };
 
-    GCodeExporter.prototype.moveXY = function(x, y){
+    GCodeExporter.prototype.moveXY = function(x, y, settings){
         var data = "";
-        if (this.postSpeed != cam.get("feedRate").xy) data += this._setSpeed(cam.get("feedRate").xy);
+        if (this.postSpeed != settings.feedRate.x) data += this._setSpeed(settings.feedRate.x);
         return data + this._goXYZ(x, y, null);
     };
 
-    GCodeExporter.prototype.moveZ = function(z){
+    GCodeExporter.prototype.moveZ = function(z, settings){
         var data = "";
-        if (this.postSpeed != cam.get("feedRate").z) data += this._setSpeed(cam.get("feedRate").z);
+        if (this.postSpeed != settings.feedRate.z) data += this._setSpeed(settings.feedRate.z);
         return data + this._goXYZ(null, null, z);
     };
 
-    GCodeExporter.prototype.goHome = function(){
-        var data = this._setSpeed(cam.get("rapidSpeeds").z);
-        return data + this._goXYZ(0,0,cam.get("rapidHeight"));
+    GCodeExporter.prototype.goHome = function(settings){
+        var data = this._setSpeed(settings.rapidSpeeds.z);
+        return data + this._goXYZ(0,0,settings.rapidHeight);
     };
 
-    GCodeExporter.prototype.makeFooter = function(){
+    GCodeExporter.prototype.makeFooter = function(settings){
         var data = "";
     //    data += this.addLine("M30", [], "program stop");
         return data;

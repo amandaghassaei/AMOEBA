@@ -46,7 +46,7 @@ Origin (xyz):&nbsp;&nbsp;
                     Stock separation: &nbsp;&nbsp;<input data-property="stockSeparation" value="<%= stockSeparation %>" placeholder="X" class="form-control floatInput assembler" type="text"><br/><br/>
                 <% } %>
     <% } %>
-    Clearance Height: &nbsp;&nbsp;
+    Clearance Height (<%= units %>): &nbsp;&nbsp;
         <input data-property="rapidHeight" value="<%= rapidHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/>
             <label class="checkbox" for="rapidPosRel">
             <input id="rapidPosRel" data-property="rapidHeightRelative" type="checkbox" <% if (rapidHeightRelative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="assembler custom-checkbox">
@@ -55,8 +55,8 @@ Origin (xyz):&nbsp;&nbsp;
 <% } else { %><br/><br/>
     Stock Height: &nbsp;&nbsp;<input data-property="stockPosition" data-key="z" value="<%= stockPosition.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>
 <% } %>
-Approach Height: &nbsp;&nbsp;<input data-property="safeHeight" value="<%= safeHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>
-Speeds (measured in <%= units %> per second):<br/><br/>
+Approach Height  (<%= units %>): &nbsp;&nbsp;<input data-property="safeHeight" value="<%= safeHeight %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>
+Speeds (<%= units %> per second):<br/><br/>
     Rapids (xy, z): &nbsp;&nbsp;<input data-property="rapidSpeeds" data-key="xy" value="<%= rapidSpeeds.xy %>" placeholder="XY" class="form-control floatInput assembler" type="text">&nbsp;
         <input data-property="rapidSpeeds" data-key="z" value="<%= rapidSpeeds.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>
     Feed Rate (xy, z): &nbsp;&nbsp;<input data-property="feedRate" data-key="xy" value="<%= feedRate.xy %>" placeholder="XY" class="form-control floatInput assembler" type="text">&nbsp;

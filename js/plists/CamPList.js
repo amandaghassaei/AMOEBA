@@ -3,7 +3,7 @@
  */
 
 
-define([], function(){
+define(['three'], function(THREE){
 
     return {
 
@@ -141,7 +141,7 @@ define([], function(){
                     rapidHeight:10,
                     rapidHeightRelative: true,
                     safeHeight: 0.5,
-                    originPosition: {x:0,y:0,z:0},
+                    originPosition: new THREE.Vector3(0,0,0),
                     rapidSpeeds:{xy: 3, z: 2},
                     feedRate:{xy: 0.1, z: 0.1}
                 }

@@ -54,28 +54,28 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:originPosition", this._moveOrigin);
 //            this.listenTo(this, "change:stockPosition", this._moveStock);
-//            this.listenTo(this,
-//                    "change:originPosition " +
-//                    "change:stockPosition " +
-//                    "change:feedRate " +
-//                    "change:rapidSpeeds " +
-//                    "change:camProcess " +
-//                    "change:camStrategy " +
-//                    "change:placementOrder " +
-//                    "change:safeHeight " +
-//                    "change:stockArraySize " +
-//                    "change:stockSeparation " +
-//                    "change:multipleStockPositions " +
-//                    "change:rapidHeight " +
-//                    "change:machineName",
-//                this._setNeedsPostProcessing);
-//            this.listenTo(lattice,
-//                    "change:scale" +
-//                    "change:units" +
-//                    "change:numCells " +
-//                    "change:cellType " +
-//                    "change:connectionType",
-//                this._setNeedsPostProcessing);
+            this.listenTo(this,
+                    "change:originPosition " +
+                    "change:stockPosition " +
+                    "change:feedRate " +
+                    "change:rapidSpeeds " +
+                    "change:camProcess " +
+                    "change:camStrategy " +
+                    "change:placementOrder " +
+                    "change:safeHeight " +
+                    "change:stockArraySize " +
+                    "change:stockSeparation " +
+                    "change:multipleStockPositions " +
+                    "change:rapidHeight " +
+                    "change:machineName",
+                this._setNeedsPostProcessing);
+            this.listenTo(lattice,
+                    "change:scale" +
+                    "change:units" +
+                    "change:numCells " +
+                    "change:cellType " +
+                    "change:connectionType",
+                this._setNeedsPostProcessing);
             this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
 
             this.listenTo(lattice, "change:partType", this._updatePartType);
@@ -299,20 +299,32 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         postProcess: function(){
             this.set("needsPostProcessing", false);
+
+            var scale = lattice.get("scale");
+            var scaledSettings = {
+                scale: scale,
+                rapidHeight: this.get("rapidHeight"),
+                safeHeight: this.get("safeHeight"),
+                originPosition: this.get("originPosition").clone().multiplyScalar(scale),
+                stockPosition: this.get("stockPosition").clone().multiplyScalar(scale),
+                rapidSpeeds: new THREE.Vector3(this.get("rapidSpeeds").xy, this.get("rapidSpeeds").xy, this.get("rapidSpeeds").z),
+                feedRate: new THREE.Vector3(this.get("feedRate").xy, this.get("feedRate").xy, this.get("feedRate").z)
+            };
+
             var self = this;
             this._getExporter(function(exporter){
                 var data = "";
-                data += exporter.makeHeader();
+                data += exporter.makeHeader(scaledSettings);
                 data += "\n\n";
                 data += exporter.addComment("begin program");
                 data += "\n";
 
-                data = self.get("assembler").postProcess(data, exporter);
+                data += self.get("assembler").postProcess(scaledSettings, exporter);
 
                 data += "\n\n";
                 data += exporter.addComment("end program");
                 data += "\n";
-                data += exporter.makeFooter();
+                data += exporter.makeFooter(scaledSettings);
 
                 self.set("dataOut", data);
                 self.set("editsMadeToProgram", false);

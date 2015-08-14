@@ -123,67 +123,60 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
     
     
-    Assembler.prototype.postProcess = function(data, exporter){//override in subclasses
-    
-        var rapidHeight = cam.get("rapidHeight");
-        var safeHeight = cam.get("safeHeight");
-        var wcs = cam.get("originPosition");
-    
-        var stockPosition = cam.get("stockPosition");
-        var stockNum = 0;//position of stock in stock array
-        var multStockPositions = cam.get("multipleStockPositions");
-        var stockSeparation = cam.get("stockSeparation");
-        var stockArraySize = cam.get("stockArraySize");
+    Assembler.prototype.postProcess = function(settings, exporter){//override in subclasses
+        var data = "";
         var self = this;
     
         lattice.rasterCells(cam._getOrder(cam.get("camStrategy")), function(cell){
             if (!cell) return;
+            var cellPosition = cell.getAbsolutePosition().multiplyScalar(settings.scale);
+            var cellIndex = cell.getAbsoluteIndex();
+
             if (!self.shouldPickUpStock){
-                data += self._postGetStock(exporter);
+                data += self._postGetStock(cellIndex, cellPosition, settings, exporter);
             } else {
-                var thisStockPosition = _.clone(stockPosition);
-                if (multStockPositions) {
-                    thisStockPosition.x += stockNum % stockArraySize.y * stockSeparation;
-                    thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * stockSeparation;
-                    stockNum += 1;
-                    if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
-                }
-                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
-                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
+//                var thisStockPosition = _.clone(stockPosition);
+//                if (multStockPositions) {
+//                    thisStockPosition.x += stockNum % stockArraySize.y * stockSeparation;
+//                    thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * stockSeparation;
+//                    stockNum += 1;
+//                    if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
+//                }
+//                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
+//                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            var cellPosition = cell.getAbsolutePosition();
-            data += self._postMoveXY(exporter, cellPosition.x-wcs.x, cellPosition.y-wcs.y);
-            data += self._postReleaseStock(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight);
+            data += self._postMoveXY(cellPosition.x-settings.originPosition.x, cellPosition.y-settings.originPosition.x, settings, exporter);
+            data += self._postReleaseStock(cellPosition, cell, settings, exporter);
             data += "\n";
         });
         return data;
     };
     
-    Assembler.prototype._postMoveXY = function(exporter, x, y){
-        return exporter.rapidXY(x, y);
+    Assembler.prototype._postMoveXY = function(x, y, settings, exporter){
+        return exporter.rapidXY(x, y, settings);
     };
     
-    Assembler.prototype._postMoveToStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
-        var data = "";
-        data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
-        data += exporter.moveZ(stockPosition.z-wcs.z);
-        data += this._postGetStock(exporter);
-        data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
-        return data;
-    };
+//    Assembler.prototype._postMoveToStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
+//        var data = "";
+//        data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
+//        data += exporter.moveZ(stockPosition.z-wcs.z);
+//        data += this._postGetStock(exporter);
+//        data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
+//        data += exporter.rapidZ(rapidHeight);
+//        return data;
+//    };
     
-    Assembler.prototype._postGetStock = function(exporter){
+    Assembler.prototype._postGetStock = function(index, position, settings, exporter){
         return exporter.addComment("get stock");
     };
     
-    Assembler.prototype._postReleaseStock = function(cellPosition, cell, exporter, rapidHeight, wcs, safeHeight){
+    Assembler.prototype._postReleaseStock = function(cellPosition, cell, settings, exporter){
         var data = "";
-        data += exporter.rapidZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.moveZ(cellPosition.z-wcs.z);
+        data += exporter.rapidZ(cellPosition.z-settings.originPosition.z+settings.safeHeight, settings);
+        data += exporter.moveZ(cellPosition.z-settings.originPosition.z, settings);
         data += exporter.addComment(JSON.stringify(cell.getAbsoluteIndex()));
-        data += exporter.moveZ(cellPosition.z-wcs.z+safeHeight);
-        data += exporter.rapidZ(rapidHeight);
+        data += exporter.moveZ(cellPosition.z-settings.originPosition.z+settings.safeHeight, settings);
+        data += exporter.rapidZ(settings.rapidHeight, settings);
         return data;
     };
     
