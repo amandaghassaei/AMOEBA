@@ -31,10 +31,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             console.warn("already added as a child");
             return;
         }
-        if (child.addParent){//todo stock has no "addParent" or id
-            this.children.push(child);
-            child.addParent(this);
-        }
+        this.children.push(child);
+        child.addParent(this);
         this.object3D.add(child.getObject3D());
     };
 
