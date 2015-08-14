@@ -96,41 +96,41 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         saveAs(blob, "GCodeExport" + ".nc");
     };
 
-    GCodeExporter.prototype.simulate = function(line, machine, wcs,  callback){
+    GCodeExporter.prototype.simulate = function(line, machine, settings,  callback){
         if (line == "(get stock)"){
-            machine.pickUpStock();
+            machine.pickUpStock(settings);
             return callback();
         }
         if (line.substr(0,2) == "({"){
-            machine.releaseStock(line.substr(1,line.length-2));
+            machine.releaseStock(line.substr(1,line.length-2), settings);
             return callback();
         }
         if (line[0] == "F"){//speed
-            this.animationSpeed = line.split("F")[1];
+            this.animationSpeed = line.split("F")[1] / settings.scale;
             return callback();
         }
         if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
             return callback();
         }
         if (line.substr(0,3) == "G01"){
-            return this._simulateGetPosition(line, {xy:this.animationSpeed, z:this.animationSpeed}, machine, wcs, callback);
+            return this._simulateGetPosition(line, {xy:this.animationSpeed, z:this.animationSpeed}, machine, settings, callback);
         } else {
             console.warn("problem parsing gcode: " + line);
             return callback();
         }
     };
 
-    GCodeExporter.prototype._simulateGetPosition = function(line, speed, machine, wcs, callback){
+    GCodeExporter.prototype._simulateGetPosition = function(line, speed, machine, settings, callback){
         var data = line.split(" ");
         var position = {x:"",y:"",z:""};
         if (data.length<2) console.warn("problem parsing gcode " + line);
         for (var i=1;i<data.length;i++){
             var item = data[i];
-            if (item[0] == "X") position.x = item.substr(1);
-            if (item[0] == "Y") position.y = item.substr(1);
-            if (item[0] == "Z") position.z = item.substr(1);
+            if (item[0] == "X") position.x = item.substr(1) / settings.scale;
+            if (item[0] == "Y") position.y = item.substr(1) / settings.scale;
+            if (item[0] == "Z") position.z = item.substr(1) / settings.scale;
         }
-        machine.moveTo(position.x, position.y, position.z, speed, wcs, callback);
+        machine.moveTo(position.x, position.y, position.z, speed, settings, callback);
     };
 
     return GCodeExporter;

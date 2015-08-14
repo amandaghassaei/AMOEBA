@@ -197,13 +197,13 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
     
-    Assembler.prototype.pickUpStock = function(){
+    Assembler.prototype.pickUpStock = function(settings){
         _.each(this.stock, function(stock){
             stock.show();
         });
     };
     
-    Assembler.prototype.releaseStock = function(index){
+    Assembler.prototype.releaseStock = function(index, settings){
         console.log(index);
         lattice.showCellAtIndex(JSON.parse(index));
         _.each(this.stock, function(stock){
@@ -214,14 +214,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     Assembler.prototype.pause = function(){
     };
     
-    Assembler.prototype.moveTo = function(x, y, z, speed, wcs, callback){
-        x = this._makeAbsPosition(x, wcs.x);
-        y = this._makeAbsPosition(y, wcs.y);
-        z = this._makeAbsPosition(z, wcs.z);
-        this._moveTo(x, y, z, speed, wcs, callback);
+    Assembler.prototype.moveTo = function(x, y, z, speed, settings, callback){
+        x = this._makeAbsPosition(x, settings.originPosition.x);
+        y = this._makeAbsPosition(y, settings.originPosition.y);
+        z = this._makeAbsPosition(z, settings.originPosition.z);
+        this._moveTo(x, y, z, speed, callback);
     };
     
-    Assembler.prototype._moveTo = function(x, y, z, speed, wcs, callback){
+    Assembler.prototype._moveTo = function(x, y, z, speed, callback){
         var totalThreads = 3;
         function sketchyCallback(){
             totalThreads -= 1;
@@ -235,9 +235,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.components.zAxis.moveTo(this._makeAxisVector(z, "z"), speed.z, sketchyCallback);
     };
     
-    Assembler.prototype._makeAbsPosition = function(target, wcs){
+    Assembler.prototype._makeAbsPosition = function(target, origin){
         if (target == "" || target == null || target === undefined) return null;
-        return parseFloat(target)+wcs;
+        return parseFloat(target)+origin;
     };
     
     Assembler.prototype._reorganizeSpeed = function(speed){

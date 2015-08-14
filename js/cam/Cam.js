@@ -157,6 +157,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         _tabChanged: function(){
             this._setCAMVisibility();
             if (appState.get("currentTab") != "animate") this.resetSimulation();
+            else if (this.get("needsPostProcessing")) this.postProcess();
         },
 
         _setCAMVisibility: function(){
@@ -262,8 +263,16 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                 var allLines = this.get("dataOut").split("\n");
                 if(currentLine<allLines.length){
                     var self = this;
+
+                    var scale = lattice.get("scale");
+                    var scaledSettings = {
+                        scale: scale,
+                        originPosition: this.get("originPosition").clone().divideScalar(scale),
+                        stockPosition: this.get("stockPosition").clone().divideScalar(scale),
+                    };
+
                     this.get("exporter").simulate(allLines[currentLine], this.get("assembler"),
-                        this.get("originPosition"), function(){
+                        scaledSettings, function(){
                         currentLine++;
                         self.set("simLineNumber", currentLine);
                         self._stockSimulation();
@@ -294,10 +303,12 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         //post processing
 
         _setNeedsPostProcessing: function(){
+            console.log("hi");
             this.set("needsPostProcessing", true);
         },
 
         postProcess: function(){
+            console.log("process");
             this.set("needsPostProcessing", false);
 
             var scale = lattice.get("scale");
