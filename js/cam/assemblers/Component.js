@@ -73,8 +73,57 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return this.object3D.position.clone();
     };
 
+    Component.prototype.getRotation = function(){
+        return this.object3D.rotation.toVector3();
+    };
+
     Component.prototype.getObject3D = function(){
         return this.object3D;
+    };
+
+    Component.prototype.rotateTo = function(target, speed, callback){
+        if (target === null){
+            if (callback) callback();
+            return;
+        }
+        var currentPosition = this.getRotation();
+        var increment = 0.15;//speed/1500.0*cam.get("simSpeed");
+        var incrVector = target.clone().sub(currentPosition);
+
+        if (increment == 0 || incrVector.length() == 0) {
+            if (callback) callback();
+            return;
+        }
+        increment = Math.max(increment, 0.00001);//need to put a min on the increment - otherwise this stalls out with floating pt tol
+
+        incrVector.normalize().multiplyScalar(increment);
+        this._incrementalRotation(incrVector, target, callback);
+    };
+
+    Component.prototype._incrementalRotation = function(increment, target, callback){
+        var self = this;
+        setTimeout(function(){
+            var remainingDist = (target.clone().sub(self.getRotation())).length();
+            var nextPos;
+            if (remainingDist == 0) {
+                if (callback) callback();
+                return;
+            } else if (remainingDist < increment.length()){
+                nextPos = target;//don't overshoot
+                self.object3D.rotation.x = target.x;
+                self.object3D.rotation.y = target.y;
+                self.object3D.rotation.z = target.z;
+                if (callback) callback();
+                return;
+            } else {
+                nextPos = self.getRotation().add(increment);
+            }
+
+//            console.log(target.clone().normalize());
+            console.log(increment);
+            self.object3D.rotateOnAxis(target.clone().normalize(), nextPos.z);
+            self._incrementalRotation(increment, target, callback);
+        }, 10);
     };
 
     Component.prototype.moveTo = function(target, speed, callback){
@@ -83,7 +132,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             return;
         }
         var currentPosition = this.getPosition();
-        var increment = speed/25*cam.get("simSpeed");
+        var increment = speed/1500.0*cam.get("simSpeed");
         var incrVector = target.clone().sub(currentPosition);
 
         if (increment == 0 || incrVector.length() == 0) {

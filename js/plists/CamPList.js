@@ -142,8 +142,8 @@ define(['three'], function(THREE){
                     rapidHeightRelative: true,
                     safeHeight: 0.5,
                     originPosition: new THREE.Vector3(0,0,0),
-                    rapidSpeeds:{xy: 3, z: 2},
-                    feedRate:{xy: 0.1, z: 0.1}
+                    rapidSpeeds:{xy: 240, z: 120},
+                    feedRate:{xy: 6, z: 6}
                 }
             }
         },
