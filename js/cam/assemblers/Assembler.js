@@ -224,15 +224,13 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
     
     Assembler.prototype.pickUpStock = function(index, position, speed, settings, callback){
-        if (index.z%2 != 0) {//rotate on odd rows
-            this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
-        } else {
-            this.components.frame.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
-        }
         _.each(this.stock, function(stock){
             stock.show();
         });
-        callback();
+        if (index.z%2 != 0) {//rotate on odd rows
+            this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+        }
+        this.components.frame.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
     };
     
     Assembler.prototype.releaseStock = function(index, position, settings){

@@ -74,7 +74,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.getRotation = function(){
-        return this.object3D.rotation.toVector3();
+        return this.object3D.rotation.toVector3().clone();
     };
 
     Component.prototype.getObject3D = function(){
@@ -88,41 +88,34 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         }
         var currentPosition = this.getRotation();
         var increment = 0.15;//speed/1500.0*cam.get("simSpeed");
-        var incrVector = target.clone().sub(currentPosition);
+        var axis = new THREE.Vector3().subVectors(target, currentPosition);
 
-        if (increment == 0 || incrVector.length() == 0) {
+        if (increment == 0 || axis.length() == 0) {
             if (callback) callback();
             return;
         }
         increment = Math.max(increment, 0.00001);//need to put a min on the increment - otherwise this stalls out with floating pt tol
 
-        incrVector.normalize().multiplyScalar(increment);
-        this._incrementalRotation(incrVector, target, callback);
+        this._incrementalRotation(increment, target, axis, callback);
     };
 
-    Component.prototype._incrementalRotation = function(increment, target, callback){
+    Component.prototype._incrementalRotation = function(increment, target, axis, callback){
         var self = this;
         setTimeout(function(){
             var remainingDist = (target.clone().sub(self.getRotation())).length();
-            var nextPos;
-            if (remainingDist == 0) {
+            if (remainingDist < 0.01) {
                 if (callback) callback();
                 return;
-            } else if (remainingDist < increment.length()){
-                nextPos = target;//don't overshoot
+            } else if (remainingDist < Math.abs(increment)){
                 self.object3D.rotation.x = target.x;
                 self.object3D.rotation.y = target.y;
                 self.object3D.rotation.z = target.z;
                 if (callback) callback();
                 return;
-            } else {
-                nextPos = self.getRotation().add(increment);
             }
 
-//            console.log(target.clone().normalize());
-            console.log(increment);
-            self.object3D.rotateOnAxis(target.clone().normalize(), nextPos.z);
-            self._incrementalRotation(increment, target, callback);
+            self.object3D.rotateOnAxis(axis.clone().normalize(), increment);
+            self._incrementalRotation(increment, target, axis, callback);
         }, 10);
     };
 
