@@ -52,6 +52,10 @@ define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, 
         this.cell.setMode();
     };
 
+    StockComponent.prototype.updatePartType = function(){//message from cam
+        this.cell.destroyParts();
+        this.setMode();
+    };
 
 
     //helper

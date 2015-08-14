@@ -197,6 +197,12 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stock.setMode();
         });
     };
+
+    Assembler.prototype.updatePartType = function(){//message from cam
+        _.each(this.stock, function(stock){
+            stock.updatePartType();
+        });
+    };
     
     Assembler.prototype.pickUpStock = function(){
         _.each(this.stock, function(stock){
