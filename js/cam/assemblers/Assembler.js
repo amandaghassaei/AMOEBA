@@ -178,22 +178,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //    };
     
     Assembler.prototype._postGetStock = function(index, position, settings, exporter){
-        var json = {
-            index:index,
-            position: position
-        };
-        return exporter.addComment("get stock " + JSON.stringify(json));
+        return exporter.addComment("get stock " + JSON.stringify(index));
     };
     
     Assembler.prototype._postReleaseStock = function(index, position, settings, exporter){
-        var json = {
-            index:index,
-            position: position
-        };
         var data = "";
         data += exporter.rapidZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
         data += exporter.moveZ(position.z-settings.originPosition.z, settings);
-        data += exporter.addComment(JSON.stringify(json));
+        data += exporter.addComment(JSON.stringify(index));
         data += exporter.moveZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
         data += exporter.rapidZ(settings.rapidHeight, settings);
         return data;
@@ -223,17 +215,18 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
     
-    Assembler.prototype.pickUpStock = function(index, position, speed, settings, callback){
+    Assembler.prototype.pickUpStock = function(index, speed, settings, callback){
         _.each(this.stock, function(stock){
             stock.show();
         });
         if (index.z%2 != 0) {//rotate on odd rows
             this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+            return;
         }
         this.components.frame.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
     };
     
-    Assembler.prototype.releaseStock = function(index, position, settings){
+    Assembler.prototype.releaseStock = function(index, settings){
         lattice.showCellAtIndex(index);
         _.each(this.stock, function(stock){
             stock.hide();

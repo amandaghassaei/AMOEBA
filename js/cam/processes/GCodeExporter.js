@@ -100,12 +100,12 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         if (line.substr(0,10) == "(get stock"){
             var json = line.substr(11,line.length-12);
             json = JSON.parse(json);
-            return machine.pickUpStock(json.index, json.position, this.animationSpeed, settings, callback);
+            return machine.pickUpStock(json, this.animationSpeed, settings, callback);
         }
         if (line.substr(0,2) == "({"){
             var json = line.substr(1,line.length-2);
             json = JSON.parse(json);
-            machine.releaseStock(json.index, json.position, settings);
+            machine.releaseStock(json, settings);
             return callback();
         }
         if (line[0] == "F"){//speed
