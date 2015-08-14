@@ -175,6 +175,7 @@ require.config({
         //assemblers
         assembler: 'cam/assemblers/Assembler',
         component: 'cam/assemblers/Component',
+        stockComponent: 'cam/assemblers/StockComponent',
 
         //processes
         gcode: 'cam/processes/GCodeExporter',

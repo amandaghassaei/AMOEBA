@@ -3,6 +3,11 @@ Parent/Child Tree:<br/>
     <%= component.name %> <a data-id="<%= component.id %>" class="editMachineComponent" href="#">Edit</a><br/>
 <% }); %><br/>
 <a href="#" id="newMachineComponent" class=" btn btn-block btn-lg btn-default">+ New Machine Component</a><br/>
+Stock:<br/>
+<% _.each(stock, function(stockEl, id){ %>
+    <%= stockEl.name %> <a data-id="<%= id %>" class="edit Stock" href="#">Edit</a><br/>
+<% }); %><br/>
+<a href="#" id="addStock" class=" btn btn-block btn-lg btn-default">+ New Stock</a><br/>
 Offset (xyz):&nbsp;&nbsp;
     <input data-property="translation" data-key="x" value="<%= translation.x %>" placeholder="X" class="form-control floatInput assembler" type="text">&nbsp;
     <input data-property="translation" data-key="y" value="<%= translation.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">&nbsp;

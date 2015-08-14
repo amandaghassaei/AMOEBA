@@ -79,7 +79,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 //            this.listenTo(appState, "change:stockSimulationPlaying", this._stockSimulation);
 
 //            this.listenTo(lattice, "change:partType", this._updatePartType);
-//            this.listenTo(appState, "change:cellMode", this._updateCellMode);
+            this.listenTo(appState, "change:cellMode", this._updateCellMode);
             this.listenTo(this, "change:machineName", this.selectMachine);
 
             this._navChanged();

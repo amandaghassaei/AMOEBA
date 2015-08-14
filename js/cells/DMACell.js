@@ -21,7 +21,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
 
-        if (this.index){
+        if (this.index){//todo gik supcells in stock have index but no highlight
             if (!this.cells) lattice.getUItarget().addHighlightableCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
             if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
         } else this.hide();//stock cell

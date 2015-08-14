@@ -114,6 +114,26 @@ define([], function(){
                         }
                     }
                 },
+                stock:{
+                    stock1: {
+                        description:{
+                            materialName: "brass",
+                            length: 4
+                        },
+                        name: "Stock 1",
+                        parent: "zAxis",
+                        position: {x:0,y:0,z:0}
+                    },
+                    stock2: {
+                        description:{
+                            materialName: "fiberGlass",
+                            length: 4
+                        },
+                        name: "Stock 2",
+                        parent: "zAxis",
+                        position: {x:26.1,y:0,z:0}
+                    }
+                },
                 defaults: {
                     camStrategy: "raster",
                     placementOrder: "XYZ",//used for raster strategy entry

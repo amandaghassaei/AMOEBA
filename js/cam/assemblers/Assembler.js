@@ -2,8 +2,8 @@
  * Created by aghassaei on 5/28/15.
  */
 
-define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component'],
-    function(_, appState, lattice, THREE, three, cam, Component){
+define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component', 'stockComponent'],
+    function(_, appState, lattice, THREE, three, cam, Component, StockComponent){
     
     var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.5});
     var stlLoader = new THREE.STLLoader();
@@ -11,7 +11,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     function Assembler(id, json){
 
         this.id = id;
-        this.components = {};
         this.rotation = json.rotation;
         this.translation = json.translation;
         this.scale = json.scale;
@@ -24,18 +23,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
 
-//        var self = this;
-//        this._buildStock(function(stock){
-//            self.stock = stock;
-//            self._positionStockRelativeToEndEffector(stock);
-//        });
 
-        if (json.components && _.keys(json.components).length > 0) {
-            var componentsJSON = json.components;
-            this.components = this._buildAssemblerComponents(componentsJSON);
-            this._loadSTLs(json, this.components);
-            this._configureAssemblerMovementDependencies(componentsJSON, this.components, this.object3D);
-        }
+        var componentsJSON = json.components;
+        this.components = this._buildAssemblerComponents(componentsJSON);
+        this._loadSTLs(json, this.components);
+        this._configureAssemblerMovementDependencies(componentsJSON, this.components, this.components, this.object3D);
+
+        this.stock = this._buildAssemblerComponents(json.stock, StockComponent);
+        this._configureAssemblerMovementDependencies(json.stock, this.components, this.stock, this.object3D);
 
         this.setVisibility(cam.isVisible());
         three.render();
@@ -86,29 +81,25 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
 
-    Assembler.prototype._buildAssemblerComponents = function(componentsJSON){
+    Assembler.prototype._buildAssemblerComponents = function(componentsJSON, Class){
         var components = {};
+        if (componentsJSON === undefined ) return components;
         _.each(componentsJSON, function(componentJSON, id){
-            components[id] = new Component(id, componentJSON);
+            if (Class) components[id] = new Class(id, componentJSON);
+            else components[id] = new Component(id, componentJSON);
         });
         return components;
     };
 
-    Assembler.prototype._configureAssemblerMovementDependencies = function(json, components, object3D){
+    Assembler.prototype._configureAssemblerMovementDependencies = function(json, components, newComponents, object3D){
+        if (json === undefined) return;
         _.each(json, function(componentJSON, id){
-            if (componentJSON.parent) components[componentJSON.parent].addChild(components[id]);
-            else object3D.add(components[id].getObject3D());
+            if (componentJSON.parent) components[componentJSON.parent].addChild(newComponents[id]);
+            else object3D.add(newComponents[id].getObject3D());
         });
     };
-    
-    Assembler.prototype._buildStock = function(callback){
-        lattice.makeCellForLatticeType({}, callback);
-    };
-    
-    Assembler.prototype._positionStockRelativeToEndEffector = function(stock){
-        var object3D = stock.getObject3D();
-        object3D.position.set((2.4803+0.2)*20, (-1.9471+0.36)*20, 1.7*20);
-    };
+
+
 
     
 
@@ -202,11 +193,15 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     //animation methods
     
     Assembler.prototype.updateCellMode = function(){//message from cam
-        this.stock.setMode();
+        _.each(this.stock, function(stock){
+            stock.setMode();
+        });
     };
     
     Assembler.prototype.pickUpStock = function(){
-        this.stock.show();
+        _.each(this.stock, function(stock){
+            stock.show();
+        });
     };
     
     Assembler.prototype.releaseStock = function(index){
