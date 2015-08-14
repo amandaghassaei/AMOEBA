@@ -145,7 +145,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
 //                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            data += self._postMoveXY(cellPosition.x-settings.originPosition.x, cellPosition.y-settings.originPosition.x, settings, exporter);
+            data += self._postMoveXY(cellPosition.x-settings.originPosition.x, cellPosition.y-settings.originPosition.y, settings, exporter);
             data += self._postReleaseStock(cellPosition, cell, settings, exporter);
             data += "\n";
         });
