@@ -9,7 +9,7 @@ define(['lattice', 'three'], function(lattice, THREE){
 
         showCellAtIndex: function(index){
             var latticeIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
-            var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+            var cell = this.sparseCells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
             if (cell) cell.show();
             else console.warn("placing a cell that does not exist");
         },
