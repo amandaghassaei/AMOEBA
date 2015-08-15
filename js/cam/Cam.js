@@ -157,7 +157,9 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         _tabChanged: function(){
             this._setCAMVisibility();
-            if (appState.get("currentTab") != "animate") this.resetSimulation();
+            var currentTab = appState.get("currentTab");
+            if (currentTab == "assemblerSetup") this.get("assembler").buildComponentTree();
+            if (currentTab != "animate") this.resetSimulation();
             else if (this.get("needsPostProcessing")) this.postProcess();
         },
 

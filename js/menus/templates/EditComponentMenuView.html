@@ -1,7 +1,7 @@
 Name: &nbsp;&nbsp;<input data-property="name" value="<%= components[editingComponent].name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput component" type="text"><br/><br/>
 Parent: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= components[components[editingComponent].parent].name || "No Parent Selected" %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><% if (components[editingComponent].parent){ %><%= components[components[editingComponent].parent].name %><% }else{ %>No Parent Selected<% } %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <% _.each(components, function(component){ %>
                 <% if (component.id == editingComponent) return; %>
@@ -19,9 +19,13 @@ Children: &nbsp;&nbsp;
         <% }); %>
     </ul>
 </div><br/>
+
     <% _.each(components[editingComponent].children, function(childID){ %>
-        <%= components[childID].name %> <a class="removeChild" data-id="<%= childID %>" href="#">Remove</a><br/>
+        <% if (components[childID]){ %>
+            <%= components[childID].name %> <a class="removeChild" data-id="<%= childID %>" href="#">Remove</a><br/>
+        <% } %>
     <% }); %><br/>
+
 STL: &nbsp;&nbsp;STL Name<br/><br/>
 <a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>
 Offset (xyz):&nbsp;&nbsp;

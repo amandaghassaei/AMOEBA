@@ -11,7 +11,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         this.object3D = new THREE.Object3D();
         this.id = id || "id" + id++;
         this.name = json.name || "";
-        this.parent = null;
+        this.parent = json.parent;
+        this.parentObject = null;
         this.children = [];
     }
 
@@ -38,9 +39,9 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.checkAncestry = function(component){//return true if this is a parent/grandparent/great-grandparent...
-        if (this.parent){
-            if (this.parent === component) return true;
-            else return this.parent.checkAncestry(component);
+        if (this.parentObject){
+            if (this.parentObject === component) return true;
+            else return this.parentObject.checkAncestry(component);
         }
         return false;
     };
@@ -55,11 +56,12 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.addParent = function(parent){
-        if (this.parent) {
-            this.parent.removeChild(this);
-            this.parent = null;
+        if (this.parentObject) {
+            this.parentObject.removeChild(this);
+            this.parentObject = null;
         }
-        this.parent = parent;
+        this.parentObject = parent;
+        this.parent = parent.id;
     };
 
     Component.prototype.getID = function(){
@@ -174,7 +176,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     //helper
 
     Component.prototype.destroy = function(){
-        if (this.parent) this.parent.removeChild(this);
+        if (this.parentObject) this.parentObject.removeChild(this);
+        this.parentObject = null;
         this.parent = null;
         var self = this;
         _.each(this.children, function(child){
@@ -191,13 +194,11 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         _.each(this.children, function(child){
             childIDs.push(child.id);
         });
-        var parentID = "";
-        if (this.parent) parentID = this.parent.id;
         return {
             id: this.id,
             name: this.name,
             children: childIDs,
-            parent: parentID,
+            parent: this.parent || "",
             translation: this.object3D.position,
             scale: this.object3D.scale.x,
             rotation: this.object3D.rotation

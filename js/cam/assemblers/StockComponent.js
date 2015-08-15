@@ -44,7 +44,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, 
     };
 
     StockComponent.prototype.hide = function(){
-        this.cell.hide();
+        if (this.cell) this.cell.hide();
     };
 
     StockComponent.prototype.setMode = function(){

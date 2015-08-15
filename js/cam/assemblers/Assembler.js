@@ -105,7 +105,8 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
 
     Assembler.prototype.highlight = function(componentId){
-        this.components[componentId].setTranslucent(false);
+        if (this.components[componentId]) this.components[componentId].setTranslucent(false);
+        else if (this.stock[componentId]) this.stock[componentId].show();
     };
     
     Assembler.prototype._setTranslucent = function(){
@@ -115,10 +116,27 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         _.each(this.components, function(component){
             component.setTranslucent(translucent);
         });
+        this.hideStock();
     };
 
-    Assembler.prototype.buildComponentTree = function(){
-
+    Assembler.prototype.buildComponentTree = function(index, parent, tree){
+        var self = this;
+        if (parent === undefined){
+            index = 0;
+            tree = {};
+        }
+        _.each(this.stock, function(thisStock, key){
+            if (thisStock.parent == parent) {
+                tree[key] = index;
+            }
+        });
+        _.each(this.components, function(component, key){
+            if (component.parent == parent) {
+                tree[key] = index;
+                self.buildComponentTree(index+1, key, tree);
+            }
+        });
+        this.tree = tree;
     };
     
     
@@ -230,6 +248,12 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stock.updatePartType();
         });
     };
+
+    Assembler.prototype.hideStock = function(){
+        _.each(this.stock, function(stock){
+            stock.hide();
+        });
+    };
     
     Assembler.prototype.pickUpStock = function(index, speed, settings, callback){
         _.each(this.stock, function(stock){
@@ -244,9 +268,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
     Assembler.prototype.releaseStock = function(index, settings){
         lattice.showCellAtIndex(index);
-        _.each(this.stock, function(stock){
-            stock.hide();
-        });
+        this.hideStock();
     };
     
     Assembler.prototype.pause = function(){
@@ -328,7 +350,8 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             shouldPickUpStock: this.shouldPickUpStock,
             relative: this.relative,
             camProcesses: this.camProcesses,
-            numMaterials: this.numMaterials
+            numMaterials: this.numMaterials,
+            tree: this.tree || this.buildComponentTree()
         }
     };
 
