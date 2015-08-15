@@ -162,7 +162,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var min = this.get("cellsMin").sub(bounds.min);
             var overlap = false;
             var forCAM = appState.get("currentNav") == "navAssemble";
-            console.log(forCAM);
             this._loopCells(this.sparseCells, function(cell){
                 if (!cell) return;
                 overlap |= cell.addToDenseArray(cells, min, forCAM);

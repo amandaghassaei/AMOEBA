@@ -143,7 +143,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             var cellIndex = cell.getAbsoluteIndex();
 
             if (!self.shouldPickUpStock){
-                data += self._postGetStock(cellIndex, cellPosition, settings, exporter);
+                data += self._postGetStock(cellIndex, cellPosition, cell.materialName, settings, exporter);
             } else {
 //                var thisStockPosition = _.clone(stockPosition);
 //                if (multStockPositions) {
@@ -155,8 +155,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
 //                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            data += self._postMoveXY(cellPosition.clone().sub(settings.originPosition), settings, exporter);
-            data += self._postReleaseStock(cellIndex, cellPosition, settings, exporter);
+            data += self._postReleaseStock(cellIndex, cellPosition, cell.materialName, settings, exporter);
             data += "\n";
         });
 
@@ -177,16 +176,20 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //        return data;
 //    };
     
-    Assembler.prototype._postGetStock = function(index, position, settings, exporter){
+    Assembler.prototype._postGetStock = function(index, position, material, settings, exporter){
         return exporter.addComment("get stock " + JSON.stringify(index));
     };
     
-    Assembler.prototype._postReleaseStock = function(index, position, settings, exporter){
+    Assembler.prototype._postReleaseStock = function(index, position, material, settings, exporter){
         var data = "";
-        data += exporter.rapidZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
-        data += exporter.moveZ(position.z-settings.originPosition.z, settings);
+        if (material == "fiberGlass") position.x -= 26.1*settings.scale;
+        position.sub(settings.originPosition);
+        data += this._postMoveXY(position, settings, exporter);
+
+        data += exporter.rapidZ(position.z+settings.safeHeight, settings);
+        data += exporter.moveZ(position.z, settings);
         data += exporter.addComment(JSON.stringify(index));
-        data += exporter.moveZ(position.z-settings.originPosition.z+settings.safeHeight, settings);
+        data += exporter.moveZ(position.z+settings.safeHeight, settings);
         data += exporter.rapidZ(settings.rapidHeight, settings);
         return data;
     };

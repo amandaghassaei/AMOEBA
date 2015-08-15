@@ -303,7 +303,6 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         //post processing
 
         _setNeedsPostProcessing: function(){
-            console.log("hi");
             this.set("needsPostProcessing", true);
         },
 
