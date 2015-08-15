@@ -87,6 +87,7 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
 
     GCodeExporter.prototype.makeFooter = function(settings){
         var data = "";
+        data += this.goHome(settings);
     //    data += this.addLine("M30", [], "program stop");
         return data;
     };

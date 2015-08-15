@@ -40,7 +40,7 @@ define(['three'], function(THREE){
                 components: {
                     xAxis: {
                         name: "X Axis",
-                        isLinear: true,
+                        rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
@@ -55,7 +55,7 @@ define(['three'], function(THREE){
                     },
                     frame: {
                         name: "Y Axis",
-                        isLinear: true,
+                        rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
@@ -70,7 +70,7 @@ define(['three'], function(THREE){
                     },
                     zAxis: {
                         name: "Z Axis",
-                        isLinear: true,
+                        rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
@@ -85,7 +85,7 @@ define(['three'], function(THREE){
                     },
                     yAxis: {
                         name: "Frame",
-                        isLinear: true,
+                        rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
@@ -100,8 +100,9 @@ define(['three'], function(THREE){
                     },
                     substrate: {
                         name: "Substrate",
-                        isLinear: false,
+                        rotary: true,
                         axisOfMotion: null,
+                        centerOfRotation: {x:10,y:10,z:0},
                         //minBound
                         //maxBound
                         parent: null,

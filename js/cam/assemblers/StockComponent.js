@@ -15,7 +15,6 @@ define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, 
             self.cell = cell;
             self._setPosition(cell, json.position, json.rotation);
             self.object3D.add(cell.getObject3D());
-            cell.show();
         });
     }
     StockComponent.prototype = Object.create(Component.prototype);
