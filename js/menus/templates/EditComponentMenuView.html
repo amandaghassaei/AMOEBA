@@ -27,7 +27,7 @@ Children: &nbsp;&nbsp;
     <% if (tree[editingComponent] >= level) return; %>
     <% var component = components[id] || stock[id]; %>
     <% treeLevel++; %>
-    <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= level*10 + 20 %>px"><%= component.name %>
+    <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= (level-tree[editingComponent]-1)*10 + 20 %>px"><%= component.name %>
         <% if(tree[editingComponent]+1 == level){ %><a data-id="<%= id %>" class="editMachineComponent pull-right" href="#">Remove</a><% } %></label></div><br/>
 <% }); %><br/>
 
