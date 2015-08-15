@@ -1,7 +1,8 @@
-Name: &nbsp;&nbsp;<input data-property="name" value="<%= components[editingComponent].name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput component" type="text"><br/><br/>
+<% var thisComponent = components[editingComponent] || stock[editingComponent]; %>
+Name: &nbsp;&nbsp;<input data-property="name" value="<%= thisComponent.name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput component" type="text"><br/><br/>
 Parent: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><% if (components[editingComponent].parent){ %><%= components[components[editingComponent].parent].name %><% }else{ %>No Parent Selected<% } %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><% if (thisComponent.parent){ %><%= components[thisComponent.parent].name %><% }else{ %>No Parent Selected<% } %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <% _.each(components, function(component){ %>
                 <% if (component.id == editingComponent) return; %>
@@ -14,7 +15,7 @@ Children: &nbsp;&nbsp;
     <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">+ Add Child<span class="caret"></span></button>
     <ul role="menu" class="dropdown-menu">
         <% _.each(components, function(component, id){ %>
-            <% if (component.id == editingComponent || component.id == components[editingComponent].parent) return; %>
+            <% if (component.id == editingComponent || component.id == thisComponent.parent) return; %>
             <li><a class="component dropdownSelector" data-property="newChild" data-value="<%= id %>" href="#"><%= component.name %></a></li>
         <% }); %>
         <% _.each(stock, function(thisStock, id){ %>
