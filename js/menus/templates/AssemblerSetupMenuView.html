@@ -1,11 +1,11 @@
 Parent/Child Tree:<br/>
 <% _.each(components, function(component){ %>
-    <%= component.name %> <a data-id="<%= component.id %>" class="editMachineComponent" href="#">Edit</a><br/>
+    <label class="assemblerTree"><%= component.name %> <a data-id="<%= component.id %>" class="editMachineComponent" href="#">Edit</a></label><br/>
 <% }); %><br/>
 <a href="#" id="newMachineComponent" class=" btn btn-block btn-lg btn-default">+ New Machine Component</a><br/>
 Stock:<br/>
 <% _.each(stock, function(stockEl, id){ %>
-    <%= stockEl.name %> <a data-id="<%= id %>" class="edit Stock" href="#">Edit</a><br/>
+    <label class="assemblerTree"><%= stockEl.name %> <a data-id="<%= id %>" class="edit Stock" href="#">Edit</a></label><br/>
 <% }); %><br/>
 <a href="#" id="addStock" class=" btn btn-block btn-lg btn-default">+ New Stock</a><br/>
 Offset (xyz):&nbsp;&nbsp;

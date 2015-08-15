@@ -5,7 +5,7 @@
 define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component', 'stockComponent'],
     function(_, appState, lattice, THREE, three, cam, Component, StockComponent){
     
-    var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.5});
+    var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.3});
     var stlLoader = new THREE.STLLoader();
 
     function Assembler(id, json){
@@ -75,7 +75,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
                     console.warn("no geometry loaded for " + filename);
                     return;
                 }
-                components[id].makeGeometry(geo, assemblerMaterial);
+                components[id].makeGeometry(geo, assemblerMaterial.clone());
             });
         });
     };
@@ -103,9 +103,22 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this._setTranslucent();
         three.render();
     };
+
+    Assembler.prototype.highlight = function(componentId){
+        this.components[componentId].setTranslucent(false);
+    };
     
     Assembler.prototype._setTranslucent = function(){
-        assemblerMaterial.transparent = (appState.get("currentTab") == "cam" || appState.get("currentTab") == "assemblerSetup");
+        var currentTab = appState.get("currentTab");
+        var translucent = currentTab == "cam" || currentTab == "assemblerSetup";
+        if (currentTab == "editComponent") return;
+        _.each(this.components, function(component){
+            component.setTranslucent(translucent);
+        });
+    };
+
+    Assembler.prototype.buildComponentTree = function(){
+
     };
     
     
@@ -302,8 +315,13 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         _.each(this.components, function(component, id){
             componentsJSON[id] = component.toJSON();
         });
+        var stockJSON = {};
+        _.each(this.stock, function(thisStock, id){
+            stockJSON[id] = thisStock.toJSON();
+        });
         return {
             components: componentsJSON,
+            stock: stockJSON,
             translation: this.translation,
             scale: this.scale,
             rotation: this.rotation,

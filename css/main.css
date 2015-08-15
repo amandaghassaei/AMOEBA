@@ -466,3 +466,7 @@ label {
     position: absolute;
     left: 245px;
 }
+
+.assemblerTree{
+    margin-left: 30px;
+}

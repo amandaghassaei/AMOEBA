@@ -69,7 +69,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                     "change:rapidHeight " +
                     "change:machineName",
                 this._setNeedsPostProcessing);
-            this.listenTo(lattice,
+            this.listenTo(lattice,//todo this isn't working
                     "change:scale" +
                     "change:units" +
                     "change:numCells " +
@@ -81,6 +81,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             this.listenTo(lattice, "change:partType", this._updatePartType);
             this.listenTo(appState, "change:cellMode", this._updateCellMode);
             this.listenTo(this, "change:machineName", this.selectMachine);
+            this.listenTo(this, "change:editingComponent", this._editComponent);
 
             this._navChanged();
     //        this._initOriginAndStock();
@@ -181,6 +182,11 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             three.render();
         },
 
+        _editComponent: function(){
+            var componentId = this.get("editingComponent");
+            if (componentId) this.get("assembler").highlight(componentId);
+        },
+
 
 
 
@@ -193,7 +199,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         isVisible: function(){
             var currentTab = appState.get("currentTab");
-            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animate" || currentTab == "send");
+            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animate" || currentTab == "send"
+                || currentTab == "editComponent");
         },
 
 

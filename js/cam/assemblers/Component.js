@@ -19,7 +19,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
 
     Component.prototype.makeGeometry = function(geo, material){
-        this.object3D.add(new THREE.Mesh(geo, material));
+        this.stl = new THREE.Mesh(geo, material);
+        this.object3D.add(this.stl);
     };
 
     Component.prototype.addChild = function(child){
@@ -64,6 +65,12 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     Component.prototype.getID = function(){
         return this.id;
     };
+
+    Component.prototype.setTranslucent = function(translucent){
+        if (this.stl === undefined) return;
+        this.stl.material.transparent = translucent;
+    };
+
 
 
 
