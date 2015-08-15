@@ -17,14 +17,19 @@ Children: &nbsp;&nbsp;
             <% if (component.id == editingComponent || component.id == components[editingComponent].parent) return; %>
             <li><a class="component dropdownSelector" data-property="newChild" data-value="<%= id %>" href="#"><%= component.name %></a></li>
         <% }); %>
+        <% _.each(stock, function(thisStock, id){ %>
+            <li><a class="component dropdownSelector" data-property="newChild" data-value="<%= id %>" href="#"><%= thisStock.name %></a></li>
+        <% }); %>
     </ul>
-</div><br/>
-
-    <% _.each(components[editingComponent].children, function(childID){ %>
-        <% if (components[childID]){ %>
-            <%= components[childID].name %> <a class="removeChild" data-id="<%= childID %>" href="#">Remove</a><br/>
-        <% } %>
-    <% }); %><br/>
+</div><br/><br/>
+<% var treeLevel = 0; %>
+<% _.each(tree, function(level, id){ %>
+    <% if (tree[editingComponent] >= level) return; %>
+    <% var component = components[id] || stock[id]; %>
+    <% treeLevel++; %>
+    <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= level*10 + 20 %>px"><%= component.name %>
+        <% if(tree[editingComponent]+1 == level){ %><a data-id="<%= id %>" class="editMachineComponent pull-right" href="#">Remove</a><% } %></label></div><br/>
+<% }); %><br/>
 
 STL: &nbsp;&nbsp;STL Name<br/><br/>
 <a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>
