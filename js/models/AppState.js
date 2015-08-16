@@ -20,6 +20,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             scriptIsVisible: false,
             consoleIsVisible: false,
             ribbonIsVisible: true,
+            turnOffRendering: false,
 
             basePlaneIsVisible:true,
             highlighterIsVisible:true,
@@ -60,6 +61,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             this.listenTo(this, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:materialType", this._materialTypeChanged);
             this.listenTo(this, "change:gikLength", this._gikLengthChanged);
+            this.listenTo(this, "change:turnOffRendering", this._renderingOnOff);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
@@ -138,6 +140,11 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 this.set("superCellRange", new THREE.Vector3(this.get("gikLength"), 1, 1));
             }
         },
+
+        _renderingOnOff: function(){
+            if (!this.get("turnOffRendering")) three.render();
+        },
+
 
         ///////////////////////////////////////////////////////////////////////////////
         /////////////////////KEY BINDINGS//////////////////////////////////////////////

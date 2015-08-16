@@ -9,6 +9,11 @@ define(['underscore', 'three'], function(_, THREE){
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 
+    var appState;
+    require(['appState'], function(globalAppState){
+        appState = globalAppState;
+    });
+
     //store all meshes to highlight
     var cells = [];
     var compositeCells = [];
@@ -122,7 +127,7 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     function startAnimationLoop(){
-        if (animationLoopRunning) return;
+        if (appState.get("turnOffRendering") || animationLoopRunning) return;
         stopAnimationFlag = false;
         animationLoopRunning = true;
         console.log("animation started");
@@ -145,7 +150,7 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     function render(){
-        if (animationLoopRunning) return;
+        if ((appState && appState.get("turnOffRendering")) || animationLoopRunning) return;
         _render();
     }
 
