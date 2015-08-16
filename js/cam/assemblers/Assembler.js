@@ -19,6 +19,13 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.camProcesses = json.camProcesses;
         this.numMaterials = json.numMaterials;
 
+        this.customHeader = json.customHeader || function(settings){
+//            this.home(settings);
+        };
+        this.customFooter = json.customFooter || function(){};
+        this.customHome = json.customHome || function(){};
+        this.customPickUpStock = json.customPickUpStock || function(){};
+        this.customPlacePart = json.customPlacePart || function(){};
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
@@ -195,6 +202,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         data += exporter.makeFooter(settings);
 
         return data;
+    };
+
+    Assembler.prototype.makeHeader = function(settings){
+        return this.customHeader(settings);
+    };
+
+    Assembler.prototype.home = function(exporter, settings){
+        return exporter.goHome(settings);
     };
     
     Assembler.prototype._postProcessCells = function(settings, exporter){
