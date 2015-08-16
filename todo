@@ -1,8 +1,8 @@
 import - offset, scale, rotation
-parse sparseCells -> cells
+
 
 hierarchical
-    - gik dimensions
+    - single layer gik throwing error on parse
     - origin
     - rotation
     - load composite materials
@@ -15,3 +15,6 @@ rendering callbacks
 
 
 highligher - check mode, do not add cells except in design/composite/material modes
+
+part stl import and orientation  - settings to json
+same for machine

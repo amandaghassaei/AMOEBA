@@ -11,9 +11,14 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         this.object3D = new THREE.Object3D();
         this.id = id || "id" + id++;
         this.name = json.name || "";
-        this.parent = json.parent;
+        this.parent = null;
+        if (json.parent) this.parent = json.parent;
         this.parentObject = null;
         this.children = [];
+        this.isStatic = json.isStatic;
+        this.rotary = json.rotary;
+        this.motionVector = new THREE.Vector3();
+        if (json.motionVector) this.motionVector.set(json.motionVector.x, json.motionVector.y, json.motionVector.z);
     }
 
     //assembler setup
@@ -34,7 +39,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             return;
         }
         this.children.push(child);
-        child.addParent(this);
+        child._addParent(this, this.id);
         this.object3D.add(child.getObject3D());
     };
 
@@ -46,7 +51,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return false;
     };
 
-    Component.prototype.removeChild = function(child){
+    Component.prototype._removeChild = function(child){
         if (this.children.indexOf(child) == -1){
             console.warn("not a child");
             return;
@@ -55,13 +60,13 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         this.object3D.remove(child.getObject3D());
     };
 
-    Component.prototype.addParent = function(parent){
+    Component.prototype._addParent = function(parent, id){
         if (this.parentObject) {
-            this.parentObject.removeChild(this);
+            this.parentObject._removeChild(this);
             this.parentObject = null;
         }
         this.parentObject = parent;
-        this.parent = parent.id;
+        this.parent = id;
     };
 
     Component.prototype.getID = function(){
@@ -176,12 +181,12 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     //helper
 
     Component.prototype.destroy = function(){
-        if (this.parentObject) this.parentObject.removeChild(this);
+        if (this.parentObject) this.parentObject._removeChild(this);
         this.parentObject = null;
         this.parent = null;
         var self = this;
         _.each(this.children, function(child){
-            self.removeChild(child);
+            self._removeChild(child);
         });
         this.children = null;
         this.name = null;
@@ -201,7 +206,10 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             parent: this.parent || "",
             translation: this.object3D.position,
             scale: this.object3D.scale.x,
-            rotation: this.object3D.rotation
+            rotation: this.object3D.rotation,
+            isStatic: this.isStatic,
+            rotary: this.rotary,
+            motionVector: this.motionVector
         }
     };
 

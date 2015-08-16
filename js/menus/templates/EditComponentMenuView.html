@@ -1,4 +1,3 @@
-<% var thisComponent = components[editingComponent] || stock[editingComponent]; %>
 <% var isStock = stock[editingComponent]; %>
 Name: &nbsp;&nbsp;<input data-property="name" value="<%= thisComponent.name %>" placeholder="Enter Name" class="seventyFiveWidth form-control textInput component" type="text"><br/><br/>
 Parent: &nbsp;&nbsp;
@@ -31,20 +30,37 @@ Parent: &nbsp;&nbsp;
         <% var component = components[id] || stock[id]; %>
         <% treeLevel++; %>
         <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= (level-tree[editingComponent]-1)*10 + 20 %>px"><%= component.name %>
-            <% if(tree[editingComponent]+1 == level){ %><a data-id="<%= id %>" class="editMachineComponent pull-right" href="#">Remove</a><% } %></label></div><br/>
+            <% if(tree[editingComponent]+1 == level){ %><a data-id="<%= id %>" class="removeChild pull-right" href="#">Remove</a><% } %></label></div><br/>
     <% }); %><br/>
-    STL: &nbsp;&nbsp;STL Name<br/><br/>
-    <a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>
+
+    Motion:<label class="checkbox pull-right" for="isStatic">
+        <input id="isStatic" data-property="isStatic" type="checkbox" <% if (thisComponent.isStatic){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="component custom-checkbox">
+        <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        Is Static</label><br/>
+        <% if (!thisComponent.isStatic){ %>
+            <label class="checkbox" for="isRotary">
+            <input id="isRotary" data-property="rotary" type="checkbox" <% if (thisComponent.rotary){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="component custom-checkbox">
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Rotary Axis (default is Linear)</label>
+            Vector (xyz):&nbsp;&nbsp;
+            <input data-property="motionVector" data-key="x" value="<%= thisComponent.motionVector.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
+            <input data-property="motionVector" data-key="y" value="<%= thisComponent.motionVector.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
+            <input data-property="motionVector" data-key="z" value="<%= thisComponent.motionVector.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/>
+            <!--Jog<br/>-->
+        <% } %>
+        <br/>
+    <!--STL: &nbsp;&nbsp;STL Name<br/><br/>-->
+    <!--<a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>-->
 <% } %>
-Offset (xyz):&nbsp;&nbsp;
-    <input data-property="translation" data-key="x" value="<%= translation.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
-    <input data-property="translation" data-key="y" value="<%= translation.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
-    <input data-property="translation" data-key="z" value="<%= translation.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
-Rotation (xyz):&nbsp;&nbsp;
-    <input data-property="rotation" data-key="x" value="<%= rotation.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
-    <input data-property="rotation" data-key="y" value="<%= rotation.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
-    <input data-property="rotation" data-key="z" value="<%= rotation.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
-<% if(!isStock){ %> Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput component" type="text"><br/><br/><% } %>
+<!--Offset (xyz):&nbsp;&nbsp;-->
+    <!--<input data-property="translation" data-key="x" value="<%= translation.x %>" placeholder="X" class="form-control floatInput stl" type="text">&nbsp;-->
+    <!--<input data-property="translation" data-key="y" value="<%= translation.y %>" placeholder="Y" class="form-control floatInput stl" type="text">&nbsp;-->
+    <!--<input data-property="translation" data-key="z" value="<%= translation.z %>" placeholder="Z" class="form-control floatInput stl" type="text"><br/><br/>-->
+<!--Rotation (xyz):&nbsp;&nbsp;-->
+    <!--<input data-property="rotation" data-key="x" value="<%= rotation.x %>" placeholder="X" class="form-control floatInput stl" type="text">&nbsp;-->
+    <!--<input data-property="rotation" data-key="y" value="<%= rotation.y %>" placeholder="Y" class="form-control floatInput stl" type="text">&nbsp;-->
+    <!--<input data-property="rotation" data-key="z" value="<%= rotation.z %>" placeholder="Z" class="form-control floatInput stl" type="text"><br/><br/>-->
+<!--<% if(!isStock){ %> Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput stl" type="text"><br/><br/><% } %>-->
 <a id="finishComponent" href="#" class="btn btn-block btn-lg btn-success">Save <% if(isStock){ %>Stock<% }else{ %>Component<% } %></a><br/>
 <a id="deleteComponent" href="#" class="btn btn-halfWidth btn-lg btn-default"><span class="fui-trash"></span> Delete</a>
 <a id="cancelComponent" href="#" class="btn btn-halfWidth pull-right btn-lg btn-default">Cancel / Exit</a><br/><br/>

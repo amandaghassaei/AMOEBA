@@ -98,6 +98,20 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         });
     };
 
+    Assembler.prototype.addChild = function(child, object3D){
+        child._addParent(this, null);
+        var object3D = object3D || this.object3D;
+        object3D.add(child.getObject3D());
+    };
+
+    Assembler.prototype._removeChild = function(child){
+        if (this.object3D.children.indexOf(child.stl) == -1){
+            console.warn("not a child");
+            return;
+        }
+        this.object3D.remove(child.getObject3D());
+    };
+
     Assembler.prototype.setVisibility = function(visible){
         this.object3D.visible = visible;
         this._setTranslucent();
@@ -119,12 +133,18 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.hideStock();
     };
 
-    Assembler.prototype.buildComponentTree = function(index, parent, tree){
+    Assembler.prototype.getComponent = function(id){
+        return this.components[id] || this.stock[id];
+    };
+
+    Assembler.prototype.buildComponentTree = function(){
+        var tree = this._recursiveTreeBuilding(0, null, {});
+        console.log(tree);
+        this.tree = tree;
+    };
+
+    Assembler.prototype._recursiveTreeBuilding = function(index, parent, tree){
         var self = this;
-        if (parent === undefined){
-            index = 0;
-            tree = {};
-        }
         _.each(this.stock, function(thisStock, key){
             if (thisStock.parent == parent) {
                 tree[key] = index;
@@ -133,10 +153,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         _.each(this.components, function(component, key){
             if (component.parent == parent) {
                 tree[key] = index;
-                self.buildComponentTree(index+1, key, tree);
+                self._recursiveTreeBuilding(index+1, key, tree);
             }
         });
-        this.tree = tree;
+        return tree;
     };
     
     

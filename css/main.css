@@ -479,3 +479,17 @@ label {
     background-color: #eee;
     border: 1px solid #ddd;
 }
+
+.dropdown-menu>li>a{
+    padding: 6px 9px;
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a .caret {
+    border-top-color: #ddd;
+    border-bottom-color: #ddd;
+}
+
+.navbar-inverse .navbar-nav > .dropdown > a:hover .caret {
+    border-top-color: #aaa;
+    border-bottom-color: #aaa;
+}

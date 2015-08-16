@@ -45,7 +45,7 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: "yAxis",
-                        children: ["zAxis"],
+                        motionVector: {x:1, y:0, z:0},
                         stl: {
                             filename: "assets/stls/stapler/xAxis.stl",
                             offset: {x:0,y:0,z:0},
@@ -60,7 +60,7 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: "substrate",
-                        children: ["yAxis"],
+                        motionVector: {x:0, y:1, z:0},
                         stl: {
                             filename: "assets/stls/stapler/yAxis.stl",
                             offset: {x:0,y:0,z:0},
@@ -75,7 +75,7 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: "xAxis",
-                        children: [],//stock
+                        motionVector: {x:0, y:0, z:1},
                         stl: {
                             filename: "assets/stls/stapler/zAxis.stl",
                             offset: {x:0,y:0,z:0},
@@ -90,7 +90,7 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: "frame",
-                        children: ["xAxis"],
+                        isStatic: true,
                         stl: {
                             filename: "assets/stls/stapler/frame.stl",
                             offset: {x:0,y:0,z:0},
@@ -106,7 +106,7 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: null,
-                        children: ["yAxis"],
+                        motionVector: {x:0, y:0, z:1},
                         stl: {
                             filename: "assets/stls/stapler/substrate.stl",
                             offset: {x:0,y:0,z:0},
