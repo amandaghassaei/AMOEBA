@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
 
         events: {
             "click .editMachineComponent":                          "_editMachineComponent",
-            "click .editMachineCode":                               "_editMachineCode"
+            "click .editMachineCode":                               "_editMachineCode",
+            "click #newMachineComponent":                           "_newComponent"
         },
 
         _initialize: function(){
@@ -31,6 +32,13 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
         _editMachineCode: function(e){
             e.preventDefault();
             console.log("edit code");
+        },
+
+        _newComponent: function(e){
+            e.preventDefault();
+            var id = cam.get("assembler").newComponent();
+            cam.set("editingComponent", id);
+            this.model.set("currentNav", "navMachineComponent");
         },
 
         _makeTemplateJSON: function(){

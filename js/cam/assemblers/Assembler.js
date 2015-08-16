@@ -92,24 +92,38 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 
     Assembler.prototype._configureAssemblerMovementDependencies = function(json, components, newComponents, object3D){
         if (json === undefined) return;
+        var self = this;
         _.each(json, function(componentJSON, id){
             if (componentJSON.parent) components[componentJSON.parent].addChild(newComponents[id]);
-            else object3D.add(newComponents[id].getObject3D());
+            else self.addChild(newComponents[id], object3D);
         });
     };
 
     Assembler.prototype.addChild = function(child, object3D){
         child._addParent(this, null);
-        var object3D = object3D || this.object3D;
+        if (object3D === undefined) object3D = this.object3D;
         object3D.add(child.getObject3D());
     };
 
     Assembler.prototype._removeChild = function(child){
-        if (this.object3D.children.indexOf(child.stl) == -1){
+        if (this.object3D.children.indexOf(child.object3D) == -1){
             console.warn("not a child");
             return;
         }
         this.object3D.remove(child.getObject3D());
+    };
+
+    Assembler.prototype.newComponent = function(){
+        var component = new Component(null, {});
+        var id = component.getID();
+        this.components[id] = component;
+        this.addChild(component);
+        this.buildComponentTree();
+        return id;
+    };
+
+    Assembler.prototype.checkAncestry = function(){
+        return false;
     };
 
     Assembler.prototype.setVisibility = function(visible){
@@ -139,7 +153,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 
     Assembler.prototype.buildComponentTree = function(){
         var tree = this._recursiveTreeBuilding(0, null, {});
-        console.log(tree);
         this.tree = tree;
     };
 

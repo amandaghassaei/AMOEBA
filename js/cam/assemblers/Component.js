@@ -5,12 +5,12 @@
 
 define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
-    var id = 0;
+    var idNum = 0;
 
     function Component(id, json){
         this.object3D = new THREE.Object3D();
-        this.id = id || "id" + id++;
-        this.name = json.name || "Component" + id;
+        this.id = id || ("id" + ++idNum);
+        this.name = json.name || "Component" + idNum;
         this.parent = null;
         if (json.parent) this.parent = json.parent;
         this.parentObject = null;

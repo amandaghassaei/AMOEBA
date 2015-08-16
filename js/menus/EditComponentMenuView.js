@@ -61,10 +61,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
         _changeParent: function(e){
             e.preventDefault();
             var id = $(e.target).data("id");
-            console.log(id);
-            if (!id) id = null;
             var assembler = cam.get("assembler");
-            assembler.getComponent(id).addChild(assembler.getComponent(cam.get("editingComponent")));
+            var parent = assembler;
+            if (id) parent = assembler.getComponent(id);
+            parent.addChild(assembler.getComponent(cam.get("editingComponent")));
             assembler.buildComponentTree();
             this.render();
         },
