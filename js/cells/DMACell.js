@@ -243,7 +243,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setMaterial = function(material){
+        this.materialName = material;
         this.object3D.children[0].material = material;
+    };
+
+    DMACell.prototype.changeMaterial = function(materialName, materialObject){
+        this.materialName = materialName;
+        if (materialObject === undefined) materialObject = materials.getMaterialForId(materialName).threeMaterial;
+        this.object3D.children[0].material = materialObject;
     };
 
     DMACell.prototype.setWireframeVisibility = function(visible, mode){

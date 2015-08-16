@@ -72,6 +72,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         return deleted;
     }
 
+    function getMaterialForId(id){
+        return materialsList[id];
+    }
 
 
 
@@ -251,6 +254,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     return {
         list: materialsList,
         setMaterial: setMaterial,
+        getMaterialForId: getMaterialForId,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,

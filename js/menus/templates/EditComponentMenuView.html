@@ -53,6 +53,29 @@ Parent: &nbsp;&nbsp;
         <br/>
     <a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>
     STL: &nbsp;&nbsp;STL Name<br/><br/>
+<% } else { %>
+    Material: &nbsp;&nbsp;
+        <div class="btn-group">
+            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= materials[thisComponent.material].name %><span class="caret"></span></button>
+            <ul role="menu" class="dropdown-menu">
+                <% _.each(allMaterials[materialClass], function(material, key){ %>
+                    <li><a class="stockMaterial dropdownSelector" data-id="<%= key %>" href="#">
+                        <div class="materialColorSwatch">
+                        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+                        <span><span class="materialListTitle"><%= material.name %></span></span></div>
+                    </a></li>
+                <% }); %>
+                <% _.each(materials, function(material, key){
+                    if (key.substr(0,5) == "super") return;
+                    if (material.noDelete) return; %>
+                    <li><a class="stockMaterial dropdownSelector" data-id="<%= key %>" href="#">
+                        <div class="materialColorSwatch">
+                        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+                        <span class="materialListTitle"><%= material.name %></span></div>
+                    </a></li>
+                <% }); %>
+            </ul>
+        </div><br/><br/>
 <% } %>
 Offset (xyz):&nbsp;&nbsp;
     <input data-property="translation" data-key="x" value="<%= translation.x %>" placeholder="X" class="form-control floatInput stl" type="text">&nbsp;

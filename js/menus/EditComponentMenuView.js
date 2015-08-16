@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponentMenuTemplate'],
-    function($, _, MenuParentView, plist, cam, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'materials', 'text!editComponentMenuTemplate'],
+    function($, _, MenuParentView, plist, cam, materials, template){
 
     return MenuParentView.extend({
 
@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
             "click #deleteComponent":                                 "_delete",
             "click .removeChild":                                     "_removeChild",
             "click .addChild":                                        "_addChild",
-            "click .changeParent":                                    "_changeParent"
+            "click .changeParent":                                    "_changeParent",
+            "click .stockMaterial":                                   "_changeStockMaterial"
         },
 
         _initialize: function(){
@@ -69,6 +70,15 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
             this.render();
         },
 
+        _changeStockMaterial: function(e){
+            e.preventDefault();
+            var $target = $(e.target);
+            var id = $target.data("id");
+            if (id === undefined) id = $target.closest("a").data("id");
+            cam.get("assembler").getComponent(cam.get("editingComponent")).setMaterial(id);
+            this.render();
+        },
+
         _makeTemplateJSON: function(){
             var assembler = cam.get("assembler");
             var editingComponent = cam.get("editingComponent");
@@ -82,8 +92,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
                 if (!correctBranch || assembler.tree[editingComponent] >= level) return;
                 allDescendants.push(id);
             });
-            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(),
-                {thisComponent: component.toJSON(), ancestors:allAncestors, descendants:allDescendants});
+            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(), plist,
+                {thisComponent: component.toJSON(), ancestors:allAncestors, descendants:allDescendants, materials:materials.list});
         },
 
         template: _.template(template)

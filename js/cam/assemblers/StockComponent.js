@@ -3,7 +3,8 @@
  */
 
 
-define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, THREE, Component, lattice){
+define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
+    function(_, cam, THREE, Component, lattice, three){
 
     function StockComponent(id, json){
 
@@ -31,6 +32,11 @@ define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, 
         var object3D = cell.getObject3D();//todo need this?
         object3D.position.set(position.x, position.y, position.z);
         //todo rotation
+    };
+
+    StockComponent.prototype.setMaterial = function(materialName){
+        this.cell.changeMaterial(materialName);
+        three.render();
     };
 
 
@@ -67,6 +73,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice'], function(_, cam, 
 
     StockComponent.prototype.toJSON = function(){
         var json  = Component.prototype.toJSON.call(this);
+        json.material = this.cell.materialName
         return json;
     };
 
