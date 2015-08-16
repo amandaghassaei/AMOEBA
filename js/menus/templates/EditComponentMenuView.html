@@ -11,7 +11,7 @@ Parent: &nbsp;&nbsp;
         </ul>
     </div><br/><br/>
 <% if(!isStock){ %>
-    Children: &nbsp;&nbsp;
+    <% if(thisComponent.children.length == 0){ %>No Children<% }else{ %>Children:<% }%> &nbsp;&nbsp;
     <div class="btn-group pull-right">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button">+ Add Child<span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
@@ -25,8 +25,11 @@ Parent: &nbsp;&nbsp;
         </ul>
     </div><br/><br/>
     <% var treeLevel = 0; %>
+    <% var correctBranch = false; %>
     <% _.each(tree, function(level, id){ %>
-        <% if (tree[editingComponent] >= level) return; %>
+        <% if(correctBranch && level <= tree[editingComponent]) correctBranch = false; %>
+        <% if(id == editingComponent) correctBranch = true; %>
+        <% if (!correctBranch || tree[editingComponent] >= level) return; %>
         <% var component = components[id] || stock[id]; %>
         <% treeLevel++; %>
         <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= (level-tree[editingComponent]-1)*10 + 20 %>px"><%= component.name %>
