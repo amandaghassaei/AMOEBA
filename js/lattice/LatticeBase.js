@@ -464,9 +464,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        showCells: function(){
+        showCells: function(whichArray){
+            if (!whichArray) whichArray = "sparseCells";
             var cellMode = appState.get("cellMode");
-            this._iterCells(this.sparseCells, function(cell){
+            this._iterCells(this[whichArray], function(cell){
                 if (cell) cell.show(cellMode)
             });
             three.render();

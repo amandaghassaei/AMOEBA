@@ -11,8 +11,8 @@ define(['three'], function(THREE){
                 //sketch:"Sketch",
                 material:"Materials",
                 import:"Import",
-                part:"Part",
-                script:"Script"
+                part:"Part"
+//                script:"Script"
             },
             electronicNavSim:{
                 eSetup:"Connectivity",

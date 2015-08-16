@@ -261,7 +261,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             this.set("simLineNumber", 0, {silent:true});
             appState.set("stockSimulationPlaying", false);
             three.stopAnimationLoop();
-            lattice.showCells();
+            lattice.showCells("cells");
         },
 
         _stockSimulation: function(){
