@@ -10,7 +10,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     function Component(id, json){
         this.object3D = new THREE.Object3D();
         this.id = id || "id" + id++;
-        this.name = json.name || "";
+        this.name = json.name || "Component" + id;
         this.parent = null;
         if (json.parent) this.parent = json.parent;
         this.parentObject = null;
@@ -49,6 +49,12 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             else return this.parentObject.checkAncestry(component);
         }
         return false;
+    };
+
+    Component.prototype.getAncestry = function(ancestors){
+        if (this.parent === null) return ancestors;
+        ancestors.push(this.parent);
+        return this.parentObject.getAncestry(ancestors);
     };
 
     Component.prototype._removeChild = function(child){

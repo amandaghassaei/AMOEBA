@@ -10,9 +10,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
 
         events: {
             "click #finishComponent":                                 "_save",
-            "click #cancelComponent":                                 "_cancel",
             "click #deleteComponent":                                 "_delete",
-            "click .removeChild":                                     "_removeChild"
+            "click .removeChild":                                     "_removeChild",
+            "click .addChild":                                        "_addChild",
+            "click .changeParent":                                    "_changeParent"
         },
 
         _initialize: function(){
@@ -24,12 +25,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
         },
 
         _save: function(e){
-            e.preventDefault();
-            console.log("save component");
-            this._stopEditing();
-        },
-
-        _cancel: function(e){
             e.preventDefault();
             this._stopEditing();
         },
@@ -54,10 +49,41 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'text!editComponen
             this.render();
         },
 
+        _addChild: function(e){
+            e.preventDefault();
+            var id = $(e.target).data("id");
+            var assembler = cam.get("assembler");
+            assembler.getComponent(cam.get("editingComponent")).addChild(assembler.getComponent(id));
+            assembler.buildComponentTree();
+            this.render();
+        },
+
+        _changeParent: function(e){
+            e.preventDefault();
+            var id = $(e.target).data("id");
+            console.log(id);
+            if (!id) id = null;
+            var assembler = cam.get("assembler");
+            assembler.getComponent(id).addChild(assembler.getComponent(cam.get("editingComponent")));
+            assembler.buildComponentTree();
+            this.render();
+        },
+
         _makeTemplateJSON: function(){
             var assembler = cam.get("assembler");
-            var component = assembler.getComponent(cam.get("editingComponent"));
-            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(), {thisComponent: component.toJSON()});
+            var editingComponent = cam.get("editingComponent");
+            var component = assembler.getComponent(editingComponent);
+            var allDescendants = [];
+            var allAncestors = component.getAncestry([]);
+            var correctBranch = false;
+            _.each(assembler.tree, function(level, id){
+                if(correctBranch && level <= assembler.tree[editingComponent]) correctBranch = false;
+                if(id == editingComponent) correctBranch = true;
+                if (!correctBranch || assembler.tree[editingComponent] >= level) return;
+                allDescendants.push(id);
+            });
+            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(),
+                {thisComponent: component.toJSON(), ancestors:allAncestors, descendants:allDescendants});
         },
 
         template: _.template(template)
