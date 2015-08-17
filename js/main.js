@@ -53,12 +53,14 @@ require.config({
         truncatedCubeLattice: 'lattice/latticeSubclasses/TruncatedCubeLattice',
         tetraStackedLattice: 'lattice/latticeSubclasses/TetraStackedLattice',
         tetraVertexLattice: 'lattice/latticeSubclasses/TetraVertexLattice',
+        hexLattice: 'lattice/latticeSubClasses/HexagonalLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',
         squareBaseplane: 'baseplane/SquareBasePlane',
         octaBaseplane: 'baseplane/OctaBasePlane',
         rotEdgeOctaBaseplane: 'baseplane/RotEdgeOctaBasePlane',
+        hexBaseplane: 'baseplane/HexagonalBasePlane',
 
         //highlighter
         highlighter: 'highlighter/Highlighter',

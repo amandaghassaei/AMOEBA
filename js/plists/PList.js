@@ -57,14 +57,24 @@ define(['three'], function(THREE){
             tetra: "Tetrahedron",
             cube:"Cube",
             truncatedCube:"Cuboctahedron",
-            kelvin:"Kelvin"
+            kelvin:"Kelvin",
+//            hex: "Hexagonal"
         },
         allConnectionTypes: {
             octa: {face:"Face",  edgeRot:"Edge", vertex:"Vertex"},// freeformFace:"Freeform Face"  edge:"Edge",   (Rotated)
             tetra: {stacked: "Stacked"},//vertex: "Vertex"
             cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
-            kelvin: {face: "Face"}
+            kelvin: {face: "Face"},
+            hex: {face: "Face"}
+        },
+        allLatticeSubclasses:{
+            octa: {face:"octaFaceLattice",  edgeRot:"octaRotEdgeLattice", vertex:"octaVertexLattice"},// freeformFace:"Freeform Face"  edge:"octaEdgeLattice",   (Rotated)
+            tetra: {stacked: "tetraStackedLattice"},//vertex: "tetraVertexLattice"
+            cube: {face:"cubeLattice", gik: "gikLattice"},
+            truncatedCube: {face:"truncatedCubeLattice"},
+            kelvin: {face: "kelvinLattice"},
+            hex: {face: "hexLattice"}
         },
         allPartTypes:{
             octa:{
@@ -96,7 +106,8 @@ define(['three'], function(THREE){
 //                    xShape:"X"
 //                }
             },
-            kelvin: {face: null}
+            kelvin: {face: null},
+            hex: {face: null}
         },
 
         allCellModes:{//supercell, cell, part, node, beam
@@ -122,7 +133,8 @@ define(['three'], function(THREE){
                 gik: 'electronic'
             },
             truncatedCube: {face: 'mechanical'},
-            kelvin: {face: 'mechanical'}
+            kelvin: {face: 'mechanical'},
+            hex: {face: 'mechanical'}
         },
 
         allMaterialClasses:{

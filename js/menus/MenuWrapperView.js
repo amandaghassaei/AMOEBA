@@ -202,7 +202,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         },
 
         _setOwnerProperty: function(owner, property, value){
-            console.log(value);
             if (owner instanceof Backbone.Model) owner.set(property, value);
             else {
                 owner[property] = value;

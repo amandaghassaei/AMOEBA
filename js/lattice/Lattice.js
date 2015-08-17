@@ -70,33 +70,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _getSubclassForLatticeType: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
-            if (cellType == "octa"){
-                if (connectionType == "face"){
-                    return "octaFaceLattice";
-                } else if (connectionType == "edge"){
-                    return "octaEdgeLattice";
-                } else if (connectionType == "edgeRot"){
-                    return "octaRotEdgeLattice";
-                } else if (connectionType == "vertex"){
-                    return "octaVertexLattice";
-                }
-            } else if (cellType == "tetra"){
-                if (connectionType == "stacked") return "tetraStackedLattice";
-                else if (connectionType == "vertex") return "tetraVertexLattice";
-            } else if (cellType == "cube"){
-                if (connectionType == "face"){
-                    return "cubeLattice";
-                } else if (connectionType == "gik"){
-                    return "gikLattice";
-                }
-            } else if (cellType == "truncatedCube"){
-                return "truncatedCubeLattice";
-            } else if (cellType == "kelvin"){
-                return "kelvinLattice";
-            } else {
+            var subclass = plist.allLatticeSubclasses[cellType][connectionType];
+            if (subclass === undefined){
                 console.warn("unrecognized cell type " + cellType);
+                return null;
             }
-            return null;
+            return subclass;
         },
 
 
