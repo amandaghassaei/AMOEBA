@@ -36,7 +36,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         getPositionForIndex: function(index){
             var position = this._positionForIndex(index);
-            if ((index.y%2) != 0) position.x -= this.xScale()/2;
+            if (index.z%2 != 0) {
+                position.x -= this.xScale()/2;
+            }
             return position;
         },
 
@@ -52,7 +54,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         zScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return Math.sqrt(3)+2*cellSeparation;
+            return Math.sqrt(3)/2+2*cellSeparation;
         },
 
         getCellSubclassFile: function(){

@@ -19,5 +19,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'hexCell'],
         return unitCellGeo;
     };
 
+    HexagonalCell.prototype.aspectRatio = function(){
+        return new THREE.Vector3(this.xScale()-1, this.yScale(), this.zScale()+Math.sqrt(3)/2);
+    };
+
     return HexagonalCell;
 });
