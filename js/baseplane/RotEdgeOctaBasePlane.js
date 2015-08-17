@@ -8,18 +8,18 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
     return SquareBasePlane.extend({
 
-        _setPosition: function(object3D, height){
-            if (!object3D || object3D === undefined) object3D = this.get("object3D");
-            object3D.position.set(0,0,height-lattice.zScale());
+        calcHighlighterParams: function(face, point){
+            var params = SquareBasePlane.prototype.calcHighlighterParams.call(this, face, point);
+            params.position.x += lattice.xScale()/2;
+            params.position.y += lattice.yScale()/2;
+            return params;
         },
 
-        calcHighlighterParams: function(face, point){
-            point.z = 0;
-            var index = lattice.getIndexForPosition(point);
-            index.sub(new THREE.Vector3(0.5, 0.5, 0));
-            var params = SquareBasePlane.prototype.calcHighlighterParams.call(this, face, point, index);
-            params.position.z -= lattice.zScale()/2;
-            return params;
+        nextCellPosition: function(highlighterPosition){
+            highlighterPosition.x -= lattice.xScale()/2;
+            highlighterPosition.y -= lattice.yScale()/2;//undo what we did in calc highlighter params
+            var newPosition = highlighterPosition.clone().add(highlighterPosition.clone().sub(this.getAbsolutePosition()));
+            return lattice.getIndexForPosition(newPosition);
         }
 
     });

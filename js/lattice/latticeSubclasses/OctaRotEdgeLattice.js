@@ -21,16 +21,22 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getIndexForPosition: function(absPosition){
+            var index = this._indexForPosition(absPosition);
+            if (index.z %2 != 0){
+                absPosition.x += this.xScale()/2;
+                absPosition.y += this.yScale()/2;
+            }
             return this._indexForPosition(absPosition);
         },
 
         getPositionForIndex: function(index){
             index = index.clone();
             if (index.z %2 != 0){
-                index.x += 0.5;
-                index.y += 0.5;
+                index.x -= 0.5;
+                index.y -= 0.5;
             }
-            return this._positionForIndex(index);
+            var position = this._positionForIndex(index);
+            return position;
         },
 
         xScale: function(cellSeparation){

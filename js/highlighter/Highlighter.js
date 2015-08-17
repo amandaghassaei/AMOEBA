@@ -147,7 +147,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         //add/remove cells
 
         _getNextCellPosition: function(){//add direction vector to current index
-            var newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getAbsolutePosition()));
+            var newPosition;
+            if (this.highlightedObject.nextCellPosition) newPosition = this.highlightedObject.nextCellPosition(this.mesh.position.clone());
+            else newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getAbsolutePosition()));
             return lattice.getIndexForPosition(newPosition);
         },
 
