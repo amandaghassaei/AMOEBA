@@ -147,12 +147,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         //add/remove cells
 
         _getNextCellPosition: function(){//add direction vector to current index
-            var newIndex = this.highlightedObject.getAbsoluteIndex().clone();
-            var direction = this.direction;
-            _.each(_.keys(newIndex), function(key){
-                newIndex[key] = Math.round(newIndex[key] + direction[key]);
-            });
-            return newIndex;
+            var newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getAbsolutePosition()));
+            return lattice.getIndexForPosition(newPosition);
         },
 
         addRemoveVoxel: function(shouldAdd){

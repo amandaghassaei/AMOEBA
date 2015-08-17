@@ -2,11 +2,15 @@
  * Created by aghassaei on 8/17/15.
  */
 
+/**
+ * Created by aghassaei on 8/17/15.
+ */
+
 
 define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
     function(_, Backbone, appState, globals, plist, THREE, three){
 
-    var HexLattice =  {
+    var HexRotLattice =  {
 
         _initLatticeType: function(){
             require(['squareBaseplane'], function(BasePlaneClass){
@@ -23,7 +27,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         getIndexForPosition: function(absPosition){
             var index = this._indexForPosition(absPosition);
-            if (index.y%2 != 0) {
+            if (index.z%2 != 0) {
                 absPosition.x += this.xScale()/2;
                 index = this._indexForPosition(absPosition);
             }
@@ -38,31 +42,31 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         xScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return Math.sqrt(3)+2*cellSeparation;
+            return 2+Math.sqrt(3)/2+2*cellSeparation;
         },
 
         yScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 1.5+2*cellSeparation;
+            return 1+2*cellSeparation;
         },
 
         zScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 1+2*cellSeparation;
+            return Math.sqrt(3)+2*cellSeparation;
         },
 
         getCellSubclassFile: function(){
-            return "hexCell";
+            return "hexRotCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
-            _.each(_.keys(HexLattice), function(key){
+            _.each(_.keys(HexRotLattice), function(key){
                 self[key] = null;
             });
         }
     };
 
-    return HexLattice;
+    return HexRotLattice;
 
 });

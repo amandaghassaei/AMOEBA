@@ -141,13 +141,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     //highlighting
 
-    DMACell.prototype.calcHighlighterParams = function(face, point){//this works for rectalinear, override in subclasses
+    DMACell.prototype.calcHighlighterParams = function(face, point){//this works for cells where addition happens orthogonal to all faces
         var direction = this.applyAbsoluteRotation(face.normal.clone());//todo local orientation?
         var position = this.getAbsolutePosition();
-        var self  = this;
-        _.each(_.keys(position), function(key){
-            position[key] += direction[key]*self.axisScale(key)/2;
-        });
+        position.add(direction.clone().multiply(this.aspectRatio().divideScalar(2)));
         return {direction:direction, position:position};
     };
 
@@ -395,19 +392,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     //scale
 
-    DMACell.prototype.axisScale = function(axis){
-        switch (axis){
-            case "x":
-                return this.xScale();
-            case "y":
-                return this.yScale();
-            case "z":
-                return this.zScale();
-            default:
-                console.warn(axis + " axis not recognized");
-                break;
-        }
-        return null;
+    DMACell.prototype.aspectRatio = function(){
+        return new THREE.Vector3(this.xScale(), this.yScale(), this.zScale());
     };
 
     DMACell.prototype.xScale = function(){

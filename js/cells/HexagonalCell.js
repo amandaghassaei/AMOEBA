@@ -18,25 +18,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
         return unitCellGeo;
     };
 
-//    HexagonalCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
-//        var wireframe = new THREE.BoxHelper(mesh);
-//        wireframe.material.color.set(0x000000);
-//        wireframe.matrixWorld = mesh.matrixWorld;
-//        wireframe.matrixAutoUpdate = true;
-//        return wireframe;
-//    };
-
-
     HexagonalCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
         var wireframe = new THREE.EdgesHelper(mesh, 0x000000);
         wireframe.matrixWorld = mesh.matrixWorld;
         wireframe.matrixAutoUpdate = true;
         return wireframe;
-    };
-
-    HexagonalCell.prototype.calcHighlighterParams = function(face, point){//this works for rectalinear, override in subclasses
-        var direction = this.applyAbsoluteRotation(face.normal.clone());//todo local orientation?
-        if (direction.z < 0.9) return null;
     };
 
     return HexagonalCell;

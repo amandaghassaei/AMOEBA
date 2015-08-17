@@ -54,6 +54,7 @@ require.config({
         tetraStackedLattice: 'lattice/latticeSubclasses/TetraStackedLattice',
         tetraVertexLattice: 'lattice/latticeSubclasses/TetraVertexLattice',
         hexLattice: 'lattice/latticeSubClasses/HexagonalLattice',
+        hexRotLattice: 'lattice/latticeSubClasses/HexagonalRotLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',
@@ -86,6 +87,7 @@ require.config({
         gikSuperCell: 'cells/supercells/GIKSuperCell',
         compositeCell: "cells/supercells/CompositeCell",
         hexCell: 'cells/HexagonalCell',
+        hexRotCell: 'cells/HexagonalRotCell',
 
         //parts
         part: 'parts/DMAPart',

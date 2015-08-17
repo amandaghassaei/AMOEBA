@@ -66,7 +66,7 @@ define(['three'], function(THREE){
             cube: {face:"Face", gik: "GIK"},
             truncatedCube: {face:"Face"},
             kelvin: {face: "Face"},
-            hex: {face: "Face"}
+            hex: {face: "Face", faceRot: "Face (Rotated)"}
         },
         allLatticeSubclasses:{
             octa: {face:"octaFaceLattice",  edgeRot:"octaRotEdgeLattice", vertex:"octaVertexLattice"},// freeformFace:"Freeform Face"  edge:"octaEdgeLattice",   (Rotated)
@@ -74,7 +74,7 @@ define(['three'], function(THREE){
             cube: {face:"cubeLattice", gik: "gikLattice"},
             truncatedCube: {face:"truncatedCubeLattice"},
             kelvin: {face: "kelvinLattice"},
-            hex: {face: "hexLattice"}
+            hex: {face: "hexLattice", faceRot: "hexRotLattice"}
         },
         allPartTypes:{
             octa:{
@@ -107,7 +107,7 @@ define(['three'], function(THREE){
 //                }
             },
             kelvin: {face: null},
-            hex: {face: null}
+            hex: {face: null, faceRot: null}
         },
 
         allCellModes:{//supercell, cell, part, node, beam
@@ -134,7 +134,7 @@ define(['three'], function(THREE){
             },
             truncatedCube: {face: 'mechanical'},
             kelvin: {face: 'mechanical'},
-            hex: {face: 'mechanical'}
+            hex: {face: 'mechanical', faceRot: 'mechanical'}
         },
 
         allMaterialClasses:{

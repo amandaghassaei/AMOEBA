@@ -56,6 +56,10 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             return this.highligherIndex.clone();
         },
 
+        getAbsolutePosition: function(){
+            return lattice.getPositionForIndex(this.getAbsoluteIndex());
+        },
+
         calcHighlighterParams: function(face, point, index){//index comes from subclass
             point.z = 0;//todo this doesn't generalize when baseplane moves
             if (!index || index === undefined) index = lattice.getIndexForPosition(point);
