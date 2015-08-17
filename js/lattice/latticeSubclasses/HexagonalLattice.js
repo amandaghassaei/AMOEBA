@@ -22,20 +22,28 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getIndexForPosition: function(absPosition){
-            return this._indexForPosition(absPosition);
+            var index = this._indexForPosition(absPosition);
+            if (index.y%2 != 0) {
+                absPosition.x += this.xScale()/2;
+                index = this._indexForPosition(absPosition);
+            }
+            return index;
         },
 
         getPositionForIndex: function(index){
-            return this._positionForIndex(index);
+            var position = this._positionForIndex(index);
+            if ((index.y%2) != 0) position.x -= this.xScale()/2;
+            return position;
         },
 
         xScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 2*Math.sqrt(3)+2*cellSeparation;
+            return Math.sqrt(3)+2*cellSeparation;
         },
 
         yScale: function(cellSeparation){
-            return this.xScale(cellSeparation);
+            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
+            return 1.5+2*cellSeparation;
         },
 
         zScale: function(cellSeparation){

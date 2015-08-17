@@ -10,96 +10,36 @@
 define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 'baseplane'],
     function(_, Backbone, appState, lattice, three, THREE, BasePlane){
 
-    return BasePlane.extend({
+     return BasePlane.extend({
 
         _makeBasePlaneMesh: function(){
 
-            var geometry = new THREE.Geometry();
-            geometry.vertices = this._calcOctaFaceVertices(0.0);
-            var faces = geometry.faces;
+            var scale = lattice.xScale();
+            var dimX = this.get("dimX")*scale;
+            var dimY = this.get("dimY")*scale;
 
-            var dimX = this.get("dimX");
-            var dimY = this.get("dimY");
-
-            var currentOffset = 0;
-            for (var j=-dimX;j<=dimX;j++){
-                for (var i=-dimY;i<=dimY;i++){
-
-                    currentOffset++;
-                    if (j == -dimX || i == -dimY) continue;
-
-                    if (Math.abs(j)%2==1){
-                        faces.push(new THREE.Face3(3*currentOffset-4, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
-                    } else {
-                        faces.push(new THREE.Face3(3*currentOffset-1, 3*currentOffset-8-6*dimY, 3*currentOffset-6-6*dimY));//pt, base, base
-                    }
-
-                }
-
-            }
-
-            geometry.computeFaceNormals();
-            return [new THREE.Mesh(geometry, this.get("material"))];
-        },
-
-//        _renderZIndexChange: function(){
-//            var zIndex = this.get("zIndex");
-//            var xScale = lattice.xScale();
-//            var yScale = lattice.yScale();
-//            var zScale = lattice.zScale();
+//            var geometry = new THREE.Geometry();
 //
-//            _.each(this.get("mesh"), function(mesh){
-//                mesh.position.set(xScale*(zIndex%2)/2, -yScale/3*(zIndex%2), zIndex*zScale);
-//                mesh.rotation.set(Math.PI*(zIndex%2),0,0)
-//            });
-//            three.render();
-//        },
+//            for ( var i = - dimX; i <= dimX+1; i += scale ) {
+//                geometry.vertices.push( new THREE.Vector3(-dimX-scale/2, i-scale/2, 0.01));
+//                geometry.vertices.push( new THREE.Vector3(dimX-scale/2, i-scale/2, 0.01));
+//                geometry.vertices.push( new THREE.Vector3(i-scale/2, -dimX-scale/2, 0.01));
+//                geometry.vertices.push( new THREE.Vector3(i-scale/2, dimX-scale/2, 0.01));
+//
+//            }
+//
+            var planeGeometry = new THREE.Geometry();
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, -dimX-scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, -dimX-scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, dimX+scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, dimX+scale/2, 0));
+            planeGeometry.faces.push(new THREE.Face3(0, 1, 3));
+            planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
+            planeGeometry.computeFaceNormals();
 
-        _calcOctaFaceVertices: function(xySep){
-
-            var vertices = [];
-
-            var xScale = lattice.xScale();
-            var yScale = lattice.yScale();
-
-            var dimX = this.get("dimX");
-            var dimY = this.get("dimY");
-
-            var baseVertOffset = xySep/Math.sqrt(3);
-            var pointVertOffset = 2*baseVertOffset;
-            var horizontalOffset = xySep;
-
-            var yOffset = 1/Math.sqrt(3)/2;
-
-            for (var j=-dimX;j<=dimX;j++){
-                for (var i=-dimY;i<=dimY;i++){
-
-                    var xOffset = 0;
-                    if (Math.abs(j)%2!=0) {
-                        xOffset = 1/2*xScale;
-                    }
-
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset - horizontalOffset - xScale/2, j*yScale + baseVertOffset - yOffset, 0));
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset + horizontalOffset - xScale/2, j*yScale + baseVertOffset - yOffset, 0));
-                    vertices.push(new THREE.Vector3(i*xScale + xOffset - xScale/2, j*yScale - pointVertOffset - yOffset, 0));
-
-                }
-
-            }
-            return vertices;
-        },
-
-        updateXYSeparation: function(xySep){
-            var geometry = this.get("mesh")[0].geometry;
-            geometry.vertices = this._calcOctaFaceVertices(xySep);
-            geometry.verticesNeedUpdate = true;
-        },
-
-        calcHighlighterParams: function(face, point){
-            point.z = 0;
-            var index = lattice.getIndexForPosition(point);
-            if (index.z%2 != 0) index.x -= 1;
-            return BasePlane.prototype.calcHighlighterParams.call(this, face, point, index);
+            var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0}));
+            return [mesh];
+//            return [mesh, new THREE.Line(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}), THREE.LinePieces)];
         }
     });
 });
