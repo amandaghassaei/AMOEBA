@@ -58,7 +58,7 @@ define(['three'], function(THREE){
             cube:"Cube",
             truncatedCube:"Cuboctahedron",
             kelvin:"Kelvin",
-//            hex: "Hexagonal"
+            hex: "Hexagonal"
         },
         allConnectionTypes: {
             octa: {face:"Face",  edgeRot:"Edge", vertex:"Vertex"},// freeformFace:"Freeform Face"  edge:"Edge",   (Rotated)

@@ -85,6 +85,7 @@ require.config({
         superCell: 'cells/supercells/DMASuperCell',
         gikSuperCell: 'cells/supercells/GIKSuperCell',
         compositeCell: "cells/supercells/CompositeCell",
+        hexCell: 'cells/HexagonalCell',
 
         //parts
         part: 'parts/DMAPart',

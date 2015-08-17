@@ -6,14 +6,14 @@
 define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
     function(_, Backbone, appState, globals, plist, THREE, three){
 
-    var KelvinLattice =  {
+    var HexLattice =  {
 
         _initLatticeType: function(){
-            require(['hexBaseplane'], function(SquareBasePlane){
-                globals.basePlane = new SquareBasePlane();
+            require(['hexBaseplane'], function(BasePlaneClass){
+                globals.basePlane = new BasePlaneClass();
             });
-            require([this.getHighlighterFile()], function(TruncatedCubeHighlighter){
-                globals.highlighter = new TruncatedCubeHighlighter();
+            require([this.getHighlighterFile()], function(HighlighterClass){
+                globals.highlighter = new HighlighterClass();
             });
         },
 
@@ -31,7 +31,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         xScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 2*Math.sqrt(2)+2*cellSeparation;
+            return 2*Math.sqrt(3)+2*cellSeparation;
         },
 
         yScale: function(cellSeparation){
@@ -40,21 +40,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         zScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 2*Math.sqrt(2)+2*cellSeparation;
+            return 1+2*cellSeparation;
         },
 
         getCellSubclassFile: function(){
-            return "kelvinCell";
+            return "hexCell";
         },
 
         _undo: function(){//remove all the mixins, this will help with debugging later
             var self = this;
-            _.each(_.keys(KelvinLattice), function(key){
+            _.each(_.keys(HexLattice), function(key){
                 self[key] = null;
             });
         }
     };
 
-    return KelvinLattice;
+    return HexLattice;
 
 });
