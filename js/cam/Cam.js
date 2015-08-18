@@ -167,7 +167,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             var currentTab = appState.get("currentTab");
             if (currentTab == "assemblerSetup") this.get("assembler").buildComponentTree();
             if (currentTab != "animate") this.resetSimulation();
-            else if (this.get("needsPostProcessing")) this.postProcess();
+            else this.postProcess();//if (this.get("needsPostProcessing"))
         },
 
         _setCAMVisibility: function(){
@@ -322,7 +322,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             this.set("needsPostProcessing", true);
         },
 
-        postProcess: function(){
+        postProcess: function(callback){
             console.log("process");
             this.set("needsPostProcessing", false);
 
@@ -343,8 +343,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                 self.set("editsMadeToProgram", false);
                 self.set("exporter", exporter);
                 if (!appState.get("stockSimulationPlaying")) self.resetSimulation();
+                if (callback) callback(exporter, self.get("dataOut"));
             });
-//            return {data:data, exporter:exporter};//todo this breaks save
         },
 
         _getExporter: function(callback){
@@ -362,12 +362,11 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         },
 
         save: function(){
-            if (this.get("needsPostProcessing")){
-                var output = this.postProcess();
-                output.exporter.save(output.data);
-                return;
-            }
-            this.get("exporter").save(this.get("dataOut"));
+//            if (this.get("needsPostProcessing")){
+                this.postProcess(function(exporter, data){
+                    exporter.save(data);
+                });
+//            }
         }
 
     });
