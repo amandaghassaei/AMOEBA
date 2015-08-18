@@ -43,7 +43,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 if (!this.highlightedObject) return;
                 var index = this.highlightedObject.getAbsoluteIndex();
                 if (Math.abs(direction.z) > 0.9) index.z+=1;
-                else if (Math.abs(direction.z) < 0.1) index.z -=1;
                 if (appState._drawingWithCompositeMaterialType()) this.mesh.rotation.set(0,0, lattice._zIndexRotationSuperCell(index));
                 else this.mesh.rotation.set(0,0, lattice._zIndexRotation(index));
             }
@@ -69,7 +68,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             var offset = appState.get("superCellIndex").clone();
             offset.applyQuaternion(this.mesh.quaternion).round();
             newIndex.sub(offset);
-            console.log(newIndex.clone());
             return newIndex;
         }
     });

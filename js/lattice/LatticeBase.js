@@ -205,7 +205,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (cell){
                     var material = cell.getMaterial();
                     var dimensions = material.dimensions;
-                    if (dimensions) dimensions.clone();
+                    if (dimensions) dimensions = dimensions.clone();
                     else dimensions = new THREE.Vector3(cell.length, 1, 1);
                     dimensions.sub(new THREE.Vector3(1,1,1));
                     var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(dimensions).round().add(new THREE.Vector3(1,1,1)));
