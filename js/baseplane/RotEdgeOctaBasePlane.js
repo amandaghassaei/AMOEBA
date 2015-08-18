@@ -16,10 +16,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
         },
 
         nextCellPosition: function(highlighterPosition){
-            highlighterPosition.x -= lattice.xScale()/2;
-            highlighterPosition.y -= lattice.yScale()/2;//undo what we did in calc highlighter params
-            var newPosition = highlighterPosition.clone().add(highlighterPosition.clone().sub(this.getAbsolutePosition()));
-            return lattice.getIndexForPosition(newPosition);
+            return highlighterPosition;
         }
 
     });

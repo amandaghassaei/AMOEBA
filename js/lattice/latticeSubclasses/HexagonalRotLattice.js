@@ -44,7 +44,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         xScale: function(cellSeparation){
             if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 2+Math.sqrt(3)/2+2*cellSeparation;
+            return 3+2*cellSeparation;
         },
 
         yScale: function(cellSeparation){
