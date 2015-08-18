@@ -43,6 +43,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return 1.28*(1+2*cellSeparation);
         },
 
+        _zIndexRotation: function(index){
+            if (index.z%2 != 0) return Math.PI/2;
+            return 0;
+        },
+
         getCellSubclassFile: function(){
             return "gikSuperCell";
         },

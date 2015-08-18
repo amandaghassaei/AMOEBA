@@ -19,9 +19,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     };
 
     CompositeCell.prototype._rotateCell = function(object3D){
-        if (lattice.get("connectionType") == "gik") {
-            if (this.index.z %2 != 0) return object3D.rotateZ(Math.PI/2);
-            return object3D;
+        if (lattice._zIndexRotation) {
+            return object3D.rotateZ(lattice._zIndexRotation(this.index));
         }
         return DMASuperCell.prototype._rotateCell.call(this, object3D);
     };

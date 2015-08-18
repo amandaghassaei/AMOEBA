@@ -35,37 +35,34 @@ define(['three'], function(THREE){
                 camProcesses: ["gcode"],
                 numMaterials: 2,
                 translation: {x:-4.0757,y: -4.3432,z: -6.2154},
-                rotation: {x:Math.PI/2,y:0,z:0},
+                rotation: {x:Math.PI/2,y:0,z:0},//Math.PI/2
                 scale: 20,
                 components: {
                     xAxis: {
-                        name: "X Axis",
-                        rotary: false,
-                        axisOfMotion: null,
-                        //minBound
-                        //maxBound
-                        parent: "yAxis",
-                        motionVector: {x:1, y:0, z:0},
-                        stl: {
-                            filename: "assets/stls/stapler/xAxis.stl",
-                            offset: {x:0,y:0,z:0},
-                            scale: 1.0,
-                            rotation: {x:0,y:0,z:0}
-                        }
-                    },
-                    frame: {
                         name: "Y Axis",
                         rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
-                        parent: "substrate",
+                        parent: "yAxis",
                         motionVector: {x:0, y:1, z:0},
                         stl: {
-                            filename: "assets/stls/stapler/yAxis.stl",
-                            offset: {x:0,y:0,z:0},
-                            scale: 1.0,
-                            rotation: {x:0,y:0,z:0}
+                            filename: "assets/stls/stapler/xAxis.stl"
+//                            offset: {x:0,y:0,z:0},
+//                            scale: 1.0,
+//                            rotation: {x:0,y:0,z:0}
+                        }
+                    },
+                    frame: {
+                        name: "X Axis",
+                        rotary: false,
+                        axisOfMotion: null,
+                        //minBound
+                        //maxBound
+                        parent: "substrate",
+                        motionVector: {x:1, y:0, z:0},
+                        stl: {
+                            filename: "assets/stls/stapler/yAxis.stl"
                         }
                     },
                     zAxis: {
@@ -77,10 +74,7 @@ define(['three'], function(THREE){
                         parent: "xAxis",
                         motionVector: {x:0, y:0, z:1},
                         stl: {
-                            filename: "assets/stls/stapler/zAxis.stl",
-                            offset: {x:0,y:0,z:0},
-                            scale: 1.0,
-                            rotation: {x:0,y:0,z:0}
+                            filename: "assets/stls/stapler/zAxis.stl"
                         }
                     },
                     yAxis: {
@@ -92,26 +86,20 @@ define(['three'], function(THREE){
                         parent: "frame",
                         isStatic: true,
                         stl: {
-                            filename: "assets/stls/stapler/frame.stl",
-                            offset: {x:0,y:0,z:0},
-                            scale: 1.0,
-                            rotation: {x:0,y:0,z:0}
+                            filename: "assets/stls/stapler/frame.stl"
                         }
                     },
                     substrate: {
                         name: "Substrate",
                         rotary: true,
                         axisOfMotion: null,
-                        centerOfRotation: {x:10,y:10,z:0},
+                        centerOfRotation: {x:10,y:10,z:0},//(5.08mm, 5.715mm)
                         //minBound
                         //maxBound
                         parent: null,
                         motionVector: {x:0, y:0, z:1},
                         stl: {
-                            filename: "assets/stls/stapler/substrate.stl",
-                            offset: {x:0,y:0,z:0},
-                            scale: 1.0,
-                            rotation: {x:0,y:0,z:0}
+                            filename: "assets/stls/stapler/substrate.stl"
                         }
                     }
                 },
