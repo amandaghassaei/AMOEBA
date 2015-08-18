@@ -185,8 +185,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
             if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
-            if ((currentNav == "electronicNavSim" || currentNav == "mechanicalNavSim" || currentNav == "navAssemble")
-                && appState.previous("currentNav") == "navDesign") this._parseSparseCell();
+            if (currentNav == "electronicNavSim" || currentNav == "mechanicalNavSim" || currentNav == "navAssemble") this._parseSparseCell();
         },
 
         getCompositeData: function(){
