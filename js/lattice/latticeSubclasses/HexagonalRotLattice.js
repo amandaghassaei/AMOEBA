@@ -13,7 +13,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
     var HexRotLattice =  {
 
         _initLatticeType: function(){
-            require(['squareBaseplane'], function(BasePlaneClass){
+            require(['hexRotBasePlane'], function(BasePlaneClass){
                 globals.basePlane = new BasePlaneClass();
             });
             require([this.getHighlighterFile()], function(HighlighterClass){

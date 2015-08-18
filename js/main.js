@@ -62,6 +62,7 @@ require.config({
         octaBaseplane: 'baseplane/OctaBasePlane',
         rotEdgeOctaBaseplane: 'baseplane/RotEdgeOctaBasePlane',
         hexBaseplane: 'baseplane/HexagonalBasePlane',
+        hexRotBasePlane: 'baseplane/HexagonalRotBasePlane',
 
         //highlighter
         highlighter: 'highlighter/Highlighter',

@@ -10,25 +10,25 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
         _makeBasePlaneMesh: function(){
 
-            var scale = lattice.xScale();
-            var dimX = this.get("dimX")*scale;
-            var dimY = this.get("dimY")*scale;
+            var xScale = lattice.xScale();
+            var yScale = lattice.yScale();
+            var dimX = this.get("dimX");
+            var dimY = this.get("dimY");
 
             var geometry = new THREE.Geometry();
 
-            for ( var i = - dimX; i <= dimX+1; i += scale ) {
-                geometry.vertices.push( new THREE.Vector3(-dimX-scale/2, i-scale/2, 0.01));
-                geometry.vertices.push( new THREE.Vector3(dimX-scale/2, i-scale/2, 0.01));
-                geometry.vertices.push( new THREE.Vector3(i-scale/2, -dimX-scale/2, 0.01));
-                geometry.vertices.push( new THREE.Vector3(i-scale/2, dimX-scale/2, 0.01));
-
+            for ( var i = - dimX; i <= dimX+1; i ++) {
+                geometry.vertices.push( new THREE.Vector3(-dimX*xScale-xScale/2, i*yScale-yScale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(dimX*xScale-xScale/2, i*yScale-yScale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(i*xScale-xScale/2, -dimX*yScale-yScale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(i*xScale-xScale/2, dimX*yScale-yScale/2, 0.01));
             }
 
             var planeGeometry = new THREE.Geometry();
-            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, -dimX-scale/2, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, -dimX-scale/2, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(-dimX-scale/2, dimX+scale/2, 0));
-            planeGeometry.vertices.push( new THREE.Vector3(dimX+scale/2, dimX+scale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX*xScale-xScale/2, -dimX*yScale-yScale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX*xScale+xScale/2, -dimX*yScale-yScale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(-dimX*xScale-xScale/2, dimX*yScale+yScale/2, 0));
+            planeGeometry.vertices.push( new THREE.Vector3(dimX*xScale+xScale/2, dimX*yScale+yScale/2, 0));
             planeGeometry.faces.push(new THREE.Face3(0, 1, 3));
             planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
             planeGeometry.computeFaceNormals();
