@@ -39,13 +39,13 @@ define(['three'], function(THREE){
                 scale: 20,
                 components: {
                     xAxis: {
-                        name: "Y Axis",
+                        name: "X Axis",
                         rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "yAxis",
-                        motionVector: {x:0, y:1, z:0},
+                        motionVector: {x:1, y:0, z:0},
                         stl: {
                             filename: "assets/stls/stapler/xAxis.stl"
 //                            offset: {x:0,y:0,z:0},
@@ -54,13 +54,13 @@ define(['three'], function(THREE){
                         }
                     },
                     frame: {
-                        name: "X Axis",
+                        name: "Y Axis",
                         rotary: false,
                         axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "substrate",
-                        motionVector: {x:1, y:0, z:0},
+                        motionVector: {x:0, y:1, z:0},
                         stl: {
                             filename: "assets/stls/stapler/yAxis.stl"
                         }
