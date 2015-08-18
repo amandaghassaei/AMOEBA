@@ -34,9 +34,17 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
         //todo rotation
     };
 
+    StockComponent.prototype.getPosition = function(){
+        return this.cell.getPosition();
+    };
+
     StockComponent.prototype.setMaterial = function(materialName){
         this.cell.changeMaterial(materialName);
         three.render();
+    };
+
+    StockComponent.prototype.getMaterial = function(){
+        return this.cell.getMaterialName();
     };
 
 

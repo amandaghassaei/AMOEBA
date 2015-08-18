@@ -79,6 +79,10 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return this.id;
     };
 
+    Component.prototype.getPosition = function(){
+        return this.object3D.position.clone();
+    };
+
     Component.prototype.setTranslucent = function(translucent){
         if (this.stl === undefined) return;
         this.stl.material.transparent = translucent;

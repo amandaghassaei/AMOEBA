@@ -261,7 +261,15 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
     Assembler.prototype._postReleaseStock = function(index, position, material, settings, exporter){
         var data = "";
-        if (material == "fiberGlass") position.x -= 26.1*settings.scale;
+        var stock = _.find(this.stock, function(thisStock){
+            return thisStock.getMaterial() == material
+        });
+        if (stock === undefined) {
+            console.warn("no stock defined of type " + material + " for this assembler");
+            return data;
+        }
+        position.sub(stock.getPosition().multiplyScalar(settings.scale));
+
         position.sub(settings.originPosition);
         data += this._postMoveXY(position, settings, exporter);
 

@@ -132,8 +132,12 @@ define(['three'], function(THREE){
                         },
                         name: "Stock 2",
                         parent: "zAxis",
-                        position: {x:26.1,y:0,z:0}
+                        position: {x:26,y:0.236,z:0}
                     }
+                },
+                lattice:{
+                    scale: 1.27,
+                    units: 'mm'
                 },
                 defaults: {
                     camStrategy: "raster",

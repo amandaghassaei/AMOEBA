@@ -109,10 +109,17 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             }
             var machineJSON = camPlist.allMachines[machineName];
             if (machineJSON.defaults) this._setMachineDefaults(machineJSON.defaults);
+            if (machineJSON.lattice) this._setLatticeDefaults(machineJSON.lattice)
 
             var self = this;
             require(['assembler'], function(Assembler){
                 self.set('assembler', new Assembler(machineName, machineJSON));
+            });
+        },
+
+        _setLatticeDefaults: function(defaults){
+            _.each(defaults, function(value, key){
+                lattice.set(key, value);
             });
         },
 
