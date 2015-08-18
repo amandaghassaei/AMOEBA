@@ -53,8 +53,8 @@ require.config({
         truncatedCubeLattice: 'lattice/latticeSubclasses/TruncatedCubeLattice',
         tetraStackedLattice: 'lattice/latticeSubclasses/TetraStackedLattice',
         tetraVertexLattice: 'lattice/latticeSubclasses/TetraVertexLattice',
-        hexLattice: 'lattice/latticeSubClasses/HexagonalLattice',
-        hexRotLattice: 'lattice/latticeSubClasses/HexagonalRotLattice',
+        hexLattice: 'lattice/latticeSubclasses/HexagonalLattice',
+        hexRotLattice: 'lattice/latticeSubclasses/HexagonalRotLattice',
 
         //baseplane
         baseplane: 'baseplane/BasePlane',
