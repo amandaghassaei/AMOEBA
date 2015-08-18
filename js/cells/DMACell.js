@@ -226,11 +226,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("no material type set for cell");
             return null;
         }
-        if (!returnTHREEObject) return materials.list[this.materialName];
         if (!materials.list[this.materialName]) {
-            console.warn("no material object found of type " + this.materialName);
+            console.warn("no material object found of type ");
+            console.warn(this.materialName);
             return null;
         }
+        if (!returnTHREEObject) return materials.list[this.materialName];
         if (!materials.list[this.materialName].threeMaterial){
             console.warn("no three material object found for type "+ this.materialName);
             return null;
@@ -240,7 +241,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setMaterial = function(material){
-        this.materialName = material;
         this.object3D.children[0].material = material;
     };
 
