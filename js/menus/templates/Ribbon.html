@@ -10,6 +10,7 @@
         <% if (currentNav != "electronicNavSim" && currentNav != "mechanicalNavSim" && currentNav != "navAssemble" && currentNav != "navOptimize"){%>
             <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>
         <% } %>
+        <a id="ribbonAxesToggle" class="btn btn-primary btn-ribbon <% if (axesAreVisible){ %> ribbon-selected"<% } %>">Axes</a>
     </div>
 </div>
 <!--//<a class="btn btn-primary btn-ribbon highlightMode<% if (highlightMode){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/cursor-light.png"></a>-->

@@ -72,7 +72,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
             geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));//todo get rid of these
-            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
+//            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
             return geometry;
         }
 
@@ -339,10 +339,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             if (totalThreads > 0) return;
             callback();
         }
-        var startingPos = {x:this.components.yAxis.getPosition().x, y:this.components.xAxis.getPosition().y, z:this.components.zAxis.getPosition().z};
+        var startingPos = {x:this.components.xAxis.getPosition().x, y:this.components.yAxis.getPosition().y, z:this.components.zAxis.getPosition().z};
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));
-        this.components.yAxis.moveTo(this._makeAxisVector(position, "x"), speed.x, sketchyCallback);
-        this.components.xAxis.moveTo(this._makeAxisVector(position, "y"), speed.y, sketchyCallback);
+        this.components.xAxis.moveTo(this._makeAxisVector(position, "x"), speed.x, sketchyCallback);
+        this.components.yAxis.moveTo(this._makeAxisVector(position, "y"), speed.y, sketchyCallback);
         this.components.zAxis.moveTo(this._makeAxisVector(position, "z"), speed.z, sketchyCallback);
     };
     

@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             "click .ribbonCellMode":                                 "_updateCellMode",
             "click .ribbonDeleteMode":                               "_updateDeleteMode",
             "click .highlightMode":                                  "_updateHighlightMode",
-            "click .cellsVisible":                                   "_updateCellVisibility"
+            "click .cellsVisible":                                   "_updateCellVisibility",
+            "click #ribbonAxesToggle":                               "_setAxesVis"
         },
 
         initialize: function(){
@@ -25,6 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             this.listenTo(this.model, "change:deleteMode", this.render);
             this.listenTo(this.model, "change:highlightMode", this.render);
             this.listenTo(this.model, "change:cellsVisible", this.render);
+            this.listenTo(this.model, "change:axesAreVisible", this.render);
             this.listenTo(lattice, "change:cellType change:connectionType", this.render);
             this.render();
         },
@@ -53,6 +55,11 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             var state = this.model.get("ribbonIsVisible");
             if (state) this.$el.show();
             else this.$el.hide();
+        },
+
+        _setAxesVis: function(e){
+            e.preventDefault();
+            this.model.set("axesAreVisible", !this.model.get("axesAreVisible"));
         },
 
         render: function(){

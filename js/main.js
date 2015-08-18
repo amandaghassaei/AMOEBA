@@ -22,6 +22,7 @@ require.config({
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
+        axes: 'three/Axes',
 
         //plist
         plist: 'plists/PList',

@@ -62,6 +62,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             this.listenTo(this, "change:materialType", this._materialTypeChanged);
             this.listenTo(this, "change:gikLength", this._gikLengthChanged);
             this.listenTo(this, "change:turnOffRendering", this._renderingOnOff);
+            this.listenTo(this, "change:axesAreVisible", this._showAxes);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
@@ -147,6 +148,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
 
         _renderingOnOff: function(){
             if (!this.get("turnOffRendering")) three.render();
+        },
+
+        _showAxes: function(){
+            var visible = this.get("axesAreVisible");
+            require(['axes'], function(axes){
+                axes.setVisibility(visible);
+                three.render();
+            })
         },
 
 
