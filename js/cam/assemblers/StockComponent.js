@@ -30,8 +30,8 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
     StockComponent.prototype._setPosition = function(cell, position, rotation){
         var object3D = cell.getObject3D();//todo need this?
-        object3D.position.set(position.x, position.y, position.z);
-        //todo rotation
+        if (position) object3D.position.set(position.x, position.y, position.z);
+        if (rotation) object3D.rotation.set(rotation.x, rotation.y, rotation.z);
     };
 
     StockComponent.prototype.getPosition = function(){

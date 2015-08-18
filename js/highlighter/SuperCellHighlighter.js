@@ -69,6 +69,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             var offset = appState.get("superCellIndex").clone();
             offset.applyQuaternion(this.mesh.quaternion).round();
             newIndex.sub(offset);
+            console.log(newIndex.clone());
             return newIndex;
         }
     });

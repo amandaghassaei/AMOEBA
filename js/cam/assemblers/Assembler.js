@@ -71,7 +71,8 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             }
             if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
-            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));
+            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));//todo get rid of these
+            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
             return geometry;
         }
 
