@@ -44,6 +44,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _zIndexRotation: function(index){
+            if (index.z%2 == 0) return Math.PI/2;
+            return 0;
+        },
+
+        _zIndexRotationSuperCell: function(index){
             if (index.z%2 != 0) return Math.PI/2;
             return 0;
         },

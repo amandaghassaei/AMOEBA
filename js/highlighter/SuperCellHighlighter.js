@@ -44,7 +44,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 var index = this.highlightedObject.getAbsoluteIndex();
                 if (Math.abs(direction.z) > 0.9) index.z+=1;
                 else if (Math.abs(direction.z) < 0.1) index.z -=1;
-                this.mesh.rotation.set(0,0, lattice._zIndexRotation(index));
+                if (appState._drawingWithCompositeMaterialType()) this.mesh.rotation.set(0,0, lattice._zIndexRotationSuperCell(index));
+                else this.mesh.rotation.set(0,0, lattice._zIndexRotation(index));
             }
 
             var superCellIndex = appState.get("superCellIndex");

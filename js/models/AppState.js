@@ -141,6 +141,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             }
         },
 
+        _drawingWithCompositeMaterialType: function(){
+            return this.get("materialType").substr(0,5) == "super";
+        },
+
         _renderingOnOff: function(){
             if (!this.get("turnOffRendering")) three.render();
         },
