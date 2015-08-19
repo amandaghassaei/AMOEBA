@@ -184,6 +184,7 @@ require.config({
 
         //assemblers
         assembler: 'cam/assemblers/Assembler',
+        assemblerPost: 'cam/assemblers/AssemblerPost',
         component: 'cam/assemblers/Component',
         stockComponent: 'cam/assemblers/StockComponent',
 

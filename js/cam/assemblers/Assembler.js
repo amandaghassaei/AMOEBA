@@ -2,8 +2,8 @@
  * Created by aghassaei on 5/28/15.
  */
 
-define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component', 'stockComponent'],
-    function(_, appState, lattice, THREE, three, cam, Component, StockComponent){
+define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component', 'stockComponent', 'assemblerPost'],
+    function(_, appState, lattice, THREE, three, cam, Component, StockComponent, AssemblerPostMethods){
     
     var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.3});
     var stlLoader = new THREE.STLLoader();
@@ -19,16 +19,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.camProcesses = json.camProcesses;
         this.numMaterials = json.numMaterials;
 
-        this.customHeader = json.customHeader || function(settings){
-            return "";
-        };
-        this.customFooter = json.customFooter || function(){};
-        this.customHome = json.customHome || function(){};
-        this.customPickUpStock = json.customPickUpStock || function(){};
-        this.customPlacePart = json.customPlacePart || function(){};
-        this.customFunctionsContext = {
-            clearHeight: 8
-        };
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
@@ -43,7 +33,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 
         this.setVisibility(cam.isVisible());
         three.render();
+
+        AssemblerPostMethods.call(this, id, json);//needed to separate this for now
     }
+    Assembler.prototype = Object.create(AssemblerPostMethods.prototype);
 
     Assembler.prototype.getID = function(){
         return this.id;
@@ -183,139 +176,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         return tree;
     };
     
-    
-    
 
-
-
-
-    //post process
-
-    Assembler.prototype.postProcess = function(settings, exporter){
-
-        _.each(this.components, function(component){
-            component.postReset();
-        });
-
-        var data = "";
-        data += exporter.makeHeader(settings);
-        data += this._makeHeader(settings, exporter);
-        data += "\n\n";
-        data += exporter.addComment("begin program");
-        data += "\n";
-
-        data += this._postProcessCells(settings, exporter);
-
-        data += "\n\n";
-        data += exporter.addComment("end program");
-        data += "\n";
-        data += exporter.makeFooter(settings);
-
-        return data;
-    };
-
-    Assembler.prototype._makeHeader = function(settings, exporter){
-        var data = this.customHeader(settings);
-        data += this.home(exporter, settings);
-        return data;
-    };
-
-    Assembler.prototype.home = function(exporter, settings){
-//        this.components.zAxis.postMoveTo(settings.rapidHeight*settings*scale);
-        return exporter.goHome(settings);
-    };
-    
-    Assembler.prototype._postProcessCells = function(settings, exporter){
-        var data = "";
-        var self = this;
-
-        var lastIndex = null;
-    
-        lattice.rasterCells(cam._getOrder(cam.get("camStrategy")), function(cell){
-            if (!cell) return;
-            var cellPosition = cell.getAbsolutePosition().multiplyScalar(settings.scale);
-            var cellIndex = cell.getAbsoluteIndex();
-
-            if (!self.shouldPickUpStock){
-                data += self._postGetStock(cellIndex, lastIndex, cellPosition, cell.materialName, settings, exporter);
-            } else {
-//                var thisStockPosition = _.clone(stockPosition);
-//                if (multStockPositions) {
-//                    thisStockPosition.x += stockNum % stockArraySize.y * stockSeparation;
-//                    thisStockPosition.y -= Math.floor(stockNum / stockArraySize.y) * stockSeparation;
-//                    stockNum += 1;
-//                    if (stockNum >= stockArraySize.x * stockArraySize.y) stockNum = 0;
-//                }
-//                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
-//                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
-            }
-            data += self._postReleaseStock(cellIndex, cellPosition, cell.materialName, settings, exporter);
-            data += "\n";
-            lastIndex = cellIndex.clone();
-        });
-
-        return data;
-    };
-    
-    Assembler.prototype._postMoveXY = function(position, settings, exporter){
-        position = this.components.zAxis.applyAbsoluteRotation(position);
-        return exporter.rapidXY(position, settings);
-    };
-    
-//    Assembler.prototype._postMoveToStock = function(exporter, stockPosition, rapidHeight, wcs, safeHeight){
-//        var data = "";
-//        data += exporter.rapidZ(stockPosition.z-wcs.z+safeHeight);
-//        data += exporter.moveZ(stockPosition.z-wcs.z);
-//        data += this._postGetStock(exporter);
-//        data += exporter.moveZ(stockPosition.z-wcs.z+safeHeight);
-//        data += exporter.rapidZ(rapidHeight);
-//        return data;
-//    };
-    
-    Assembler.prototype._postGetStock = function(index, lastIndex, position, material, settings, exporter){
-        var data = "";
-        if (lastIndex === null || (lastIndex.z-index.z)%2 != 0){
-            data += exporter.addLine("G0", ["A" + (index.z%2*0.3125).toFixed(4)], "new layer");
-            data += "\n";
-        }
-        data += exporter.addComment("get stock " + JSON.stringify(index));
-        return data;
-    };
-    
-    Assembler.prototype._postReleaseStock = function(index, position, material, settings, exporter){
-        var data = "";
-        var stock = _.find(this.stock, function(thisStock){
-            return thisStock.getMaterial() == material
-        });
-        if (stock === undefined) {
-            console.warn("no stock defined of type " + material + " for this assembler");
-            return data;
-        }
-        position.sub(stock.getPosition().multiplyScalar(settings.scale));
-
-
-        position.sub(settings.originPosition);
-        data += this._postMoveXY(position.clone(), settings, exporter);
-
-        data += exporter.rapidZ(position.z+settings.safeHeight, settings);
-        data += exporter.moveZ(position.z, settings);
-
-        //place part
-        data += exporter.addComment(JSON.stringify(index));
-        if (material == "brass") data += exporter.addLine("M3");
-        else if (material == "fiberGlass") data += exporter.addLine("M4");
-        data += exporter.addLine("G4", ["P" + 0.75]);
-        data += exporter.addLine("M5");
-        data += exporter.moveZ(position.z, settings);
-
-        data += exporter.moveZ(position.z+settings.safeHeight, settings);
-        data += exporter.rapidZ(settings.rapidHeight, settings);
-        return data;
-    };
-
-
-    
-    
     
     
     //animation methods

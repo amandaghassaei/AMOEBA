@@ -10,19 +10,6 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         this.animationSpeed = null;
     }
 
-    GCodeExporter.prototype.makeHeader = function(settings){
-        var data = "";
-        if (lattice.get("units") == "inches") data += this.addLine("G20", [], "units inches");
-        else data += this.addLine("G21", [], "units mm");
-    //    data += this.addLine("G90", [], "absolute positioning");
-    //    data += this.addLine("G54", [], "work offset");
-    ////    data += this.addLine("G49", [], "cancel tool length comp");
-    //    data += this.addLine("G40", [], "cancel tool radius comp");
-    ////    data += this.addLine("M09", [], "coolant off");
-//        data += this.goHome(settings);
-        return data;
-    };
-
     GCodeExporter.prototype.addLine = function(command, params, comment){
         var data = "";
         data += command + " ";
@@ -40,7 +27,19 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     };
 
     GCodeExporter.prototype._setSpeed = function(speed){
+        this.postSpeed = speed;
         return "F"+ speed + "\n";
+    };
+
+    GCodeExporter.prototype.setUnits = function(units){
+        if (units == "inches") return this.addLine("G20", [], "units inches");
+        else if (units == "mm") return this.addLine("G21", [], "units mm");
+        console.warn("units " + units + " not recognized");
+        return "";
+    };
+
+    GCodeExporter.prototype.newLine = function(){
+        return "\n";
     };
 
     //GCodeExporter.prototype._rapidXYZ = function(x, y, z){
@@ -59,13 +58,6 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         return data + this._goXYZ(null, null, z);
     };
 
-    GCodeExporter.prototype._goXYZ = function(x, y, z){
-        if (x !== null) x = "X"+parseFloat(x).toFixed(3);
-        if (y !== null) y = "Y"+parseFloat(y).toFixed(3);
-        if (z !== null) z = "Z"+parseFloat(z).toFixed(3);
-        return this.addLine("G01", [x,y,z]);
-    };
-
     GCodeExporter.prototype.moveXY = function(x, y, settings){
         var data = "";
         if (this.postSpeed != settings.feedRate.x) data += this._setSpeed(settings.feedRate.x);
@@ -78,17 +70,24 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
         return data + this._goXYZ(null, null, z);
     };
 
-    GCodeExporter.prototype.goHome = function(settings){
-        var data = this._setSpeed(settings.rapidSpeeds.z);
-        return data + this._goXYZ(0,0,settings.rapidHeight);
+    GCodeExporter.prototype._goXYZ = function(x, y, z){
+        if (x !== null) x = "X"+parseFloat(x).toFixed(3);
+        if (y !== null) y = "Y"+parseFloat(y).toFixed(3);
+        if (z !== null) z = "Z"+parseFloat(z).toFixed(3);
+        return this.addLine("G01", [x,y,z]);
     };
 
-    GCodeExporter.prototype.makeFooter = function(settings){
-        var data = "";
-        data += this.goHome(settings);
-    //    data += this.addLine("M30", [], "program stop");
-        return data;
+    GCodeExporter.prototype.goHome = function(settings){
+        var data = this.rapidZ(settings.rapidHeight, settings);
+        return data + this.rapidXY({x:0, y:0}, settings);
     };
+
+
+
+
+
+
+
 
     GCodeExporter.prototype.save = function(data){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
