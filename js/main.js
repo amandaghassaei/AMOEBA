@@ -14,6 +14,8 @@ require.config({
         bootstrapSlider: '../dependencies/bootstrap-slider/bootstrap-slider',
         fileSaverLib: '../dependencies/loaders/FileSaver.min',
         numeric: '../dependencies/numeric-1.2.6',
+        codeMirrorJS: '../dependencies/codemirror/javascript',
+        codeMirror: '../dependencies/codemirror/codemirror',
 
         //three
         three: '../dependencies/three',
@@ -141,6 +143,7 @@ require.config({
         navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
         ribbonTemplate: 'menus/templates/Ribbon.html',
         modalViewTemplate: 'menus/templates/ModalView.html',
+        scriptView: 'menus/ScriptView',
         menuWrapperTemplate: 'menus/templates/MenuWrapperView.html',
         latticeMenuTemplate: 'menus/templates/LatticeMenuView.html',
         importMenuTemplate: 'menus/templates/ImportMenuView.html',
@@ -230,6 +233,10 @@ require.config({
         },
         'numeric': {
             exports: 'numeric'
+        },
+        'codeMirror': {
+            deps: ['codeMirrorJS'],
+            exports: 'CodeMirror'
         }
     }
 

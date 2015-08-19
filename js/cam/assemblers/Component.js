@@ -278,6 +278,11 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
 
+    Component.prototype.saveJSON = function(){
+
+    };
+
+
     Component.prototype.toJSON = function(){
         var childIDs = [];
         _.each(this.children, function(child){

@@ -26,6 +26,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.customHome = json.customHome || function(){};
         this.customPickUpStock = json.customPickUpStock || function(){};
         this.customPlacePart = json.customPlacePart || function(){};
+        this.customFunctionsContext = {
+            clearHeight: 8
+        };
 
         this.object3D = new THREE.Object3D();
         three.sceneAdd(this.object3D);
@@ -420,6 +423,12 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.frame = null;
         this.substrate = null;
         this.object3D = null;
+    };
+
+    Assembler.prototype.saveJSON = function(){
+        return {
+
+        }
     };
 
     Assembler.prototype.toJSON = function(){
