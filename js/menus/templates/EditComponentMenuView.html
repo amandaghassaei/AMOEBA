@@ -44,11 +44,17 @@ Parent: &nbsp;&nbsp;
             <input id="isRotary" data-property="rotary" type="checkbox" <% if (thisComponent.rotary){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="component custom-checkbox">
             <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Rotary Axis (default is Linear)</label>
-            Vector (xyz):&nbsp;&nbsp;
+            Vector of Motion (xyz):<br/>
             <input data-property="motionVector" data-key="x" value="<%= thisComponent.motionVector.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
             <input data-property="motionVector" data-key="y" value="<%= thisComponent.motionVector.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
-            <input data-property="motionVector" data-key="z" value="<%= thisComponent.motionVector.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/>
-            <!--Jog<br/>-->
+            <input data-property="motionVector" data-key="z" value="<%= thisComponent.motionVector.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
+            <% if (thisComponent.rotary){ %>
+                Center of Rotation, relative to Origin (xyz):<br/>
+                <input data-property="centerOfRotation" data-key="x" value="<%= thisComponent.centerOfRotation.x %>" placeholder="X" class="form-control floatInput component" type="text">&nbsp;
+                <input data-property="centerOfRotation" data-key="y" value="<%= thisComponent.centerOfRotation.y %>" placeholder="Y" class="form-control floatInput component" type="text">&nbsp;
+                <input data-property="centerOfRotation" data-key="z" value="<%= thisComponent.centerOfRotation.z %>" placeholder="Z" class="form-control floatInput component" type="text"><br/><br/>
+            <% } %>
+            Jog: &nbsp;&nbsp;<br/>
         <% } %>
         <br/>
     <a id="uploadStl" href="#" class="btn btn-block btn-lg btn-default">Upload STL</a><br/>

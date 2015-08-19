@@ -18,6 +18,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         this.isStatic = json.isStatic;
         this.rotary = json.rotary;
         this.motionVector = new THREE.Vector3();
+        if (json.centerOfRotation) this.centerOfRotation = new THREE.Vector3(json.centerOfRotation.x, json.centerOfRotation.y, json.centerOfRotation.z);
         if (json.motionVector) this.motionVector.set(json.motionVector.x, json.motionVector.y, json.motionVector.z);
     }
 
@@ -219,7 +220,8 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             rotation: this.object3D.rotation,
             isStatic: this.isStatic,
             rotary: this.rotary,
-            motionVector: this.motionVector
+            motionVector: this.motionVector,
+            centerOfRotation: this.centerOfRotation
         }
     };
 
