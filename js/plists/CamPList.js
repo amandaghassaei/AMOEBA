@@ -128,7 +128,7 @@ define(['three'], function(THREE){
                     camProcess: "gcode",
                     rapidHeight: 30,
                     rapidHeightRelative: true,
-                    safeHeight: 4.5,
+                    safeHeight: 4,
                     originPosition: new THREE.Vector3(0,0,0),
                     rapidSpeeds:{xy: 250, z: 250},
                     feedRate:{xy: 6, z: 6}

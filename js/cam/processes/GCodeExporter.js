@@ -2,11 +2,12 @@
  * Created by aghassaei on 3/10/15.
  */
 
-define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
+define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THREE){
 
     function GCodeExporter() {
         //keep track of speeds for F commands
         this.postSpeed = null;
+        this.postPosition = new THREE.Vector3(0,0,0);
         this.animationSpeed = null;
     }
 
@@ -71,15 +72,28 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     };
 
     GCodeExporter.prototype._goXYZ = function(x, y, z){
-        if (x !== null) x = "X"+parseFloat(x).toFixed(3);
-        if (y !== null) y = "Y"+parseFloat(y).toFixed(3);
-        if (z !== null) z = "Z"+parseFloat(z).toFixed(3);
+        if (x !== null) {
+            x = "X"+parseFloat(x).toFixed(3);
+            this.postPosition.x = x;
+        }
+        if (y !== null) {
+            y = "Y"+parseFloat(y).toFixed(3);
+            this.postPosition.y = y;
+        }
+        if (z !== null) {
+            z = "Z"+parseFloat(z).toFixed(3);
+            this.postPosition.z = z;
+        }
         return this.addLine("G01", [x,y,z]);
     };
 
     GCodeExporter.prototype.goHome = function(settings){
         var data = this.rapidZ(settings.rapidHeight, settings);
         return data + this.rapidXY({x:0, y:0}, settings);
+    };
+
+    GCodeExporter.prototype.getPostPosition = function(){
+        return this.postPosition.clone();
     };
 
 

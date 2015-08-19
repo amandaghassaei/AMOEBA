@@ -21,7 +21,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         this.customFunctionsContext = {
             zClearHeight: 8,//height above part to clear during assembly
             zPreload: 0.2,
-            wait: 0.75,//seconds
+            stockWait: 0.75,//seconds
             blOvershoot: 1.0
         };
 
@@ -58,25 +58,42 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
             return data;
         };
 
-        this.customMoveXY = function(position, index, exporter, settings, context){
+        this.customMoveXY = function(position, lastPosition, index, exporter, settings, context){//already offset for dual heads
             var data = "";
+
+            var overshoot = false;
+            var overshootPosition = position.clone();
+
+            //always approach from +x +y direction
+            if (lastPosition.x < position.x){
+                overshoot = true;
+                overshootPosition.x += context.blOvershoot;
+            }
+
+            if (lastPosition.y < position.y){
+                overshoot = true;
+                overshootPosition.y += context.blOvershoot;
+            }
+
+            if (overshoot) data += exporter.rapidXY(overshootPosition, settings);
             data += exporter.rapidXY(position, settings);
+
             return data;
         };
 
-        this.customPlacePart = function(position, index, material, exporter, settings, context){
+        this.customPlacePart = function(position, index, material, exporter, settings, context){//already offset for dual heads
             var data = "";
             data += exporter.rapidZ(position.z + settings.safeHeight, settings);
-            data += exporter.moveZ(position.z, settings);
+            data += exporter.moveZ(position.z - context.zPreload, settings);
 
             if (material == "brass") data += exporter.addLine("M3");
             else if (material == "fiberGlass") data += exporter.addLine("M4");
 
             data += exporter.addComment(JSON.stringify(index));
 
-            data += exporter.addLine("G4", ["P" + context.wait]);
+            data += exporter.addLine("G4", ["P" + context.stockWait]);
             data += exporter.addLine("M5");
-            data += exporter.moveZ(position.z, settings);
+            data += exporter.moveZ(position.z - context.zPreload, settings);//need this line?
 
             data += exporter.moveZ(position.z + settings.safeHeight, settings);
             data += exporter.rapidZ(position.z + context.zClearHeight, settings);
@@ -182,9 +199,9 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         position.sub(stock.getPosition().multiplyScalar(settings.scale));
         position.sub(settings.originPosition);
 
-        data += this.customMoveXY(position.clone(), index.clone(), exporter, settings, context);
+        data += this.customMoveXY(position.clone(), exporter.getPostPosition(), index.clone(), exporter, settings, context);
 
-        data += this.customPlacePart(position, index, material, exporter, settings, context);
+        data += this.customPlacePart(position.clone(), index.clone(), material, exporter, settings, context);
         return data;
     };
 
@@ -192,3 +209,63 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     return AssemblerPost;
 
 });
+
+
+//don't delete
+//         this.customHeader = function(exporter, settings, context){
+//            var data = "";
+//            data += exporter.setUnits(lattice.get("units"));
+//            data += this.customHome(exporter, settings, context);
+//            return data;
+//        };
+//
+//        this.customFooter = function(exporter, settings, context){
+//            var data = "";
+//            data += this.customHome(exporter, settings, context);
+//            return data;
+//        };
+//
+//        this.customHome = function(exporter, settings, context){
+//            var data = "";
+//            data += exporter.goHome(settings);
+//            return data;
+//        };
+//
+//        this.customPickUpStock = function(exporter, settings, context){//not relevant for your assembler
+//            var data = "";
+//            return data;
+//        };
+//
+//        this.customChangeZLayer = function(currentIndex, lastIndex, exporter, settings, context){
+//            var data = "";
+//            if (lastIndex === null || (currentIndex.z-lastIndex.z)%2 != 0){
+//                data += exporter.addLine("G0", ["A" + (currentIndex.z%2*0.3125).toFixed(4)], "new layer");
+//                data += "\n";
+//            }
+//            return data;
+//        };
+//
+//        this.customMoveXY = function(position, index, exporter, settings, context){//already offset for dual heads
+//            var data = "";
+//            data += exporter.rapidXY(position, settings);
+//            return data;
+//        };
+//
+//        this.customPlacePart = function(position, index, material, exporter, settings, context){//already offset for dual heads
+//            var data = "";
+//            data += exporter.rapidZ(position.z + settings.safeHeight, settings);
+//            data += exporter.moveZ(position.z - context.zPreload, settings);
+//
+//            if (material == "brass") data += exporter.addLine("M3");
+//            else if (material == "fiberGlass") data += exporter.addLine("M4");
+//
+//            data += exporter.addComment(JSON.stringify(index));
+//
+//            data += exporter.addLine("G4", ["P" + context.stockWait]);
+//            data += exporter.addLine("M5");
+//            data += exporter.moveZ(position.z - context.zPreload, settings);//need this line?
+//
+//            data += exporter.moveZ(position.z + settings.safeHeight, settings);
+//            data += exporter.rapidZ(position.z + context.zClearHeight, settings);
+//            return data;
+//        };
