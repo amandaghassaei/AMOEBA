@@ -236,7 +236,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             callback();
         }
 
-        var startingPos = this.components.xAxis.getPosition().add(this.components.yAxis.getPosition().add(this.components.zAxis.getPosition()))//this.components.zAxis.getAbsolutePosition();//get position of end effector
+        var startingPos = this.components.xAxis.getPosition().add(this.components.frame.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
         this.components.xAxis.moveTo(position, speed.x, sketchyCallback);
         this.components.frame.moveTo(position, speed.y, sketchyCallback);

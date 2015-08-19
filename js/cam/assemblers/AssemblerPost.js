@@ -9,14 +9,15 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
     function AssemblerPost(id, json){
 
-        //settings:
-//        feedRate: THREE.Vector3
-//        originPosition: THREE.Vector3
+        //what's in "settings"?
+
+//        feedRate: THREE.Vector3 - slow speeds, exporter.move commands use this speed
+//        originPosition: THREE.Vector3 - you won't need this
 //        rapidHeight: 30 - max z height of machine, used when we want to be sure we're clear
-//        rapidSpeeds: THREE.Vector3
+//        rapidSpeeds: THREE.Vector3 - fast speeds, exporter.rapid use this speed
 //        safeHeight: 4.5 - height above parts where we start to move slowly
-//        scale: 1.27
-//        stockPosition: THREE.Vector3
+//        scale: 1.27 - all positions and speeds are already scaled for you to mm
+//        stockPosition: THREE.Vector3 - not used for your machine
 
         this.customFunctionsContext = {
             zClearHeight: 8,//height above part to clear during assembly
@@ -99,11 +100,16 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
             data += exporter.rapidZ(position.z + context.zClearHeight, settings);
             return data;
         };
-
-
-
-
     }
+
+
+
+
+
+
+
+
+
 
 
 
@@ -198,6 +204,12 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         }
         position.sub(stock.getPosition().multiplyScalar(settings.scale));
         position.sub(settings.originPosition);
+
+//        position.add(new THREE.Vector3(18.23*((index.z+1)%2), 0.3*((index.z+1)%2), 0));
+
+//        (5.08mm, 5.715mm)
+//        x = part_pos[0]*1.27 + 18.23*((layer+1)%2)
+//		y = part_pos[1]*1.27 + 0.3*((layer+1)%2)
 
         data += this.customMoveXY(position.clone(), exporter.getPostPosition(), index.clone(), exporter, settings, context);
 
