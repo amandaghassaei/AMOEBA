@@ -41,7 +41,6 @@ define(['three'], function(THREE){
                     xAxis: {
                         name: "X Axis",
                         rotary: false,
-                        axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "yAxis",
@@ -56,7 +55,6 @@ define(['three'], function(THREE){
                     frame: {
                         name: "Y Axis",
                         rotary: false,
-                        axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "substrate",
@@ -68,7 +66,6 @@ define(['three'], function(THREE){
                     zAxis: {
                         name: "Z Axis",
                         rotary: false,
-                        axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "xAxis",
@@ -80,7 +77,6 @@ define(['three'], function(THREE){
                     yAxis: {
                         name: "Frame",
                         rotary: false,
-                        axisOfMotion: null,
                         //minBound
                         //maxBound
                         parent: "frame",
@@ -92,8 +88,7 @@ define(['three'], function(THREE){
                     substrate: {
                         name: "Substrate",
                         rotary: true,
-                        axisOfMotion: null,
-                        centerOfRotation: {x:10,y:10,z:0},//(5.08mm, 5.715mm)
+                        centerOfRotation: {x:4,y:4.5,z:0},//(5.08mm, 5.715mm)
                         //minBound
                         //maxBound
                         parent: null,

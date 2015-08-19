@@ -84,6 +84,30 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return this.object3D.position.clone();
     };
 
+    Component.prototype.getAbsolutePosition = function(){
+        if (!this.parent) return this.getPosition();
+        return this.parentObject.getAbsolutePosition().add(this.parentObject.applyRotation(this.getPosition()));
+    };
+
+    Component.prototype.getOrientation = function(){
+        return this.object3D.quaternion.clone();
+    };
+
+    Component.prototype.getAbsoluteOrientation = function(){
+        if (!this.parent) return this.getOrientation();
+        return this.getOrientation().multiply(this.parentObject.getAbsoluteOrientation());//order matters!
+    };
+
+    Component.prototype.applyRotation = function(vector){//todo local rotation?
+        vector.applyQuaternion(this.getAbsoluteOrientation());
+        return vector;
+    };
+
+    Component.prototype.applyAbsoluteRotation = function(vector){
+        vector.applyQuaternion(this.getAbsoluteOrientation());
+        return vector;
+    };
+
     Component.prototype.setTranslucent = function(translucent){
         if (this.stl === undefined) return;
         this.stl.material.transparent = translucent;
@@ -145,10 +169,12 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.moveTo = function(target, speed, callback){
+        var target = this._multiplyVectors(target, this.motionVector);
         if (target === null){
             if (callback) callback();
             return;
         }
+
         var currentPosition = this.getPosition();
         var increment = speed/1500.0*cam.get("simSpeed");
         var incrVector = target.clone().sub(currentPosition);
@@ -161,6 +187,14 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
         incrVector.normalize().multiplyScalar(increment);
         this._incrementalMove(incrVector, target, callback);
+    };
+
+    Component.prototype._multiplyVectors = function(target, motion){
+        if (target.x === null && motion.x > 0) return null;
+        if (target.y === null && motion.y > 0) return null;
+        if (target.z === null && motion.z > 0) return null;
+        var target = new THREE.Vector3(target.x, target.y, target.z);
+        return target.multiply(motion);
     };
 
     Component.prototype._incrementalMove = function(increment, target, callback){
