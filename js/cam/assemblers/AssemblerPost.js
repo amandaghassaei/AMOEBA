@@ -195,6 +195,14 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
     AssemblerPost.prototype._postReleaseStock = function(index, position, material, settings, exporter, context){
         var data = "";
+
+        //offset for rotation
+        var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);
+//        position.add(new THREE.Vector3(18.23*((index.z)%2), 0.3*((index.z)%2), 0));
+        if (index.z%2 != 0){
+            position = new THREE.Vector3(-position.y, position.x, position.z);
+        }
+
         var stock = _.find(this.stock, function(thisStock){
             return thisStock.getMaterial() == material
         });
@@ -205,7 +213,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         position.sub(stock.getPosition().multiplyScalar(settings.scale));
         position.sub(settings.originPosition);
 
-//        position.add(new THREE.Vector3(18.23*((index.z+1)%2), 0.3*((index.z+1)%2), 0));
+
 
 //        (5.08mm, 5.715mm)
 //        x = part_pos[0]*1.27 + 18.23*((layer+1)%2)

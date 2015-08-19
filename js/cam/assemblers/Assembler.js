@@ -237,7 +237,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         }
 
         var startingPos = this.components.xAxis.getPosition().add(this.components.frame.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
+        console.log("here");
+        console.log(startingPos);//this.components.zAxis.applyAbsoluteRotation(
+        console.log(position);
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
+
         this.components.xAxis.moveTo(position, speed.x, sketchyCallback);
         this.components.frame.moveTo(position, speed.y, sketchyCallback);
         this.components.zAxis.moveTo(position, speed.z, sketchyCallback);
@@ -247,6 +251,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         if (position.x === null && position.y === null) return speed;
         var deltaX = position.x-startingPos.x;
         var deltaY = position.y-startingPos.y;
+        console.log(deltaX + "  " + deltaY);
         var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         if (totalDistance == 0) return speed;
         speed.x = Math.abs(deltaX/totalDistance*speed.x);

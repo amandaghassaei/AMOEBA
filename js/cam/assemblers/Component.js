@@ -209,8 +209,9 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             if (callback) callback();
             return;
         }
+        target = this.applyRotation(target);//absolute?
 
-        var currentPosition = this.getPosition();//local position
+        var currentPosition = this.getPosition();
         var increment = speed/1500.0*cam.get("simSpeed");
         var incrVector = target.clone().sub(currentPosition);
 
@@ -232,9 +233,9 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return target.multiply(motion);
     };
 
-    Component.prototype.getThisDistanceToTarget = function(target){
-        return target.clone().multiply(this.getAbsoluteMotionVector());
-    };
+//    Component.prototype.getThisDistanceToTarget = function(target){
+//        return target.clone().multiply(this.getAbsoluteMotionVector());
+//    };
 
     Component.prototype._incrementalMove = function(increment, target, callback){
         var self = this;
