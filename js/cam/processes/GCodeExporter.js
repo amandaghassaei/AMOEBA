@@ -19,7 +19,7 @@ define(['underscore', 'cam', 'lattice'], function(_, cam, lattice){
     ////    data += this.addLine("G49", [], "cancel tool length comp");
     //    data += this.addLine("G40", [], "cancel tool radius comp");
     ////    data += this.addLine("M09", [], "coolant off");
-        data += this.goHome(settings);
+//        data += this.goHome(settings);
         return data;
     };
 

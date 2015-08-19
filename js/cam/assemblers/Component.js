@@ -20,6 +20,9 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         this.motionVector = new THREE.Vector3();
         if (json.centerOfRotation) this.centerOfRotation = new THREE.Vector3(json.centerOfRotation.x, json.centerOfRotation.y, json.centerOfRotation.z);
         if (json.motionVector) this.motionVector.set(json.motionVector.x, json.motionVector.y, json.motionVector.z);
+
+
+        this.postReset();
     }
 
     //assembler setup
@@ -80,6 +83,14 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         return this.id;
     };
 
+
+
+
+
+
+
+    //position/rotation/etc
+
     Component.prototype.getPosition = function(){
         return this.object3D.position.clone();
     };
@@ -87,6 +98,19 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     Component.prototype.getAbsolutePosition = function(){
         if (!this.parent) return this.getPosition();
         return this.parentObject.getAbsolutePosition().add(this.parentObject.applyRotation(this.getPosition()));
+    };
+
+    Component.prototype.getMotionVector = function(){
+        return this.motionVector.clone();
+    };
+
+    Component.prototype.getAbsoluteMotionVector = function(){
+        if (!this.parent) return this.getMotionVector();
+        return this.applyAbsoluteRotation(this.getMotionVector());
+    };
+
+    Component.prototype.getRotation = function(){//for rotary axes
+        return this.object3D.rotation.toVector3().clone();
     };
 
     Component.prototype.getOrientation = function(){
@@ -116,15 +140,26 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
 
 
+    //post processing
+
+    Component.prototype.postReset = function(){
+        this._postAngle = 0;
+        this._postPosition = 0;
+    };
+
+    Component.prototype.postRotateTo = function(newAngle){
+        this._postAngle = newAngle;
+    };
+
+
+    Component.prototype.postMoveTo = function(newPosition){
+        this._postPosition = newPosition;
+    };
+
+
+
+
     //simulation animation
-
-    Component.prototype.getPosition = function(){
-        return this.object3D.position.clone();
-    };
-
-    Component.prototype.getRotation = function(){
-        return this.object3D.rotation.toVector3().clone();
-    };
 
     Component.prototype.getObject3D = function(){
         return this.object3D;
@@ -168,14 +203,14 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         }, 10);
     };
 
-    Component.prototype.moveTo = function(target, speed, callback){
-        var target = this._multiplyVectors(target, this.motionVector);
+    Component.prototype.moveTo = function(target, speed, callback){//all local in sim bc gcode is in local coordinate systems
+        var target = this._multiplyVectors(target, this.getMotionVector());//this.getAbsoluteMotionVector()
         if (target === null){
             if (callback) callback();
             return;
         }
 
-        var currentPosition = this.getPosition();
+        var currentPosition = this.getPosition();//local position
         var increment = speed/1500.0*cam.get("simSpeed");
         var incrVector = target.clone().sub(currentPosition);
 
@@ -190,11 +225,15 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype._multiplyVectors = function(target, motion){
-        if (target.x === null && motion.x > 0) return null;
-        if (target.y === null && motion.y > 0) return null;
-        if (target.z === null && motion.z > 0) return null;
+        if (target.x === null && motion.x > 0.001) return null;
+        if (target.y === null && motion.y > 0.001) return null;
+        if (target.z === null && motion.z > 0.001) return null;
         var target = new THREE.Vector3(target.x, target.y, target.z);
         return target.multiply(motion);
+    };
+
+    Component.prototype.getThisDistanceToTarget = function(target){
+        return target.clone().multiply(this.getAbsoluteMotionVector());
     };
 
     Component.prototype._incrementalMove = function(increment, target, callback){

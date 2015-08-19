@@ -20,7 +20,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.numMaterials = json.numMaterials;
 
         this.customHeader = json.customHeader || function(settings){
-//            this.home(settings);
+            return "";
         };
         this.customFooter = json.customFooter || function(){};
         this.customHome = json.customHome || function(){};
@@ -189,8 +189,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     //post process
 
     Assembler.prototype.postProcess = function(settings, exporter){
+
+        _.each(this.components, function(component){
+            component.postReset();
+        });
+
         var data = "";
         data += exporter.makeHeader(settings);
+        data += this._makeHeader(settings, exporter);
         data += "\n\n";
         data += exporter.addComment("begin program");
         data += "\n";
@@ -205,17 +211,22 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         return data;
     };
 
-    Assembler.prototype.makeHeader = function(settings){
-        return this.customHeader(settings);
+    Assembler.prototype._makeHeader = function(settings, exporter){
+        var data = this.customHeader(settings);
+        data += this.home(exporter, settings);
+        return data;
     };
 
     Assembler.prototype.home = function(exporter, settings){
+//        this.components.zAxis.postMoveTo(settings.rapidHeight*settings*scale);
         return exporter.goHome(settings);
     };
     
     Assembler.prototype._postProcessCells = function(settings, exporter){
         var data = "";
         var self = this;
+
+        var lastIndex = null;
     
         lattice.rasterCells(cam._getOrder(cam.get("camStrategy")), function(cell){
             if (!cell) return;
@@ -223,7 +234,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             var cellIndex = cell.getAbsoluteIndex();
 
             if (!self.shouldPickUpStock){
-                data += self._postGetStock(cellIndex, cellPosition, cell.materialName, settings, exporter);
+                data += self._postGetStock(cellIndex, lastIndex, cellPosition, cell.materialName, settings, exporter);
             } else {
 //                var thisStockPosition = _.clone(stockPosition);
 //                if (multStockPositions) {
@@ -237,12 +248,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             }
             data += self._postReleaseStock(cellIndex, cellPosition, cell.materialName, settings, exporter);
             data += "\n";
+            lastIndex = cellIndex.clone();
         });
 
         return data;
     };
     
     Assembler.prototype._postMoveXY = function(position, settings, exporter){
+        position = this.components.zAxis.applyAbsoluteRotation(position);
         return exporter.rapidXY(position, settings);
     };
     
@@ -256,8 +269,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
 //        return data;
 //    };
     
-    Assembler.prototype._postGetStock = function(index, position, material, settings, exporter){
-        return exporter.addComment("get stock " + JSON.stringify(index));
+    Assembler.prototype._postGetStock = function(index, lastIndex, position, material, settings, exporter){
+        var data = "";
+        if (lastIndex === null || (lastIndex.z-index.z)%2 != 0){
+            data += exporter.addLine("G0", ["A" + (index.z%2*0.3125).toFixed(4)], "new layer");
+            data += "\n";
+        }
+        data += exporter.addComment("get stock " + JSON.stringify(index));
+        return data;
     };
     
     Assembler.prototype._postReleaseStock = function(index, position, material, settings, exporter){
@@ -271,12 +290,21 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         }
         position.sub(stock.getPosition().multiplyScalar(settings.scale));
 
+
         position.sub(settings.originPosition);
-        data += this._postMoveXY(position, settings, exporter);
+        data += this._postMoveXY(position.clone(), settings, exporter);
 
         data += exporter.rapidZ(position.z+settings.safeHeight, settings);
         data += exporter.moveZ(position.z, settings);
+
+        //place part
         data += exporter.addComment(JSON.stringify(index));
+        if (material == "brass") data += exporter.addLine("M3");
+        else if (material == "fiberGlass") data += exporter.addLine("M4");
+        data += exporter.addLine("G4", ["P" + 0.75]);
+        data += exporter.addLine("M5");
+        data += exporter.moveZ(position.z, settings);
+
         data += exporter.moveZ(position.z+settings.safeHeight, settings);
         data += exporter.rapidZ(settings.rapidHeight, settings);
         return data;
@@ -322,6 +350,10 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         }
         this.components.frame.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
     };
+
+    Assembler.prototype.rotateTo = function(index, speed, settings, callback){
+        this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+    };
     
     Assembler.prototype.releaseStock = function(index, settings){
         lattice.showCellAtIndex(index);
@@ -340,7 +372,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             callback();
         }
 
-        var startingPos = this.components.zAxis.getAbsolutePosition();//get position of end effector
+        var startingPos = this.components.xAxis.getPosition().add(this.components.yAxis.getPosition().add(this.components.zAxis.getPosition()))//this.components.zAxis.getAbsolutePosition();//get position of end effector
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
         this.components.xAxis.moveTo(position, speed.x, sketchyCallback);
         this.components.frame.moveTo(position, speed.y, sketchyCallback);
