@@ -11,7 +11,8 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
         events: {
             "click .editMachineComponent":                          "_editMachineComponent",
             "click .editMachineCode":                               "_editMachineCode",
-            "click #newMachineComponent":                           "_newComponent"
+            "click #newMachineComponent":                           "_newComponent",
+            "click #saveMachineConfig":                             "_save"
         },
 
         _initialize: function(){
@@ -50,6 +51,13 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
             var id = cam.get("assembler").newComponent();
             cam.set("editingComponent", id);
             this.model.set("currentNav", "navMachineComponent");
+        },
+
+        _save: function(e){
+            e.preventDefault();
+            require(['fileSaver'], function(fileSaver){
+                fileSaver.saveMachineConfig(cam.get("assembler").saveJSON());
+            });
         },
 
         _makeTemplateJSON: function(){

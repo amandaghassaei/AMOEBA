@@ -18,6 +18,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         this.relative = json.relative;
         this.camProcesses = json.camProcesses;
         this.numMaterials = json.numMaterials;
+        this.name = json.name;
 
 
         this.object3D = new THREE.Object3D();
@@ -292,9 +293,23 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     };
 
     Assembler.prototype.saveJSON = function(){
-        return {
-
-        }
+        var json = this.toJSON();
+        json.lattice = {
+            scale: lattice.get("scale"),
+            units: lattice.get("units")
+        };
+        json.defaults = {
+            camStrategy: cam.get("camStrategy"),
+            placementOrder: cam.get("placementOrder"),
+            camProcess: cam.get("camProcess"),
+            rapidHeight: cam.get("rapidHeight"),
+            rapidHeightRelative: cam.get("rapidHeightRelative"),
+            safeHeight: cam.get("safeHeight"),
+            originPosition: cam.get("originPosition"),
+            rapidSpeeds: cam.get("rapidSpeeds"),
+            feedRate: cam.get("feedRate")
+        };
+        return json;
     };
 
     Assembler.prototype.toJSON = function(){
@@ -307,6 +322,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stockJSON[id] = thisStock.toJSON();
         });
         return {
+            name: this.name,
             components: componentsJSON,
             stock: stockJSON,
             translation: this.translation,

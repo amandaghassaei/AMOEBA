@@ -6,25 +6,25 @@
 define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWrapper'], function(_, saveAs, lattice, materials, ribbon, menuWrapper){
 
     function _saveFile(data, name, extension){
-        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        var blob = new Blob([JSON.stringify(data, null, '\t')], {type: "text/plain;charset=utf-8"});
         saveAs(blob, name + extension);
     }
 
 //    function save(name){
 //        if (!name || name == "" || name == undefined) name = "file";
-//        var data = JSON.stringify({
+//        var data = {
 //            lattice:_getLatticeDataToSave(),
 ////            assembler:_getAssemblerDataToSave()
-//        });
+//        };
 //        _saveFile(data, name, ".json");
 //    }
 
     function save(name){
         if (!name || name == "" || name == undefined) name = "DM Assembly";
-        var data = JSON.stringify({
+        var data = {
             assembly:_getLatticeDataToSave(),
             materials:_getMaterialsDataToSave()
-        });
+        };
         _saveFile(data, name, ".json");
     }
 
@@ -36,17 +36,21 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         if (!name || name == "" || name == undefined) name = "user";
         var latticeData = _.omit(_getLatticeDataToSave(), ["cells", "cellsMin", "cellsMax", "numCells"]);
         var assemblerData = _.omit(_getAssemblerDataToSave(), ["dataOut", "needsPostProcessing", "editsMadeToProgram"]);
-        var data = JSON.stringify({
+        var data = {
             lattice:latticeData,
             assembler:assemblerData
-        });
+        };
         _saveFile(data, name, ".user");
     }
 
     function saveMaterial(id, material){
         var data = {materials:{}};
         data.materials[id] = material || _getMaterialDataToSave(id);
-        _saveFile(JSON.stringify(data), data.materials[id].name, ".json");
+        _saveFile(data, data.materials[id].name, ".json");
+    }
+
+    function saveMachineConfig(data){
+        _saveFile(data, "Machine Config", ".json");
     }
 
     function _getAssemblerDataToSave(){
@@ -110,6 +114,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 //        save: save,
         save: save,
         saveMaterial: saveMaterial,
+        saveMachineConfig: saveMachineConfig,
 //        saveAssembler: saveAssembler,
 //        saveUser: saveUser,
         loadFile: loadFile

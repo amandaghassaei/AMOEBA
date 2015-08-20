@@ -3,8 +3,10 @@ Parent/Child Tree:<br/><br/>
 <% _.each(tree, function(level, id){ %>
     <% var component = components[id] || stock[id]; %>
     <% treeLevel++; %>
-    <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= level*10 + 20 %>px"><%= component.name %>
-        <a data-id="<%= id %>" class="editMachineComponent pull-right" href="#">Edit</a></label></div><br/>
+    <div class="alternatingColorList<% if (treeLevel%2 == 0){ %> evenListItem <% } %>">
+        <label style="padding-left:<%= level*10 + 20 %>px"><%= component.name %>
+        <a data-id="<%= id %>" class="editMachineComponent pull-right" href="#">Edit</a></label>
+    </div><br/>
 <% }); %><br/>
 <a href="#" id="newMachineComponent" class=" btn halfWidth btn-lg btn-default">+ Component</a>
 <a href="#" id="addStock" class=" btn halfWidth btn-lg btn-default pull-right">+ Stock</a><br/><br/>
@@ -16,6 +18,7 @@ Rotation (xyz):&nbsp;&nbsp;
     <input data-property="rotation" data-key="x" value="<%= rotation.x %>" placeholder="X" class="form-control floatInput assembler" type="text">&nbsp;
     <input data-property="rotation" data-key="y" value="<%= rotation.y %>" placeholder="Y" class="form-control floatInput assembler" type="text">&nbsp;
     <input data-property="rotation" data-key="z" value="<%= rotation.z %>" placeholder="Z" class="form-control floatInput assembler" type="text"><br/><br/>
+
 Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput assembler" type="text"><br/><br/>
 Edit Code:<br/><br/>
 Context Variables  <a class="editMachineCode" data-name="customFunctionsContext" href="#">Edit</a><br/>
@@ -27,4 +30,4 @@ Move XY <a class="editMachineCode" data-name="customMoveXY" href="#">Edit</a><br
 Change Z <a class="editMachineCode" data-name="customChangeZLayer" href="#">Edit</a><br/>
 Place part <a class="editMachineCode" data-name="customPlacePart" href="#">Edit</a><br/>
 Footer <a class="editMachineCode" data-name="customFooter" href="#">Edit</a><br/><br/>
-<a href="#" id="saveMachineToFiles" class=" btn btn-block btn-lg btn-success">Save Machine Files</a><br/>
+<a href="#" id="saveMachineConfig" class=" btn btn-block btn-lg btn-success">Save Machine Files</a><br/>

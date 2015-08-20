@@ -62,7 +62,7 @@ Parent: &nbsp;&nbsp;
 <% } else { %>
     Material: &nbsp;&nbsp;
         <div class="btn-group">
-            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= materials[thisComponent.material].name %><span class="caret"></span></button>
+            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= materials[thisComponent.description.materialName].name %><span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
                 <% _.each(allMaterials[materialClass], function(material, key){ %>
                     <li><a class="stockMaterial dropdownSelector" data-id="<%= key %>" href="#">

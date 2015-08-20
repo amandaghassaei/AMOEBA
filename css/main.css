@@ -468,17 +468,21 @@ label {
     left: 245px;
 }
 
-.assemblerTree>label{
+.alternatingColorList>label{
     padding-right: 10px;
     width: 100%;
 }
 
-.assemblerTree{
+.alternatingColorList{
     display: inline-block;
     width: 100%;
     height: 35px;
     background-color: #eee;
     border: 1px solid #ddd;
+}
+
+.alternatingColorList.evenListItem{
+    background-color:#ddd;
 }
 
 .dropdown-menu>li>a{

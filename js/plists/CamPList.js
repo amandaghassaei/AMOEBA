@@ -106,7 +106,7 @@ define(['three'], function(THREE){
                         },
                         name: "Stock 1",
                         parent: "zAxis",
-                        position: {x:0,y:0,z:0}
+                        translation: {x:0,y:0,z:0}
                     },
                     stock2: {
                         description:{
@@ -115,7 +115,7 @@ define(['three'], function(THREE){
                         },
                         name: "Stock 2",
                         parent: "zAxis",
-                        position: {x:26,y:0.236,z:0}
+                        translation: {x:26,y:0.236,z:0}
                     }
                 },
                 lattice:{
