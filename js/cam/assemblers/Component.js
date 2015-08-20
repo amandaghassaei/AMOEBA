@@ -209,7 +209,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             if (callback) callback();
             return;
         }
-        target = this.applyRotation(target);//absolute?
+        target = this.applyAbsoluteRotation(target);//absolute?
 
         var currentPosition = this.getPosition();
         var increment = speed/1500.0*cam.get("simSpeed");

@@ -196,11 +196,13 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     AssemblerPost.prototype._postReleaseStock = function(index, position, material, settings, exporter, context){
         var data = "";
 
-        //offset for rotation
-        var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);
+
 //        position.add(new THREE.Vector3(18.23*((index.z)%2), 0.3*((index.z)%2), 0));
         if (index.z%2 != 0){
-            position = new THREE.Vector3(-position.y, position.x, position.z);
+            //offset for rotation
+            var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
+            var dist = position.clone().sub(offset);
+            position = offset.add(new THREE.Vector3(dist.y, -dist.x, position.z));
         }
 
         var stock = _.find(this.stock, function(thisStock){
