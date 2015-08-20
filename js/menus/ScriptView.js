@@ -4,7 +4,8 @@
 
 
 
-define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror'], function($, _, Backbone, appState, CodeMirror){
+define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menus/templates/ScriptView.html',  'codeMirrorJS'],
+    function($, _, Backbone, appState, CodeMirror, template){
     
 
     var ScriptView = Backbone.View.extend({
@@ -19,7 +20,7 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror'], function(
     
         initialize: function(){
     
-            _.bindAll(this, "render", "_handleKeyStroke");
+            _.bindAll(this, "render");
     
             //bind events
 //            $(document).bind('keydown', {}, this._handleKeyStroke);
@@ -83,12 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror'], function(
             this._setEditorHeight();
         },
     
-        template: _.template('\
-                <div class="col-sm-4"><a href="#" id="loadScript" class=" btn btn-lg btn-block btn-default">Load Script</a></div>\
-                <div class="col-sm-4"><a href="#" id="runScript" class=" btn btn-lg btn-block btn-default">Run Script&nbsp&nbsp&nbsp(CTRL/&#8984; + R)</a></div>\
-                <div class="col-sm-4"><a href="#" id="saveScript" class=" btn btn-lg btn-block btn-default">Save Script</a></div><br/><br/>\
-                <textarea id="scriptEditor"><%= script %></textarea><br/>\
-            ')
+        template: _.template(template)
     
     });
 

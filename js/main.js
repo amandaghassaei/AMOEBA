@@ -234,10 +234,6 @@ require.config({
         },
         'numeric': {
             exports: 'numeric'
-        },
-        'codeMirror': {
-            deps: ['codeMirrorJS'],
-            exports: 'CodeMirror'
         }
     }
 
@@ -250,7 +246,7 @@ require.config({
 //};
 
 //init stuff
-require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper'],
+require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView'],
     function(appState, lattice, Navbar, three, ThreeView){
 
     new Navbar({model:appState});
