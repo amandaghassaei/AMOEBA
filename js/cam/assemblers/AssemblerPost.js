@@ -103,7 +103,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 };
 
         this.customCalcPositionOffsets = function(index, position, material, settings, context){
-    //this feeds into moveXY and placePart's position parameter
+    //this feeds into moveXY and placePart functions
 
     if (index.z%2 != 0){
         //offset for rotation
