@@ -101,6 +101,33 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     data += exporter.rapidZ(position.z + context.zClearHeight, settings);
     return data;
 };
+
+        this.customCalcPositionOffsets = function(index, position, material, settings, context){
+    //this feeds into moveXY and placePart's position parameter
+
+    if (index.z%2 != 0){
+        //offset for rotation
+        var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
+        var dist = position.clone().sub(offset);
+        position = offset.add(new THREE.Vector3(dist.y, -dist.x, position.z));
+    }
+
+    var stock = _.find(this.stock, function(thisStock){
+        return thisStock.getMaterial() == material
+    });
+    if (stock === undefined) {
+        console.warn("no stock defined of type " + material + " for this assembler");
+        return null;
+    }
+
+    position.sub(stock.getPosition().multiplyScalar(settings.scale));
+    position.sub(settings.originPosition);
+
+    return position;
+}
+
+
+
     }
 
 
@@ -199,23 +226,8 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
 
 //        position.add(new THREE.Vector3(18.23*((index.z)%2), 0.3*((index.z)%2), 0));
-        if (index.z%2 != 0){
-            //offset for rotation
-            var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
-            var dist = position.clone().sub(offset);
-            position = offset.add(new THREE.Vector3(dist.y, -dist.x, position.z));
-        }
-
-        var stock = _.find(this.stock, function(thisStock){
-            return thisStock.getMaterial() == material
-        });
-        if (stock === undefined) {
-            console.warn("no stock defined of type " + material + " for this assembler");
-            return data;
-        }
-        position.sub(stock.getPosition().multiplyScalar(settings.scale));
-        position.sub(settings.originPosition);
-
+        var position = this.customCalcPositionOffsets(index, position, material, settings, context);
+        if (position === null) return data;
 
 
 //        (5.08mm, 5.715mm)
