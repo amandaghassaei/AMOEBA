@@ -16,6 +16,7 @@ require.config({
         numeric: '../dependencies/numeric-1.2.6',
         codeMirrorJS: '../dependencies/codemirror/javascript',
         codeMirror: '../dependencies/codemirror/codemirror',
+        acorn: '../dependencies/acorn/acorn',
 
         //three
         three: '../dependencies/three',

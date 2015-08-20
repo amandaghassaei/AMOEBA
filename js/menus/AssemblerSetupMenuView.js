@@ -31,7 +31,18 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
 
         _editMachineCode: function(e){
             e.preventDefault();
-            console.log("edit code");
+            var codeType = $(e.target).data("name");
+            if (!codeType) return;
+            var js = cam.get("assembler")[codeType];
+            if (js){
+                if (codeType == "customFunctionsContext") js = JSON.stringify(js, null, "\t");
+                require(['globals'], function(globals){
+                    globals.scriptView.showWithJS(js, codeType, function(js){
+                        console.log("saved");
+                        cam.get("assembler")[codeType] = js;
+                    });
+                });
+            }
         },
 
         _newComponent: function(e){

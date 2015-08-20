@@ -4,8 +4,8 @@
 
 
 
-define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menus/templates/ScriptView.html',  'codeMirrorJS'],
-    function($, _, Backbone, appState, CodeMirror, template){
+define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'acorn', 'globals', 'text!menus/templates/ScriptView.html',  'codeMirrorJS'],
+    function($, _, Backbone, appState, CodeMirror, acorn, globals, template){
     
 
     var ScriptView = Backbone.View.extend({
@@ -15,18 +15,32 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menu
         events: {
             "click #runScript":                                       "_runScript",
             "click #saveScript":                                      "_saveScript",
-            "click #loadScript":                                      "_loadScript"
+            "click #loadScript":                                      "_loadScript",
+            "click #hideScript":                                      "_hide"
         },
     
         initialize: function(){
     
             _.bindAll(this, "render");
+
+            this.script = "write code here.";
+            this.scriptName = "Script";
+            this.saveCallback = null;
+            this.editor = null;
     
             //bind events
 //            $(document).bind('keydown', {}, this._handleKeyStroke);
             this.render();
     
             this.listenTo(this.model, "change:scriptIsVisible", this._setVisibility);
+
+//            var string = "function(){console.log('here');}";
+////            console.log(acorn.parse(string));
+//            string();
+//            eval(string);
+////            console.log(eval(string));
+//            console.log(string);
+
         },
     
 //        _handleKeyStroke: function(e){
@@ -43,11 +57,22 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menu
     //        appState.runScript(globals.codeMirror.getValue());
         },
     
-//        _saveScript: function(e){
-//            e.preventDefault();
-//    //        appState.syncScript(globals.codeMirror.getValue());
-//    //        globals.saveFile(globals.script, "linkageScript", ".js");
-//        },
+        _saveScript: function(e){
+            e.preventDefault();
+            if (this.saveCallback){
+                this.script = this.editor.getValue();
+                var js = "js = " + this.script;
+                try{
+                    eval(js);
+                    this.saveCallback(js);
+                } catch(error){
+                    this.render(error.message);
+                }
+//                console.log(acorn.parse(js));
+                return;
+            }
+            console.warn("no save callback for this script");
+        },
 //
 //        _loadScript: function(e){
 //            e.preventDefault();
@@ -69,15 +94,25 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menu
         _hide: function(){
             var width = this.$el.parent().width();
             this.$el.animate({left: "-" + width + "px"});
+            this.model.get("scriptIsVisible", false);
         },
     
         _show: function(){
             this.$el.animate({left: "0"});
+            this.model.get("scriptIsVisible", true);
+        },
+
+        showWithJS: function(js, name, saveCallback){
+            this.script = js;
+            this.scriptName = name || "Script";
+            this.saveCallback = saveCallback;
+            this._show();
+            this.render();
         },
     
-        render: function(){
-            this.$el.html(this.template({script:"test"}));
-            CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
+        render: function(errorMsg){
+            this.$el.html(this.template({script:this.script, scriptName: this.scriptName, errorMsg:errorMsg}));
+            this.editor = CodeMirror.fromTextArea(document.getElementById("scriptEditor"), {
                 lineNumbers: true,
                 mode: "javascript"
             });
@@ -88,7 +123,9 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'text!menu
     
     });
 
+        var view = new ScriptView({model: appState});
+        globals.scriptView = view;
 
-    return new ScriptView({model: appState});
+    return view
     
 });

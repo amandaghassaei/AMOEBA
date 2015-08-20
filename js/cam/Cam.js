@@ -334,7 +334,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                 originPosition: this.get("originPosition").clone().multiplyScalar(scale),
                 stockPosition: this.get("stockPosition").clone().multiplyScalar(scale),
                 rapidSpeeds: new THREE.Vector3(this.get("rapidSpeeds").xy, this.get("rapidSpeeds").xy, this.get("rapidSpeeds").z),
-                feedRate: new THREE.Vector3(this.get("feedRate").xy, this.get("feedRate").xy, this.get("feedRate").z)
+                feedRate: new THREE.Vector3(this.get("feedRate").xy, this.get("feedRate").xy, this.get("feedRate").z),
+                units: lattice.get("units")
             };
 
             var self = this;
