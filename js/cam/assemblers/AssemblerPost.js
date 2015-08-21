@@ -27,23 +27,23 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
             blOvershoot: 1.0
         };
 
-        this.customHeader = function(exporter, settings, context){
+        this.customHeader = function(exporter, settings, context, self){
     var data = "";
     data += exporter.setUnits(settings.units);
-    data += this.customHome(exporter, settings, context);
+    data += self.customHome(exporter, settings, context);
     return data;
 };
         this._loadFunction(json.customPost, "customHeader");
 
-        this.customFooter = function(exporter, settings, context){
+        this.customFooter = function(exporter, settings, context, self){
     var data = "";
-    data += this.customHome(exporter, settings, context);
+    data += self.customHome(exporter, settings, context);
     return data;
 };
 
         this._loadFunction(json.customPost, "customFooter");
 
-        this.customHome = function(exporter, settings, context){
+        this.customHome = function(exporter, settings, context, self){
     var data = "";
     data += exporter.goHome(settings);
     return data;
@@ -51,14 +51,14 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
         this._loadFunction(json.customPost, "customHome");
 
-        this.customPickUpStock = function(exporter, settings, context){//not relevant for your assembler
+        this.customPickUpStock = function(exporter, settings, context, self){//not relevant for your assembler
     var data = "";
     return data;
 };
 
         this._loadFunction(json.customPost, "customPickUpStock");
 
-        this.customChangeZLayer = function(currentIndex, lastIndex, exporter, settings, context){
+        this.customChangeZLayer = function(currentIndex, lastIndex, exporter, settings, context, self){
     var data = "";
     if (lastIndex === null || (currentIndex.z-lastIndex.z)%2 != 0){
         data += exporter.addLine("G0", ["A" + (currentIndex.z%2*0.3125).toFixed(4)], "new layer");
@@ -69,7 +69,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
         this._loadFunction(json.customPost, "customChangeZLayer");
 
-        this.customMoveXY = function(position, lastPosition, index, exporter, settings, context){//already offset for dual heads
+        this.customMoveXY = function(position, lastPosition, index, exporter, settings, context, self){//already offset for dual heads
     var data = "";
 
     var overshoot = false;
@@ -94,7 +94,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
         this._loadFunction(json.customPost, "customMoveXY");
 
-        this.customPlacePart = function(position, index, material, exporter, settings, context){//already offset for dual heads
+        this.customPlacePart = function(position, index, material, exporter, settings, context, self){//already offset for dual heads
     var data = "";
     data += exporter.rapidZ(position.z + settings.safeHeight, settings);
     data += exporter.moveZ(position.z - context.zPreload, settings);
@@ -116,19 +116,19 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
         this._loadFunction(json.customPost, "customPlacePart");
 
-        this.customCalcPositionOffsets = function(index, position, material, settings, context){
+        this.customCalcPositionOffsets = function(index, position, material, settings, context, self){
     //this feeds into moveXY and placePart functions
 
     position.sub(settings.originPosition);
 
     if (index.z%2 != 0){
         //offset for rotation
-        var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
+        var offset = self.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
         var dist = position.clone().sub(offset);
         position = offset.add(new THREE.Vector3(dist.y, -dist.x, position.z));
     }
 
-    var stock = _.find(this.stock, function(thisStock){
+    var stock = _.find(self.stock, function(thisStock){
         return thisStock.getMaterial() == material
     });
     if (stock === undefined) {
@@ -168,10 +168,21 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
     //post process
 
+    AssemblerPost.prototype._tryCustomFunction = function(name, p1, p2, p3, p4, p5, p6, p7, p8){
+        try {
+            var data = this[name](p1, p2, p3, p4, p5, p6, p7, p8);
+            return data;
+        } catch(error){
+            console.warn("runtime error in your custom post processing function " + name + ":   " + error.message + "\n" +
+                "skipping this function, gcode will be missing something");
+        }
+        return "";
+    };
+
     AssemblerPost.prototype.postProcess = function(settings, exporter){//called from outside);
 
         var data = "";
-        data += this.customHeader(exporter, settings, this.customFunctionsContext);
+        data += this._tryCustomFunction("customHeader", exporter, settings, this.customFunctionsContext, this);
 
         data += exporter.newLine();
         data += exporter.newLine();
@@ -189,7 +200,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
         data += exporter.newLine();
 
-        data += this.customFooter(exporter, settings, this.customFunctionsContext);
+        data += this._tryCustomFunction("customFooter", exporter, settings, this.customFunctionsContext, this);
 
         return data;
     };
@@ -240,7 +251,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     AssemblerPost.prototype._postGetStock = function(index, lastIndex, position, material, settings, exporter, context){
         var data = "";
         if (lastIndex === null || lastIndex.z != index.z){
-            data += this.customChangeZLayer(index, lastIndex, exporter, settings, context)
+            data += this._tryCustomFunction("customChangeZLayer", index, lastIndex, exporter, settings, context, this)
         }
         data += exporter.addComment("get stock " + JSON.stringify(index));
         return data;
@@ -251,17 +262,17 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
 
 //        position.add(new THREE.Vector3(18.23*((index.z)%2), 0.3*((index.z)%2), 0));
-        var position = this.customCalcPositionOffsets(index, position, material, settings, context);
-        if (position === null) return data;
+        var position = this._tryCustomFunction("customCalcPositionOffsets", index, position, material, settings, context, this);
+        if (position === null || position == "") return data;
 
 
 //        (5.08mm, 5.715mm)
 //        x = part_pos[0]*1.27 + 18.23*((layer+1)%2)
 //		y = part_pos[1]*1.27 + 0.3*((layer+1)%2)
 
-        data += this.customMoveXY(position.clone(), exporter.getPostPosition(), index.clone(), exporter, settings, context);
+        data += this._tryCustomFunction("customMoveXY", position.clone(), exporter.getPostPosition(), index.clone(), exporter, settings, context, this);
 
-        data += this.customPlacePart(position.clone(), index.clone(), material, exporter, settings, context);
+        data += this._tryCustomFunction("customPlacePart", position.clone(), index.clone(), material, exporter, settings, context, this);
         return data;
     };
 

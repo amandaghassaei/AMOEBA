@@ -65,6 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'globals',
                 try{
                     eval(js);
                     this.saveCallback(js);
+                    this._hide();
                 } catch(error){
                     this.render(error.message);
                 }
