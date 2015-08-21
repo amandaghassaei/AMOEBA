@@ -50,13 +50,13 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
     GCodeExporter.prototype.rapidXY = function(position, settings){
         var data = "";
         if (this.postSpeed != settings.rapidSpeeds.x) data += this._setSpeed(settings.rapidSpeeds.x);
-        return data + this._goXYZ(position.x, position.y, null);
+        return data + this._rapidXYZ(position.x, position.y, null);
     };
 
     GCodeExporter.prototype.rapidZ = function(z, settings){
         var data = "";
         if (this.postSpeed != settings.rapidSpeeds.z) data += this._setSpeed(settings.rapidSpeeds.z);
-        return data + this._goXYZ(null, null, z);
+        return data + this._rapidXYZ(null, null, z);
     };
 
     GCodeExporter.prototype.moveXY = function(x, y, settings){
@@ -71,7 +71,7 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
         return data + this._goXYZ(null, null, z);
     };
 
-    GCodeExporter.prototype._goXYZ = function(x, y, z){
+    GCodeExporter.prototype._goXYZ = function(x, y, z, command){
         if (x !== null) {
             x = "X"+parseFloat(x).toFixed(3);
             this.postPosition.x = x;
@@ -84,7 +84,12 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
             z = "Z"+parseFloat(z).toFixed(3);
             this.postPosition.z = z;
         }
+        if (command) return this.addLine(command, [x,y,z]);
         return this.addLine("G01", [x,y,z]);
+    };
+
+    GCodeExporter.prototype._rapidXYZ = function(x, y, z){
+        return this._goXYZ(x, y, z, "G0");
     };
 
     GCodeExporter.prototype.goHome = function(settings){
@@ -124,18 +129,22 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
             this.animationSpeed = line.split("F")[1] / settings.scale;
             return callback();
         }
-        if (line == "" || line[0] == "(" || line.substr(0,3) != "G01"){
+        if (line == "" || line[0] == "(" || !this._isMoveCommand(line)){
             return callback();
         }
-        if (line.substr(0,3) == "G01"){
-            return this._simulateG01(line, this.animationSpeed, machine, settings, callback);
+        if (this._isMoveCommand(line)){
+            return this._simulateMove(line, this.animationSpeed, machine, settings, callback);
         } else {
             console.warn("problem parsing gcode: " + line);
             return callback();
         }
     };
 
-    GCodeExporter.prototype._simulateG01 = function(line, speed, machine, settings, callback){
+    GCodeExporter.prototype._isMoveCommand = function(line){
+        return line.substr(0,3) == "G01" || line.substr(0,2) == "G0";
+    };
+
+    GCodeExporter.prototype._simulateMove = function(line, speed, machine, settings, callback){
         var data = line.split(" ");
         var position = {x:null,y:null,z:null};
         if (data.length<2) {
