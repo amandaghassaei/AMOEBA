@@ -20,7 +20,7 @@ pre {
 
 .navbar {
     margin-bottom:0;
-    z-index: 2;
+    z-index: 5;
     border-radius: 0;
     opacity:0.8;
 }
