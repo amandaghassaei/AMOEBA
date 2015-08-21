@@ -21,13 +21,12 @@ Rotation (xyz):&nbsp;&nbsp;
 
 Scale: &nbsp;&nbsp;<input data-property="scale" value="<%= scale %>" placeholder="Scale" class="form-control floatInput assembler" type="text"><br/><br/>
 Edit Code:<br/><br/>
-Context Variables  <a class="editMachineCode" data-name="customFunctionsContext" href="#">Edit</a><br/>
-Position Offsets <a class="editMachineCode" data-name="customCalcPositionOffsets" href="#">Edit</a><br/>
-Header  <a class="editMachineCode" data-name="customHeader" href="#">Edit</a><br/>
-Go Home <a class="editMachineCode" data-name="customHome" href="#">Edit</a><br/>
+<% var treeLevel = 0;
+_.each(customFns, function(description, key){ %>
+    <% treeLevel++; %>
+    <div class="alternatingColorList<% if (treeLevel%2 == 0){ %> evenListItem <% } %>">
+        <label><%= description %>  <a class="editMachineCode pull-right" data-name="<%= key %>" href="#">Edit</a></label>
+    </div><br/>
+<% }); %><br/>
 <!--Pick up stock <a class="editMachineCode" data-name="customHeader" href="#">Edit</a><br/>-->
-Move XY <a class="editMachineCode" data-name="customMoveXY" href="#">Edit</a><br/>
-Change Z <a class="editMachineCode" data-name="customChangeZLayer" href="#">Edit</a><br/>
-Place part <a class="editMachineCode" data-name="customPlacePart" href="#">Edit</a><br/>
-Footer <a class="editMachineCode" data-name="customFooter" href="#">Edit</a><br/><br/>
 <a href="#" id="saveMachineConfig" class=" btn btn-block btn-lg btn-success">Save Machine Files</a><br/>

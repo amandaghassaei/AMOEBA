@@ -61,7 +61,18 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assembler
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), cam.toJSON(), cam.get("assembler").toJSON());
+            return _.extend(this.model.toJSON(), cam.toJSON(), cam.get("assembler").toJSON(),
+                {customFns: {
+                    customFunctionsContext: "Context Variables",
+                    customCalcPositionOffsets: "Calc Position Offsets",
+                    customHeader: "Header",
+                    customHome: "Go Home",
+                    customMoveXY: "Move XY",
+                    customChangeZLayer: "Change Z",
+                    customPlacePart: "Place Part",
+                    customFooter: "Footer"
+                }}
+            );
         },
 
         template: _.template(template)

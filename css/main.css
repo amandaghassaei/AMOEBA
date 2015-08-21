@@ -470,6 +470,7 @@ label {
 
 .alternatingColorList>label{
     padding-right: 10px;
+    padding-left: 15px;
     width: 100%;
 }
 
