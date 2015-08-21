@@ -36,7 +36,10 @@ define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'mat
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), cam.toJSON(), lattice.toJSON(), camPlist, {materials:materials.list});
+            var assembler = cam.get("assembler");
+            if (assembler)  assembler = assembler.basicJSON();
+            else assembler = camPlist.allMachines[cam.get("machineName")];
+            return _.extend(this.model.toJSON(), {thisAssembler: assembler}, cam.toJSON(), lattice.toJSON(), camPlist, {materials:materials.list});
         },
     
         template: _.template(template)

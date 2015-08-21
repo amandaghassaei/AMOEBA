@@ -22,7 +22,6 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         if (json.motionVector) this.motionVector.set(json.motionVector.x, json.motionVector.y, json.motionVector.z);
         this.stlJSON = json.stl;
 
-
         this.postReset();
     }
 
@@ -297,7 +296,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             parent: this.parent || "",
             translation: this.object3D.position,
             scale: this.object3D.scale.x,
-            rotation: this.object3D.rotation,
+            rotation: this.object3D.rotation.toVector3(),
             isStatic: this.isStatic,
             rotary: this.rotary,
             motionVector: this.motionVector,

@@ -11,10 +11,12 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
         Component.call(this, id, json);
         //material
 
+        this.object3D.position.set(json.translation.x, json.translation.y, json.translation.z);
+        if (json.rotation) this.object3D.rotation.set(json.rotation.x, json.rotation.y, json.rotation.z);
+
         var self = this;
         this._makeCell(json.description, function(cell){
             self.cell = cell;
-            self._setPosition(cell, json.translation, json.rotation);
             self.object3D.add(cell.getObject3D());
         });
     }
@@ -26,12 +28,6 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
     StockComponent.prototype._makeCell = function(json, callback){
         lattice.makeCellForLatticeType(json, callback);
-    };
-
-    StockComponent.prototype._setPosition = function(cell, position, rotation){
-        var object3D = cell.getObject3D();//todo need this?
-        if (position) object3D.position.set(position.x, position.y, position.z);
-        if (rotation) object3D.rotation.set(rotation.x, rotation.y, rotation.z);
     };
 
     StockComponent.prototype.getPosition = function(){
@@ -55,6 +51,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
     StockComponent.prototype.show = function(){
         this.cell.show();
+        console.log(this.cell);
     };
 
     StockComponent.prototype.hide = function(){
@@ -75,7 +72,8 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
     StockComponent.prototype.destroy = function(){
         Component.prototype.destroy.call(this);
-
+        this.cell.destroy();
+        this.cell = null;
     };
 
 

@@ -76,6 +76,10 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     }
 
     function loadFile(data){//parsed json todo make this better - load composite
+        if (data.assembler) {
+            _loadAssembler(data.assembler);
+            return;
+        }
         if (!data.materials){
             console.warn("no material definitions in this file");
             return;
@@ -93,6 +97,13 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         if (sparseCells) lattice._updateLatticeType(sparseCells);
         ribbon.render();
         menuWrapper.render();
+    }
+
+    function _loadAssembler(data){
+        require(['cam'], function(cam){
+            cam.selectMachine(data);
+            console.log("loaded");
+        });
     }
 
     function loadUser(data){

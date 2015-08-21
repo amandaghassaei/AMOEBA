@@ -97,17 +97,23 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         },
 
 
-        selectMachine: function(){
+        selectMachine: function(json){
 
-            var machineName = this.get("machineName");
-            if (this.get("assembler")){
-                if (this.get("assembler").getID() == machineName) return;
-                else {
-                    this.get("assembler").destroy();
-                    this.set("assembler", null);
+            var machineJSON = json;
+            if (machineJSON === undefined){
+                var machineName = this.get("machineName");
+                if (this.get("assembler")){
+                    if (this.get("assembler").getID() == machineName) return;
+                    else {
+                        this.get("assembler").destroy();
+                        this.set("assembler", null);
+                    }
                 }
+                machineJSON = camPlist.allMachines[machineName];
+            } else {
+                machineName = "customMachine";
+                this.set("machineName", machineName, {silent:true});
             }
-            var machineJSON = camPlist.allMachines[machineName];
             if (machineJSON.defaults) this._setMachineDefaults(machineJSON.defaults);
             if (machineJSON.lattice) this._setLatticeDefaults(machineJSON.lattice)
 
@@ -126,7 +132,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         _setMachineDefaults: function(defaults){
             var self = this;
             _.each(defaults, function(value, key){
-                self.set(key, value, {silent:true});
+                if (value.x !== undefined && value.x !== null) self.set(key, new THREE.Vector3(value.x, value.y, value.z), {silent:true});
+                else self.set(key, value, {silent:true});
             });
         },
 

@@ -238,9 +238,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         }
 
         var startingPos = this.components.xAxis.getPosition().add(this.components.frame.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
-        console.log("here");
-        console.log(startingPos);//this.components.zAxis.applyAbsoluteRotation(
-        console.log(position);
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
 
         this.components.xAxis.moveTo(position, speed.x, sketchyCallback);
@@ -279,9 +276,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         var self = this;
         _.each(this.components, function(component, index){
             component.destroy();
-            self[index] = null;
+            self.components[index] = null;
+        });
+        _.each(this.stock, function(thisStock, index){
+            thisStock.destroy();
+            self.stock[index] = null;
         });
         this.components = null;
+        this.stock = null;
         three.sceneRemove(this.object3D);
         this.stock = null;
         this.components.zAxis = null;
@@ -309,7 +311,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             rapidSpeeds: cam.get("rapidSpeeds"),
             feedRate: cam.get("feedRate")
         };
-        return json;
+        return {assembler: json};
     };
 
     Assembler.prototype.toJSON = function(){
@@ -321,10 +323,18 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         _.each(this.stock, function(thisStock, id){
             stockJSON[id] = thisStock.toJSON();
         });
-        return {
-            name: this.name,
+        var json = this.basicJSON();
+        _.extend(json, {
             components: componentsJSON,
             stock: stockJSON,
+            tree: this.tree || this.buildComponentTree()
+        });
+        return json;
+    };
+
+    Assembler.prototype.basicJSON = function(){
+        return {
+            name: this.name,
             translation: this.translation,
             scale: this.scale,
             rotation: this.rotation,
@@ -332,7 +342,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             relative: this.relative,
             camProcesses: this.camProcesses,
             numMaterials: this.numMaterials,
-            tree: this.tree || this.buildComponentTree()
         }
     };
 

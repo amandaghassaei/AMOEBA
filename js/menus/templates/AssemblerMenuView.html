@@ -1,9 +1,10 @@
 <% if (numCells == 0){ %>
     <div class="inlineWarning">No cells in assembly!</div>
 <% } %>
+<a href="#" class="importJSON btn btn-block btn-lg btn-default">Load Assembler From File</a><br/>
 Machine: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMachines[machineName].name %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= thisAssembler.name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <% _.each(machineTypesForLattice[cellType][connectionType], function(machine){ %>
                 <li><a class="assembler dropdownSelector" data-property="machineName" data-value="<%= machine %>" href="#"><%= allMachines[machine].name %></a></li>
@@ -11,15 +12,15 @@ Machine: &nbsp;&nbsp;
         </ul>
     </div><br/>
     <label class="checkbox" for="relativeAssembler">
-        <input id="relativeAssembler" data-property="relative" type="checkbox" <% if (allMachines[machineName].relative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="machine custom-checkbox">
+        <input id="relativeAssembler" data-property="relative" type="checkbox" <% if (thisAssembler.relative){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="machine custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Relative Assembler</label>
     <label class="checkbox" for="stockAttached">
-        <input id="stockAttached" data-property="shouldPickUpStock" type="checkbox" <% if (allMachines[machineName].shouldPickUpStock){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="machine custom-checkbox">
+        <input id="stockAttached" data-property="shouldPickUpStock" type="checkbox" <% if (thisAssembler.shouldPickUpStock){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="machine custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Separate Stock Position</label>
-        <% if (allMachines[machineName].numMaterials > -1){ %>
-            Num Materials: &nbsp;&nbsp;<%= allMachines[machineName].numMaterials %><br/>
+        <% if (thisAssembler.numMaterials > -1){ %>
+            Num Materials: &nbsp;&nbsp;<%= thisAssembler.numMaterials %><br/>
         <% } %><br/>
 Strategy: &nbsp;&nbsp;
     <div class="btn-group">
@@ -33,8 +34,8 @@ Strategy: &nbsp;&nbsp;
 <% if (camStrategy == "raster"){ %>
     Raster Order: &nbsp;&nbsp;<input value="<%= placementOrder %>" placeholder="Placement Order" class="form-control placementOrder halfWidth" type="text"><br/><br/>
 <% } %>
-<% if (allMachines[machineName].numMaterials > -1 && allMachines[machineName].numMaterials < allCAMMaterialTypes.length){ %>
-    <div class="inlineWarning">Number of materials in assembly exceeds available materials ( <%= allMachines[machineName].numMaterials %> ) for assembler type.</div>
+<% if (thisAssembler.numMaterials > -1 && thisAssembler.numMaterials < allCAMMaterialTypes.length){ %>
+    <div class="inlineWarning">Number of materials in assembly exceeds available materials ( <%= thisAssembler.numMaterials %> ) for assembler type.</div>
 <% } %>
 Num Materials in Assembly: &nbsp;&nbsp;<%= allCAMMaterialTypes.length %><br/>
 <% _.each(allCAMMaterialTypes, function(material){ %>
