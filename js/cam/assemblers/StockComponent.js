@@ -51,7 +51,6 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
     StockComponent.prototype.show = function(){
         this.cell.show();
-        console.log(this.cell);
     };
 
     StockComponent.prototype.hide = function(){

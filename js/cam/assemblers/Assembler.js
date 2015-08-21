@@ -68,7 +68,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             }
             if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
-            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, 0));//todo get rid of these
+            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, -1.28));//todo get rid of these
 //            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
             return geometry;
         }
@@ -249,7 +249,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         if (position.x === null && position.y === null) return speed;
         var deltaX = position.x-startingPos.x;
         var deltaY = position.y-startingPos.y;
-        console.log(deltaX + "  " + deltaY);
         var totalDistance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
         if (totalDistance == 0) return speed;
         speed.x = Math.abs(deltaX/totalDistance*speed.x);

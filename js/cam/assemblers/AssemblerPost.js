@@ -91,10 +91,11 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     if (material == "brass") data += exporter.addLine("M3");
     else if (material == "fiberGlass") data += exporter.addLine("M4");
 
-    data += exporter.addComment(JSON.stringify(index));
 
     data += exporter.addLine("G4", ["P" + context.stockWait]);
     data += exporter.addLine("M5");
+    data += exporter.addComment(JSON.stringify(index));//leave this, tells sim to show cell
+
     data += exporter.moveZ(position.z - context.zPreload, settings);//need this line?
 
     data += exporter.moveZ(position.z + settings.safeHeight, settings);
