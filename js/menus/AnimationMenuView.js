@@ -68,7 +68,9 @@ define(['jquery', 'underscore', 'menuParent', 'cam', 'text!animationMenuTemplate
 
         _changeSpeedSlider: function(e){
             e.preventDefault();
-            cam.set("simSpeed", Math.pow(2,$(e.target)[0].value));
+            var val = $(e.target)[0].value;
+            if (val === undefined || val === null) return;
+            cam.set("simSpeed", Math.pow(2,val));
         },
 
         _drawGcodeHighlighter: function(){

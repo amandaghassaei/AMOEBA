@@ -237,7 +237,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             callback();
         }
 
-        console.log(position);
         var startingPos = this.components.xAxis.getPosition().add(this.components.yAxis.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
 
@@ -329,6 +328,9 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stock: stockJSON,
             tree: this.tree || this.buildComponentTree()
         });
+        json.customPost = {
+
+        };
         return json;
     };
 
