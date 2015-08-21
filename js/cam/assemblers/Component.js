@@ -31,6 +31,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     Component.prototype.makeGeometry = function(geo, material){
         this.stl = new THREE.Mesh(geo, material);
         this.object3D.add(this.stl);
+        if (this.rotary) this.stl.position.set(-this.centerOfRotation.x, -this.centerOfRotation.y, -this.centerOfRotation.z);
     };
 
     Component.prototype.addChild = function(child){
@@ -44,7 +45,19 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
         }
         this.children.push(child);
         child._addParent(this, this.id);
-        this.object3D.add(child.getObject3D());
+
+        if (this.rotary){
+            var wrapper = new THREE.Object3D();
+            wrapper.add(child.getObject3D());
+            wrapper.position.set(-this.centerOfRotation.x, -this.centerOfRotation.y, -this.centerOfRotation.z);
+            console.log("here");
+            this.secondWrapper = new THREE.Object3D();
+            this.secondWrapper.add(wrapper);
+            this.object3D.add(this.secondWrapper);
+            this.object3D.position.set(this.centerOfRotation.x, this.centerOfRotation.y, this.centerOfRotation.z);
+        } else {
+            this.object3D.add(child.getObject3D());
+        }
     };
 
     Component.prototype.checkAncestry = function(component){//return true if this is a parent/grandparent/great-grandparent...
@@ -110,7 +123,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.getRotation = function(){//for rotary axes
-        return this.object3D.rotation.toVector3().clone();
+        return this.secondWrapper.rotation.toVector3().clone();
     };
 
     Component.prototype.getOrientation = function(){
@@ -191,14 +204,14 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
                 if (callback) callback();
                 return;
             } else if (remainingDist < Math.abs(increment)){
-                self.object3D.rotation.x = target.x;
-                self.object3D.rotation.y = target.y;
-                self.object3D.rotation.z = target.z;
+                self.secondWrapper.rotation.x = target.x;
+                self.secondWrapper.rotation.y = target.y;
+                self.secondWrapper.rotation.z = target.z;
                 if (callback) callback();
                 return;
             }
 
-            self.object3D.rotateOnAxis(axis.clone().normalize(), increment);
+            self.secondWrapper.rotateOnAxis(axis.clone().normalize(), increment);
             self._incrementalRotation(increment, target, axis, callback);
         }, 10);
     };

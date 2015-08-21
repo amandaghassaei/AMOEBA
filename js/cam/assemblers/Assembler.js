@@ -210,14 +210,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stock.show();
         });
         if (index.z%2 != 0) {//rotate on odd rows
-            this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+            this.components.substrate.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
             return;
         }
-        this.components.frame.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
+        this.components.substrate.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
     };
 
     Assembler.prototype.rotateTo = function(index, speed, settings, callback){
-        this.components.frame.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+        this.components.substrate.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
     };
     
     Assembler.prototype.releaseStock = function(index, settings){
@@ -237,11 +237,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             callback();
         }
 
-        var startingPos = this.components.xAxis.getPosition().add(this.components.frame.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
+        var startingPos = this.components.xAxis.getPosition().add(this.components.yAxis.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
         speed = this._normalizeSpeed(startingPos, position, new THREE.Vector3(speed, speed, speed));//todo fix this
 
         this.components.xAxis.moveTo(position, speed.x, sketchyCallback);
-        this.components.frame.moveTo(position, speed.y, sketchyCallback);
+        this.components.yAxis.moveTo(position, speed.y, sketchyCallback);
         this.components.zAxis.moveTo(position, speed.z, sketchyCallback);
     };
     

@@ -80,7 +80,8 @@ define(['three'], function(THREE){
                         //minBound
                         //maxBound
                         parent: "frame",
-                        isStatic: true,
+                        motionVector: {x:0, y:1, z:0},
+//                        isStatic: true,
                         stl: {
                             filename: "assets/stls/stapler/frame.stl"
                         }

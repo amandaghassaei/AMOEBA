@@ -31,7 +31,7 @@ Parent: &nbsp;&nbsp;
         <% if (descendants.indexOf(id)<0) return; %>
         <% var component = components[id] || stock[id]; %>
         <% treeLevel++; %>
-        <div class="assemblerTree" <% if (treeLevel%2 == 0){ %> style="background-color:#ddd"<% } %> ><label style="padding-left:<%= (level-tree[editingComponent]-1)*10 + 20 %>px"><%= component.name %>
+        <div class="alternatingColorList<% if (treeLevel%2 == 0){ %> evenListItem<% } %>" ><label style="padding-left:<%= (level-tree[editingComponent]-1)*10 + 20 %>px"><%= component.name %>
             <% if(tree[editingComponent]+1 == level){ %><a data-id="<%= id %>" class="removeChild pull-right" href="#">Remove</a><% } %></label></div><br/>
     <% }); %><br/>
 
