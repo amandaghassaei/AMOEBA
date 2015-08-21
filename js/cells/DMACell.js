@@ -90,7 +90,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.getIndex = function(){
         if (!this.index) {
-            console.warn("no index for this cell");
+//            console.warn("no index for this cell");
             return null;
         }
         return this.index.clone();
@@ -98,7 +98,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.getAbsoluteIndex = function(){
         if (!this.index) {
-            console.warn("no index for this cell");
+//            console.warn("no index for this cell");
             return null;
         }
         if (!this.superCell) return this.getIndex();

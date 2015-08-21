@@ -20,7 +20,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 //        stockPosition: THREE.Vector3 - not used for your machine
 //        units: mm
 
-        this.customFunctionsContext = {
+        this.customFunctionsContext = json.customPost.customFunctionsContext || {
             zClearHeight: 8,//height above part to clear during assembly
             zPreload: 0.2,
             stockWait: 0.75,//seconds
@@ -33,6 +33,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     data += this.customHome(exporter, settings, context);
     return data;
 };
+        this._loadFunction(json.customPost, "customHeader");
 
         this.customFooter = function(exporter, settings, context){
     var data = "";
@@ -40,16 +41,22 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     return data;
 };
 
+        this._loadFunction(json.customPost, "customFooter");
+
         this.customHome = function(exporter, settings, context){
     var data = "";
     data += exporter.goHome(settings);
     return data;
 };
 
+        this._loadFunction(json.customPost, "customHome");
+
         this.customPickUpStock = function(exporter, settings, context){//not relevant for your assembler
     var data = "";
     return data;
 };
+
+        this._loadFunction(json.customPost, "customPickUpStock");
 
         this.customChangeZLayer = function(currentIndex, lastIndex, exporter, settings, context){
     var data = "";
@@ -59,6 +66,8 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     }
     return data;
 };
+
+        this._loadFunction(json.customPost, "customChangeZLayer");
 
         this.customMoveXY = function(position, lastPosition, index, exporter, settings, context){//already offset for dual heads
     var data = "";
@@ -83,6 +92,8 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     return data;
 };
 
+        this._loadFunction(json.customPost, "customMoveXY");
+
         this.customPlacePart = function(position, index, material, exporter, settings, context){//already offset for dual heads
     var data = "";
     data += exporter.rapidZ(position.z + settings.safeHeight, settings);
@@ -102,6 +113,8 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     data += exporter.rapidZ(position.z + context.zClearHeight, settings);
     return data;
 };
+
+        this._loadFunction(json.customPost, "customPlacePart");
 
         this.customCalcPositionOffsets = function(index, position, material, settings, context){
     //this feeds into moveXY and placePart functions
@@ -123,13 +136,13 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         return null;
     }
 
+
     position.sub(stock.getPosition().multiplyScalar(settings.scale));
 
     return position;
 }
 
-
-
+        this._loadFunction(json.customPost, "customCalcPositionOffsets");
     }
 
 
@@ -140,6 +153,16 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 
 
 
+    AssemblerPost.prototype._loadFunction = function(json, name){
+        if (json[name] === undefined) return;
+        var js = "js = " + json[name];
+        try{
+            eval(js);
+            this[name] = js;
+        } catch(error){
+            console.log(error.message);
+        }
+    };
 
 
 

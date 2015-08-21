@@ -16,7 +16,7 @@ require.config({
         numeric: '../dependencies/numeric-1.2.6',
         codeMirrorJS: '../dependencies/codemirror/javascript',
         codeMirror: '../dependencies/codemirror/codemirror',
-        acorn: '../dependencies/acorn/acorn',
+        jsonFn: '../dependencies/jsonfn',
 
         //three
         three: '../dependencies/three',
@@ -235,6 +235,9 @@ require.config({
         },
         'numeric': {
             exports: 'numeric'
+        },
+        'jsonFn': {
+            exports: 'JSONfn'
         }
     }
 

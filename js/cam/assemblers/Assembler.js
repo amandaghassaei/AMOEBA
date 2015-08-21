@@ -310,6 +310,17 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             rapidSpeeds: cam.get("rapidSpeeds"),
             feedRate: cam.get("feedRate")
         };
+        json.customPost = {
+            customFunctionsContext: this.customFunctionsContext,
+            customHeader: this.customHeader.toString(),
+            customFooter: this.customFooter.toString(),
+            customHome: this.customHome.toString(),
+            customPickUpStock: this.customPickUpStock.toString(),
+            customChangeZLayer: this.customChangeZLayer.toString(),
+            customMoveXY: this.customMoveXY.toString(),
+            customPlacePart: this.customPlacePart.toString(),
+            customCalcPositionOffsets: this.customCalcPositionOffsets.toString()
+        };
         return {assembler: json};
     };
 
@@ -328,9 +339,6 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             stock: stockJSON,
             tree: this.tree || this.buildComponentTree()
         });
-        json.customPost = {
-
-        };
         return json;
     };
 

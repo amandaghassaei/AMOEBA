@@ -50,7 +50,6 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
             var wrapper = new THREE.Object3D();
             wrapper.add(child.getObject3D());
             wrapper.position.set(-this.centerOfRotation.x, -this.centerOfRotation.y, -this.centerOfRotation.z);
-            console.log("here");
             this.secondWrapper = new THREE.Object3D();
             this.secondWrapper.add(wrapper);
             this.object3D.add(this.secondWrapper);

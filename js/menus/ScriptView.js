@@ -4,8 +4,8 @@
 
 
 
-define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'acorn', 'globals', 'text!menus/templates/ScriptView.html',  'codeMirrorJS'],
-    function($, _, Backbone, appState, CodeMirror, acorn, globals, template){
+define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'globals', 'text!menus/templates/ScriptView.html',  'codeMirrorJS'],
+    function($, _, Backbone, appState, CodeMirror, globals, template){
     
 
     var ScriptView = Backbone.View.extend({

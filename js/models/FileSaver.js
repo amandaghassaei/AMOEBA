@@ -6,8 +6,10 @@
 define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWrapper'], function(_, saveAs, lattice, materials, ribbon, menuWrapper){
 
     function _saveFile(data, name, extension){
-        var blob = new Blob([JSON.stringify(data, null, '\t')], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, name + extension);
+//        require(['jsonFn'], function(JSONfn){
+            var blob = new Blob([JSON.stringify(data, null, '\t')], {type: "text/plain;charset=utf-8"});
+            saveAs(blob, name + extension);
+//        });
     }
 
 //    function save(name){
