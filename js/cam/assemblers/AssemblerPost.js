@@ -61,7 +61,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         this.customChangeZLayer = function(currentIndex, lastIndex, exporter, settings, context, self){
     var data = "";
     if (lastIndex === null || (currentIndex.z-lastIndex.z)%2 != 0){
-        data += exporter.addLine("G0", ["A" + (currentIndex.z%2*0.3125).toFixed(4)], "new layer");
+        data += exporter.addLine("G0", ["A" + ((currentIndex.z%2+1)*0.3125).toFixed(4)], "new layer");
         data += "\n";
     }
     return data;

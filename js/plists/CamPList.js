@@ -102,7 +102,7 @@ define(['three'], function(THREE){
                 stock:{
                     stock1: {
                         description:{
-                            materialName: "brass",
+                            materialName: "fiberGlass",
                             length: 4
                         },
                         name: "Stock 1",
@@ -111,7 +111,7 @@ define(['three'], function(THREE){
                     },
                     stock2: {
                         description:{
-                            materialName: "fiberGlass",
+                            materialName: "brass",
                             length: 4
                         },
                         name: "Stock 2",
