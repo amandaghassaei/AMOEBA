@@ -126,6 +126,9 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         var offset = self.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in lattice pitch
         var dist = position.clone().sub(offset);
         position = offset.add(new THREE.Vector3(-dist.y-3*settings.scale, dist.x-0.335, position.z));
+    } else {
+        position.y -= 1;
+        position.x -= settings.scale;
     }
 
     var stock = _.find(self.stock, function(thisStock){
