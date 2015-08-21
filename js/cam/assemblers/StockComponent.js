@@ -31,7 +31,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
     };
 
     StockComponent.prototype.getPosition = function(){
-        return this.cell.getPosition();
+        return this.object3D.position.clone();
     };
 
     StockComponent.prototype.setMaterial = function(materialName){

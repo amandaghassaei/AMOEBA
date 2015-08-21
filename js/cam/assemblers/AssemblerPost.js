@@ -106,6 +106,8 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         this.customCalcPositionOffsets = function(index, position, material, settings, context){
     //this feeds into moveXY and placePart functions
 
+    position.sub(settings.originPosition);
+
     if (index.z%2 != 0){
         //offset for rotation
         var offset = this.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in mm
@@ -122,7 +124,6 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
     }
 
     position.sub(stock.getPosition().multiplyScalar(settings.scale));
-    position.sub(settings.originPosition);
 
     return position;
 }
