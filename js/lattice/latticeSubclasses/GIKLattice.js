@@ -44,12 +44,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         _zIndexRotation: function(index){
-            if (index.z%2 != 0) return Math.PI/2;
+            if (index.z%2 == 0) return Math.PI/2;
             return 0;
         },
 
         _zIndexRotationSuperCell: function(index){
-            if (index.z%2 != 0) return Math.PI/2;//this goes neg if zIndexRotation rules are opp? need to clear this up eventually
+            if (index.z%2 != 0) return -Math.PI/2;//this goes neg if zIndexRotation rules are opp? need to clear this up eventually
             return 0;
         },
 

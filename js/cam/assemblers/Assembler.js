@@ -69,6 +69,11 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
             geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, -1.28));//todo get rid of these
+
+
+//            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-4, -4.5, 0));
+//            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(-Math.PI/2));
+//            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(4.5, -4, 0));
 //            geometry.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
             return geometry;
         }
@@ -209,8 +214,8 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         _.each(this.stock, function(stock){
             stock.show();
         });
-        if (index.z%2 != 0) {//rotate on odd rows
-            this.components.substrate.rotateTo(new THREE.Vector3(0, 0, Math.PI/2), speed, callback);
+        if (index.z%2 == 0) {//rotate on odd rows
+            this.components.substrate.rotateTo(new THREE.Vector3(0, 0, -Math.PI/2), speed, callback);
             return;
         }
         this.components.substrate.rotateTo(new THREE.Vector3(0, 0, 0), speed, callback);
