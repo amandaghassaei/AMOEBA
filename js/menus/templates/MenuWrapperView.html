@@ -1,6 +1,6 @@
 <ul class="nav nav-tabs nav-justified">
-<% _.each(_.keys(allMenuTabs[currentNav]), function(key){
+<% _.each(allMenus[currentNav].tabs, function(tabName, key){
     if (key == "part" && !(allPartTypes[cellType][connectionType])) return;  %>
-    <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= allMenuTabs[currentNav][key] %></a></li>
+    <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= tabName %></a></li>
 <% }); %>
 </ul>

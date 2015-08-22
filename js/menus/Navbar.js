@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState'], function($, _, Backbone, fileSaver, NavViewMenu, appState){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState', 'plist'],
+    function($, _, Backbone, fileSaver, NavViewMenu, appState, plist){
 
     return Backbone.View.extend({
 
@@ -65,9 +66,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
         _updateNavSelectionUI: function(){
             this._deselectAllNavItems();
             var navSelection = this.model.get("currentNav");
-            if (navSelection == "electronicNavSim" || navSelection == "mechanicalNavSim") navSelection = "navSim";
-            if (navSelection == "navComposite" || navSelection == "navMaterial") navSelection = "navDesign";
-            if (navSelection == "navMachineComponent") navSelection = "navAssemble";
+            if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
             _.each($(".menuHoverControls"), function(link){
                 var $link = $(link);
                 if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight

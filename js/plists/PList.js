@@ -5,50 +5,86 @@ define(['three'], function(THREE){
 
     return {
 
-        allMenuTabs: {
+        allMenus: {
             navDesign:{
-                lattice:"Lattice",
-                //sketch:"Sketch",
-                material:"Materials",
-                import:"Import",
-                part:"Part"
-//                script:"Script"
-            },
-            electronicNavSim:{
-                eSetup:"Connectivity",
-//                materialProperties: "Materials",
-                eStatic:"Statics",
-                eDynamic:"Dynamics"
-            },
-            mechanicalNavSim:{
-                mSetup:"Setup",
-//                materialProperties: "Materials",
-                mStatic:"Statics",
-                mDynamic:"Dynamics"
-            },
-            navOptimize:{
-                optimize:"Optimize"
-            },
-            navAssemble:{
-                assembler:"Assembler",
-                assemblerSetup: "Setup",
-                cam: "Process",
-//                editCamOutput: "Edit",
-                animate:"Preview"
-            },
-            navMachineComponent:{
-                editComponent: "Edit Component"
-            },
-            navComm:{
-                setupComm: "Setup",
-                send: "Send"
-            },
-            //maybe do something different here?
-            navComposite:{
-                composite:"Composite Editor"
+                name: "Design",
+                tabs:{
+                    lattice:"Lattice",
+                    //sketch:"Sketch",
+                    material:"Materials",
+                    import:"Import",
+                    part:"Part"
+                    //script:"Script"
+                }
             },
             navMaterial:{
-                materialEditor: "Material Editor"
+                name: "Materials",
+                parent: "navDesign",
+                tabs:{
+                    materialEditor: "Material Editor"
+                }
+            },
+            navComposite:{
+                name: "Composite",
+                parent: "navDesign",
+                tabs:{
+                    composite:"Composite Editor"
+                }
+            },
+            navSim:{
+                name: "Simulate",
+                tabs:{
+                }
+            },
+            electronicNavSim:{
+                name: "Electronic Simulation",
+                parent: "navSim",
+                tabs:{
+                    eSetup:"Connectivity",
+    //                materialProperties: "Materials",
+                    eStatic:"Statics",
+                    eDynamic:"Dynamics"
+                }
+            },
+            mechanicalNavSim:{
+                name: "Mechanical Simulation",
+                parent: "navSim",
+                tabs:{
+                    mSetup:"Setup",
+    //                materialProperties: "Materials",
+                    mStatic:"Statics",
+                    mDynamic:"Dynamics"
+                }
+            },
+            navOptimize:{
+                name: "Optimize",
+                tabs:{
+                    optimize:"Optimize"
+                }
+            },
+            navAssemble:{
+                name: "Assemble",
+                tabs:{
+                    assembler:"Assembler",
+                    assemblerSetup: "Setup",
+                    cam: "Process",
+    //                editCamOutput: "Edit",
+                    animate:"Preview"
+                },
+            },
+            navMachineComponent:{
+                name: "Component Editor",
+                parent: "navAssemble",
+                tabs:{
+                    editComponent: "Edit Component"
+                }
+            },
+            navComm:{
+                name: "Comm",
+                tabs:{
+                    setupComm: "Setup",
+                    send: "Send"
+                }
             }
         },
 
