@@ -158,6 +158,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             })
         },
 
+        reset3DNavigation: function(){
+            three.resetCameraPosition();
+        },
+
 
         ///////////////////////////////////////////////////////////////////////////////
         /////////////////////KEY BINDINGS//////////////////////////////////////////////

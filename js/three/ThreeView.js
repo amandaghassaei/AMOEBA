@@ -36,6 +36,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             this.$el.append(this.model.domElement);//render only once
 
+            this.model.setThreeView(this);
+
             this.model.render();
     //        this._animate();
         },
@@ -52,6 +54,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         _setControlsEnabled: function(){
             var state = appState.get("deleteMode") || appState.get("shift") || appState.get("extrudeMode");
             this.controls.noRotate = state;
+        },
+
+        reset3DNavigation: function(){
+            this.controls.reset();
         },
 
         ////////////////////////////////////////////////////////////////////////////////

@@ -25,13 +25,15 @@ define(['underscore', 'three'], function(_, THREE){
 
     var shouldRender = false;
 
+    var initialCameraPosition = new THREE.Vector3(-15, -12, 12);
+
+    var threeView = null;
+
     initialize();
 
     function initialize(){
 
-        camera.position.x = -15;
-        camera.position.y = -12;
-        camera.position.z = 12;
+        resetCameraPosition();
         camera.up.set(0,0,1);//set z axis as "up"
 
         var fogColor = 0xcccccc;
@@ -65,11 +67,23 @@ define(['underscore', 'three'], function(_, THREE){
         window.addEventListener('resize', onWindowResize, false);
     }
 
+    function resetCameraPosition(){
+        camera.position.x = initialCameraPosition.x;
+        camera.position.y = initialCameraPosition.y;
+        camera.position.z = initialCameraPosition.z;
+        if (threeView) threeView.reset3DNavigation();
+        render();
+    }
+
     function onWindowResize(){
         camera.aspect = window.innerWidth/window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         render();
+    }
+
+    function setThreeView(view){
+        threeView = view;
     }
 
     function sceneAdd(object){
@@ -187,7 +201,9 @@ define(['underscore', 'three'], function(_, THREE){
         removeCompositeCell: removeCompositeCell,
         getBasePlane: getBasePlane,
         removeAllCells: removeAllCells,
-        removeAllCompositeCells: removeAllCompositeCells
+        removeAllCompositeCells: removeAllCompositeCells,
+        resetCameraPosition: resetCameraPosition,
+        setThreeView: setThreeView
     }
 
 });

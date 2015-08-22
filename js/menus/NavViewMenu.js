@@ -10,7 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'text!navViewMenuTemplate']
         el: "#navViewMenu",
 
         events: {
-            "click a":                                       "_makeSelection",
+            "click a.boolProperty":                                       "_makeSelection",
             "click #reset3DView":                            "_reset3DNavigation"
         },
 
@@ -40,8 +40,9 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'text!navViewMenuTemplate']
             return null;
         },
 
-        _reset3DNavigation: function(){
+        _reset3DNavigation: function(e){
             e.preventDefault();
+            this.model.reset3DNavigation();
         },
 
         render: function(){
