@@ -34,9 +34,9 @@ define(['three'], function(THREE){
                 relative: false,
                 camProcesses: ["gcode"],
                 numMaterials: 2,
-                translation: {x:-4.0757,y: -4.3432,z: -6.2154},
+                translation: {x:11.43,y:-61.93,z:-5.06},
                 rotation: {x:Math.PI/2,y:0,z:0},//Math.PI/2
-                scale: 20,
+                scale: 0.7874,
                 components: {
                     xAxis: {
                         name: "X Axis",
@@ -89,7 +89,7 @@ define(['three'], function(THREE){
                     substrate: {
                         name: "Substrate",
                         rotary: true,
-                        centerOfRotation: {x:4,y:4.5,z:0},//(5.08mm, 5.715mm)
+                        centerOfRotation: {x:9,y:10.5,z:0},//(5.08mm, 5.715mm)
                         //minBound
                         //maxBound
                         parent: null,

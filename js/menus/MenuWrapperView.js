@@ -85,6 +85,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var $target = $(e.target);
             var newVal = parseFloat($target.val());
             if (isNaN(newVal)) {
+                if (newVal == "") return;
                 console.warn("value is not float");
                 return;
             }
@@ -97,6 +98,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var $target = $(e.target);
             var newVal = parseInt($target.val());
             if (isNaN(newVal)) {
+                if (newVal == "") return;
                 console.warn("value is NaN");
                 return;
             }

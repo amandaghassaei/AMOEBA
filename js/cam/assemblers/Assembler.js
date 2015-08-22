@@ -60,6 +60,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         function geometryPreProcess(geometry){//todo do this better
             if(geometry === undefined || (geometry.vertices && geometry.vertices.length == 0)) return null;
 
+            console.log(json.translation);
             if (json.translation) geometry.applyMatrix(new THREE.Matrix4().makeTranslation(json.translation.x, json.translation.y, json.translation.z));
             if (json.rotation) {
                 if (json.rotation.x) geometry.applyMatrix(new THREE.Matrix4().makeRotationX(json.rotation.x));
@@ -68,7 +69,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
             }
             if (json.scale) geometry.applyMatrix(new THREE.Matrix4().makeScale(json.scale, json.scale, json.scale));
 
-            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, -1.28));//todo get rid of these
+//            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-21, -0.63, -1.28));//todo get rid of these
 
 
 //            geometry.applyMatrix(new THREE.Matrix4().makeTranslation(-4, -4.5, 0));
