@@ -100,7 +100,7 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'globals',
     
         _show: function(){
             this.$el.animate({left: "0"});
-            this.model.get("scriptIsVisible", true);
+            this.model.set("scriptIsVisible", true);
         },
 
         showWithJS: function(js, name, saveCallback){
