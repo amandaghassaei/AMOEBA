@@ -107,10 +107,12 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             var nextTab = this.get("lastNavTab")[navSelection] || _.keys(plist.allMenus[navSelection].tabs)[0];
             this.set("currentTab", nextTab, {silent:true});
 
+            if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
+
             if (navSelection == "navDesign") {
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", true);
-            } else if (navSelection == "electronicNavSim" || navSelection == "mechanicalNavSim"){
+            } else if (navSelection == "navSim"){
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", false);
             } else if (navSelection == "navAssemble"){
