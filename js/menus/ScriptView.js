@@ -95,7 +95,7 @@ define(['jquery', 'underscore', 'backbone', 'appState', 'codeMirror', 'globals',
         _hide: function(){
             var width = this.$el.parent().width();
             this.$el.animate({left: "-" + width + "px"});
-            this.model.get("scriptIsVisible", false);
+            this.model.set("scriptIsVisible", false);
         },
     
         _show: function(){
