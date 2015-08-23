@@ -135,7 +135,7 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
     };
 
     Component.prototype.applyRotation = function(vector){//todo local rotation?
-        vector.applyQuaternion(this.getAbsoluteOrientation());
+        vector.applyQuaternion(this.getOrientation());
         return vector;
     };
 

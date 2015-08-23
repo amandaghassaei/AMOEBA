@@ -126,7 +126,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.applyRotation = function(vector){//todo local rotation?
-        vector.applyQuaternion(this.getAbsoluteOrientation());
+        vector.applyQuaternion(this.getOrientation());
         return vector;
     };
 

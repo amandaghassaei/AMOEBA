@@ -125,7 +125,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
         //offset for rotation
         var offset = self.components.substrate.centerOfRotation.clone().multiplyScalar(settings.scale);//offset in lattice pitch
         var dist = position.clone().sub(offset);
-        position = offset.add(new THREE.Vector3(-dist.y-3*settings.scale, dist.x-0.335, position.z));
+        position = offset.add(new THREE.Vector3(-dist.y, dist.x-0.335, position.z));
     } else {
         position.y -= 1;
         position.x -= settings.scale;
@@ -217,6 +217,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
             if (!cell) return;
 
             var cellPosition = cell.getAbsolutePosition().multiplyScalar(settings.scale);
+            if (cell.getMinPosition) cellPosition = cell.getMinPosition().multiplyScalar(settings.scale);
             var cellIndex = cell.getAbsoluteIndex();
 
             if (!self.shouldPickUpStock){

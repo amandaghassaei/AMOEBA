@@ -49,6 +49,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return unitGeos[key];
     };
 
+    GIKSuperCell.prototype.getMinPosition = function(){//for assembly
+        var position = this.getAbsolutePosition();
+        var oppPosition = this.applyAbsoluteRotation(new THREE.Vector3(3,0,0));
+        oppPosition.add(position);
+        position.x = Math.min(position.x, oppPosition.x);
+        position.y = Math.max(position.y, oppPosition.y);
+        return position;
+    };
+
     GIKSuperCell.prototype._buildWireframe = function(mesh){
         var wireframe = new THREE.BoxHelper(mesh);
         wireframe.material.color.set(0x000000);
