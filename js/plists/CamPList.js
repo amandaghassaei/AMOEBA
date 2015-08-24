@@ -135,6 +135,32 @@ define(['three'], function(THREE){
                     feedRate:{xy: 6, z: 6}
                 },
                 customPost: {}
+            },
+            mojo:{
+                name: "Mojo",
+                shouldPickUpStock: false,
+                relative: true,
+                camProcesses: ["gcode"],
+                numMaterials: -1,
+                translation: {x:8.48528,y:8.48528,z:8.48528},
+                rotation: {x:0,y:0,z:0},//Math.PI/2
+                scale: 0.083333,
+                components: {
+                    frame:  {
+                        name: "Y Axis",
+                        rotary: false,
+                        //minBound
+                        //maxBound
+                        parent: null,
+                        motionVector: {x:0, y:1, z:0},
+                        stl: {
+                            filename: "assets/stls/mojo/mojo.stl"
+                        }
+                    }
+                },
+                stock: {},
+                defaults:{},
+                customPost: {}
             }
         },
 
@@ -142,7 +168,7 @@ define(['three'], function(THREE){
             octa:{
                 face: ["handOfGod"],
                 edgeRot: ["shopbot", "oneBitBot", "handOfGod"],
-                vertex: ["handOfGod"]
+                vertex: ["mojo"]
             },
             tetra: {
                 vertex: ["handOfGod"]
