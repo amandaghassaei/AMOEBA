@@ -185,6 +185,15 @@ define(['three'], function(THREE){
             }
         },
 
+        allJointTypes: {
+            revolute: "Revolute",
+            continuous: "Continuous",
+            prismatic: "Prismatic",
+            fixed: "Fixed",
+            floating: "Floating",
+            planar: "Planar"
+        },
+
         allAssemblyStrategies: {
             raster: "Raster"
         },

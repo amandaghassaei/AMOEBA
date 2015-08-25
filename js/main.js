@@ -193,6 +193,8 @@ require.config({
         assemblerPost: 'cam/assemblers/AssemblerPost',
         component: 'cam/assemblers/Component',
         stockComponent: 'cam/assemblers/StockComponent',
+        urdfJoint: 'cam/assemblers/URDFJoint',
+        urdfLink: 'cam/assemblers/URDfLink',
 
         //processes
         gcode: 'cam/processes/GCodeExporter',

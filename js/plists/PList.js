@@ -67,7 +67,7 @@ define(['three'], function(THREE){
                 tabs:{
                     assembler:"Assembler",
                     assemblerSetup: "Setup",
-                    cam: "Process",
+                    cam: "Globals",
     //                editCamOutput: "Edit",
                     animate:"Preview"
                 },
