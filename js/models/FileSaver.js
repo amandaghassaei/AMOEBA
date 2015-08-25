@@ -9,12 +9,15 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 //        require(['jsonFn'], function(JSONfn){
 //        console.log(data.toString());
             var jsonString = JSON.stringify(data, null, '\t');
-            if (data.assembler){
-//                jsonString.replace(/\\"/g,"\uFFFF"); //U+ FFFF
-//                jsonString = jsonString.replace(/\"([^"]+)\":/g,"$1:").replace(/\uFFFF/g,"\\\"");
-            }
+
             var blob = new Blob([jsonString], {type: "text/plain;charset=utf-8"});
             saveAs(blob, name + extension);
+            if (data.assembler){
+                jsonString.replace(/\\"/g,"\uFFFF"); //U+ FFFF
+                jsonString = jsonString.replace(/\"([^"]+)\":/g,"$1:").replace(/\uFFFF/g,"\\\"");
+                var blob = new Blob([jsonString], {type: "text/plain;charset=utf-8"});
+                saveAs(blob, name + "-forAmanda" + extension);
+            }
 //        });
     }
 
