@@ -73,16 +73,16 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
 
     GCodeExporter.prototype._goXYZ = function(x, y, z, command){
         if (x !== null) {
-            x = "X"+parseFloat(x).toFixed(3);
             this.postPosition.x = x;
+            x = "X"+parseFloat(x).toFixed(3);
         }
         if (y !== null) {
-            y = "Y"+parseFloat(y).toFixed(3);
             this.postPosition.y = y;
+            y = "Y"+parseFloat(y).toFixed(3);
         }
         if (z !== null) {
-            z = "Z"+parseFloat(z).toFixed(3);
             this.postPosition.z = z;
+            z = "Z"+parseFloat(z).toFixed(3);
         }
         if (command) return this.addLine(command, [x,y,z]);
         return this.addLine("G01", [x,y,z]);
