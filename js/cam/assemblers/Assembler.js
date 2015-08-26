@@ -5,7 +5,7 @@
 define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', 'component', 'stockComponent', 'assemblerPost'],
     function(_, appState, lattice, THREE, three, cam, Component, StockComponent, AssemblerPostMethods){
     
-    var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xff00000, shading: THREE.FlatShading, transparent:true, opacity:0.3});//0xaaaaaa
+    var assemblerMaterial = new THREE.MeshLambertMaterial({color:0xaaaaaa, shading: THREE.FlatShading, transparent:true, opacity:0.3});
     var stlLoader = new THREE.STLLoader();
 
     function Assembler(id, json){
