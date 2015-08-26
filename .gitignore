@@ -1,4 +1,4 @@
 *.idea/
 *.DS_Store
 node/node_modules/
-.push.sh
+push.sh
