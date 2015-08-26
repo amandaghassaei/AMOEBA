@@ -88,37 +88,91 @@ define(['three'], function(THREE){
             }
         },
 
-        allCellTypes: {
-            octa:"Octahedron",
-            tetra: "Tetrahedron",
-            cube:"Cube",
-            truncatedCube:"Cuboctahedron",
-            kelvin:"Kelvin",
-            hex: "Hexagonal"
+        allLattices:{
+            octa: {
+                name: "Octahedron",
+                connection: {
+                    face: {
+                        name: "Face",
+                        subclass: "octaFaceLattice"
+                    },
+//                    edge: {
+//                        name: "Edge (Rotated)",
+//                        subclass: "octaEdgeLattice"
+//                    },
+                    edgeRot: {
+                        name: "Edge",
+                        subclass: "octaRotEdgeLattice"
+                    },
+                    vertex: {
+                        name: "Vertex",
+                        subclass: "octaVertexLattice"
+                    }
+                }
+            },
+            tetra: {
+                name: "Tetrahedron",
+                connection: {//vertex: "Vertex"
+                    stacked: {
+                        name: "Stacked",
+                        subclass: "tetraStackedLattice"
+                    }
+                }
+            },
+            cube: {
+                name: "Cube",
+                connection: {
+                    face: {
+                        name: "Face",
+                        subclass: "cubeLattice"
+                    },
+                    gik: {
+                        name: "GIK",
+                        subclass: "gikLattice"
+                    }
+                }
+            },
+            truncatedCube: {
+                name: "Cuboctahedron",
+                connection: {
+                    face: {
+                        name: "Face",
+                        subclass: "truncatedCubeLattice"
+                    }
+                }
+            },
+            kelvin: {
+                name: "Kelvin",
+                connection: {
+                    face: {
+                        name: "Face",
+                        subclass: "kelvinLattice"
+                    }
+                }
+            },
+            hex: {
+                name: "Hexagonal",
+                connection: {
+                    face: {
+                        name: "Face",
+                        subclass: "hexLattice"
+                    },
+                    faceRot: {
+                        name: "Face (Rotated)",
+                        subclass: "hexRotLattice"
+                    }
+                }
+            }
         },
-        allConnectionTypes: {
-            octa: {face:"Face",  edgeRot:"Edge", vertex:"Vertex"},// freeformFace:"Freeform Face"  edge:"Edge",   (Rotated)
-            tetra: {stacked: "Stacked"},//vertex: "Vertex"
-            cube: {face:"Face", gik: "GIK"},
-            truncatedCube: {face:"Face"},
-            kelvin: {face: "Face"},
-            hex: {face: "Face", faceRot: "Face (Rotated)"}
-        },
-        allLatticeSubclasses:{
-            octa: {face:"octaFaceLattice",  edgeRot:"octaRotEdgeLattice", vertex:"octaVertexLattice"},// freeformFace:"Freeform Face"  edge:"octaEdgeLattice",   (Rotated)
-            tetra: {stacked: "tetraStackedLattice"},//vertex: "tetraVertexLattice"
-            cube: {face:"cubeLattice", gik: "gikLattice"},
-            truncatedCube: {face:"truncatedCubeLattice"},
-            kelvin: {face: "kelvinLattice"},
-            hex: {face: "hexLattice", faceRot: "hexRotLattice"}
-        },
+
+
         allPartTypes:{
             octa:{
                 face: {
                     triangle:"Triangle"
                 },
                 edge: null,
-                    edgeRot: {
+                edgeRot: {
                     vox: "Snap Voxel (high res)",
                     voxLowPoly: "Snap Voxel (low res)"
                 },
