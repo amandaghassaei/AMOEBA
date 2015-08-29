@@ -9,8 +9,7 @@
         <!--<a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>-->
         <% if (currentNav != "navDesign"){%>
             <a data-type="hide" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "hide"){ %> ribbon-selected"<% } %>">Hide</a>
-        <% } %>
-        <% if (currentNav != "navSim" && currentNav != "navAssemble" && currentNav != "navOptimize"){%>
+        <% }else{ %>
             <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>
         <% } %>
         <a id="ribbonAxesToggle" class="btn btn-primary btn-ribbon <% if (axesAreVisible){ %> ribbon-selected"<% } %>">Axes</a>

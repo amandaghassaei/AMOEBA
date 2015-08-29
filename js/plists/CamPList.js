@@ -192,7 +192,7 @@ define(['three'], function(THREE){
         allCamProcesses: {
             shopbot: "Shopbot (sbp)",
             gcode: "G-Code",
-            tinyG: "TinyG"
+            tinyG: "TinyG (G-Code)"
         },
 
         allUnitTypes: {
