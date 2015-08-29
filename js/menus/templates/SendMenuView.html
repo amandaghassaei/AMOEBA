@@ -1,3 +1,7 @@
-Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>
-Out: &nbsp;&nbsp;<input id="sendSerialMessage" value="" placeholder="Send Message" class="seventyFiveWidth form-control unresponsiveInput" type="text"><br/><br/>
-<a href="#" id="stopMachine" class="btn btn-block btn-lg btn-danger">Stop</a><br/>
+<% if(connected){ %>
+    Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>
+    Out: &nbsp;&nbsp;<input id="sendSerialMessage" value="" placeholder="Send Message" class="seventyFiveWidth form-control unresponsiveInput" type="text"><br/><br/>
+    <a href="#" id="stopMachine" class="btn btn-block btn-lg btn-danger">Stop</a><br/>
+<% }else{ %>
+    Not connected, go back to setup tab and connect to Node server.
+<% } %>
