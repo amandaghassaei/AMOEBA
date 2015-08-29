@@ -13,8 +13,8 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             portName: "Select Port",
             baudRate: 200,
             error: null,
-            testMessage: "",
-            lastMessageReceived: ""
+            lastMessageReceived: "",
+            lastMessageSent: ""
         },
 
         initialize: function(){

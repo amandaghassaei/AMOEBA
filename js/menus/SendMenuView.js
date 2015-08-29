@@ -2,21 +2,25 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!sendMenuTemplate'], function($, _, MenuParentView, plist, lattice, template){
+define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'commPlist', 'text!sendMenuTemplate'],
+    function($, _, CommParentMenu, serialComm, commPlist, template){
 
-    return MenuParentView.extend({
+    return CommParentMenu.extend({
+
 
         events: {
         },
 
-        _initialize: function(){
-            //bind events
+
+        __initialize: function(){
         },
 
         _makeTemplateJSON: function(){
-            return null;
+            console.log("render");
+            return _.extend(serialComm.toJSON(), commPlist);
         },
 
         template: _.template(template)
+
     });
 });

@@ -3,58 +3,21 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'text!setupCommMenuTemplate'],
-    function($, _, MenuParentView, plist, serialComm, template){
+define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommMenuTemplate', 'commPlist'],
+    function($, _, CommParentMenu, serialComm, template, commPlist){
 
 
-
-
-    return MenuParentView.extend({
+    return CommParentMenu.extend({
 
         events: {
             "click #serialFlushBuffer":                         "_flushBuffer",
             "click #nodeSetupInstructions":                     "_setupInstructions",
             "click #refreshPorts":                              "_refreshPorts",
-            "change #seriallTestMessage":                       "_sendTestMessage",
             "click #reconnectToNode":                           "_reconnectToNode"
         },
 
 
-        _initialize: function(){
-
-            this.listenTo(serialComm, "change", this.render);
-            this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMessage);
-
-            this.inTimeout = false;
-        },
-
-        getPropertyOwner: function($target){
-            if ($target.hasClass("serialComm")) return serialComm;
-            return null;
-        },
-
-        _sendTestMessage: function(e){
-            e.preventDefault();
-            var message = $("#seriallTestMessage").val();
-            $("#seriallTestMessage").val("");
-            if (message == "") return;
-            serialComm.send(message);
-        },
-
-        _updateIncomingMessage: function(){
-            var message = serialComm.get("lastMessageReceived");
-            var $message = $("#incomingSerialMessage");
-            console.log(message);
-            $message.html(message);
-            $message.css("background", "#ffff99");
-            if (!this.inTimeout) {
-                this.inTimeout = true;
-                var self = this;
-                setTimeout(function(){
-                    $message.css("background", "white");
-                    self.inTimeout = false;
-                }, 100);
-            }
+        __initialize: function(){
         },
 
         _flushBuffer: function(e){
@@ -83,7 +46,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'text!setup
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), serialComm.toJSON(), {allBaudRates: [300, 600, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 38400, 57600, 115200]});
+            console.log("render");
+            return _.extend(serialComm.toJSON(), commPlist);
         },
 
         template: _.template(template),

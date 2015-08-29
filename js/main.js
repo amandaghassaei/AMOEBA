@@ -39,6 +39,7 @@ require.config({
         //communication
         socketio: '../dependencies/socket.io-1.3.5',
         serialComm: 'models/SerialComm',
+        commPlist: 'plists/CommPlist',
 
         //lattice classes and extra methods
         latticeBase: 'lattice/LatticeBase',
@@ -140,6 +141,7 @@ require.config({
         mDynamicMenu: 'menus/MDynamicMenuView',
         assemblerSetupMenu: 'menus/AssemblerSetupMenuView',
         editComponentMenu: 'menus/EditComponentMenuView',
+        commParentMenu: 'menus/CommParentMenu',
 
         //templates
         navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
