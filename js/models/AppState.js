@@ -117,6 +117,9 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 this.set("highlighterIsVisible", false);
             } else if (navSelection == "navAssemble"){
                 this.set("highlighterIsVisible", false);
+            } else if (navSelection == "navComm"){
+                this.set("basePlaneIsVisible", false);
+                this.set("highlighterIsVisible", false);
             }
         },
 

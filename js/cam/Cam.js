@@ -215,7 +215,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         isVisible: function(){
             var currentTab = appState.get("currentTab");
-            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animate" || currentTab == "send"
+            var currentNav = appState.get("currentNav");
+            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animate" || currentNav == "navComm"
                 || currentTab == "editComponent");
         },
 

@@ -10,7 +10,9 @@
         <a href="#" id="stopMachine" class="btn pull-right btn-halfWidth btn-lg btn-danger">Stop</a><br/><br/>
         Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"></pre><br/><br/>
         Out: &nbsp;&nbsp;<input id="sendSerialMessage" value="" placeholder="Send Message" class="seventyFiveWidth form-control unresponsiveInput" type="text"><br/><br/>
-        Next Line: &nbsp;&nbsp;<input id="nextLine" value="" placeholder="##" class="intInput form-control unresponsiveInput" type="text">Up/down<br/><br/>
+        Next Line: &nbsp;&nbsp;<input id="nextLine" value="" placeholder="##" class="intInput form-control unresponsiveInput" type="text">
+        <a href="#" id="previousLineButton" class="btn btn-lg btn-default">Prev</a>
+        <a href="#" id="nextLineButton" class="btn btn-lg btn-default">Next</a><br/><br/>
         <div id="gcodeEditor"><%= dataOut %></div><br/>
     <% } %>
 <% } else { %>
