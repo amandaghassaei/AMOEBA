@@ -250,12 +250,13 @@ require.config({
 //};
 
 //init stuff
-require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView'],
-    function(appState, lattice, Navbar, three, ThreeView){
+require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'globals', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView'],
+    function(appState, lattice, Navbar, three, ThreeView, globals){
 
     new Navbar({model:appState});
 
-    new ThreeView({model:three});
+    var threeView = new ThreeView({model:three});
+    globals.threeView = threeView;//todo fix this
 
 //    if (lattice.get("connectionType") != "gik") lattice.getUItarget().addCellAtIndex({x:0,y:0,z:0});//add a cell
 });

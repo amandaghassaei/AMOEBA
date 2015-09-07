@@ -130,6 +130,11 @@ THREE.OrbitControls = function ( object, domElement ) {
 	var startEvent = { type: 'start'};
 	var endEvent = { type: 'end'};
 
+    this.setTarget = function(target){//three vector
+        this.target = target;
+//        this.target0 = this.target.clone();
+    };
+
 	this.rotateLeft = function ( angle ) {
 
 		if ( angle === undefined ) {

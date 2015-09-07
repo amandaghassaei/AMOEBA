@@ -35,6 +35,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
+            this.listenTo(this, "change:cellsMin change:cellsMax", this._updateThreeViewControls);
 
             this._updateLatticeType();
         },
@@ -102,6 +103,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             this.set("nodes", [], {silent:silent});
             if (globals.basePlane) globals.basePlane.set("zIndex", 0, {silent:silent});
+        },
+
+        _updateThreeViewControls: function(){
+            var cellsMin = this.get("cellsMin");
+            var cellsMax = this.get("cellsMax");
+            if (cellsMax === null || cellsMin === null) return;
+            if (globals.threeView) globals.threeView.setOrbitControlsFor(this.get("cellsMin").clone(), this.get("cellsMax").clone())
         },
 
 
