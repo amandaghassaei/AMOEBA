@@ -60,8 +60,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             this.controls.reset();
         },
 
-        setOrbitControlsFor: function(min, max){
-            this.controls.setTarget(max.sub(min).divideScalar(2).add(min));
+        setOrbitControlsFor: function(center){//lattice min max
+            this.controls.setTarget(center);//center of lattice bounds
         },
 
         ////////////////////////////////////////////////////////////////////////////////

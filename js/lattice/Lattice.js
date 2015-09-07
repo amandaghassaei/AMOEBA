@@ -109,7 +109,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
             if (cellsMax === null || cellsMin === null) return;
-            if (globals.threeView) globals.threeView.setOrbitControlsFor(this.get("cellsMin").clone(), this.get("cellsMax").clone())
+            var center = cellsMax.clone().sub(cellsMin).divideScalar(2).add(cellsMin);
+            if (globals.threeView && this.getPositionForIndex) globals.threeView.setOrbitControlsFor(this.getPositionForIndex(center));
         },
 
 
