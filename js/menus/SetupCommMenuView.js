@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
             "click #serialFlushBuffer":                         "_flushBuffer",
             "click #nodeSetupInstructions":                     "_setupInstructions",
             "click #refreshPorts":                              "_refreshPorts",
-            "click #reconnectToNode":                           "_reconnectToNode"
+            "click #reconnectToNode":                           "_reconnectToNode",
+            "click #openSerialMonitor":                         "_openSerialMonitor"
         },
 
 
@@ -41,8 +42,16 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
             })
         },
 
-        _reconnectToNode: function(){
+        _reconnectToNode: function(e){
+            e.preventDefault();
             serialComm.attemptToConnectToNode();
+        },
+
+        _openSerialMonitor: function(e){
+            e.preventDefault();
+            require(['serialMonitor'], function(SerialMonitor){
+                var serialMonitor = new SerialMonitor();
+            });
         },
 
         _makeTemplateJSON: function(){
