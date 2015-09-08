@@ -18,7 +18,7 @@ var io = require('socket.io').listen(8080);
 //defaults
 var portName = null;
 var currentPort = null;
-var baudRate = 9600;
+var baudRate = 115200;
 
 //io.sockets.on('connection', function (socket) {
 //    socket.emit('baudRate', baudRate);
@@ -50,8 +50,12 @@ io.on('connection', function(socket){
     });
 
     socket.on('dataOut', function(data){
+        data += '\n';
         console.log("Sending data: " + data);
-        currentPort.write(new Buffer([parseInt(data)]));
+        currentPort.write(new Buffer(data), function(err, res) {
+            if (err) onPortError(err);
+        });
+//        currentPort.write(new Buffer([parseInt(data)]));//write byte
     });
 
     socket.on('flush', function(){
@@ -145,7 +149,7 @@ io.on('connection', function(socket){
     }
 
     function onPortData(data){
-//        console.log(data);
+        console.log(data);
         socket.emit("dataIn", data);
     }
 
