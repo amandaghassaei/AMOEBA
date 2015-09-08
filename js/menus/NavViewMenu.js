@@ -3,21 +3,23 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'text!navViewMenuTemplate'], function($, _, Backbone, plist, template){
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMenuTemplate'],
+    function($, _, Backbone, plist, lattice, template){
 
     return Backbone.View.extend({
 
         el: "#navViewMenu",
 
         events: {
-            "click a.boolProperty":                                       "_makeSelection",
-            "click #reset3DView":                            "_reset3DNavigation"
+            "click a":                                                    "_makeSelection",
+            "click #reset3DView":                                         "_reset3DNavigation"
         },
 
         initialize: function(){
 
             _.bindAll(this, "render");
         },
+
 
 
         _makeSelection: function(e){
@@ -46,7 +48,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'text!navViewMenuTemplate']
         },
 
         render: function(){
-            this.$el.html(this.template(_.extend(this.model.toJSON(), plist)));
+            this.$el.html(this.template(_.extend(this.model.toJSON(), plist, lattice.toJSON())));
 
             var self = this;
             _.each($(".boolProperty"), function(item){
