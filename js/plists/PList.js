@@ -202,11 +202,11 @@ define(['three'], function(THREE){
                         }
                     },
                     gik: {
-                        name: "GIK",
+                        name: "Lego",
                         subclass: "gikLattice",
                         type: {
                             willGik: {
-                                name: "Will's Lattice",
+                                name: "Electronic GIK Lattice",
                                 parts: {
                                     lego: {
                                         name: "Micro LEGO (high res)"
