@@ -15,6 +15,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             cellType: "cube",
             connectionType: "gik",
+            latticeType: "willGik",
             partType: null,
 
             denseCellsMin: null,
@@ -28,7 +29,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         __initialize: function(){
 
-            this.listenTo(this, "change:partType", this._updatePartType);
+            //todo change latticeType
+            this.listenTo(this, "change:partType change:latticeType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
                 this._updateLatticeType();//pass no params
             });
@@ -53,17 +55,35 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _setToDefaultsSilently: function(){
             var newCellType = this.get("cellType");
             var newConnectionType = this.get("connectionType");
+
             if (newConnectionType == this.previous("connectionType")){
-                newConnectionType = _.keys(plist["allConnectionTypes"][newCellType])[0];
+                newConnectionType = _.keys(plist.allLattices[newCellType].connection)[0];
                 this.set("connectionType", newConnectionType, {silent:true});
             }
-            var partType = _.keys(plist["allPartTypes"][newCellType][newConnectionType])[0];
-            this.set("partType", partType, {silent:true});
-            appState.set("materialClass", plist.allMaterialTypes[newCellType][newConnectionType]);
+
+            var newLatticeType = this.get("latticeType");
+            if (newLatticeType === this.previous("latticeType")){
+                newLatticeType = _.keys(plist.allLattices[newCellType].connection[newConnectionType].type)[0];
+                this.set("latticeType", newLatticeType, {silent:true});
+            }
+
+            var latticeData = this._getLatticePlistData();
+
+            var newPartType = null;
+            if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
+            this.set("partType", newPartType, {silent:true});
+
+            var newMaterialClass = (latticeData.materialClasses || plist.allMaterialClasses)[0];
+            appState.set("materialClass", newMaterialClass);
+        },
+
+        _getLatticePlistData: function(){
+            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("latticeType")];
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
-            if (!plist["allPartTypes"][this.get("cellType")][this.get("connectionType")]){
+            var latticeData = this._getLatticePlistData();
+            if (latticeData.parts === null){
                 var currentMode = appState.get("cellMode");
                 if (currentMode == "cell" || currentMode == "supercell") return;
                 appState.set("cellMode", "cell");
@@ -73,7 +93,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _getSubclassForLatticeType: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
-            var subclass = plist.allLatticeSubclasses[cellType][connectionType];
+            var subclass = plist.allLattices[cellType].connection[connectionType].subclass;
             if (subclass === undefined){
                 console.warn("unrecognized cell type " + cellType);
                 return null;

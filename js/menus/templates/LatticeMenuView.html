@@ -1,18 +1,27 @@
 Cell Type: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCellTypes[cellType] %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(_.keys(allCellTypes), function(key){ %>
-                <li><a class="lattice dropdownSelector" data-property="cellType" data-value="<%= key %>" href="#"><%= allCellTypes[key] %></a></li>
+            <% _.each(allLattices, function(cellTypeData, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="cellType" data-value="<%= key %>" href="#"><%= cellTypeData.name %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>
 Cell Connection:&nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allConnectionTypes[cellType][connectionType] %>-Connected<span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].name %>-Connected<span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(_.keys(allConnectionTypes[cellType]), function(key){ %>
-                <li><a class="lattice dropdownSelector" data-property="connectionType" data-value="<%= key %>" href="#"><%= allConnectionTypes[cellType][key] %></a></li>
+            <% _.each(allLattices[cellType].connection, function(connectionTypeData, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="connectionType" data-value="<%= key %>" href="#"><%= connectionTypeData.name %></a></li>
+            <% }); %>
+        </ul>
+    </div><br/><br/>
+Type:&nbsp;&nbsp;
+    <div class="btn-group">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[latticeType].name %><span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <% _.each(allLattices[cellType].connection[connectionType].type, function(latticeTypeData, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="latticeType" data-value="<%= key %>" href="#"><%= latticeTypeData.name %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>
