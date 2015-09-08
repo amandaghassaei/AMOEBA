@@ -370,6 +370,12 @@ define(['three'], function(THREE){
 
         allScripts: {
             loadFile: "Load From File..."
+        },
+
+        allUnitTypes: {
+            inches: "Inches",
+            mm: "mm",
+            um: "Micron"
         }
 
     }

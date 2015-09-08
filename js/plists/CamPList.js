@@ -202,12 +202,6 @@ define(['three'], function(THREE){
             shopbot: "Shopbot (sbp)",
             gcode: "G-Code",
             tinyG: "TinyG (G-Code)"
-        },
-
-        allUnitTypes: {
-            inches: "Inches",
-            mm: "mm",
-            um: "Micron"
         }
 
     }
