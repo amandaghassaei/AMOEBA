@@ -74,6 +74,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.set("partType", newPartType, {silent:true});
 
             var newMaterialClass = (latticeData.materialClasses || plist.allMaterialClasses)[0];
+            console.log(newMaterialClass);
             appState.set("materialClass", newMaterialClass);
         },
 

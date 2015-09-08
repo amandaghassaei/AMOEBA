@@ -3,38 +3,37 @@
         <div class="btn-group">
             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialClasses[materialClass] %><span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
-                <% _.each(_.keys(allMaterialClasses), function(key){ %>
-                    <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= allMaterialClasses[key] %></a></li>
+                <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].materialClasses || allMaterialClasses, function(val, key){ %>
+                    <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= val %></a></li>
                 <% }); %>
             </ul>
         </div><br/><br/>
 <% } %>
-<% if (allMaterialTypes[cellType][connectionType]){ %>
-    Materials:<br/>
-    <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
-        <label class="radio colorSwatches">
-            <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-            <div class="materialColorSwatch">
-            <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>
-            <span><span class="materialListTitle"><%= materials[key].name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
-        </label>
-    <% }); %>
-    <% _.each(materials, function(material, key){
-        if (key.substr(0,5) == "super") return;
-        if (material.noDelete) return; %>
-        <label class="radio colorSwatches">
-            <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-            <div class="materialColorSwatch">
-            <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
-            <span><span class="materialListTitle"><%= material.name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
-        </label>
-    <% }); %>
-    <label class="checkbox" for="realisticColorScheme">
-    <input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
-    <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-    Use realistic color scheme</label><br/>
-    <a id="newElementaryMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material Definition</a>
-<% } %><br/>
+Materials:<br/>
+<% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
+    <label class="radio colorSwatches">
+        <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <div class="materialColorSwatch">
+        <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>
+        <span><span class="materialListTitle"><%= materials[key].name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
+    </label>
+<% }); %>
+<% _.each(materials, function(material, key){
+    if (key.substr(0,5) == "super") return;
+    if (material.noDelete) return; %>
+    <label class="radio colorSwatches">
+        <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <div class="materialColorSwatch">
+        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+        <span><span class="materialListTitle"><%= material.name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
+    </label>
+<% }); %>
+<label class="checkbox" for="realisticColorScheme">
+<input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
+<span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+Use realistic color scheme</label><br/>
+<a id="newElementaryMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material Definition</a>
+<br/>
 <% if (!inSimMode){ %>
     Composite Materials:<br/>
     <% if ((cellType == "octa" && connectionType != "vertex") || cellType == "tetra"){ %>
