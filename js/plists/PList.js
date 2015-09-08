@@ -94,7 +94,22 @@ define(['three'], function(THREE){
                 connection: {
                     face: {
                         name: "Face",
-                        subclass: "octaFaceLattice"
+                        subclass: "octaFaceLattice",
+                        types: {
+                            octaTruss: {
+                                name: "Matt's Truss",
+                                parts: {
+                                    triangle:"Triangle"
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1),
+                                materialClasses: ['mechanical']
+                            },
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     },
 //                    edge: {
 //                        name: "Edge (Rotated)",
@@ -102,11 +117,45 @@ define(['three'], function(THREE){
 //                    },
                     edgeRot: {
                         name: "Edge",
-                        subclass: "octaRotEdgeLattice"
+                        subclass: "octaRotEdgeLattice",
+                        types: {
+                            snapVoxel: {
+                                name: "Ben's Voxels",
+                                parts: {
+                                    vox: "Snap Voxel (high res)",
+                                    voxLowPoly: "Snap Voxel (low res)"
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1),
+                                materialClasses: ['mechanical']
+                            },
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     },
                     vertex: {
                         name: "Vertex",
-                        subclass: "octaVertexLattice"
+                        subclass: "octaVertexLattice",
+                        type: {
+                            kennyVertex: {
+                                name: "Kenny's Lattice",
+                                parts: {
+                                    kennyTeq: "Kenny Teq",
+                                    kennyTeqHighRes: "Kenny Teq (High Res)",
+                                    samTeq: "Square"
+                //                   xShape:"X"
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1),
+                                materialClasses: ['mechanical']
+                            },
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             },
@@ -115,7 +164,14 @@ define(['three'], function(THREE){
                 connection: {//vertex: "Vertex"
                     stacked: {
                         name: "Stacked",
-                        subclass: "tetraStackedLattice"
+                        subclass: "tetraStackedLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             },
@@ -124,11 +180,34 @@ define(['three'], function(THREE){
                 connection: {
                     face: {
                         name: "Face",
-                        subclass: "cubeLattice"
+                        subclass: "cubeLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     },
                     gik: {
                         name: "GIK",
-                        subclass: "gikLattice"
+                        subclass: "gikLattice",
+                        type: {
+                            willGik: {
+                                name: "Will's Lattice",
+                                parts: {
+                                    lego: "Micro LEGO (high res)",
+                                    legoLowPoly: "Micro LEGO (low res)"
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1.28),
+                                materialClasses: ['electronic']
+                            },
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             },
@@ -137,7 +216,14 @@ define(['three'], function(THREE){
                 connection: {
                     face: {
                         name: "Face",
-                        subclass: "truncatedCubeLattice"
+                        subclass: "truncatedCubeLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             },
@@ -146,7 +232,14 @@ define(['three'], function(THREE){
                 connection: {
                     face: {
                         name: "Face",
-                        subclass: "kelvinLattice"
+                        subclass: "kelvinLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             },
@@ -155,49 +248,28 @@ define(['three'], function(THREE){
                 connection: {
                     face: {
                         name: "Face",
-                        subclass: "hexLattice"
+                        subclass: "hexLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     },
                     faceRot: {
                         name: "Face (Rotated)",
-                        subclass: "hexRotLattice"
+                        subclass: "hexRotLattice",
+                        type: {
+                            default: {
+                                name: "Default",
+                                parts: null,
+                                aspectRatio: new THREE.Vector3(1,1,1)
+                            }
+                        }
                     }
                 }
             }
-        },
-
-
-        allPartTypes:{
-            octa:{
-                face: {
-                    triangle:"Triangle"
-                },
-                edge: null,
-                edgeRot: {
-                    vox: "Snap Voxel (high res)",
-                    voxLowPoly: "Snap Voxel (low res)"
-                },
-                vertex: {
-                    kennyTeq: "Kenny Teq",
-                    kennyTeqHighRes: "Kenny Teq (High Res)",
-                    samTeq: "Square"
-//                   xShape:"X"
-                }
-            },
-            tetra: {vertex: null},
-            cube: {face: null,
-                gik: {
-                lego: "Micro LEGO (high res)",
-                legoLowPoly: "Micro LEGO (low res)"
-            }
-            },
-            truncatedCube: {
-                face: null//{
-//                    square:"Square",
-//                    xShape:"X"
-//                }
-            },
-            kelvin: {face: null},
-            hex: {face: null, faceRot: null}
         },
 
         allCellModes:{//supercell, cell, part, node, beam
@@ -207,25 +279,6 @@ define(['three'], function(THREE){
             hide: "Hide Cells"
         },
 
-        allMaterialTypes:{
-            octa:{
-                face: 'mechanical',
-                edge: 'mechanical',
-                edgeRot: 'mechanical',
-                vertex: 'mechanical'
-            },
-            tetra: {
-                stacked: 'mechanical',
-                vertex: 'mechanical'
-            },
-            cube: {
-                face: 'electronic',
-                gik: 'electronic'
-            },
-            truncatedCube: {face: 'mechanical'},
-            kelvin: {face: 'mechanical'},
-            hex: {face: 'mechanical', faceRot: 'mechanical'}
-        },
 
         allMaterialClasses:{
             mechanical: "Structural",
