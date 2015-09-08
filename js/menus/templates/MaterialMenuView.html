@@ -3,8 +3,8 @@
         <div class="btn-group">
             <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialClasses[materialClass] %><span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
-                <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].materialClasses || allMaterialClasses, function(val, key){ %>
-                    <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= val %></a></li>
+                <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].materialClasses || _.keys(allMaterialClasses), function(key){ %>
+                    <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= allMaterialClasses[key] %></a></li>
                 <% }); %>
             </ul>
         </div><br/><br/>
