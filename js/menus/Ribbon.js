@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             this.listenTo(this.model, "change:highlightMode", this.render);
             this.listenTo(this.model, "change:cellsVisible", this.render);
             this.listenTo(this.model, "change:axesAreVisible", this.render);
-            this.listenTo(lattice, "change:cellType change:connectionType", this.render);
+            this.listenTo(lattice, "change:cellType change:connectionType change:latticeType", this.render);
             this.render();
         },
 

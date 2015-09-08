@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
             //bind events
             this.listenTo(this.model, "change:currentNav", this.render);
-            this.listenTo(lattice, "change:cellType change:connectionType", this._populateAndShow);
+            this.listenTo(lattice, "change:cellType change:connectionType change:latticeType", this._populateAndShow);
             this.listenTo(this.model, "change:currentTab", function(){
                 if (!this.model.changedAttributes() || this.model.changedAttributes()["currentNav"]) return;
                 this._updateCurrentTab();

@@ -1,9 +1,10 @@
+<% var latticeData = allLattices[cellType].connection[connectionType].type[latticeType]; %>
 Part Type: &nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allPartTypes[cellType][connectionType][partType] %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= latticeData.parts[partType].name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(_.keys(allPartTypes[cellType][connectionType]), function(key){ %>
-                <li><a class="lattice dropdownSelector" data-property="partType" data-value="<%= key %>" href="#"><%= allPartTypes[cellType][connectionType][key] %></a></li>
+            <% _.each(latticeData.parts, function(val, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="partType" data-value="<%= key %>" href="#"><%= val.name %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>

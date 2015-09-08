@@ -99,7 +99,9 @@ define(['three'], function(THREE){
                             octaTruss: {
                                 name: "Matt's Truss",
                                 parts: {
-                                    triangle:"Triangle"
+                                    triangle: {
+                                        name: "Triangle"
+                                    }
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1),
                                 materialClasses: ['mechanical']
@@ -122,8 +124,12 @@ define(['three'], function(THREE){
                             snapVoxel: {
                                 name: "Ben's Voxels",
                                 parts: {
-                                    vox: "Snap Voxel (high res)",
-                                    voxLowPoly: "Snap Voxel (low res)"
+                                    vox: {
+                                        name: "Snap Voxel (high res)"
+                                    },
+                                    voxLowPoly: {
+                                        name: "Snap Voxel (low res)"
+                                    }
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1),
                                 materialClasses: ['mechanical']
@@ -142,9 +148,15 @@ define(['three'], function(THREE){
                             kennyVertex: {
                                 name: "Kenny's Lattice",
                                 parts: {
-                                    kennyTeq: "Kenny Teq",
-                                    kennyTeqHighRes: "Kenny Teq (High Res)",
-                                    samTeq: "Square"
+                                    kennyTeq: {
+                                        name: "Kenny Tech"
+                                    },
+                                    kennyTeqHighRes: {
+                                        name: "Kenny Tech (High Res)"
+                                    },
+                                    samTeq: {
+                                        name: "Square"
+                                    }
                 //                   xShape:"X"
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1),
@@ -196,8 +208,12 @@ define(['three'], function(THREE){
                             willGik: {
                                 name: "Will's Lattice",
                                 parts: {
-                                    lego: "Micro LEGO (high res)",
-                                    legoLowPoly: "Micro LEGO (low res)"
+                                    lego: {
+                                        name: "Micro LEGO (high res)"
+                                    },
+                                    legoLowPoly: {
+                                        name: "Micro LEGO (low res)"
+                                    }
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1.28),
                                 materialClasses: ['electronic']
