@@ -105,9 +105,10 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _updateInt: function(e){
             e.preventDefault();
             var $target = $(e.target);
-            var newVal = parseInt($target.val());
+            var val = $target.val();
+            if (val == "") return;
+            var newVal = parseInt(val);
             if (isNaN(newVal)) {
-                if (newVal == "") return;
                 console.warn("value is NaN");
                 return;
             }

@@ -41,7 +41,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //lattice type
 
-        _updateLatticeType: function(cells, subclass){//do not clear cells if loading from file (cells array contains important metadata)
+        _getLatticePlistData: function(){
+            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("latticeType")];
+        },
+
+        _updateLatticeConfig: function(cells, subclass){//do not clear cells if loading from file (cells array contains important metadata)
 
             if (!cells) {
                 if (this._setToDefaultsSilently) this._setToDefaultsSilently();

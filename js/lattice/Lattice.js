@@ -18,6 +18,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             latticeType: "willGik",
             partType: null,
 
+            aspectRatio: null,
+
             denseCellsMin: null,
             overlapDetected: false,
 
@@ -32,8 +34,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             //todo change latticeType
             this.listenTo(this, "change:partType change:latticeType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
-                this._updateLatticeType();//pass no params
+                this._updateLatticeConfig();//pass no params
             });
+            this.listenTo(this, "change:latticeType", this._updateLatticeType);
             this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
@@ -41,7 +44,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 this.updateThreeViewTarget();
             });
 
-            this._updateLatticeType();
+            this._updateLatticeConfig();
         },
 
 
@@ -73,12 +76,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
             this.set("partType", newPartType, {silent:true});
 
-            var newMaterialClass = (latticeData.materialClasses || plist.allMaterialClasses)[0];
-            appState.set("materialClass", newMaterialClass);
+            this._updateLatticeType();
         },
 
-        _getLatticePlistData: function(){
-            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("latticeType")];
+        _updateLatticeType: function(){
+            var latticeData = this._getLatticePlistData();
+            this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
+
+            var newMaterialClass = (latticeData.materialClasses || _.keys(plist.allMaterialClasses))[0];
+            appState.set("materialClass", newMaterialClass);
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
@@ -244,7 +250,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
                     var cells = null;
                     if (data) cells = data.sparseCells;
-                    _self._updateLatticeType(cells, self._getSubclassForLatticeType());
+                    _self._updateLatticeConfig(cells, self._getSubclassForLatticeType());
                     appState.set("currentNav", "navComposite");
                 });
 

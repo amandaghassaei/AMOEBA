@@ -105,7 +105,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         lattice.clearCells();
         var sparseCells = data.assembly.sparseCells;
         _setData(lattice, _.omit(data.assembly, "sparseCells"));
-        if (sparseCells) lattice._updateLatticeType(sparseCells);
+        if (sparseCells) lattice._updateLatticeConfig(sparseCells);
         ribbon.render();
         menuWrapper.render();
     }
