@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
                 this.popup.focus();
                 return;
             }
-            this.popup = window.open('SerialMonitor.html', '', 'height=400, width=400, titlebar=no, toolbar=no, menubar=yes, scrollbars=no, resizable=yes, location=no, directories=no, status=no');
+            this.popup = window.open('js/SerialMonitor/index.html', '', 'height=400, width=400, titlebar=no, toolbar=no, menubar=yes, scrollbars=no, resizable=yes, location=no, directories=no, status=no');
             var self = this;
             $(this.popup).unload(function(){
                 self.onClose();

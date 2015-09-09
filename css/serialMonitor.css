@@ -1,7 +1,21 @@
-  #serialMonitorSend {
+  #sendSerialMessage {
     position: absolute;
     bottom: 0px;
     border-radius: 0px;
     border: none;
     border-top: 2px solid #bdc3c7;
+  }
+
+  #serialMonitorOutput {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    padding: 10px 20px 100px 20px;
+    font-family: Courier, monospace;
+    font-size: 13px;
+    line-height: 25px;
+  }
+
+  #serialMonitorView {
+      overflow: hidden;
   }
