@@ -25,6 +25,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             basePlaneIsVisible:true,
             highlighterIsVisible:true,
             axesAreVisible: false,
+            focusOnLattice: true,
 
             //key bindings
             shift: false,
@@ -63,6 +64,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             this.listenTo(this, "change:gikLength", this._gikLengthChanged);
             this.listenTo(this, "change:turnOffRendering", this._renderingOnOff);
             this.listenTo(this, "change:axesAreVisible", this._showAxes);
+            this.listenTo(this, "change:focusOnLattice", this._focusOnLattice);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
@@ -161,6 +163,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 axes.setVisibility(visible);
                 three.render();
             })
+        },
+
+        _focusOnLattice: function(){
+            if (this.get("focusOnLattice")) this.lattice.updateThreeViewTarget();
+            else {
+                this.lattice.updateThreeViewTarget(new THREE.Vector3(0,0,0));
+                this.reset3DNavigation();
+            }
         },
 
         reset3DNavigation: function(){
