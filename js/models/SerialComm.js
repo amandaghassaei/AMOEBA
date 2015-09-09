@@ -50,6 +50,12 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             if (property === null || property === undefined || value === null || value === undefined) return;
             this.socket.emit(property, value);//always pass user interaction on
             this.set(property, value);
+        },
+
+        openSerialMonitor: function(){
+            require(['serialMonitorController'], function(serialMonitorController){
+                serialMonitorController.open();
+            });
         }
 
     });
@@ -86,8 +92,9 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             serialComm.set("portConnected", false);
         });
 
-        socket.on("errorMsg", function(error){
-            serialComm.set("error", error);
+        socket.on("errorMsg", function(data){
+            console.log(data);
+            serialComm.set("error", data.error);
         });
 
         socket.on("error", function(error){

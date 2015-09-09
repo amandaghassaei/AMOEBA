@@ -159,7 +159,7 @@ io.on('connection', function(socket){
 
     function onPortError(error){
         console.log("Serial port error " + error);
-        socket.emit("errorMsg", error);
+        socket.emit("errorMsg", {error:String(error)});
     }
 
 });

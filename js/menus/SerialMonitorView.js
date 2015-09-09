@@ -1,35 +1,64 @@
 /**
- * Created by aghassaei on 9/8/15.
+ * Created by aghassaei on 9/9/15.
  */
 
+require.config({
 
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
+    baseUrl: 'js',
+
+    paths: {
+        jquery: '../dependencies/jquery-2.1.3',
+        underscore: '../dependencies/underscore',
+        backbone: '../dependencies/backbone'
+    },
+
+    shim: {
+        three: {
+            exports: 'THREE'
+        },
+        orbitControls: {
+            deps: ['three'],
+            exports: 'THREE'
+        },
+        stlLoader: {
+            deps: ['three'],
+            exports: 'THREE'
+        },
+        fileSaverLib: {
+            exports: 'saveAs'
+        },
+        flatUI: {
+            deps: ['jquery']
+        },
+        bootstrapSlider:{
+            deps: ['jquery'],
+            exports: '$'
+        },
+        'socketio': {
+            exports: 'io'
+        },
+        'numeric': {
+            exports: 'numeric'
+        }
+    }
+
+});
+
+console.log("hi");
+
+require(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
+
+    console.log("here45");
 
     var SerialMonitorView = Backbone.View.extend({
 
         el: "#serialMonitorView",
 
-        events: {
-        },
-
         initialize: function(){
-            this.open();
-        },
-
-        open: function(){
-            window.open('SerialMonitor.html', '', 'height=400, width=400, titlebar=no, toolbar=no, menubar=yes, scrollbars=no, resizable=yes, location=no, directories=no, status=no');
-        },
-
-        onClose: function(){
-
-        },
-
-        _destroy: function(){
-
+            $("#serialMonitorView").html("working");
         }
 
     });
 
-    return SerialMonitorView;
-
+    new SerialMonitorView();
 });

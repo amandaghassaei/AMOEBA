@@ -49,9 +49,7 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
 
         _openSerialMonitor: function(e){
             e.preventDefault();
-            require(['serialMonitor'], function(SerialMonitor){
-                var serialMonitor = new SerialMonitor();
-            });
+            serialComm.openSerialMonitor();
         },
 
         _makeTemplateJSON: function(){

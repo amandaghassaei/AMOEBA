@@ -1,7 +1,7 @@
-<% if(error){ %>
-    <div class="inlineWarning"><%= error %></div>
-<% } %>
 <% if(connected){ %>
+    <% if(error){ %>
+        <div class="inlineWarning"><%= error %></div>
+    <% } %>
     Status: &nbsp;&nbsp;<% if (portConnected){ %> Connected <% } else { %> <span class="red">Disconnected</span> <% } %><br/><br/>
     Baud Rate: &nbsp;&nbsp;
         <div class="btn-group">

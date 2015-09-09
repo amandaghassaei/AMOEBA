@@ -142,7 +142,7 @@ require.config({
         assemblerSetupMenu: 'menus/AssemblerSetupMenuView',
         editComponentMenu: 'menus/EditComponentMenuView',
         commParentMenu: 'menus/CommParentMenu',
-        serialMonitor: 'menus/SerialMonitorView',
+        serialMonitorController: 'menus/SerialMonitorController',
 
         //templates
         navViewMenuTemplate: 'menus/templates/NavViewMenu.html',
