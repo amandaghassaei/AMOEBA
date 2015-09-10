@@ -5,11 +5,13 @@
 
 define(['backbone'], function(Backbone){
 
-    return Backbone.Model.extend({
+    var SerialMonitor = Backbone.Model.extend({
 
         defaults: {
-            autoscroll: true
+            autoscroll: false
         }
 
     });
+
+    return new SerialMonitor();
 });

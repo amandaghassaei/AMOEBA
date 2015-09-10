@@ -35,6 +35,6 @@ require.config({
 
 });
 
-require(['serialMonitorView', 'serialMonitor'], function(SerialMonitorView, SerialMonitor){
-    new SerialMonitorView({model: new SerialMonitor()});
+require(['serialMonitorView', 'serialMonitor'], function(SerialMonitorView, serialMonitor){
+    new SerialMonitorView({model: serialMonitor});
 });
