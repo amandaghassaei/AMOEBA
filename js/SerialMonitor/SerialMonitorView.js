@@ -63,11 +63,17 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
         },
 
         __sendMessage: function(message){
-            $("#serialMonitorOutput").append("<span class='outgoing'>" + message + "</span><br/>");
+            this._addOutputData("<span class='outgoing'>" + message + "</span><br/>");
         },
 
         _updateIncomingMessage: function(){
-            $("#serialMonitorOutput").append("<span class='incoming'>" + serialComm.get("lastMessageReceived") + "</span><br/>");
+            this._addOutputData("<span class='incoming'>" + serialComm.get("lastMessageReceived") + "</span><br/>");
+        },
+
+        _addOutputData: function(html){
+            var $output = $("#serialMonitorOutput");
+            $output.append(html);
+            if (this.model.get("autoscroll")) $output.animate({scrollTop:$output.scrollTop()+$output.innerHeight()}, "fast");
         },
 
         template: _.template(template)
