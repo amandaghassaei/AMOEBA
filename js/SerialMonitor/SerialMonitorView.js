@@ -3,19 +3,26 @@
  */
 
 
-define(['jquery', 'underscore', 'commParentMenu', 'text!SerialMonitorView.html'], function($, _, CommParentMenu, template){
+define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMonitorView.html'],
+    function($, _, CommParentMenu, serialComm, template){
 
     return CommParentMenu.extend({
 
         el: "#serialMonitorView",
 
+        events: {
+        },
+
         __initialize: function(){
-            $("#serialMonitorOutput").html("flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>)flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>)flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>");
+            this.render();
         },
 
         _makeTemplateJSON: function(){
-            console.log("render");
             return this.model.toJSON();
+        },
+
+        _updateIncomingMessage: function(){
+            $("#serialMonitorOutput").append(serialComm.get("lastMessageReceived") + "<br/>");
         },
 
         template: _.template(template)

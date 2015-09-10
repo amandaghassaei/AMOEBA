@@ -32,7 +32,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'commPlist'
         },
 
         _sendMessage: function(e){
-            console.log("here");
             e.preventDefault();
             var message = $("#sendSerialMessage").val();
             $("#sendSerialMessage").val("");
