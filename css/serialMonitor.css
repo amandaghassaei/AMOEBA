@@ -19,3 +19,27 @@
   #serialMonitorView {
       overflow: hidden;
   }
+
+
+  .btn {
+      padding: 5px 10px;
+      margin: 5px 10px;
+  }
+
+  #controlPanel {
+    background: #eee;
+    width: 100%;
+    position: absolute;
+    bottom: 40px;
+  }
+
+  .checkbox input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .radio input[type="checkbox"].custom-checkbox:checked + .icons .icon-checked, .checkbox input[type="radio"].custom-radio:checked + .icons .icon-checked, .radio input[type="radio"].custom-radio:checked + .icons .icon-checked {
+    color: #888;
+  }
+
+  #autoscrollCheckbox {
+    display: inline-block;
+    position: absolute;
+    margin-left: 10px;
+    margin-top: 12px;
+  }

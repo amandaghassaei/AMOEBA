@@ -11,6 +11,7 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
         el: "#serialMonitorView",
 
         events: {
+            "click #clearMonitor":                   "_clear"
         },
 
         __initialize: function(){
@@ -19,6 +20,11 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
 
         _makeTemplateJSON: function(){
             return this.model.toJSON();
+        },
+
+        _clear: function(e){
+            e.preventDefault();
+            $("#serialMonitorOutput").html("");
         },
 
         _updateIncomingMessage: function(){
