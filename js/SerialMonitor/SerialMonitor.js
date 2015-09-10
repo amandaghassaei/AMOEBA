@@ -8,7 +8,7 @@ define(['backbone'], function(Backbone){
     var SerialMonitor = Backbone.Model.extend({
 
         defaults: {
-            autoscroll: false
+            autoscroll: true
         }
 
     });

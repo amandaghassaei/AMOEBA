@@ -43,3 +43,11 @@
     margin-left: 10px;
     margin-top: 12px;
   }
+
+  span.incoming {
+        color: #999;
+  }
+
+  span.outgoing {
+        font-weight:700;
+  }

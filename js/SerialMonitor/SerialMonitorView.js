@@ -62,8 +62,12 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             $("#serialMonitorOutput").html("");
         },
 
+        __sendMessage: function(message){
+            $("#serialMonitorOutput").append("<span class='outgoing'>" + message + "</span><br/>");
+        },
+
         _updateIncomingMessage: function(){
-            $("#serialMonitorOutput").append(serialComm.get("lastMessageReceived") + "<br/>");
+            $("#serialMonitorOutput").append("<span class='incoming'>" + serialComm.get("lastMessageReceived") + "</span><br/>");
         },
 
         template: _.template(template)
