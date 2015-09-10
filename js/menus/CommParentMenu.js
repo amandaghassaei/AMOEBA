@@ -4,8 +4,8 @@
 
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'text!setupCommMenuTemplate', 'commPlist'],
-    function($, _, MenuParentView, plist, serialComm, template, commPlist){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'commPlist'],
+    function($, _, MenuParentView, plist, serialComm, commPlist){
 
 
     return MenuParentView.extend({

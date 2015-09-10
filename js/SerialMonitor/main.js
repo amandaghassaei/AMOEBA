@@ -9,13 +9,32 @@ require.config({
         jquery: '../../dependencies/jquery-2.1.3',
         underscore: '../../dependencies/underscore',
         backbone: '../../dependencies/backbone',
+        text: '../../dependencies/require/text',
+        three: '../../dependencies/three',
+        socketio: '../../dependencies/socket.io-1.3.5',
+
         serialMonitor: 'SerialMonitor',
-        serialMonitorView: 'SerialMonitorView'
+        serialMonitorView: 'SerialMonitorView',
+
+        menuParent: '../menus/MenuParentView',
+        commParentMenu: '../menus/CommParentMenu',
+        plist: '../plists/PList',
+        commPlist: '../plists/commPlist',
+        serialComm: '../models/SerialComm'
+
+    },
+
+    shim: {
+        three: {
+            exports: 'THREE'
+        },
+        'socketio': {
+            exports: 'io'
+        }
     }
 
 });
 
-console.log("herefsdf");
 require(['serialMonitorView', 'serialMonitor'], function(SerialMonitorView, SerialMonitor){
     new SerialMonitorView({model: new SerialMonitor()});
 });

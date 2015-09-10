@@ -3,15 +3,22 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
+define(['jquery', 'underscore', 'commParentMenu', 'text!SerialMonitorView.html'], function($, _, CommParentMenu, template){
 
-    return Backbone.View.extend({
+    return CommParentMenu.extend({
 
         el: "#serialMonitorView",
 
-        initialize: function(){
+        __initialize: function(){
             $("#serialMonitorOutput").html("flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>)flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>)flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>flksadlfkj<br/>");
-        }
+        },
+
+        _makeTemplateJSON: function(){
+            console.log("render");
+            return this.model.toJSON();
+        },
+
+        template: _.template(template)
 
     });
 });
