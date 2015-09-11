@@ -48,22 +48,22 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         _decrementLineNum: function(e){
             e.preventDefault();
             var nextLine = this.nextLine - 1;
-            if (nextLine < 0) nextLine = 0;
             this._setNextLine(nextLine);
         },
 
         _incrementLineNum: function(e){
             e.preventDefault();
             var nextLine = this.nextLine + 1;
-            var length = cam.get("dataOut").split("\n").length;
-            if (nextLine > length-1) nextLine = length-1;
             this._setNextLine(nextLine);
         },
 
-        _setNextLine: function(val){
-            this.nextLine = val;
+        _setNextLine: function(nextLine){
+            var length = cam.get("dataOut").split("\n").length;
+            if (nextLine < 0) nextLine = length-1;
+            if (nextLine > length-1) nextLine = 0;
+            this.nextLine = nextLine;
             $("#nextLine").val(this.nextLine);
-            this._drawGcodeHighlighter(val);
+            this._drawGcodeHighlighter(nextLine);
         },
 
         _openSerialMonitor: function(e){
@@ -77,7 +77,6 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
         _drawGcodeHighlighter: function(lineNum){
-            if (lineNum == 0) return;
             var code = cam.get("dataOut").split("\n");
             code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
             var newText = code.join("\n");
@@ -87,7 +86,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             if (!$editor.position() || !$highlighter.position()) return;//todo weird bug
             var highlighterHeight = $highlighter.position().top - $editor.position().top;
             var desiredHeight = $editor.height()/2;
-            if (highlighterHeight > desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
+            if (highlighterHeight != desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
         },
 
         _makeTemplateJSON: function(){
@@ -96,7 +95,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _render: function(){
             if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
-            this._drawGcodeHighlighter();
+            this._drawGcodeHighlighter(this.nextLine);
         },
 
         template: _.template(template)
