@@ -54,6 +54,10 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'commPlist', 'te
             return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {streaming: this.isStreaming});
         },
 
+        _render: function(){
+            if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
+        },
+
         template: _.template(template)
 
     });

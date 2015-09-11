@@ -9,7 +9,7 @@
             <a href="#" id="streamCommands" class="btn btn-block btn-lg btn-success">Stream</a>
         <% } %>
         <br/>
-        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"><br/></pre><br/>
+        Incoming: &nbsp;&nbsp;<pre id="incomingSerialMessage"><%= lastMessageReceived %></pre><br/><br/>
         Out: &nbsp;&nbsp;<input id="sendSerialMessage" value="" placeholder="Send Message" class="seventyFiveWidth form-control unresponsiveInput" type="text"><br/><br/>
         Next Line: &nbsp;&nbsp;<input id="nextLine" value="" placeholder="##" class="intInput form-control unresponsiveInput" type="text">
         <a href="#" id="previousLineButton" class="btn btn-lg btn-default">Prev</a>

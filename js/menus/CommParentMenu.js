@@ -41,10 +41,10 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'commPlist'
 
         _updateIncomingMessage: function(){
             var message = serialComm.get("lastMessageReceived");
-            console.log(message);
             var $message = $("#incomingSerialMessage");
             $message.html(message);
             $message.css("background", "#ffff99");
+            $message.css('display', 'inline-block');
             if (!this.inTimeout) {
                 this.inTimeout = true;
                 var self = this;

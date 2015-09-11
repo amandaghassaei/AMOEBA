@@ -13,7 +13,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             portName: "Select Port",
             baudRate: 200,
             error: null,
-            lastMessageReceived: "",
+            lastMessageReceived: null,
             lastMessageSent: ""
         },
 
@@ -73,6 +73,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         });
 
         socket.on('dataIn', function(data){
+            if (data == "" || data == '\n' || data == "\r") return;
             serialComm.set("lastMessageReceived", data, {silent:true});
             serialComm.trigger("change:lastMessageReceived");
         });

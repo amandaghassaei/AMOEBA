@@ -56,6 +56,10 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
             return _.extend(serialComm.toJSON(), commPlist);
         },
 
+        _render: function(){
+            if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
+        },
+
         template: _.template(template),
 
         helpFile: "" +

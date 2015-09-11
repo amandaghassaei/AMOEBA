@@ -499,3 +499,13 @@ label {
     border-top-color: #aaa;
     border-bottom-color: #aaa;
 }
+
+#incomingSerialMessage{
+    background-color: white;
+    white-space: nowrap;
+    max-width: 250px;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    position: absolute;
+}
