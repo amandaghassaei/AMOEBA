@@ -92,7 +92,6 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
 
         socket.on('connected', function(data){
             serialComm.set("connected", true, {silent:true});
-            console.log(data);
             _.each(_.keys(data), function(key){
                 if (data[key] !== null) serialComm.set(key, data[key]);
             });

@@ -10,7 +10,7 @@
         <% } %>
         <br/>
         <a href="#" id="openSerialMonitor" class="btn btn-block btn-lg btn-default">Open Serial Monitor</a><br/>
-        Next Line: &nbsp;&nbsp;<input id="nextLine" value="" placeholder="##" class="intInput form-control unresponsiveInput" type="text">
+        Next Line: &nbsp;&nbsp;<input id="nextLine" value=<%= nextLine %> placeholder="##" class="intInput form-control unresponsiveInput" type="text">
         &nbsp;&nbsp;<a href="#" id="previousLineButton" class="btn btn-lg btn-default">Prev</a>
         &nbsp;&nbsp;<a href="#" id="nextLineButton" class="btn btn-lg btn-default">Next</a><br/><br/>
         <div id="gcodeEditor"><%= dataOut %></div><br/>

@@ -19,9 +19,12 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
 
         _initialize: function(){
+
             this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
             this.listenTo(serialComm, "change:isStreaming", this.render);
-            this.listenTo(cam, "change:simLineNumber", this._drawGcodeHighlighter);
+            this.listenTo(cam, "change:simLineNumber", this._lineNumChanged);
+
+            this.nextLine = cam.get("simLineNumber");
         },
 
         _startStream: function(e){
@@ -44,12 +47,23 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _decrementLineNum: function(e){
             e.preventDefault();
-            console.log("prev");
+            var nextLine = this.nextLine - 1;
+            if (nextLine < 0) nextLine = 0;
+            this._setNextLine(nextLine);
         },
 
         _incrementLineNum: function(e){
             e.preventDefault();
-            console.log("next");
+            var nextLine = this.nextLine + 1;
+            var length = cam.get("dataOut").split("\n").length;
+            if (nextLine > length-1) nextLine = length-1;
+            this._setNextLine(nextLine);
+        },
+
+        _setNextLine: function(val){
+            this.nextLine = val;
+            $("#nextLine").val(this.nextLine);
+            this._drawGcodeHighlighter(val);
         },
 
         _openSerialMonitor: function(e){
@@ -57,8 +71,12 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             serialComm.openSerialMonitor();
         },
 
-        _drawGcodeHighlighter: function(){
+        _lineNumChanged: function(){
             var lineNum = cam.get("simLineNumber");
+            this._setNextLine(lineNum);
+        },
+
+        _drawGcodeHighlighter: function(lineNum){
             if (lineNum == 0) return;
             var code = cam.get("dataOut").split("\n");
             code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
@@ -73,7 +91,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist);
+            return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {nextLine:this.nextLine});
         },
 
         _render: function(){
