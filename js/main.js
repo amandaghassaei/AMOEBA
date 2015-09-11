@@ -40,6 +40,7 @@ require.config({
         socketio: '../dependencies/socket.io-1.3.5',
         serialComm: 'models/SerialComm',
         commPlist: 'plists/CommPlist',
+        machineState: 'models/MachineState',
 
         //lattice classes and extra methods
         latticeBase: 'lattice/LatticeBase',

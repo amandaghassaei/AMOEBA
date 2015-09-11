@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/17/15.
  */
 
-define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
+define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backbone, io, MachineState){
 
     var SerialComm = Backbone.Model.extend({
 
@@ -18,6 +18,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         },
 
         initialize: function(){
+            this.machineState = null;
             this.attemptToConnectToNode();
         },
 
@@ -44,6 +45,15 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
 
         flushBuffer: function(){
             this.socket.emit("flush");
+        },
+
+        refreshMachineState: function(){//when updating connection, create a new instance of machine state
+            if (this.machineState) this.machineState.destroy();
+            this.machineState = new MachineState();
+        },
+
+        getMachineState: function(){
+            return this.machineState;
         },
 
         setProperty: function(property, value){//portName, baudRate
@@ -93,6 +103,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             serialComm.set("portName", data.portName);
             serialComm.set("portConnected", true);
             serialComm.set("error", false);
+            serialComm.refreshMachineState();
         });
 
         socket.on('portDisconnected', function(data){

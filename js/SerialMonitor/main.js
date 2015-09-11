@@ -15,12 +15,14 @@ require.config({
 
         serialMonitor: 'SerialMonitor',
         serialMonitorView: 'SerialMonitorView',
+        positionControlPanelView: 'PositionControlPanelView',
 
         menuParent: '../menus/MenuParentView',
         commParentMenu: '../menus/CommParentMenu',
         plist: '../plists/PList',
         commPlist: '../plists/commPlist',
-        serialComm: '../models/SerialComm'
+        serialComm: '../models/SerialComm',
+        machineState: '../models/MachineState'
 
     },
 
@@ -35,6 +37,8 @@ require.config({
 
 });
 
-require(['serialMonitorView', 'serialMonitor'], function(SerialMonitorView, serialMonitor){
+require(['serialMonitorView', 'serialMonitor', 'positionControlPanelView', 'serialComm'],
+    function(SerialMonitorView, serialMonitor, PositionControlPanelView, serialComm){
     new SerialMonitorView({model: serialMonitor});
+    new PositionControlPanelView({model:serialComm});
 });
