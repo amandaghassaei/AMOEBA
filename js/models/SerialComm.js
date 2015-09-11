@@ -77,6 +77,11 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
             serialComm.trigger("change:lastMessageReceived");
         });
 
+        socket.on('dataSent', function(data){
+            serialComm.set("lastMessageSent", data, {silent:true});
+            serialComm.trigger("change:lastMessageSent");
+        });
+
         socket.on('portConnected', function(data){
             console.log("connected port " + data.portName + " at " + data.baudRate);
             serialComm.set("baudRate", data.baudRate);

@@ -37,7 +37,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'commPlist'
             $("#sendSerialMessage").val("");
             if (message == "") return;
             serialComm.send(message);
-            if (this.__sendMessage) this.__sendMessage(message);
         },
 
         _updateIncomingMessage: function(){

@@ -10,6 +10,9 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
 
         el: "#serialMonitorView",
 
+        parentEvents: {
+        },
+
         events: {
             "click #clearMonitor":                         "render",
             "change input:checkbox":                       "_clickCheckbox"
@@ -17,12 +20,25 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
 
         __initialize: function(){
 
+            _.bindAll(this, "_onKeyUp");
+            $(document).bind('keyup', {}, this._onKeyUp);
+
+            this.listenTo(serialComm, "change:lastMessageSent", this._updateOutgoingMessage);
             this.listenTo(serialComm, "change:baudRate change:portName", this.render);
             this.listenTo(serialComm, "change:connected", function(){
                 if (!serialComm.get("connected")) this._close();
-            })
+            });
 
             this.render();
+        },
+
+        _onKeyUp: function(e){
+            var $output = $("#sendSerialMessage");
+            if ($output.is(":focus")){
+                if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
+                else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
+                else if (e.keyCode == 13) this._sendMessage(e);
+            }
         },
 
         _clickCheckbox: function(e){
@@ -63,8 +79,10 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             return this.model.toJSON();
         },
 
-        __sendMessage: function(message){
+        _updateOutgoingMessage: function(){
+            var message = serialComm.get("lastMessageSent");
             this._addOutputData("<span class='outgoing'>" + message + "</span><br/>");
+            this.model.appendOutput(message);
         },
 
         _updateIncomingMessage: function(){
