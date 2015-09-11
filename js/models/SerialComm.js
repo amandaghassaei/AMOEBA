@@ -53,6 +53,10 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         },
 
         openSerialMonitor: function(){
+            if (!this.get("connected")) {
+                console.warn("can't open serial monitor if not connected to node server");
+                return;
+            }
             require(['serialMonitorController'], function(serialMonitorController){
                 serialMonitorController.open();
             });

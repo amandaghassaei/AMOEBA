@@ -46,9 +46,18 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             }
 
             if ($(".floatInput").is(":focus")) this._updateFloat(e);
-            if ($(".intInput").is(":focus")) this._updateInt(e);
-            if ($(".textInput").is(":focus")) this._updateString(e);
-            if ($(".hexInput").is(":focus")) this._updateHex(e);
+            else if ($(".intInput").is(":focus")) this._updateInt(e);
+            else if ($(".textInput").is(":focus")) this._updateString(e);
+            else if ($(".hexInput").is(":focus")) this._updateHex(e);
+
+            else if (!$("input").is(":focus") && e.keyCode == 77 && (e.ctrlKey || e.metaKey) && e.shiftKey && appState.get("currentNav") == "navComm"){
+                e.preventDefault();
+                require(['serialComm'], function(serialComm){
+                    serialComm.openSerialMonitor();
+                });
+            }
+            console.log(e);
+
         },
 
         _updateString: function(e){

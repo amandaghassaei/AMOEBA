@@ -17,7 +17,6 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
             "click #openSerialMonitor":                         "_openSerialMonitor"
         },
 
-
         __initialize: function(){
         },
 

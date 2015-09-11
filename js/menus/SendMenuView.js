@@ -2,10 +2,10 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'commPlist', 'text!sendMenuTemplate', 'cam', 'camPlist'],
-    function($, _, CommParentMenu, serialComm, commPlist, template, cam, camPlist){
+define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!sendMenuTemplate', 'cam', 'camPlist'],
+    function($, _, MenuParent, serialComm, commPlist, template, cam, camPlist){
 
-    return CommParentMenu.extend({
+    return MenuParent.extend({
 
 
         events: {
