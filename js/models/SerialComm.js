@@ -72,7 +72,6 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
         setProperty: function(property, value){//portName, baudRate
             if (property === null || property === undefined || value === null || value === undefined) return;
             this.socket.emit(property, value);//always pass user interaction on
-            this.set(property, value);
         },
 
         openSerialMonitor: function(){
@@ -93,10 +92,10 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
 
         socket.on('connected', function(data){
             serialComm.set("connected", true, {silent:true});
+            console.log(data);
             _.each(_.keys(data), function(key){
-                if (data[key] !== null) serialComm.set(key, data[key], {silent:true});
+                if (data[key] !== null) serialComm.set(key, data[key]);
             });
-            serialComm.trigger("change");
         });
 
         socket.on('dataIn', function(data){
@@ -111,7 +110,6 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
         });
 
         socket.on('isStreaming', function(data){
-            console.log(data);
             serialComm.set("isStreaming", data);
         });
 
