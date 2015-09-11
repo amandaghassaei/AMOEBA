@@ -13,7 +13,8 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             "click #pauseStream":                                   "_pauseStream",
             "click #stopMachine":                                   "_stopMachine",
             "click #previousLineButton":                            "_decrementLineNum",
-            "click #nextLineButton":                                "_incrementLineNum"
+            "click #nextLineButton":                                "_incrementLineNum",
+            "click #openSerialMonitor":                             "_openSerialMonitor"
         },
 
 
@@ -23,18 +24,21 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _startStream: function(e){
             e.preventDefault();
+            this.model.set("stockSimulationPlaying", true);
             this.isStreaming = true;
             this.render();
         },
 
         _pauseStream: function(e){
             e.preventDefault();
+            this.model.set("stockSimulationPlaying", false);
             this.isStreaming = false;
             this.render();
         },
 
         _stopMachine: function(e){
             e.preventDefault();
+            this.model.set("stockSimulationPlaying", false);
             this.isStreaming = false;
             serialComm.send("!");
             this.render();
@@ -48,6 +52,11 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         _incrementLineNum: function(e){
             e.preventDefault();
             console.log("next");
+        },
+
+        _openSerialMonitor: function(e){
+            e.preventDefault();
+            serialComm.openSerialMonitor();
         },
 
         _makeTemplateJSON: function(){

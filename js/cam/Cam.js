@@ -297,10 +297,10 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
                     this.get("exporter").simulate(allLines[currentLine], this.get("assembler"),
                         scaledSettings, function(){
-                        currentLine++;
-                        self.set("simLineNumber", currentLine);
-                        self._stockSimulation();
-                    });
+                            currentLine++;
+                            self.set("simLineNumber", currentLine);
+                            self._stockSimulation();
+                        });
                 } else {
                     //finished simulation
                     this.resetSimulation();
