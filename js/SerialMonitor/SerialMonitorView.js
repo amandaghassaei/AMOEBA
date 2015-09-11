@@ -14,7 +14,7 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
         },
 
         events: {
-            "click #clearMonitor":                         "render",
+            "click #clearMonitor":                         "_clear",
             "change input:checkbox":                       "_clickCheckbox"
         },
 
@@ -93,6 +93,11 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             var $output = $("#serialMonitorOutput");
             $output.append(html);
             if (this.model.get("autoscroll")) $output.animate({scrollTop:$output.scrollTop()+$output.innerHeight()}, "fast");
+        },
+
+        _clear: function(e){
+            e.preventDefault();
+            this.render();
         },
 
         _close: function(){
