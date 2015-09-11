@@ -24,7 +24,7 @@ define(['underscore', 'backbone', 'socketio'], function(_, Backbone, io){
         attemptToConnectToNode: function(){
             if (!this.get("connected")) {
                 this.socket = io.connect('http://localhost:8080', {'forceNew':true});
-                addEventHandlers(this.socket);
+                addEventHandlers(this.socket);//if we're not in the serial monitor window
             }
         },
 

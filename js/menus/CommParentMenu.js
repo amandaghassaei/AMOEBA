@@ -42,6 +42,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'serialComm', 'commPlist'
 
         _updateIncomingMessage: function(){
             var message = serialComm.get("lastMessageReceived");
+            console.log(message);
             var $message = $("#incomingSerialMessage");
             $message.html(message);
             $message.css("background", "#ffff99");

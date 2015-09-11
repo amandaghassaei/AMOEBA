@@ -21,7 +21,7 @@ var currentPort = null;
 var baudRate = 115200;
 
 //io.sockets.on('connection', function (socket) {
-//    socket.emit('baudRate', baudRate);
+//    io.emit('baudRate', baudRate);
 //});
 
 
@@ -92,7 +92,7 @@ io.on('connection', function(socket){
             if (!portName && _allPorts.length>0) portName = _allPorts[0];
             if (callback) callback(allPorts, portName, baudRate);
 
-            socket.emit('connected', {
+            io.emit('connected', {
                 baudRate: baudRate,
                 portName: portName,
                 availablePorts: _allPorts
@@ -138,19 +138,19 @@ io.on('connection', function(socket){
                     onPortError(error);
                     return null;
                 }
-                socket.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
+                io.emit("portDisconnected", {baudRate:oldBaud, portName:oldName});
             });
         }
         return initPort(_portName, _baudRate);
     }
 
     function onPortOpen(name, baud){
-        socket.emit("portConnected", {baudRate:baud, portName:name});
+        io.emit("portConnected", {baudRate:baud, portName:name});
     }
 
     function onPortData(data){
         console.log(data);
-        socket.emit("dataIn", data);
+        io.emit('dataIn', data);
     }
 
     function onPortClose(){
@@ -159,7 +159,7 @@ io.on('connection', function(socket){
 
     function onPortError(error){
         console.log("Serial port error " + error);
-        socket.emit("errorMsg", {error:String(error)});
+        io.emit("errorMsg", {error:String(error)});
     }
 
 });

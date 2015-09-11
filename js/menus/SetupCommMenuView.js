@@ -53,7 +53,6 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommM
         },
 
         _makeTemplateJSON: function(){
-            console.log("render");
             return _.extend(serialComm.toJSON(), commPlist);
         },
 

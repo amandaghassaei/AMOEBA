@@ -11,11 +11,17 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
         el: "#serialMonitorView",
 
         events: {
-            "click #clearMonitor":                         "_clear",
+            "click #clearMonitor":                         "render",
             "change input:checkbox":                       "_clickCheckbox"
         },
 
         __initialize: function(){
+
+            this.listenTo(serialComm, "change:baudRate change:portName", this.render);
+            this.listenTo(serialComm, "change:connected", function(){
+                if (!serialComm.get("connected")) this._close();
+            })
+
             this.render();
         },
 
@@ -57,11 +63,6 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             return this.model.toJSON();
         },
 
-        _clear: function(e){
-            e.preventDefault();
-            $("#serialMonitorOutput").html("");
-        },
-
         __sendMessage: function(message){
             this._addOutputData("<span class='outgoing'>" + message + "</span><br/>");
         },
@@ -74,6 +75,10 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             var $output = $("#serialMonitorOutput");
             $output.append(html);
             if (this.model.get("autoscroll")) $output.animate({scrollTop:$output.scrollTop()+$output.innerHeight()}, "fast");
+        },
+
+        _close: function(){
+            window.close();
         },
 
         template: _.template(template)

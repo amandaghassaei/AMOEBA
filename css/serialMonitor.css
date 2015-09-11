@@ -1,4 +1,8 @@
-  #sendSerialMessage {
+body {
+    overflow: hidden;
+}  
+
+#sendSerialMessage {
     position: absolute;
     bottom: 0px;
     border-radius: 0px;

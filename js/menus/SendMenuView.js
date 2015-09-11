@@ -51,7 +51,6 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'commPlist', 'te
         },
 
         _makeTemplateJSON: function(){
-            console.log("render");
             return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {streaming: this.isStreaming});
         },
 
