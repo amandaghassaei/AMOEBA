@@ -3,27 +3,24 @@
  */
 
 
-define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMonitorView.html'],
-    function($, _, CommParentMenu, serialComm, template){
+define(['jquery', 'underscore', 'backbone', 'serialComm', 'text!SerialMonitorView.html'],
+    function($, _, Backbone, serialComm, template){
 
-    return CommParentMenu.extend({
+    return Backbone.View.extend({
 
         el: "#serialMonitorView",
-
-        parentEvents: {
-        },
 
         events: {
             "click #clearMonitor":                         "_clear",
             "change input:checkbox":                       "_clickCheckbox"
         },
 
-        __initialize: function(){
+        initialize: function(){
 
             _.bindAll(this, "_onKeyUp");
             $(document).bind('keyup', {}, this._onKeyUp);
 
-
+            this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMessage);
             this.listenTo(serialComm, "change:lastMessageSent", this._updateOutgoingMessage);
             this.listenTo(serialComm, "change:baudRate change:portName", this.render);
             this.listenTo(serialComm, "change:connected", function(){
@@ -79,6 +76,14 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             }
         },
 
+        _sendMessage: function(e){
+            e.preventDefault();
+            var message = $("#sendSerialMessage").val();
+            $("#sendSerialMessage").val("");
+            if (message == "") return;
+            serialComm.send(message);
+        },
+
         _makeTemplateJSON: function(){
             return this.model.toJSON();
         },
@@ -101,12 +106,16 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
 
         _clear: function(e){
             e.preventDefault();
-            this.render();
+            $("#serialMonitorOutput").html("");
         },
 
         _close: function(){
-            this.userInitedReload = false;
             window.close();
+        },
+
+        render: function(){
+            if ($("input[type=text]").is(":focus")) return;
+            this.$el.html(this.template(this._makeTemplateJSON()));
         },
 
         template: _.template(template)

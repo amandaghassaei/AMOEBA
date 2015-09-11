@@ -299,7 +299,6 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                         scaledSettings, function(){
                             currentLine++;
                             self.set("simLineNumber", currentLine);
-                            console.log(self);
                             self._stockSimulation();
                         });
                 } else {

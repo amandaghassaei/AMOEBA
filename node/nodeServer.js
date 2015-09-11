@@ -19,6 +19,7 @@ var io = require('socket.io').listen(8080);
 var portName = null;
 var currentPort = null;
 var baudRate = 115200;
+var isStreaming = false;
 
 //io.sockets.on('connection', function (socket) {
 //    io.emit('baudRate', baudRate);
@@ -50,6 +51,10 @@ io.on('connection', function(socket){
     });
 
     socket.on('dataOut', function(data){
+        outputData(data);
+    });
+
+    function outputData(data){
         io.emit('dataSent', data);
         data += '\n';
         console.log("Sending data: " + data);
@@ -57,7 +62,7 @@ io.on('connection', function(socket){
             if (err) onPortError(err);
         });
 //        currentPort.write(new Buffer([parseInt(data)]));//write byte
-    });
+    }
 
     socket.on('flush', function(){
         if (currentPort) currentPort.flush(function(){
@@ -69,6 +74,25 @@ io.on('connection', function(socket){
         console.log("refreshing ports list");
         allPorts = refreshAvailablePorts();
     });
+
+    socket.on('stopStream', function(){
+        outputData("!");
+        setIsStreaming(false);
+    });
+
+    socket.on('startStream', function(){
+        setIsStreaming(true);
+    });
+
+    socket.on('pauseStream', function(){
+        setIsStreaming(false);
+    });
+
+    function setIsStreaming(state){
+        if (state == isStreaming) return;
+        isStreaming = state;
+        io.emit('isStreaming', isStreaming);
+    }
 
     function checkThatPortExists(_portName){
         if (allPorts.indexOf(_portName) < 0) {

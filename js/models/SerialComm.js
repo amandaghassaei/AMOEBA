@@ -14,7 +14,8 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
             baudRate: 200,
             error: null,
             lastMessageReceived: null,
-            lastMessageSent: ""
+            lastMessageSent: "",
+            isStreaming: false
         },
 
         initialize: function(){
@@ -45,6 +46,18 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
 
         flushBuffer: function(){
             this.socket.emit("flush");
+        },
+
+        startStream: function(){
+            this.socket.emit("startStream");
+        },
+
+        pauseStream: function(){
+            this.socket.emit("pauseStream");
+        },
+
+        stopStream: function(){
+            this.socket.emit("stopStream");
         },
 
         refreshMachineState: function(){//when updating connection, create a new instance of machine state
@@ -95,6 +108,11 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
         socket.on('dataSent', function(data){
             serialComm.set("lastMessageSent", data, {silent:true});
             serialComm.trigger("change:lastMessageSent");
+        });
+
+        socket.on('isStreaming', function(data){
+            console.log(data);
+            serialComm.set("isStreaming", data);
         });
 
         socket.on('portConnected', function(data){

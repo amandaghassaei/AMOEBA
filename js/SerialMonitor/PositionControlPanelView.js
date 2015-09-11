@@ -11,7 +11,9 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
         el: "#positionPanel",
 
         events: {
-
+            "click #stopMachine":                           "_stopMachine",
+            "click #pauseOutput":                           "_pause",
+            "click #askForPosition":                        "_askForPosition"
         },
 
 
@@ -21,7 +23,6 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
 
         _renderPositionData: function(){
             var machineState = this.model.getMachineState();
-            console.log(machineState);
             if (machineState === null) {
                 $("#positionData").html("<div id='positionDataError'>no position data available</div>");
                 return;
@@ -38,7 +39,7 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
             this._renderPositionData();
         },
 
-        template: _.template(template),
+        template: _.template(template)
 
     });
 

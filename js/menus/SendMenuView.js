@@ -18,32 +18,28 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
 
-        __initialize: function(){
-            this.isStreaming = false;
+        _initialize: function(){
             this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
+            this.listenTo(serialComm, "change:isStreaming", this.render);
             this.listenTo(cam, "change:simLineNumber", this._drawGcodeHighlighter);
         },
 
         _startStream: function(e){
             e.preventDefault();
             this.model.set("stockSimulationPlaying", true);
-            this.isStreaming = true;
-            this.render();
+            serialComm.startStream();
         },
 
         _pauseStream: function(e){
             e.preventDefault();
             this.model.set("stockSimulationPlaying", false);
-            this.isStreaming = false;
-            this.render();
+            serialComm.pauseStream();
         },
 
         _stopMachine: function(e){
             e.preventDefault();
             this.model.set("stockSimulationPlaying", false);
-            this.isStreaming = false;
-            serialComm.send("!");
-            this.render();
+            serialComm.stopStream();
         },
 
         _decrementLineNum: function(e){
@@ -63,7 +59,6 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _drawGcodeHighlighter: function(){
             var lineNum = cam.get("simLineNumber");
-            console.log(lineNum);
             if (lineNum == 0) return;
             var code = cam.get("dataOut").split("\n");
             code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
@@ -78,7 +73,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {streaming: this.isStreaming});
+            return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist);
         },
 
         _render: function(){
