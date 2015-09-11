@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'], function($, _, Backbone, template){
+define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html', 'text!PositionDataView.html'],
+    function($, _, Backbone, template, positionTemplate){
 
     return Backbone.View.extend({
 
@@ -18,18 +19,26 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
             this.render();
         },
 
-        _makeTemplateJSON: function(){
-            console.log(this.model);
+        _renderPositionData: function(){
             var machineState = this.model.getMachineState();
-            if (machineState === null) return {};
-            return machineState.toJSON();
+            console.log(machineState);
+            if (machineState === null) {
+                $("#positionData").html("<div id='positionDataError'>no position data available</div>");
+                return;
+            }
+            $("#positionData").html(_.template(positionTemplate)(machineState.toJSON()));
+        },
+
+        _makeTemplateJSON: function(){
+            return {};
         },
 
         render: function(){
             this.$el.html(this.template(this._makeTemplateJSON()));
+            this._renderPositionData();
         },
 
-        template: _.template(template)
+        template: _.template(template),
 
     });
 
