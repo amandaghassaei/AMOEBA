@@ -39,6 +39,7 @@ require.config({
 
 require(['serialMonitorView', 'serialMonitor', 'positionControlPanelView', 'serialComm'],
     function(SerialMonitorView, serialMonitor, PositionControlPanelView, serialComm){
+
     new SerialMonitorView({model: serialMonitor});
     new PositionControlPanelView({model:serialComm});
 });

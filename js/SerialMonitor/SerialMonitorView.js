@@ -23,6 +23,7 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
             _.bindAll(this, "_onKeyUp");
             $(document).bind('keyup', {}, this._onKeyUp);
 
+
             this.listenTo(serialComm, "change:lastMessageSent", this._updateOutgoingMessage);
             this.listenTo(serialComm, "change:baudRate change:portName", this.render);
             this.listenTo(serialComm, "change:connected", function(){
@@ -38,6 +39,9 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
                 if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
                 else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
                 else if (e.keyCode == 13) this._sendMessage(e);
+
+
+            } else {
             }
         },
 
@@ -101,6 +105,7 @@ define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!SerialMoni
         },
 
         _close: function(){
+            this.userInitedReload = false;
             window.close();
         },
 

@@ -33,8 +33,12 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
         onClose: function(){
             var self = this;
             setTimeout(function(){
-                if (self.popup.closed) self.popup = null;
+                if (self.popup.closed) self.dumpPopup();
             }, 100);//todo this is stupid, find an event that fires with window.closed == true
+        },
+
+        dumpPopup: function(){
+            this.popup = null;
         }
 
     });
