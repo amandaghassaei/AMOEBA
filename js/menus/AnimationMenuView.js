@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'menuParent', 'cam', 'text!animationMenuTemplate
                 self.render();
             });
             this.listenTo(cam, "change:simLineNumber", this._drawGcodeHighlighter);
-            $(document).bind('keyup', {state:false}, this._codeEdit);
+//            $(document).bind('keyup', {state:false}, this._codeEdit);
             //this.$el.bind('resize', this._setEditorHeight);
         },
 

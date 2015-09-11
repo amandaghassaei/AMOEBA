@@ -47,7 +47,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         initialize: function(){
 
-            _.bindAll(this, "postProcess");
+            _.bindAll(this, "postProcess", "_stockSimulation");
 
             //bind events
             this.listenTo(appState, "change:currentTab", this._tabChanged);
@@ -299,6 +299,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                         scaledSettings, function(){
                             currentLine++;
                             self.set("simLineNumber", currentLine);
+                            console.log(self);
                             self._stockSimulation();
                         });
                 } else {

@@ -20,6 +20,8 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         __initialize: function(){
             this.isStreaming = false;
+            this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
+            this.listenTo(cam, "change:simLineNumber", this._drawGcodeHighlighter);
         },
 
         _startStream: function(e){
@@ -59,12 +61,29 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             serialComm.openSerialMonitor();
         },
 
+        _drawGcodeHighlighter: function(){
+            var lineNum = cam.get("simLineNumber");
+            console.log(lineNum);
+            if (lineNum == 0) return;
+            var code = cam.get("dataOut").split("\n");
+            code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
+            var newText = code.join("\n");
+            var $editor = $('#gcodeEditor');
+            $editor.html(newText);
+            var $highlighter = $("#gcodeHighlighter");
+            if (!$editor.position() || !$highlighter.position()) return;//todo weird bug
+            var highlighterHeight = $highlighter.position().top - $editor.position().top;
+            var desiredHeight = $editor.height()/2;
+            if (highlighterHeight > desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
+        },
+
         _makeTemplateJSON: function(){
             return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {streaming: this.isStreaming});
         },
 
         _render: function(){
             if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
+            this._drawGcodeHighlighter();
         },
 
         template: _.template(template)

@@ -1,4 +1,7 @@
-<div id="serialMonitorOutput"></div>
+<div id="wrapper">
+    <div id="serialMonitorOutput"></div>
+</div>
+<div>
 <div id="controlPanel">
     <label id="autoscrollCheckbox" class="checkbox" for="autoscroll">
         <input id="autoscroll" data-property="autoscroll" type="checkbox" <% if (autoscroll){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="serialMonitor custom-checkbox">
@@ -7,3 +10,4 @@
     <a href="#" id="clearMonitor" class="pull-right btn btn-lg btn-default">Clear</a><br/>
 </div>
 <input id="sendSerialMessage" value="" placeholder="Send Message" class="form-control" type="text">
+</div>
