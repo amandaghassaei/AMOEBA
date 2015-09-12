@@ -399,15 +399,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.xScale = function(){
-        return lattice.xScale(0);
+        return lattice.xScale();
     };
 
     DMACell.prototype.yScale = function(){
-        return lattice.yScale(0);
+        return lattice.yScale();
     };
 
     DMACell.prototype.zScale = function(){
-        return lattice.zScale(0);
+        return lattice.zScale();
     };
 
 

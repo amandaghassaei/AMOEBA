@@ -104,7 +104,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
                 }
             });
 
-            var offset = this.get("cellsMin").clone().sub(new THREE.Vector3(1/(2*resolution)+this.xScale(0)/2, 1/(2*resolution)+this.yScale(0)/2, 1/(2*resolution)+this.zScale(0)/2));
+            var offset = this.get("cellsMin").clone().sub(new THREE.Vector3(1/(2*resolution)+this.xScale()/2, 1/(2*resolution)+this.yScale()/2, 1/(2*resolution)+this.zScale()/2));
             var dataRange = [];
             _.each(conductorGroups, function(group){
                 dataRange.push(group.voltage);

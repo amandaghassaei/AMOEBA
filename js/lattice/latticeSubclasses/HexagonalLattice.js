@@ -36,21 +36,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return position;
         },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return Math.sqrt(3)+2*cellSeparation;
-        },
-
-        yScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 1.5+2*cellSeparation;
-        },
-
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 1+2*cellSeparation;
-        },
-
         getCellSubclassFile: function(){
             return "hexCell";
         },

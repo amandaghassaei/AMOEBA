@@ -28,20 +28,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return this._positionForIndex(index);
         },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return Math.sqrt(2)+2*cellSeparation;
-        },
-
-        yScale: function(cellSeparation){
-            return this.xScale(cellSeparation);
-        },
-
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return Math.sqrt(2)+2*cellSeparation;
-        },
-
         getCellSubclassFile: function(){
             return "octaVertexCell";
         },

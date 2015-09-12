@@ -103,13 +103,13 @@ define(['three'], function(THREE){
                                         name: "Triangle"
                                     }
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,1),
+                                aspectRatio: new THREE.Vector3(1,1/2*Math.sqrt(3),2/Math.sqrt(6)),
                                 materialClasses: ['mechanical']
                             },
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(1,1/2*Math.sqrt(3),2/Math.sqrt(6))
                             }
                         }
                     },
@@ -131,13 +131,13 @@ define(['three'], function(THREE){
                                         name: "Snap Voxel (low res)"
                                     }
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,1),
+                                aspectRatio: new THREE.Vector3(1,1,Math.sqrt(2)/2),
                                 materialClasses: ['mechanical']
                             },
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(1,1,Math.sqrt(2)/2)
                             }
                         }
                     },
@@ -159,13 +159,13 @@ define(['three'], function(THREE){
                                     }
                 //                   xShape:"X"
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,1),
+                                aspectRatio: new THREE.Vector3(Math.sqrt(2),Math.sqrt(2),Math.sqrt(2)),
                                 materialClasses: ['mechanical']
                             },
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(Math.sqrt(2),Math.sqrt(2),Math.sqrt(2))
                             }
                         }
                     }
@@ -181,11 +181,12 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(1,1/2*Math.sqrt(3),2/Math.sqrt(6))
                             }
                         }
                     }
                 }
+                //vetex (1, 1//2*Math.sqrt(3), 2/Math.sqrt(6))
             },
             cube: {
                 name: "Cube",
@@ -215,8 +216,27 @@ define(['three'], function(THREE){
                                         name: "Micro LEGO (low res)"
                                     }
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,1.28),
-                                materialClasses: ['electronic']
+                                aspectRatio: new THREE.Vector3(1,1,5),//1.28
+                                materialClasses: ['electronic'],
+                                options: {
+                                    gikLength: 4
+                                }
+                            },
+                            dnaBricks: {
+                                name: "DNA Bricks",
+                                parts: {
+                                    dnaLego: {
+                                        name: "Lego Blocks"
+                                    },
+                                    dnaStraight: {
+                                        name: "DNA (straight chains)"
+                                    }
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1),
+                                materialClasses: ['mechanical'],
+                                options: {
+                                    gikLength: 2
+                                }
                             },
                             default: {
                                 name: "Default",
@@ -237,7 +257,7 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(Math.sqrt(2),Math.sqrt(2),Math.sqrt(2))
                             }
                         }
                     }
@@ -253,7 +273,7 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(2*Math.sqrt(2),2*Math.sqrt(2),2*Math.sqrt(2))
                             }
                         }
                     }
@@ -269,7 +289,7 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(Math.sqrt(3),1.5,1)
                             }
                         }
                     },
@@ -280,7 +300,7 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(3,1,Math.sqrt(3)/2)
                             }
                         }
                     }

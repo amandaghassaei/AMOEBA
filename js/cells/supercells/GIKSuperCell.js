@@ -10,7 +10,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     var unitGeos = {};
 
     function makePartWithLength(length){
-        var geo = new THREE.BoxGeometry(lattice.xScale(0),lattice.yScale(0),lattice.zScale(0));
+        var geo = new THREE.BoxGeometry(lattice.xScale(),lattice.yScale(),lattice.zScale());
         geo.applyMatrix(new THREE.Matrix4().makeScale(length, 1, 1));
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(length/2-0.5, 0, 0));
         return geo;

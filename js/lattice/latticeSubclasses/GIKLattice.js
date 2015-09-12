@@ -29,20 +29,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return this._positionForIndex(index);
         },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 1+2*cellSeparation;
-        },
-
-        yScale: function(cellSeparation){
-            return this.xScale(cellSeparation);
-        },
-
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 1.28*(1+2*cellSeparation);
-        },
-
         _zIndexRotation: function(index){
             if (index.z%2 == 0) return Math.PI/2;
             return 0;

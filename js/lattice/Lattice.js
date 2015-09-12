@@ -23,21 +23,17 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             denseCellsMin: null,
             overlapDetected: false,
 
-            nodes: [],
-
-            cellSeparation: {xy:0, z:0}//spacing for connectors/joints
+            nodes: []
         }),
 
 
         __initialize: function(){
 
-            //todo change latticeType
             this.listenTo(this, "change:partType change:latticeType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType", function(){
                 this._updateLatticeConfig();//pass no params
             });
             this.listenTo(this, "change:latticeType", this._updateLatticeType);
-            this.listenTo(this, "change:cellSeparation", this._updateCellSeparation);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:cellsMin change:cellsMax", function(){
@@ -85,6 +81,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var newMaterialClass = (latticeData.materialClasses || _.keys(plist.allMaterialClasses))[0];
             appState.set("materialClass", newMaterialClass);
+
+            if (latticeData.options){
+                if (latticeData.options.gikLength) appState.set("gikLength", latticeData.options.gikLength);
+            }
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type
@@ -107,6 +107,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return subclass;
         },
 
+        xScale: function(){
+            return this.get("aspectRatio").x;
+        },
+
+        yScale: function(){
+            return this.get("aspectRatio").y;
+        },
+
+        zScale: function(){
+            return this.get("aspectRatio").z;
+        },
+
 
 
 
@@ -114,18 +126,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
         //events
-
-        _updateCellSeparation: function(){
-            var cellSep = this.get("cellSeparation");
-            globals.basePlane.updateXYSeparation(cellSep.xy);
-
-            var cellMode = appState.get("cellMode");
-            var partType = this.get("partType");
-//            this._iterCells(this.cells, function(cell){
-//                if (cell) cell.updateForScale(cellMode, partType);
-//            });
-            three.render();
-        },
 
         __clearCells: function(silent){
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here

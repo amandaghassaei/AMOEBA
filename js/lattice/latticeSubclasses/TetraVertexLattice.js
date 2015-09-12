@@ -37,20 +37,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return position;
         },
 
-        xScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").xy;
-            return 1+2*cellSeparation;
-        },
-
-        yScale: function(cellSeparation){
-            return this.xScale(cellSeparation)/2*Math.sqrt(3);
-        },
-
-        zScale: function(cellSeparation){
-            if (cellSeparation === undefined) cellSeparation = this.get("cellSeparation").z;
-            return 2/Math.sqrt(6)+2*cellSeparation;
-        },
-
         getCellSubclassFile: function(){
             return "tetraVertexCell";
         },
