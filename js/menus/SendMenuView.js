@@ -89,12 +89,20 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             if (highlighterHeight != desiredHeight) $editor.scrollTop($editor.scrollTop()+highlighterHeight-desiredHeight);
         },
 
+         _setEditorHeight: function(){
+            var $editor = $('#gcodeEditor');
+            var height = this.$el.height()-$editor.position().top;
+            height = Math.max(height, 250);
+            $editor.css({height:height +"px"});
+        },
+
         _makeTemplateJSON: function(){
             return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {nextLine:this.nextLine});
         },
 
         _render: function(){
             if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
+            this._setEditorHeight();
             this._drawGcodeHighlighter(this.nextLine);
         },
 
