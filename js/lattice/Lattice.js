@@ -29,11 +29,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         __initialize: function(){
 
-            this.listenTo(this, "change:partType change:latticeType", this._updatePartType);
-            this.listenTo(this, "change:cellType change:connectionType", function(){
+            this.listenTo(this, "change:partType", this._updatePartType);
+            this.listenTo(this, "change:cellType change:connectionType change:latticeType", function(){
                 this._updateLatticeConfig();//pass no params
             });
-            this.listenTo(this, "change:latticeType", this._updateLatticeType);
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:cellsMin change:cellsMax", function(){
@@ -54,23 +53,17 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _setToDefaultsSilently: function(){
             var newCellType = this.get("cellType");
             var newConnectionType = this.get("connectionType");
+            var newLatticeType = this.get("latticeType");
 
-            if (newConnectionType == this.previous("connectionType")){
+            if (this.previous("cellType") !== undefined && newCellType != this.previous("cellType")){
                 newConnectionType = _.keys(plist.allLattices[newCellType].connection)[0];
                 this.set("connectionType", newConnectionType, {silent:true});
             }
 
-            var newLatticeType = this.get("latticeType");
-            if (newLatticeType === this.previous("latticeType")){
+            if (this.previous("connectionType") !== undefined && newConnectionType != this.previous("connectionType")){
                 newLatticeType = _.keys(plist.allLattices[newCellType].connection[newConnectionType].type)[0];
                 this.set("latticeType", newLatticeType, {silent:true});
             }
-
-            var latticeData = this._getLatticePlistData();
-
-            var newPartType = null;
-            if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
-            this.set("partType", newPartType, {silent:true});
 
             this._updateLatticeType();
         },
@@ -78,6 +71,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _updateLatticeType: function(){
             var latticeData = this._getLatticePlistData();
             this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
+
+            var newPartType = null;
+            if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
+            this.set("partType", newPartType, {silent:true});
 
             var newMaterialClass = (latticeData.materialClasses || _.keys(plist.allMaterialClasses))[0];
             appState.set("materialClass", newMaterialClass);

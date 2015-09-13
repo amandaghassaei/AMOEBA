@@ -56,8 +56,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                     serialComm.openSerialMonitor();
                 });
             }
-            console.log(e);
-
         },
 
         _updateString: function(e){

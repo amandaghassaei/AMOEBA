@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMen
 
         events: {
             "click a":                                                    "_makeSelection",
-            "click #reset3DView":                                         "_reset3DNavigation"
+            "click #reset3DView":                                         "_reset3DNavigation",
+            "click #videoRendering":                                      "_videoRenderingSetup"
         },
 
         initialize: function(){
@@ -23,8 +24,9 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMen
 
 
         _makeSelection: function(e){
-            e.preventDefault();
             var $target = $(e.target);
+            if ($target.hasClass("customClick")) return;
+            e.preventDefault();
             if ($target.prop("tagName") == "SPAN") $target = $target.parent();
             var property = $target.data("property");
             var value = $target.data("value");
@@ -45,6 +47,11 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMen
         _reset3DNavigation: function(e){
             e.preventDefault();
             this.model.reset3DNavigation();
+        },
+
+        _videoRenderingSetup: function(e){
+            e.preventDefault();
+            window.resizeTo(1000, 700);
         },
 
         render: function(){

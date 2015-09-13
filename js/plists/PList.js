@@ -216,10 +216,24 @@ define(['three'], function(THREE){
                                         name: "Micro LEGO (low res)"
                                     }
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,5),//1.28
+                                aspectRatio: new THREE.Vector3(1,1,1.28),
                                 materialClasses: ['electronic'],
                                 options: {
                                     gikLength: 4
+                                }
+                            },
+                            lego: {
+                                name: "LEGO",
+                                parts: {
+                                    lego: {
+                                        name: "LEGO Bricks"
+                                    }
+                                },
+                                aspectRatio: new THREE.Vector3(1,1,1.17),
+                                materialClasses: ['mechanical'],
+                                options: {
+                                    scale: 8.2,
+                                    units: "mm"
                                 }
                             },
                             dnaBricks: {
