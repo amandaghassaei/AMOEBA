@@ -32,8 +32,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._checkURL();
 
             this.listenTo(this, "change:partType", this._updatePartType);
-            this.listenTo(this, "change:cellType change:connectionType change:latticeType", function(){
-                this._updateLatticeConfig();//pass no params
+
+            this.listenTo(this, "change:cellType", function(){
+                this._cellTypeChanged();
+                this._reloadCells();
+            });
+            this.listenTo(this, "change:connectionType", function(){
+                this._connectionTypeChanged();
+                this._reloadCells();
+            });
+            this.listenTo(this, "change:latticeType", function(){
+                this._latticeTypeChanged();
+                this._reloadCells();
+            });
+            this.listenTo(this, "change:aspectRatio", function(){
+                this._reloadCells();
             });
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
@@ -41,7 +54,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 this.updateThreeViewTarget();
             });
 
-            this._updateLatticeConfig();
+            this._latticeTypeChanged();
+            this._reloadCells();
         },
 
         _checkURL: function(){
@@ -57,25 +71,22 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //latticeType
 
-        _setToDefaultsSilently: function(){
-            var newCellType = this.get("cellType");
-            var newConnectionType = this.get("connectionType");
-            var newLatticeType = this.get("latticeType");
-
-            if (this.previous("cellType") !== undefined && newCellType != this.previous("cellType")){
-                newConnectionType = _.keys(plist.allLattices[newCellType].connection)[0];
-                this.set("connectionType", newConnectionType, {silent:true});
-            }
-
-            if (this.previous("connectionType") !== undefined && newConnectionType != this.previous("connectionType")){
-                newLatticeType = _.keys(plist.allLattices[newCellType].connection[newConnectionType].type)[0];
-                this.set("latticeType", newLatticeType, {silent:true});
-            }
-
-            this._updateLatticeType();
+        _cellTypeChanged: function(){
+            var cellType = this.get("cellType");
+            var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
+            this.set("connectionType", connectionType, {silent:true});
+            this._connectionTypeChanged();
         },
 
-        _updateLatticeType: function(){
+        _connectionTypeChanged: function(){
+            var cellType = this.get("cellType");
+            var connectionType = this.get("connectionType");
+            var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
+            this.set("latticeType", latticeType, {silent:true});
+            this._latticeTypeChanged();
+        },
+
+        _latticeTypeChanged: function(){
             var latticeData = this._getLatticePlistData();
             this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
 
@@ -254,7 +265,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
                     var cells = null;
                     if (data) cells = data.sparseCells;
-                    _self._updateLatticeConfig(cells, self._getSubclassForLatticeType());
+                    _self._reloadCells(cells, self._getSubclassForLatticeType());
                     appState.set("currentNav", "navComposite");
                 });
 
