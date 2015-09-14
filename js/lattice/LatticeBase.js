@@ -47,6 +47,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _reloadCells: function(cells, subclass){
 
+            if (this.get("connectionType") == "gik" || this.previous("connectionType") == "gik") this.clearCells();
+
             if (!cells) cells = JSON.parse(JSON.stringify(this.sparseCells));
 
             if (this._setDefaultCellMode) this._setDefaultCellMode();

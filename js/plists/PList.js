@@ -110,7 +110,7 @@ define(['three'], function(THREE){
                     face: {
                         name: "Face",
                         subclass: "octaFaceLattice",
-                        types: {
+                        type: {
                             octaTruss: {
                                 name: "Matt's Truss",
                                 parts: {
@@ -135,7 +135,7 @@ define(['three'], function(THREE){
                     edgeRot: {
                         name: "Edge",
                         subclass: "octaRotEdgeLattice",
-                        types: {
+                        type: {
                             snapVoxel: {
                                 name: "Ben's Voxels",
                                 parts: {
