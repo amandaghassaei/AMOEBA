@@ -9,7 +9,8 @@ define(['underscore', 'stlLoader', 'gikPart', 'bin!dnaLegoBrickSTL'], function(_
     var unitGeo = preProcessGeo(loader.parse(stl));
 
     function preProcessGeo(geo){
-        geo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.PI/2));
+        geo.applyMatrix(new THREE.Matrix4().makeRotationZ(Math.PI/2));
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0,0,-0.54));
         return geo;
     }
 

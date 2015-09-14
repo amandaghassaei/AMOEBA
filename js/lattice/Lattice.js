@@ -73,16 +73,20 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _cellTypeChanged: function(){
             var cellType = this.get("cellType");
-            var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
-            this.set("connectionType", connectionType, {silent:true});
+            if (plist.allLattices[cellType].connection[this.get("connectionType")] === undefined){
+                var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
+                this.set("connectionType", connectionType, {silent:true});
+            }
             this._connectionTypeChanged();
         },
 
         _connectionTypeChanged: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
-            var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
-            this.set("latticeType", latticeType, {silent:true});
+            if (plist.allLattices[cellType].connection[connectionType].type[this.get("latticeType")] === undefined){
+                var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
+                this.set("latticeType", latticeType, {silent:true});
+            }
             this._latticeTypeChanged();
         },
 
