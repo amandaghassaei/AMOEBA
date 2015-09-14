@@ -224,10 +224,10 @@ define(['three'], function(THREE){
                             willGik: {
                                 name: "Electronic GIK Lattice",
                                 parts: {
-                                    lego: {
+                                    willLego: {
                                         name: "Micro LEGO (high res)"
                                     },
-                                    legoLowPoly: {
+                                    willLegoLowPoly: {
                                         name: "Micro LEGO (low res)"
                                     }
                                 },

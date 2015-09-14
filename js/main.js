@@ -107,6 +107,7 @@ require.config({
         kennyTeqPart: 'parts/KennyTeqPart',
         kennyTeqHighResPart: 'parts/KennyTeqHighResPart',
         samTeqPart: 'parts/SamTeqPart',
+        legoPart: 'parts/LegoPart',
 
         //materials
         materials: 'materials/DMAMaterials',

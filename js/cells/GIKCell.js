@@ -20,14 +20,29 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         var self = this;
         var parts  = [];
 
-        if (lattice.get("partType") == "lego") {
-            require(['gikPart'], function(GIKPart){
-                parts.push(new GIKPart(self.index.x, self));
+        if (lattice.get("partType") == "willLego") {
+            require(['gikPart'], function(PartSubclass){
+                parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
-        } else {
-            require(['gikPartLowPoly'], function(GIKPartLowPoly){
-                parts.push(new GIKPartLowPoly(self.index.x, self));
+        } else if (lattice.get("partType") == "willLegoLowPoly") {
+            require(['gikPartLowPoly'], function(PartSubclass){
+                parts.push(new PartSubclass(self.index.x, self));
+                callback(parts);
+            });
+        } else if (lattice.get("partType") == "dnaLego") {
+            require(['legoPart'], function(PartSubclass){
+                parts.push(new PartSubclass(self.index.x, self));
+                callback(parts);
+            });
+        } else if (lattice.get("partType") == "lego") {
+            require(['legoPart'], function(PartSubclass){
+                parts.push(new PartSubclass(self.index.x, self));
+                callback(parts);
+            });
+        } else if (lattice.get("partType") == "dnaStraight") {
+            require(['gikPartLowPoly'], function(PartSubclass){
+                parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
         }
