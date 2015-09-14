@@ -30,13 +30,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
-        } else if (lattice.get("partType") == "dnaLego") {
+        } else if (lattice.get("partType") == "lego") {
             require(['legoPart'], function(PartSubclass){
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
-        } else if (lattice.get("partType") == "lego") {
-            require(['legoPart'], function(PartSubclass){
+        } else if (lattice.get("partType") == "dnaLego") {
+            require(['dnaLegoPart'], function(PartSubclass){
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });

@@ -12,7 +12,7 @@ define(['three'], function(THREE){
                     lattice:"Lattice",
                     //sketch:"Sketch",
                     material:"Materials",
-                    import:"Import",
+//                    import:"Import",
                     part:"Part"
                     //script:"Script"
                 }
