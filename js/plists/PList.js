@@ -261,10 +261,12 @@ define(['three'], function(THREE){
                                         name: "Lego Blocks"
                                     }
                                 },
-                                aspectRatio: new THREE.Vector3(1,1,1),
+                                aspectRatio: new THREE.Vector3(1,1,1.08),
                                 materialClasses: ['mechanical'],
                                 options: {
-                                    gikLength: 2
+                                    gikLength: 2,
+                                    scale: 2.5,
+                                    units: 'nm'
                                 }
                             },
                             default: {

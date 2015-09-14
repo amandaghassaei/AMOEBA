@@ -5,7 +5,7 @@
 
 define(['underscore', 'stlLoader', 'gikPart'], function(_, THREE, GIKPart){
 
-    var zScale = 1/8;
+    var zScale = 1.08/8;
     var unitGeo = new THREE.BoxGeometry(0.2, 0.2, zScale);
 
     var bridgeGeo = new THREE.BoxGeometry(0.3, 0.4, zScale);
