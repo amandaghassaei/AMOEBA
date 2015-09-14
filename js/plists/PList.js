@@ -88,6 +88,21 @@ define(['three'], function(THREE){
             }
         },
 
+        urls: {
+            dnabricks: {
+                cellType: "cube",
+                connectionType: "gik",
+                latticeType: "willGik",
+                partType: null
+            },
+            electronics: {
+                cellType: "cube",
+                connectionType: "gik",
+                latticeType: "dnaBricks",
+                partType: null
+            }
+        },
+
         allLattices:{
             octa: {
                 name: "Octahedron",

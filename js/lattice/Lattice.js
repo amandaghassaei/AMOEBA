@@ -29,6 +29,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         __initialize: function(){
 
+            this._checkURL();
+
             this.listenTo(this, "change:partType", this._updatePartType);
             this.listenTo(this, "change:cellType change:connectionType change:latticeType", function(){
                 this._updateLatticeConfig();//pass no params
@@ -40,6 +42,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
 
             this._updateLatticeConfig();
+        },
+
+        _checkURL: function(){
+            var path = window.location.path;
+//            console.log(path);
         },
 
 
