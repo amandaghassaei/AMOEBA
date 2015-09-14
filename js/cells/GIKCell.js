@@ -41,8 +41,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
                 callback(parts);
             });
         } else if (lattice.get("partType") == "dnaStraight") {
-            require(['gikPartLowPoly'], function(PartSubclass){
-                parts.push(new PartSubclass(self.index.x, self));
+            require(['dnaStraightPart'], function(PartSubclass){
+                for (var i=0;i<16;i++){
+                    parts.push(new PartSubclass(self.index.x, self, {
+                        vertIndex: i,
+                        isBridge: false
+                    }));
+                }
+                parts.push(new PartSubclass(self.index.x, self, {isBridge: true}));
                 callback(parts);
             });
         }

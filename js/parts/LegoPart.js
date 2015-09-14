@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'stlLoader', 'gikPart', 'bin!../assets/stls/parts/legoBrick1x1.stl'], function(_, THREE, GIKPart, stl){
+define(['underscore', 'stlLoader', 'gikPart', 'bin!legoBrickSTL'], function(_, THREE, GIKPart, stl){
 
     var loader = new THREE.STLLoader();
     var unitGeo = preProcessGeo(loader.parse(stl));

@@ -6,7 +6,7 @@
 
 define(['underscore', 'three'], function(_, THREE){
 
-    function DMAPart(index, parent) {
+    function DMAPart(index, parent, options) {
         this.parentCell  = parent;
         this.index = index;
         this.mesh = this._buildMesh();

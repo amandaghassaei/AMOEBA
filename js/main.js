@@ -108,6 +108,7 @@ require.config({
         kennyTeqHighResPart: 'parts/KennyTeqHighResPart',
         samTeqPart: 'parts/SamTeqPart',
         legoPart: 'parts/LegoPart',
+        dnaStraightPart: 'parts/DNAStraightPart',
 
         //materials
         materials: 'materials/DMAMaterials',
@@ -212,7 +213,8 @@ require.config({
         gikEndPartLowPolySTL: 'assets/stls/parts/GIKEndPartLowPoly.stl',
         kennyTeqPartSTL: 'assets/stls/parts/KennyTeqPart.stl',
         kennyTeqPartHighResSTL: 'assets/stls/parts/KennyTeqPartHighRes.stl',
-        samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl'
+        samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl',
+        legoBrickSTL: 'assets/stls/parts/legoBrick1x1.stl'
 
     },
 

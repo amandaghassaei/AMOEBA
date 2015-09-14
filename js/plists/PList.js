@@ -254,11 +254,11 @@ define(['three'], function(THREE){
                             dnaBricks: {
                                 name: "DNA Bricks",
                                 parts: {
-                                    dnaLego: {
-                                        name: "Lego Blocks"
-                                    },
                                     dnaStraight: {
                                         name: "DNA (straight chains)"
+                                    },
+                                    dnaLego: {
+                                        name: "Lego Blocks"
                                     }
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1),
