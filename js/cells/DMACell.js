@@ -107,6 +107,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return superCellIndex.add(this.superCell.applyRotation(this.getIndex()).round());
     };
 
+    DMACell.prototype.getLatticeIndex = function(){
+        var parent = lattice.getUItarget();
+        return this.getAbsoluteIndex().sub(parent.get("cellsMin"));
+    };
+
     DMACell.prototype.getPosition = function(){
         return this.object3D.position.clone();
     };

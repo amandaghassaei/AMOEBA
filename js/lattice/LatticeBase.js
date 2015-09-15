@@ -447,6 +447,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     if (cell) cell.show();
                 });
             }
+
             this._iterCells(this.sparseCells, function(cell){
                 if (cell) cell.setMode(cellMode, function(){
                     if (--numCells <= 0) three.render();
@@ -518,6 +519,46 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var yScale = this.yScale();
             var zScale = this.zScale();
             return {x:xScale, y:yScale, z:zScale};
+        },
+
+        _parseSparseCell: function(){
+
+            this.cells = [[[null]]];
+
+            console.log("parse cells");
+
+            if (this.get("numCells") == 0) {
+                console.warn("no cells in assembly");
+                this.cells = [[[null]]];
+                return;
+            }
+
+            var bounds = this.calculateBoundingBox();
+            this.set("denseCellsMin", bounds.min.clone().add(this.get("cellsMin")));
+            var size = bounds.max.sub(bounds.min);
+
+            //create array of nulls
+            var cells = [];
+            for (var x=0;x<size.x;x++){
+                cells.push([]);
+                for (var y=0;y<size.y;y++){
+                    cells[x].push([]);
+                    for (var z=0;z<size.z;z++){
+                        cells[x][y].push(null);
+                    }
+                }
+            }
+
+            var min = this.get("cellsMin").sub(bounds.min);
+            var overlap = false;
+            var forCAM = appState.get("currentNav") == "navAssemble";
+            this._loopCells(this.sparseCells, function(cell){
+                if (!cell) return;
+                overlap |= cell.addToDenseArray(cells, min, forCAM);
+            });
+            this.set("overlapDetected", overlap);
+
+            this.cells = cells;
         },
 
 

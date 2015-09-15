@@ -4,8 +4,8 @@
 
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell'],
-    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'gikCell', 'dnaBrickCell'],
+    function(_, THREE, three, lattice, appState, DMASuperCell, GIKCell, DNABrickCell){
 
     var unitGeos = {};
 
@@ -30,6 +30,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
 
     GIKSuperCell.prototype._makeSubCellForIndex = function(json, callback){
         json.materialName = this.materialName;
+        if (lattice.get("latticeType") == "dnaBricks"){
+            callback(new DNABrickCell(json, this));
+            return;
+        }
         callback(new GIKCell(json, this));
     };
 

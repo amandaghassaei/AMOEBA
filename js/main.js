@@ -96,6 +96,7 @@ require.config({
         compositeCell: "cells/supercells/CompositeCell",
         hexCell: 'cells/HexagonalCell',
         hexRotCell: 'cells/HexagonalRotCell',
+        dnaBrickCell: 'cells/DNABrickCell',
 
         //parts
         part: 'parts/DMAPart',

@@ -41,6 +41,10 @@ define(['underscore', 'stlLoader', 'gikPart'], function(_, THREE, GIKPart){
         return 'g';
     };
 
+    DNAStraightPart.prototype.getNucleotide = function(){
+        return this._nuclType;
+    };
+
     DNAStraightPart.prototype._getGeometry = function(){
         if (this._isBridge) return bridgeGeo;
         return unitGeo;
