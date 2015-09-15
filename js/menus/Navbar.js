@@ -59,7 +59,10 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             if (navSelection == "navSim"){//choose which simulation package to pull up
                 this.model.set("currentNav", appState.get("materialClass") + "NavSim");
                 return;
+            } else if (navSelection == "navAssemble"){//choose which assembly package to pull up
+                if (this.model.get("materialClass") == "dna") navSelection = "navDNAAssemble";
             }
+
             if (navSelection) this.model.set("currentNav", navSelection);
         },
 

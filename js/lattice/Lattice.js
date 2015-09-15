@@ -197,7 +197,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
             if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
-            if (currentNav == "electronicNavSim" || currentNav == "mechanicalNavSim" || currentNav == "navAssemble") this._parseSparseCell();
+            currentNav = plist.allMenus[currentNav].parent || currentNav;
+            if (currentNav == "navSim" || currentNav == "navAssemble") this._parseSparseCell();
         },
 
         getCompositeData: function(){

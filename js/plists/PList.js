@@ -77,7 +77,14 @@ define(['three'], function(THREE){
                     cam: "Globals",
     //                editCamOutput: "Edit",
                     animate:"Preview"
-                },
+                }
+            },
+            navDNAAssemble:{
+                name: "Assemble",
+                parent: "navAssemble",
+                tabs:{
+                    dnaExport: "Export"
+                }
             },
             navMachineComponent:{
                 name: "Component Editor",
