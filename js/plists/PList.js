@@ -373,15 +373,15 @@ define(['three'], function(THREE){
                     properties:{}
                 },
                 tension:{
-                    name: "Tension",
+                    name: "In Tension",
                     color: "#aaa",
-                    altColor: "#70eee8",
+                    altColor: "#f0c437",
                     properties:{}
                 },
                 compression: {
-                    name: "Compression",
+                    name: "In Compression",
                     color: "#aaa",
-                    altColor: "#f0c437",
+                    altColor: "#70eee8",
                     properties:{}
                 }
             },

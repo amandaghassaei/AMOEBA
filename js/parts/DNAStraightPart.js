@@ -9,6 +9,13 @@ define(['underscore', 'stlLoader', 'gikPart'], function(_, THREE, GIKPart){
     var unitGeo = new THREE.BoxGeometry(0.2, 0.2, zScale);
 
     var bridgeGeo = new THREE.BoxGeometry(0.3, 0.4, zScale);
+    console.log(bridgeGeo);
+    bridgeGeo.vertices[4].y = 0;
+    bridgeGeo.vertices[5].y = 0;
+    bridgeGeo.vertices[2].y = -0.1;
+    bridgeGeo.vertices[3].y = -0.1;
+    bridgeGeo.vertices[0].y = 0.1;
+    bridgeGeo.vertices[1].y = 0.1;
     var bridgeMaterial = new THREE.MeshLambertMaterial({color:'#000000'});
 
     var nuclMaterials = {
