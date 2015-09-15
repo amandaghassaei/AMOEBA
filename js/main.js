@@ -144,6 +144,7 @@ require.config({
         mSetupMenu: 'menus/MSetupMenuView',
         mStaticMenu: 'menus/MStaticMenuView',
         mDynamicMenu: 'menus/MDynamicMenuView',
+        dnaSetupMenu: 'menus/DNASimSetupMenuView',
         assemblerSetupMenu: 'menus/AssemblerSetupMenuView',
         editComponentMenu: 'menus/EditComponentMenuView',
         commParentMenu: 'menus/CommParentMenu',

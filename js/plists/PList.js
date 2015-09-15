@@ -46,6 +46,13 @@ define(['three'], function(THREE){
                     eDynamic:"Dynamics"
                 }
             },
+            dnaNavSim:{
+                name: "DNA Simulation",
+                parent: "navSim",
+                tabs:{
+                    dnaSetup: "Setup"
+                }
+            },
             mechanicalNavSim:{
                 name: "Mechanical Simulation",
                 parent: "navSim",
@@ -315,7 +322,7 @@ define(['three'], function(THREE){
                 }
             },
             hex: {
-                name: "Hexagonal",
+                name: "Honeycomb",
                 connection: {
                     face: {
                         name: "Face",
@@ -368,13 +375,13 @@ define(['three'], function(THREE){
                 tension:{
                     name: "Tension",
                     color: "#aaa",
-                    altColor: "#666",
+                    altColor: "#70eee8",
                     properties:{}
                 },
                 compression: {
                     name: "Compression",
                     color: "#aaa",
-                    altColor: "#8391AC",
+                    altColor: "#f0c437",
                     properties:{}
                 }
             },

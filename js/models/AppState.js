@@ -199,7 +199,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             } else this.downKeys[e.keyCode] = false;
 
 //            console.log(e);
-            console.log(e.keyCode);
+//            console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
