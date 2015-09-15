@@ -262,7 +262,7 @@ define(['three'], function(THREE){
                                     }
                                 },
                                 aspectRatio: new THREE.Vector3(1,1,1.08),
-                                materialClasses: ['mechanical'],
+                                materialClasses: ['dna'],
                                 options: {
                                     gikLength: 2,
                                     scale: 2.5,
@@ -349,10 +349,31 @@ define(['three'], function(THREE){
 
         allMaterialClasses:{
             mechanical: "Structural",
-            electronic: "Electronic"
+            electronic: "Electronic",
+            dna: "DNA"
         },
 
         allMaterials:{
+            dna:{
+                noForces:{
+                    name: "No Internal Forces",
+                    color: "#aaa",
+                    altColor: "#666",
+                    properties:{}
+                },
+                tension:{
+                    name: "Tension",
+                    color: "#aaa",
+                    altColor: "#666",
+                    properties:{}
+                },
+                compression: {
+                    name: "Compression",
+                    color: "#aaa",
+                    altColor: "#8391AC",
+                    properties:{}
+                }
+            },
             electronic:{
                 brass:{
                     name: "Brass",
