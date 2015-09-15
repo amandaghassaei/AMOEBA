@@ -76,6 +76,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         return materialsList[id];
     }
 
+    function getDeleteMaterial(){
+        return materialsList.deleteMaterial.threeMaterial;
+    }
+
 
 
 
@@ -260,6 +264,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         getChildCellTypes:getChildCellTypes,
         setToDefaultMaterial: setToDefaultMaterial,
         setEditingMaterial: setEditingMaterial,
-        getEditingMaterial: getEditingMaterial
+        getEditingMaterial: getEditingMaterial,
+        getDeleteMaterial: getDeleteMaterial
     };
 });

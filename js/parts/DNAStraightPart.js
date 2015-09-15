@@ -3,13 +3,12 @@
  */
 
 
-define(['underscore', 'stlLoader', 'gikPart'], function(_, THREE, GIKPart){
+define(['underscore', 'stlLoader', 'gikPart', 'materials'], function(_, THREE, GIKPart, materials){
 
     var zScale = 1.08/8;
     var unitGeo = new THREE.BoxGeometry(0.2, 0.2, zScale);
 
     var bridgeGeo = new THREE.BoxGeometry(0.3, 0.4, zScale);
-    console.log(bridgeGeo);
     bridgeGeo.vertices[4].y = 0;
     bridgeGeo.vertices[5].y = 0;
     bridgeGeo.vertices[2].y = -0.1;
@@ -63,6 +62,11 @@ define(['underscore', 'stlLoader', 'gikPart'], function(_, THREE, GIKPart){
             return nuclMaterials[this._nuclType];
         }
         return GIKPart.prototype.getMaterial.call(this, returnTHREEObject);
+    };
+
+    DNAStraightPart.prototype.setMaterial = function(material){
+        if (material != materials.getDeleteMaterial()) material = this.getMaterial(true);
+        this.mesh.material = material;
     };
 
     DNAStraightPart.prototype._translatePart = function(mesh){

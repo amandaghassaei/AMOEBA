@@ -158,7 +158,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype.setDeleteMode = function(state){
         var material;
         if (!state && !this.materialName) return;//cell may be deleted by now
-        if (state) material = materials.list.deleteMaterial.threeMaterial;
+        if (state) material = materials.getDeleteMaterial();
         else  material = this.getMaterial(true);
         if (!material) return;//no material object found
         if (this.object3D.children[0].material == material) return;
