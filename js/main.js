@@ -218,7 +218,8 @@ require.config({
         kennyTeqPartHighResSTL: 'assets/stls/parts/KennyTeqPartHighRes.stl',
         samTeqPartSTL: 'assets/stls/parts/SamTeqPart.stl',
         legoBrickSTL: 'assets/stls/parts/legoBrick1x1.stl',
-        dnaLegoBrickSTL: 'assets/stls/parts/DNALegoBrick1x1.stl'
+        dnaLegoBrickSTL: 'assets/stls/parts/DNALegoBrick1x2.stl',
+        dnaLegoBrick1x1STL: 'assets/stls/parts/DNALegoBrick1x1.stl'
 
     },
 
