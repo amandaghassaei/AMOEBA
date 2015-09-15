@@ -504,6 +504,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
+        loopCells: function(callback){
+            this._loopCells(this.sparseCells, callback);
+        },
+
         _loopCells: function(cells, callback){
             for (var x=0;x<cells.length;x++){
                 for (var y=0;y<cells[0].length;y++){

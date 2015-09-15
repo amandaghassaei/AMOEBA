@@ -90,5 +90,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         this.length = null;
     };
 
+
+    GIKSuperCell.prototype.getSequence = function(){//todo this goes somewhere else
+        var sequence = "";
+        for (var i=0;i<this.length;i++){
+            if (i>0) sequence += "-";//linker
+            sequence += this.cells[i][0][0].getSequence();
+        }
+        return sequence;
+    };
+
     return GIKSuperCell;
 });

@@ -3,21 +3,27 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!menus/templates/DNAExportMenuView.html'],
-    function($, _, MenuParentView, plist, lattice, template){
+define(['jquery', 'underscore', 'menuParent', 'dnaExport', 'text!menus/templates/DNAExportMenuView.html'],
+    function($, _, MenuParentView, dnaExport, template){
 
 
     return MenuParentView.extend({
 
         events: {
+            "click #saveSequences":                     "_saveToFile"
         },
 
 
         _initialize: function(){
         },
 
+        _saveToFile: function(e){
+            e.preventDefault();
+            dnaExport.save();
+        },
+
         _makeTemplateJSON: function(){
-            return {};
+            return dnaExport.toJSON();
         },
 
         template: _.template(template)

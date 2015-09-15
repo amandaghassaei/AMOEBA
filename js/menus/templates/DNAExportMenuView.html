@@ -1,1 +1,9 @@
-export sequences
+32bp sequences:<br/>
+<% _.each(sequence32, function(seq){ %>
+    <%= seq %><br/>
+<% }); %><br/>
+16bp sequences:<br/>
+<% _.each(sequence16, function(seq){ %>
+    <%= seq %><br/>
+<% }); %><br/>
+<a href="#" id="saveSequences" class="btn btn-block btn-lg btn-success">Save to File</a><br/>

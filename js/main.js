@@ -35,6 +35,7 @@ require.config({
         globals: 'models/Globals',
         appState: 'models/AppState',
         fileSaver: 'models/FileSaver',
+        dnaExport: 'dnaExport/dnaExport',
 
         //communication
         socketio: '../dependencies/socket.io-1.3.5',

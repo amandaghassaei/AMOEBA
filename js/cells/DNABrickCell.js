@@ -25,6 +25,22 @@ define(['gikCell'], function(GIKCell){
         return "unassigned";
     };
 
+    DNABrickCell.prototype.getSequence = function(){
+        if (this._sequence) return this._sequence;
+        var sequence = "";
+        if (!this.parts || this.parts.length < 16) {
+            console.warn("need to calc nucleotides for this cell");
+            return sequence;
+        }
+        for (var i=0;i<16;i++){
+            var nucleotide = this.parts[i].getNucleotide();
+            if (nucleotide) sequence += nucleotide;
+            else console.warn("no nucleotide found for this part");
+        }
+        this._sequence = sequence;
+        return sequence;
+    };
+
 
     return DNABrickCell;
 });

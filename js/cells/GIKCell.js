@@ -51,10 +51,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
                 var index = self.getLatticeIndex();
                 if (parent.cells[index.x][index.y][index.z+1]) var topNeighbor = parent.cells[index.x][index.y][index.z+1];
                 if (parent.cells[index.x][index.y][index.z-1]) var bottomNeighbor = parent.cells[index.x][index.y][index.z-1];
+                var seq = this._sequence;
                 for (var i=0;i<16;i++){
                     var nucleotide = null;
-                    if (topNeighbor && i<8) nucleotide = self.getCompliment(topNeighbor.getNucleotideAtIndex(i+8));
-                    if (bottomNeighbor && i>7) nucleotide = self.getCompliment(bottomNeighbor.getNucleotideAtIndex(i-8));
+                    if (seq === undefined){
+                        if (topNeighbor && i<8) nucleotide = self.getCompliment(topNeighbor.getNucleotideAtIndex(i+8));
+                        if (bottomNeighbor && i>7) nucleotide = self.getCompliment(bottomNeighbor.getNucleotideAtIndex(i-8));
+                    } else  nucleotide = seq[i];
                     parts.push(new PartSubclass(self.index.x, self, {
                         nuclType: nucleotide,
                         vertIndex: i,
