@@ -1,3 +1,8 @@
+<% if(sequence32.length + sequence16.length != numCells){ %>
+    <div class="inlineWarning">
+        The number of sequences calculated does not match the number of cells in your assembly.  Switch to part type "DNA" and then hit "Re-Calc Sequences" to fix this.
+    </div>
+<% } %>
 <% if(sequence32.length > 0){ %>
     32bp sequences:<br/>
     <div class="sequenceOutput">
@@ -18,4 +23,5 @@
 <% } else { %>
     no 16bp sequences<br/>
 <% } %><br/>
+<a href="#" id="calcSequences" class="btn btn-block btn-lg btn-default">(Re)-Calc Sequences</a><br/>
 <a href="#" id="saveSequences" class="btn btn-block btn-lg btn-success">Save to File</a><br/>
