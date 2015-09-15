@@ -95,7 +95,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         var sequence = "";
         for (var i=0;i<this.length;i++){
             if (i>0) sequence += "-";//linker
-            sequence += this.cells[i][0][0].getSequence();
+            var seq = this.cells[i][0][0].getSequence();
+            if (i==0) seq = seq.split('').reverse().join('');
+            sequence += seq;
         }
         return sequence;
     };
