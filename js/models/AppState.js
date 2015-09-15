@@ -199,7 +199,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             } else this.downKeys[e.keyCode] = false;
 
 //            console.log(e);
-//            console.log(e.keyCode);
+            console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
@@ -250,7 +250,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                     e.preventDefault();
                     if (state && this.get("currentTab") == "animate") this.set("stockSimulationPlaying", !this.get("stockSimulationPlaying"));
                     break;
-                case 50://2-9
+                case 49://1-9
+                case 50:
                 case 51:
                 case 52:
                 case 53:
@@ -260,7 +261,15 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 case 57:
                     if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
-                        this.set("gikLength", e.keyCode-48);
+                        var val = e.keyCode-48;
+                        var range = plist.allLattices[this.lattice.get("cellType")].connection[this.lattice.get("connectionType")].type[this.lattice.get("latticeType")].options.gikRange;
+                        if (range){
+                            if ((range[0] > 0 && val < range[0]) || (range[1] > 1 && val > range[1])){
+                                console.warn("gik length out of range");
+                                return;
+                            }
+                        }
+                        this.set("gikLength", val);
                     }
                     break;
                 case 87://w - increase supercell index

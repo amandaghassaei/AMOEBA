@@ -25,15 +25,17 @@ Type:&nbsp;&nbsp;
             <% }); %>
         </ul>
     </div><br/><br/>
-Part Type: &nbsp;&nbsp;
-    <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[latticeType].parts[partType].name %><span class="caret"></span></button>
-        <ul role="menu" class="dropdown-menu">
-            <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].parts, function(val, key){ %>
-                <li><a class="lattice dropdownSelector" data-property="partType" data-value="<%= key %>" href="#"><%= val.name %></a></li>
-            <% }); %>
-        </ul>
-    </div><br/><br/>
+<% if(allLattices[cellType].connection[connectionType].type[latticeType].parts){ %>
+    Part Type: &nbsp;&nbsp;
+        <div class="btn-group">
+            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[latticeType].parts[partType].name %><span class="caret"></span></button>
+            <ul role="menu" class="dropdown-menu">
+                <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].parts, function(val, key){ %>
+                    <li><a class="lattice dropdownSelector" data-property="partType" data-value="<%= key %>" href="#"><%= val.name %></a></li>
+                <% }); %>
+            </ul>
+        </div><br/><br/>
+<% } %>
 Aspect Ratio:&nbsp;&nbsp;
     <input data-property="aspectRatio" data-key="x" value="<%= aspectRatio.x %>" placeholder="X" class="form-control lattice floatInput" type="text">&nbsp;
     <input data-property="aspectRatio" data-key="y" value="<%= aspectRatio.y %>" placeholder="Y" class="form-control lattice floatInput" type="text">&nbsp;

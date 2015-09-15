@@ -41,7 +41,7 @@ define(['underscore', 'stlLoader', 'part', 'bin!gikPartSTL', 'bin!gikEndPartSTL'
     };
 
     GIKPart.prototype._getGIKLength = function(){
-        return this.parentCell.superCell.getLength();
+        return this.parentCell.getLength();
     };
 
     return GIKPart;

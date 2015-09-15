@@ -15,6 +15,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         return null;//never show the gik cell
     };
 
+    GIKCell.prototype.getLength = function(){
+        return this.superCell.getLength();
+    };
+
     GIKCell.prototype._initParts = function(callback){
         if (!this.superCell) return;
         var self = this;
@@ -57,7 +61,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
                         isBridge: false
                     }));
                 }
-                parts.push(new PartSubclass(self.index.x, self, {isBridge: true}));
+                if (self.getLength() > 1) parts.push(new PartSubclass(self.index.x, self, {isBridge: true}));
                 callback(parts);
             });
         }

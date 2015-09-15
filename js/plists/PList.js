@@ -234,7 +234,9 @@ define(['three'], function(THREE){
                                 aspectRatio: new THREE.Vector3(1,1,1.28),
                                 materialClasses: ['electronic'],
                                 options: {
-                                    gikLength: 4
+                                    gikLength: 4,
+                                    gikRange: [1,-1],
+                                    units: "mm"
                                 }
                             },
                             lego: {
@@ -265,6 +267,7 @@ define(['three'], function(THREE){
                                 materialClasses: ['dna'],
                                 options: {
                                     gikLength: 2,
+                                    gikRange: [1,2],
                                     scale: 2.5,
                                     units: 'nm'
                                 }
@@ -272,7 +275,8 @@ define(['three'], function(THREE){
                             default: {
                                 name: "Default",
                                 parts: null,
-                                aspectRatio: new THREE.Vector3(1,1,1)
+                                aspectRatio: new THREE.Vector3(1,1,1),
+                                options:{}
                             }
                         }
                     }
