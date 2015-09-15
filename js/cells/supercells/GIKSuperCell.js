@@ -99,6 +99,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
             if (i==0) seq = seq.split('').reverse().join('');
             sequence += seq;
         }
+        if (sequence == "-") return "";
         return sequence;
     };
 

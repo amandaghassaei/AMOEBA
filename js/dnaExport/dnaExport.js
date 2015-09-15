@@ -30,9 +30,12 @@ define(['underscore', 'backbone', 'lattice', 'appState', 'fileSaver'],
             var sequences16 = [];
             lattice.loopCells(function(cell, x, y, z){
                 if (!cell) return;
-                if (cell.getLength() == 2) sequences32.push(cell.getSequence());
-                else if (cell.getLength() == 1) sequences16.push(cell.getSequence());
-                else console.warn("unexpected cell of length " + cell.getLength());
+                var seq = cell.getSequence();
+                if (seq && seq != ""){
+                    if (cell.getLength() == 2) sequences32.push(seq);
+                    else if (cell.getLength() == 1) sequences16.push(seq);
+                    else console.warn("unexpected cell of length " + cell.getLength());
+                }
             });
             this.set("sequence32", sequences32);
             this.set("sequence16", sequences16);
