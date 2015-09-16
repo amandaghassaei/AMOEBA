@@ -6,7 +6,27 @@
 define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
     function(_, THREE, three, lattice, appState, DMACell){
 
-    var unitGeo = new THREE.OctahedronGeometry(1/Math.sqrt(2));
+    var unitGeo = new THREE.Geometry();
+    unitGeo.vertices = [
+        new THREE.Vector3(0.7071067811865475, 0, 0),
+        new THREE.Vector3(-0.7071067811865475, 0, 0),
+        new THREE.Vector3(0, 0.7071067811865475, 0),
+        new THREE.Vector3(0, -0.7071067811865475, 0),
+        new THREE.Vector3(0, 0, 0.7071067811865475),
+        new THREE.Vector3(0, 0, -0.7071067811865475)
+    ];
+
+    unitGeo.faces = [
+        new THREE.Face3(2, 4, 0),
+        new THREE.Face3(4, 3, 0),
+        new THREE.Face3(3, 5, 0),
+        new THREE.Face3(5, 2, 0),
+        new THREE.Face3(2, 5, 1),
+        new THREE.Face3(5, 3, 1),
+        new THREE.Face3(3, 4, 1),
+        new THREE.Face3(4, 2, 1)
+    ];
+    unitGeo.computeFaceNormals();
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationZ(-3*Math.PI/12));
     unitGeo.applyMatrix(new THREE.Matrix4().makeRotationX(Math.asin(2/Math.sqrt(2)/Math.sqrt(3))));
 
