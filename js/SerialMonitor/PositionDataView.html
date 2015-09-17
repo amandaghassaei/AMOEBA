@@ -3,4 +3,12 @@ Y: &nbsp;&nbsp;<span class="positionVal"><%= y %></span><br/>
 Z: &nbsp;&nbsp;<span class="positionVal"><%= z %></span><br/><br/>
 A: &nbsp;&nbsp;<span class="positionVal"><%= a %></span><br/>
 B: &nbsp;&nbsp;<span class="positionVal"><%= b %></span><br/>
-C: &nbsp;&nbsp;<span class="positionVal"><%= c %></span><br/>
+C: &nbsp;&nbsp;<span class="positionVal"><%= c %></span><br/><br/>
+<span id="machineStatus">status: &nbsp;&nbsp;
+    <% if (status == 0) { %>initializing
+    <% } else if (status == 1 || status == 3 || status == 4){ %>ready
+    <% } else if (status == 2){ %>alarm
+    <% } else if (status == 5) { %>moving
+    <% } else if (status == 6) { %>holding
+    <% } else if (status == 9) { %>homing
+    <% } else { %>status = <%= status %><% } %></span>

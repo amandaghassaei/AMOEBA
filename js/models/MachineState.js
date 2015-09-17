@@ -13,7 +13,8 @@ define(['underscore', 'backbone'], function(_, Backbone){
             z: null,
             a: null,
             b: null,
-            c: null
+            c: null,
+            status: 0
         },
 
         setPosition: function(data){
@@ -22,6 +23,7 @@ define(['underscore', 'backbone'], function(_, Backbone){
                 var val = data["pos" + key];
                 if (val !== null && val !== undefined) self.set(key, val);
             });
+            if (data.stat !== null && data.stat !== undefined) this.set("status", data.stat);
         },
 
         refresh: function(){

@@ -97,3 +97,7 @@ span.outgoing {
     font-size: 30px;
     padding-left: 5px;
 }
+
+#machineStatus {
+    font-size: 18px;
+}
