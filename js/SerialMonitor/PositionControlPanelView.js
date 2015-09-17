@@ -27,7 +27,6 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
 
         _renderPositionData: function(){
             var machineState = this.model.getMachineState();
-            console.log(machineState.toJSON());
             $("#positionData").html(_.template(positionTemplate)(machineState.toJSON()));
         },
 

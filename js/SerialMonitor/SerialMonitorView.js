@@ -23,7 +23,6 @@ define(['jquery', 'underscore', 'backbone', 'serialComm', 'text!SerialMonitorVie
             this.listenTo(serialComm, "change:lastMessageReceived", this._updateIncomingMessage);
             this.listenTo(serialComm, "change:lastMessageSent", this._updateOutgoingMessage);
             this.listenTo(serialComm, "change:baudRate change:portName", this.render);
-            this.listenTo(serialComm, "change:baudRate", function(){console.log("got it")});
             this.listenTo(serialComm, "change:connected", function(){
                 if (!serialComm.get("connected")) this._close();
             });
@@ -115,7 +114,6 @@ define(['jquery', 'underscore', 'backbone', 'serialComm', 'text!SerialMonitorVie
         },
 
         render: function(){
-            console.log("render");
             if ($("input[type=text]").is(":focus")) return;
             this.$el.html(this.template(this._makeTemplateJSON()));
         },

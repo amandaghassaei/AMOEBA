@@ -23,13 +23,21 @@ define(['underscore', 'backbone'], function(_, Backbone){
                 var val = data["pos" + key];
                 if (val !== null && val !== undefined) self.set(key, val);
             });
-            if (data.stat !== null && data.stat !== undefined) this.set("status", data.stat);
+            if (data.stat !== null && data.stat !== undefined) {
+                this.set("status", data.stat);
+                if (data.stat == 1 || data.stat == 3 || data.stat == 4) this._triggerNextCommand();
+            }
         },
 
         setFooterStatus: function(data){
             if (data[1] == 0){//ok status
                 this.set("status", 3);
+                this._triggerNextCommand();
             } else this.set("status", 10);
+        },
+
+        _triggerNextCommand: function(){
+            this.trigger("readyForNextCommand");
         },
 
         refresh: function(){
