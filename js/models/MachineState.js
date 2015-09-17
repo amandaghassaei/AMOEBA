@@ -3,31 +3,34 @@
  */
 
 
-define(['backbone'], function(Backbone){
+define(['underscore', 'backbone'], function(_, Backbone){
 
     var MachineState = Backbone.Model.extend({
 
         defaults:{
-            xAxis: null,
-            yAxis: null,
-            zAxis: null,
-            aAxis: null,
-            bAxis: null,
-            cAxis: null
+            x: null,
+            y: null,
+            z: null,
+            a: null,
+            b: null,
+            c: null
         },
 
-        destroy: function(){
-            this.set("xAxis", null, {silent:true});
-            this.set("yAxis", null, {silent:true});
-            this.set("zAxis", null, {silent:true});
-            this.set("aAxis", null, {silent:true});
-            this.set("bAxis", null, {silent:true});
-            this.set("cAxis", null, {silent:true});
+        setPosition: function(data){
+            var self = this;
+            _.each(this.attributes, function(attribute, key){
+                var val = data["pos" + key];
+                if (val !== null && val !== undefined) self.set(key, val);
+            });
+        },
+
+        refresh: function(){
+            this.set(this.defaults);
         }
 
 
     });
 
-    return MachineState;
+    return new MachineState();
 
 });

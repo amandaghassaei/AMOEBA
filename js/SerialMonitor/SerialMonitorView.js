@@ -102,7 +102,7 @@ define(['jquery', 'underscore', 'backbone', 'serialComm', 'text!SerialMonitorVie
         _addOutputData: function(html){
             var $output = $("#serialMonitorOutput");
             $output.append(html);
-            if (this.model.get("autoscroll")) $output.animate({scrollTop:$output.scrollTop()+$output.innerHeight()}, "fast");
+            if (this.model.get("autoscroll")) $output.scrollTop($output.scrollTop()+$output.innerHeight());
         },
 
         _clear: function(e){

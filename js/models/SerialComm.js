@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/17/15.
  */
 
-define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backbone, io, MachineState){
+define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backbone, io, machineState){
 
     var SerialComm = Backbone.Model.extend({
 
@@ -19,7 +19,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
         },
 
         initialize: function(){
-            this.machineState = null;
+            this.machineState = machineState;
             this.attemptToConnectToNode();
         },
 
@@ -61,8 +61,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
         },
 
         refreshMachineState: function(){//when updating connection, create a new instance of machine state
-            if (this.machineState) this.machineState.destroy();
-            this.machineState = new MachineState();
+            this.machineState.refresh();
         },
 
         getMachineState: function(){
@@ -101,6 +100,14 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
             if (data == "" || data == '\n' || data == "\r") return;
             serialComm.set("lastMessageReceived", data, {silent:true});
             serialComm.trigger("change:lastMessageReceived");
+            try {
+                var json = JSON.parse(data);
+                if (json.r && json.r.sr){
+                    serialComm.getMachineState().setPosition(json.r.sr);
+                } else if (json.sr){
+                    serialComm.getMachineState().setPosition(json.sr);
+                }
+            } catch(err) {}
         });
 
         socket.on('dataSent', function(data){

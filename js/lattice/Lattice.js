@@ -15,7 +15,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             cellType: "cube",
             connectionType: "gik",
-            latticeType: "dnaBricks",
+            latticeType: "willGik",
             partType: null,
 
             aspectRatio: null,

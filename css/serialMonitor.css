@@ -91,3 +91,9 @@ span.outgoing {
     text-align: center;
     padding-top: 20px;
 }
+
+.positionVal {
+    color: #7777FF;
+    font-size: 30px;
+    padding-left: 5px;
+}

@@ -36,7 +36,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
             cellsVisible: true,
 
             superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds
-            gikLength: 2,//this updates super cell range when using non-composite materials
+            gikLength: 4,//this updates super cell range when using non-composite materials
             superCellRange: new THREE.Vector3(1,1,1),
 
             realisticColorScheme: false,
