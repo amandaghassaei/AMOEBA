@@ -26,6 +26,12 @@ define(['underscore', 'backbone'], function(_, Backbone){
             if (data.stat !== null && data.stat !== undefined) this.set("status", data.stat);
         },
 
+        setFooterStatus: function(data){
+            if (data[1] == 0){//ok status
+                this.set("status", 3);
+            } else this.set("status", 10);
+        },
+
         refresh: function(){
             this.set(this.defaults);
         }

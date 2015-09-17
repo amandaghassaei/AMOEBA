@@ -107,6 +107,8 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
                 } else if (json.sr){
                     serialComm.getMachineState().setPosition(json.sr);
                 }
+                if (json.f) serialComm.getMachineState().setFooterStatus(json.f);
+                else if (json.r.f) serialComm.getMachineState().setFooterStatus(json.r.f);
             } catch(err) {}
         });
 
