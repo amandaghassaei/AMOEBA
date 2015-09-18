@@ -171,7 +171,15 @@ define(['underscore', 'cam', 'three'], function(_, cam, THREE){
 
 
 
-    //simulation animation
+    //simulation
+
+    Component.prototype.immediatelySetAngle = function(angle){
+        this.secondWrapper.rotation.z = angle;
+    };
+
+    Component.prototype.immediatelySetPosition = function(nextPos){
+        this.object3D.position.set(nextPos.x, nextPos.y, nextPos.z);
+    };
 
     Component.prototype.getObject3D = function(){
         return this.object3D;

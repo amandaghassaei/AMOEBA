@@ -23,8 +23,11 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
             this.listenTo(serialComm, "change:isStreaming", this.render);
             this.listenTo(cam, "change:simLineNumber", this._lineNumChanged);
+        },
 
-            this.nextLine = cam.get("simLineNumber");
+        _getPropertyOwner: function($target){
+            if ($target.hasClass("cam")) return cam;
+            return null;
         },
 
         _startStream: function(e){
@@ -44,13 +47,13 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _decrementLineNum: function(e){
             e.preventDefault();
-            var nextLine = this.nextLine - 1;
+            var nextLine = cam.get("simLineNumber") - 1;
             this._setNextLine(nextLine);
         },
 
         _incrementLineNum: function(e){
             e.preventDefault();
-            var nextLine = this.nextLine + 1;
+            var nextLine = cam.get("simLineNumber") + 1;
             this._setNextLine(nextLine);
         },
 
@@ -58,8 +61,12 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             var length = cam.get("dataOut").split("\n").length;
             if (nextLine < 0) nextLine = length-1;
             if (nextLine > length-1) nextLine = 0;
-            this.nextLine = nextLine;
-            $("#nextLine").val(this.nextLine);
+            cam.set("simLineNumber", nextLine);
+        },
+
+        _showNextLine: function(nextLine){
+            console.log(nextLine);
+            $("#nextLine").val(nextLine);
             this._drawGcodeHighlighter(nextLine);
         },
 
@@ -70,7 +77,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _lineNumChanged: function(){
             var lineNum = cam.get("simLineNumber");
-            this._setNextLine(lineNum);
+            this._showNextLine(lineNum);
         },
 
         _drawGcodeHighlighter: function(lineNum){

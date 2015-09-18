@@ -232,6 +232,14 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
     
     Assembler.prototype.pause = function(){
     };
+
+    Assembler.prototype.immediatelyMoveTo = function(data){
+        this.components.xAxis.immediatelySetPosition(new THREE.Vector3(data.x, 0, 0));
+        this.components.yAxis.immediatelySetPosition(new THREE.Vector3(0, data.y, 0));
+        this.components.zAxis.immediatelySetPosition(new THREE.Vector3(0, 0, data.z));
+        if (data.a != 0) this.components.substrate.immediatelySetAngle(-Math.PI/2);
+        else this.components.substrate.immediatelySetAngle(data.a);
+    };
     
     Assembler.prototype.moveTo = function(position, speed, settings, callback){
 

@@ -29,15 +29,8 @@ define(['underscore', 'backbone'], function(_, Backbone){
             }
         },
 
-        setFooterStatus: function(data){
-            if (data[1] == 0){//ok status
-                this.set("status", 3);
-                this._triggerNextCommand();
-            } else this.set("status", 10);
-        },
-
         isReadyStatus: function(status){
-            if (status == undefined) status = this.get("status");
+            if (status === undefined) status = this.get("status");
             return status == 1 || status == 3 || status == 4;
         },
 

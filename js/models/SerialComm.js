@@ -2,8 +2,8 @@
  * Created by aghassaei on 6/17/15.
  */
 
-define(['underscore', 'backbone', 'socketio', 'machineState'],
-    function(_, Backbone, io, machineState){
+define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
+    function(_, Backbone, io, machineState, cam){
 
     var SerialComm = Backbone.Model.extend({
 
@@ -21,6 +21,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState'],
 
         initialize: function(){
             this.machineState = machineState;
+            this.listenTo(machineState, "change", this._updateVirtualMachine);
             this.attemptToConnectToNode();
         },
 
@@ -61,31 +62,33 @@ define(['underscore', 'backbone', 'socketio', 'machineState'],
             this.socket.emit("stopStream");
         },
 
+        _updateVirtualMachine: function(){
+            cam.setPosition(this.getMachineState().toJSON());
+        },
+
         sendGCode: function(){
+            if (!this.get("isStreaming")) return;
+            if (!cam.initialize) return;//don't do this from serial monitor window
             var self = this;
             var machineState = this.getMachineState();
-            require(['cam'], function(cam){
-                if (machineState && machineState.isReadyStatus()){
-                    var lineNum = cam.get("simLineNumber");
-                    var allLines = cam.get("dataOut").split("\n");
-                    if (lineNum >= 0 && lineNum < allLines.length) {
-                        var line = allLines[lineNum];
-                        self.listenToOnce(machineState, "readyForNextCommand", function(){
-                            lineNum ++;
-                            cam.set("simLineNumber", lineNum);
-                            self.sendGCode();
-                        });
-                        self.send('{"gc":"' + line + '"}');
-                        cam.simulateCurrentLine();
-                    } else if (lineNum == allLines.length){
-                        cam.simulateCurrentLine();
-                        self.pauseStream();
-                    } else {
-                        console.warn("invalid line number " + lineNum);
-                    }
-
+            if (machineState && machineState.isReadyStatus()){
+                var lineNum = cam.get("simLineNumber");
+                var allLines = cam.get("dataOut").split("\n");
+                if (lineNum >= 0 && lineNum < allLines.length) {
+                    var line = allLines[lineNum];
+                    self.listenToOnce(machineState, "readyForNextCommand", function(){
+                        lineNum ++;
+                        cam.set("simLineNumber", lineNum);
+                        self.sendGCode();
+                    });
+                    self.send('{"gc":"' + line + '"}');
+                } else if (lineNum == allLines.length){
+                    self.pauseStream();
+                } else {
+                    console.warn("invalid line number " + lineNum);
                 }
-            });
+
+            } else console.warn("machine not ready");
         },
 
         refreshMachineState: function(){//when updating connection, create a new instance of machine state
@@ -135,8 +138,6 @@ define(['underscore', 'backbone', 'socketio', 'machineState'],
                 } else if (json.sr){
                     serialComm.getMachineState().setPosition(json.sr);
                 }
-                if (json.f) serialComm.getMachineState().setFooterStatus(json.f);
-                else if (json.r.f) serialComm.getMachineState().setFooterStatus(json.r.f);
             } catch(err) {}
         });
 

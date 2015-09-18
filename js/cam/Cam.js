@@ -297,7 +297,6 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         simulateCurrentLine: function(callback){
             var lineNum = this.get("simLineNumber");
-            console.log(lineNum);
             three.startAnimationLoop();
             if (lineNum == 0) lattice.hideCells("cells");
             var allLines = this.get("dataOut").split("\n");
@@ -316,6 +315,19 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
                 //finished simulation
                 this.resetSimulation();
             }
+        },
+
+        setPosition: function(position){
+            var scale = lattice.get("scale");
+
+            _.each(position, function(val, key){
+                position[key] = val/scale;
+            });
+
+            this.get("assembler").immediatelyMoveTo(position);
+
+
+            three.render();
         },
 
 

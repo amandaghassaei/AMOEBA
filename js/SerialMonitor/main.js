@@ -22,7 +22,8 @@ require.config({
         plist: '../plists/PList',
         commPlist: '../plists/commPlist',
         serialComm: '../models/SerialComm',
-        machineState: '../models/MachineState'
+        machineState: '../models/MachineState',
+        cam: 'fakeCam'
 
     },
 

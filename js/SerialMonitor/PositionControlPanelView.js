@@ -30,7 +30,7 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
             $("#positionData").html(_.template(positionTemplate)(machineState.toJSON()));
         },
 
-        _askForPosition: function(e){
+        _askForPosition: function(e){//todo should be in machine state init
             if (e) e.preventDefault();
             this.model.send('{"sr":n}');
         },
