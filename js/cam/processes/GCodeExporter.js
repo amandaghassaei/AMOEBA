@@ -85,7 +85,7 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
             z = "Z"+parseFloat(z).toFixed(3);
         }
         if (command) return this.addLine(command, [x,y,z]);
-        return this.addLine("G01", [x,y,z]);
+        return this.addLine("G1", [x,y,z]);
     };
 
     GCodeExporter.prototype._rapidXYZ = function(x, y, z){

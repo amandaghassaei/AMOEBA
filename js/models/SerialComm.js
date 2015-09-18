@@ -16,7 +16,8 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
             error: null,
             lastMessageReceived: null,
             lastMessageSent: "",
-            isStreaming: false
+            isStreaming: false,
+            singleStepMode: true
         },
 
         initialize: function(){
@@ -79,11 +80,16 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
                     self.listenToOnce(machineState, "readyForNextCommand", function(){
                         lineNum ++;
                         cam.set("simLineNumber", lineNum);
+                        if (self.get("singleStepMode")){
+                            self.pauseStream();
+                            return;
+                        }
                         self.sendGCode();
                     });
                     self.send('{"gc":"' + line + '"}');
                 } else if (lineNum == allLines.length){
                     self.pauseStream();
+                    cam.set("simLineNumber", 0);
                 } else {
                     console.warn("invalid line number " + lineNum);
                 }

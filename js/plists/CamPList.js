@@ -132,7 +132,7 @@ define(['three'], function(THREE){
                     safeHeight: 4,
                     originPosition: new THREE.Vector3(0,0,0),
                     rapidSpeeds:{xy: 250, z: 250},
-                    feedRate:{xy: 6, z: 6}
+                    feedRate:{xy: 100, z: 100}
                 },
                 customPost: {}
             },

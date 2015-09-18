@@ -2,8 +2,8 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!sendMenuTemplate', 'cam', 'camPlist'],
-    function($, _, MenuParent, serialComm, commPlist, template, cam, camPlist){
+define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!sendMenuTemplate', 'text!menus/templates/SendControlPanel.html', 'cam', 'camPlist'],
+    function($, _, MenuParent, serialComm, commPlist, template, controlPanelTemplate, cam, camPlist){
 
     return MenuParent.extend({
 
@@ -20,13 +20,14 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _initialize: function(){
 
-            this.listenTo(this.model, "change:stockSimulationPlaying", this.render);
-            this.listenTo(serialComm, "change:isStreaming", this.render);
+            this.listenTo(serialComm, "change", this._renderControls);
+            this.listenTo(cam, "change", this._renderControls);
             this.listenTo(cam, "change:simLineNumber", this._lineNumChanged);
         },
 
-        _getPropertyOwner: function($target){
+        getPropertyOwner: function($target){
             if ($target.hasClass("cam")) return cam;
+            if ($target.hasClass("comm")) return serialComm;
             return null;
         },
 
@@ -64,12 +65,6 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             cam.set("simLineNumber", nextLine);
         },
 
-        _showNextLine: function(nextLine){
-            console.log(nextLine);
-            $("#nextLine").val(nextLine);
-            this._drawGcodeHighlighter(nextLine);
-        },
-
         _openSerialMonitor: function(e){
             e.preventDefault();
             serialComm.openSerialMonitor();
@@ -77,7 +72,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _lineNumChanged: function(){
             var lineNum = cam.get("simLineNumber");
-            this._showNextLine(lineNum);
+            this._drawGcodeHighlighter(lineNum);
         },
 
         _drawGcodeHighlighter: function(lineNum){
@@ -100,16 +95,25 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
             $editor.css({height:height +"px"});
         },
 
+        _makeControlTemplateJSON: function(){
+
+        },
+
         _makeTemplateJSON: function(){
-            return _.extend(serialComm.toJSON(), commPlist, cam.toJSON(), camPlist, {nextLine:this.nextLine});
+            return _.extend(serialComm.toJSON(), cam.toJSON(), camPlist);
+        },
+
+        _renderControls: function(){
+            $("#sendControls").html(this.controlPanelTemplate(this._makeTemplateJSON()));
         },
 
         _render: function(){
-            if (serialComm.get("lastMessageReceived") === null) $("#incomingSerialMessage").hide();
             this._setEditorHeight();
-            this._drawGcodeHighlighter(this.nextLine);
+            this._drawGcodeHighlighter(cam.get("simLineNumber"));
+            this._renderControls();
         },
 
+        controlPanelTemplate: _.template(controlPanelTemplate),
         template: _.template(template)
 
     });
