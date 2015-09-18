@@ -137,17 +137,15 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
             if (data == "" || data == '\n' || data == "\r") return;
             serialComm.set("lastMessageReceived", data, {silent:true});
             serialComm.trigger("change:lastMessageReceived");
-            console.log(data);
             try {
                 var json = JSON.parse(data);
-                console.log(json);
                 if (json.r && json.r.sr){
                     serialComm.getMachineState().setPosition(json.r.sr);
                 } else if (json.sr){
                     serialComm.getMachineState().setPosition(json.sr);
                 }
             } catch(err) {
-                console.warn(err);
+//                console.warn(err);
             }
         });
 
@@ -178,7 +176,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
         });
 
         socket.on("errorMsg", function(data){
-            console.log(data);
+            console.warn(data);
             serialComm.set("error", data.error);
         });
 

@@ -145,7 +145,7 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
     };
 
     GCodeExporter.prototype._isMoveCommand = function(line){
-        return line.substr(0,3) == "G01" || line.substr(0,2) == "G0";
+        return line.substr(0,2) == "G1" || line.substr(0,2) == "G0" || line.substr(0,3) == "G01";
     };
 
     GCodeExporter.prototype._simulateMove = function(line, speed, machine, settings, callback){
