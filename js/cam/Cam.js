@@ -319,14 +319,17 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         setPosition: function(position){
             var scale = lattice.get("scale");
+            var originOffset = this.get("originPosition");
 
             _.each(position, function(val, key){
+                if (key == "x") position[key] -= originOffset.x;
+                if (key == "y") position[key] -= originOffset.y;
+                if (key == "z") position[key] -= originOffset.z;
+
                 position[key] = val/scale;
             });
 
             this.get("assembler").immediatelyMoveTo(position);
-
-
             three.render();
         },
 

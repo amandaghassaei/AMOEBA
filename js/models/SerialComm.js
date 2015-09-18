@@ -137,14 +137,18 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
             if (data == "" || data == '\n' || data == "\r") return;
             serialComm.set("lastMessageReceived", data, {silent:true});
             serialComm.trigger("change:lastMessageReceived");
+            console.log(data);
             try {
                 var json = JSON.parse(data);
+                console.log(json);
                 if (json.r && json.r.sr){
                     serialComm.getMachineState().setPosition(json.r.sr);
                 } else if (json.sr){
                     serialComm.getMachineState().setPosition(json.sr);
                 }
-            } catch(err) {}
+            } catch(err) {
+                console.warn(err);
+            }
         });
 
         socket.on('dataSent', function(data){

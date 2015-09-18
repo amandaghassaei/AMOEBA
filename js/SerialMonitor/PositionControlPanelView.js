@@ -23,6 +23,10 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
             this.listenTo(this.model.getMachineState(), "change", this._renderPositionData);
             this.render();
             this._askForPosition();
+
+            this.model.send('{"sr":{"stat":t, "posx":t, "posy":t, "posz":t, "posa":t, "line":t}}');
+            this.model.send('$ej=1');
+            this.model.send('$sv=2');
         },
 
         _renderPositionData: function(){
