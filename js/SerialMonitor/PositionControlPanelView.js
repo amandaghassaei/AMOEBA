@@ -40,6 +40,11 @@ define(['jquery', 'underscore', 'backbone', 'text!PositionControlPanelView.html'
             this.model.send("!");
         },
 
+        _pause: function(e){
+            e.preventDefault();
+            this.model.pauseStream();
+        },
+
         _makeTemplateJSON: function(){
             return {};
         },

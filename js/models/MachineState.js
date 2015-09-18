@@ -25,7 +25,7 @@ define(['underscore', 'backbone'], function(_, Backbone){
             });
             if (data.stat !== null && data.stat !== undefined) {
                 this.set("status", data.stat);
-                if (data.stat == 1 || data.stat == 3 || data.stat == 4) this._triggerNextCommand();
+                if (this.isReadyStatus(data.stat)) this._triggerNextCommand();
             }
         },
 
@@ -34,6 +34,11 @@ define(['underscore', 'backbone'], function(_, Backbone){
                 this.set("status", 3);
                 this._triggerNextCommand();
             } else this.set("status", 10);
+        },
+
+        isReadyStatus: function(status){
+            if (status == undefined) status = this.get("status");
+            return status == 1 || status == 3 || status == 4;
         },
 
         _triggerNextCommand: function(){

@@ -2,7 +2,8 @@
  * Created by aghassaei on 6/17/15.
  */
 
-define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backbone, io, machineState){
+define(['underscore', 'backbone', 'socketio', 'machineState'],
+    function(_, Backbone, io, machineState){
 
     var SerialComm = Backbone.Model.extend({
 
@@ -58,6 +59,33 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
 
         stopStream: function(){
             this.socket.emit("stopStream");
+        },
+
+        sendGCode: function(){
+            var self = this;
+            var machineState = this.getMachineState();
+            require(['cam'], function(cam){
+                if (machineState && machineState.isReadyStatus()){
+                    var lineNum = cam.get("simLineNumber");
+                    var allLines = cam.get("dataOut").split("\n");
+                    if (lineNum >= 0 && lineNum < allLines.length) {
+                        var line = allLines[lineNum];
+                        self.listenToOnce(machineState, "readyForNextCommand", function(){
+                            lineNum ++;
+                            cam.set("simLineNumber", lineNum);
+                            self.sendGCode();
+                        });
+                        self.send('{"gc":"' + line + '"}');
+                        cam.simulateCurrentLine();
+                    } else if (lineNum == allLines.length){
+                        cam.simulateCurrentLine();
+                        self.pauseStream();
+                    } else {
+                        console.warn("invalid line number " + lineNum);
+                    }
+
+                }
+            });
         },
 
         refreshMachineState: function(){//when updating connection, create a new instance of machine state
@@ -119,6 +147,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState'], function(_, Backb
 
         socket.on('isStreaming', function(data){
             serialComm.set("isStreaming", data);
+            if (data == true) serialComm.sendGCode();
         });
 
         socket.on('portConnected', function(data){

@@ -29,19 +29,16 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _startStream: function(e){
             e.preventDefault();
-            this.model.set("stockSimulationPlaying", true);
             serialComm.startStream();
         },
 
         _pauseStream: function(e){
             e.preventDefault();
-            this.model.set("stockSimulationPlaying", false);
             serialComm.pauseStream();
         },
 
         _stopMachine: function(e){
             e.preventDefault();
-            this.model.set("stockSimulationPlaying", false);
             serialComm.stopStream();
         },
 

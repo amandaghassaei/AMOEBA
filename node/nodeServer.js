@@ -171,6 +171,7 @@ io.on('connection', function(socket){
 
     function onPortOpen(name, baud){
         io.emit("portConnected", {baudRate:baud, portName:name});
+        setIsStreaming(false);
     }
 
     function onPortData(data){

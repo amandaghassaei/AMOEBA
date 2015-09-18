@@ -123,20 +123,24 @@ define(['underscore', 'cam', 'lattice', 'three'], function(_, cam, lattice, THRE
             var json = line.substr(1,line.length-2);
             json = JSON.parse(json);
             machine.releaseStock(json, settings);
-            return callback();
+            if (callback) callback();
+            return;
         }
         if (line[0] == "F"){//speed
             this.animationSpeed = line.split("F")[1] / settings.scale;
-            return callback();
+            if (callback) callback();
+            return;
         }
         if (line == "" || line[0] == "(" || !this._isMoveCommand(line)){
-            return callback();
+            if (callback) callback();
+            return;
         }
         if (this._isMoveCommand(line)){
             return this._simulateMove(line, this.animationSpeed, machine, settings, callback);
         } else {
             console.warn("problem parsing gcode: " + line);
-            return callback();
+            if (callback) callback();
+            return;
         }
     };
 

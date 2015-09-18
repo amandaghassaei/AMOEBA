@@ -275,41 +275,47 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         resetSimulation: function(){
             this.set("simLineNumber", 0, {silent:true});
             appState.set("stockSimulationPlaying", false);
+            //todo isStreaming = false;
             three.stopAnimationLoop();
             lattice.showCells("cells");
         },
 
         _stockSimulation: function(){
             if (appState.get("stockSimulationPlaying")){
-                three.startAnimationLoop();
-                var currentLine = this.get("simLineNumber");
-                if (currentLine == 0) lattice.hideCells("cells");
-                var allLines = this.get("dataOut").split("\n");
-                if(currentLine<allLines.length){
-                    var self = this;
-
-                    var scale = lattice.get("scale");
-                    var scaledSettings = {
-                        scale: scale,
-                        originPosition: this.get("originPosition").clone().divideScalar(scale),
-                        stockPosition: this.get("stockPosition").clone().divideScalar(scale),
-                    };
-
-                    this.get("exporter").simulate(allLines[currentLine], this.get("assembler"),
-                        scaledSettings, function(){
-                            currentLine++;
-                            self.set("simLineNumber", currentLine);
-                            self._stockSimulation();
-                        });
-                } else {
-                    //finished simulation
-                    this.resetSimulation();
-                }
+                var currentLineNum = this.get("simLineNumber");
+                var self = this;
+                this.simulateCurrentLine(function(){
+                    currentLineNum++;
+                    self.set("simLineNumber", currentLineNum);
+                    self._stockSimulation();
+                });
             } else {
                 three.stopAnimationLoop();
                 this.get("assembler").pause();
             }
+        },
 
+        simulateCurrentLine: function(callback){
+            var lineNum = this.get("simLineNumber");
+            console.log(lineNum);
+            three.startAnimationLoop();
+            if (lineNum == 0) lattice.hideCells("cells");
+            var allLines = this.get("dataOut").split("\n");
+            if(lineNum < allLines.length){
+
+                var scale = lattice.get("scale");
+                var scaledSettings = {
+                    scale: scale,
+                    originPosition: this.get("originPosition").clone().divideScalar(scale),
+                    stockPosition: this.get("stockPosition").clone().divideScalar(scale)
+                };
+
+                this.get("exporter").simulate(allLines[lineNum], this.get("assembler"),
+                    scaledSettings, callback);
+            } else {
+                //finished simulation
+                this.resetSimulation();
+            }
         },
 
 

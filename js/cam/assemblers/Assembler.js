@@ -239,7 +239,7 @@ define(['underscore', 'appState', 'lattice', 'stlLoader', 'threeModel', 'cam', '
         function sketchyCallback(){
             totalThreads -= 1;
             if (totalThreads > 0) return;
-            callback();
+            if (callback) callback();
         }
 
         var startingPos = this.components.xAxis.getPosition().add(this.components.yAxis.getPosition().add(this.components.zAxis.getPosition()));//this.components.zAxis.getAbsolutePosition();//get position of end effector
