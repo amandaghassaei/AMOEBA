@@ -89,7 +89,7 @@ define(['three'], function(THREE){
                     substrate: {
                         name: "Substrate",
                         rotary: true,
-                        centerOfRotation: {x:9,y:10.5,z:0},//(5.08mm, 5.715mm)
+                        centerOfRotation: {x:9,y:9.5,z:0},//(5.08mm, 5.715mm)
                         //minBound
                         //maxBound
                         parent: null,
