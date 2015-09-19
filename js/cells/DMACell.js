@@ -174,7 +174,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             });
         }
         this.setMaterial(material);
-        three.render();
     };
 
     DMACell.prototype.getParent = function(){

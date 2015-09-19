@@ -77,6 +77,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 if (state) this.hide();
                 object.getParent().setDeleteMode(state);
             }
+            three.render();
         },
 
 

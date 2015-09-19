@@ -169,6 +169,7 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     function _render(){
+//        console.log("render");
         renderer.render(scene, camera);
     }
 
