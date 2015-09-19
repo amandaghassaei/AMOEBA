@@ -19,15 +19,13 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             "click .saveJSON":                                      "_save",
             "click .saveAsJSON":                                    "_saveAs",
 //            "change #saveAsFileName":                               "_saveAs",//detect enter key
-            "click .saveUser":                                      "_saveUser",
-            "change #saveUserFileName":                             "_saveUser",//detect enter key
 
             "click .importJSON":                                    "_importJSON",
             "change #jsonInput":                                    "_selectJSONFiles",
-            "click .loadUser":                                      "_loadUser",
-            "click .loadDemo":                                      "_loadDemo",
+            "click .jsonFile":                                      "_loadJSON",
 
-            "click #viewMenuDropdown":                              "_renderViewMenu"
+            "click #viewMenuDropdown":                              "_renderViewMenu",
+            "click #videoRendering":                                "_videoRenderingSetup"
         },
 
         initialize: function(){
@@ -105,6 +103,11 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             this.viewMenu.render();
         },
 
+         _videoRenderingSetup: function(e){
+            e.preventDefault();
+            window.resizeTo(1000, 700);//todo this doesn't work
+        },
+
 
 
         _save: function(e){
@@ -117,13 +120,6 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             var fileName = $("#saveAsFileName").val();
             fileSaver.save(fileName);
             $('#saveAsModel').modal('hide');
-        },
-
-        _saveUser: function(e){
-            e.preventDefault();
-            var fileName = $("#saveUserFileName").val();
-            fileSaver.saveUser(fileName);
-            $('#saveUserModel').modal('hide');
         },
 
 
@@ -152,24 +148,14 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
                     var extension = filename.substr(filename.length - 5);
                     if (extension == ".json"){
                         fileSaver.loadFile(JSON.parse(e.target.result));
-                    } else if (extension == ".user"){
-                        fileSaver.loadUser(JSON.parse(e.target.result));
                     } else console.warn("file type not recognized");
                 }
             })();
         },
 
-        _loadUser: function(e){
+        _loadJSON: function(e){
             e.preventDefault();
-            var url = "data/users/" + $(e.target).data("file");
-            $.getJSON( url, function(data) {
-                fileSaver.loadUser(data);
-            });
-        },
-
-        _loadDemo: function(e){
-            e.preventDefault();
-            var url = "data/demos/" + $(e.target).data("file");
+            var url = "data/" + $(e.target).data("file");
             $.getJSON( url, function(data) {
                 fileSaver.loadFile(data);
             });

@@ -47,17 +47,6 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     }
 
-    function saveUser(name){
-        if (!name || name == "" || name == undefined) name = "user";
-        var latticeData = _.omit(_getLatticeDataToSave(), ["cells", "cellsMin", "cellsMax", "numCells"]);
-        var assemblerData = _.omit(_getAssemblerDataToSave(), ["dataOut", "needsPostProcessing", "editsMadeToProgram"]);
-        var data = {
-            lattice:latticeData,
-            assembler:assemblerData
-        };
-        _saveFile(data, name, ".user");
-    }
-
     function saveSequences(seqArray, name){
         _saveFile(seqArray, name || "seqs", ".txt", true);
     }
@@ -113,7 +102,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         lattice.clearCells();
         var sparseCells = data.assembly.sparseCells;
         _setData(lattice, _.omit(data.assembly, "sparseCells"));
-        if (sparseCells) lattice._updateLatticeConfig(sparseCells);
+        if (sparseCells) lattice._reloadCells(sparseCells);
         ribbon.render();
         menuWrapper.render();
     }
@@ -123,10 +112,6 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
             cam.selectMachine(data);
             console.log("loaded");
         });
-    }
-
-    function loadUser(data){
-        _setData(data);
     }
 
     function _setData(object, data){
@@ -146,9 +131,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         saveMaterial: saveMaterial,
         saveMachineConfig: saveMachineConfig,
 //        saveAssembler: saveAssembler,
-//        saveUser: saveUser,
         loadFile: loadFile,
-//        loadUser: loadUser
         saveSequences: saveSequences
     }
 });

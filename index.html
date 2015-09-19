@@ -32,11 +32,6 @@
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
-        <li><a data-menu-id="navDesign" class="menuHoverControls" href="#">Design</a></li>
-        <li><a data-menu-id="navSim" class="menuHoverControls" href="#">Simulate</a></li>
-        <li><a data-menu-id="navOptimize" class="menuHoverControls" href="#">Optimize</a></li>
-        <li><a data-menu-id="navAssemble" class="menuHoverControls" href="#">Assemble</a></li>
-        <li><a data-menu-id="navComm" class="menuHoverControls" href="#">Comm</a></li>
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
@@ -47,17 +42,25 @@
                 <li class="dropdown-submenu">
                 <a tabindex="-1">Demo Files<span class="pull-right fui-arrow-right"></span></a>
                 <ul class="dropdown-menu">
-                    <li><a data-file="oneBitBot.json" class="loadDemo" href="#">One Bit Assembly</a></li>
+                    <li><a data-file="demos/oneBitBot.json" class="jsonFile" href="#">One Bit Assembly</a></li>
                 </ul></li>
                 <li class="divider"></li>
                 <li class="dropdown-submenu">
-                <a tabindex="-1">Load User Settings<span class="pull-right fui-arrow-right"></span></a>
+                <a tabindex="-1">Load User Data<span class="pull-right fui-arrow-right"></span></a>
                 <ul class="dropdown-menu">
-                    <!--<li><a id="resetDefaultSettings" href="#">Reset Settings</a></li>-->
-                    <li><a data-file="ben.user" class="loadUser" href="#">Ben</a></li>
-                    <li><a data-file="matt.user" class="loadUser" href="#">Matt</a></li>
-                    <li><a data-file="will.user" class="loadUser" href="#">Will</a></li>
-                    <li><a class="importJSON" href="#">From File...</a></li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1">Amanda<span class="pull-right fui-arrow-right"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a id="videoRendering" href="#">Video Rendering Setup</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown-submenu">
+                        <a tabindex="-1">Will<span class="pull-right fui-arrow-right"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a class="jsonFile" data-file="will/bounds.json" href="#">Bounds</a></li>
+                            <li><a class="jsonFile" data-file="will/capacitor.json" href="#">Capacitor</a></li>
+                        </ul>
+                    </li>
                 </ul>
               </li>
               <li><a id="saveUserSettings" data-toggle="modal" data-target="#saveUserModel" href="#">Save User Settings...</a></li>
@@ -65,6 +68,11 @@
             <li><a id="exportSTL" href="#">Export STL</a></li>
           </ul>
         </li>
+        <li><a data-menu-id="navDesign" class="menuHoverControls" href="#">Design</a></li>
+        <li><a data-menu-id="navSim" class="menuHoverControls" href="#">Simulate</a></li>
+        <li><a data-menu-id="navOptimize" class="menuHoverControls" href="#">Optimize</a></li>
+        <li><a data-menu-id="navAssemble" class="menuHoverControls" href="#">Assemble</a></li>
+        <li><a data-menu-id="navComm" class="menuHoverControls" href="#">Comm</a></li>
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" id="viewMenuDropdown" data-toggle="dropdown">View <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>

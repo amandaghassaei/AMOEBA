@@ -12,8 +12,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMen
 
         events: {
             "click a":                                                    "_makeSelection",
-            "click #reset3DView":                                         "_reset3DNavigation",
-            "click #videoRendering":                                      "_videoRenderingSetup"
+            "click #reset3DView":                                         "_reset3DNavigation"
         },
 
         initialize: function(){
@@ -47,11 +46,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMen
         _reset3DNavigation: function(e){
             e.preventDefault();
             this.model.reset3DNavigation();
-        },
-
-        _videoRenderingSetup: function(e){
-            e.preventDefault();
-            window.resizeTo(1000, 700);
         },
 
         render: function(){
