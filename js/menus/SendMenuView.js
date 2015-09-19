@@ -20,6 +20,8 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _initialize: function(){
 
+            this.gcode = "";
+
             this.listenTo(serialComm, "change", this._renderControls);
             this.listenTo(cam, "change", this._renderControls);
             this.listenTo(cam, "change:simLineNumber", this._lineNumChanged);
@@ -76,9 +78,9 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
         _drawGcodeHighlighter: function(lineNum){
-            var code = cam.get("dataOut").split("\n");
+            var code = this.gcode.split("\n");
             code[lineNum] = "<span id='gcodeHighlighter'>" + code[lineNum] + " </span>";
-            var newText = code.join("\n");
+            var newText = code.join('\n');
             var $editor = $('#gcodeEditor');
             $editor.html(newText);
             var $highlighter = $("#gcodeHighlighter");
@@ -111,6 +113,12 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
         _render: function(){
             this._setEditorHeight();
+            var code = cam.get("dataOut").split("\n");
+            var newText = "";
+            _.each(code, function(line, num){
+                newText += '<span class="gCodeLineNum">' + num + '</span>' + line + '\n';
+            });
+            this.gcode = newText;
             this._drawGcodeHighlighter(cam.get("simLineNumber"));
             this._renderControls();
         },

@@ -114,6 +114,11 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         },
 
         _setNumber: function($target, newVal){
+            var min = $target.data("min");
+            var max = $target.data("max");
+            if (min !== undefined && (min > newVal)) newVal = min;
+            else if (max !== undefined && (max < newVal)) newVal = max;
+
             var property = $target.data("property");
             if (!property) {
                 console.warn("no property associated with number input");

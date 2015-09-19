@@ -9,6 +9,6 @@
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
 Single step mode</label>
 <a href="#" id="openSerialMonitor" class="btn btn-block btn-lg btn-default">Open Serial Monitor</a><br/>
-Next Line: &nbsp;&nbsp;<input id="nextLine" data-property="simLineNumber" value="<%= simLineNumber %>" placeholder="##" class="intInput form-control cam" type="text">
+Next Line: &nbsp;&nbsp;<input id="nextLine" data-property="simLineNumber" data-min="0" data-max="<%= dataOut.split('\n').length-1 %>" value="<%= simLineNumber %>" placeholder="##" class="intInput form-control cam" type="text">
 &nbsp;&nbsp;<a href="#" id="previousLineButton" class="btn btn-lg btn-default"><span class="fui-triangle-up"></span></a>
 &nbsp;&nbsp;<a href="#" id="nextLineButton" class="btn btn-lg btn-default"><span class="fui-triangle-down"></span></a><br/><br/>
