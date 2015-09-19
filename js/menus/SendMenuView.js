@@ -90,6 +90,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
 
          _setEditorHeight: function(){
             var $editor = $('#gcodeEditor');
+            if($editor.position()=== undefined) return;//not rendered (bc user has not generated gcode yet)
             var height = this.$el.height()-$editor.position().top;
             height = Math.max(height, 250);
             $editor.css({height:height +"px"});
