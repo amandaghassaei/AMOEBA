@@ -104,6 +104,7 @@ define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!s
         },
 
         _renderControls: function(){
+            if ($("input[type=text]").is(":focus")) return;
             $("#sendControls").html(this.controlPanelTemplate(this._makeTemplateJSON()));
         },
 
