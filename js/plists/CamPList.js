@@ -270,8 +270,8 @@ define(['three'], function(THREE){
                     rapidHeightRelative: true,
                     safeHeight: 4,
                     originPosition: {
-                        x: -15,
-                        y: -4,
+                        x: 0,
+                        y: 0,
                         z: 0
                     },
                     rapidSpeeds: {
