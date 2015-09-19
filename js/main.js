@@ -27,6 +27,8 @@ require.config({
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
         axes: 'three/Axes',
+        svgRenderer: '../dependencies/svgRenderer',
+        threeProjector: '../dependencies/Projector',
 
         //plist
         plist: 'plists/PList',
@@ -236,6 +238,14 @@ require.config({
         stlLoader: {
             deps: ['three'],
             exports: 'THREE'
+        },
+        threeProjector: {
+            deps: ['three'],
+            exports: "THREE"
+        },
+        svgRenderer: {
+            deps: ['three', 'threeProjector'],
+            exports: "THREE.SVGRenderer"
         },
         fileSaverLib: {
             exports: 'saveAs'

@@ -9,6 +9,8 @@ define(['underscore', 'three'], function(_, THREE){
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 
+    var svgRenderer = null;
+
     var appState;
     require(['appState'], function(globalAppState){
         appState = globalAppState;
@@ -36,7 +38,6 @@ define(['underscore', 'three'], function(_, THREE){
         resetCameraPosition();
         camera.up.set(0,0,1);//set z axis as "up"
 
-        var fogColor = 0xcccccc;
 //        scene.fog = new THREE.FogExp2(fogColor, 0.001);
 
         // lights
@@ -61,10 +62,15 @@ define(['underscore', 'three'], function(_, THREE){
         
 
         // renderer
-        renderer.setClearColor(fogColor, 1);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        configRenderer(renderer);
 
         window.addEventListener('resize', onWindowResize, false);
+    }
+
+    function configRenderer(_renderer){
+        var fogColor = 0xcccccc;
+        _renderer.setClearColor(fogColor, 1);
+        _renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
     function resetCameraPosition(){
@@ -182,6 +188,19 @@ define(['underscore', 'three'], function(_, THREE){
         shouldRender = false;
     }
 
+    function saveSVG(){
+        require(['svgRenderer', 'fileSaver'], function(SVGRenderer, fileSaver){
+            if (svgRenderer === null) {
+                svgRenderer = new SVGRenderer();
+            }
+            configRenderer(svgRenderer);
+            svgRenderer.render(scene, camera);
+            var XMLS = new XMLSerializer();
+            var svgfile = XMLS.serializeToString(svgRenderer.domElement);
+            fileSaver.saveData(svgfile, "screenshot", ".svg");
+        })
+    }
+
     return {//return public properties/methods
         render: render,
         conditionalRender: conditionalRender,
@@ -204,7 +223,8 @@ define(['underscore', 'three'], function(_, THREE){
         removeAllCells: removeAllCells,
         removeAllCompositeCells: removeAllCompositeCells,
         resetCameraPosition: resetCameraPosition,
-        setThreeView: setThreeView
+        setThreeView: setThreeView,
+        saveSVG: saveSVG
     }
 
 });

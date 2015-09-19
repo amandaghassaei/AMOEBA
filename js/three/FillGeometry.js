@@ -29,7 +29,6 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
     
             var mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({
                 color:0xf25536,
-                shading: THREE.FlatShading,
                 transparent:true,
                 opacity:0.4,
                 side:THREE.DoubleSide

@@ -14,8 +14,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
                 jsonString = jsonString.replace(/"/g, '');
             }
 
-            var blob = new Blob([jsonString], {type: "text/plain;charset=utf-8"});
-            saveAs(blob, name + extension);
+            saveData(jsonString, name, extension);
             if (data.assembler){
                 jsonString.replace(/\\"/g,"\uFFFF"); //U+ FFFF
                 jsonString = jsonString.replace(/\"([^"]+)\":/g,"$1:").replace(/\uFFFF/g,"\\\"");
@@ -23,6 +22,11 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
                 saveAs(blob, name + "-forAmanda" + extension);
             }
 //        });
+    }
+
+    function saveData(data, name, extension){
+        var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, name + extension);
     }
 
 //    function save(name){
@@ -125,9 +129,11 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         object.trigger("change");
     }
 
+
     return {//return public methods
 //        save: save,
         save: save,
+        saveData: saveData,
         saveMaterial: saveMaterial,
         saveMachineConfig: saveMachineConfig,
 //        saveAssembler: saveAssembler,

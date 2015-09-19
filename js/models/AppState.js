@@ -220,9 +220,16 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                     break;
                 case 69://e
     //                if (currentTab != "sketch") return;
-                    this.set("extrudeMode", state);
+//                    this.set("extrudeMode", state);
                     break;
                 case 80://p part mode
+                    if (e.ctrlKey || e.metaKey){//command
+                        if (e.shiftKey){
+                            e.preventDefault();
+                            three.saveSVG();
+                            return;
+                        }
+                    }
                     var cellMode = this.get("cellMode");
                     if (cellMode == "part") this.set("cellMode", "cell");
                     else if (cellMode == "cell") this.set("cellMode", "part");
