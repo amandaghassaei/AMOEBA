@@ -405,6 +405,10 @@ label {
     margin-right:10px;
 }
 
+#navViewMenu {
+    width: 200px;
+}
+
 .CodeMirror {
     opacity: 0.6;
     margin: 0 20px 0 -10px;

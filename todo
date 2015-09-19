@@ -1,11 +1,8 @@
-import - offset, scale, rotation
-
+import stl fill - offset, scale, rotation
 
 hierarchical
-    - single layer gik throwing error on parse
     - origin
     - rotation
-    - load composite materials
     - change bounding box
     - placement ui 3D
 
@@ -13,8 +10,6 @@ material transformations -> change material of a cell, change in bulk
 
 rendering callbacks
 
-
-highligher - check mode, do not add cells except in design/composite/material modes
-
 part stl import and orientation  - settings to json
 same for machine
+

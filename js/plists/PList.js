@@ -358,10 +358,10 @@ define(['three'], function(THREE){
         },
 
         allCellModes:{//supercell, cell, part, node, beam
-            supercell: "Hierarchical Mode",
-            cell: "Voxel Mode",
-            part: "Part Mode",
-            hide: "Hide Cells"
+            supercell: "Hierarchical Mode  &nbsp;&nbsp;(H)",
+            cell: "Voxel Mode  &nbsp;&nbsp;(V)",
+            part: "Part Mode  &nbsp;&nbsp;(P)",
+            hide: "Hide Cells  &nbsp;&nbsp;(O)"
         },
 
 

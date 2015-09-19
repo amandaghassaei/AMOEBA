@@ -211,10 +211,17 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 case 68://d delete mode
                     this.set("deleteMode", state);
                     break;
-                case 72://h hide mode
+                case 86://cell (voxel) mode
                     if (state) {
                         this.lastCellMode = this.get("cellMode");
-                        this.set("cellMode", "hide");
+                        this.set("cellMode", "cell");
+                    }
+                    else this.set("cellMode", this.lastCellMode);
+                    break;
+                case 72://h hierarchical mode
+                    if (state) {
+                        this.lastCellMode = this.get("cellMode");
+                        this.set("cellMode", "supercell");
                     }
                     else this.set("cellMode", this.lastCellMode);
                     break;
@@ -222,17 +229,19 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
     //                if (currentTab != "sketch") return;
 //                    this.set("extrudeMode", state);
                     break;
-                case 80://p part mode
-                    if (e.ctrlKey || e.metaKey){//command
+                case 80://p
+                    if (e.ctrlKey || e.metaKey){//command + shift + p = print svg screenshot
                         if (e.shiftKey){
                             e.preventDefault();
                             three.saveSVG();
                             return;
                         }
                     }
-                    var cellMode = this.get("cellMode");
-                    if (cellMode == "part") this.set("cellMode", "cell");
-                    else if (cellMode == "cell") this.set("cellMode", "part");
+                    if (state) {//p part mode
+                        this.lastCellMode = this.get("cellMode");
+                        this.set("cellMode", "part");
+                    }
+                    else this.set("cellMode", this.lastCellMode);
                     break;
                 case 83://s save
                     if (e.ctrlKey || e.metaKey){//command
@@ -251,7 +260,13 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                     if (e.ctrlKey || e.metaKey){//command
                         e.preventDefault();
                         $("#jsonInput").click();
+                        return;
                     }
+                    if (state) {//hide mode
+                        this.lastCellMode = this.get("cellMode");
+                        this.set("cellMode", "hide");
+                    }
+                    else this.set("cellMode", this.lastCellMode);
                     break;
                 case 32://space bar (play/pause simulation)
                     e.preventDefault();
