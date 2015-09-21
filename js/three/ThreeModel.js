@@ -170,7 +170,7 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     function render(){
-        if ((appState && appState.get("turnOffRendering")) || animationLoopRunning) return;
+        if (animationLoopRunning || (appState && appState.get("turnOffRendering"))) return;
         _render();
     }
 

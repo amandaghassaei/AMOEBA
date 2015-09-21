@@ -123,6 +123,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
                 this.set("basePlaneIsVisible", false);
                 this.set("highlighterIsVisible", false);
             }
+
+            if (this.get("cellMode") == "hide") this.set("cellMode", "cell");
         },
 
         _materialTypeChanged: function(){
