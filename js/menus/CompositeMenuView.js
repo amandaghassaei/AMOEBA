@@ -78,8 +78,9 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'plist',
 
         _saveCompositeToFile: function(e){
             e.preventDefault();
+            var self = this;
             require(['fileSaver'], function(fileSaver){
-                fileSaver.saveMaterial(this.composite.get("id"), this.composite.toJSONForSave(bounds));
+                fileSaver.saveMaterial(self.composite.get("id"), self.composite.toJSONForSave(bounds));//todo save children too
             });
         },
 

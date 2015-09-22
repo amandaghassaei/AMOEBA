@@ -1,10 +1,11 @@
 import stl fill - offset, scale, rotation
 
-hierarchical
+composite
     - origin
     - rotation
     - change bounding box
-    - placement ui 3D
+    - placement ui 3D could be better
+    - need material class
 
 material transformations -> change material of a cell, change in bulk
 

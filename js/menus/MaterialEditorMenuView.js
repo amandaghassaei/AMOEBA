@@ -6,8 +6,6 @@
 define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materialEditorMenuTemplate', 'fileSaver'],
     function($, _, MenuParentView, plist, materials, template, fileSaver){
 
-    var materialNameIndex = 1;
-
     return MenuParentView.extend({
 
         events: {
@@ -25,16 +23,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
             if (id == "new") id = materials.getNextMaterialID();
             this.materialID = id;
 
-            var material = _.clone(materials.getMaterialForId(options.myObject));//todo do this in dmamaterials
-            if (!material) material = {
-                name: "Material " + materialNameIndex++,
-                color: '#000000',
-                altColor: '#000000',
-                noDelete: false,
-                properties: {}
-            };
-            this.material = material;
-
+            this.material = materials.getMaterialCopy(id);
         },
 
         getPropertyOwner: function($target){

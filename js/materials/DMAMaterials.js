@@ -57,8 +57,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
             lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
         }
-
-        return false;
     }
 
     function deleteMaterial(id){
@@ -76,8 +74,41 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         return deleted;
     }
 
-    function getMaterialForId(id){
-        return materialsList[id];
+    function getMaterialForId(id, returnTHREEObject, transparent){
+        var material = materialsList[id];
+        if (!returnTHREEObject) return material;
+        if (!material.threeMaterial){
+            console.warn("no three material object found for type "+ id);
+            return null;
+        }
+        if (transparent) return material.transparentMaterial;
+        return material.threeMaterial;
+    }
+
+    var materialNameIndex = 1;
+
+    function getMaterialCopy(id){
+        if (materialsList[id]){
+            return JSON.parse(JSON.stringify(toJSON(id)));
+        }
+        return {
+                name: "Material " + materialNameIndex++,
+                color: '#000000',
+                altColor: '#000000',
+                noDelete: false,
+                properties: {}
+            };
+    }
+
+    function toJSON(id){
+        var material = materialsList[id];
+        return {
+            name: material.name,
+            color: material.color,
+            altColor: material.altColor,
+            noDelete: material.noDelete,
+            properties: material.properties
+        }
     }
 
     function getDeleteMaterial(){
@@ -257,12 +288,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         setMaterial: setMaterial,
         deleteMaterial: deleteMaterial,
         getMaterialForId: getMaterialForId,
+        getMaterialCopy: getMaterialCopy,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,
         setToDefaultMaterial: setToDefaultMaterial,
         getDeleteMaterial: getDeleteMaterial,
         getNextCompositeID: getNextCompositeID,
-        getNextMaterialID: getNextMaterialID
+        getNextMaterialID: getNextMaterialID,
+        toJSON: toJSON
     };
 });

@@ -232,18 +232,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("no material type set for cell");
             return null;
         }
-        if (!materials.list[this.materialName]) {
-            console.warn("no material object found of type ");
-            console.warn(this.materialName);
+        var material = materials.getMaterialForId(this.materialName, returnTHREEObject, this.isTransparent);
+        if (!material) {
+            console.warn("no material object found of type " + id);
             return null;
         }
-        if (!returnTHREEObject) return materials.list[this.materialName];
-        if (!materials.list[this.materialName].threeMaterial){
-            console.warn("no three material object found for type "+ this.materialName);
-            return null;
-        }
-        if (this.isTransparent) return materials.list[this.materialName].transparentMaterial;
-        return materials.list[this.materialName].threeMaterial;
+        return material;
     };
 
     DMACell.prototype.setMaterial = function(material){
@@ -489,7 +483,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var data = {
             materialName: this.materialName
         };
-//        if (materials.list[this.materialName].sparseCells) return data;//material definition in material composites
+//        if (materials.getMaterialForID(this.materialName).sparseCells) return data;//material definition in material composites
 //        if (this.cells) data.cells = this.cells;
         return data;
     };
