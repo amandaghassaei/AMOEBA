@@ -3,14 +3,15 @@
  */
 
 //everything is a top level material with a threeMaterial object
-define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], function(_, THREE, appState, lattice, plist, three){
+define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'material'],
+    function(_, THREE, appState, lattice, plist, three, DMAMaterial){
 
     var materialsList = {
-        deleteMaterial: {
+        deleteMaterial: new DMAMaterial({
             color: "#ff0000",
-            threeMaterial: makeMaterialObject("#ff0000"),
+            altColor: "#ff0000",
             noDelete: true
-        }
+        })
     };
 
 
@@ -19,7 +20,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     listener.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
     listener.listenTo(appState, "change:materialClass", function(){setToDefaultMaterial()});//pass no params
-    listener.listenTo(lattice, "change:connectionType cellType", function(){setToDefaultMaterial()});
+//    listener.listenTo(lattice, "change:connectionType cellType", function(){materialClassChanged()});
     listener.listenTo(appState, "change:materialType", setMaterialDefaults);
 
     setToDefaultMaterial();
@@ -29,23 +30,17 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
     function setMaterial(id, data){
-        if (!materialsList[id]) materialsList[id] = {};
-
-        //check if colors have changed
-        var oldColor = materialsList[id].color;
-        var oldAltColor = materialsList[id].altColor;
+        var material = getMaterialForId(id);
 
         var edited = false;
-        if (materialsList[id].sparseCells) edited = !(_.isEqual(data.sparseCells, materialsList[id].sparseCells));
+        if (!material) {
+            materialsList[id] = new DMAMaterial(data);
+            return;
+        } else {
+            if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
+            edited = material.set(data);
+        }
 
-        if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
-
-        _.each(_.keys(data), function(key){
-            if (data[key] && data[key].x) materialsList[id][key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
-            else materialsList[id][key] = data[key];
-        });
-
-        if (!materialsList[id].threeMaterial || oldColor != materialsList[id].color || oldAltColor != materialsList[id].altColor) changeSingleMaterialColorScheme(id);
         if (edited){
             var allChangedMaterialsList = getAllParentComposites(id);
             allChangedMaterialsList.push(id);
@@ -64,10 +59,12 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             console.warn("this material was never saved");
             return true;
         }
-        if (materialsList[id].noDelete) {
+        if (!materialsList[id].canDelete()) {
             console.warn("no delete flag on this material type");
             return false;
         }
+        materialsList[id].destroy();
+        materialsList[id] = null;
         delete materialsList[id];//todo check if being used first (instances)
         var deleted = true;
         if (deleted) setToDefaultMaterial();
@@ -81,19 +78,16 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             console.warn("no material object found for type "+ id);
             return null;
         }
-        if (!material.threeMaterial){
-            console.warn("no three material object found for type "+ id);
-            return null;
-        }
-        if (transparent) return material.transparentMaterial;
-        return material.threeMaterial;
+        if (transparent) return material.getTransparentMaterial(id);
+        return material.getThreeMaterial(id);
     }
 
     var materialNameIndex = 1;
 
     function getMaterialCopy(id){
-        if (materialsList[id]){
-            return JSON.parse(JSON.stringify(toJSON(id)));
+        var material = getMaterialForId(id);
+        if (material){
+            return JSON.parse(JSON.stringify(material.toJSON()));
         }
         return {
                 name: "Material " + materialNameIndex++,
@@ -104,19 +98,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
             };
     }
 
-    function toJSON(id){
-        var material = materialsList[id];
-        return {
-            name: material.name,
-            color: material.color,
-            altColor: material.altColor,
-            noDelete: material.noDelete,
-            properties: material.properties
-        }
-    }
-
     function getDeleteMaterial(){
-        return materialsList.deleteMaterial.threeMaterial;
+        return materialsList.deleteMaterial.getThreeMaterial("deleteMaterial");
     }
 
 
@@ -172,8 +155,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     function getPropertiesFromChildren(children){
         var properties = {};
-        _.each(children, function(child){
-            if (materialsList[child].properties.conductive) properties.conductive = true;
+        var self = this;
+        _.each(children, function(childID){
+            if (self.getMaterialForId(childID).getProperties().conductive) properties.conductive = true;
         });
         return properties;
     }
@@ -211,13 +195,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     function parseClassFromDefinitions(definitions){
         var newMaterials = {};
-        var state = appState.get("realisticColorScheme");
-        _.each(_.keys(definitions), function(key){
-            newMaterials[key] = definitions[key];
-            var color = getMaterialColorForState(state, definitions[key], key);
-            newMaterials[key].threeMaterial = makeMaterialObject(color);
-            newMaterials[key].transparentMaterial = makeMaterialObject(color, true);
-            newMaterials[key].noDelete = true;//don't delete the predefined materials
+        _.each(definitions, function(data, key){
+            data.noDelete = true;
+            newMaterials[key] = new DMAMaterial(data);
         });
         return newMaterials;
     }
@@ -232,42 +212,17 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
     function changeColorScheme(){
         var state = appState.get("realisticColorScheme");
-        _.each(_.keys(materialsList), function(name){
-            if (name == "setMaterial") return;
-            changeSingleMaterialColorScheme(name, state);
+        _.each(materialsList, function(material, name){
+            material.changeColorScheme(state);
         });
         three.render();
-    }
-
-    function changeSingleMaterialColorScheme(name, state){
-        if (!state) state = appState.get("realisticColorScheme");
-        var materialInfo = materialsList[name];
-        var color = getMaterialColorForState(state, materialInfo, name);
-
-        if (materialInfo.threeMaterial) materialInfo.threeMaterial.color = new THREE.Color(color);
-        else materialInfo.threeMaterial = makeMaterialObject(color);
-
-        if (materialInfo.transparentMaterial) materialInfo.transparentMaterial.color = new THREE.Color(color);
-        else materialInfo.transparentMaterial = makeMaterialObject(color, true);
-    }
-
-    function getMaterialColorForState(state, definition, key){
-        var color = definition.color;
-        if (!color) console.warn("no color for material type " + key);
-        if (!state && definition.altColor) color = definition.altColor;
-        return color;
-    }
-
-    function makeMaterialObject(color, transparent){
-        if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent: true, opacity:0.1});
-        return new THREE.MeshLambertMaterial({color:color});
     }
 
     function setMaterialDefaults(){
         var materialType = appState.get("materialType");
         appState.set("superCellIndex", new THREE.Vector3(0,0,0));
-        if (materialsList[materialType].dimensions){
-            appState.set("superCellRange", materialsList[materialType].dimensions.clone());
+        if (materialsList[materialType].getDimensions()){
+            appState.set("superCellRange", materialsList[materialType].getDimensions());
         } else if (lattice.get("connectionType") == "gik"){
             appState.set("superCellRange", new THREE.Vector3(appState.get("gikLength"), 1, 1));
         }
@@ -299,7 +254,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         setToDefaultMaterial: setToDefaultMaterial,
         getDeleteMaterial: getDeleteMaterial,
         getNextCompositeID: getNextCompositeID,
-        getNextMaterialID: getNextMaterialID,
-        toJSON: toJSON
+        getNextMaterialID: getNextMaterialID
     };
 });

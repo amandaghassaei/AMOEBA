@@ -57,7 +57,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     function saveMaterial(id, material){
         var data = {materials:{}};
-        data.materials[id] = material || _getMaterialDataToSave(id);
+        data.materials[id] = material || _getMaterialDataToSave(material);
         _saveFile(data, data.materials[id].name, "json");
     }
 
@@ -77,14 +77,14 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     function _getMaterialsDataToSave(){
         var data = {};
-        _.each(_.keys(materials.list), function(key){
-            data[key] = _getMaterialDataToSave(key);
+        _.each(materials.list, function(material, key){
+            data[key] = _getMaterialDataToSave(material);
         });
         return data;
     }
 
-    function _getMaterialDataToSave(id){
-        return materials.toJSON(id);
+    function _getMaterialDataToSave(material){
+        return material.toJSON();
     }
 
     function loadFile(data){//parsed json todo make this better - load composite

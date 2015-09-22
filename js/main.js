@@ -118,6 +118,7 @@ require.config({
 
         //materials
         materials: 'materials/DMAMaterials',
+        material: 'materials/DMAMaterial',
 
         //UI
         navbar: 'menus/Navbar',
