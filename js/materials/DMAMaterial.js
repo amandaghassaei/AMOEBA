@@ -3,7 +3,7 @@
  */
 
 
-define(['appState'], function(appState){
+define(['underscore', 'appState'], function(_, appState){
 
     function DMAMaterial(json){
         this.set(json);
@@ -16,7 +16,6 @@ define(['appState'], function(appState){
         var oldAltColor = this.altColor;
 
         var edited = false;
-        if (this.sparseCells) edited = !(_.isEqual(data.sparseCells, this.sparseCells));
 
         var self = this;
         _.each(_.keys(data), function(key){
@@ -27,6 +26,8 @@ define(['appState'], function(appState){
         if (!this.threeMaterial || oldColor != this.color || oldAltColor != this.altColor) this.changeColorScheme();
 
         if (!data.noDelete) this.noDelete = false;
+
+        return edited;
     };
 
     DMAMaterial.prototype.changeColorScheme = function(state){
@@ -70,6 +71,10 @@ define(['appState'], function(appState){
         return false;
     };
 
+    DMAMaterial.prototype.isComposite = function(){
+        return false;
+    };
+
     DMAMaterial.prototype.getProperties = function(){
         return this.properties;
     };
@@ -93,7 +98,10 @@ define(['appState'], function(appState){
     };
 
     DMAMaterial.prototype.destroy = function(){
-
+        var self = this;
+        _.each(this, function(property, key){
+            self[key] = null;
+        });
     };
 
     return DMAMaterial;
