@@ -17,7 +17,10 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             "focusout .floatInput":                        "_softRenderTab",//force rounding if needed
             "focusout .intInput":                          "_softRenderTab",
             "change input:checkbox":                       "_clickCheckbox",
-            "click input:radio":                           "_radioSelection"
+            "click input:radio":                           "_radioSelection",
+            "click #deleteExitMenu":                       "_deleteExitMenu",
+            "click #cancelExitMenu":                       "_cancelExitMenu",
+            "click #saveExitMenu":                         "_saveExitMenu"
         },
 
         initialize: function(){

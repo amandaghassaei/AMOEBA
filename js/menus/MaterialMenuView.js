@@ -32,29 +32,26 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             e.stopPropagation();
             e.preventDefault();
             var id = $(e.target).data("id");
-            lattice.setToCompositeMode(id,materials.list[id]);
+            lattice.setToCompositeMode(id,materials.getMaterialForId(id));
         },
 
         _editMaterial: function(e){
             e.stopPropagation();
             e.preventDefault();
-            var id = $(e.target).data("id");
-            this._openMaterialEditor(id);
+            this._openMaterialEditor($(e.target).data("id"));
         },
 
         _newMaterial: function(e){
             e.preventDefault();
-            //first create dummy material
-            var id = "material" + this.cid + materialID++;
+            var id = "material" + this.cid + materialID++;//first create new material id
             this._openMaterialEditor(id);
         },
 
-        _openMaterialEditor: function(id){
-            materials.setEditingMaterial(id);
-            this.model.set("currentTab", "materialEditor", {silent:true});
-            this.model.set("currentNav", "navMaterial");
+        _openMaterialEditor: function(materialID){
+            require(['menuWrapper'], function(menuWrapper){
+                menuWrapper.initTabWithObject(materialID, "materialEditor", "navMaterial")
+            });
         },
-
 
         _latticeToComposite: function(e){
             lattice.setToCompositeMode(null, lattice.getCompositeData());

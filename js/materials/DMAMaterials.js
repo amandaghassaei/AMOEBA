@@ -28,7 +28,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
     function setMaterial(id, data){
-        if (id && data === null) return deleteMaterial(id);
         if (!materialsList[id]) materialsList[id] = {};
 
         //check if colors have changed
@@ -238,33 +237,17 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
 
-    //edit material definition
-
-    var editingMaterial = null;//material definition currently being edited
-
-    function setEditingMaterial(id){
-        editingMaterial = id;
-    }
-
-    function getEditingMaterial(){
-        return editingMaterial;
-    }
-
-
-
-
 
 
     return {
         list: materialsList,
         setMaterial: setMaterial,
+        deleteMaterial: deleteMaterial,
         getMaterialForId: getMaterialForId,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,
         setToDefaultMaterial: setToDefaultMaterial,
-        setEditingMaterial: setEditingMaterial,
-        getEditingMaterial: getEditingMaterial,
         getDeleteMaterial: getDeleteMaterial
     };
 });

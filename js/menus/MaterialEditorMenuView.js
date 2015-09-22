@@ -11,17 +11,18 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
     return MenuParentView.extend({
 
         events: {
-            "click #cancelMaterial":                             "_cancelMaterial",
-            "click #deleteMaterial":                             "_deleteMaterial",
-            "click #finishMaterial":                             "_save",
-            "click #newRandomColor":                             "_changeRandomColor",
-            "click #saveMaterial":                               "_saveMaterialToFile"
+            "click #saveToFile":                                 "_saveMaterialToFile",
+            "click #newRandomColor":                             "_changeRandomColor"
         },
 
-        _initialize: function(){
+        _initialize: function(options){
             //bind events
-            if (!materials.getEditingMaterial()) console.warn("no editing material id set");
-            this.material = _.clone(materials.list[materials.getEditingMaterial()]);
+            if (!options.myObject) {
+                console.warn("no editing material id passed in");
+                this.model.set("currentNav", plist.allMenus.navMaterial.parent);
+            }
+            this.materialID = options.myObject;
+            this.material = _.clone(materials.getMaterialForId(options.myObject));
             if (!this.material) this.material = {
                 name: "Material " + materialNameIndex++,
                 color: '#000000',
@@ -50,37 +51,21 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
             this.render();
         },
 
-        _save: function(e){
-            e.preventDefault();
-            if (this.material.name == "") this.material.name = "Material " + materialNameIndex++;
-            materials.setMaterial(materials.getEditingMaterial(), _.clone(this.material));
-            this._exit();
-        },
-
         _saveMaterialToFile: function(e){
             e.preventDefault();
-            fileSaver.saveMaterial(materials.getEditingMaterial(), this.material);
+            fileSaver.saveMaterial(this.materialID, this.material);
         },
 
-        _deleteMaterial: function(e){
+        saveExitMenu: function(e, callback){
             e.preventDefault();
-            if (!materials.list[materials.getEditingMaterial()]) {
-                this._exit();
-                return;
-            }
-            var deleted = materials.setMaterial(materials.getEditingMaterial(), null);
-            if (deleted) this._exit();
+            if (this.material.name == "") this.material.name = "Material " + materialNameIndex++;
+            materials.setMaterial(this.materialID, _.clone(this.material));
+            callback();
         },
 
-        _cancelMaterial: function(e){
-            e.preventDefault();
-            this._exit();
-        },
-
-        _exit: function(){
-            this.material = null;
-            materials.setEditingMaterial(null);
-            this.model.set("currentNav", "navDesign");
+        deleteExitMenu: function(e, callback){
+            var deleted = materials.deleteMaterial(this.materialID);
+            if (deleted) callback();
         },
 
         _makeTemplateJSON: function(){
@@ -93,6 +78,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
                 delete self.material[key];
             });
             this.material = null;
+            this.materialID = null;
         },
 
         template: _.template(template)
