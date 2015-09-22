@@ -20,16 +20,16 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
             return null;//override in subclasses
         },
 
-        deleteExitMenu: function(e, callback){
-            callback();
+        deleteExitMenu: function(e){
+            return true;
         },
 
-        cancelExitMenu: function(e, callback){
-            callback();
+        cancelExitMenu: function(e){
+            return true;
         },
 
-        saveExitMenu: function(e, callback){
-            callback();
+        saveExitMenu: function(e){
+            return true;
         },
 
         render: function(){

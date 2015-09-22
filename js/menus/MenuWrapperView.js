@@ -239,25 +239,22 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _deleteExitMenu: function(e){
             e.preventDefault();
             var nextNav = this._getNextNav();
-            this.menu.deleteExitMenu(e, function(){
-                appState.set("currentNav", nextNav);
-            });
+            var shouldExit = this.menu.deleteExitMenu(e);
+            if (shouldExit) appState.set("currentNav", nextNav)
         },
 
         _cancelExitMenu: function(e){
             e.preventDefault();
             var nextNav = this._getNextNav();
-            this.menu.cancelExitMenu(e, function(){
-                appState.set("currentNav", nextNav);
-            });
+            var shouldExit = this.menu.cancelExitMenu(e);
+            if (shouldExit) appState.set("currentNav", nextNav);
         },
 
         _saveExitMenu: function(e){
             e.preventDefault();
             var nextNav = this._getNextNav();
-            this.menu.saveExitMenu(e, function(){
-                appState.set("currentNav", nextNav);
-            });
+            var shouldExit = this.menu.saveExitMenu(e);
+            if (shouldExit) appState.set("currentNav", nextNav)
         },
 
         _getNextNav: function(){

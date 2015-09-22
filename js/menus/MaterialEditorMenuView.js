@@ -56,16 +56,15 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
             fileSaver.saveMaterial(this.materialID, this.material);
         },
 
-        saveExitMenu: function(e, callback){
-            e.preventDefault();
+        saveExitMenu: function(){
             if (this.material.name == "") this.material.name = "Material " + materialNameIndex++;
             materials.setMaterial(this.materialID, _.clone(this.material));
-            callback();
+            return true;
         },
 
-        deleteExitMenu: function(e, callback){
+        deleteExitMenu: function(){
             var deleted = materials.deleteMaterial(this.materialID);
-            if (deleted) callback();
+            return deleted;
         },
 
         _makeTemplateJSON: function(){
