@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'text!mSetupMe
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist. lattice.toJSON());
+            return _.extend(this.model.toJSON(), plist, lattice.toJSON());
         },
 
         template: _.template(template)

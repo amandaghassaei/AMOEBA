@@ -9,15 +9,27 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
 
         el: "#menuContent",
 
-        initialize: function(){
+        initialize: function(options){
 
             _.bindAll(this, "render");
 
-            if (this._initialize) this._initialize();//call subclass
+            if (this._initialize) this._initialize(options);//call subclass
         },
 
         getPropertyOwner: function($target){
             return null;//override in subclasses
+        },
+
+        deleteExitMenu: function(e, callback){
+            callback();
+        },
+
+        cancelExitMenu: function(e, callback){
+            callback();
+        },
+
+        saveExitMenu: function(e, callback){
+            callback();
         },
 
         render: function(){

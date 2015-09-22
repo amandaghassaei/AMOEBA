@@ -66,7 +66,7 @@ define(['three'], function(THREE){
             navOptimize:{
                 name: "Optimize",
                 tabs:{
-                    optimize:"Optimize"
+                    optimization:"Optimize"
                 }
             },
             navAssemble:{
@@ -76,7 +76,7 @@ define(['three'], function(THREE){
                     assemblerSetup: "Setup",
                     cam: "Globals",
     //                editCamOutput: "Edit",
-                    animate:"Preview"
+                    animation:"Preview"
                 }
             },
             navDNAAssemble:{
