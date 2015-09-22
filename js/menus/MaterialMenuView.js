@@ -5,12 +5,10 @@
 define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!materialMenuTemplate'],
     function($, _, MenuParentView, plist, lattice, globals, materials, template){
 
-    var materialID = 0;
-
     return MenuParentView.extend({
 
         events: {
-            "click #navToCompositeMenu":                             "_navToCompositeMenu",
+            "click #newComposite":                                   "_newComposite",
             "click #compositeFromLattice":                           "_latticeToComposite",
             "click .editComposite":                                  "_editComposite",
             "click .editMaterial":                                   "_editMaterial",
@@ -23,16 +21,26 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
             this.listenTo(this.model, "change", this.render);
         },
 
-        _navToCompositeMenu: function(e){
+        _newComposite: function(e){
             e.preventDefault();
-            lattice.setToCompositeMode();
+            this._openCompositeEditor("new");
         },
 
         _editComposite: function(e){
             e.stopPropagation();
             e.preventDefault();
-            var id = $(e.target).data("id");
-            lattice.setToCompositeMode(id,materials.getMaterialForId(id));
+            this._openCompositeEditor($(e.target).data("id"));
+        },
+
+        _latticeToComposite: function(e){
+            e.preventDefault();
+            this._openCompositeEditor("fromLattice");
+        },
+
+        _openCompositeEditor: function(compositeID){
+            require(['menuWrapper'], function(menuWrapper){
+                menuWrapper.initTabWithObject(compositeID, "composite", "navComposite")
+            });
         },
 
         _editMaterial: function(e){
@@ -43,20 +51,13 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
 
         _newMaterial: function(e){
             e.preventDefault();
-            var id = "material" + this.cid + materialID++;//first create new material id
-            this._openMaterialEditor(id);
+            this._openMaterialEditor("new");
         },
 
         _openMaterialEditor: function(materialID){
             require(['menuWrapper'], function(menuWrapper){
                 menuWrapper.initTabWithObject(materialID, "materialEditor", "navMaterial")
             });
-        },
-
-        _latticeToComposite: function(e){
-            lattice.setToCompositeMode(null, lattice.getCompositeData());
-            lattice.clearCells();
-            e.preventDefault();
         },
 
         _makeTemplateJSON: function(){

@@ -16,20 +16,24 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         },
 
         _initialize: function(options){
-            //bind events
+
+            var id = options.myObject;
             if (!options.myObject) {
                 console.warn("no editing material id passed in");
                 this.model.set("currentNav", plist.allMenus.navMaterial.parent);
             }
-            this.materialID = options.myObject;
-            this.material = _.clone(materials.getMaterialForId(options.myObject));
-            if (!this.material) this.material = {
+            if (id == "new") id = materials.getNextMaterialID();
+            this.materialID = id;
+
+            var material = _.clone(materials.getMaterialForId(options.myObject));//todo do this in dmamaterials
+            if (!material) material = {
                 name: "Material " + materialNameIndex++,
                 color: '#000000',
                 altColor: '#000000',
                 noDelete: false,
                 properties: {}
             };
+            this.material = material;
 
         },
 

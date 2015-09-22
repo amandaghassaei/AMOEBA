@@ -13,6 +13,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         }
     };
 
+
     var listener = {};
     _.extend(listener, Backbone.Events);
 
@@ -61,6 +62,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     }
 
     function deleteMaterial(id){
+        if (materialsList[id] === undefined){
+            console.warn("this material was never saved");
+            return true;
+        }
         if (materialsList[id].noDelete) {
             console.warn("no delete flag on this material type");
             return false;
@@ -235,8 +240,16 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
 
 
 
+    var compositeID = 0;
+    var materialID = 0;
 
+    function getNextCompositeID(){
+        return "super" + compositeID++;
+    }
 
+    function getNextMaterialID(){
+        return "material" + materialID++;
+    }
 
 
     return {
@@ -248,6 +261,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,
         setToDefaultMaterial: setToDefaultMaterial,
-        getDeleteMaterial: getDeleteMaterial
+        getDeleteMaterial: getDeleteMaterial,
+        getNextCompositeID: getNextCompositeID,
+        getNextMaterialID: getNextMaterialID
     };
 });

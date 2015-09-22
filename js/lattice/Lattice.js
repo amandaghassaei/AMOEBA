@@ -194,7 +194,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
-            if (currentNav != "navComposite" && this.compositeEditor && this.exitCompositeEditing) this.exitCompositeEditing();
+            if (currentNav != "navComposite" && this.compositeEditor) this.exitCompositeEditing();
+
             currentNav = plist.allMenus[currentNav].parent || currentNav;
             if (currentNav == "navSim" || currentNav == "navAssemble") this._parseSparseCell();
         },
@@ -209,26 +210,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             };
         },
 
-        setToCompositeMode: function(id, data){
-            var self = this;
-            require(['compositeEditorLattice'], function(CompositeEditorLattice){
-                self.hideCells();
-                if (self.compositeEditor) {
-                    console.warn("composite editor already allocated");
-                    self.compositeEditor.destroy();
-                }
-                self.compositeEditor = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_self){
-                    var cells = null;
-                    if (data) cells = data.sparseCells;
-                    _self._reloadCells(cells, self._getSubclassForLatticeType());
-                    appState.set("currentNav", "navComposite");
-                });
-
-            });
+        setToCompositeMode: function(compositeLattice){
+            this.compositeEditor = compositeLattice;
         },
 
         inCompositeMode: function(){
-            return this.compositeEditor != null;
+            return this.compositeEditor !== null && this.compositeEditor !== undefined;
         },
 
         _isSingltonLattice: function(){
@@ -246,7 +233,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return this;
         },
 
-        reinitAllCellsOfTypes: function(types){
+        reinitAllCellsOfTypes: function(types){//when material definition is changed
             this._loopCells(this.sparseCells, function(cell, x, y, z, self){
                 if (cell && cell.materialName.substr(0,5) == "super" && types.indexOf(cell.materialName) > -1){
                     //re-init cell;

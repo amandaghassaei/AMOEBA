@@ -32,7 +32,12 @@ define(['jquery', 'underscore', 'backbone'], function($, _, Backbone){
             return true;
         },
 
+        shouldRender: function(){
+            return true;
+        },
+
         render: function(){
+            if (!this.shouldRender()) return;
             if (this.model.changedAttributes()["currentNav"]) return;
             if ($("input[type=text]").is(":focus")) return;
             if (this._preRender) this._preRender();
