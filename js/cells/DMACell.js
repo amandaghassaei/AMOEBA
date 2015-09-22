@@ -234,7 +234,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         }
         var material = materials.getMaterialForId(this.materialName, returnTHREEObject, this.isTransparent);
         if (!material) {
-            console.warn("no material object found of type " + id);
+            console.warn("no material object found of type " + this.materialName);
             return null;
         }
         return material;

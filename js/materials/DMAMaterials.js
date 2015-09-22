@@ -77,6 +77,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel'], fu
     function getMaterialForId(id, returnTHREEObject, transparent){
         var material = materialsList[id];
         if (!returnTHREEObject) return material;
+        if (!material){
+            console.warn("no material object found for type "+ id);
+            return null;
+        }
         if (!material.threeMaterial){
             console.warn("no three material object found for type "+ id);
             return null;
