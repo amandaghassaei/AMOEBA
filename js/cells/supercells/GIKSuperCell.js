@@ -29,7 +29,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     };
 
     GIKSuperCell.prototype._makeSubCellForIndex = function(json, callback){
-        json.materialName = this.materialName;
+        json.materialID = this.material.id;
         if (lattice.get("latticeType") == "dnaBricks"){
             callback(new DNABrickCell(json, this));
             return;

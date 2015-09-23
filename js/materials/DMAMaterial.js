@@ -5,17 +5,16 @@
 
 define(['underscore', 'appState'], function(_, appState){
 
-    function DMAMaterial(json){
+    function DMAMaterial(json, id){
+        this.id = id;
         this.set(json);
     }
 
+    DMAMaterial.prototype.getID = function(){
+        return this.id;
+    };
+
     DMAMaterial.prototype.set = function(data){
-
-        //check if colors have changed
-        var oldColor = this.color;
-        var oldAltColor = this.altColor;
-
-        var edited = false;
 
         var self = this;
         _.each(_.keys(data), function(key){
@@ -23,11 +22,16 @@ define(['underscore', 'appState'], function(_, appState){
             else self[key] = data[key];
         });
 
-        if (!this.threeMaterial || oldColor != this.color || oldAltColor != this.altColor) this.changeColorScheme();
+        //check if colors have changed
+        var oldColor = this.color;
+        var oldAltColor = this.altColor;
+        if (!this.threeMaterial ||
+            (data.color && oldColor != data.color) ||
+            (data.altColor && oldAltColor != data.altColor)) this.changeColorScheme();//don't need to set edited flag for this, render will handle it
 
-        if (!data.noDelete) this.noDelete = false;
+        if (data.noDelete === undefined) this.noDelete = false;
 
-        return edited;
+        return false;//composite materials have edited flag to trigger upstream changes
     };
 
     DMAMaterial.prototype.changeColorScheme = function(state){
@@ -51,17 +55,17 @@ define(['underscore', 'appState'], function(_, appState){
         return new THREE.MeshLambertMaterial({color:color});
     };
 
-    DMAMaterial.prototype.getThreeMaterial = function(id){
+    DMAMaterial.prototype.getThreeMaterial = function(){
         if (!this.threeMaterial) {
-            console.warn("no transparentMaterial found for material " + id);
+            console.warn("no transparentMaterial found for material " + this.id);
             return null;
         }
         return this.threeMaterial;
     };
 
-    DMAMaterial.prototype.getTransparentMaterial = function(id){
+    DMAMaterial.prototype.getTransparentMaterial = function(){
         if (!this.transparentMaterial) {
-            console.warn("no transparentMaterial found for material " + id);
+            console.warn("no transparentMaterial found for material " + this.id);
             return null;
         }
         return this.transparentMaterial;

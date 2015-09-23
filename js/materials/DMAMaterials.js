@@ -28,31 +28,13 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
 
 
+    function newMaterial(data){
 
-    function setMaterial(id, data){
-        var material = getMaterialForId(id);
-
-        var edited = false;
-        if (!material) {
-            materialsList[id] = new DMAMaterial(data);
-            return;
-        } else {
-            if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
-            edited = material.set(data);
-        }
-
-        if (edited){
-            var allChangedMaterialsList = getAllParentComposites(id);
-            allChangedMaterialsList.push(id);
-
-            _.each(allChangedMaterialsList, function(key){
-                materialsList[key].compositeChildren = getChildCellTypes(materialsList[key].sparseCells, false);
-                materialsList[key].elementaryChildren = getChildCellTypes(materialsList[key].sparseCells, true);
-            });
-
-            lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
-        }
     }
+
+    //material objects edited through set()
+
+
 
     function deleteMaterial(id){
         if (materialsList[id] === undefined){
@@ -82,13 +64,41 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
         return material.getThreeMaterial(id);
     }
 
+
+
+
+    function setMaterial(id, data){
+        var material = getMaterialForId(id);
+
+        var edited = false;
+        if (!material) {
+            materialsList[id] = new DMAMaterial(data);
+            return;
+        } else {
+            if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
+            edited = material.set(data);
+        }
+
+        if (edited){
+            var allChangedMaterialsList = getAllParentComposites(id);
+            allChangedMaterialsList.push(id);
+
+            _.each(allChangedMaterialsList, function(key){
+                materialsList[key].compositeChildren = getChildCellTypes(materialsList[key].sparseCells, false);
+                materialsList[key].elementaryChildren = getChildCellTypes(materialsList[key].sparseCells, true);
+            });
+
+            lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
+        }
+    }
+
+
+
     var materialNameIndex = 1;
 
     function getMaterialCopy(id){
         var material = getMaterialForId(id);
-        if (material){
-            return JSON.parse(JSON.stringify(material.toJSON()));
-        }
+        if (material) return material.clone();
         return {
                 name: "Material " + materialNameIndex++,
                 color: '#000000',
@@ -138,14 +148,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
         var children = [];
         loopCells(cells, function(cell){
             if (!cell) return;
-            var isComposite = cell.materialName.substr(0,5) == "super";
-            if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialName);
+            var isComposite = cell.materialID.substr(0,5) == "super";
+            if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialID);
             if (isComposite){
-                if (elementaryTypes && materialsList[cell.materialName].elementaryChildren) {
-                    Array.prototype.push.apply(children, materialsList[cell.materialName].elementaryChildren);
+                if (elementaryTypes && materialsList[cell.materialID].elementaryChildren) {
+                    Array.prototype.push.apply(children, materialsList[cell.materialID].elementaryChildren);
                 }
-                else if (!elementaryTypes && materialsList[cell.materialName].compositeChildren) {
-                    Array.prototype.push.apply(children, materialsList[cell.materialName].compositeChildren);
+                else if (!elementaryTypes && materialsList[cell.materialID].compositeChildren) {
+                    Array.prototype.push.apply(children, materialsList[cell.materialID].compositeChildren);
                 }
             }
         });

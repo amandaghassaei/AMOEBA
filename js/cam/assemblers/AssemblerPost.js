@@ -221,7 +221,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
             var cellIndex = cell.getAbsoluteIndex();
 
             if (!self.shouldPickUpStock){
-                data += self._postGetStock(cellIndex, lastIndex, cellPosition, cell.materialName, settings, exporter, context);
+                data += self._postGetStock(cellIndex, lastIndex, cellPosition, cell.getMaterialID(), settings, exporter, context);
             } else {
 //                var thisStockPosition = _.clone(stockPosition);
 //                if (multStockPositions) {
@@ -233,7 +233,7 @@ define(['underscore', 'appState', 'lattice', 'cam'], function(_, appState, latti
 //                data += self._postMoveXY(exporter, stockPosition.x-wcs.x, stockPosition.y-wcs.y);
 //                data += self._postMoveToStock(exporter, thisStockPosition, rapidHeight, wcs, safeHeight);
             }
-            data += self._postReleaseStock(cellIndex, cellPosition, cell.materialName, settings, exporter, context);
+            data += self._postReleaseStock(cellIndex, cellPosition, cell.getMaterialID(), settings, exporter, context);
             data += "\n";
             lastIndex = cellIndex.clone();
         });

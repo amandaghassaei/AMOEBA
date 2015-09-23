@@ -235,7 +235,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         reinitAllCellsOfTypes: function(types){//when material definition is changed
             this._loopCells(this.sparseCells, function(cell, x, y, z, self){
-                if (cell && cell.materialName.substr(0,5) == "super" && types.indexOf(cell.materialName) > -1){
+                if (!cell) return;
+                var material = cell.getMaterial();
+                if (material && material.isComposite() && types.indexOf(material.getID()) > -1){
                     //re-init cell;
                     var json = cell.toJSON();
                     json.index = cell.getIndex();

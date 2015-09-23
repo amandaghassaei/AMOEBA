@@ -218,7 +218,7 @@ define(['three'], function(THREE){
                             z: 0
                         },
                         description: {
-                            materialName: "fiberGlass",
+                            materialID: "fiberGlass",
                             length: 4
                         }
                     },
@@ -244,7 +244,7 @@ define(['three'], function(THREE){
                             z: 0
                         },
                         description: {
-                            materialName: "brass",
+                            materialID: "brass",
                             length: 4
                         }
                     }

@@ -34,13 +34,13 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
         return this.object3D.position.clone();
     };
 
-    StockComponent.prototype.setMaterial = function(materialName){
-        this.cell.changeMaterial(materialName);
+    StockComponent.prototype.setMaterial = function(materialID){
+        this.cell.changeMaterial(materialID);
         three.render();
     };
 
     StockComponent.prototype.getMaterial = function(){
-        return this.cell.getMaterialName();
+        return this.cell.getMaterialID();
     };
 
 
@@ -79,7 +79,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
     StockComponent.prototype.toJSON = function(){
         var json  = Component.prototype.toJSON.call(this);
         json.description = {
-            materialName: this.cell.materialName,
+            materialID: this.getMaterial(),
             length: this.cell.getLength()
         };
         return json;

@@ -95,7 +95,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         makeCellForLatticeType: function(json, callback){
             var subclassFile = this.getCellSubclassFile();
-            if (json.materialName && json.materialName.substr(0,5) == "super") subclassFile = "compositeCell";
+            if (json.materialID && json.materialID.substr(0,5) == "super") subclassFile = "compositeCell";
             require([subclassFile], function(CellSubclass){
                 var cell = new CellSubclass(json);
                 if (callback) callback(cell);

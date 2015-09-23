@@ -50,7 +50,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
         },
 
         saveExitMenu: function(){
-            if (this.material.name == "") this.material.name = "Material " + materialNameIndex++;
+            if (this.material.name == "") this.material.name = "Material " + materials.getNextMaterialID();
             materials.setMaterial(this.materialID, _.clone(this.material));
             return true;
         },
