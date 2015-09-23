@@ -11,7 +11,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
             color: "#ff0000",
             altColor: "#ff0000",
             noDelete: true
-        })
+        }, "deleteMaterial")
     };
 
 
@@ -72,7 +72,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
         var edited = false;
         if (!material) {
-            materialsList[id] = new DMAMaterial(data);
+            materialsList[id] = new DMAMaterial(data, id);
             return;
         } else {
             if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
@@ -109,7 +109,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
     }
 
     function getDeleteMaterial(){
-        return materialsList.deleteMaterial.getThreeMaterial("deleteMaterial");
+        return materialsList.deleteMaterial.threeMaterial;
     }
 
 
@@ -207,7 +207,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
         var newMaterials = {};
         _.each(definitions, function(data, key){
             data.noDelete = true;
-            newMaterials[key] = new DMAMaterial(data);
+            newMaterials[key] = new DMAMaterial(data, key);
         });
         return newMaterials;
     }

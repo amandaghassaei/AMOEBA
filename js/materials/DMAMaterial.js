@@ -16,15 +16,16 @@ define(['underscore', 'appState'], function(_, appState){
 
     DMAMaterial.prototype.set = function(data){
 
+        //check if colors have changed
+        var oldColor = this.color;
+        var oldAltColor = this.altColor;
+
         var self = this;
         _.each(_.keys(data), function(key){
             if (data[key] && data[key].x) self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
             else self[key] = data[key];
         });
 
-        //check if colors have changed
-        var oldColor = this.color;
-        var oldAltColor = this.altColor;
         if (!this.threeMaterial ||
             (data.color && oldColor != data.color) ||
             (data.altColor && oldAltColor != data.altColor)) this.changeColorScheme();//don't need to set edited flag for this, render will handle it

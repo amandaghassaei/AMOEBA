@@ -156,12 +156,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setDeleteMode = function(state){
-        var material;
+        var threeMaterial;
         if (!state && !this.material) return;//cell may be deleted by now
-        if (state) material = materials.getDeleteMaterial();
-        else  material = this.getMaterial(true);
-        if (!material) return;//no material object found
-        if (this.object3D.children[0].material == material) return;
+        if (state) threeMaterial = materials.getDeleteMaterial();
+        else  threeMaterial = this.getMaterial(true);
+        if (!threeMaterial) return;//no material object found
 
         if (this.cells){
             this._loopCells(function(cell){
@@ -170,10 +169,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         }
         if (this.parts){
             _.each(this.parts, function(part){
-                if (part) part.setMaterial(material);
+                if (part) part.setMaterial(threeMaterial);
             });
         }
-        this.setMaterial(material);
+        this._setTHREEMaterial(threeMaterial);
     };
 
     DMACell.prototype.getParent = function(){
@@ -229,7 +228,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.setMaterial = function(material){
         this.material = material;
-        this.object3D.children[0].material = this.getMaterial(true);
+        this._setTHREEMaterial(this.getMaterial(true));
+    };
+
+    DMACell.prototype._setTHREEMaterial = function(threeMaterial){
+        this.object3D.children[0].material = threeMaterial;
     };
 
     DMACell.prototype.getMaterial = function(returnTHREEObject){
