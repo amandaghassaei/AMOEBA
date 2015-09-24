@@ -15,15 +15,18 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _initialize: function(options){
 
-            var id = options.myObject;
-            if (!options.myObject) {
+            var materialID = options.myObject;
+
+            if (!materialID) {
                 console.warn("no editing material id passed in");
                 this.model.set("currentNav", plist.allMenus.navMaterial.parent);
             }
-            if (id == "new") id = materials.getNextMaterialID();
-            this.materialID = id;
 
-            this.material = materials.getMaterialCopy(id);
+            var material = materials.getMaterialForId(materialID);
+            var json = {};
+            if (material) json = material.toJSON();
+
+            this.material = materials.newMaterial(json, true);
         },
 
         getPropertyOwner: function($target){
@@ -46,31 +49,26 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _saveMaterialToFile: function(e){
             e.preventDefault();
-            fileSaver.saveMaterial(this.materialID, this.material);
+            fileSaver.saveMaterial(this.material);
         },
 
         saveExitMenu: function(){
-            if (this.material.name == "") this.material.name = "Material " + materials.getNextMaterialID();
-            materials.setMaterial(this.materialID, _.clone(this.material));
+            materials.setMaterial(this.material.getID(), this.material.toJSON());
             return true;
         },
 
         deleteExitMenu: function(){
-            var deleted = materials.deleteMaterial(this.materialID);
+            var deleted = materials.deleteMaterial(this.material.getID());
             return deleted;
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.material);
+            return _.extend(this.material.toJSON());
         },
 
         _destroy: function(){
-            var self = this;
-            _.each(_.keys(this.material), function(key){
-                delete self.material[key];
-            });
+            if(this.material) this.material.destroy();
             this.material = null;
-            this.materialID = null;
         },
 
         template: _.template(template)

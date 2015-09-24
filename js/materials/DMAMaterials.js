@@ -8,6 +8,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
     var materialsList = {
         deleteMaterial: new DMAMaterial({
+            name: "Delete",
             color: "#ff0000",
             altColor: "#ff0000",
             noDelete: true
@@ -28,13 +29,19 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
 
 
-    function newMaterial(data){
+    function newMaterial(data, noAdd){
+        if (data.sparseCells) {
+            console.warn("you are trying to init a composite material as a regular material");
+            return null;
+        }
 
+        var id = data.id || getNextMaterialID();
+        var material = new DMAMaterial(data, id);
+        if (noAdd) return material;//in the new material menu, you may init a material before saving changes
+
+        materialsList[id] = material;
+        return material;
     }
-
-    //material objects edited through set()
-
-
 
     function deleteMaterial(id){
         if (materialsList[id] === undefined){
@@ -53,26 +60,17 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
         return deleted;
     }
 
-    function getMaterialForId(id, returnTHREEObject, transparent){
-        var material = materialsList[id];
-        if (!returnTHREEObject) return material;
-        if (!material){
-            console.warn("no material object found for type "+ id);
-            return null;
-        }
-        if (transparent) return material.getTransparentMaterial(id);
-        return material.getThreeMaterial(id);
+    function getMaterialForId(id){
+        return materialsList[id];
     }
 
-
-
-
     function setMaterial(id, data){
+
         var material = getMaterialForId(id);
 
         var edited = false;
         if (!material) {
-            materialsList[id] = new DMAMaterial(data, id);
+            newMaterial(data);
             return;
         } else {
             if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
@@ -94,19 +92,11 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
 
 
-    var materialNameIndex = 1;
 
-    function getMaterialCopy(id){
-        var material = getMaterialForId(id);
-        if (material) return material.clone();
-        return {
-                name: "Material " + materialNameIndex++,
-                color: '#000000',
-                altColor: '#000000',
-                noDelete: false,
-                properties: {}
-            };
-    }
+
+
+
+
 
     function getDeleteMaterial(){
         return materialsList.deleteMaterial.threeMaterial;
@@ -252,18 +242,18 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
     }
 
 
+
     return {
         list: materialsList,
+        newMaterial: newMaterial,
         setMaterial: setMaterial,
         deleteMaterial: deleteMaterial,
         getMaterialForId: getMaterialForId,
-        getMaterialCopy: getMaterialCopy,
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,
         setToDefaultMaterial: setToDefaultMaterial,
         getDeleteMaterial: getDeleteMaterial,
-        getNextCompositeID: getNextCompositeID,
-        getNextMaterialID: getNextMaterialID
+        getNextCompositeID: getNextCompositeID
     };
 });

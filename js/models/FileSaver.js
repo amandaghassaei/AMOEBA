@@ -55,10 +55,10 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         _saveFile(seqArray, name || "seqs", "txt", true);
     }
 
-    function saveMaterial(id, material){
+    function saveMaterial(material){
         var data = {materials:{}};
-        data.materials[id] = material || _getMaterialDataToSave(material);
-        _saveFile(data, data.materials[id].name, "json");
+        data.materials[materials.getID()] = material.toJSON();
+        _saveFile(data, material.getName(), "json");
     }
 
     function saveMachineConfig(data){
@@ -78,14 +78,11 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     function _getMaterialsDataToSave(){
         var data = {};
         _.each(materials.list, function(material, key){
-            data[key] = _getMaterialDataToSave(material);
+            data[key] = material.toJSON();
         });
         return data;
     }
 
-    function _getMaterialDataToSave(material){
-        return material.toJSON();
-    }
 
     function loadFile(data){//parsed json todo make this better - load composite
         if (data.assembler) {

@@ -5,8 +5,24 @@
 
 define(['underscore', 'appState'], function(_, appState){
 
-    function DMAMaterial(json, id){
+    var materialNum = 0;
+
+    function getNextMaterialNum(){
+        return materialNum++;
+    }
+
+
+    function DMAMaterial(json, id){//todo defaults
         this.id = id;
+
+        var defaults = {
+            name: "",
+            color: "#000000",
+            altColor: "#000000",
+            noDelete: false,
+            properties:{}
+        };
+        json = _.extend(defaults, json);
         this.set(json);
     }
 
@@ -15,6 +31,8 @@ define(['underscore', 'appState'], function(_, appState){
     };
 
     DMAMaterial.prototype.set = function(data){
+
+        if (data.id) delete data.id;//cannot change id once set
 
         //check if colors have changed
         var oldColor = this.color;
@@ -25,12 +43,11 @@ define(['underscore', 'appState'], function(_, appState){
             if (data[key] && data[key].x) self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
             else self[key] = data[key];
         });
+        if (this.name === "") this.name = "Material " + getNextMaterialNum();
 
         if (!this.threeMaterial ||
             (data.color && oldColor != data.color) ||
             (data.altColor && oldAltColor != data.altColor)) this.changeColorScheme();//don't need to set edited flag for this, render will handle it
-
-        if (data.noDelete === undefined) this.noDelete = false;
 
         return false;//composite materials have edited flag to trigger upstream changes
     };
@@ -58,7 +75,7 @@ define(['underscore', 'appState'], function(_, appState){
 
     DMAMaterial.prototype.getThreeMaterial = function(){
         if (!this.threeMaterial) {
-            console.warn("no transparentMaterial found for material " + this.id);
+            console.warn("no transparentMaterial found for material " + this.getID());
             return null;
         }
         return this.threeMaterial;
@@ -66,7 +83,7 @@ define(['underscore', 'appState'], function(_, appState){
 
     DMAMaterial.prototype.getTransparentMaterial = function(){
         if (!this.transparentMaterial) {
-            console.warn("no transparentMaterial found for material " + this.id);
+            console.warn("no transparentMaterial found for material " + this.getID());
             return null;
         }
         return this.transparentMaterial;
@@ -80,6 +97,10 @@ define(['underscore', 'appState'], function(_, appState){
         return false;
     };
 
+    DMAMaterial.prototype.getName = function(){
+        return this.name;
+    };
+
     DMAMaterial.prototype.getProperties = function(){
         return this.properties;
     };
@@ -88,17 +109,18 @@ define(['underscore', 'appState'], function(_, appState){
         return !this.noDelete;
     };
 
-    DMAMaterial.prototype.clone = function(){
-        return JSON.parse(JSON.stringify(this.toJSON()));
-    };
+//    DMAMaterial.prototype.clone = function(){
+//        return JSON.parse(JSON.stringify(this.toJSON()));
+//    };
 
     DMAMaterial.prototype.toJSON = function(){
         return {
                 name: this.name,
                 color: this.color,
+                id: this.getID(),
                 altColor: this.altColor,
                 noDelete: this.noDelete,
-                properties: this.properties
+                properties: this.getProperties()
             }
     };
 
