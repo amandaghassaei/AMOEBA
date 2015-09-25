@@ -3,8 +3,8 @@
  */
 
 //everything is a top level material with a threeMaterial object
-define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material'],
-    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial){
+define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material', 'compositeMaterial'],
+    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial){
 
 
     var materialsList = {
@@ -17,6 +17,16 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         noDelete: true
     });
 
+    var compositeID = 0;
+    var materialID = 0;
+
+    function getNextCompositeID(){
+        return "super" + compositeID++;
+    }
+
+    function getNextMaterialID(){
+        return "material" + materialID++;
+    }
 
     var listener = {};
     _.extend(listener, Backbone.Events);
@@ -31,13 +41,15 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
 
     function newMaterial(data, noAdd){
+        var material, id;
         if (data.sparseCells) {
-            console.warn("you are trying to init a composite material as a regular material");
-            return null;
+            id = data.id || getNextCompositeID();
+            material = new DMACompositeMaterial(data, id);
+        } else {
+            id = data.id || getNextMaterialID();
+            material = new DMAMaterial(data, id);
         }
 
-        var id = data.id || getNextMaterialID();
-        var material = new DMAMaterial(data, id);
         if (noAdd) return material;//in the new material menu, you may init a material before saving changes
 
         materialsList[id] = material;
@@ -118,8 +130,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
     }
 
     function getCompositeKeys(){
-        return _.filter(materialsList, function(material){
-            return material.isComposite();
+        return _.filter(_.keys(materialsList), function(key){
+            return isComposite(key);
         });
     }
 
@@ -134,7 +146,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         var parentComposites = [];
         _.each(materialsList, function(material, key){
             if (key == id) return;
-            if (material.compositeChildren && material.compositeChildren.indexOf(id)>-1){
+            if (material.compositeChildren && material.isCompositeChild(id)){
                 parentComposites.push(key);
             }
         });
@@ -143,9 +155,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
     function getChildCellTypes(cells, elementaryTypes){//deep search to find all sub sub components
         var children = [];
+        var _isComposite = isComposite;
         loopCells(cells, function(cell){
             if (!cell) return;
-            var isComposite = isComposite(cell.materialID);
+            var isComposite = _isComposite(cell.getMaterialID());
             if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialID);
             if (isComposite){
                 if (elementaryTypes && materialsList[cell.materialID].elementaryChildren) {
@@ -189,7 +202,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
 
 
-
+    //events
 
     function setToDefaultMaterial(triggerEvent){
         var materialClass = appState.get("materialClass");
@@ -209,14 +222,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         return newMaterials;
     }
 
-
-
-
-
-
-
-
-
     function changeColorScheme(){
         var state = appState.get("realisticColorScheme");
         _.each(materialsList, function(material, name){
@@ -234,20 +239,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
             appState.set("superCellRange", new THREE.Vector3(appState.get("gikLength"), 1, 1));
         }
     }
-
-
-
-    var compositeID = 0;
-    var materialID = 0;
-
-    function getNextCompositeID(){
-        return "super" + compositeID++;
-    }
-
-    function getNextMaterialID(){
-        return "material" + materialID++;
-    }
-
 
 
     return {

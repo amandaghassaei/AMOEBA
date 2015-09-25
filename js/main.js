@@ -120,6 +120,7 @@ require.config({
         materialsPlist: 'plists/MaterialsPlist',
         materials: 'materials/DMAMaterials',
         material: 'materials/DMAMaterial',
+        compositeMaterial: 'materials/DMACompositeMaterial',
 
         //UI
         navbar: 'menus/Navbar',

@@ -77,7 +77,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
             var id = this.get("id");
             var data = this.toJSONForSave(bounds);
-            materials.setMaterial(id, data);
+            materials.newMaterial(data);
         },
 
         toJSONForSave: function(bounds){

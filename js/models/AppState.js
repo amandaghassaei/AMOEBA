@@ -134,15 +134,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             require(['materials'], function(materials){
                 var materialType = self.get("materialType");
                 //verify that correct class is in sync
-                if (materials.isComposite(materialType)) {
-                    if (materials.isComposite(self.previous("materialType"))) return;
+                if (!materials.isComposite(materialType)) {
+                    if (!materials.isComposite(self.previous("materialType"))) return;
                     //re init highlighter
                     require([self.lattice.getHighlighterFile()], function(HighlighterClass){
                         globals.highlighter = new HighlighterClass();
                     });
                     return;
                 }
-
                 //composite material
                 require(['superCellHighlighter'], function(SuperCellHighlighter){
                     globals.highlighter = new SuperCellHighlighter();

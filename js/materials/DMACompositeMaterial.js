@@ -24,14 +24,25 @@ define(['material'], function(DMAMaterial){
         return true;
     };
 
+    DMACompositeMaterial.prototype.isCompositeChild = function(id){
+        return this.compositeChildren.indexOf(id)>-1;
+    };
+
     DMACompositeMaterial.prototype.toJSON = function(){
         return {
-                name: this.name,
-                color: this.color,
-                altColor: this.altColor,
-                noDelete: this.noDelete,
-                properties: this.properties
-            }
+            name: this.name,
+            color: this.color,
+            altColor: this.altColor,
+            noDelete: this.noDelete,
+            properties: this.properties,
+            cellsMin: this.cellsMin,
+            cellsMax: this.cellsMax,
+            compositeChildren: this.compositeChildren,
+            elementaryChildren: this.elementaryChildren,
+            sparseCells: this.sparseCells
+        }
     };
+
+    return DMACompositeMaterial;
 
 });
