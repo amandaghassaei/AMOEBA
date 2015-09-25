@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'latticeBase'],
-    function(_, Backbone, appState, globals, plist, THREE, three, LatticeBase){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlist', 'three', 'threeModel', 'latticeBase'],
+    function(_, Backbone, appState, globals, plist, materialsPlist, THREE, three, LatticeBase){
 
     var Lattice = LatticeBase.extend({
 
@@ -96,7 +96,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
             this.set("partType", newPartType, {silent:true});
 
-            var newMaterialClass = (latticeData.materialClasses || _.keys(plist.allMaterialClasses))[0];
+            var newMaterialClass = (latticeData.materialClasses || _.keys(materialsPlist.allMaterialClasses))[0];
             appState.set("materialClass", newMaterialClass);
 
             if (latticeData.options){

@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'text!mSetupMenuTemplate'],
-    function($, _, MenuParentView, lattice, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'materialsPlist', 'text!mSetupMenuTemplate'],
+    function($, _, MenuParentView, lattice, plist, materialsPlist, template){
 
     return MenuParentView.extend({
 
@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'text!mSetupMe
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist, lattice.toJSON());
+            return _.extend(this.model.toJSON(), plist, materialsPlist, lattice.toJSON());
         },
 
         template: _.template(template)

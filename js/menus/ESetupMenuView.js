@@ -2,8 +2,8 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eSetupMenuTemplate', 'latticeESim', 'eSim'],
-    function($, _, MenuParentView, plist, template, lattice, eSim){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!eSetupMenuTemplate', 'latticeESim', 'eSim'],
+    function($, _, MenuParentView, plist, materialsPlist, template, lattice, eSim){
 
     return MenuParentView.extend({
 
@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eSetupMenuTemplate'
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), eSim.toJSON(), plist, lattice.toJSON());
+            return _.extend(this.model.toJSON(), eSim.toJSON(), plist, materialsPlist, lattice.toJSON());
         },
 
         template: _.template(template)

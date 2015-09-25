@@ -117,6 +117,7 @@ require.config({
         dnaLegoPart: 'parts/DNALegoPart',
 
         //materials
+        materialsPlist: 'plists/MaterialsPlist',
         materials: 'materials/DMAMaterials',
         material: 'materials/DMAMaterial',
 

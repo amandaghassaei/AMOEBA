@@ -2,8 +2,8 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'materials', 'text!materialMenuTemplate'],
-    function($, _, MenuParentView, plist, lattice, globals, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattice', 'globals', 'materials', 'text!materialMenuTemplate'],
+    function($, _, MenuParentView, materialsPlist, plist, lattice, globals, materials, template){
 
     return MenuParentView.extend({
 
@@ -61,7 +61,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'globals', 'ma
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), this.model.toJSON(), plist, globals, {inSimMode:false, materials:materials.list, compositeMaterialsKeys:materials.getCompositeKeys()});
+            return _.extend(lattice.toJSON(), this.model.toJSON(), materialsPlist, plist, globals, {inSimMode:false, materials:materials.list, compositeMaterialsKeys:materials.getCompositeKeys()});
         },
 
         template: _.template(template)

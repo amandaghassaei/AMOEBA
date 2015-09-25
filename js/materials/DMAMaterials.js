@@ -3,17 +3,18 @@
  */
 
 //everything is a top level material with a threeMaterial object
-define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'material'],
-    function(_, THREE, appState, lattice, plist, three, DMAMaterial){
+define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material'],
+    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial){
 
     var materialsList = {
-        deleteMaterial: new DMAMaterial({
-            name: "Delete",
-            color: "#ff0000",
-            altColor: "#ff0000",
-            noDelete: true
-        }, "deleteMaterial")
     };
+    newMaterial({
+        id: "deleteMaterial",
+        name: "Delete",
+        color: "#ff0000",
+        altColor: "#ff0000",
+        noDelete: true
+    });
 
 
     var listener = {};
@@ -25,7 +26,6 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
     listener.listenTo(appState, "change:materialType", setMaterialDefaults);
 
     setToDefaultMaterial();
-
 
 
 
@@ -186,8 +186,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'plist', 'threeModel', 'ma
 
     function setToDefaultMaterial(triggerEvent){
         var materialClass = appState.get("materialClass");
-        var newDefaultType = _.keys(plist.allMaterials[materialClass])[0];
-        if (!materialsList[newDefaultType]) _.extend(materialsList, parseClassFromDefinitions(plist.allMaterials[materialClass]));
+        var newDefaultType = _.keys(materialsPlist.allMaterials[materialClass])[0];
+        if (!materialsList[newDefaultType]) _.extend(materialsList, parseClassFromDefinitions(materialsPlist.allMaterials[materialClass]));
         if (!materialsList[newDefaultType]) console.warn("material type " + newDefaultType + "  not in definition for " + materialClass);
         if (triggerEvent === undefined) triggerEvent = false;
         appState.set("materialType", newDefaultType, {silent:!triggerEvent});

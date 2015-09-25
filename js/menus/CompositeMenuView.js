@@ -2,8 +2,8 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'plist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate'],
-    function($, _, MenuParentView, CompositeEditorLattice, plist, lattice, globals, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materialsPlist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate'],
+    function($, _, MenuParentView, CompositeEditorLattice, materialsPlist, lattice, globals, materials, template){
 
     var bounds;
 
@@ -104,7 +104,7 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'plist',
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist, globals, this.composite.toJSON(),
+            return _.extend(this.model.toJSON(), materialsPlist, globals, this.composite.toJSON(),
                 {
                     dimensions: bounds.max.clone().sub(bounds.min),
                     materials: materials.list,

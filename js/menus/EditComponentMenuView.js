@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'materials', 'text!editComponentMenuTemplate'],
-    function($, _, MenuParentView, plist, cam, materials, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'cam', 'materials', 'text!editComponentMenuTemplate'],
+    function($, _, MenuParentView, plist, materialsPlist, cam, materials, template){
 
     return MenuParentView.extend({
 
@@ -92,7 +92,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'cam', 'materials', 'text
                 if (!correctBranch || assembler.tree[editingComponent] >= level) return;
                 allDescendants.push(id);
             });
-            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(), plist,
+            return _.extend(this.model.toJSON(), cam.toJSON(), assembler.toJSON(), plist, materialsPlist,
                 {thisComponent: component.toJSON(), ancestors:allAncestors, descendants:allDescendants, materials:materials.list});
         },
 
