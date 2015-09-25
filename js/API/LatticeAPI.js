@@ -42,59 +42,27 @@ define(['lattice', 'plist'], function(lattice, plist){
         //setters
 
         setAspectRatio: function(x, y, z){
-            if (!x || !y || !z || x<0 || y<0 || z<0) {//no 0, undefined, null, or neg #'s
-                console.warn("invalid aspect ratio params");
-                return;
-            }
-            lattice.set("aspectRatio", new THREE.Vector3(x, y, z));
+            lattice.setAspectRatio(x, y, z);
         },
 
         setCellType: function(cellType){
-            if (plist.allLattices[cellType] === undefined){
-                console.warn("no cell type " + cellType);
-                return;
-            }
-            return lattice.set("cellType", cellType);
+            lattice.setCellType(cellType);
         },
 
         setConnectionType: function(connectionType){
-            var cellType = lattice.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            if (plistCellData[connectionType] === undefined){
-                console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
-                return;
-            }
-            return lattice.set("connectionType", connectionType);
+            lattice.setConnectionType(connectionType);
         },
 
         setApplicationType: function(applicationType){
-            var cellType = lattice.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            var connectionType = lattice.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
-            if (plistConnectionData[applicationType] === undefined){
-                console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
-                return;
-            }
-            return lattice.set("applicationType", applicationType);
+            lattice.setApplicationType(applicationType);
         },
 
         setPartType: function(partType){
-            var cellType = lattice.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            var connectionType = lattice.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
-            var applicationType = lattice.get("applicationType");
-            var plistAppData = plistConnectionData[applicationType];
-            if (plistConnectionData[applicationType] === undefined){
-                console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
-                return;
-            }
-            return lattice.set("partType", partType);
+            lattice.setPartType(partType);
         },
 
         setLatticeType: function(cellType, connectionType, applicationType, partType){
-
+            lattice.setLatticeType(cellType, connectionType, applicationType, partType);
         },
 
 

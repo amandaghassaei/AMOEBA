@@ -212,10 +212,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _setProperty: function($target, property, newVal, key){
             var owner = this._getPropertyOwner($target);
             if (!owner) return;
-            if (owner.setProperty){
-                owner.setProperty(property, newVal, key);
-                return;
-            }
+            if (newVal === null || newVal === undefined) return;
             if (key){
                 var propObject = this._getOwnerProperty(owner, property);
                 if (propObject.clone) propObject = propObject.clone();
@@ -233,11 +230,16 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         },
 
         _setOwnerProperty: function(owner, property, value){
-            if (owner instanceof Backbone.Model) owner.set(property, value);
+            if (owner[this._getSetterName(property)]) owner[this._getSetterName(property)](value);
+            else if (owner instanceof Backbone.Model) owner.set(property, value);
             else {
                 owner[property] = value;
                 this.menu.render();
             }
+        },
+
+        _getSetterName: function(property){
+            return "set" + property.charAt(0).toUpperCase() + property.slice(1);
         },
 
 

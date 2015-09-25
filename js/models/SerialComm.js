@@ -120,9 +120,12 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam', 'lattice', 
             return this.machineState;
         },
 
-        setProperty: function(property, value){//portName, baudRate
-            if (property === null || property === undefined || value === null || value === undefined) return;
-            this.socket.emit(property, value);//always pass user interaction on
+        setBaudRate: function(value){
+            this.socket.emit("baudRate", value);
+        },
+
+        setPortName: function(value){
+            this.socket.emit("portName", value);
         },
 
         openSerialMonitor: function(){
