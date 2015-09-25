@@ -132,7 +132,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
             var self = this;
             require(['materials'], function(materials){
-                var materialType = this.get("materialType");
+                var materialType = self.get("materialType");
                 //verify that correct class is in sync
                 if (materials.isComposite(materialType)) {
                     if (materials.isComposite(self.previous("materialType"))) return;

@@ -15,10 +15,12 @@ define(['underscore', 'appState'], function(_, appState){
     function DMAMaterial(json, id){
         this.id = id;
 
+        var randomColor = this.randomHexColor();
+
         var defaults = {
             name: "",
-            color: "#000000",
-            altColor: "#000000",
+            color: randomColor,
+            altColor: randomColor,
             noDelete: false,
             properties:{}
         };
@@ -66,6 +68,10 @@ define(['underscore', 'appState'], function(_, appState){
     DMAMaterial.prototype._getColorForState = function(state){
         if (state) return this.color;
         return this.altColor;
+    };
+
+    DMAMaterial.prototype.randomHexColor = function(){
+        return '#' + Math.floor(Math.random()*16777215).toString(16);
     };
 
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){

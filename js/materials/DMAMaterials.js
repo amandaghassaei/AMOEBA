@@ -6,6 +6,7 @@
 define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material'],
     function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial){
 
+
     var materialsList = {
     };
     newMaterial({

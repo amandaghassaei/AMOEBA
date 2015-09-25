@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materi
 
         _changeRandomColor: function(e){
             e.preventDefault();
-            var color = '#' + Math.floor(Math.random()*16777215).toString(16);
+            var color = this.material.randomHexColor();
             this.material.altColor = color;
             this.render();
         },

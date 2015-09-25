@@ -28,11 +28,11 @@ Materials:<br/>
         <span><span class="materialListTitle"><%= material.name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
     </label>
 <% }); %>
+<a id="newElementaryMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material Definition</a>
 <label class="checkbox" for="realisticColorScheme">
 <input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
 <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
 Use realistic color scheme</label><br/>
-<a id="newElementaryMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material Definition</a>
 <br/>
 <% if (!inSimMode){ %>
     Composite Materials:<br/>
