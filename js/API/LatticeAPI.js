@@ -10,8 +10,7 @@ define(['lattice', 'plist'], function(lattice, plist){
         //getters
 
         getSize: function(){
-            var bBox = lattice.calculateBoundingBox();
-            return bBox.max.sub(bBox.min);
+            return lattice.getSize();
         },
 
         getBoundingBox: function(){
@@ -19,23 +18,23 @@ define(['lattice', 'plist'], function(lattice, plist){
         },
 
         getAspectRatio: function(){
-            return lattice.get("aspectRatio").clone();
+            return lattice.getAspectRatio();
         },
 
         getCellType: function(){
-            return lattice.get("cellType");
+            return lattice.getCellType();
         },
 
         getConnectionType: function(){
-            return lattice.get("connectionType");
+            return lattice.getConnectionType();
         },
 
         getApplicationType: function(){
-            return lattice.get("applicationType");
+            return lattice.getApplicationType();
         },
 
         getPartType: function(){
-            return lattice.get("partType");
+            return lattice.getPartType();
         },
 
 

@@ -34,6 +34,38 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
 
 
+        //getters
+
+        getSize: function(){
+            var bBox = this.calculateBoundingBox();
+            return bBox.max.sub(bBox.min).add(new THREE.Vector3(1,1,1));
+        },
+
+        getBoundingBox: function(){
+            return this.calculateBoundingBox();
+        },
+
+        getAspectRatio: function(){
+            return this.get("aspectRatio").clone();
+        },
+
+        getCellType: function(){
+            return this.get("cellType");
+        },
+
+        getConnectionType: function(){
+            return this.get("connectionType");
+        },
+
+        getApplicationType: function(){
+            return this.get("applicationType");
+        },
+
+        getPartType: function(){
+            return this.get("partType");
+        },
+
+
 
 
         //setters
