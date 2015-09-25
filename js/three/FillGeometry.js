@@ -52,7 +52,7 @@ define(['three', 'underscore', 'backbone', 'lattice', 'threeModel'],
             var maxIndex = lattice.getIndexForPosition(scaledMax);
             console.log(minIndex);
             console.log(maxIndex);
-            lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//expand cells matrix before
+            lattice.checkForMatrixExpansion(null, maxIndex, minIndex);//todo put this somewhere else
     
             var raycaster = new THREE.Raycaster();
             var direction = new THREE.Vector3(0,0,1);

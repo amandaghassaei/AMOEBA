@@ -12,7 +12,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             "click .ribbonCellMode":                                 "_updateCellMode",
             "click .ribbonDeleteMode":                               "_updateDeleteMode",
             "click .highlightMode":                                  "_updateHighlightMode",
-            "click .cellsVisible":                                   "_updateCellVisibility",
             "click #ribbonAxesToggle":                               "_setAxesVis"
         },
 
@@ -25,7 +24,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             this.listenTo(this.model, "change:currentNav", this.render);
             this.listenTo(this.model, "change:deleteMode", this.render);
             this.listenTo(this.model, "change:highlightMode", this.render);
-            this.listenTo(this.model, "change:cellsVisible", this.render);
             this.listenTo(this.model, "change:axesAreVisible", this.render);
             this.listenTo(lattice, "change:cellType change:connectionType change:latticeType", this.render);
             this.render();
@@ -44,11 +42,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
         _updateHighlightMode: function(e){
             e.preventDefault();
             this.model.set("highlightMode", !this.model.get("highlightMode"));
-        },
-
-        _updateCellVisibility: function(e){
-            e.preventDefault();
-            this.model.set("cellsVisible", !this.model.get("cellsVisible"));
         },
 
         _changeVisibility: function(){
@@ -71,6 +64,3 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
 
     return new Ribbon({model:appState});
 });
-
-//<a class="btn btn-primary btn-ribbon highlightMode<% if (highlightMode){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/cursor-light.png"></a>\
-//<a class="btn btn-primary btn-ribbon cellsVisible<% if (!cellsVisible){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/hide.png"></a>\

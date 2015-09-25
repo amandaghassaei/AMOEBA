@@ -3,14 +3,19 @@
  */
 
 
-define(['lattice'], function(lattice){
+define(['lattice', 'plist'], function(lattice, plist){
 
     return {
 
         //getters
 
         getSize: function(){
+            var bBox = lattice.calculateBoundingBox();
+            return bBox.max.sub(bBox.min);
+        },
 
+        getBoundingBox: function(){
+            return lattice.calculateBoundingBox();
         },
 
         getAspectRatio: function(){
@@ -45,19 +50,47 @@ define(['lattice'], function(lattice){
         },
 
         setCellType: function(cellType){
-
+            if (plist.allLattices[cellType] === undefined){
+                console.warn("no cell type " + cellType);
+                return;
+            }
+            return lattice.set("cellType", cellType);
         },
 
         setConnectionType: function(connectionType){
-
+            var cellType = lattice.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            if (plistCellData[connectionType] === undefined){
+                console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
+                return;
+            }
+            return lattice.set("connectionType", connectionType);
         },
 
         setApplicationType: function(applicationType){
-
+            var cellType = lattice.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            var connectionType = lattice.get("connectionType");
+            var plistConnectionData = plistCellData[connectionType];
+            if (plistConnectionData[applicationType] === undefined){
+                console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
+                return;
+            }
+            return lattice.set("latticeType", applicationType);
         },
 
         setPartType: function(partType){
-
+            var cellType = lattice.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            var connectionType = lattice.get("connectionType");
+            var plistConnectionData = plistCellData[connectionType];
+            var applicationType = lattice.get("latticeType");
+            var plistAppData = plistConnectionData[applicationType];
+            if (plistConnectionData[applicationType] === undefined){
+                console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
+                return;
+            }
+            return lattice.set("partType", partType);
         },
 
         setLatticeType: function(cellType, connectionType, applicationType, partType){
@@ -72,11 +105,15 @@ define(['lattice'], function(lattice){
         },
 
         getSparseCells: function(){
+            return lattice.sparseCells;
+        },
 
+        setSparseCells: function(cells){
+            lattice.reloadCells(cells);
         },
 
         getCells: function(){
-
+            return lattice.cells;
         },
 
         loopSparseCells: function(){
@@ -89,6 +126,10 @@ define(['lattice'], function(lattice){
 
         addCellAtIndex: function(){
 
+        },
+
+        removeCell: function(cell){
+            lattice.removeCell(cell);
         },
 
         removeCellAtIndex: function(){

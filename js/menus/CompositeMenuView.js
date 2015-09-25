@@ -52,7 +52,7 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
             var compositeLattice = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_composite){
                 var cells = null;
                 if (data) cells = data.sparseCells;
-                _composite._reloadCells(cells, lattice._getSubclassForLatticeType());
+                _composite.reloadCells(cells, lattice._getSubclassForLatticeType());//todo get rid of this
             });
 
             lattice.setToCompositeMode(compositeLattice);

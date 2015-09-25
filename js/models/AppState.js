@@ -34,7 +34,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             highlightMode: true,
             extrudeMode: false,
             cellMode: "cell",//supercell, cell, part, hide
-            cellsVisible: true,
 
             superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds
             gikLength: 4,//this updates super cell range when using non-composite materials

@@ -33,18 +33,18 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
             this.listenTo(this, "change:cellType", function(){
                 this._cellTypeChanged();
-                this._reloadCells();
+                this.reloadCells();
             });
             this.listenTo(this, "change:connectionType", function(){
                 this._connectionTypeChanged();
-                this._reloadCells();
+                this.reloadCells();
             });
             this.listenTo(this, "change:latticeType", function(){
                 this._latticeTypeChanged();
-                this._reloadCells();
+                this.reloadCells();
             });
             this.listenTo(this, "change:aspectRatio", function(){
-                this._reloadCells();
+                this.reloadCells();
             });
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
@@ -53,7 +53,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             });
 
             this._latticeTypeChanged();
-            this._reloadCells();
+            this.reloadCells();
         },
 
 

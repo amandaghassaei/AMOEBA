@@ -28,7 +28,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             //bind events
             this.listenTo(appState, "change:cellMode", this._updateForMode);
-            this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 
             if (this.__initialize) this.__initialize(options, callback);
         },
@@ -44,13 +43,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("latticeType")];
         },
 
-        _reloadCells: function(cells, subclass){
+        reloadCells: function(cells, subclass){
 
             if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik") && !cells) this.clearCells();
 
             if (!cells) cells = JSON.parse(JSON.stringify(this.sparseCells));
 
-            if (this._setDefaultCellMode) this._setDefaultCellMode();
+            if (this._setDefaultCellMode) this._setDefaultCellMode();//only on lattice
 
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
@@ -63,7 +62,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (globals.highlighter) globals.highlighter.destroy();
             }
 
-            if (cellsMax && cellsMin) this.checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
+            if (cellsMax && cellsMin) this._checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
             var self = this;
             require([subclass || this._getSubclassForLatticeType()], function(subclassObject){
                 _.extend(self, subclassObject);
@@ -106,7 +105,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         addCellsInRange: function(range){//add a block of cells (extrude)
 
-            this.checkForMatrixExpansion(this.sparseCells, range.max, range.min);
+            this._checkForMatrixExpansion(this.sparseCells, range.max, range.min);
 
             var cellsMin = this.get("cellsMin");
             var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
@@ -134,14 +133,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         addCellAtIndex: function(index, noRender, noCheck){//no render no check from fill/load
 
-            if (!noCheck || noCheck === undefined) this.checkForMatrixExpansion(this.sparseCells, index, index);
+            if (!noCheck || noCheck === undefined) this._checkForMatrixExpansion(this.sparseCells, index, index);
 
             var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
             if (!noRender || noRender === undefined) three.setRenderFlag();
-            this.addCellWithJson({index: index, materialName:appState.get("materialType")}, relIndex);
+            this._addCellWithJSON({index: index, materialName:appState.get("materialType")}, relIndex);
         },
 
-        addCellWithJson: function(json, index){
+        _addCellWithJSON: function(json, index){
             var self = this;
             if (!this.sparseCells[index.x][index.y][index.z]) {
                 this.makeCellForLatticeType(json, function(cell){
@@ -230,7 +229,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //cells array
 
-        checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
+        _checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
 
             if (!cells) {
                 console.warn("no cells specified in matrix expansion");
@@ -457,11 +456,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        _setCellVisibility: function(){
-            if (appState.get("cellsVisible")) this.showCells();
-            else this.hideCells();
-        },
-
         hideCells: function(whichArray){
             if (!whichArray) whichArray = "sparseCells";
             this._iterCells(this[whichArray], function(cell){
@@ -578,7 +572,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._loopCells(sparseCells, function(cell, x, y, z, self){
                 if (cell) {
                     var json = _.extend({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, cell);
-                    self.addCellWithJson(json, new THREE.Vector3(x, y, z));
+                    self._addCellWithJSON(json, new THREE.Vector3(x, y, z));
                 }
             });
         },
