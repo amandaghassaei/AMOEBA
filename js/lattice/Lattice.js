@@ -15,7 +15,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
             cellType: "cube",
             connectionType: "gik",
-            latticeType: "willGik",
+            applicationType: "willGik",
             partType: null,
 
             aspectRatio: null,
@@ -39,8 +39,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 this._connectionTypeChanged();
                 this.reloadCells();
             });
-            this.listenTo(this, "change:latticeType", function(){
-                this._latticeTypeChanged();
+            this.listenTo(this, "change:applicationType", function(){
+                this._applicationTypeChanged();
                 this.reloadCells();
             });
             this.listenTo(this, "change:aspectRatio", function(){
@@ -52,7 +52,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 this.updateThreeViewTarget();
             });
 
-            this._latticeTypeChanged();
+            this._applicationTypeChanged();
             this.reloadCells();
         },
 
@@ -77,12 +77,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         _connectionTypeChanged: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
-            var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
-            this.set("latticeType", latticeType, {silent:true});
-            this._latticeTypeChanged();
+            var appType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
+            this.set("applicationType", appType, {silent:true});
+            this._applicationTypeChanged();
         },
 
-        _latticeTypeChanged: function(){
+        _applicationTypeChanged: function(){
             var latticeData = this._getLatticePlistData();
             this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
 

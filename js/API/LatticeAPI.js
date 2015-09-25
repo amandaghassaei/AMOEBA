@@ -31,7 +31,7 @@ define(['lattice', 'plist'], function(lattice, plist){
         },
 
         getApplicationType: function(){
-            return lattice.get("latticeType");
+            return lattice.get("applicationType");
         },
 
         getPartType: function(){
@@ -76,7 +76,7 @@ define(['lattice', 'plist'], function(lattice, plist){
                 console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
                 return;
             }
-            return lattice.set("latticeType", applicationType);
+            return lattice.set("applicationType", applicationType);
         },
 
         setPartType: function(partType){
@@ -84,7 +84,7 @@ define(['lattice', 'plist'], function(lattice, plist){
             var plistCellData = plist.allLattices[cellType];
             var connectionType = lattice.get("connectionType");
             var plistConnectionData = plistCellData[connectionType];
-            var applicationType = lattice.get("latticeType");
+            var applicationType = lattice.get("applicationType");
             var plistAppData = plistConnectionData[applicationType];
             if (plistConnectionData[applicationType] === undefined){
                 console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);

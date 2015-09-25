@@ -18,19 +18,19 @@ Cell Connection:&nbsp;&nbsp;
     </div><br/><br/>
 Type:&nbsp;&nbsp;
     <div class="btn-group">
-        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[latticeType].name %><span class="caret"></span></button>
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[applicationType].name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(allLattices[cellType].connection[connectionType].type, function(latticeTypeData, key){ %>
-                <li><a class="lattice dropdownSelector" data-property="latticeType" data-value="<%= key %>" href="#"><%= latticeTypeData.name %></a></li>
+            <% _.each(allLattices[cellType].connection[connectionType].type, function(appTypeData, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="applicationType" data-value="<%= key %>" href="#"><%= appTypeData.name %></a></li>
             <% }); %>
         </ul>
     </div><br/><br/>
-<% if(allLattices[cellType].connection[connectionType].type[latticeType].parts){ %>
+<% if(allLattices[cellType].connection[connectionType].type[applicationType].parts){ %>
     Part Type: &nbsp;&nbsp;
         <div class="btn-group">
-            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[latticeType].parts[partType].name %><span class="caret"></span></button>
+            <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allLattices[cellType].connection[connectionType].type[applicationType].parts[partType].name %><span class="caret"></span></button>
             <ul role="menu" class="dropdown-menu">
-                <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].parts, function(val, key){ %>
+                <% _.each(allLattices[cellType].connection[connectionType].type[applicationType].parts, function(val, key){ %>
                     <li><a class="lattice dropdownSelector" data-property="partType" data-value="<%= key %>" href="#"><%= val.name %></a></li>
                 <% }); %>
             </ul>

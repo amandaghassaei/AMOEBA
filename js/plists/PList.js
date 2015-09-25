@@ -106,13 +106,13 @@ define(['three'], function(THREE){
             dnabricks: {
                 cellType: "cube",
                 connectionType: "gik",
-                latticeType: "willGik",
+                applicationType: "willGik",
                 partType: null
             },
             electronics: {
                 cellType: "cube",
                 connectionType: "gik",
-                latticeType: "dnaBricks",
+                applicationType: "dnaBricks",
                 partType: null
             }
         },

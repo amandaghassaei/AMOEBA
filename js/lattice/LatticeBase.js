@@ -40,7 +40,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //lattice type
 
         _getLatticePlistData: function(){
-            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("latticeType")];
+            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("applicationType")];
         },
 
         reloadCells: function(cells, subclass){

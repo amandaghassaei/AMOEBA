@@ -36,7 +36,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 if (this.currentNav == this.model.get("currentNav")) return;
                 this.render();
             });
-            this.listenTo(lattice, "change:cellType change:connectionType change:latticeType", this._populateAndShow);
+            this.listenTo(lattice, "change:cellType change:connectionType change:applicationType", this._populateAndShow);
             this.listenTo(this.model, "change:currentTab", function(){
                 if (this.currentTab == this.model.get("currentTab")) return;
                 if (!this.model.changedAttributes() || this.model.changedAttributes()["currentNav"]) return;

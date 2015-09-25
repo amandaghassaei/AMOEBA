@@ -290,7 +290,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     if (this.lattice.get("connectionType") != "gik") break;
                     if (state) {
                         var val = e.keyCode-48;
-                        var range = plist.allLattices[this.lattice.get("cellType")].connection[this.lattice.get("connectionType")].type[this.lattice.get("latticeType")].options.gikRange;
+                        var range = plist.allLattices[this.lattice.get("cellType")].connection[this.lattice.get("connectionType")].type[this.lattice.get("applicationType")].options.gikRange;
                         if (range){
                             if ((range[0] > 0 && val < range[0]) || (range[1] > 1 && val > range[1])){
                                 console.warn("gik length out of range");

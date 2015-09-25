@@ -5,7 +5,7 @@ Simulation Type: &nbsp;&nbsp;
     <div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allMaterialClasses[materialClass] %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
-            <% _.each(allLattices[cellType].connection[connectionType].type[latticeType].materialClasses || _.keys(allMaterialClasses), function(key){ %>
+            <% _.each(allLattices[cellType].connection[connectionType].type[applicationType].materialClasses || _.keys(allMaterialClasses), function(key){ %>
                 <li><a class="appState dropdownSelector" data-property="materialClass" data-value="<%= key %>" href="#"><%= allMaterialClasses[key] %></a></li>
             <% }); %>
         </ul>
