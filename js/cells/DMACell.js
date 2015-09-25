@@ -223,7 +223,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.getMaterialID = function(){
-        return this.material.id;
+        return this.material.getID();
     };
 
     DMACell.prototype.setMaterial = function(material){

@@ -6,7 +6,7 @@
 define(['cell', 'lattice'], function(DMACell, lattice){
 
     DMACell.prototype.isConductive = function(){
-        return this.getMaterial().properties.conductive;
+        return this.getMaterial().getProperties().conductive;
     };
 
     DMACell.prototype.setConductorGroupNum = function(num, force){

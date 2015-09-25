@@ -5,14 +5,14 @@
 
 define(['underscore', 'appState'], function(_, appState){
 
-    var materialNum = 0;
+    var materialNum = 1;
 
     function getNextMaterialNum(){
         return materialNum++;
     }
 
 
-    function DMAMaterial(json, id){//todo defaults
+    function DMAMaterial(json, id){
         this.id = id;
 
         var defaults = {
