@@ -71,7 +71,9 @@ define(['underscore', 'appState'], function(_, appState){
     };
 
     DMAMaterial.prototype.randomHexColor = function(){
-        return '#' + Math.floor(Math.random()*16777215).toString(16);
+        var hex = '#' + Math.floor(Math.random()*16777215).toString(16);
+        if (hex.match(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i) !== null) return hex;
+        return "#000000";
     };
 
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){

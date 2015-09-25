@@ -29,8 +29,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         __initialize: function(){
 
-            this._checkURL();
-
             this.listenTo(this, "change:partType", this._updatePartType);
 
             this.listenTo(this, "change:cellType", function(){
@@ -58,10 +56,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this._reloadCells();
         },
 
-        _checkURL: function(){
-            var path = window.location.path;
-//            console.log(path);
-        },
 
 
 
