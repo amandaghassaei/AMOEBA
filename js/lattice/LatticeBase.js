@@ -8,8 +8,8 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
-    function(_, Backbone, appState, globals, plist, THREE, three){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'materials'],
+    function(_, Backbone, appState, globals, plist, THREE, three, materials){
 
     return Backbone.Model.extend({
 
@@ -95,7 +95,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         makeCellForLatticeType: function(json, callback){
             var subclassFile = this.getCellSubclassFile();
-            if (json.materialID && json.materialID.substr(0,5) == "super") subclassFile = "compositeCell";
+            if (json.materialID && materials.isComposite(json.materialID)) subclassFile = "compositeCell";
             require([subclassFile], function(CellSubclass){
                 var cell = new CellSubclass(json);
                 if (callback) callback(cell);

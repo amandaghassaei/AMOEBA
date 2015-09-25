@@ -107,12 +107,18 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
 
 
-
-
+    function isComposite(id){
+        return id.substr(0,5) == "super";
+//
+//        var material = getMaterialForId(id);
+//        if (material) return material.isComposite();
+//        console.warn("no material found with id = " + id);
+//        return false;
+    }
 
     function getCompositeKeys(){
-        return _.filter(_.keys(materialsList), function(key){
-            return key.substr(0,5) == "super";
+        return _.filter(materialsList, function(material){
+            return material.isComposite();
         });
     }
 
@@ -138,7 +144,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         var children = [];
         loopCells(cells, function(cell){
             if (!cell) return;
-            var isComposite = cell.materialID.substr(0,5) == "super";
+            var isComposite = isComposite(cell.materialID);
             if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialID);
             if (isComposite){
                 if (elementaryTypes && materialsList[cell.materialID].elementaryChildren) {
@@ -249,6 +255,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         setMaterial: setMaterial,
         deleteMaterial: deleteMaterial,
         getMaterialForId: getMaterialForId,
+        isComposite: isComposite,
+
+
         getCompositeKeys: getCompositeKeys,
         getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
         getChildCellTypes:getChildCellTypes,

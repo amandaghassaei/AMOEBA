@@ -5,7 +5,8 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], function(_, Backbone, three, THREE, plist, globals){
+define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
+    function(_, Backbone, three, THREE, plist, globals){
 
     var AppState = Backbone.Model.extend({
 
@@ -82,10 +83,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
         },
 
 
-        ///////////////////////////////////////////////////////////////////////////////
-        /////////////////////EVENTS////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////
 
+
+
+        //events
 
         _tabChanged: function(){
             var currentTab = this.get("currentTab");
@@ -128,21 +129,26 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
         },
 
         _materialTypeChanged: function(){
-            var materialType = this.get("materialType");
-            //verify that correct class is in sync
-            if (materialType.substr(0,5) != "super") {
-                if (this.previous("materialType").substr(0,5) != "super") return;
-                //re init highlighter
-                require([this.lattice.getHighlighterFile()], function(HighlighterClass){
-                    globals.highlighter = new HighlighterClass();
-                });
-                return;
-            }
 
-            //composite material
-            require(['superCellHighlighter'], function(SuperCellHighlighter){
-                globals.highlighter = new SuperCellHighlighter();
+            var self = this;
+            require(['materials'], function(materials){
+                var materialType = this.get("materialType");
+                //verify that correct class is in sync
+                if (materials.isComposite(materialType)) {
+                    if (materials.isComposite(self.previous("materialType"))) return;
+                    //re init highlighter
+                    require([self.lattice.getHighlighterFile()], function(HighlighterClass){
+                        globals.highlighter = new HighlighterClass();
+                    });
+                    return;
+                }
+
+                //composite material
+                require(['superCellHighlighter'], function(SuperCellHighlighter){
+                    globals.highlighter = new SuperCellHighlighter();
+                });
             });
+
         },
 
         _gikLengthChanged: function(){
@@ -180,9 +186,9 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'], fu
         },
 
 
-        ///////////////////////////////////////////////////////////////////////////////
-        /////////////////////KEY BINDINGS//////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////
+
+
+        //key bindings
 
         _handleKeyStroke: function(e){//receives keyup and keydown
 

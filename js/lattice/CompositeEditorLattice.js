@@ -25,9 +25,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (!options.id || options.id == "") this.set("id", "super" + this.cid);
             else {
                 //change material type to allowed type
-                var currentMaterial = appState.get("materialType");
-                if (currentMaterial.substr(0,5) == "super"){
-                    if (materials.getVaildAvailableCompositeKeys(options.id).indexOf(currentMaterial) < 0){
+                var currentMaterialID = appState.get("materialType");
+                if (materials.isComposite(currentMaterialID)){
+                    if (materials.getVaildAvailableCompositeKeys(options.id).indexOf(currentMaterialID) < 0){
                         materials.setToDefaultMaterial(true);
                     }
                 }
