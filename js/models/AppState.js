@@ -33,7 +33,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             deleteMode: false,
             highlightMode: true,
             extrudeMode: false,
-            cellMode: "cell",//supercell, cell, part, node, beam
+            cellMode: "cell",//supercell, cell, part, hide
             cellsVisible: true,
 
             superCellIndex: new THREE.Vector3(0,0,0),//offset of superCell adds

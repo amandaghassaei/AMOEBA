@@ -27,7 +27,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.sparseCells = [[[null]]];//3D matrix containing highest hierarchical level of cells and null
 
             //bind events
-
             this.listenTo(appState, "change:cellMode", this._updateForMode);
             this.listenTo(appState, "change:cellsVisible", this._setCellVisibility);
 

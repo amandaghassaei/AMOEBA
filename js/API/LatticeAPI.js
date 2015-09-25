@@ -87,6 +87,16 @@ define(['lattice'], function(lattice){
 
         },
 
+        addCellAtIndex: function(){
+
+        },
+
+        removeCellAtIndex: function(){
+
+        },
+
+
+
 
         //general
 
