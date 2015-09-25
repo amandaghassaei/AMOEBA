@@ -60,14 +60,133 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
 
 
+        //getters
+
+        getUnits: function(){
+            return this.get("units");
+        },
+
+        getScale: function(){
+            return this.get("scale");
+        },
+
+        getAspectRatio: function(){
+            return this.get("aspectRatio").clone();
+        },
+
+        getCellType: function(){
+            return this.get("cellType");
+        },
+
+        getConnectionType: function(){
+            return this.get("connectionType");
+        },
+
+        getApplicationType: function(){
+            return this.get("applicationType");
+        },
+
+        getPartType: function(){
+            return this.get("partType");
+        },
+
+
+
+        //setters
+
+
+        setProperty: function(property, value, silent){
+            var changed = this.get(property) != value;
+            if (silent !== true) silent = false;
+            this.set(property, value, {silent:silent});
+            return changed;
+        },
+
+        _getSetterName: function(property){
+            return "set" + property.charAt(0).toUpperCase() + property.slice(1);
+        },
+
+        setAspectRatio: function(aspectRatio, silent){
+            if (!aspectRatio.x || !aspectRatio.y || !aspectRatio.z || aspectRatio.x<0 || aspectRatio.y<0 || aspectRatio.z<0) {//no 0, undefined, null, or neg #'s
+                console.warn("invalid aspect ratio params");
+                return;
+            }
+            return this.setProperty("aspectRatio", new THREE.Vector3(aspectRatio.x, aspectRatio.y, aspectRatio.z), silent);
+        },
+
+        setCellType: function(cellType, silent){
+            if (plist.allLattices[cellType] === undefined){
+                console.warn("no cell type " + cellType);
+                return;
+            }
+            return this.setProperty("cellType", cellType, silent);
+        },
+
+        setConnectionType: function(connectionType, silent){
+            var cellType = this.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            if (plistCellData[connectionType] === undefined){
+                console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
+                return;
+            }
+            return this.setProperty("connectionType", connectionType, silent);
+        },
+
+        setApplicationType: function(applicationType, silent){
+            var cellType = this.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            var connectionType = this.get("connectionType");
+            var plistConnectionData = plistCellData[connectionType];
+            if (plistConnectionData[applicationType] === undefined){
+                console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
+                return;
+            }
+            return this.setProperty("applicationType", applicationType, silent);
+        },
+
+        setPartType: function(partType, silent){
+            var cellType = this.get("cellType");
+            var plistCellData = plist.allLattices[cellType];
+            var connectionType = this.get("connectionType");
+            var plistConnectionData = plistCellData[connectionType];
+            var applicationType = this.get("applicationType");
+            var plistAppData = plistConnectionData[applicationType];
+            if (plistConnectionData[applicationType] === undefined){
+                console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
+                return;
+            }
+            return this.setProperty("partType", partType, silent);
+        },
+
+        setLatticeMetaData: function(data){
+            if (!data) {
+                console.warn("no data received");
+                return;
+            }
+            var changed = false;
+            var self = this;
+            _.each(data, function(val, key){
+                if (self[self._getSetterName(key)]) {
+                    changed |= self[self._getSetterName(key)](val, true);
+                }
+                else console.warn("no setter found for param " + key);
+            });
+            if (changed){
+                //todo trigger event
+            }
+        },
+
+
+
+
 
 
 
         //latticeType
 
         _cellTypeChanged: function(){
-            var cellType = this.get("cellType");
-            if (plist.allLattices[cellType].connection[this.get("connectionType")] === undefined){
+            var cellType = this.getCellType();
+            if (plist.allLattices[cellType].connection[this.getConnectionType()] === undefined){
                 var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
                 this.set("connectionType", connectionType, {silent:true});
             }

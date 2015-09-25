@@ -45,90 +45,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return this.calculateBoundingBox();
         },
 
-        getAspectRatio: function(){
-            return this.get("aspectRatio").clone();
-        },
 
-        getCellType: function(){
-            return this.get("cellType");
+        getNumCells: function(){
+            return this.get("numCells");
         },
-
-        getConnectionType: function(){
-            return this.get("connectionType");
-        },
-
-        getApplicationType: function(){
-            return this.get("applicationType");
-        },
-
-        getPartType: function(){
-            return this.get("partType");
-        },
-
 
 
 
         //setters
 
-        setAspectRatio: function(aspectRatio){
-            if (!aspectRatio.x || !aspectRatio.y || !aspectRatio.z || aspectRatio.x<0 || aspectRatio.y<0 || aspectRatio.z<0) {//no 0, undefined, null, or neg #'s
-                console.warn("invalid aspect ratio params");
-                return;
-            }
-            this.set("aspectRatio", new THREE.Vector3(aspectRatio.x, aspectRatio.y, aspectRatio.z));
-        },
-
-        setCellType: function(cellType){
-            if (plist.allLattices[cellType] === undefined){
-                console.warn("no cell type " + cellType);
-                return;
-            }
-            this.set("cellType", cellType);
-        },
-
-        setConnectionType: function(connectionType){
-            var cellType = this.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            if (plistCellData[connectionType] === undefined){
-                console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
-                return;
-            }
-            this.set("connectionType", connectionType);
-        },
-
-        setApplicationType: function(applicationType){
-            var cellType = this.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            var connectionType = this.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
-            if (plistConnectionData[applicationType] === undefined){
-                console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
-                return;
-            }
-            this.set("applicationType", applicationType);
-        },
-
-        setPartType: function(partType){
-            var cellType = this.get("cellType");
-            var plistCellData = plist.allLattices[cellType];
-            var connectionType = this.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
-            var applicationType = this.get("applicationType");
-            var plistAppData = plistConnectionData[applicationType];
-            if (plistConnectionData[applicationType] === undefined){
-                console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
-                return;
-            }
-            this.set("partType", partType);
-        },
-
-        setLatticeType: function(cellType, connectionType, applicationType, partType){
-            //todo check if this causes too many renders
-            if (cellType) this.setCellType(cellType);
-            if (connectionType) this.setConnectionType(connectionType);
-            if (applicationType) this.setApplicationType(applicationType);
-            if (partType) this.setPartType(partType);
-        },
 
 
 

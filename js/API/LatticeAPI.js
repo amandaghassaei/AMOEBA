@@ -3,11 +3,23 @@
  */
 
 
-define(['lattice', 'plist'], function(lattice, plist){
+define(['lattice', 'plist'], function(lattice){
 
     return {
 
         //getters
+
+        getUnits: function(){
+            return lattice.getUnits();
+        },
+
+        getScale: function(){
+            return lattice.getScale();
+        },
+
+        getNumCells: function(){
+            return lattice.getNumCells();
+        },
 
         getSize: function(){
             return lattice.getSize();
@@ -41,27 +53,27 @@ define(['lattice', 'plist'], function(lattice, plist){
         //setters
 
         setAspectRatio: function(x, y, z){
-            lattice.setAspectRatio(x, y, z);
+            lattice.setAspectRatio({x:x, y:y, z:z}, false);
         },
 
         setCellType: function(cellType){
-            lattice.setCellType(cellType);
+            lattice.setCellType(cellType, false);
         },
 
         setConnectionType: function(connectionType){
-            lattice.setConnectionType(connectionType);
+            lattice.setConnectionType(connectionType, false);
         },
 
         setApplicationType: function(applicationType){
-            lattice.setApplicationType(applicationType);
+            lattice.setApplicationType(applicationType, false);
         },
 
         setPartType: function(partType){
-            lattice.setPartType(partType);
+            lattice.setPartType(partType, false);
         },
 
-        setLatticeType: function(cellType, connectionType, applicationType, partType){
-            lattice.setLatticeType(cellType, connectionType, applicationType, partType);
+        set: function(data){
+            lattice.setLatticeMetaData(data);
         },
 
 
