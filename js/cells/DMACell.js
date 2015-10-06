@@ -219,6 +219,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.show = function(mode){
         this.object3D.visible = true;
+        this._setTransparent(false);
         this.setMode(mode);
     };
 
@@ -256,7 +257,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setTransparent = function(evalFunction){
-        var transparent = evalFunction(this);
+        this._setTransparent(evalFunction(this))
+    };
+
+    DMACell.prototype._setTransparent = function(transparent){
         if (transparent == this.isTransparent) return;
         this.isTransparent = transparent;
         this._setTHREEMaterial(this.getMaterial(true));

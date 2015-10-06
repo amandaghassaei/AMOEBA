@@ -125,6 +125,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             }
 
             if (this.get("cellMode") == "hide") this.set("cellMode", "cell");
+            this.lattice.showCells();
         },
 
         _materialTypeChanged: function(){

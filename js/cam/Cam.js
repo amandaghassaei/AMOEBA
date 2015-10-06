@@ -158,7 +158,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             if (appState.get("currentNav") == "navAssemble") {
                 this._setDefaultMachineForLatticeType();
                 this._calculateNumMaterials();
-            }
+            } else if (!this.isVisible() && this.get("assembler")) this.get("assembler").setVisibility(false);
         },
 
         _setDefaultMachineForLatticeType: function(){
@@ -179,7 +179,6 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
 
         _setCAMVisibility: function(){
             var visible = this.isVisible();
-            console.log(visible);
     //        this.get("origin").visible = visible;
     //        this.get("stock").visible = visible;
             if (visible && !this.get("assembler")) this.selectMachine();
@@ -217,8 +216,8 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         isVisible: function(){
             var currentTab = appState.get("currentTab");
             var currentNav = appState.get("currentNav");
-            return (currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animation" || currentNav == "navComm"
-                || currentTab == "editComponent");
+            return ((currentTab == "assemblerSetup" || currentTab == "cam" || currentTab == "animation"
+                || currentTab == "editComponent") && currentNav == "navAssemble" || currentNav == "navComm");
         },
 
 
