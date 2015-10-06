@@ -159,7 +159,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         loopCells(cells, function(cell){
             if (!cell) return;
             var isComposite = _isComposite(cell.getMaterialID());
-            if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.materialID);
+            if ((elementaryTypes && !isComposite) || (!elementaryTypes && isComposite)) children.push(cell.getMaterialID());
             if (isComposite){
                 if (elementaryTypes && materialsList[cell.materialID].elementaryChildren) {
                     Array.prototype.push.apply(children, materialsList[cell.materialID].elementaryChildren);

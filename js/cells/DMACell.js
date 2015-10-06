@@ -259,7 +259,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var transparent = evalFunction(this);
         if (transparent == this.isTransparent) return;
         this.isTransparent = transparent;
-        this.setMaterial(this.getMaterial(true));
+        this._setTHREEMaterial(this.getMaterial(true));
         this.setWireframeVisibility(!this.isTransparent);
         if (this.parts) {
             _.each(this.parts, function(part){
