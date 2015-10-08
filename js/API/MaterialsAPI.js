@@ -3,26 +3,35 @@
  */
 
 
-define(['materials'], function(){
+define(['materials'], function(materials){
 
 
     return {
 
-        init: function(){
+        init: function(json){//create a new material
+            return materials.newMaterial(json);//return DMAMaterial object
+        },
+
+        destroy: function(material){
+            materials.deleteMaterial(material.getID());
+        },
+
+        getMaterialForId: function(id){
+            return materials.getMaterialForId(id);
+        },
+
+        getMaterials: function(){
 
         },
 
-        set: function(){
+        getCompositeMaterials: function(){
 
         },
 
         bulkChangeMaterial: function(startMaterial, endMaterial){
 
-        },
-
-        destroy: function(){
-
         }
+
     }
 
 });
