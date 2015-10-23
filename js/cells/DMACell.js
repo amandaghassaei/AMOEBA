@@ -352,8 +352,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype.getVisibleGeometry = function(){//for save stl
         var meshes = this.getVisibleMeshes();
         var geometry = [];
+        var self = this;
         _.each(meshes, function(mesh){
-            geometry.push(mesh.geometry);
+            geometry.push({geo: mesh.geometry, offset:self.getAbsolutePosition(), orientation:self.getAbsoluteOrientation()});
         });
         return geometry;
     };

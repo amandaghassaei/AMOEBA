@@ -130,14 +130,15 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     }
 
     function saveSTL(){
-        require(['stlExport'], function(stlFromGeometry){
+        require(['stlExport'], function(geometryToSTLBin){
             //merge geometry first
             var geoArray = [];
             lattice.loopCells(function(cell){
                 if (cell) geoArray = geoArray.concat(cell.getVisibleGeometry());
             });
-            var stlString = stlFromGeometry(geoArray);
-            saveData(stlString, "DMAssembly", "stl");
+            var stlBin = geometryToSTLBin(geoArray);
+            var blob = new Blob([stlBin], {type: 'application/octet-binary'});
+            saveAs(blob, "STL.stl");
         });
     }
 

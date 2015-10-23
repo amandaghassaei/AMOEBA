@@ -23,7 +23,7 @@ require.config({
         three: '../dependencies/three',
         orbitControls: '../dependencies/OrbitControls',
         stlLoader: '../dependencies/loaders/STLLoader',
-        stlExport: '../dependencies/THREE2STL',
+        stlExport: '../dependencies/loaders/binary_stl_writer',
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
@@ -241,7 +241,7 @@ require.config({
             exports: 'THREE'
         },
         stlExport: {
-            exports: 'stlFromGeometry'
+            exports: 'geometryToSTLBin'
         },
         threeProjector: {
             deps: ['three'],
