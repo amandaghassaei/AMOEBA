@@ -351,7 +351,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.getVisibleGeometry = function(){//for save stl
         var geometry = [];
-        if (!this.object3D.visible) return geometry;
+        if (!this.object3D.visible || this.isTransparent) return geometry;
         var meshes = _.filter(this.object3D.children, function(child){
             return child.visible && child instanceof THREE.Mesh
         });
