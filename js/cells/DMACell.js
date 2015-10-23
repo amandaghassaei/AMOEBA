@@ -350,26 +350,23 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.getVisibleGeometry = function(){//for save stl
-        var meshes = this.getVisibleMeshes();
         var geometry = [];
-        var self = this;
-        _.each(meshes, function(mesh){
-            geometry.push({geo: mesh.geometry, offset:self.getAbsolutePosition(), orientation:self.getAbsoluteOrientation()});
-        });
-        return geometry;
-    };
-
-    DMACell.prototype.getVisibleMeshes = function(){
-        if (!this.object3D.visible) return [];
+        if (!this.object3D.visible) return geometry;
         var meshes = _.filter(this.object3D.children, function(child){
             return child.visible && child instanceof THREE.Mesh
         });
-        if (meshes.length > 0) return meshes;
-        if (!this.cells) return [];
+        if (meshes.length > 0) {
+            var self = this;
+            _.each(meshes, function(mesh){
+                geometry.push({geo: mesh.geometry, offset:self.getAbsolutePosition(), orientation:mesh.quaternion.clone().multiply(self.getAbsoluteOrientation())});
+            });
+            return geometry;
+        }
+        if (!this.cells) return geometry;
         this._loopCells(function(cell){
-            if (cell) meshes = meshes.concat(cell.getVisibleMeshes());
+            if (cell) geometry = geometry.concat(cell.getVisibleGeometry());
         });
-        return meshes;
+        return geometry;
     };
 
 

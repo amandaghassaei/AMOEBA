@@ -137,6 +137,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
                 if (cell) geoArray = geoArray.concat(cell.getVisibleGeometry());
             });
             var stlBin = geometryToSTLBin(geoArray);
+            if (!stlBin) return;
             var blob = new Blob([stlBin], {type: 'application/octet-binary'});
             saveAs(blob, "STL.stl");
         });

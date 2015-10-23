@@ -5,7 +5,6 @@ var geometryToSTLBin = function(geometryArray) {
 
     var writeVector = function(dataview, bufferIndex, vector, offset, orientation, isLittleEndian) {
         vector = vector.clone();
-        console.log(orientation);
         if (orientation) vector.applyQuaternion(orientation);
         if (offset) vector.add(offset);
         bufferIndex = writeFloat(dataview, bufferIndex, vector.x, isLittleEndian);
@@ -27,12 +26,33 @@ var geometryToSTLBin = function(geometryArray) {
         var geometry = geometryArray[index].geo;
         var orientation = geometryArray[index].orientation;
         var offset = geometryArray[index].offset;
-        var tris = geometry.faces;
-        var verts = geometry.vertices;
 
-        for(var n = 0; n < tris.length; n++) {
-            floatData.push([tris[n].normal, verts[tris[n].a], verts[tris[n].b], verts[tris[n].c], offset, orientation]);
+        if (geometry instanceof THREE.BufferGeometry){
+
+            var normals = geometry.attributes.normal.array;
+            var vertices = geometry.attributes.position.array;
+            for (var n=0;n<vertices.length;n+=9){
+                var normal = new THREE.Vector3(normals[n], normals[n+1], normals[n+2]);
+                var verta = new THREE.Vector3(vertices[n], vertices[n+1], vertices[n+2]);
+                var vertb = new THREE.Vector3(vertices[n+3], vertices[n+4], vertices[n+5]);
+                var vertc = new THREE.Vector3(vertices[n+6], vertices[n+7], vertices[n+8]);
+                floatData.push([normal, verta, vertb, vertc, offset, orientation]);
+            }
+
+        } else {
+
+            var tris = geometry.faces;
+            var verts = geometry.vertices;
+
+            for(var n = 0; n < tris.length; n++) {
+                floatData.push([tris[n].normal, verts[tris[n].a], verts[tris[n].b], verts[tris[n].c], offset, orientation]);
+            }
         }
+    }
+
+    if (floatData.length == 0){
+        console.warn("no data to write to stl");
+        return null;
     }
 
     //write to DataView
