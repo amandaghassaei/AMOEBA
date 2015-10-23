@@ -3,6 +3,8 @@
 node/node_modules/
 *.sh
 
+*.orig
+
 
 # Compiled source #
 ###################
