@@ -83,10 +83,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _connectionTypeChanged: function(){
             var cellType = this.get("cellType");
             var connectionType = this.get("connectionType");
-            if (plist.allLattices[cellType].connection[connectionType].type[this.get("latticeType")] === undefined){
-                var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
-                this.set("latticeType", latticeType, {silent:true});
-            }
+            var latticeType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
+            this.set("latticeType", latticeType, {silent:true});
             this._latticeTypeChanged();
         },
 
