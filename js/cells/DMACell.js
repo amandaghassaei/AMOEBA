@@ -349,6 +349,27 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return this.superCell === null || this.superCell === undefined;
     };
 
+    DMACell.prototype.getVisibleGeometry = function(){//for save stl
+        var meshes = this.getVisibleMeshes();
+        var geometry = [];
+        _.each(meshes, function(mesh){
+            geometry.push(mesh.geometry);
+        });
+        return geometry;
+    };
+
+    DMACell.prototype.getVisibleMeshes = function(){
+        if (!this.object3D.visible) return [];
+        var meshes = _.filter(this.object3D.children, function(child){
+            return child.visible && child instanceof THREE.Mesh
+        });
+        if (meshes.length > 0) return meshes;
+        if (!this.cells) return [];
+        this._loopCells(function(cell){
+            if (cell) meshes = meshes.concat(cell.getVisibleMeshes());
+        });
+        return meshes;
+    };
 
 
 

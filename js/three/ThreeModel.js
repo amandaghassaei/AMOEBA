@@ -197,7 +197,7 @@ define(['underscore', 'three'], function(_, THREE){
             svgRenderer.render(scene, camera);
             var XMLS = new XMLSerializer();
             var svgfile = XMLS.serializeToString(svgRenderer.domElement);
-            fileSaver.saveData(svgfile, "screenshot", ".svg");
+            fileSaver.saveData(svgfile, "screenshot", "svg");
         })
     }
 

@@ -19,14 +19,14 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
                 jsonString.replace(/\\"/g,"\uFFFF"); //U+ FFFF
                 jsonString = jsonString.replace(/\"([^"]+)\":/g,"$1:").replace(/\uFFFF/g,"\\\"");
                 var blob = new Blob([jsonString], {type: "text/plain;charset=utf-8"});
-                saveAs(blob, name + "-forAmanda" + extension);
+                saveAs(blob, name + "-forAmanda" + "." + extension);
             }
 //        });
     }
 
     function saveData(data, name, extension){
         var blob = new Blob([data], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, name + extension);
+        saveAs(blob, name + "." + extension);
     }
 
 //    function save(name){
@@ -35,7 +35,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 //            lattice:_getLatticeDataToSave(),
 ////            assembler:_getAssemblerDataToSave()
 //        };
-//        _saveFile(data, name, ".json");
+//        _saveFile(data, name, "json");
 //    }
 
     function save(name){
@@ -44,7 +44,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
             assembly:_getLatticeDataToSave(),
             materials:_getMaterialsDataToSave()
         };
-        _saveFile(data, name, ".json");
+        _saveFile(data, name, "json");
     }
 
     function saveAssembler(){
@@ -52,17 +52,17 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
     }
 
     function saveSequences(seqArray, name){
-        _saveFile(seqArray, name || "seqs", ".txt", true);
+        _saveFile(seqArray, name || "seqs", "txt", true);
     }
 
     function saveMaterial(id, material){
         var data = {materials:{}};
         data.materials[id] = material || _getMaterialDataToSave(id);
-        _saveFile(data, data.materials[id].name, ".json");
+        _saveFile(data, data.materials[id].name, "json");
     }
 
     function saveMachineConfig(data){
-        _saveFile(data, "Machine Config", ".json");
+        _saveFile(data, "Machine Config", "json");
     }
 
     function _getAssemblerDataToSave(){
@@ -129,6 +129,18 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         object.trigger("change");
     }
 
+    function saveSTL(){
+        require(['stlExport'], function(stlFromGeometry){
+            //merge geometry first
+            var geoArray = [];
+            lattice.loopCells(function(cell){
+                if (cell) geoArray = geoArray.concat(cell.getVisibleGeometry());
+            });
+            var stlString = stlFromGeometry(geoArray);
+            saveData(stlString, "DMAssembly", "stl");
+        });
+    }
+
 
     return {//return public methods
 //        save: save,
@@ -138,6 +150,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         saveMachineConfig: saveMachineConfig,
 //        saveAssembler: saveAssembler,
         loadFile: loadFile,
-        saveSequences: saveSequences
+        saveSequences: saveSequences,
+        saveSTL: saveSTL
     }
 });

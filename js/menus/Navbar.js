@@ -19,6 +19,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             "click .saveJSON":                                      "_save",
             "click .saveAsJSON":                                    "_saveAs",
 //            "change #saveAsFileName":                               "_saveAs",//detect enter key
+            "click #exportSTL":                                     "_saveSTL",
 
             "click .importJSON":                                    "_importJSON",
             "change #jsonInput":                                    "_selectJSONFiles",
@@ -120,6 +121,11 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             var fileName = $("#saveAsFileName").val();
             fileSaver.save(fileName);
             $('#saveAsModel').modal('hide');
+        },
+
+        _saveSTL: function(e){
+            e.preventDefault();
+            fileSaver.saveSTL();
         },
 
 
