@@ -2,8 +2,10 @@
  * Created by aghassaei on 6/17/15.
  */
 
-define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
-    function(_, Backbone, io, machineState, cam){
+//todo get cam, lattice, appstate out of here
+
+define(['underscore', 'backbone', 'socketio', 'machineState', 'cam', 'lattice', 'appState'],
+    function(_, Backbone, io, machineState, cam, lattice, appState){
 
     var SerialComm = Backbone.Model.extend({
 
@@ -23,7 +25,12 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
         initialize: function(){
             this.machineState = machineState;
             this.listenTo(machineState, "change", this._updateVirtualMachine);
+            if (appState.get) this.listenTo(appState, "change:currentNav", this._navChanged);
             this.attemptToConnectToNode();
+        },
+
+        _navChanged: function(){
+            if (appState.previous("currentNav") == "navComm") lattice.showCells("cells");
         },
 
         attemptToConnectToNode: function(){
@@ -75,8 +82,16 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam'],
             if (machineState && machineState.isReadyStatus()){
                 var lineNum = cam.get("simLineNumber");
                 var allLines = cam.get("dataOut").split("\n");
+                if (lineNum == 0) lattice.hideCells("cells");
                 if (lineNum >= 0 && lineNum < allLines.length) {
                     var line = allLines[lineNum];
+
+                    if (line.substr(0,2) == "({"){
+                        var index = line.substr(1,line.length-2);
+                        index = JSON.parse(index);
+                        lattice.showCellAtIndex(index);
+                    }
+
                     self.listenToOnce(machineState, "readyForNextCommand", function(){
                         lineNum ++;
                         cam.set("simLineNumber", lineNum);
