@@ -139,7 +139,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
             var stlBin = geometryToSTLBin(geoArray);
             if (!stlBin) return;
             var blob = new Blob([stlBin], {type: 'application/octet-binary'});
-            saveAs(blob, "STL.stl");
+            saveAs(blob, "DM.stl");
         });
     }
 
