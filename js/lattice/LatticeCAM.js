@@ -7,13 +7,6 @@ define(['lattice', 'three'], function(lattice, THREE){
 
     var camMethods = {
 
-        showCellAtIndex: function(index){
-            var latticeIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
-            var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
-            if (cell) cell.show();
-            else console.warn("placing a cell that does not exist");
-        },
-
         rasterCells: function(order, callback, var1, var2, var3, cells){//used for CAM raster x/y/z in any order permutation
             //order is of form 'XYZ'
             var firstLetter = order.charAt(0);

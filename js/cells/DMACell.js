@@ -219,7 +219,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.show = function(mode){
         this.object3D.visible = true;
-        this._setTransparent(false);
+        this.setTransparent(false);
         this.setMode(mode);
     };
 
@@ -256,8 +256,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.object3D.children[1].visible = visible && this.object3D.children[1].name == mode;
     };
 
-    DMACell.prototype.setTransparent = function(evalFunction){
+    DMACell.prototype.setTransparentByEval = function(evalFunction){
         this._setTransparent(evalFunction(this))
+    };
+
+    DMACell.prototype.setTransparent = function(transparent){
+        this._setTransparent(transparent);
     };
 
     DMACell.prototype._setTransparent = function(transparent){
@@ -438,9 +442,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //parse
     DMACell.prototype.addToDenseArray = function(cellsArray, min){
         var index = this.getAbsoluteIndex().sub(min);
-        if (cellsArray[index.x][index.y][index.z]) return true;
+        if (cellsArray[index.x][index.y][index.z]) return [this, cellsArray[index.x][index.y][index.z]];
         cellsArray[index.x][index.y][index.z] = this;
-        return false;
+        return null;
     };
 
     DMACell.prototype.removeFromDenseArray = function(cellsArray, min){

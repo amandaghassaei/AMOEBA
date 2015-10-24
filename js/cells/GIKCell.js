@@ -70,6 +70,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         }
     };
 
+    GIKCell.prototype.show = function(){
+        this.superCell.show();
+    };
+
+    GIKCell.prototype.setTransparent = function(){
+        this.superCell.setTransparent();
+    };
+
     //todo move this somewhere else
     GIKCell.prototype.propagateConductorGroupNum = function(num){
         if (!this.isConductive()) return;

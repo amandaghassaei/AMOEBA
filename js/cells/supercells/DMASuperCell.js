@@ -102,10 +102,17 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
     };
 
 
-    DMASuperCell.prototype.setTransparent = function(evalFunction){
-        DMACell.prototype.setTransparent.call(this, evalFunction);//todo don't pass down to cells if no change
+    DMASuperCell.prototype.setTransparentByEval = function(evalFunction){
+        DMACell.prototype.setTransparentByEval.call(this, evalFunction);//todo don't pass down to cells if no change
         this._loopCells(function(cell){
-            if (cell) cell.setTransparent(evalFunction);
+            if (cell) cell.setTransparentByEval(evalFunction);
+        })
+    };
+
+    DMASuperCell.prototype.setTransparent = function(transparent){
+        this._setTransparent(transparent);
+        this._loopCells(function(cell){
+            if (cell) cell._setTransparent(transparent);
         })
     };
 
@@ -116,11 +123,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
      //parse
     DMASuperCell.prototype.addToDenseArray = function(cellsArray, min, forCAM){
         if (forCAM && this._isBottomLayer()) return DMACell.prototype.addToDenseArray.call(this, cellsArray, min);//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
-        var overlap = false;
+        var overlap = [];
         this._loopCells(function(cell){
-            if (cell) overlap |= cell.addToDenseArray(cellsArray, min, forCAM);
+            if (cell) {
+                var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM)
+                if (overlappingCells) overlap = overlap.concat(overlappingCells);
+            }
         });
-        return overlap;
+        if (overlap.length>0) return overlap;
+        return null;
     };
 
 

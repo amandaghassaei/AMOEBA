@@ -496,9 +496,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         setOpaque: function(){
             this._loopCells(this.sparseCells, function(cell){
-                if (cell) cell.setTransparent(function(){
-                    return false;
-                });
+                if (cell) cell.setTransparent(false);
             });
             three.render();
         },
@@ -571,15 +569,33 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var min = this.get("cellsMin").sub(bounds.min);
-            var overlap = false;
+            var overlap = [];
             var forCAM = appState.get("currentNav") == "navAssemble";
             this._loopCells(this.sparseCells, function(cell){
                 if (!cell) return;
-                overlap |= cell.addToDenseArray(cells, min, forCAM);
+                var overlappingCells = cell.addToDenseArray(cells, min, forCAM);
+                if (overlappingCells) overlap = overlap.concat(overlappingCells);
             });
-            this.set("overlapDetected", overlap);
+            this.set("overlappingCells", overlap);
 
             this.cells = cells;
+        },
+
+        highlightOverlappingCells: function(){
+            this._loopCells(this.sparseCells, function(cell){
+                if (cell) cell.setTransparent(true);
+            });
+            _.each(this.get("overlappingCells"), function(cell){
+                cell.show();
+            });
+            three.render();
+        },
+
+        showCellAtIndex: function(index){
+            index = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
+            var cell = this.cells[index.x][index.y][index.z];
+            if (cell) cell.show();
+            else console.warn("cell does not exist");
         },
 
 

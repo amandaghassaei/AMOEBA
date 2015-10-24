@@ -8,7 +8,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!e
     return MenuParentView.extend({
 
         events: {
-            "click #calcConnectivity":                              "_calcConnectivity"
+            "click #calcConnectivity":                              "_calcConnectivity",
+            "click #showOverlappingCells":                          "_showOverlappingCells"
         },
 
         _initialize: function(){
@@ -29,6 +30,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!e
         _calcConnectivity: function(e){
             e.preventDefault();
             lattice.calculateConductorConnectivity();
+        },
+
+        _showOverlappingCells: function(e){
+            e.preventDefault();
+            lattice.highlightOverlappingCells();
         },
 
         _makeTemplateJSON: function(){
