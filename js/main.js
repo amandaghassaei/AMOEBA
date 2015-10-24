@@ -127,6 +127,7 @@ require.config({
         navViewMenu: 'menus/NavViewMenu',//view dropdown
         ribbon: 'menus/Ribbon',
         modalView: 'menus/ModalView',
+        contextMenu: 'menus/contextMenu/ContextMenu',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
         latticeMenu: 'menus/LatticeMenuView',
@@ -281,7 +282,7 @@ require.config({
 //};
 
 //init stuff
-require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'globals', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView'],
+require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'globals', 'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView', 'contextMenu'],
     function(appState, lattice, Navbar, three, ThreeView, globals){
 
     new Navbar({model:appState});

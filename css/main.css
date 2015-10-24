@@ -232,7 +232,7 @@ input.intInput, input.floatInput{
 
 .navbar-nav > .open > .dropdown-menu{
     padding: 0!important;
-    min-width: 150px;
+    min-width: 100px;
 }
 
 .divider{
@@ -527,4 +527,40 @@ label {
 .gCodeLineNum {
     margin-right: 20px;
     color: #B7B6B6;
+}
+
+#contextMenuWrapper{
+    background-color: clear;
+    padding: 20px;
+    position: absolute;
+    z-index: 10;
+    display: none;
+}
+
+#contextMenu {
+    background-color: #555;
+    width: 200px;
+    color: white;
+    opacity: 0.95;
+    border-radius: 5px;
+
+    font-weight: 400;
+    font-size: 14px;
+}
+
+#contextMenu li{
+    list-style: none;
+    height: 32px;
+    padding: 2px 20px;
+}
+#contextMenu li:hover{
+    background-color: #aaa;
+}
+
+#contextMenu ul {
+    padding: 2px 0 2px 0;
+}
+
+#contextMenu li>a{
+    text-decoration: none;
 }
