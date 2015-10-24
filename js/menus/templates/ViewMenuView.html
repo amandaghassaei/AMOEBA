@@ -1,0 +1,18 @@
+Set Material Visibility:
+<% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
+    <div class="materialColorSwatch">
+    <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>
+    <span class="materialListTitle"><%= materials[key].name %></span></div>
+<% }); %>
+<% _.each(materials, function(material, key){
+    if (key.substr(0,5) == "super") return;
+    if (material.noDelete) return; %>
+    <div class="materialColorSwatch">
+    <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+    <span class="materialListTitle"><%= material.name %></span></div>
+<% }); %>
+<% _.each(compositeMaterialsKeys, function(key){ %>
+    <div class="materialColorSwatch">
+    <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>
+    <span class="materialListTitle"><%= materials[key].name %></span></div>
+<% }); %><br/>

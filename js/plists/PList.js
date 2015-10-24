@@ -14,6 +14,7 @@ define(['three'], function(THREE){
                     material:"Materials",
 //                    import:"Import",
                     part:"Part"
+//                    view: "View"
                     //script:"Script"
                 }
             },
