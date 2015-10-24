@@ -125,7 +125,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         setConnectionType: function(connectionType, silent){
             var cellType = this.get("cellType");
             var plistCellData = plist.allLattices[cellType];
-            if (plistCellData[connectionType] === undefined){
+            if (plistCellData.connection[connectionType] === undefined){
                 console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
                 return;
             }
@@ -136,8 +136,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var cellType = this.get("cellType");
             var plistCellData = plist.allLattices[cellType];
             var connectionType = this.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
-            if (plistConnectionData[applicationType] === undefined){
+            var plistConnectionData = plistCellData.connection[connectionType];
+            if (plistConnectionData.type[applicationType] === undefined){
                 console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
                 return;
             }
@@ -148,10 +148,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var cellType = this.get("cellType");
             var plistCellData = plist.allLattices[cellType];
             var connectionType = this.get("connectionType");
-            var plistConnectionData = plistCellData[connectionType];
+            var plistConnectionData = plistCellData.connection[connectionType];
             var applicationType = this.get("applicationType");
-            var plistAppData = plistConnectionData[applicationType];
-            if (plistConnectionData[applicationType] === undefined){
+            var plistAppData = plistConnectionData.type[applicationType];
+            if (plistAppData.parts[partType] === undefined){
                 console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
                 return;
             }

@@ -531,7 +531,7 @@ label {
 
 #contextMenuWrapper{
     background-color: clear;
-    padding: 20px;
+    padding: 10px;
     position: absolute;
     z-index: 10;
     display: none;

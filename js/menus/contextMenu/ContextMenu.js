@@ -43,9 +43,10 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/contextMenu/MaterialsCon
         },
 
         showMenu: function(e){
-            var left = e.pageX-20;
+            var padding = parseInt($wrapper.css("padding"));
+            var left = e.pageX-padding;
             if ($('body').width()-200 < left) left -= 200;
-            $wrapper.css({left:left, top: e.pageY-20});
+            $wrapper.css({left:left, top: e.pageY-padding});
             $wrapper.show();
         },
 
