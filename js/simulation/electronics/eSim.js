@@ -68,7 +68,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState'], function(_, Backbon
             var visibleSim = this.get("visibleStaticSim");
             if (visibleSim == "none") {
                 three.render();
-                console.warn("no visible simulation selected");
                 return;
             }
             if (this.get(visibleSim)) this.get(visibleSim).show(height);
