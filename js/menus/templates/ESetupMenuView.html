@@ -12,7 +12,7 @@ Simulation Type: &nbsp;&nbsp;
             <% }); %>
         </ul>
     </div><br/><br/>
-<a href="#" id="calcConnectivity" class="btn btn-block btn-lg btn-default"><% if(conductorGroups){ %>Re-<% } %>Calculate Connectivity</a><br/>
+<a href="#" id="calcElectricalConnectivity" class="btn btn-block btn-lg btn-default"><% if(conductorGroups){ %>Re-<% } %>Calculate Electrical Connectivity</a><br/>
 <% if(conductorGroups){ %>
     Num Connected Conductors: &nbsp;&nbsp<%= _.keys(conductorGroups).length %><br/>
     <% if(_.keys(conductorGroups).length > 0){ %>
@@ -27,6 +27,22 @@ Simulation Type: &nbsp;&nbsp;
         <% var index = 0;  _.each(conductorGroups, function(groupData, id){ %>
             <label class="radio">
                 <input type="radio" <% if (id == visibleConductorGroup){ %>checked<% } %> name="visibleConductorGroup" value="<%= id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+                Group <%= ++index %>
+            </label>
+        <% }); %>
+    <% } %>
+<% } %>
+<a href="#" id="calcStructuralConnectivity" class="btn btn-block btn-lg btn-default"><% if(structuralGroups){ %>Re-<% } %>Calculate Structural Connectivity</a><br/>
+<% if(structuralGroups){ %>
+    Num Separate Structures: &nbsp;&nbsp<%= _.keys(structuralGroups).length %><br/>
+    <% if(_.keys(structuralGroups).length > 0){ %>
+        <label class="radio">
+            <input type="radio" <% if (visibleStructuralGroup == -1){ %>checked<% } %> name="visibleStructuralGroup" value="-1" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Show Everything
+        </label>
+        <% var index = 0;  _.each(structuralGroups, function(groupData, id){ %>
+            <label class="radio">
+                <input type="radio" <% if (id == visibleStructuralGroup){ %>checked<% } %> name="visibleStructuralGroup" value="<%= id %>" data-toggle="radio" class="custom-radio eSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
                 Group <%= ++index %>
             </label>
         <% }); %>

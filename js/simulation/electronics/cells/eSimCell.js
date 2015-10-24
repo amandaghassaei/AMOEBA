@@ -33,5 +33,28 @@ define(['cell', 'lattice'], function(DMACell, lattice){
         return this.isConductive() && (allVisible || groupNum == this._eSimConductorGroup);
     };
 
+    DMACell.prototype.setStructuralGroupNum = function(num, force){
+        if (force) this._eSimStructuralGroup = num;
+        else if (this._eSimStructuralGroup>num){
+            this._eSimStructuralGroup = num;
+            this.propagateStructuralGroupNum(num);
+        }
+    };
+
+    DMACell.prototype.propagateStructuralGroupNum = function(num){
+        if (num === undefined) num = this._eSimStructuralGroup;
+        lattice.propagateToNeighbors(this.getAbsoluteIndex(), function(neighbor){
+            if (neighbor) neighbor.setStructuralGroupNum(num);
+        });
+    };
+
+    DMACell.prototype.getStructuralGroupNum = function(){
+        return this._eSimStructuralGroup;
+    };
+
+    DMACell.prototype.structuralGroupVisible = function(groupNum){
+        return groupNum == this._eSimStructuralGroup;
+    };
+
 
 });

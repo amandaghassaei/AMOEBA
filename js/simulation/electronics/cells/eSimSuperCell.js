@@ -17,5 +17,16 @@ define(['underscore', 'superCell'], function(_, DMASuperCell){
         return false;
     };
 
+    DMASuperCell.prototype.structuralGroupVisible = function(groupNum){
+        for (var i=0;i<this.cells.length;i++){
+            for (var j=0;j<this.cells[0].length;j++){
+                for (var k=0;k<this.cells[0][0].length;k++){
+                    if (this.cells[i][j][k] && this.cells[i][j][k].structuralGroupVisible(groupNum)) return true;
+                }
+            }
+        }
+        return false;
+    };
+
     return DMASuperCell;
 });

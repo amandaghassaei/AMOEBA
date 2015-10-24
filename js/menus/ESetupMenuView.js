@@ -8,7 +8,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!e
     return MenuParentView.extend({
 
         events: {
-            "click #calcConnectivity":                              "_calcConnectivity",
+            "click #calcElectricalConnectivity":                    "_calcElectricalConnectivity",
+            "click #calcStructuralConnectivity":                    "_calcStructuralConnectivity",
             "click #showOverlappingCells":                          "_showOverlappingCells"
         },
 
@@ -27,9 +28,14 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!e
             this.model.set("currentNav", materialClass + "NavSim");
         },
 
-        _calcConnectivity: function(e){
+        _calcElectricalConnectivity: function(e){
             e.preventDefault();
             lattice.calculateConductorConnectivity();
+        },
+
+        _calcStructuralConnectivity: function(e){
+            e.preventDefault();
+            lattice.calculateStructuralConnectivity();
         },
 
         _showOverlappingCells: function(e){

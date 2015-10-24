@@ -90,5 +90,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         CubeCell.prototype.propagateConductorGroupNum.call(this, num);
     };
 
+    GIKCell.prototype.propagateStructuralGroupNum = function(num){
+        if (num === undefined) num = this._eSimStructuralGroup;
+        var self = this;
+        this.superCell._loopCells(function(cell){
+            if (cell == self) return;
+            if (cell) cell.setStructuralGroupNum(num);
+        });
+        CubeCell.prototype.propagateStructuralGroupNum.call(this, num);
+    };
+
     return GIKCell;
 });

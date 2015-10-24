@@ -31,6 +31,47 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             three.render();
         },
 
+        _showStructure: function(){
+            var groupNum = eSim.get("visibleStructuralGroup");
+            if (!eSim.get("structuralGroups") || _.keys(eSim.get("structuralGroups")).length == 0 || groupNum == -1){
+                this.setOpaque();
+                three.render();
+                return;
+            }
+            var allVisible = groupNum == -1;
+            this._loopCells(this.sparseCells, function(cell){
+                if (cell) cell.setTransparentByEval(function(evalCell){
+                    return !(allVisible || evalCell.structuralGroupVisible(groupNum));
+                });
+            });
+            three.render();
+        },
+
+        calculateStructuralConnectivity: function(){
+            var num = 1;
+            this._loopCells(this.cells, function(cell){
+                if (cell) cell.setStructuralGroupNum(num++, true);
+            });
+            this._loopCells(this.cells, function(cell){
+                if (cell) cell.propagateStructuralGroupNum();
+            });
+            this._calcNumberStructurallyConnectedComponents();
+            this._showConductors();
+        },
+
+        _calcNumberStructurallyConnectedComponents: function(){
+            var groups = {};
+            this._loopCells(this.cells, function(cell){
+                if (!cell) return;
+                if (_.filter(groups, function(group){
+                    return group.id == cell.getStructuralGroupNum();
+                }).length == 0) {
+                    groups[cell.getStructuralGroupNum()] = {};
+                }
+            });
+            eSim.set("structuralGroups", groups);
+        },
+
         calculateConductorConnectivity: function(){
             var num = 1;
             this._loopCells(this.cells, function(cell){
@@ -39,11 +80,11 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             this._loopCells(this.cells, function(cell){
                 if (cell) cell.propagateConductorGroupNum();
             });
-            this._calcNumberConnectedComponents();
+            this._calcNumberDCConnectedComponents();
             this._showConductors();
         },
 
-        _calcNumberConnectedComponents: function(){
+        _calcNumberDCConnectedComponents: function(){
             var groups = {};
             this._loopCells(this.cells, function(cell){
                 if (!cell) return;
@@ -207,6 +248,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
     _.extend(lattice, eSimMethods);
     lattice.listenTo(appState, "change:currentTab", lattice._eSimTabChanged);
     lattice.listenTo(eSim, "change:visibleConductorGroup", lattice._showConductors);
+    lattice.listenTo(eSim, "change:visibleStructuralGroup", lattice._showStructure);
     lattice._showConductors();
 
 

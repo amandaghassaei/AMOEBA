@@ -8,8 +8,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState'], function(_, Backbon
     var eSim = Backbone.Model.extend({
 
         defaults:{
+
+            //electrical connections
             conductorGroups: null,//{{current:xx, voltage:xx}, ...}
             visibleConductorGroup: -1,//-2 = show everything, -1 = show all conductors
+
+            //structural connections
+            structuralGroups: null,
+            visibleStructuralGroup: -1,//-1 = show everything
+
             globalInductance: null,
             voltageUnits: "1",
             currentUnits: "0.001",
