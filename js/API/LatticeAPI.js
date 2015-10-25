@@ -103,8 +103,8 @@ define(['lattice', 'plist'], function(lattice){
 
         },
 
-        addCellAtIndex: function(){
-
+        addCellAtIndex: function(x, y, z, data){
+            var index = new THREE.Vector3(x, y, z);
         },
 
         removeCell: function(cell){

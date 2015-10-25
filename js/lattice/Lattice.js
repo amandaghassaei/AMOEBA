@@ -20,7 +20,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
             aspectRatio: null,
 
-            denseCellsMin: null,
             overlappingCells: [],
 
             nodes: []

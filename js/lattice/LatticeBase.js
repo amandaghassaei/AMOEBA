@@ -3,11 +3,6 @@
  */
 
 
-/**
- * Created by aghassaei on 1/16/15.
- */
-
-
 define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
     function(_, Backbone, appState, globals, plist, THREE, three){
 
@@ -553,7 +548,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
 
             var bounds = this.calculateBoundingBox();
-            this.set("denseCellsMin", bounds.min.clone().add(this.get("cellsMin")));
+            this.set("cellsMin", bounds.min.clone().add(this.get("cellsMin")));
             var size = bounds.max.sub(bounds.min);
 
             //create array of nulls
