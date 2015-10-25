@@ -14,8 +14,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             scale: 1.0,
 
             cellType: "cube",
-            connectionType: "gik",
-            applicationType: "willGik",
+            connectionType: "face",
+            applicationType: "default",
             partType: null,
 
             aspectRatio: null,
@@ -213,8 +213,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
 
-            console.log(cells);
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cells, cellsMax, cellsMin);
+            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cellsMax, cellsMin);
 
             var self = this;
             require([subclass], function(subclassObject){
@@ -389,7 +388,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                     //re-init cell;
                     var json = cell.toJSON();
                     json.index = cell.getIndex();
-                    self.makeCellForLatticeType(json, function(newCell){
+                    self.makeCellWithJSON(json, function(newCell){
                         self.sparseCells[x][y][z] = newCell;
                         cell.destroy();
                     });

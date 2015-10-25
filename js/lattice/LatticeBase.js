@@ -68,7 +68,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var cellsMax = this.get("cellsMax");
             var cellsMin = this.get("cellsMin");
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cells, cellsMax, cellsMin);
+            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cellsMax, cellsMin);
 
             var self = this;
             require([subclass], function(subclassObject){
@@ -96,7 +96,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //add/remove cells
 
-        makeCellForLatticeType: function(json, callback){
+        makeCellWithJSON: function(json, callback){
             var subclassFile = this.getCellSubclassFile();
             require(['materials'], function(materials){
                 var materialID = json.materialID || appState.get("materialType");
@@ -110,21 +110,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         addCellsInRange: function(range){//add a block of cells (extrude)
 
-            this._checkForMatrixExpansion(this.sparseCells, range.max, range.min);
+            this._checkForMatrixExpansion(range.max, range.min);
 
             var cellsMin = this.get("cellsMin");
             var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
             var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
 
-            var materialName = appState.get("materialType");
+            var materialID = appState.get("materialType");
             for (var x=relativeMin.x;x<=relativeMax.x;x++){
                 for (var y=relativeMin.y;y<=relativeMax.y;y++){
                     for (var z=relativeMin.z;z<=relativeMax.z;z++){
                         if (!this.sparseCells[x][y][z]) {
                             var self = this;
-                             this.makeCellForLatticeType({
+                             this.makeCellWithJSON({
                                      index: (new THREE.Vector3(x, y, z)).add(cellsMin),
-                                     materialName: materialName
+                                     materialID: materialID
                                  }, function(cell){
                                     self.sparseCells[x][y][z] = cell;
                                     self.set("numCells", self.get("numCells")+1);
@@ -136,20 +136,67 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        addCellAtIndex: function(index, noRender, noCheck){//no render no check from fill/load
+        addCellAtIndex: function(index){
+            var self = this;
+            this.makeCellWithJSON({index: index, materialID:appState.get("materialType")}, function(cell){
+                var bounds = cell.getAbsoluteBounds();
+                self._checkForMatrixExpansion(bounds.max, bounds.min);
 
-            if (!noCheck || noCheck === undefined) this._checkForMatrixExpansion(this.sparseCells, index, index);
+                var relIndex = new THREE.Vector3().subVectors(index, self.get("cellsMin"));
+                var flattenedCells = cell.getCells();
+                if (self.cells[relIndex.x][relIndex.y][relIndex.z] !== null ||
+                    (flattenedCells !== null && self._checkForCellOverlap(flattenedCells, relIndex))){
+                    console.warn("overlap detected, addCellAtIndex operation cancelled");
+                    cell.destroy();
+                    return;
+                }
 
-            var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
-            if (!noRender || noRender === undefined) three.setRenderFlag();
-            this._addCellWithJSON({index: index, materialName:appState.get("materialType")}, relIndex);
+                if (flattenedCells === null) flattenedCells = [[[cell]]];
+                self.sparseCells[relIndex.x][relIndex.y][relIndex.z] = cell;
+                self._loopCells(flattenedCells, function(flatCell, x, y, z){
+                    self.cells[relIndex.x+x][relIndex.y+y][relIndex.z+z] = flatCell;
+                });
+                console.log(self.cells);
+                console.log(self.sparseCells);
+
+                cell.addToScene();
+            });
+
+//            this._checkForMatrixExpansion(index, index);
+//
+//            var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
+//            if (!noRender || noRender === undefined) three.setRenderFlag();
+//            this._addCellWithJSON({index: index, materialID:appState.get("materialType")});
+        },
+
+
+//        _booleanAddCells: function(cellsJSON, offset){
+//            if (offset === undefined) offset = new THREE.Vector3(0,0,0);
+//            if (this._checkForCellOverlap(cellsJSON, offset)){
+//                console.warn("collision detected, operation cancelled");
+//                return;
+//            }
+//        },
+
+        _checkForCellOverlap: function(cells, offset){
+            var existingCells = this.cells;
+            var overlapDetected = false;
+            var self = this;
+            this._loopCells(cells, function(cell, x, y, z){
+                if (overlapDetected) return;
+                var index = new THREE.Vector3(x, y, z).add(offset);
+                if (index > self.get("cellsMax")) return;
+                if (existingCells[index.x][index.y][index.z]) overlapDetected = true;
+            });
+            return overlapDetected;
         },
 
         _addCellWithJSON: function(json, index){
             var self = this;
             if (!this.sparseCells[index.x][index.y][index.z]) {
-                this.makeCellForLatticeType(json, function(cell){
+                this.makeCellWithJSON(json, function(cell){
                     self.sparseCells[index.x][index.y][index.z] = cell;
+                    self.cells[index.x][index.y][index.z] = cell;
                     self.set("numCells", self.get("numCells")+1);
                 });
             } else console.warn("already a cell there");
@@ -186,7 +233,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             cell.destroy();
             this.sparseCells[index.x][index.y][index.z] = null;
 
-            this._checkForMatrixContraction(this.sparseCells);
+            this._checkForMatrixContraction();
 
             this.set("numCells", this.get("numCells")-1);
             three.render();
@@ -232,30 +279,30 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //cells array
 
-        _checkForMatrixExpansion: function(cells, indicesMax, indicesMin){
-
-            if (!cells) {
-                console.warn("no cells specified in matrix expansion");
-                cells = this.sparseCells;
-            }
+        _checkForMatrixExpansion: function(indicesMax, indicesMin){
 
             if (!this.get("cellsMax") || !this.get("cellsMin")){
                 this.set("cellsMax", indicesMax);
                 this.set("cellsMin", indicesMin);
-                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(indicesMax, indicesMin), false);
+                var size = (new THREE.Vector3()).subVectors(indicesMax, indicesMin);
+                this._expandCellsArray(this.cells, size, false);
+                this._expandCellsArray(this.sparseCells, size, false);
                 return;
             }
-
             var lastMax = this.get("cellsMax");
             var lastMin = this.get("cellsMin");
             var newMax = this._updateCellsMax(indicesMax, lastMax);
             var newMin = this._updateCellsMin(indicesMin, lastMin);
             if (newMax) {
-                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(newMax, lastMax), false);
+                var size = (new THREE.Vector3()).subVectors(newMax, lastMax);
+                this._expandCellsArray(this.cells, size, false);
+                this._expandCellsArray(this.sparseCells, size, false);
                 this.set("cellsMax", newMax);
             }
             if (newMin) {
-                this._expandCellsArray(cells, (new THREE.Vector3()).subVectors(lastMin, newMin), true);
+                var size = (new THREE.Vector3()).subVectors(lastMin, newMin);
+                this._expandCellsArray(this.cells, size, true);
+                this._expandCellsArray(this.sparseCells, size, true);
                 this.set("cellsMin", newMin);
             }
         },
@@ -336,18 +383,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return false;
         },
 
-        _checkForMatrixContraction: function(cells, deletedIndex){//this could be more efficient
+        _checkForMatrixContraction: function(deletedIndex){//this could be more efficient
 
             var cellsMax = this.get("cellsMax");
             var cellsMin = this.get("cellsMin");
-            if (!cells || !cellsMin || !cellsMax) {
+            if (!cellsMin || !cellsMax) {
                 console.warn("missing param for cells contraction");
                 return;
             }
 
-            var newMin = this._contractCellsArray(cells, true, cellsMin.clone(), cellsMax.clone());
+            var newMin = this._contractCellsArray(this.cells, true, cellsMin.clone(), cellsMax.clone());
             var newMax = null;
             if (newMin) newMax = this._contractCellsArray(cells, false, newMin.clone(), cellsMax.clone());
+
+            //todo handle sparse cells
+
 
             this.set("cellsMax", newMax, {silent:true});
             this.set("cellsMin", newMin);
@@ -360,7 +410,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _contractCellsArray: function(cells, fromFront, cellsMin, cellsMax){
 
-            if (cellsMax.x < cellsMin.x || cellsMax.y < cellsMin.y || cellsMax.z < cellsMin.z) return null;
+            if (cellsMax.x < cellsMin.x || cellsMax.y < cellsMin.y || cellsMax.z < cellsMin.z) {
+                console.warn("something weird happened");
+                return null;
+            }
 
             var xTrim = true;
             var yTrim = true;

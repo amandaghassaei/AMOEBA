@@ -20,14 +20,24 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.addChildren(this._buildMesh(), this.object3D);//build cell meshes
 
         if (this.superCell) this.superCell.addChildren(this.object3D);//add as child of supercell
-
-        if (this.getAbsoluteIndex()){
-            if (!this.cells) lattice.getUItarget().addHighlightableCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
-            if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
-        } else this.hide();//stock cell
-
-        if (!this.cells) this.setMode();
+        if (!this.sparseCells) this.setMode();
     }
+
+    DMACell.prototype.addToScene = function(superCell){
+        if (!this.sparseCells) lattice.getUItarget().addHighlightableCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
+        if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
+        if (this.sparseCells){
+            var self = this;
+            this._loopCells(function(cell){
+                cell.addToScene(self);
+            });
+        }
+    };
+
+
+    //add stock cell{
+//        this.hide();//stock cell
+//    }
 
 
 
@@ -37,7 +47,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype._buildObject3D = function(){
         var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
-        if (!this.cells) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
+        if (!this.sparseCells) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
         object3D.name = "object3D";
         return object3D;
     };
@@ -107,6 +117,24 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return superCellIndex.add(this.superCell.applyRotation(this.getIndex()).round());
     };
 
+    DMACell.prototype.getDimensions = function(){
+        return new THREE.Vector3(1,1,1);
+    };
+
+    DMACell.prototype.getAbsoluteDimensions = function(){
+        return this.getDimensions();
+    };
+
+    DMACell.prototype.getBounds = function(){//todo need to accound for origin eventually
+        var index = this.getIndex();
+        return {min: index, max: index};
+    };
+
+    DMACell.prototype.getAbsoluteBounds = function(){
+        var index = this.getAbsoluteIndex();
+        return {min: index, max: index};
+    };
+
     DMACell.prototype.getLatticeIndex = function(){
         var parent = lattice.getUItarget();
         return this.getAbsoluteIndex().sub(parent.get("cellsMin"));
@@ -162,7 +190,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         else  threeMaterial = this.getMaterial(true);
         if (!threeMaterial) return;//no material object found
 
-        if (this.cells){
+        if (this.sparseCells){
             this._loopCells(function(cell){
                 if (cell) cell.setDeleteMode(state);
             });
@@ -296,7 +324,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 setVisiblity();
                 break;
             case "part":
-                if (!this.cells && !this.parts) {
+                if (!this.sparseCells && !this.parts) {
                     this._initParts(function(parts){
                         self.parts = parts;
                         setVisiblity();
@@ -304,7 +332,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 } else setVisiblity();
                 break;
             case "beam":
-                if (!this.cells && !this.beams) this.beams = this._initBeams(function(){
+                if (!this.sparseCells && !this.beams) this.beams = this._initBeams(function(){
                     if (!this.nodes) this.nodes = self._initNodes(function(){
                         setVisiblity();
                     });
@@ -364,11 +392,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             });
             return geometry;
         }
-        if (!this.cells) return geometry;
+        if (!this.sparseCells) return geometry;
         this._loopCells(function(cell){
             if (cell) geometry = geometry.concat(cell.getVisibleGeometry());
         });
         return geometry;
+    };
+
+    DMACell.prototype.getCells = function(){
+        return null;
+    };
+
+    DMACell.prototype.getSparseCells = function(){
+        return null;
     };
 
 
@@ -460,11 +496,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //destroy
 
     DMACell.prototype.destroy = function(){//todo remove reference from lattice.cells
+        console.log("destroy");
         this.destroyParts();
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
             else if (this.index) three.sceneRemove(this.object3D);
-            if (!this.cells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
+            if (!this.sparseCells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
             this.object3D.myParent = null;
     //            this.object3D.dispose();
     //            geometry.dispose();
@@ -492,7 +529,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             materialID: this.getMaterialID()
         };
 //        if (this.material.sparseCells) return data;//material definition in material composites
-//        if (this.cells) data.cells = this.cells;
+//        if (this.sparseCells) data.cells = this.sparseCells;
         return data;
     };
 

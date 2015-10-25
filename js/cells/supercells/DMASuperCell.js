@@ -16,8 +16,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         var range;
         var material = this.getMaterial();
         if (material.cellsMax) range = (new THREE.Vector3(1,1,1)).add(material.cellsMax).sub(material.cellsMin);
-        else range = this._getSuperCellRange();
-        this.cells = this._makeChildCells(range, material);
+        else range = this.getDimensions();
+        this.sparseCells = this._makeChildCells(range, material);
 
         DMACell.prototype.setMode.call(this, null, function(){
             three.conditionalRender();
@@ -25,8 +25,38 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
     }
     DMASuperCell.prototype = Object.create(DMACell.prototype);
 
-    DMASuperCell.prototype._getSuperCellRange = function(){//override in gik super cell
-        return appState.get("superCellRange").clone();
+    DMASuperCell.prototype.getOrigin = function(){
+        return new THREE.Vector3(0,0,0);
+    };
+
+    DMASuperCell.prototype.getAbsoluteOrigin = function(){
+        if (!this.superCell) return this.applyRotation(this.getOrigin());
+        return this.applyAbsoluteRotation(this.getOrigin()).round();
+    };
+
+    DMASuperCell.prototype.getAbsoluteDimensions = function(){
+        var rotationPt = this.getOrigin().add(new THREE.Vector3(1,1,1));
+        var dims = this.applyAbsoluteRotation(this.getDimensions().sub(rotationPt)).add(rotationPt);
+        _.each(dims, function(val, key){
+            if (val < 0) dims[key] = -val;
+        });
+        return dims.round();
+    };
+
+    DMASuperCell.prototype.getBounds = function(){
+        var origin = this.getOrigin();
+        var index = this.getIndex();
+        var min = index.clone().sub(origin);
+        var max = index.add(this.getDimensions()).sub(origin).sub(new THREE.Vector3(1,1,1));
+        return {min: min, max: max};
+    };
+
+    DMASuperCell.prototype.getAbsoluteBounds = function(){
+        var origin = this.getAbsoluteOrigin();
+        var index = this.getAbsoluteIndex();
+        var min = index.clone().sub(origin);
+        var max = index.add(this.getAbsoluteDimensions()).sub(origin);
+        return {min: min, max: max};
     };
 
     DMASuperCell.prototype._makeChildCells = function(range, material){
@@ -116,16 +146,54 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         })
     };
 
+    DMASuperCell.prototype.getCells = function(){
+        return this._getCells(true);
+    };
 
+    DMASuperCell.prototype.getSparseCells = function(){
+        return this._getCells(false);
+    };
 
+    DMASuperCell.prototype._getCells = function(recursive){
+        var size = this.getAbsoluteDimensions();
+        var bounds = this.getAbsoluteBounds();
 
+        console.log(size);
 
-     //parse
+        //create array of nulls
+        var cells = [];
+        for (var x=0;x<size.x;x++){
+            cells.push([]);
+            for (var y=0;y<size.y;y++){
+                cells[x].push([]);
+                for (var z=0;z<size.z;z++){
+                    cells[x][y].push(null);
+                }
+            }
+        }
+
+        var overlap = false;
+        this._loopCells(function(cell, x, y, z){
+            var overlappingCells = null;
+            if (recursive){
+                overlappingCells = cell.addToDenseArray(cells, bounds.min);
+            } else {
+                overlappingCells = DMACell.prototype.addToDenseArray.call(cell, cells, bounds.min);
+            }
+            if (overlappingCells) overlap = true;
+        });
+        if (overlap) {
+            console.warn("overlap detected");
+            return [[[null]]];
+        }
+        return cells;
+    };
+
     DMASuperCell.prototype.addToDenseArray = function(cellsArray, min, forCAM){
         if (forCAM && this._isBottomLayer()) return DMACell.prototype.addToDenseArray.call(this, cellsArray, min);//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
         var overlap = [];
         this._loopCells(function(cell){
-            var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM)
+            var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM);
             if (overlappingCells) overlap = overlap.concat(overlappingCells);
         });
         if (overlap.length>0) return overlap;
@@ -139,7 +207,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
 
 
     DMASuperCell.prototype._loopCells = function(callback){
-        var cells = this.cells;
+        var cells = this.sparseCells;
         if (!cells || cells === undefined) return;
         for (var x=0;x<cells.length;x++){
             for (var y=0;y<cells[0].length;y++){
@@ -156,7 +224,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
             cell = null;
         });
         DMACell.prototype.destroy.call(this);
-        this.cells = null;
+        this.sparseCells = null;
     };
 
     DMASuperCell.prototype.destroyParts = function(){

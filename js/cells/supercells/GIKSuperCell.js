@@ -22,7 +22,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     }
     GIKSuperCell.prototype = Object.create(DMASuperCell.prototype);
 
-    GIKSuperCell.prototype._getSuperCellRange = function(){
+    GIKSuperCell.prototype.getDimensions = function(){
         if (this.length) return new THREE.Vector3(this.length, 1, 1);
         console.warn("no length property for gik super cell");
         return null;
@@ -95,7 +95,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         var sequence = "";
         for (var i=0;i<this.length;i++){
             if (i>0) sequence += "-";//linker
-            var seq = this.cells[i][0][0].getSequence();
+            var seq = this.sparseCells[i][0][0].getSequence();
             if (i==0) seq = seq.split('').reverse().join('');
             sequence += seq;
         }

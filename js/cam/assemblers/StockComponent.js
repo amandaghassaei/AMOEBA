@@ -27,7 +27,7 @@ define(['underscore', 'cam', 'three', 'component', 'lattice', 'threeModel'],
 
 
     StockComponent.prototype._makeCell = function(json, callback){
-        lattice.makeCellForLatticeType(json, callback);
+        lattice.makeCellWithJSON(json, callback);
     };
 
     StockComponent.prototype.getPosition = function(){

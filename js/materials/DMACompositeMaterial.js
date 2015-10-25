@@ -28,6 +28,14 @@ define(['material'], function(DMAMaterial){
         return this.compositeChildren.indexOf(id)>-1;
     };
 
+    DMACompositeMaterial.prototype.getCells = function(){
+        return [[[null]]]
+    };
+
+    DMACompositeMaterial.prototype.getSparseCells = function(){
+        return this.sparseCells;
+    };
+
     DMACompositeMaterial.prototype.toJSON = function(){
         return {
             name: this.name,

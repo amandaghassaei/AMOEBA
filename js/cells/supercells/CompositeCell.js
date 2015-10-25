@@ -34,5 +34,9 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return wireframe;
     };
 
+    CompositeCell.prototype.getDimensions = function(){//override in gik super cell
+        return this.getMaterial().getDimensions();
+    };
+
     return CompositeCell;
 });
