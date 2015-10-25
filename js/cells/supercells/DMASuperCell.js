@@ -79,7 +79,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
                 return child.name == "object3D";
             }).length;//todo this is weird
             self._loopCells(function(cell){
-                if (cell) cell.setMode(mode, function(){
+                cell.setMode(mode, function(){
                     if (--numChildren <= 0) {
                         if (callback) {
                             callback();
@@ -105,14 +105,14 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
     DMASuperCell.prototype.setTransparentByEval = function(evalFunction){
         DMACell.prototype.setTransparentByEval.call(this, evalFunction);//todo don't pass down to cells if no change
         this._loopCells(function(cell){
-            if (cell) cell.setTransparentByEval(evalFunction);
+            cell.setTransparentByEval(evalFunction);
         })
     };
 
     DMASuperCell.prototype.setTransparent = function(transparent){
         this._setTransparent(transparent);
         this._loopCells(function(cell){
-            if (cell) cell._setTransparent(transparent);
+            cell._setTransparent(transparent);
         })
     };
 
@@ -125,10 +125,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         if (forCAM && this._isBottomLayer()) return DMACell.prototype.addToDenseArray.call(this, cellsArray, min);//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
         var overlap = [];
         this._loopCells(function(cell){
-            if (cell) {
-                var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM)
-                if (overlappingCells) overlap = overlap.concat(overlappingCells);
-            }
+            var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM)
+            if (overlappingCells) overlap = overlap.concat(overlappingCells);
         });
         if (overlap.length>0) return overlap;
         return null;
@@ -146,29 +144,16 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         for (var x=0;x<cells.length;x++){
             for (var y=0;y<cells[0].length;y++){
                 for (var z=0;z<cells[0][0].length;z++){
-                    callback(cells[x][y][z], x, y, z, this);
+                    if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
                 }
             }
         }
     };
 
-    DMASuperCell.prototype._iterCells = function(callback){
-        var cells = this.cells;
-        _.each(cells, function(cellLayer){
-            _.each(cellLayer, function(cellColumn){
-                _.each(cellColumn, function(cell){
-                    callback(cell, cellColumn, cellLayer);
-                });
-            });
-        });
-    };
-
     DMASuperCell.prototype.destroy = function(){
-        this._iterCells(function(cell){
-            if (cell) {
-                cell.destroy();
-                cell = null;
-            }
+        this._loopCells(function(cell){
+            cell.destroy();
+            cell = null;
         });
         DMACell.prototype.destroy.call(this);
         this.cells = null;
@@ -176,7 +161,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
 
     DMASuperCell.prototype.destroyParts = function(){
         this._loopCells(function(cell){
-            if (cell) cell.destroyParts();
+            cell.destroyParts();
         });
     };
 

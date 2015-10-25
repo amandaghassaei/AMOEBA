@@ -175,6 +175,67 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             }
         },
 
+        reloadCells: function(){
+            this.setSparseCells(this.sparseCells);
+        },
+
+        setSparseCells: function(cells){
+            if (cells === undefined || cells == null) {
+                console.warn("no cells given to setSparseCells");
+                return;
+            }
+            this._setSparseCells(cells, this._getSubclassForLatticeType());
+        },
+
+        _getSubclassForLatticeType: function(){
+            var cellType = this.get("cellType");
+            var connectionType = this.get("connectionType");
+            var subclass = plist.allLattices[cellType].connection[connectionType].subclass;
+            if (subclass === undefined){
+                console.warn("unrecognized cell type " + cellType);
+                return null;
+            }
+            return subclass;
+        },
+
+        _setSparseCells: function(cells, subclass){
+
+            if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik")) this.clearCells();
+
+            this._setDefaultCellMode();//cell mode
+
+            var cellsMin = this.get("cellsMin");
+            var cellsMax = this.get("cellsMax");
+            var numCells = this.get("numCells");
+
+            this.clearCells();
+            if (this._undo) this._undo();//undo subclass methods
+            if (globals.basePlane) globals.basePlane.destroy();
+            if (globals.highlighter) globals.highlighter.destroy();
+
+            console.log(cells);
+            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cells, cellsMax, cellsMin);
+
+            var self = this;
+            require([subclass], function(subclassObject){
+                _.extend(self, subclassObject);
+                self._initLatticeType();//init for lattice subclass
+                if (numCells > 0) {
+                    self._bindRenderToNumCells(numCells);
+                    self.parseCellsJSON(cells);
+                }
+            });
+        },
+
+        _setDefaultCellMode: function(){//if no part associated with this lattice type set to cell mode
+            var latticeData = this._getLatticePlistData();
+            if (latticeData.parts === undefined){
+                var currentMode = appState.get("cellMode");
+                if (currentMode == "cell" || currentMode == "supercell") return;
+                appState.set("cellMode", "cell");
+            }
+        },
+
 
 
 
@@ -214,26 +275,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (latticeData.options){
                 if (latticeData.options.gikLength) appState.set("gikLength", latticeData.options.gikLength);
             }
-        },
-
-        _setDefaultCellMode: function(){//if no part associated with this lattice type
-            var latticeData = this._getLatticePlistData();
-            if (latticeData.parts === null){
-                var currentMode = appState.get("cellMode");
-                if (currentMode == "cell" || currentMode == "supercell") return;
-                appState.set("cellMode", "cell");
-            }
-        },
-
-        _getSubclassForLatticeType: function(){
-            var cellType = this.get("cellType");
-            var connectionType = this.get("connectionType");
-            var subclass = plist.allLattices[cellType].connection[connectionType].subclass;
-            if (subclass === undefined){
-                console.warn("unrecognized cell type " + cellType);
-                return null;
-            }
-            return subclass;
         },
 
         xScale: function(){
@@ -330,10 +371,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             return this.compositeEditor !== null && this.compositeEditor !== undefined;
         },
 
-        _isSingltonLattice: function(){
-            return true;
-        },
-
         exitCompositeEditing: function(){
             if (this.compositeEditor) this.compositeEditor.destroy();
             this.compositeEditor = null;
@@ -347,7 +384,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         reinitAllCellsOfTypes: function(types){//when material definition is changed
             this._loopCells(this.sparseCells, function(cell, x, y, z, self){
-                if (!cell) return;
                 var material = cell.getMaterial();
                 if (material && material.isComposite() && types.indexOf(material.getID()) > -1){
                     //re-init cell;

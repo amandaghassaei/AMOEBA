@@ -85,7 +85,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         var self = this;
         this.superCell._loopCells(function(cell){
             if (cell == self) return;
-            if (cell) cell.setConductorGroupNum(num);
+            cell.setConductorGroupNum(num);
         });
         CubeCell.prototype.propagateConductorGroupNum.call(this, num);
     };
@@ -95,7 +95,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
         var self = this;
         this.superCell._loopCells(function(cell){
             if (cell == self) return;
-            if (cell) cell.setStructuralGroupNum(num);
+            cell.setStructuralGroupNum(num);
         });
         CubeCell.prototype.propagateStructuralGroupNum.call(this, num);
     };

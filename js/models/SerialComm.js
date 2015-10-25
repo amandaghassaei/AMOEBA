@@ -30,7 +30,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam', 'lattice', 
         },
 
         _navChanged: function(){
-            if (appState.previous("currentNav") == "navComm") lattice.showCells("cells");
+            if (appState.previous("currentNav") == "navComm") lattice.showCells();
         },
 
         attemptToConnectToNode: function(){
@@ -82,7 +82,7 @@ define(['underscore', 'backbone', 'socketio', 'machineState', 'cam', 'lattice', 
             if (machineState && machineState.isReadyStatus()){
                 var lineNum = cam.get("simLineNumber");
                 var allLines = cam.get("dataOut").split("\n");
-                if (lineNum == 0) lattice.hideCells("cells");
+                if (lineNum == 0) lattice.hideCells();
                 if (lineNum >= 0 && lineNum < allLines.length) {
                     var line = allLines[lineNum];
 

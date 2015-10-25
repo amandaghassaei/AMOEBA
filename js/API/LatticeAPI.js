@@ -88,7 +88,7 @@ define(['lattice', 'plist'], function(lattice){
         },
 
         setSparseCells: function(cells){
-            lattice.reloadCells(cells);
+            lattice.setSparseCells(cells);
         },
 
         getCells: function(){

@@ -217,10 +217,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.object3D.visible = false;
     };
 
-    DMACell.prototype.show = function(mode){
+    DMACell.prototype.show = function(mode, callback){
         this.object3D.visible = true;
         this.setTransparent(false);
-        this.setMode(mode);
+        this.setMode(mode, callback);
     };
 
     DMACell.prototype.getMaterialID = function(){

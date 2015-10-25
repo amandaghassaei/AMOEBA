@@ -277,7 +277,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
             appState.set("stockSimulationPlaying", false);
             //todo isStreaming = false;
             three.stopAnimationLoop();
-            lattice.showCells("cells");
+            lattice.showCells();
         },
 
         _stockSimulation: function(){
@@ -298,7 +298,7 @@ define(['underscore', 'three', 'backbone', 'appState', 'latticeCAM', 'threeModel
         simulateCurrentLine: function(callback){
             var lineNum = this.get("simLineNumber");
             three.startAnimationLoop();
-            if (lineNum == 0) lattice.hideCells("cells");
+            if (lineNum == 0) lattice.hideCells();
             var allLines = this.get("dataOut").split("\n");
             if(lineNum < allLines.length){
 

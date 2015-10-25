@@ -59,36 +59,25 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("applicationType")];
         },
 
-        reloadCells: function(cells, subclass){
+        _setSparseCells: function(cells, subclass){
 
-            if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik") && !cells) this.clearCells();
+            this.clearCells();//composite lattice should always be empty
 
-            if (!cells) cells = JSON.parse(JSON.stringify(this.sparseCells));
+            console.log(this.get("numCells"));
+            var numCells = this.get("numCells");
 
-            if (this._setDefaultCellMode) this._setDefaultCellMode();//only on lattice
-
-            var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
-            this._bindRenderToNumCells(this.get("numCells"));
-            this.clearCells();
+            var cellsMin = this.get("cellsMin");
+            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cells, cellsMax, cellsMin);
 
-            if (this._undo) this._undo();
-            if (this._isSingltonLattice()){
-                if (globals.basePlane) globals.basePlane.destroy();
-                if (globals.highlighter) globals.highlighter.destroy();
-            }
-
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(this.sparseCells, cellsMax, cellsMin);
             var self = this;
-            require([subclass || this._getSubclassForLatticeType()], function(subclassObject){
+            require([subclass], function(subclassObject){
                 _.extend(self, subclassObject);
-                if (self._isSingltonLattice()) self._initLatticeType();//only do this for the lattice singleton
-                if (self.get("cellsMin")) self.parseCellsJSON(cells);
+                if (numCells>0) {
+                    self._bindRenderToNumCells(numCells);
+                    self.parseCellsJSON(cells);
+                }
             });
-        },
-
-        _isSingltonLattice: function(){
-            return false;
         },
 
         _bindRenderToNumCells: function(numCells){
@@ -206,7 +195,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         clearCells: function(silent){
             if (silent === undefined) silent = false;
             this._loopCells(this.sparseCells, function(cell){//send destroy to top level
-                if (cell) cell.destroy();
+                cell.destroy();
             });
             this.cells = [[[null]]];
             this.sparseCells = [[[null]]];
@@ -222,16 +211,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var dimMax = this.get("cellsMax").clone().sub(this.get("cellsMin")).add(new THREE.Vector3(1,1,1));
             var dimMin = new THREE.Vector3(0,0,0);
             this._loopCells(this.sparseCells, function(cell, x, y, z){
-                if (cell){
-                    var material = cell.getMaterial();
-                    var dimensions = material.dimensions;
-                    if (dimensions) dimensions = dimensions.clone();
-                    else dimensions = new THREE.Vector3(cell.length, 1, 1);
-                    dimensions.sub(new THREE.Vector3(1,1,1));
-                    var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(dimensions).round().add(new THREE.Vector3(1,1,1)));
-                    dimMax.max(subCellRange);
-                    dimMin.min(subCellRange);
-                }
+                var material = cell.getMaterial();
+                var dimensions = material.dimensions;
+                if (dimensions) dimensions = dimensions.clone();
+                else dimensions = new THREE.Vector3(cell.length, 1, 1);
+                dimensions.sub(new THREE.Vector3(1,1,1));
+                var subCellRange = (new THREE.Vector3(x, y, z)).add(cell.applyRotation(dimensions).round().add(new THREE.Vector3(1,1,1)));
+                dimMax.max(subCellRange);
+                dimMin.min(subCellRange);
             });
             return {max:dimMax, min:dimMin};
         },
@@ -379,16 +366,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var yTrim = true;
             var zTrim = true;
             this._loopCells(cells, function(cell, x, y, z){
-                if (cell){
-                    if (fromFront){
-                        if (x == 0) xTrim = false;
-                        if (y == 0) yTrim = false;
-                        if (z == 0) zTrim = false;
-                    } else {
-                        if (x == cellsMax.x-cellsMin.x) xTrim = false;
-                        if (y == cellsMax.y-cellsMin.y) yTrim = false;
-                        if (z == cellsMax.z-cellsMin.z) zTrim = false;
-                    }
+                if (fromFront){
+                    if (x == 0) xTrim = false;
+                    if (y == 0) yTrim = false;
+                    if (z == 0) zTrim = false;
+                } else {
+                    if (x == cellsMax.x-cellsMin.x) xTrim = false;
+                    if (y == cellsMax.y-cellsMin.y) yTrim = false;
+                    if (z == cellsMax.z-cellsMin.z) zTrim = false;
                 }
             });
 
@@ -443,55 +428,57 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //events
 
         _updatePartType: function(){
-            this._iterCells(this.sparseCells, function(cell){
-                if (cell) cell.destroyParts();
+            this._loopCells(this.sparseCells, function(cell){
+                cell.destroyParts();
             });
             this._updateForMode();
         },
 
         _updateForMode: function(){
             var cellMode = appState.get("cellMode");
-            var numCells = this.get("numCells");
             if (cellMode == "hide"){
-                this._iterCells(this.sparseCells, function(cell){
-                    if (cell) cell.hide();
-                });
-                three.render();
+                this.hideCells();
                 return;
             }
+
             if (appState.previous("cellMode") == "hide"){
-                this._iterCells(this.sparseCells, function(cell){
-                    if (cell) cell.show();
-                });
+                this.showCells();
+            } else {
+                this._setAllCellsMode(cellMode);
             }
+        },
 
-            this._iterCells(this.sparseCells, function(cell){
-                if (cell) cell.setMode(cellMode, function(){
-                    if (--numCells <= 0) three.render();
-                });
+        _setAllCellsMode: function(cellMode){
+            var numCells = this.get("numCells");
+            var renderCallback = function(){
+                if (--numCells <= 0) three.render();
+            };
+            this._loopCells(this.sparseCells, function(cell){
+                cell.setMode(cellMode, renderCallback);
             });
         },
 
-        hideCells: function(whichArray){
-            if (!whichArray) whichArray = "sparseCells";
-            this._iterCells(this[whichArray], function(cell){
-                if (cell) cell.hide();
+        hideCells: function(){
+            this._loopCells(this.sparseCells, function(cell){
+                cell.hide();
             });
             three.render();
         },
 
-        showCells: function(whichArray){
-            if (!whichArray) whichArray = "sparseCells";
+        showCells: function(){
             var cellMode = appState.get("cellMode");
-            this._iterCells(this[whichArray], function(cell){
-                if (cell) cell.show(cellMode)
+            var numCells = this.get("numCells");
+            var renderCallback = function(){
+                if (--numCells <= 0) three.render();
+            };
+            this._loopCells(this.sparseCells, function(cell){
+                cell.show(cellMode, renderCallback);
             });
-            three.render();
         },
 
         setOpaque: function(){
             this._loopCells(this.sparseCells, function(cell){
-                if (cell) cell.setTransparent(false);
+                cell.setTransparent(false);
             });
             three.render();
         },
@@ -503,17 +490,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //utils
 
-        _iterCells: function(cells, callback){
-            _.each(cells, function(cellLayer){
-                _.each(cellLayer, function(cellColumn){
-                    _.each(cellColumn, function(cell){
-                        callback(cell, cellColumn, cellLayer);
-                    });
-                });
-
-            });
-        },
-
         loopCells: function(callback){
             this._loopCells(this.sparseCells, callback);
         },
@@ -522,7 +498,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             for (var x=0;x<cells.length;x++){
                 for (var y=0;y<cells[0].length;y++){
                     for (var z=0;z<cells[0][0].length;z++){
-                        callback(cells[x][y][z], x, y, z, this);
+                        if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
                     }
                 }
             }
@@ -567,7 +543,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var overlap = [];
             var forCAM = appState.get("currentNav") == "navAssemble";
             this._loopCells(this.sparseCells, function(cell){
-                if (!cell) return;
                 var overlappingCells = cell.addToDenseArray(cells, min, forCAM);
                 if (overlappingCells) overlap = overlap.concat(overlappingCells);
             });
@@ -578,7 +553,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         highlightOverlappingCells: function(){
             this._loopCells(this.sparseCells, function(cell){
-                if (cell) cell.setTransparent(true);
+                cell.setTransparent(true);
             });
             _.each(this.get("overlappingCells"), function(cell){
                 cell.show();
@@ -602,10 +577,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){
-                if (cell) {
-                    var json = _.extend({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, cell);
-                    self._addCellWithJSON(json, new THREE.Vector3(x, y, z));
-                }
+                var json = _.extend({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, cell);
+                self._addCellWithJSON(json, new THREE.Vector3(x, y, z));
             });
         },
 

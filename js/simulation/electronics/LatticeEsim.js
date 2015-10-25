@@ -24,7 +24,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             }
             var allVisible = groupNum == -1;
             this._loopCells(this.sparseCells, function(cell){
-                if (cell) cell.setTransparentByEval(function(evalCell){
+                cell.setTransparentByEval(function(evalCell){
                     return !(evalCell.conductiveGroupVisible(allVisible, groupNum));
                 });
             });
@@ -40,7 +40,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
             }
             var allVisible = groupNum == -1;
             this._loopCells(this.sparseCells, function(cell){
-                if (cell) cell.setTransparentByEval(function(evalCell){
+                cell.setTransparentByEval(function(evalCell){
                     return !(allVisible || evalCell.structuralGroupVisible(groupNum));
                 });
             });
@@ -50,10 +50,10 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
         calculateStructuralConnectivity: function(){
             var num = 1;
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.setStructuralGroupNum(num++, true);
+                cell.setStructuralGroupNum(num++, true);
             });
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.propagateStructuralGroupNum();
+                cell.propagateStructuralGroupNum();
             });
             this._calcNumberStructurallyConnectedComponents();
             this._showConductors();
@@ -62,7 +62,6 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
         _calcNumberStructurallyConnectedComponents: function(){
             var groups = {};
             this._loopCells(this.cells, function(cell){
-                if (!cell) return;
                 if (_.filter(groups, function(group){
                     return group.id == cell.getStructuralGroupNum();
                 }).length == 0) {
@@ -75,10 +74,10 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
         calculateConductorConnectivity: function(){
             var num = 1;
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.setConductorGroupNum(num++, true);
+                cell.setConductorGroupNum(num++, true);
             });
             this._loopCells(this.cells, function(cell){
-                if (cell) cell.propagateConductorGroupNum();
+                cell.propagateConductorGroupNum();
             });
             this._calcNumberDCConnectedComponents();
             this._showConductors();
@@ -87,7 +86,6 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
         _calcNumberDCConnectedComponents: function(){
             var groups = {};
             this._loopCells(this.cells, function(cell){
-                if (!cell) return;
                 if (_.filter(groups, function(group){
                     return group.id == cell.getConductorGroupNum();
                 }).length == 0 && cell.isConductive()) {
@@ -132,7 +130,6 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
 
             //input conductor potentials
             this._loopCells(this.cells, function(cell, x, y, z){
-                if (!cell) return;
                 for (var i=0;i<resolution;i++){
                     for (var j=0;j<resolution;j++){
                         for (var k=0;k<resolution;k++){
