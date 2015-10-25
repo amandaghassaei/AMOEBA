@@ -156,8 +156,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 self._loopCells(flattenedCells, function(flatCell, x, y, z){
                     self.cells[relIndex.x+x][relIndex.y+y][relIndex.z+z] = flatCell;
                 });
-                console.log(self.cells);
-                console.log(self.sparseCells);
 
                 cell.addToScene();
             });

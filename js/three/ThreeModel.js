@@ -114,11 +114,15 @@ define(['underscore', 'three'], function(_, THREE){
     }
 
     function removeCell(cell){
-        cells.splice(cells.indexOf(cell), 1);
+        var index = cells.indexOf(cell);
+        if (index < 0) return;
+        cells.splice(index, 1);
     }
 
     function removeCompositeCell(cell){
-        compositeCells.splice(compositeCells.indexOf(cell), 1);
+        var index = compositeCells.indexOf(cell);
+        if (index < 0) return;
+        compositeCells.splice(index, 1);
     }
 
     function getCells(){

@@ -9,7 +9,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
 
     function DMASuperCell(json, superCell){//supercells might have supercells
 
-        this.cells = true;//flag for now
+        this.sparseCells = true;//flag for now
 
         DMACell.call(this, json, superCell);
 
@@ -55,7 +55,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         var origin = this.getAbsoluteOrigin();
         var index = this.getAbsoluteIndex();
         var min = index.clone().sub(origin);
-        var max = index.add(this.getAbsoluteDimensions()).sub(origin);
+        var max = index.add(this.getAbsoluteDimensions()).sub(origin).sub(new THREE.Vector3(1,1,1));
         return {min: min, max: max};
     };
 
