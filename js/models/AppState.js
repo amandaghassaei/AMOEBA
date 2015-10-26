@@ -191,7 +191,11 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
         _handleKeyStroke: function(e){//receives keyup and keydown
 
-            if ($("input").is(':focus')) return;//we are typing in an input
+
+            if ($("input").is(':focus')) {
+                if (e.keyCode == 27) $(':focus').blur();
+                return;
+            }//we are typing in an input
             if ($("textarea").is(':focus')) return;//we are typing in an input
 
             var state = e.data.state;
