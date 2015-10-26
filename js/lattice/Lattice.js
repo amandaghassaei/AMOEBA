@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlist', 'three', 'threeModel', 'latticeBase'],
-    function(_, Backbone, appState, globals, plist, materialsPlist, THREE, three, LatticeBase){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlist', 'three', 'threeModel', 'latticeBase', 'console'],
+    function(_, Backbone, appState, globals, plist, materialsPlist, THREE, three, LatticeBase, myConsole){
 
     var Lattice = LatticeBase.extend({
 

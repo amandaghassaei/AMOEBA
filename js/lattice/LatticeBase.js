@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel'],
-    function(_, Backbone, appState, globals, plist, THREE, three){
+define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'threeModel', 'console'],
+    function(_, Backbone, appState, globals, plist, THREE, three, myConsole){
 
     return Backbone.Model.extend({
 
@@ -136,6 +136,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         addCellAtIndex: function(index, json){
             this._addCellAtIndex(index, json, function(){
+                myConsole.write("lattice.addCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
                 three.render();
             });
         },
@@ -150,7 +151,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 var bounds = cell.getAbsoluteBounds();
 
                 if (self._checkForCellOverlap(flattenedCells, bounds.min)){
-                    console.warn("overlap detected, addCellAtIndex operation cancelled");
+                    myConsole.warn("overlap detected, lattice.addCellAtIndex operation cancelled");
                     cell.destroy();
                     return;
                 }
@@ -221,18 +222,25 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         removeCellAtIndex: function(index){
             index = this._getCellsIndexForLatticeIndex(index);
             if (this._checkForIndexOutsideBounds(index) || this.sparseCells[index.x][index.y][index.z] === null){
-                console.warn("no cell at this index, removeCellAtIndex operation cancelled");
+                myConsole.warn("no cell at this index, lattice.removeCellAtIndex operation cancelled");
                 return;
             }
-            this.removeCell(this.sparseCells[index.x][index.y][index.z]);
+            this._removeCell(this.sparseCells[index.x][index.y][index.z]);
+            myConsole.write("lattice.removeCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
+            three.render();
         },
 
         removeCell: function(cell){
-
             if (!cell) {
-                console.warn("no cell, removeCell operation cancelled");
+                myConsole.warn("no cell, lattice.removeCell operation cancelled");
                 return;
             }
+            myConsole.write("removeCell(" + cell + ")");
+            this._removeCell(cell);
+            three.render();
+        },
+
+        _removeCell: function(cell){
             var index = this._getCellsIndexForLatticeIndex(cell.getIndex());
             var flattenedCells = cell.getCells();
             this.sparseCells[index.x][index.y][index.z] = null;
@@ -245,7 +253,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             this.set("numCells", this.get("numCells")-1);
             if (this.get("numCells" == 0)) this.clearCells();//todo shrink matrices as you go
-            three.render();
         },
 
         clearCells: function(silent){
