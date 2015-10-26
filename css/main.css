@@ -581,12 +581,15 @@ label {
     border-radius: 0;
 }
 #consoleOutput{
-    min-height:35px;
-    background-color: #ddd;
-    opacity: 0.9;
+    min-height:42px;
+    background-color: rgba(255,255,255,0.8);
     border: 2px solid #bdc3c7;
     border-bottom-width: 0;
     border-top-width: 0;
     overflow: auto;
     resize: vertical;
+    padding: 10px 20px;
+    font-family: Courier, monospace;
+    font-size: 13px;
+    line-height: 25px;
 }

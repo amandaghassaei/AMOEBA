@@ -15,8 +15,14 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
 
         initialize: function(){
 
+            _.bindAll(this, "_onKeyUp");
+            $(document).bind('keyup', {}, this._onKeyUp);
+
             this.listenTo(appState, "change:consoleIsVisible", this._setVisibility);
-            this._setWidth();
+            this.listenTo(appState, "change:menuIsVisible", function(){
+                this._setWidth(false);
+            });
+            this._setWidth(false);
             this._setVisibility();
         },
 
@@ -28,16 +34,54 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         },
 
         _setVisibility: function(){
-            if (appState.get("consoleIsVisible")) this.show();
-            else this.hide();
+            if (appState.get("consoleIsVisible")) this._show();
+            else this._hide();
         },
 
-        show: function(){
+        write: function(string){
+            this._writeOutput(string + "<br/>");
+        },
+
+        warn: function(string){
+
+        },
+
+        error: function(string){
+
+        },
+
+        _writeOutput: function(html){
+            var $output = $("#consoleOutput");
+            var height = $output.height();
+            $output.append(html);
+            $output.height(height);
+            $output.scrollTop($output.scrollTop()+$output.innerHeight());
+        },
+
+        _show: function(){
             this.$el.fadeIn();
         },
 
-        hide: function(){
+        _hide: function(){
             this.$el.fadeOut();
+        },
+
+        _onKeyUp: function(e){
+            var $input = $("#consoleInput");
+            if ($input.is(":focus")){
+//                if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
+//                else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
+                if (e.keyCode == 13) this._enterCommand($input);
+            } else {
+            }
+        },
+
+        _enterCommand: function($input){
+//            var command = $input.val();
+            var command = "nice try, this doesn't work yet :)";
+            $input.val("");
+            this.write(command);
+            $input.focus();
         }
 
     });
