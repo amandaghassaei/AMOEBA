@@ -26,7 +26,7 @@ define(['lattice', 'plist'], function(lattice){
         },
 
         getBoundingBox: function(){
-            return lattice.calculateBoundingBox();
+            return lattice.getBoundingBox();
         },
 
         getAspectRatio: function(){
