@@ -34,8 +34,12 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         },
 
         _setVisibility: function(){
-            if (appState.get("consoleIsVisible")) this._show();
+            if (this._isVisible()) this._show();
             else this._hide();
+        },
+
+        _isVisible: function(){
+            return appState.get("consoleIsVisible");
         },
 
         write: function(string){
