@@ -104,7 +104,10 @@ define(['lattice', 'plist'], function(lattice){
         },
 
         addCellAtIndex: function(x, y, z, data){
-            var index = new THREE.Vector3(x, y, z);
+            //parse x, y, z
+            //check data is valid json
+
+            lattice.addCellAtIndex(new THREE.Vector3(x, y, z), data);
         },
 
         removeCell: function(cell){
