@@ -573,12 +573,14 @@ label {
 }
 
 #console>div{
-    background-color: red;
+    background-color: clear;
     height: 100%;
 }
 #consoleInput{
     border-radius: 0;
 }
 #consoleOutput{
-    min-height:50px;
+    min-height:30px;
+    background-color: #ddd;
+    opacity: 0.9;
 }
