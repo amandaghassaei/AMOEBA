@@ -570,6 +570,7 @@ label {
     width: 100%;
     position: absolute;
     background-color: clear;
+    display:none;
 }
 
 #console>div{
@@ -580,7 +581,12 @@ label {
     border-radius: 0;
 }
 #consoleOutput{
-    min-height:30px;
+    min-height:35px;
     background-color: #ddd;
     opacity: 0.9;
+    border: 2px solid #bdc3c7;
+    border-bottom-width: 0;
+    border-top-width: 0;
+    overflow: auto;
+    resize: vertical;
 }

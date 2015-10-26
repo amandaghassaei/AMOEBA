@@ -359,13 +359,11 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _hide: function(callback, suppressModelUpdate){
             this.$el.animate({right: "-430"}, {done: callback});
-            $("#console").animate({"padding-right":"0"});
             if (!suppressModelUpdate) this.model.set("menuIsVisible", false);
         },
 
         _show: function(){
             this.$el.animate({right: "0"});
-            $("#console").animate({"padding-right":"430px"});
             this.model.set("menuIsVisible", true);
         },
 

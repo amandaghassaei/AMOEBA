@@ -19,7 +19,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
             menuIsVisible: true,
             scriptIsVisible: false,
-            consoleIsVisible: false,
+            consoleIsVisible: true,
             ribbonIsVisible: true,
             turnOffRendering: false,
 
