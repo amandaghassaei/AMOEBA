@@ -94,12 +94,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
     GIKSuperCell.prototype.getSequence = function(){//todo this goes somewhere else
         var sequence = "";
         for (var i=0;i<this.length;i++){
-            if (i>0) sequence += "-";//linker
             var seq = this.sparseCells[i][0][0].getSequence();
             if (i==0) seq = seq.split('').reverse().join('');
             sequence += seq;
         }
-        if (sequence == "-") return "";
         return sequence;
     };
 
