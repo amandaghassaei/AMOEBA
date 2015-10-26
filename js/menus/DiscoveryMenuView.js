@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!discoveryMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!menus/templates/DiscoveryMenuView.html'],
     function($, _, MenuParentView, plist, lattice, template){
 
     var log = "testing<br/>hello";

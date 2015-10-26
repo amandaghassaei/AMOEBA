@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!mStaticMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/MStaticMenuView.html'],
+    function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 

@@ -2,7 +2,7 @@
  * Created by aghassaei on 7/12/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!editCamOutputMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/EditCamOutputMenuView.html'],
     function($, _, MenuParentView, plist, template){
 
 

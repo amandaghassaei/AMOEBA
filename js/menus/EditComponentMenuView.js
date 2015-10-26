@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'cam', 'materials', 'text!editComponentMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'cam', 'materials', 'text!menus/templates/EditComponentMenuView.html'],
     function($, _, MenuParentView, plist, materialsPlist, cam, materials, template){
 
     return MenuParentView.extend({

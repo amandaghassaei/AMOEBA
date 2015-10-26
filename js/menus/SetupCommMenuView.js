@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!setupCommMenuTemplate', 'commPlist'],
+define(['jquery', 'underscore', 'commParentMenu', 'serialComm', 'text!menus/templates/SetupCommMenuView.html', 'commPlist'],
     function($, _, CommParentMenu, serialComm, template, commPlist){
 
 

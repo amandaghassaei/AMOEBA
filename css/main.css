@@ -564,3 +564,21 @@ label {
 #contextMenu li>a{
     text-decoration: none;
 }
+
+#console {
+    z-index: 2;
+    width: 100%;
+    position: absolute;
+    background-color: clear;
+}
+
+#console>div{
+    background-color: red;
+    height: 100%;
+}
+#consoleInput{
+    border-radius: 0;
+}
+#consoleOutput{
+    min-height:50px;
+}

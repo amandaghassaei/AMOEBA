@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!navViewMenuTemplate'],
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!menus/templates/NavViewMenu.html'],
     function($, _, Backbone, plist, lattice, template){
 
     return Backbone.View.extend({

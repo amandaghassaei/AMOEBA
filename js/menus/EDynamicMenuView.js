@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!eDynamicMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/EDynamicMenuView.html'],
+    function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 

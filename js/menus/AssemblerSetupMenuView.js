@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!assemblerSetupMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'text!menus/templates/AssemblerSetupMenuView.html''],
     function($, _, MenuParentView, camPlist, cam, template){
 
     return MenuParentView.extend({

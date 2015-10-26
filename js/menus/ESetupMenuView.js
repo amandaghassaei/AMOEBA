@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!eSetupMenuTemplate', 'latticeESim', 'eSim'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!menus/templates/ESetupMenuView.html', 'latticeESim', 'eSim'],
     function($, _, MenuParentView, plist, materialsPlist, template, lattice, eSim){
 
     return MenuParentView.extend({

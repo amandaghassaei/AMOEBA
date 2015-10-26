@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!materialEditorMenuTemplate', 'fileSaver'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/templates/MaterialEditorMenuView.html', 'fileSaver'],
     function($, _, MenuParentView, plist, materials, template, fileSaver){
 
     return MenuParentView.extend({

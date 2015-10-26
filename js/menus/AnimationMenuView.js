@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/1/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'cam', 'text!animationMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'cam', 'text!menus/templates/AnimationMenuView.html'],
     function($, _, MenuParentView, cam, template){
 
     return MenuParentView.extend({

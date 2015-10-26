@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!eStaticMenuTemplate', 'eSim', 'latticeESim'],
+define(['jquery', 'underscore', 'menuParent', 'eSimPlist', 'text!menus/templates/EStaticMenuView.html', 'eSim', 'latticeESim'],
     function($, _, MenuParentView, eSimPlist, template, eSim, lattice){
 
     return MenuParentView.extend({

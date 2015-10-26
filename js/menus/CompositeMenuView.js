@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materialsPlist', 'lattice', 'globals', 'materials', 'text!compositeMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materialsPlist', 'lattice', 'globals', 'materials', 'text!menus/templates/CompositeMenuView.html'],
     function($, _, MenuParentView, CompositeEditorLattice, materialsPlist, lattice, globals, materials, template){
 
     var bounds;

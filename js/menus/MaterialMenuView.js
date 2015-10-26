@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattice', 'globals', 'materials', 'text!materialMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattice', 'globals', 'materials', 'text!menus/templates/MaterialMenuView.html'],
     function($, _, MenuParentView, materialsPlist, plist, lattice, globals, materials, template){
 
     return MenuParentView.extend({

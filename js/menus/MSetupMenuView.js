@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'materialsPlist', 'text!mSetupMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'lattice', 'plist', 'materialsPlist', 'text!menus/templates/MSetupMenuView.html'],
     function($, _, MenuParentView, lattice, plist, materialsPlist, template){
 
     return MenuParentView.extend({

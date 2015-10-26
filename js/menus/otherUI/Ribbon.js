@@ -2,7 +2,7 @@
  * Created by fab on 3/18/15.
  */
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'text!ribbonTemplate'], function($, _, Backbone, plist, lattice, appState, template){
+define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'text!menus/templates/Ribbon.html'], function($, _, Backbone, plist, lattice, appState, template){
 
     var Ribbon = Backbone.View.extend({
 

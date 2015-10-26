@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'text!modalViewTemplate'], function($, _, Backbone, template){
+define(['jquery', 'underscore', 'backbone', 'text!menus/templates/ModalView.html'], function($, _, Backbone, template){
 
     return Backbone.View.extend({
 

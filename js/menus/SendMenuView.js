@@ -2,7 +2,7 @@
  * Created by aghassaei on 3/11/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!sendMenuTemplate', 'text!menus/templates/SendControlPanel.html', 'cam', 'camPlist'],
+define(['jquery', 'underscore', 'menuParent', 'serialComm', 'commPlist', 'text!menus/templates/SendMenuView.html', 'text!menus/templates/SendControlPanel.html', 'cam', 'camPlist'],
     function($, _, MenuParent, serialComm, commPlist, template, controlPanelTemplate, cam, camPlist){
 
     return MenuParent.extend({

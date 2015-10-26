@@ -2,7 +2,8 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!optimizeMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/OptimizationMenuView.html'],
+    function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 

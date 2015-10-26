@@ -2,7 +2,7 @@
  * Created by aghassaei on 2/25/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'materials', 'text!assemblerMenuTemplate'],
+define(['jquery', 'underscore', 'menuParent', 'camPlist', 'cam', 'lattice', 'materials', 'text!menus/templates/AssemblerMenuView.html'],
     function($, _, MenuParentView, camPlist, cam, lattice, materials, template){
 
     return MenuParentView.extend({

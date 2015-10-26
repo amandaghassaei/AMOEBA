@@ -2,7 +2,8 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!scriptMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/ScriptMenuView.html'],
+    function($, _, MenuParentView, plist, template){
 
     return MenuParentView.extend({
 

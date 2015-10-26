@@ -2,7 +2,7 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!importMenuTemplate', 'fillGeometry', 'stlLoader'],
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!menus/templates/ImportMenuView.html', 'fillGeometry', 'stlLoader'],
     function($, _, MenuParentView, plist, lattice, template, fillGeometry, THREE){
 
     return MenuParentView.extend({
