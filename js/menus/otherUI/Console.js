@@ -67,11 +67,13 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         },
 
         _onKeyUp: function(e){
+
             var $input = $("#consoleInput");
             if ($input.is(":focus")){
+                if (e.keyCode == 27) $input.blur();
 //                if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
 //                else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
-                if (e.keyCode == 13) this._enterCommand($input);
+                else if (e.keyCode == 13) this._enterCommand($input);
             }
         },
 
