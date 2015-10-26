@@ -43,7 +43,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         },
 
         warn: function(string){
-
+            this._writeOutput("<span class='consoleWarning'>" + string + "</span><br/>");
         },
 
         error: function(string){
@@ -72,7 +72,6 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
 //                if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
 //                else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
                 if (e.keyCode == 13) this._enterCommand($input);
-            } else {
             }
         },
 
@@ -81,7 +80,6 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             var command = "nice try, this doesn't work yet :)";
             $input.val("");
             this.write(command);
-            $input.focus();
         }
 
     });

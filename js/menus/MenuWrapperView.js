@@ -49,7 +49,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _onKeyUp: function(e){
             if ($(".unresponsiveInput").is(":focus")) return;
-            if ($("input").is(":focus") && e.keyCode == 13) {//enter key
+            if ($("#menuWrapper input").is(":focus") && e.keyCode == 13) {//enter key
                 $(e.target).blur();
                 this._softRenderTab();
                 return;

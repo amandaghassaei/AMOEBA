@@ -593,3 +593,7 @@ label {
     font-size: 13px;
     line-height: 25px;
 }
+
+.consoleWarning {
+    color: orange;
+}
