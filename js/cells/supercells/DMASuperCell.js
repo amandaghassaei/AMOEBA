@@ -158,8 +158,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
         var size = this.getAbsoluteDimensions();
         var bounds = this.getAbsoluteBounds();
 
-        console.log(size);
-
         //create array of nulls
         var cells = [];
         for (var x=0;x<size.x;x++){

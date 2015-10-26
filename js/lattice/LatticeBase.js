@@ -139,17 +139,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         addCellAtIndex: function(index){
             var self = this;
             this.makeCellWithJSON({index: index, materialID:appState.get("materialType")}, function(cell){
-                var bounds = cell.getAbsoluteBounds();
-                self._checkForMatrixExpansion(bounds.max, bounds.min);
 
-                var relIndex = new THREE.Vector3().subVectors(index, self.get("cellsMin"));
                 var flattenedCells = cell.getCells();
-                if (self.cells[relIndex.x][relIndex.y][relIndex.z] !== null ||
-                    (flattenedCells !== null && self._checkForCellOverlap(flattenedCells, relIndex))){
+                var bounds = cell.getAbsoluteBounds();
+
+                if (self._checkForCellOverlap(flattenedCells, bounds.min)){
                     console.warn("overlap detected, addCellAtIndex operation cancelled");
                     cell.destroy();
                     return;
                 }
+
+                var cellOutsideCurrentBounds = self._checkForIndexOutsideBounds(bounds.min) || self._checkForIndexOutsideBounds(bounds.max);
+                if (cellOutsideCurrentBounds) self._expandCellsMatrix(bounds.max, bounds.min);
+                var relIndex = self._getCellsIndexForLatticeIndex(index);
 
                 if (flattenedCells === null) flattenedCells = [[[cell]]];
                 self.sparseCells[relIndex.x][relIndex.y][relIndex.z] = cell;
@@ -165,6 +167,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 //            var relIndex = (new THREE.Vector3()).subVectors(index, this.get("cellsMin") || index);
 //            if (!noRender || noRender === undefined) three.setRenderFlag();
 //            this._addCellWithJSON({index: index, materialID:appState.get("materialType")});
+        },
+
+        _getCellsIndexForLatticeIndex: function(index){
+            var cellsMin = this.get("cellsMin");
+            if (cellsMin === null) return new THREE.Vector3(0,0,0);
+            return index.clone().sub(cellsMin);
         },
 
 
@@ -183,10 +191,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this._loopCells(cells, function(cell, x, y, z){
                 if (overlapDetected) return;
                 var index = new THREE.Vector3(x, y, z).add(offset);
-                if (index > self.get("cellsMax")) return;
+                if (self._checkForIndexOutsideBounds(index)) return;
+                index = self._getCellsIndexForLatticeIndex(index);
                 if (existingCells[index.x][index.y][index.z]) overlapDetected = true;
             });
             return overlapDetected;
+        },
+
+        _checkForIndexOutsideBounds: function(index){
+            var cellsMin = this.get("cellsMin");
+            var cellsMax = this.get("cellsMax");
+            if (cellsMax === null || cellsMin === null) return true;
+            if (index.x < cellsMin.x || index.x > cellsMax.x) return true;
+            if (index.y < cellsMin.y || index.y > cellsMax.y) return true;
+            if (index.z < cellsMin.z || index.z > cellsMax.z) return true;
+            return false;
         },
 
         _addCellWithJSON: function(json, index){
@@ -277,7 +296,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         //cells array
 
-        _checkForMatrixExpansion: function(indicesMax, indicesMin){
+        _expandCellsMatrix: function(indicesMax, indicesMin){
 
             if (!this.get("cellsMax") || !this.get("cellsMin")){
                 this.set("cellsMax", indicesMax);

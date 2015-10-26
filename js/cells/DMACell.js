@@ -400,7 +400,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.getCells = function(){
-        return null;
+        return [[[this]]];
     };
 
     DMACell.prototype.getSparseCells = function(){
@@ -496,7 +496,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //destroy
 
     DMACell.prototype.destroy = function(){//todo remove reference from lattice.cells
-        console.log("destroy");
         this.destroyParts();
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
