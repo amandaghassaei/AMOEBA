@@ -54,6 +54,10 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
 
         },
 
+        clear: function(){
+            $("#consoleOutput").html("");
+        },
+
         _writeOutput: function(html){
             var $output = $("#consoleOutput");
             var height = $output.height();

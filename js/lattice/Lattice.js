@@ -119,6 +119,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 myConsole.warn("no cell type " + cellType + ", lattice.setCellType operation cancelled");
                 return;
             }
+            myConsole.clear();
             myConsole.write("lattice.setCellType('" + cellType + "')");
             return this.setProperty("cellType", cellType, silent);
         },
@@ -131,6 +132,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                     ", lattice.setConnectionType operation cancelled");
                 return;
             }
+            myConsole.clear();
+            myConsole.write("lattice.setCellType('" + cellType + "')");
             myConsole.write("lattice.setConnectionType('" + connectionType + "')");
             return this.setProperty("connectionType", connectionType, silent);
         },
@@ -192,6 +195,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 console.warn("no cells given to setSparseCells");
                 return;
             }
+            myConsole.clear();
+            myConsole.write("lattice.setCells(" + JSON.stringify(cells) + ")");
             this._setSparseCells(cells, this._getSubclassForLatticeType());
         },
 
@@ -208,7 +213,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         _setSparseCells: function(cells, subclass){
 
-            if ((this.get("numCells") > 0 && (this.get("connectionType") == "gik" || this.previous("connectionType") == "gik"))) this.clearCells();
+            if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik") &&
+                this.get("applicationType") != this.previous("applicationType")) this.clearCells();
 
             this._setDefaultCellMode();//cell mode
 

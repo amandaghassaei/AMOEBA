@@ -235,7 +235,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 myConsole.warn("no cell, lattice.removeCell operation cancelled");
                 return;
             }
-            myConsole.write("lattice.removeCell(" + cell + ")");
+            var json = cell.toJSON();
+            json.index = cell.getIndex();
+            myConsole.write("lattice.removeCell(" + JSON.stringify(json) + ")");
             this._removeCell(cell);
             three.render();
         },
@@ -256,6 +258,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         clearCells: function(silent){
+            myConsole.clear();
             myConsole.write("lattice.clearCells()");
             this._clearCells(silent);
         },
