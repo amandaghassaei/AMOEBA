@@ -86,7 +86,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
 //                if (e.keyCode == 38) $output.val(this.model.getPrevHistElem());
 //                else if (e.keyCode == 40) $output.val(this.model.getNewerHistElem());
                 else if (e.keyCode == 13) this._enterCommand($input);
-            }
+            } else if (e.keyCode == 9) $input.focus();
         },
 
         _enterCommand: function($input){

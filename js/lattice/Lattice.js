@@ -31,24 +31,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this.listenTo(this, "change:partType", this._updatePartType);
 
             this.listenTo(this, "change:cellType", function(){
-                var cellType = this.getCellType();
-                myConsole.clear();
-                myConsole.write("lattice.setCellType('" + cellType + "')");
-                this._cellTypeChanged(cellType);
-                this.reloadCells();
+                this._cellTypeChanged();
             });
             this.listenTo(this, "change:connectionType", function(){
-                var connectionType = this.getConnectionType();
-                myConsole.clear();
-                myConsole.write("lattice.setConnectionType('" + connectionType + "')");
-                this._connectionTypeChanged(connectionType);
-                this.reloadCells();
+                this._connectionTypeChanged();
             });
             this.listenTo(this, "change:applicationType", function(){
-                var applicationType = this.getApplicationType();
-                myConsole.write("lattice.setApplicationType('" + applicationType + "')");
-                this._applicationTypeChanged(applicationType);
-                this.reloadCells();
+                this._applicationTypeChanged();
             });
             this.listenTo(this, "change:aspectRatio", function(){
                 var aspectRatio = this.getAspectRatio();
@@ -62,7 +51,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             });
 
             this._applicationTypeChanged();
-            this.reloadCells();
         },
 
 
@@ -190,7 +178,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         },
 
         reloadCells: function(){
-            this.setSparseCells(this.sparseCells);
+            this._setSparseCells(this.sparseCells, this._getSubclassForLatticeType());
         },
 
         setSparseCells: function(cells){
@@ -261,7 +249,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         //latticeType
 
-        _cellTypeChanged: function(cellType){
+        _latticeTypeChanged: function(){
+
+        },
+
+        _printCurrentLatticeType: function(){
+            myConsole.write("lattice.setCellType('" + this.getCellType() + "')");
+            myConsole.write("lattice.setConnectionType('" + this.getConnectionType() + "')");
+            myConsole.write("lattice.setApplicationType('" + this.getApplicationType() + "')");
+            myConsole.write("lattice.setPartType('" + this.getPartType() + "')");
+        },
+
+        _cellTypeChanged: function(){
+            var cellType = this.getCellType();
             if (plist.allLattices[cellType].connection[this.getConnectionType()] === undefined){
                 var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
                 this.set("connectionType", connectionType, {silent:true});
@@ -269,15 +269,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this._connectionTypeChanged();
         },
 
-        _connectionTypeChanged: function(connectionType){
+        _connectionTypeChanged: function(){
+            var connectionType = this.getConnectionType();
             if (connectionType === undefined) connectionType = this.getConnectionType();
             var cellType = this.get("cellType");
             var appType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
             this.set("applicationType", appType, {silent:true});
-            this._applicationTypeChanged(appType);
+            this._applicationTypeChanged();
         },
 
-        _applicationTypeChanged: function(applicationType){
+        _applicationTypeChanged: function(){
             var latticeData = this._getLatticePlistData();
             this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
 
@@ -291,6 +292,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (latticeData.options){
                 if (latticeData.options.gikLength) appState.set("gikLength", latticeData.options.gikLength);
             }
+
+            this.setSparseCells(this.sparseCells);
+            this._printCurrentLatticeType();
         },
 
         xScale: function(){
