@@ -600,9 +600,19 @@ label {
 .consoleComment {
     color: darkgray;
 }
-
-#consoleSaveScript {
+#consoleButtons{
     height: 42px;
     border-width: 0;
+    padding: 0;
     border-radius: 0;
+}
+#consoleButtons>span {
+    height: 42px;
+    border-top-width: 0;
+    border-bottom-width: 0;
+    border-right-width: 0;
+    border-radius: 0;
+}
+#consoleLoadScript{
+    border: 2px solid #aaa;
 }

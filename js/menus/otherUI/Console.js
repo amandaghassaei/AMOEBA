@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         el: "#console",
 
         events: {
-            "click #consoleSaveScript":                     "_saveScript"
+            "click #consoleSaveScript":                     "_saveScript",
+            "click #consoleLoadScript":                     "_loadScript"
         },
 
         initialize: function(){
@@ -96,6 +97,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         },
 
         _enterCommand: function($input){
+            if ($input === undefined) $input = $("#consoleInput");
 //            var command = $input.val();
             var command = "nice try, this doesn't work yet :)";
             $input.val("");
@@ -108,6 +110,11 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             require(['fileSaver'], function(fileSaver){
                 fileSaver.saveConsoleScript(self.getConsoleData());
             })
+        },
+
+        _loadScript: function(e){
+            e.preventDefault();
+            this._enterCommand();
         },
 
         getConsoleData: function(){
