@@ -140,6 +140,10 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         });
     }
 
+    function saveConsoleScript(data){
+        saveData(data, "script", "js");
+    }
+
 
     return {//return public methods
 //        save: save,
@@ -150,6 +154,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 //        saveAssembler: saveAssembler,
         loadFile: loadFile,
         saveSequences: saveSequences,
-        saveSTL: saveSTL
+        saveSTL: saveSTL,
+        saveConsoleScript: saveConsoleScript
     }
 });

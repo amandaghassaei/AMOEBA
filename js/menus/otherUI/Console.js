@@ -10,7 +10,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
         el: "#console",
 
         events: {
-
+            "click #consoleSaveScript":                     "_saveScript"
         },
 
         initialize: function(){
@@ -42,12 +42,16 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             return appState.get("consoleIsVisible");
         },
 
-        write: function(string){
-            this._writeOutput(string + "<br/>");
+        write: function(string){//for commands
+            this._writeOutput(string + "<br>");
+        },
+
+        log: function(string){//for comments
+            this._writeOutput("<span class='consoleComment'>" + string + "</span><br>");
         },
 
         warn: function(string){
-            this._writeOutput("<span class='consoleWarning'>" + string + "</span><br/>");
+            this._writeOutput("<span class='consoleWarning'>" + string + "</span><br>");
         },
 
         error: function(string){
@@ -89,7 +93,25 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
 //            var command = $input.val();
             var command = "nice try, this doesn't work yet :)";
             $input.val("");
-            this.write(command);
+            this.log(command);
+        },
+
+        _saveScript: function(e){
+            e.preventDefault();
+            var self = this;
+            require(['fileSaver'], function(fileSaver){
+                fileSaver.saveConsoleScript(self.getConsoleData());
+            })
+        },
+
+        getConsoleData: function(){
+            var data = $("#consoleOutput").html().split("<br>");
+            data.pop();//last line is ""
+            var commands = []
+            _.each(data, function(line, index){
+                if (line.substr(0,5) != "<span") commands.push(line);
+            });
+            return commands.join('\n');
         }
 
     });

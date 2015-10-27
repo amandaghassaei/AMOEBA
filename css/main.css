@@ -597,3 +597,12 @@ label {
 .consoleWarning {
     color: orange;
 }
+.consoleComment {
+    color: darkgray;
+}
+
+#saveConsole {
+    height: 42px;
+    border-bottom-width: 0;
+    border-radius: 0;
+}

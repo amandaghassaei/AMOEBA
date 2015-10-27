@@ -131,7 +131,10 @@
 <div id="console">
     <div>
         <div id="consoleOutput"></div>
-        <input id="consoleInput" value="" placeholder="Type Command" class="form-control" type="text">
+        <div class="input-group">
+            <input id="consoleInput" value="" aria-describedby="consoleSaveScript" placeholder="Type Command" class="form-control" type="text">
+            <span class="input-group-addon btn btn-defualt" id="consoleSaveScript">Save Script</span>
+        </div>
     </div>
 </div>
 <div id="menuWrapper"><div id="menuHeader"></div><div id="menuContent"></div></div>
