@@ -45,6 +45,7 @@ require.config({
         serialComm: 'models/SerialComm',
         commPlist: 'plists/CommPlist',
         machineState: 'models/MachineState',
+        serialMonitorController: 'SerialMonitor/SerialMonitorController',
 
         //lattice classes and extra methods
         latticeBase: 'lattice/LatticeBase',
@@ -132,6 +133,7 @@ require.config({
         scriptView: 'menus/otherUI/ScriptView',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
+        commParentMenu: 'menus/CommParentMenu',
 
         //electronic sim
         eSimPlist: 'plists/ESimPlist',
