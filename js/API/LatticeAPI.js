@@ -82,8 +82,8 @@ define(['lattice', 'plist', 'console'], function(lattice, plist, myConsole){
             lattice.setPartType(partType, false);
         },
 
-        set: function(data){
-            lattice.setLatticeMetaData(data);
+        setMetaData: function(data){
+            lattice.setMetaData(data);
         },
 
 

@@ -159,9 +159,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             return this.setProperty("partType", partType, silent);
         },
 
-        setLatticeMetaData: function(data){
+        setMetaData: function(data){
             if (!data) {
-                console.warn("no data received");
+                myConsole.warn("no data received, lattice.setMetaData operation cancelled");
                 return;
             }
             var changed = false;
@@ -170,7 +170,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 if (self[self._getSetterName(key)]) {
                     changed |= self[self._getSetterName(key)](val, true);
                 }
-                else console.warn("no setter found for param " + key);
+                else myConsole.warn("no setter found for key " + key);
             });
             if (changed){
                 //todo trigger event
@@ -234,7 +234,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type set to cell mode
             var latticeData = this._getLatticePlistData();
-            if (latticeData.parts === undefined){
+            if (!latticeData.parts){
                 var currentMode = appState.get("cellMode");
                 if (currentMode == "cell" || currentMode == "supercell") return;
                 appState.set("cellMode", "cell");
@@ -248,10 +248,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
 
         //latticeType
-
-        _latticeTypeChanged: function(){
-
-        },
 
         _printCurrentLatticeType: function(){
             myConsole.write("lattice.setCellType('" + this.getCellType() + "')");
