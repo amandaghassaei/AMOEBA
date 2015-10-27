@@ -235,14 +235,17 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 myConsole.warn("no cell, lattice.removeCell operation cancelled");
                 return;
             }
-            var json = cell.toJSON();
-            json.index = cell.getIndex();
-            myConsole.write("lattice.removeCell(" + JSON.stringify(json) + ")");
+            var index = cell.getIndex();
+            myConsole.write("lattice.removeCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
             this._removeCell(cell);
             three.render();
         },
 
         _removeCell: function(cell){
+            var json = cell.toJSON();//log data
+            json.index = cell.getIndex();
+            myConsole.log(JSON.stringify(json));
+
             var index = this._getCellsIndexForLatticeIndex(cell.getIndex());
             var flattenedCells = cell.getCells();
             this.sparseCells[index.x][index.y][index.z] = null;
