@@ -67,7 +67,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             var height = $output.height();
             $output.append(html);
             $output.height(height);
-            $output.scrollTop($output.scrollTop()+$output.innerHeight());
+            $output.scrollTop($output[0].scrollHeight);
         },
 
         _show: function(){
