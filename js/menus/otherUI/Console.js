@@ -24,6 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             });
             this._setWidth(false);
             this._setVisibility();
+            this._scrollToBottom();
         },
 
         _setWidth: function(immediately){
@@ -67,6 +68,11 @@ define(['jquery', 'underscore', 'backbone', 'appState'], function($, _, Backbone
             var height = $output.height();
             $output.append(html);
             $output.height(height);
+            this._scrollToBottom();
+        },
+
+        _scrollToBottom: function(){
+            var $output = $("#consoleOutput");
             $output.scrollTop($output[0].scrollHeight);
         },
 
