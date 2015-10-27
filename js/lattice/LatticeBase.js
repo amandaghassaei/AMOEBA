@@ -300,8 +300,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return;
             }
 
-            indicesMax.max(lastMax);
-            indicesMin.min(lastMin);
+            indicesMax = indicesMax.clone().max(lastMax);
+            indicesMin = indicesMin.clone().min(lastMin);
             if (!indicesMax.equals(lastMax)) {
                 var size = indicesMax.clone().sub(lastMax);
                 this._expandArray(this.cells, size, false);
@@ -609,9 +609,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
             this._loopCells(sparseCells, function(cell, x, y, z, self){
-                var json = _.extend({index: (new THREE.Vector3(x, y, z)).add(cellsMin)}, cell);
-                self._addCellAtIndex(new THREE.Vector3(x, y, z), json);
+                var index = (new THREE.Vector3(x, y, z)).add(cellsMin);
+                var json = _.extend({index: index}, cell);
+                self._addCellAtIndex(index, json);
             });
+            three.render();
         },
 
         getSaveJSON: function(){

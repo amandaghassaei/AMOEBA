@@ -196,8 +196,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 return;
             }
             myConsole.clear();
-            myConsole.write("lattice.setCells(" + JSON.stringify(cells) + ")");
-            this._setSparseCells(cells, this._getSubclassForLatticeType());
+            var cellsString = JSON.stringify(cells);
+            myConsole.write("lattice.setCells(" + cellsString + ")");
+            this._setSparseCells(JSON.parse(cellsString), this._getSubclassForLatticeType());
         },
 
         _getSubclassForLatticeType: function(){
@@ -227,7 +228,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();
 
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cellsMax, cellsMin);
+            if (cellsMax && cellsMin) this._expandCellsMatrix(cellsMax, cellsMin);
 
             var self = this;
             require([subclass], function(subclassObject){
