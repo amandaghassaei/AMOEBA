@@ -42,7 +42,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
     function newMaterial(data, options){
         options = options || {};
+        data = data || {};
         var material, id;
+
         if (data.sparseCells) {
             id = data.id || getNextCompositeID();
             material = new DMACompositeMaterial(data, id);
