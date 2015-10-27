@@ -5,58 +5,72 @@
 
 define(['lattice', 'plist', 'console'], function(lattice, plist, myConsole){
 
+    function _printGetter(output){
+        myConsole.log(output);
+    }
+
     return {
 
         //getters
 
         getUnits: function(){
-            myConsole.write("lattice.getUnits()");
-            return lattice.getUnits();
+            var output = lattice.getUnits();
+            _printGetter(output);
+            return output;
         },
 
         getScale: function(){
-            myConsole.write("lattice.getScale()");
-            return lattice.getScale();
+            var output = lattice.getScale();
+            _printGetter(output);
+            return output;
         },
 
         getNumCells: function(){
-            myConsole.write("lattice.getNumCells()");
-            return lattice.getNumCells();
+            var output = lattice.getNumCells();
+            _printGetter(output);
+            return output;
         },
 
         getSize: function(){
-            myConsole.write("lattice.getSize()");
-            return lattice.getSize();
+            var output = lattice.getSize();
+            _printGetter(output);
+            return output;
         },
 
         getBoundingBox: function(){
-            myConsole.write("lattice.getBoundingBox()");
-            return lattice.getBoundingBox();
+            var output = lattice.getBoundingBox();
+            _printGetter(output);
+            return output;
         },
 
         getAspectRatio: function(){
-            myConsole.write("lattice.getAspectRatio()");
-            return lattice.getAspectRatio();
+            var output = lattice.getAspectRatio();
+            _printGetter(output);
+            return output;
         },
 
         getCellType: function(){
-            myConsole.write("lattice.getCellType()");
-            return lattice.getCellType();
+            var output = lattice.getCellType();
+            _printGetter(output);
+            return output;
         },
 
         getConnectionType: function(){
-            myConsole.write("lattice.getConnectionType()");
-            return lattice.getConnectionType();
+            var output = lattice.getConnectionType();
+            _printGetter(output);
+            return output;
         },
 
         getApplicationType: function(){
-            myConsole.write("lattice.getApplicationType()");
-            return lattice.getApplicationType();
+            var output = lattice.getApplicationType();
+            _printGetter(output);
+            return output;
         },
 
         getPartType: function(){
-            myConsole.write("lattice.getPartType()");
-            return lattice.getPartType();
+            var output = lattice.getPartType();
+            _printGetter(output);
+            return output;
         },
 
 
@@ -109,6 +123,7 @@ define(['lattice', 'plist', 'console'], function(lattice, plist, myConsole){
 
         loopSparseCells: function(){
             myConsole.write("lattice.loopSparseCells()");
+
         },
 
         loopCells: function(){
