@@ -601,7 +601,7 @@ label {
     color: darkgray;
 }
 
-#saveConsole {
+#consoleSaveScript {
     height: 42px;
     border-bottom-width: 0;
     border-radius: 0;
