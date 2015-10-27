@@ -2,11 +2,12 @@
  * Created by aghassaei on 6/26/15.
  */
 
-define(['underscore', 'stlLoader', 'part', 'bin!kennyTeqPartSTL'], function(_, THREE, DMAPart, stl){
+
+define(['underscore', 'stlLoader', 'part', 'bin!samTechPartSTL'], function(_, THREE, DMAPart, stl){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(stl);
-    var unitScale = 1/6.9597;
+    var unitScale = Math.sqrt(2);
     unitGeo.applyMatrix(new THREE.Matrix4().makeScale(unitScale, unitScale, unitScale));
 
     function PartSubclass(type, parent){

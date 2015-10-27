@@ -3,49 +3,59 @@
  */
 
 
-define(['lattice', 'plist'], function(lattice){
+define(['lattice', 'plist', 'console'], function(lattice, plist, myConsole){
 
     return {
 
         //getters
 
         getUnits: function(){
+            myConsole.write("lattice.getUnits()");
             return lattice.getUnits();
         },
 
         getScale: function(){
+            myConsole.write("lattice.getScale()");
             return lattice.getScale();
         },
 
         getNumCells: function(){
+            myConsole.write("lattice.getNumCells()");
             return lattice.getNumCells();
         },
 
         getSize: function(){
+            myConsole.write("lattice.getSize()");
             return lattice.getSize();
         },
 
         getBoundingBox: function(){
+            myConsole.write("lattice.getBoundingBox()");
             return lattice.getBoundingBox();
         },
 
         getAspectRatio: function(){
+            myConsole.write("lattice.getAspectRatio()");
             return lattice.getAspectRatio();
         },
 
         getCellType: function(){
+            myConsole.write("lattice.getCellType()");
             return lattice.getCellType();
         },
 
         getConnectionType: function(){
+            myConsole.write("lattice.getConnectionType()");
             return lattice.getConnectionType();
         },
 
         getApplicationType: function(){
+            myConsole.write("lattice.getApplicationType()");
             return lattice.getApplicationType();
         },
 
         getPartType: function(){
+            myConsole.write("lattice.getPartType()");
             return lattice.getPartType();
         },
 
@@ -84,6 +94,7 @@ define(['lattice', 'plist'], function(lattice){
         },
 
         getSparseCells: function(){
+            myConsole.write("lattice.getSparseCells()");
             return lattice.sparseCells;
         },
 
@@ -92,14 +103,16 @@ define(['lattice', 'plist'], function(lattice){
         },
 
         getCells: function(){
+            myConsole.write("lattice.getCells()");
             return lattice.cells;
         },
 
         loopSparseCells: function(){
-
+            myConsole.write("lattice.loopSparseCells()");
         },
 
         loopCells: function(){
+            myConsole.write("lattice.loopCells()");
 
         },
 
@@ -124,7 +137,6 @@ define(['lattice', 'plist'], function(lattice){
         //general
 
         save: function(filename){
-
         }
     }
 

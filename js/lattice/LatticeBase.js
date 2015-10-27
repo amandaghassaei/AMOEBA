@@ -59,7 +59,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _setSparseCells: function(cells, subclass){
 
-            this.clearCells();//composite lattice should always be empty
+            this._clearCells();//composite lattice should always be empty
 
             console.log(this.get("numCells"));
             var numCells = this.get("numCells");
@@ -235,7 +235,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 myConsole.warn("no cell, lattice.removeCell operation cancelled");
                 return;
             }
-            myConsole.write("removeCell(" + cell + ")");
+            myConsole.write("lattice.removeCell(" + cell + ")");
             this._removeCell(cell);
             three.render();
         },
@@ -256,6 +256,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         clearCells: function(silent){
+            myConsole.write("lattice.clearCells()");
+            this._clearCells(silent);
+        },
+
+        _clearCells: function(silent){
             if (silent === undefined) silent = false;
             this._loopCells(this.sparseCells, function(cell){//send destroy to top level
                 cell.destroy();

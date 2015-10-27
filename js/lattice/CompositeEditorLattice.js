@@ -122,7 +122,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         destroy: function(){
-            this.clearCells(true);
+            this._clearCells(true);
             var self = this;
             _.each(_.keys(this.attributes), function(key){
                 self.set(key, null, {silent:true});

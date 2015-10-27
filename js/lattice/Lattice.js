@@ -107,17 +107,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         setAspectRatio: function(aspectRatio, silent){
             if (!aspectRatio.x || !aspectRatio.y || !aspectRatio.z || aspectRatio.x<0 || aspectRatio.y<0 || aspectRatio.z<0) {//no 0, undefined, null, or neg #'s
-                console.warn("invalid aspect ratio params");
+                myConsole.warn("invalid aspect ratio params, lattice.setAspectRatio operation cancelled");
                 return;
             }
+            myConsole.write("lattice.setAspectRatio(" + aspectRatio.x + ", " + aspectRatio.y + ", " + aspectRatio.z +")");
             return this.setProperty("aspectRatio", new THREE.Vector3(aspectRatio.x, aspectRatio.y, aspectRatio.z), silent);
         },
 
         setCellType: function(cellType, silent){
             if (plist.allLattices[cellType] === undefined){
-                console.warn("no cell type " + cellType);
+                myConsole.warn("no cell type " + cellType + ", lattice.setCellType operation cancelled");
                 return;
             }
+            myConsole.write("lattice.setCellType('" + cellType + "')");
             return this.setProperty("cellType", cellType, silent);
         },
 
@@ -125,9 +127,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var cellType = this.get("cellType");
             var plistCellData = plist.allLattices[cellType];
             if (plistCellData.connection[connectionType] === undefined){
-                console.warn("no connection type " + connectionType + " for cell type " + plistCellData.name);
+                myConsole.warn("no connection type " + connectionType + " for cell type " + cellType +
+                    ", lattice.setConnectionType operation cancelled");
                 return;
             }
+            myConsole.write("lattice.setConnectionType('" + connectionType + "')");
             return this.setProperty("connectionType", connectionType, silent);
         },
 
@@ -137,9 +141,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var connectionType = this.get("connectionType");
             var plistConnectionData = plistCellData.connection[connectionType];
             if (plistConnectionData.type[applicationType] === undefined){
-                console.warn("no application type " + applicationType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name);
+                myConsole.warn("no application type " + applicationType + " for cell type " + cellType + " and connection type " + connectionType +
+                ", lattice.setApplicationType operation cancelled");
                 return;
             }
+            myConsole.write("lattice.setApplicationType('" + applicationType + "')");
             return this.setProperty("applicationType", applicationType, silent);
         },
 
@@ -151,9 +157,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var applicationType = this.get("applicationType");
             var plistAppData = plistConnectionData.type[applicationType];
             if (plistAppData.parts[partType] === undefined){
-                console.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name);
+                myConsole.warn("no part type " + partType + " for cell type " + plistCellData.name + " and connection type " + plistConnectionData.name + " and application type " + plistAppData.name +
+                ", lattice.setPartType operation cancelled");
                 return;
             }
+            myConsole.write("lattice.setPartType('" + partType + "')");
             return this.setProperty("partType", partType, silent);
         },
 
@@ -200,7 +208,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         _setSparseCells: function(cells, subclass){
 
-            if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik")) this.clearCells();
+            if ((this.get("numCells") > 0 && (this.get("connectionType") == "gik" || this.previous("connectionType") == "gik"))) this.clearCells();
 
             this._setDefaultCellMode();//cell mode
 
@@ -208,7 +216,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var cellsMax = this.get("cellsMax");
             var numCells = this.get("numCells");
 
-            this.clearCells();
+            this._clearCells();
             if (this._undo) this._undo();//undo subclass methods
             if (globals.basePlane) globals.basePlane.destroy();
             if (globals.highlighter) globals.highlighter.destroy();

@@ -2,7 +2,7 @@
  * Created by aghassaei on 6/29/15.
  */
 
-define(['underscore', 'stlLoader', 'part', 'bin!kennyTeqPartHighResSTL'], function(_, THREE, DMAPart, stl){
+define(['underscore', 'stlLoader', 'part', 'bin!kennyTechPartHighResSTL'], function(_, THREE, DMAPart, stl){
 
     var loader = new THREE.STLLoader();
     var unitGeo = loader.parse(stl);

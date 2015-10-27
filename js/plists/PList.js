@@ -178,13 +178,13 @@ define(['three'], function(THREE){
                             kennyVertex: {
                                 name: "Kenny's Lattice",
                                 parts: {
-                                    kennyTeq: {
+                                    kennyTech: {
                                         name: "Kenny Tech"
                                     },
-                                    kennyTeqHighRes: {
+                                    kennyTechHighRes: {
                                         name: "Kenny Tech (High Res)"
                                     },
-                                    samTeq: {
+                                    samTech: {
                                         name: "Square"
                                     }
                 //                   xShape:"X"
