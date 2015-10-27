@@ -31,18 +31,28 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this.listenTo(this, "change:partType", this._updatePartType);
 
             this.listenTo(this, "change:cellType", function(){
-                this._cellTypeChanged();
+                var cellType = this.getCellType();
+                myConsole.clear();
+                myConsole.write("lattice.setCellType('" + cellType + "')");
+                this._cellTypeChanged(cellType);
                 this.reloadCells();
             });
             this.listenTo(this, "change:connectionType", function(){
-                this._connectionTypeChanged();
+                var connectionType = this.getConnectionType();
+                myConsole.clear();
+                myConsole.write("lattice.setConnectionType('" + connectionType + "')");
+                this._connectionTypeChanged(connectionType);
                 this.reloadCells();
             });
             this.listenTo(this, "change:applicationType", function(){
-                this._applicationTypeChanged();
+                var applicationType = this.getApplicationType();
+                myConsole.write("lattice.setApplicationType('" + applicationType + "')");
+                this._applicationTypeChanged(applicationType);
                 this.reloadCells();
             });
             this.listenTo(this, "change:aspectRatio", function(){
+                var aspectRatio = this.getAspectRatio();
+                myConsole.write("lattice.setAspectRatio(" + aspectRatio.x + ", " + aspectRatio.y + ", " + aspectRatio.z +")");
                 this.reloadCells();
             });
 
@@ -110,7 +120,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 myConsole.warn("invalid aspect ratio params, lattice.setAspectRatio operation cancelled");
                 return;
             }
-            myConsole.write("lattice.setAspectRatio(" + aspectRatio.x + ", " + aspectRatio.y + ", " + aspectRatio.z +")");
             return this.setProperty("aspectRatio", new THREE.Vector3(aspectRatio.x, aspectRatio.y, aspectRatio.z), silent);
         },
 
@@ -119,8 +128,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 myConsole.warn("no cell type " + cellType + ", lattice.setCellType operation cancelled");
                 return;
             }
-            myConsole.clear();
-            myConsole.write("lattice.setCellType('" + cellType + "')");
             return this.setProperty("cellType", cellType, silent);
         },
 
@@ -132,9 +139,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                     ", lattice.setConnectionType operation cancelled");
                 return;
             }
-            myConsole.clear();
-            myConsole.write("lattice.setCellType('" + cellType + "')");
-            myConsole.write("lattice.setConnectionType('" + connectionType + "')");
             return this.setProperty("connectionType", connectionType, silent);
         },
 
@@ -148,7 +152,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 ", lattice.setApplicationType operation cancelled");
                 return;
             }
-            myConsole.write("lattice.setApplicationType('" + applicationType + "')");
             return this.setProperty("applicationType", applicationType, silent);
         },
 
@@ -258,8 +261,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         //latticeType
 
-        _cellTypeChanged: function(){
-            var cellType = this.getCellType();
+        _cellTypeChanged: function(cellType){
             if (plist.allLattices[cellType].connection[this.getConnectionType()] === undefined){
                 var connectionType = _.keys(plist.allLattices[cellType].connection)[0];
                 this.set("connectionType", connectionType, {silent:true});
@@ -267,15 +269,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this._connectionTypeChanged();
         },
 
-        _connectionTypeChanged: function(){
+        _connectionTypeChanged: function(connectionType){
+            if (connectionType === undefined) connectionType = this.getConnectionType();
             var cellType = this.get("cellType");
-            var connectionType = this.get("connectionType");
             var appType = _.keys(plist.allLattices[cellType].connection[connectionType].type)[0];
             this.set("applicationType", appType, {silent:true});
-            this._applicationTypeChanged();
+            this._applicationTypeChanged(appType);
         },
 
-        _applicationTypeChanged: function(){
+        _applicationTypeChanged: function(applicationType){
             var latticeData = this._getLatticePlistData();
             this.set("aspectRatio", latticeData.aspectRatio.clone(), {silent:true});
 
