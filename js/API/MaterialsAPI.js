@@ -3,12 +3,15 @@
  */
 
 
-define(['materials'], function(materials){
+define(['materials', 'console'], function(materials, myConsole){
 
+    function _printGetter(output){
+        myConsole.log(output);
+    }
 
     return {
 
-        init: function(json){//create a new material
+        newMaterial: function(json){//create a new material
             return materials.newMaterial(json);//return DMAMaterial object
         },
 
@@ -17,7 +20,9 @@ define(['materials'], function(materials){
         },
 
         getMaterialForId: function(id){
-            return materials.getMaterialForId(id);
+            var output = materials.getMaterialID(id);
+            _printGetter(output);
+            return output;
         },
 
         getMaterials: function(){

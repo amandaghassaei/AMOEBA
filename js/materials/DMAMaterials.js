@@ -3,8 +3,8 @@
  */
 
 //everything is a top level material with a threeMaterial object
-define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material', 'compositeMaterial'],
-    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial){
+define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material', 'compositeMaterial', 'console'],
+    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial, myConsole){
 
 
     var materialsList = {
@@ -15,10 +15,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         color: "#ff0000",
         altColor: "#ff0000",
         noDelete: true
-    });
+    }, {silent:true} );
 
-    var compositeID = 0;
-    var materialID = 0;
+    var compositeID = 1;
+    var materialID = 1;
 
     function getNextCompositeID(){
         return "super" + compositeID++;
@@ -40,7 +40,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
 
 
-    function newMaterial(data, noAdd){
+    function newMaterial(data, options){
+        options = options || {};
         var material, id;
         if (data.sparseCells) {
             id = data.id || getNextCompositeID();
@@ -50,9 +51,10 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
             material = new DMAMaterial(data, id);
         }
 
-        if (noAdd) return material;//in the new material menu, you may init a material before saving changes
+        if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
 
         materialsList[id] = material;
+        if (!options.silent) myConsole.write("materials.newMaterial(" + JSON.stringify(material.toJSON()) + "}");
         return material;
     }
 
@@ -61,11 +63,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
             console.warn("this material was never saved");
             return true;
         }
-        if (!materialsList[id].canDelete()) {
-            console.warn("no delete flag on this material type");
+        var material = materialsList[id];
+        if (!material.canDelete()) {
+            myConsole.warn("noDelete flag on this material type, deleteMaterial operation cancelled");
             return false;
         }
-        materialsList[id].destroy();
+        myConsole.write("materials.deleteMaterial(" + id + "}");
+        myConsole.log(JSON.stringify(material.toJSON()));
+        material.destroy();
         materialsList[id] = null;
         delete materialsList[id];//todo check if being used first (instances)
         var deleted = true;
@@ -89,6 +94,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
             if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
             edited = material.set(data);
         }
+
+        myConsole.write("materials.setMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
 
         if (edited){
             var allChangedMaterialsList = getAllParentComposites(id);
@@ -217,7 +224,8 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         var newMaterials = {};
         _.each(definitions, function(data, key){
             data.noDelete = true;
-            newMaterials[key] = new DMAMaterial(data, key);
+            data.id = key;
+            newMaterial(data, {silent:true});
         });
         return newMaterials;
     }

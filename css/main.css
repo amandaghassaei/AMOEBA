@@ -587,6 +587,7 @@ label {
     border-bottom-width: 0;
     border-top-width: 0;
     overflow: auto;
+    overflow-x: hidden;
     resize: vertical;
     padding: 8px 20px;
     font-family: Courier, monospace;

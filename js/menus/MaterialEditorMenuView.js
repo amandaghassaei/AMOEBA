@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
             var json = {};
             if (material) json = material.toJSON();
 
-            this.material = materials.newMaterial(json, true);
+            this.material = materials.newMaterial(json, {noAdd: true});
         },
 
         getPropertyOwner: function($target){
