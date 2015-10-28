@@ -96,7 +96,7 @@ define(['lattice', 'appState', 'three', 'threeModel', 'numeric', 'eSim', 'eSimFi
         },
 
         propagateToNeighbors: function(index, callback){
-            index.sub(this.get("denseCellsMin"));
+            index.sub(this.get("cellsMin"));
             var xLength = this.cells.length;
             var yLength = this.cells[0].length;
             var zLength = this.cells[0][0].length;

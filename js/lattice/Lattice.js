@@ -367,7 +367,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (currentNav != "navComposite" && this.compositeEditor) this.exitCompositeEditing();
 
             currentNav = plist.allMenus[currentNav].parent || currentNav;
-            if (currentNav == "navSim" || currentNav == "navAssemble") this._parseSparseCell();
+//            if (currentNav == "navAssemble") this._parseSparseCell();
         },
 
         getCompositeData: function(){
