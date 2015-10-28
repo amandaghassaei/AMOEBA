@@ -32,7 +32,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //getters
 
         getSize: function(){
-            return this.get("cellMax").clone().sub(this.get("cellsMin"));
+            var cellsMax = this.get("cellsMax");
+            var cellsMin = this.get("cellsMin");
+            if (!cellsMax || !cellsMin) return new THREE.Vector3(0,0,0);
+            return new THREE.Vector3(1,1,1).add(cellsMax.clone().sub(cellsMin));
         },
 
         getBoundingBox: function(){
@@ -257,7 +260,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             cell.destroy();
 
             this.set("numCells", this.get("numCells")-1);
-            if (this.get("numCells" == 0)) this.clearCells();//todo shrink matrices as you go
+            if (this.get("numCells") == 0) {
+                this._clearCells();
+                return;
+            }
+
+            this._checkForMatrixContraction();
         },
 
         clearCells: function(silent){
@@ -365,95 +373,71 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-//        _checkForMatrixContraction: function(deletedIndex){//this could be more efficient
-//
-//            var cellsMax = this.get("cellsMax");
-//            var cellsMin = this.get("cellsMin");
-//            if (!cellsMin || !cellsMax) {
-//                console.warn("missing param for cells contraction");
-//                return;
-//            }
-//
-//            var newMin = this._contractCellsArray(this.cells, true, cellsMin.clone(), cellsMax.clone());
-//            var newMax = null;
-//            if (newMin) newMax = this._contractCellsArray(cells, false, newMin.clone(), cellsMax.clone());
-//
-//            //todo handle sparse cells
-//
-//
-//            this.set("cellsMax", newMax, {silent:true});
-//            this.set("cellsMin", newMin);
-//
-//            if (!newMin || !newMax){
-//                cells = [[[null]]];
-//            }
-//
-//        },
-//
-//        _contractCellsArray: function(cells, fromFront, cellsMin, cellsMax){
-//
-//            if (cellsMax.x < cellsMin.x || cellsMax.y < cellsMin.y || cellsMax.z < cellsMin.z) {
-//                console.warn("something weird happened");
-//                return null;
-//            }
-//
-//            var xTrim = true;
-//            var yTrim = true;
-//            var zTrim = true;
-//            this._loopCells(cells, function(cell, x, y, z){
-//                if (fromFront){
-//                    if (x == 0) xTrim = false;
-//                    if (y == 0) yTrim = false;
-//                    if (z == 0) zTrim = false;
-//                } else {
-//                    if (x == cellsMax.x-cellsMin.x) xTrim = false;
-//                    if (y == cellsMax.y-cellsMin.y) yTrim = false;
-//                    if (z == cellsMax.z-cellsMin.z) zTrim = false;
-//                }
-//            });
-//
-//            if (!xTrim && !yTrim && !zTrim) {
-//                if (fromFront) return cellsMin;
-//                return cellsMax;
-//            }
-//            if (xTrim) {
-//                if (cells.length == 1) return null;
-//                if (fromFront) {
-//                    cellsMin.x += 1;
-//                    cells.shift();
-//                }
-//                else {
-//                    cellsMax.x -= 1;
-//                    cells.pop();
-//                }
-//            }
-//            if (yTrim || zTrim) {
-//                if (yTrim){
-//                    if (fromFront) cellsMin.y += 1;
-//                    else cellsMax.y -= 1;
-//                }
-//                if (zTrim){
-//                    if (fromFront) cellsMin.z += 1;
-//                    else cellsMax.z -= 1;
-//                }
-//                _.each(cells, function(cellLayer){
-//                    if (yTrim) {
-//                        if (cellLayer.length == 1) return;
-//                        if (fromFront) cellLayer.shift();
-//                        else cellLayer.pop();
-//                    }
-//                    if (!zTrim) return;
-//                    _.each(cellLayer, function(cellColumn){
-//                        if (zTrim) {
-//                            if (cellColumn.length == 1) return;
-//                            if (fromFront) cellColumn.shift();
-//                            else cellColumn.pop();
-//                        }
-//                    });
-//                });
-//            }
-//            return this._contractCellsArray(cells, fromFront, cellsMin, cellsMax);
-//        },
+        _checkForMatrixContraction: function(){//this could be more efficient by using info about deleted
+
+            var cellsMax = this.get("cellsMax");
+            var cellsMin = this.get("cellsMin");
+            if (!cellsMin || !cellsMax) {
+                console.warn("missing param for cells contraction");
+                return;
+            }
+
+            var newMax = this._getContractedCellsMax();
+            var newMin = this._getContractedCellsMin();
+
+            var maxDiff = cellsMax.clone().sub(newMax);
+            var minDiff =  newMin.clone().sub(cellsMin);
+
+            var zero = new THREE.Vector3(0,0,0);
+            if (maxDiff.equals(zero) && minDiff.equals(zero)) return;
+
+            this._contractCellsArray(this.cells, false, maxDiff);
+            this._contractCellsArray(this.sparseCells, false, maxDiff);
+            this._contractCellsArray(this.cells, true, minDiff);
+            this._contractCellsArray(this.sparseCells, true, minDiff);
+
+            this.set("cellsMax", newMax, {silent:true});
+            this.set("cellsMin", newMin);
+        },
+
+        _getContractedCellsMin: function(){
+            var newMin = this.get("cellsMax").clone().sub(this.get("cellsMin"));
+            this._loopCells(this.cells, function(cell, x, y, z){
+                    newMin.min(new THREE.Vector3(x, y, z));
+            });
+            return newMin.add(this.get("cellsMin"));
+        },
+
+        _getContractedCellsMax: function(){
+            var newMax = new THREE.Vector3(0,0,0);
+            this._loopCells(this.cells, function(cell, x, y, z){
+                newMax.max(new THREE.Vector3(x, y, z));
+            });
+            return newMax.add(this.get("cellsMin"));
+        },
+
+        _contractCellsArray: function(cells, fromFront, contractionSize){
+            for (var x=0;x<contractionSize.x;x++){
+                if (cells.length == 1) {
+                    console.warn("nothing left to delete");
+                    return;
+                }
+                if (fromFront) cells.shift();
+                else cells.pop();
+            }
+            _.each(cells, function(cellLayer){
+                for (var y=0;y<contractionSize.y;y++){
+                    if (fromFront) cellLayer.shift();
+                    else cellLayer.pop();
+                }
+                for (var z=0;z<contractionSize.z;z++){
+                    _.each(cellLayer, function(cellColumn){
+                        if (fromFront) cellColumn.shift();
+                        else cellColumn.pop();
+                    });
+                }
+            });
+        },
 
 
 
