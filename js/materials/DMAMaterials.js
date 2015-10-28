@@ -3,20 +3,8 @@
  */
 
 //everything is a top level material with a threeMaterial object
-define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material', 'compositeMaterial', 'console'],
-    function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial, myConsole){
-
-
-    var materialsList = {};
-    var compositeMaterialsList = {};
-
-    newMaterial({
-        id: "deleteMaterial",
-        name: "Delete",
-        color: "#ff0000",
-        altColor: "#ff0000",
-        noDelete: true
-    }, {silent:true} );
+define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlist', 'threeModel', 'material', 'compositeMaterial', 'console'],
+    function(_, Backbone, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial, myConsole){
 
     var compositeID = 1;
     var materialID = 1;
@@ -29,161 +17,187 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         return "material" + materialID++;
     }
 
-    var listener = {};
-    _.extend(listener, Backbone.Events);
+    return new Backbone.Model.extend({
 
-    listener.listenTo(appState, "change:realisticColorScheme", changeColorScheme);
-    listener.listenTo(appState, "change:materialClass", function(){setToDefaultMaterial()});//pass no params
-//    listener.listenTo(lattice, "change:connectionType cellType", function(){materialClassChanged()});
-    listener.listenTo(appState, "change:materialType", setMaterialDefaults);
+        initialize: function(){
+            this.materialsList = {};
+            this.compositeMaterialsList = {};
+            this.newMaterial({
+                id: "deleteMaterial",
+                name: "Delete",
+                color: "#ff0000",
+                altColor: "#ff0000",
+                noDelete: true
+            }, {silent:true});
 
-    setToDefaultMaterial();
+            this.listenTo(appState, "change:realisticColorScheme", this.changeColorScheme);
+            this.listenTo(appState, "change:materialClass", this.loadMaterialClass);
+            this.listenTo(appState, "change:materialType", this.setMaterialDefaults);
+
+            this.loadMaterialClass();
+        },
+
+        loadMaterialClass:function(){
+            var materialClass = appState.get("materialClass");
+            var self = this;
+            _.each(materialsPlist.allMaterials[materialClass], function(json, id){
+                if (self.materialsList[id]) return;
+                json.noDelete = true;
+                json.id = id;
+                self.materialsList[id] = self.newMaterial(json, {silent:true});
+            });
+            this.setToDefaultMaterial();
+        },
+
+        setToDefaultMaterial: function(){
+            var materialClass = appState.get("materialClass");
+            var id = _.keys(materialsPlist.allMaterials[materialClass])[0];
+            if (!this.getMaterialForId(id)) {
+                this.loadMaterialClass();
+                return;
+            }
+            appState.set("materialType", id);
+        },
 
 
 
-    function newMaterial(data, options){
-        options = options || {};
-        data = data || {};
 
-        if (data.sparseCells) {
-            console.warn("you are trying to init a composite material, use newCompositeMaterial()");
-            return newCompositeMaterial(data, options);
-        }
+        //create/delete materials
 
-        var id = data.id || getNextMaterialID();
-        var material = new DMAMaterial(data, id);
+        newMaterial: function(json, options){
+            options = options || {};
+            json = json || {};
 
-        if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
+            if (json.sparseCells) {
+                console.warn("you are trying to init a composite material, use newCompositeMaterial()");
+                return this.newCompositeMaterial(json, options);
+            }
 
-        materialsList[id] = material;
-        if (!options.silent) myConsole.write("materials.newMaterial(" + JSON.stringify(material.toJSON()) + "}");
-        return material;
-    }
+            var id = json.id || getNextMaterialID();
+            var material = new DMAMaterial(json, id);
 
-    function newCompositeMaterial(data, options){
-        options = options || {};
-        data = data || {};
+            if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
 
-        var id = data.id || getNextMaterialID();
-        var material = new DMAMaterial(data, id);
+            this.materialsList[id] = material;
+            if (!options.silent) myConsole.write("materials.newMaterial(" + JSON.stringify(material.toJSON()) + "}");
+            return material;
+        },
 
-        if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
+        newCompositeMaterial: function(json, options){
+            options = options || {};
+            json = data || {};
 
-        compositeMaterialsList[id] = material;
-        if (!options.silent) myConsole.write("materials.newCompositeMaterial(" + JSON.stringify(material.toJSON()) + "}");
-        return material;
-    }
+            var id = json.id || getNextMaterialID();
+            var material = new DMAMaterial(json, id);
 
-    function deleteMaterialById(id){
-        var material = getMaterialForId(id);
-        if (!material){
-            myConsole.warn("this material was never saved, deleteMaterial operation cancelled");
-            return false;
-        }
-        return deleteMaterial(material);
-    }
+            if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
 
-    function deleteMaterial(material){
-        if (!material){
-            myConsole.warn("no material provided, deleteMaterial operation cancelled");
-            return false;
-        }
-        if (!material.canDelete()) {
-            myConsole.warn("noDelete flag on this material type, deleteMaterial operation cancelled");
-            return false;
-        }
-        myConsole.write("materials.deleteMaterialById(" + id + "}");
-        myConsole.log(JSON.stringify(material.toJSON()));
-        if (material.isComposite()){
-            compositeMaterialsList[id] = null;
-            delete compositeMaterialsList[id];//todo check if being used first
-        } else {
-            materialsList[id] = null;
-            delete materialsList[id];//todo check if being used first (instances)
-        }
-        material.destroy();
+            this.compositeMaterialsList[id] = material;
+            if (!options.silent) myConsole.write("materials.newCompositeMaterial(" + JSON.stringify(material.toJSON()) + "}");
+            return material;
+        },
 
-        var deleted = true;
-        if (deleted) setToDefaultMaterial();
-        return deleted;
-    }
+        deleteMaterialById: function(id){
+            var material = getMaterialForId(id);
+            if (!material){
+                myConsole.warn("this material was never saved, deleteMaterial operation cancelled");
+                return false;
+            }
+            return this.deleteMaterial(material);
+        },
 
-    function getMaterialForId(id){
-        return materialsList[id] || compositeMaterialsList[id];
-    }
+        deleteMaterial: function(material){
+            if (!material){
+                myConsole.warn("no material provided, deleteMaterial operation cancelled");
+                return false;
+            }
+            if (!material.canDelete()) {
+                myConsole.warn("noDelete flag on this material type, deleteMaterial operation cancelled");
+                return false;
+            }
+            myConsole.write("materials.deleteMaterialById(" + id + "}");
+            myConsole.log(JSON.stringify(material.toJSON()));
+            if (material.isComposite()){
+                this.compositeMaterialsList[id] = null;
+                delete this.compositeMaterialsList[id];//todo check if being used first
+            } else {
+                this.materialsList[id] = null;
+                delete this.materialsList[id];//todo check if being used first (instances)
+            }
+            material.destroy();
 
-    function setMaterial(id, data){
+            var deleted = true;
+            if (deleted) this.setToDefaultMaterial();
+            return deleted;
+        },
 
-        var material = getMaterialForId(id);
-        if (material.isComposite()){
-            console.warn("use setCompositeMaterial()");
-            return setCompositeMaterial(id, data);
-        }
-        if (!material) return newMaterial(data);
+        getMaterialForId: function(id){
+            return this.materialsList[id] || this.compositeMaterialsList[id];
+        },
 
-        var edited = material.set(data);
-        if (edited) myConsole.write("materials.setMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
 
-        if (edited){
+
+
+        //edit material
+
+        setMaterial: function(id, data){
+
+            var material = this.getMaterialForId(id);
+            if (material.isComposite()){
+                console.warn("use setCompositeMaterial()");
+                return this.setCompositeMaterial(id, data);
+            }
+            if (!material) return this.newMaterial(data);
+
+            var edited = material.set(data);
+            if (edited) myConsole.write("materials.setMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
+            return material;
+        },
+
+        setCompositeMaterial: function(id, data){
+            var material = this.getMaterialForId(id);
+            if (!material) return this.newCompositeMaterial(data);
+
+            var edited = material.set(data);
+            if (edited) myConsole.write("materials.setCompositeMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
+            return material;
+        },
+
+        updateParentProperties: function(parents){
             //update properties of all composites containing this element
             var allChangedMaterialsList = getAllParentComposites(id);
-        }
-    }
+        },
 
-    function setCompositeMaterial(id, data){
-
-        var material = getMaterialForId(id);
-        if (!material) return newCompositeMaterial(data);
-
-        var edited = material.setMetaData(data);
-        var materialDefinitionEdited = material.setData(data);
-        edited |= materialDefinitionEdited;
-
-        if (edited) myConsole.write("materials.setCompositeMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
-
-        if (materialDefinitionEdited){
-
-            //update composite children
-            //update elem children
-            //update properties
-
+        upDataParentComposition: function(parents){
             var allChangedMaterialsList = getAllParentComposites(id);
             allChangedMaterialsList.push(id);
 
             _.each(allChangedMaterialsList, function(key){
-                materialsList[key].compositeChildren = getChildCellTypes(materialsList[key].sparseCells, false);
-                materialsList[key].elementaryChildren = getChildCellTypes(materialsList[key].sparseCells, true);
+//                materialsList[key].compositeChildren = getChildCellTypes(materialsList[key].sparseCells, false);
+//                materialsList[key].elementaryChildren = getChildCellTypes(materialsList[key].sparseCells, true);
             });
 
             lattice.reinitAllCellsOfTypes(allChangedMaterialsList);
+        },
+
+        getDeleteMaterial: function(){
+            return this.getMaterialForId("deleteMaterial").getThreeMaterial();
+        },
+
+        isComposite: function(id){
+            var material = this.getMaterialForId(id);
+            if (!material) {
+                console.warn("no material found with id " + id);
+                return false;
+            }
+            return material.isComposite();
         }
-    }
+
+
+    });
 
 
 
-
-
-
-
-
-
-    function getDeleteMaterial(){
-        return materialsList.deleteMaterial.threeMaterial;
-    }
-
-
-
-
-
-
-    function isComposite(id){
-        var material = this.getMaterialForId(id);
-        if (!material) {
-            console.warn("no material found with id " + id);
-            return false;
-        }
-        return material.isComposite();
-    }
 
     function getCompositeKeys(){
         return _.keys(compositeMaterialsList);
@@ -236,46 +250,15 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         return properties;
     }
 
-    function loopCells(cells, callback){
-        for (var x=0;x<cells.length;x++){
-            for (var y=0;y<cells[0].length;y++){
-                for (var z=0;z<cells[0][0].length;z++){
-                    callback(cells[x][y][z], x, y, z);
-                }
-            }
-        }
-    }
-
-
-
-
-
-
-
 
 
 
 
     //events
 
-    function setToDefaultMaterial(triggerEvent){
-        var materialClass = appState.get("materialClass");
-        var newDefaultType = _.keys(materialsPlist.allMaterials[materialClass])[0];
-        if (!materialsList[newDefaultType]) _.extend(materialsList, parseClassFromDefinitions(materialsPlist.allMaterials[materialClass]));
-        if (!materialsList[newDefaultType]) console.warn("material type " + newDefaultType + "  not in definition for " + materialClass);
-        if (triggerEvent === undefined) triggerEvent = false;
-        appState.set("materialType", newDefaultType, {silent:!triggerEvent});
-    }
 
-    function parseClassFromDefinitions(definitions){
-        var newMaterials = {};
-        _.each(definitions, function(data, key){
-            data.noDelete = true;
-            data.id = key;
-            newMaterial(data, {silent:true});
-        });
-        return newMaterials;
-    }
+
+
 
     function changeColorScheme(){
         var state = appState.get("realisticColorScheme");
@@ -294,24 +277,4 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
             appState.set("superCellRange", new THREE.Vector3(appState.get("gikLength"), 1, 1));
         }
     }
-
-
-    return {
-        list: materialsList,
-        newMaterial: newMaterial,
-        newCompositeMaterial: newCompositeMaterial,
-        setMaterial: setMaterial,
-        deleteMaterialById: deleteMaterialById,
-        deleteMaterial: deleteMaterial,
-        getMaterialForId: getMaterialForId,
-        isComposite: isComposite,
-
-
-        getCompositeKeys: getCompositeKeys,
-        getVaildAvailableCompositeKeys: getVaildAvailableCompositeKeys,
-        getChildCellTypes:getChildCellTypes,
-        setToDefaultMaterial: setToDefaultMaterial,
-        getDeleteMaterial: getDeleteMaterial,
-        getNextCompositeID: getNextCompositeID
-    };
 });
