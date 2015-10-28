@@ -104,6 +104,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         },
 
         setAspectRatio: function(aspectRatio, silent){
+            return;
             if (!aspectRatio.x || !aspectRatio.y || !aspectRatio.z || aspectRatio.x<0 || aspectRatio.y<0 || aspectRatio.z<0) {//no 0, undefined, null, or neg #'s
                 myConsole.warn("invalid aspect ratio params, lattice.setAspectRatio operation cancelled");
                 return;
