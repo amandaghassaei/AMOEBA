@@ -7,8 +7,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
     function(_, THREE, appState, lattice, materialsPlist, three, DMAMaterial, DMACompositeMaterial, myConsole){
 
 
-    var materialsList = {
-    };
+    var materialsList = {};
+    var compositeMaterialsList = {};
+
     newMaterial({
         id: "deleteMaterial",
         name: "Delete",
@@ -43,15 +44,14 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
     function newMaterial(data, options){
         options = options || {};
         data = data || {};
-        var material, id;
 
         if (data.sparseCells) {
-            id = data.id || getNextCompositeID();
-            material = new DMACompositeMaterial(data, id);
-        } else {
-            id = data.id || getNextMaterialID();
-            material = new DMAMaterial(data, id);
+            console.warn("you are trying to init a composite material, use newCompositeMaterial()");
+            return newCompositeMaterial(data, options);
         }
+
+        var id = data.id || getNextMaterialID();
+        var material = new DMAMaterial(data, id);
 
         if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
 
@@ -60,46 +60,93 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
         return material;
     }
 
-    function deleteMaterial(id){
-        if (materialsList[id] === undefined){
-            console.warn("this material was never saved");
-            return true;
+    function newCompositeMaterial(data, options){
+        options = options || {};
+        data = data || {};
+
+        var id = data.id || getNextMaterialID();
+        var material = new DMAMaterial(data, id);
+
+        if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
+
+        compositeMaterialsList[id] = material;
+        if (!options.silent) myConsole.write("materials.newCompositeMaterial(" + JSON.stringify(material.toJSON()) + "}");
+        return material;
+    }
+
+    function deleteMaterialById(id){
+        var material = getMaterialForId(id);
+        if (!material){
+            myConsole.warn("this material was never saved, deleteMaterial operation cancelled");
+            return false;
         }
-        var material = materialsList[id];
+        return deleteMaterial(material);
+    }
+
+    function deleteMaterial(material){
+        if (!material){
+            myConsole.warn("no material provided, deleteMaterial operation cancelled");
+            return false;
+        }
         if (!material.canDelete()) {
             myConsole.warn("noDelete flag on this material type, deleteMaterial operation cancelled");
             return false;
         }
-        myConsole.write("materials.deleteMaterial(" + id + "}");
+        myConsole.write("materials.deleteMaterialById(" + id + "}");
         myConsole.log(JSON.stringify(material.toJSON()));
+        if (material.isComposite()){
+            compositeMaterialsList[id] = null;
+            delete compositeMaterialsList[id];//todo check if being used first
+        } else {
+            materialsList[id] = null;
+            delete materialsList[id];//todo check if being used first (instances)
+        }
         material.destroy();
-        materialsList[id] = null;
-        delete materialsList[id];//todo check if being used first (instances)
+
         var deleted = true;
         if (deleted) setToDefaultMaterial();
         return deleted;
     }
 
     function getMaterialForId(id){
-        return materialsList[id];
+        return materialsList[id] || compositeMaterialsList[id];
     }
 
     function setMaterial(id, data){
 
         var material = getMaterialForId(id);
-
-        var edited = false;
-        if (!material) {
-            newMaterial(data);
-            return;
-        } else {
-            if (data.elementaryChildren) data.properties = getPropertiesFromChildren(data.elementaryChildren);
-            edited = material.set(data);
+        if (material.isComposite()){
+            console.warn("use setCompositeMaterial()");
+            return setCompositeMaterial(id, data);
         }
+        if (!material) return newMaterial(data);
 
-        myConsole.write("materials.setMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
+        var edited = material.set(data);
+        if (edited) myConsole.write("materials.setMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
 
         if (edited){
+            //update properties of all composites containing this element
+            var allChangedMaterialsList = getAllParentComposites(id);
+        }
+    }
+
+    function setCompositeMaterial(id, data){
+
+        var material = getMaterialForId(id);
+        if (!material) return newCompositeMaterial(data);
+
+        var edited = material.setMetaData(data);
+        var materialDefinitionEdited = material.setData(data);
+        edited |= materialDefinitionEdited;
+
+        if (edited) myConsole.write("materials.setCompositeMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
+
+        if (materialDefinitionEdited){
+
+            //update composite children
+            //update elem children
+            //update properties
+
             var allChangedMaterialsList = getAllParentComposites(id);
             allChangedMaterialsList.push(id);
 
@@ -130,18 +177,16 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
 
 
     function isComposite(id){
-        return id.substr(0,5) == "super";
-//
-//        var material = getMaterialForId(id);
-//        if (material) return material.isComposite();
-//        console.warn("no material found with id = " + id);
-//        return false;
+        var material = this.getMaterialForId(id);
+        if (!material) {
+            console.warn("no material found with id " + id);
+            return false;
+        }
+        return material.isComposite();
     }
 
     function getCompositeKeys(){
-        return _.filter(_.keys(materialsList), function(key){
-            return isComposite(key);
-        });
+        return _.keys(compositeMaterialsList);
     }
 
     function getVaildAvailableCompositeKeys(id){//for "available materials" list in composite editor
@@ -243,7 +288,7 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
     function setMaterialDefaults(){
         var materialType = appState.get("materialType");
         appState.set("superCellIndex", new THREE.Vector3(0,0,0));
-        if (materialsList[materialType].getDimensions()){
+        if (materialsList[materialType].getDimensions){
             appState.set("superCellRange", materialsList[materialType].getDimensions());
         } else if (lattice.get("connectionType") == "gik"){
             appState.set("superCellRange", new THREE.Vector3(appState.get("gikLength"), 1, 1));
@@ -254,7 +299,9 @@ define(['underscore', 'three', 'appState', 'lattice', 'materialsPlist', 'threeMo
     return {
         list: materialsList,
         newMaterial: newMaterial,
+        newCompositeMaterial: newCompositeMaterial,
         setMaterial: setMaterial,
+        deleteMaterialById: deleteMaterialById,
         deleteMaterial: deleteMaterial,
         getMaterialForId: getMaterialForId,
         isComposite: isComposite,

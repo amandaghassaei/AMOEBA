@@ -15,8 +15,12 @@ define(['materials', 'console'], function(materials, myConsole){
             return materials.newMaterial(json);//return DMAMaterial object
         },
 
-        destroy: function(material){
-            materials.deleteMaterial(material.getID());
+        deleteMaterial: function(material){
+            materials.deleteMaterial(material);
+        },
+
+        deleteMaterialById: function(materialID){
+            materials.deleteMaterialById(materialID);
         },
 
         getMaterialForId: function(id){

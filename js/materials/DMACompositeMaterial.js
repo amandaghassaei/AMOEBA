@@ -5,15 +5,45 @@
 
 define(['material'], function(DMAMaterial){
 
-    function DMACompositeMaterial(data){
-        DMAMaterial.call(this, data);
+    var materialNum = 1;
+
+    function getNextMaterialNum(){
+        return materialNum++;
+    }
+
+    function DMACompositeMaterial(json, id){
+
+        var defaults = {
+            elementaryCells: [],
+            compositeCells: [],
+            sparseCells: [[[null]]],//store as json
+            cells: [[[null]]],//store as json
+            cellsMin: null,
+            cellsMax: null
+        };
+
+        json = _.extend(defaults, json);
+        DMAMaterial.call(this, json, id);
     }
     DMACompositeMaterial.prototype = Object.create(DMAMaterial.prototype);
 
-    DMACompositeMaterial.prototype.set = function(data){
-        var edited = DMAMaterial.prototype.set.call(this, data);
-        if (this.sparseCells) edited |= !(_.isEqual(data.sparseCells, this.sparseCells));
+    DMACompositeMaterial.prototype.generateMaterialName = function(){
+        return "Composite Material " + materialNum++;
+    };
+
+    DMACompositeMaterial.prototype.setData = function(data){
+
+        var edited = false;
+        if (data.sparseCells){
+            edited |= !(_.isEqual(data.sparseCells, this.sparseCells));
+            this.sparseCells = data.sparseCells;
+            this.cells = this.parseSparseCells(this.sparseCells);
+        }
         return edited;
+    };
+
+    DMACompositeMaterial.prototype.parseSparseCells = function(sparseCells){
+        return [[[null]]];
     };
 
     DMACompositeMaterial.prototype.getDimensions = function(){
@@ -29,7 +59,7 @@ define(['material'], function(DMAMaterial){
     };
 
     DMACompositeMaterial.prototype.getCells = function(){
-        return [[[null]]]
+        return this.cells;
     };
 
     DMACompositeMaterial.prototype.getSparseCells = function(){
@@ -37,18 +67,14 @@ define(['material'], function(DMAMaterial){
     };
 
     DMACompositeMaterial.prototype.toJSON = function(){
-        return {
-            name: this.name,
-            color: this.color,
-            altColor: this.altColor,
-            noDelete: this.noDelete,
-            properties: this.properties,
+        var json = DMAMaterial.prototype.toJSON.call(this);
+        return _.extend(json, {
             cellsMin: this.cellsMin,
             cellsMax: this.cellsMax,
             compositeChildren: this.compositeChildren,
             elementaryChildren: this.elementaryChildren,
             sparseCells: this.sparseCells
-        }
+        });
     };
 
     return DMACompositeMaterial;

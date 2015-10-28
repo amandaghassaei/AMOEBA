@@ -16,15 +16,16 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
         _initialize: function(options){
 
             var materialID = options.myObject;
-
-            if (!materialID) {
-                console.warn("no editing material id passed in");
-                this.model.set("currentNav", plist.allMenus.navMaterial.parent);
-            }
-
-            var material = materials.getMaterialForId(materialID);
             var json = {};
-            if (material) json = material.toJSON();
+
+            if (materialID) {
+                var material = materials.getMaterialForId(materialID);
+                if (!material) {
+                    console.warn("invalid editing material id " + materialID + " passed in");
+                    this.model.set("currentNav", plist.allMenus.navMaterial.parent);
+                }
+                json = material.toJSON();
+            }
 
             this.material = materials.newMaterial(json, {noAdd: true});
         },
@@ -58,7 +59,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
         },
 
         deleteExitMenu: function(){
-            var deleted = materials.deleteMaterial(this.material.getID());
+            var deleted = materials.deleteMaterial(this.material);
             return deleted;
         },
 

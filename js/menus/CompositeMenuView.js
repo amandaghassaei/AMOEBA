@@ -99,7 +99,7 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
                 console.warn("lattice not in composite mode for delete composite call");
                 return true;
             }
-            var deleted = materials.deleteMaterial(this.composite.get("id"));
+            var deleted = materials.deleteMaterial(this.composite);
             return deleted;
         },
 

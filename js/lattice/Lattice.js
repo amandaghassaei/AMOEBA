@@ -400,6 +400,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         },
 
         reinitAllCellsOfTypes: function(types){//when material definition is changed
+            //todo add cells array to this
             this._loopCells(this.sparseCells, function(cell, x, y, z, self){
                 var material = cell.getMaterial();
                 if (material && material.isComposite() && types.indexOf(material.getID()) > -1){

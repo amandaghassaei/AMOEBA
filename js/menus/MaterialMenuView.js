@@ -23,7 +23,7 @@ define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattic
 
         _newComposite: function(e){
             e.preventDefault();
-            this._openCompositeEditor("new");
+            this._openCompositeEditor();
         },
 
         _editComposite: function(e){
@@ -51,7 +51,7 @@ define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattic
 
         _newMaterial: function(e){
             e.preventDefault();
-            this._openMaterialEditor("new");
+            this._openMaterialEditor();
         },
 
         _openMaterialEditor: function(materialID){

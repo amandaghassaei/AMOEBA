@@ -7,11 +7,6 @@ define(['underscore', 'appState'], function(_, appState){
 
     var materialNum = 1;
 
-    function getNextMaterialNum(){
-        return materialNum++;
-    }
-
-
     function DMAMaterial(json, id){
         this.id = id;
 
@@ -32,26 +27,60 @@ define(['underscore', 'appState'], function(_, appState){
         return this.id;
     };
 
-    DMAMaterial.prototype.set = function(data){
+    DMAMaterial.prototype.setMetaData = function(data){
 
         if (data.id) delete data.id;//cannot change id once set
+        if (data.noDelete) delete data.noDelete;//immutable
 
         //check if colors have changed
         var oldColor = this.color;
         var oldAltColor = this.altColor;
 
+        var changed = false;
         var self = this;
-        _.each(_.keys(data), function(key){
-            if (data[key] && data[key].x) self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
-            else self[key] = data[key];
+        _.each(["name", "color", "altColor"], function(key){
+            if (data[key] && data[key] != self[key]) {
+                self[key] = data[key];
+                changed = true;
+            }
         });
-        if (this.name === "") this.name = "Material " + getNextMaterialNum();
+
+        if (this.name = "" && data.name === undefined){
+            this.name = this.generateMaterialName();
+            changed = true;
+        }
 
         if (!this.threeMaterial ||
             (data.color && oldColor != data.color) ||
             (data.altColor && oldAltColor != data.altColor)) this.changeColorScheme();//don't need to set edited flag for this, render will handle it
 
-        return false;//composite materials have edited flag to trigger upstream changes
+        this.properties = this.properties || {};
+        if (data.properties){
+            _.each(data.properties, function(val, key){
+                if (self.properties[key] != val){
+                    self.properties[key] = val;
+                    changed  = true;
+                }
+            });
+        }
+
+        return changed;
+    };
+
+    DMAMaterial.prototype.generateMaterialName = function(){
+        return "Material " + materialNum++;
+    };
+
+    DMAMaterial.prototype.setData = function(data){
+        return false;
+    };
+
+    DMAMaterial.prototype.set = function(data){
+
+        var changed = this.setMetaData(data);
+        changed |= this.setData(data);
+
+        return changed;
     };
 
     DMAMaterial.prototype.changeColorScheme = function(state){
@@ -83,7 +112,7 @@ define(['underscore', 'appState'], function(_, appState){
 
     DMAMaterial.prototype.getThreeMaterial = function(){
         if (!this.threeMaterial) {
-            console.warn("no transparentMaterial found for material " + this.getID());
+            console.warn("no three material found for material " + this.getID());
             return null;
         }
         return this.threeMaterial;
@@ -91,14 +120,10 @@ define(['underscore', 'appState'], function(_, appState){
 
     DMAMaterial.prototype.getTransparentMaterial = function(){
         if (!this.transparentMaterial) {
-            console.warn("no transparentMaterial found for material " + this.getID());
+            console.warn("no transparent material found for material " + this.getID());
             return null;
         }
         return this.transparentMaterial;
-    };
-
-    DMAMaterial.prototype.getDimensions = function(){
-        return false;
     };
 
     DMAMaterial.prototype.isComposite = function(){
