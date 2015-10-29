@@ -2,10 +2,8 @@
  * Created by aghassaei on 6/10/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materialsPlist', 'lattice', 'globals', 'materials', 'text!menus/templates/CompositeMenuView.html'],
-    function($, _, MenuParentView, CompositeEditorLattice, materialsPlist, lattice, globals, materials, template){
-
-    var bounds;
+define(['jquery', 'underscore', 'three', 'menuParent', 'compositeEditorLattice', 'materialsPlist', 'lattice', 'globals', 'materials', 'text!menus/templates/CompositeMenuView.html'],
+    function($, _, THREE, MenuParentView, CompositeEditorLattice, materialsPlist, lattice, globals, materials, template){
 
     return MenuParentView.extend({
 
@@ -41,7 +39,6 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
         },
 
         _setToCompositeMode: function(json){
-            console.log(json);
             lattice.hideCells();
             if (lattice.inCompositeMode()) {
                 console.warn("composite editor already allocated");
@@ -73,18 +70,30 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
 
         _saveCompositeToFile: function(e){
             e.preventDefault();
+
+            this.material.set(this._buildMaterialJSON());//todo this should be a callback
             var self = this;
             require(['fileSaver'], function(fileSaver){
-                self._syncLatticeToMaterial();
                 fileSaver.saveMaterial(self.material);
             });
         },
 
-        _syncLatticeToMaterial: function(){
+        _buildMaterialJSON: function(){
             var json = {
-                sparseCells: this.compositeEditor.getSparseCellsJSON()
+                sparseCells: this.compositeEditor.getSparseCellsJSON(),
+                dimensions: this.compositeEditor.getSize()
+
             };
-            this.material.set(json);
+            if (this.compositeEditor.getNumCells() > 0){
+                _.extend(json, {
+                    origin: new THREE.Vector3(0,0,0),
+                    cellsMin: new THREE.Vector3(0,0,0),
+                    cellsMax: this.compositeEditor.get("cellsMax").clone().sub(this.compositeEditor.get("cellsMin"))
+                });
+            } else {
+                console.warn("composite material has no cells");
+            }
+            return json;
         },
 
         saveExitMenu: function(){
@@ -93,8 +102,11 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
                 console.warn("lattice not in composite mode for finish composite call");
                 return false;
             }
-            this._syncLatticeToMaterial();
-            materials.setCompositeMaterial(this.material.getID(), this.material.toJSON());
+            if (this.compositeEditor.getNumCells() > 0){
+                materials.setCompositeMaterial(this.material.getID(), _.extend(this.material.toJSON(), this._buildMaterialJSON()));
+            } else {
+                console.warn("no cells in composite definition, save cancelled");
+            }
             return true;
         },
 

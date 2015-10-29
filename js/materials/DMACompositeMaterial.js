@@ -39,7 +39,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
         var self = this;
         _.each(["origin", "cellsMin", "cellsMax", "dimensions"], function(key){
-            if (data[key] !== undefined && data[key] != self[key]) {
+            if (data[key] && data[key] != self[key]) {
                 self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
                 changed = true;
             }
@@ -61,7 +61,6 @@ define(['three', 'material'], function(THREE, DMAMaterial){
         }
 
         if (edited){
-            console.log("composite material edited");
             var self = this;
             require(['materials'], function(materials){
 
@@ -173,7 +172,6 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
     DMACompositeMaterial.prototype.toJSON = function(){
         var json = DMAMaterial.prototype.toJSON.call(this);
-        console.log(this.origin);
         return _.extend(json, {
             compositeChildren: this.compositeChildren,
             elementaryChildren: this.elementaryChildren,

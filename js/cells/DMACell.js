@@ -482,6 +482,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("cell overlap, something bad happened");
             return;
         }
+        console.log(cellsArray);
         cellsArray[index.x][index.y][index.z] = this;
     };
 

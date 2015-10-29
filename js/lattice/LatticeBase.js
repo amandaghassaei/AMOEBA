@@ -154,6 +154,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.makeCellWithJSON(json, function(cell){
 
                 var flattenedCells = cell.getCells();
+                console.log(cell);
                 var bounds = cell.getAbsoluteBounds();
 
                 if (self._checkForCellOverlap(flattenedCells, bounds.min)){
