@@ -26,28 +26,32 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cubeCell'],
 
         if (lattice.get("partType") == "willLego") {
             require(['gikPart'], function(PartSubclass){
+                if (!self.index) return;
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
         } else if (lattice.get("partType") == "willLegoLowPoly") {
             require(['gikPartLowPoly'], function(PartSubclass){
+                if (!self.index) return;
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
         } else if (lattice.get("partType") == "lego") {
             require(['legoPart'], function(PartSubclass){
+                if (!self.index) return;
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
         } else if (lattice.get("partType") == "dnaLego") {
             require(['dnaLegoPart'], function(PartSubclass){
+                if (!self.index) return;
                 parts.push(new PartSubclass(self.index.x, self));
                 callback(parts);
             });
         } else if (lattice.get("partType") == "dnaStraight") {
             require(['dnaStraightPart'], function(PartSubclass){
+                if (!self.index) return;
                 var parent = lattice.getUItarget();
-                parent._parseSparseCell();//todo this should get checked
                 var index = self.getLatticeIndex();
                 if (parent.cells[index.x][index.y][index.z+1]) var topNeighbor = parent.cells[index.x][index.y][index.z+1];
                 if (parent.cells[index.x][index.y][index.z-1]) var bottomNeighbor = parent.cells[index.x][index.y][index.z-1];
