@@ -15,6 +15,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
 
+        setSparseCells: function(cells, offset){
+            if (cells === undefined || cells == null) {
+                console.warn("no cells given to setSparseCells");
+                return;
+            }
+            this._setSparseCells(cells, offset);
+        },
 
 
 
@@ -32,29 +39,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return three.getCompositeCells();
         },
 
-
-
-
-        _setSparseCells: function(cells, subclass){
-
-            this._clearCells();//composite lattice should always be empty
-
-            console.log(this.get("numCells"));
-            var numCells = this.get("numCells");
-
-            var cellsMax = this.get("cellsMax");
-            var cellsMin = this.get("cellsMin");
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cellsMax, cellsMin);
-
-            var self = this;
-            require([subclass], function(subclassObject){
-                _.extend(self, subclassObject);
-                if (numCells>0) {
-                    self._bindRenderToNumCells(numCells);
-                    self.parseCellsJSON(cells);
-                }
-            });
-        },
 
 
 

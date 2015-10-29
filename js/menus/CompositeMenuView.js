@@ -17,14 +17,10 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
         _initialize: function(options){
 
             var id = options.myObject;
-            if (!id) {
-                console.warn("no composite editor id");
-                return;
-            }
 
             var material;
             if (id) material = materials.getMaterialForId(id);
-            if (!material.isComposite()){
+            if (material && !material.isComposite()){
                 console.warn("material " + id + " is not a composite");
 
             }
@@ -45,13 +41,14 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
         },
 
         _setToCompositeMode: function(json){
+            console.log(json);
             lattice.hideCells();
             if (lattice.inCompositeMode()) {
                 console.warn("composite editor already allocated");
                 lattice.exitCompositeEditing();
             }
             var compositeLattice = new CompositeEditorLattice();
-            compositeLattice.setSparseCells(json.sparseCells);
+            compositeLattice.setSparseCells(json.sparseCells, lattice.getOffset());
             lattice.setToCompositeMode(compositeLattice);
             return compositeLattice;
         },
@@ -85,7 +82,7 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
 
         _syncLatticeToMaterial: function(){
             var json = {
-                sparseCells: this.compositeEditor.getSparseCells()
+                sparseCells: this.compositeEditor.getSparseCellsJSON()
             };
             this.material.set(json);
         },
@@ -97,7 +94,7 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
                 return false;
             }
             this._syncLatticeToMaterial();
-            materials.set(this.material.getID(), this.material.toJSON());
+            materials.setCompositeMaterial(this.material.getID(), this.material.toJSON());
             return true;
         },
 
@@ -110,9 +107,11 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), materials.toJSON(), globals, this.material.toJSON(), this.compositeEditor.toJSON(),
+            var compositeParents = this.material.getParentComposites(materials);
+            return _.extend(this.model.toJSON(), materials.toJSON(), materialsPlist, globals, this.material.toJSON(), this.compositeEditor.toJSON(),
                 {
-                    dimensions: this.compositeEditor.getSize()
+                    dimensions: this.compositeEditor.getSize(),
+                    validCompositeMaterials: _.difference(materials.compositeMaterialsList, compositeParents)
                 });
         },
 

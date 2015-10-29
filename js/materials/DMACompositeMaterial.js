@@ -21,7 +21,8 @@ define(['three', 'material'], function(THREE, DMAMaterial){
             cellsMin: null,
             cellsMax: null,
             dimensions: new THREE.Vector3(0,0,0),
-            numCells: 0
+            numCells: 0,
+            origin: new THREE.Vector3(0,0,0)
         };
 
         json = _.extend(defaults, json);
@@ -31,6 +32,19 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
     DMACompositeMaterial.prototype.generateMaterialName = function(){
         return "Composite Material " + materialNum++;
+    };
+
+    DMACompositeMaterial.prototype.setMetaData = function(data){
+        var changed = DMAMaterial.prototype.setMetaData.call(this, data);
+
+        var self = this;
+        _.each(["origin", "cellsMin", "cellsMax", "dimensions"], function(key){
+            if (data[key] !== undefined && data[key] != self[key]) {
+                self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
+                changed = true;
+            }
+        });
+        return changed;
     };
 
     DMACompositeMaterial.prototype.setData = function(data){
@@ -65,29 +79,16 @@ define(['three', 'material'], function(THREE, DMAMaterial){
         return edited;
     };
 
-    DMACompositeMaterial.prototype.getParentComposites = function(materials){
-        var parentComposites = [];
-        var id = this.getID();
-        _.each(materials.compositeMaterialsList, function(material, key){
-            if (key == id) return;
-            var compositeChildren = material.getCompositeChildren();
-            if (compositeChildren.indexOf(id) >= 0){
-                parentComposites.push(key);
-            }
-        });
-        return parentComposites;
-    };
-
     DMACompositeMaterial.prototype.getFirstGenChildMaterials = function(materials){
         var compositeChildrenFirstGen = [];
         var elementaryChildrenFirstGen = [];
         this.loopCells(function(cell, x, y, z){
-            var materialID = cell.materialID;
+            var materialID = cell.materialID;//cells json
             var material = materials.getMaterialForId(materialID);
             if (material.isComposite()){
-                if (compositeChildrenFirstGen.indexOf(materialID) == -1) compositeChildren.push(materialID);
+                if (compositeChildrenFirstGen.indexOf(materialID) == -1) compositeChildrenFirstGen.push(materialID);
             } else {
-                if (elementaryChildrenFirstGen.indexOf(materialID) == -1) elementaryChildren.push(materialID);
+                if (elementaryChildrenFirstGen.indexOf(materialID) == -1) elementaryChildrenFirstGen.push(materialID);
             }
         });
         return {compositeCells:compositeChildrenFirstGen, elementaryCells:elementaryChildrenFirstGen};
@@ -172,13 +173,15 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
     DMACompositeMaterial.prototype.toJSON = function(){
         var json = DMAMaterial.prototype.toJSON.call(this);
+        console.log(this.origin);
         return _.extend(json, {
             compositeChildren: this.compositeChildren,
             elementaryChildren: this.elementaryChildren,
             sparseCells: this.sparseCells,
             dimensions: this.dimensions,
             isComposite: true,
-            numCells: this.numCells
+            numCells: this.numCells,
+            origin: this.origin
         });
     };
 

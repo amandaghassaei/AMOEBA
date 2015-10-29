@@ -39,11 +39,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getBoundingBox: function(){
-            return {min: this.get("cellsMin").clone(), max:this.get("cellsMax").clone()};
+            var cellsMax = this.get("cellsMax");
+            var cellsMin = this.get("cellsMin");
+            if (!cellsMax || !cellsMin) return new THREE.Vector3(0,0,0);
+            return {min: cellsMin.clone(), max:cellsMax.clone()};
         },
 
         getOffset: function(){
-            return this.get("cellsMin").clone();
+            if (this.get("cellMin")) return this.get("cellsMin").clone();
+            return null;
         },
 
         getNumCells: function(){
@@ -97,7 +101,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //add/remove cells
 
         makeCellWithJSON: function(json, callback){
-            var subclassFile = this.getCellSubclassFile();
+            var subclassFile = appState.lattice.getCellSubclassFile();
             require(['materials'], function(materials){
                 var materialID = json.materialID || appState.get("materialType");
                 if (materials.isComposite(materialID)) subclassFile = "compositeCell";
@@ -287,6 +291,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
+        _setSparseCells: function(cells, offset){
+
+            offset = offset || this.getOffset() || new THREE.Vector3(0,0,0);
+            if(this.get("numCells")>0) this.clearCells();
+            this.set("cellsMin", new THREE.Vector3(offset.x, offset.y, offset.z));
+            this.parseCellsJSON(cells);
+        },
 
 
 

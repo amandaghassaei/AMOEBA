@@ -177,37 +177,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         },
 
         reloadCells: function(){
-            this._setSparseCells(this.sparseCells, this._getSubclassForLatticeType());
-        },
-
-        setSparseCells: function(cells, offset){
-            if (cells === undefined || cells == null) {
-                console.warn("no cells given to setSparseCells");
-                return;
-            }
-            myConsole.clear();
-            var cellsString = JSON.stringify(cells);
-            myConsole.write("lattice.setCells(" + cellsString + ", " + JSON.stringify(offset) + ")");
-
-            offset = offset || this.getOffset();
-            this.set("cellsMin", offset, {silent:true});
-            this.set("cellsMax", (new THREE.Vector3(cells.length, cells[0].length, cells[0][0].length)).add(offset), {silent:true});
-
-            this._setSparseCells(JSON.parse(cellsString), this._getSubclassForLatticeType());
-        },
-
-        _getSubclassForLatticeType: function(){
-            var cellType = this.get("cellType");
-            var connectionType = this.get("connectionType");
-            var subclass = plist.allLattices[cellType].connection[connectionType].subclass;
-            if (subclass === undefined){
-                console.warn("unrecognized cell type " + cellType);
-                return null;
-            }
-            return subclass;
-        },
-
-        _setSparseCells: function(cells, subclass){
 
             if ((this.get("connectionType") == "gik" || this.previous("connectionType") == "gik") &&
                 this.get("applicationType") != this.previous("applicationType")) this.clearCells();
@@ -225,15 +194,38 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
             if (cellsMax && cellsMin) this._expandCellsMatrix(cellsMax, cellsMin);
 
-            var self = this;
-            require([subclass], function(subclassObject){
+              var self = this;
+            require([this._getSubclassForLatticeType()], function(subclassObject){
                 _.extend(self, subclassObject);
                 self._initLatticeType();//init for lattice subclass
                 if (numCells > 0) {
                     self._bindRenderToNumCells(numCells);
-                    self.parseCellsJSON(cells);
+                    self._setSparseCells(self.sparseCells, cellsMin);
                 }
             });
+        },
+
+        setSparseCells: function(cells, offset){
+            if (cells === undefined || cells == null) {
+                console.warn("no cells given to setSparseCells");
+                return;
+            }
+            myConsole.clear();
+            var cellsString = JSON.stringify(cells);
+            myConsole.write("lattice.setCells(" + cellsString + ", " + JSON.stringify(offset) + ")");
+
+            this._setSparseCells(JSON.parse(cellsString), offset);
+        },
+
+        _getSubclassForLatticeType: function(){
+            var cellType = this.get("cellType");
+            var connectionType = this.get("connectionType");
+            var subclass = plist.allLattices[cellType].connection[connectionType].subclass;
+            if (subclass === undefined){
+                console.warn("unrecognized cell type " + cellType);
+                return null;
+            }
+            return subclass;
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type set to cell mode

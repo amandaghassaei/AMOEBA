@@ -10,13 +10,22 @@
         </div><br/><br/>
 <% } %>
 Materials:<br/>
-<% _.each(materials, function(material, key){ %>
-    <% if (key == "deleteMaterial") return; %>
+<% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
+    <% var material = materials[key]; %>
     <label class="radio colorSwatches">
         <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         <div class="materialColorSwatch">
         <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
         <span><span class="materialListTitle"><%= material.name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
+    </label>
+<% }); %>
+<% _.each(materials, function(material, key){ %>
+    <% if(material.noDelete) return; %>
+    <label class="radio colorSwatches">
+        <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <div class="materialColorSwatch">
+        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+        <span><%= material.name %></span></div>
     </label>
 <% }); %>
 <a id="newElementaryMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material Definition</a>

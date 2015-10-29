@@ -9,11 +9,12 @@ Display Color: &nbsp;&nbsp;
 <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/>
 Available Materials:<br/>
     <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
+        <% var material = materials[key]; %>
         <label class="radio colorSwatches">
             <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             <div class="materialColorSwatch">
-            <div style="background-color:<% if(realisticColorScheme){ %><%= allMaterials[materialClass][key].color %><% }else{ %><%= allMaterials[materialClass][key].altColor %><% } %>"></div>
-            <span><%= allMaterials[materialClass][key].name %></span></div>
+            <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+            <span><%= material.name %></span></div>
         </label>
     <% }); %>
     <% _.each(materials, function(material, key){
@@ -26,11 +27,12 @@ Available Materials:<br/>
         </label>
     <% }); %>
 <% _.each(validCompositeMaterials, function(key){%>
+    <% var material = compositeMaterials[key]; %>
     <label class="radio colorSwatches">
         <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         <div class="materialColorSwatch">
-        <div style="background-color:<% if(realisticColorScheme){ %><%= materials[key].color %><% }else{ %><%= materials[key].altColor %><% } %>"></div>
-        <span><%= materials[key].name %></span></div>
+        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+        <span><%= material.name %></span></div>
     </label>
 <% }); %><br/>
 <a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Composite</a><br/>

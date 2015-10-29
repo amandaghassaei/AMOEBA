@@ -30,7 +30,6 @@ define(['underscore', 'appState'], function(_, appState){
     DMAMaterial.prototype.setMetaData = function(data){
 
         if (data.id) delete data.id;//cannot change id once set
-        if (data.noDelete) delete data.noDelete;//immutable
 
         //check if colors have changed
         var oldColor = this.color;
@@ -38,7 +37,7 @@ define(['underscore', 'appState'], function(_, appState){
 
         var changed = false;
         var self = this;
-        _.each(["name", "color", "altColor"], function(key){
+        _.each(["name", "color", "altColor", "noDelete"], function(key){
             if (data[key] !== undefined && data[key] != self[key]) {
                 self[key] = data[key];
                 changed = true;
@@ -80,7 +79,23 @@ define(['underscore', 'appState'], function(_, appState){
         var changed = this.setMetaData(data);
         changed |= this.setData(data);
 
+        require(["materials"], function(materials){
+            //todo update changed properties
+        });
         return changed;
+    };
+
+    DMAMaterial.prototype.getParentComposites = function(materials){
+        var parentComposites = [];
+        var id = this.getID();
+        _.each(materials.compositeMaterialsList, function(material, key){
+            if (key == id) return;
+            var compositeChildren = material.getCompositeChildren();
+            if (compositeChildren.indexOf(id) >= 0){
+                parentComposites.push(key);
+            }
+        });
+        return parentComposites;
     };
 
     DMAMaterial.prototype.changeColorScheme = function(state){

@@ -95,10 +95,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
 
         newCompositeMaterial: function(json, options){
             options = options || {};
-            json = data || {};
+            json = json || {};
 
             var id = json.id || getNextCompositeID();
-            var material = new DMAMaterial(json, id);
+            var material = new DMACompositeMaterial(json, id);
 
             if (options._noAdd) return material;//in the new material menu, you may init a material before saving changes
 
@@ -172,6 +172,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
             var edited = material.set(data);
             if (edited) myConsole.write("materials.setCompositeMaterial(" + id + ", " + JSON.stringify(material.toJSON()) + "}");
             return material;
+        },
+
+        getAllParents: function(id){
+            this.getMaterialForId(id).getParentComposites(this);
         },
 
         getDeleteMaterial: function(){
