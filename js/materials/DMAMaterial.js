@@ -99,6 +99,10 @@ define(['underscore', 'appState'], function(_, appState){
         return this.altColor;
     };
 
+    DMAMaterial.prototype.changeRandomColor = function(){
+        this.set({altColor: this.randomHexColor()});
+    };
+
     DMAMaterial.prototype.randomHexColor = function(){
         var hex = '#' + Math.floor(Math.random()*16777215).toString(16);
         if (hex.match(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i) !== null) return hex;

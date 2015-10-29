@@ -3,7 +3,7 @@
  */
 
 
-define(['material'], function(DMAMaterial){
+define(['three', 'material'], function(THREE, DMAMaterial){
 
     var materialNum = 1;
 
@@ -19,7 +19,9 @@ define(['material'], function(DMAMaterial){
             sparseCells: [[[null]]],//store as json
             cells: [[[null]]],//store as json
             cellsMin: null,
-            cellsMax: null
+            cellsMax: null,
+            dimensions: new THREE.Vector3(0,0,0),
+            numCells: 0
         };
 
         json = _.extend(defaults, json);
@@ -37,6 +39,11 @@ define(['material'], function(DMAMaterial){
         if (data.sparseCells){
             edited |= !(_.isEqual(data.sparseCells, this.sparseCells));//must be comparing json
             this.sparseCells = data.sparseCells;
+            var numCells = 0;
+            this.loopCells(function(){
+                numCells++;
+            });
+            this.numCells = numCells;
         }
 
         if (edited){
@@ -148,6 +155,10 @@ define(['material'], function(DMAMaterial){
         return this.sparseCells;//json description
     };
 
+    DMACompositeMaterial.prototype.getNumCells = function(){
+        return this.numCells;
+    };
+
     DMACompositeMaterial.prototype.loopCells = function(callback){
         var cells = this.sparseCells;
         for (var x=0;x<cells.length;x++){
@@ -162,12 +173,12 @@ define(['material'], function(DMAMaterial){
     DMACompositeMaterial.prototype.toJSON = function(){
         var json = DMAMaterial.prototype.toJSON.call(this);
         return _.extend(json, {
-            cellsMin: this.cellsMin,
-            cellsMax: this.cellsMax,
             compositeChildren: this.compositeChildren,
             elementaryChildren: this.elementaryChildren,
             sparseCells: this.sparseCells,
-            isComposite: true
+            dimensions: this.dimensions,
+            isComposite: true,
+            numCells: this.numCells
         });
     };
 

@@ -34,7 +34,7 @@ define(['jquery', 'underscore', 'menuParent', 'materialsPlist', 'plist', 'lattic
 
         _latticeToComposite: function(e){
             e.preventDefault();
-            this._openCompositeEditor("fromLattice");
+            this._openCompositeEditor("_fromLattice");
         },
 
         _openCompositeEditor: function(compositeID){

@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
                 json = material.toJSON();
             }
 
-            this.material = materials.newMaterial(json, {noAdd: true});
+            this.material = materials.newMaterial(json, {_noAdd: true});
         },
 
         getPropertyOwner: function($target){
@@ -43,8 +43,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
 
         _changeRandomColor: function(e){
             e.preventDefault();
-            var color = this.material.randomHexColor();
-            this.material.altColor = color;
+            this.material.changeRandomColor();
             this.render();
         },
 
@@ -59,7 +58,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materials', 'text!menus/
         },
 
         deleteExitMenu: function(){
-            var deleted = materials.deleteMaterial(this.material);
+            var deleted = materials.deleteMaterialById(this.material.getID());
+            this.material = null;
             return deleted;
         },
 

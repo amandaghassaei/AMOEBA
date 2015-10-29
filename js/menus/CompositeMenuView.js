@@ -21,40 +21,37 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
                 console.warn("no composite editor id");
                 return;
             }
-            var compositeData = {};
-            if (id == "fromLattice"){
-                id = materials.getNextCompositeID();
-                compositeData = lattice.getCompositeData();
-                lattice.clearCells();
-            } else if (options.myObject == "new"){
-                id = materials.getNextCompositeID();
-            } else {
-                compositeData = materials.getMaterialForId(id);
+
+            var material;
+            if (id) material = materials.getMaterialForId(id);
+            if (!material.isComposite()){
+                console.warn("material " + id + " is not a composite");
+
             }
 
-            this.composite = this._setToCompositeMode(id, compositeData);
+            var json = {};
+            if (material) json = material.toJSON();
+            else if (id == "_fromLattice"){
+                json.sparseCells = lattice.getSparseCellsJSON();
+                lattice.clearCells();
+            }
+            material = materials.newCompositeMaterial(json, {_noAdd: true});
 
-            var self = this;
-            this.listenTo(this.composite, "change", function(){
-                if (this.composite.changedAttributes().numCells !== undefined) bounds = this.composite.calculateBoundingBox();
-                self.render();
-            });
-            bounds = this.composite.calculateBoundingBox();
-            this.listenTo(this.model, "change", this.render);
+            this.material = material;
+            this.compositeEditor = this._setToCompositeMode(material.toJSON());
+
+            this.listenTo(this.compositeEditor, "change:numCells", this.render);
+//            this.listenTo(this.model, "change", this.render);
         },
 
-        _setToCompositeMode: function(id, data){
+        _setToCompositeMode: function(json){
             lattice.hideCells();
             if (lattice.inCompositeMode()) {
                 console.warn("composite editor already allocated");
                 lattice.exitCompositeEditing();
             }
-            var compositeLattice = new CompositeEditorLattice(_.extend({id:id}, _.omit(data, "sparseCells")), null, function(_composite){
-                var cells = null;
-                if (data) cells = data.sparseCells;
-                _composite.reloadCells(cells, lattice._getSubclassForLatticeType());//todo get rid of this
-            });
-
+            var compositeLattice = new CompositeEditorLattice();
+            compositeLattice.setSparseCells(json.sparseCells);
             lattice.setToCompositeMode(compositeLattice);
             return compositeLattice;
         },
@@ -63,11 +60,12 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
 
         _changeRandomColor: function(e){
             e.preventDefault();
-            this.composite._changeRandomColor();
+            this.material.changeRandomColor();
+            this.render();
         },
 
         getPropertyOwner: function($target){
-            if ($target.hasClass("compositeEditor")) return this.composite;
+            if ($target.hasClass("compositeEditor")) return this.compositeEditor;
             return null;
         },
 
@@ -80,35 +78,41 @@ define(['jquery', 'underscore', 'menuParent', 'compositeEditorLattice', 'materia
             e.preventDefault();
             var self = this;
             require(['fileSaver'], function(fileSaver){
-                fileSaver.saveMaterial(self.composite.get("id"), self.composite.toJSONForSave(bounds));//todo save children too
+                self._syncLatticeToMaterial();
+                fileSaver.saveMaterial(self.material);
             });
+        },
+
+        _syncLatticeToMaterial: function(){
+            var json = {
+                sparseCells: this.compositeEditor.getSparseCells()
+            };
+            this.material.set(json);
         },
 
         saveExitMenu: function(){
             this.stopListening();
-            if (!this.composite){
+            if (!this.compositeEditor){
                 console.warn("lattice not in composite mode for finish composite call");
                 return false;
             }
-            this.composite.makeNewCompositeMaterial(bounds);
+            this._syncLatticeToMaterial();
+            materials.set(this.material.getID(), this.material.toJSON());
             return true;
         },
 
         deleteExitMenu: function(){
-            if (!this.composite){
+            if (!this.compositeEditor){
                 console.warn("lattice not in composite mode for delete composite call");
                 return true;
             }
-            var deleted = materials.deleteMaterial(this.composite);
-            return deleted;
+            return materials.deleteMaterialById(this.material.getID());
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), materialsPlist, globals, this.composite.toJSON(),
+            return _.extend(this.model.toJSON(), materials.toJSON(), globals, this.material.toJSON(), this.compositeEditor.toJSON(),
                 {
-                    dimensions: bounds.max.clone().sub(bounds.min),
-                    materials: materials.list,
-                    validCompositeMaterials: materials.getVaildAvailableCompositeKeys(this.composite.get("id"))
+                    dimensions: this.compositeEditor.getSize()
                 });
         },
 

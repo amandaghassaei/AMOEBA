@@ -86,7 +86,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
             var id = json.id || getNextMaterialID();
             var material = new DMAMaterial(json, id);
 
-            if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
+            if (options._noAdd) return material;//in the new material menu, you may init a material before saving changes
 
             this.materialsList[id] = material;
             if (!options.silent) myConsole.write("materials.newMaterial(" + JSON.stringify(material.toJSON()) + "}");
@@ -100,7 +100,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
             var id = json.id || getNextCompositeID();
             var material = new DMAMaterial(json, id);
 
-            if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
+            if (options._noAdd) return material;//in the new material menu, you may init a material before saving changes
 
             this.compositeMaterialsList[id] = material;
             if (!options.silent) myConsole.write("materials.newCompositeMaterial(" + JSON.stringify(material.toJSON()) + "}");

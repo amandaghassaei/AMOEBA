@@ -180,14 +180,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this._setSparseCells(this.sparseCells, this._getSubclassForLatticeType());
         },
 
-        setSparseCells: function(cells){
+        setSparseCells: function(cells, offset){
             if (cells === undefined || cells == null) {
                 console.warn("no cells given to setSparseCells");
                 return;
             }
             myConsole.clear();
             var cellsString = JSON.stringify(cells);
-            myConsole.write("lattice.setCells(" + cellsString + ")");
+            myConsole.write("lattice.setCells(" + cellsString + ", " + JSON.stringify(offset) + ")");
+
+            offset = offset || this.getOffset();
+            this.set("cellsMin", offset, {silent:true});
+            this.set("cellsMax", (new THREE.Vector3(cells.length, cells[0].length, cells[0][0].length)).add(offset), {silent:true});
+
             this._setSparseCells(JSON.parse(cellsString), this._getSubclassForLatticeType());
         },
 
@@ -288,7 +293,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 if (latticeData.options.gikLength) appState.set("gikLength", latticeData.options.gikLength);
             }
 
-            this.setSparseCells(this.sparseCells);
+            this.reloadCells();
             this._printCurrentLatticeType();
         },
 
@@ -366,16 +371,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
             currentNav = plist.allMenus[currentNav].parent || currentNav;
 //            if (currentNav == "navAssemble") this._parseSparseCell();
-        },
-
-        getCompositeData: function(){
-            if (this.get("numCells") == 0) return null;
-            return {
-                cellsMin: this.get("cellsMin").clone(),
-                cellsMax: this.get("cellsMax").clone(),
-                sparseCells: JSON.parse(JSON.stringify(this.sparseCells)),
-                numCells: this.get("numCells")
-            };
         },
 
         setToCompositeMode: function(compositeLattice){

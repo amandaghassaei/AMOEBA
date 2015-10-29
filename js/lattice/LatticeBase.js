@@ -39,11 +39,31 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getBoundingBox: function(){
-            return {min: this.get("cellsMin"), max:this.get("cellsMax")};
+            return {min: this.get("cellsMin").clone(), max:this.get("cellsMax").clone()};
+        },
+
+        getOffset: function(){
+            return this.get("cellsMin").clone();
         },
 
         getNumCells: function(){
             return this.get("numCells");
+        },
+
+        getSparseCells: function(){
+            return this.sparseCells;
+        },
+
+        getCells: function(){
+            return this.cells;
+        },
+
+        getSparseCellsJSON: function(){
+            return JSON.parse(JSON.stringify(this.sparseCells));
+        },
+
+        getCellsJSON: function(){
+            return JSON.parse(JSON.stringify(this.cells));
         },
 
 
@@ -58,27 +78,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _getLatticePlistData: function(){
             return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("applicationType")];
-        },
-
-        _setSparseCells: function(cells, subclass){
-
-            this._clearCells();//composite lattice should always be empty
-
-            console.log(this.get("numCells"));
-            var numCells = this.get("numCells");
-
-            var cellsMax = this.get("cellsMax");
-            var cellsMin = this.get("cellsMin");
-            if (cellsMax && cellsMin) this._checkForMatrixExpansion(cellsMax, cellsMin);
-
-            var self = this;
-            require([subclass], function(subclassObject){
-                _.extend(self, subclassObject);
-                if (numCells>0) {
-                    self._bindRenderToNumCells(numCells);
-                    self.parseCellsJSON(cells);
-                }
-            });
         },
 
         _bindRenderToNumCells: function(numCells){
