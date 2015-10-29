@@ -10,7 +10,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!m
         events: {
             "click #calcElectricalConnectivity":                    "_calcElectricalConnectivity",
             "click #calcStructuralConnectivity":                    "_calcStructuralConnectivity",
-            "click #showOverlappingCells":                          "_showOverlappingCells"
         },
 
         _initialize: function(){
@@ -36,11 +35,6 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'materialsPlist', 'text!m
         _calcStructuralConnectivity: function(e){
             e.preventDefault();
             lattice.calculateStructuralConnectivity();
-        },
-
-        _showOverlappingCells: function(e){
-            e.preventDefault();
-            lattice.highlightOverlappingCells();
         },
 
         _makeTemplateJSON: function(){

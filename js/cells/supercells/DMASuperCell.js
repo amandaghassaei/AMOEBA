@@ -170,32 +170,21 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
             }
         }
 
-        var overlap = false;
         this._loopCells(function(cell, x, y, z){
-            var overlappingCells = null;
-            if (recursive){
-                overlappingCells = cell.addToDenseArray(cells, bounds.min);
-            } else {
-                overlappingCells = DMACell.prototype.addToDenseArray.call(cell, cells, bounds.min);
-            }
-            if (overlappingCells) overlap = true;
+            if (recursive) cell.addToDenseArray(cells, bounds.min);
+            else DMACell.prototype.addToDenseArray.call(cell, cells, bounds.min);
         });
-        if (overlap) {
-            console.warn("overlap detected");
-            return [[[null]]];
-        }
         return cells;
     };
 
     DMASuperCell.prototype.addToDenseArray = function(cellsArray, min, forCAM){
-        if (forCAM && this._isBottomLayer()) return DMACell.prototype.addToDenseArray.call(this, cellsArray, min);//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
-        var overlap = [];
+        if (forCAM && this._isBottomLayer()) {
+            DMACell.prototype.addToDenseArray.call(this, cellsArray, min);
+            return;
+        }//this gives back the bottom layer cell for assembly, not necessarily the lattice pitch
         this._loopCells(function(cell){
-            var overlappingCells = cell.addToDenseArray(cellsArray, min, forCAM);
-            if (overlappingCells) overlap = overlap.concat(overlappingCells);
+            cell.addToDenseArray(cellsArray, min, forCAM);
         });
-        if (overlap.length>0) return overlap;
-        return null;
     };
 
 

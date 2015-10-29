@@ -72,7 +72,6 @@ Parent: &nbsp;&nbsp;
                     </a></li>
                 <% }); %>
                 <% _.each(materials, function(material, key){
-                    if (key.substr(0,5) == "super") return;
                     if (material.noDelete) return; %>
                     <li><a class="stockMaterial dropdownSelector" data-id="<%= key %>" href="#">
                         <div class="materialColorSwatch">

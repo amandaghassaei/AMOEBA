@@ -478,16 +478,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //parse
     DMACell.prototype.addToDenseArray = function(cellsArray, min){
         var index = this.getAbsoluteIndex().sub(min);
-        if (cellsArray[index.x][index.y][index.z]) return [this, cellsArray[index.x][index.y][index.z]];
+        if (cellsArray[index.x][index.y][index.z]) {
+            console.warn("cell overlap, something bad happened");
+            return;
+        }
         cellsArray[index.x][index.y][index.z] = this;
-        return null;
     };
-
-    DMACell.prototype.removeFromDenseArray = function(cellsArray, min){
-        var index = this.getAbsoluteIndex().sub(min);
-        cellsArray[index.x][index.y][index.z] = null;
-    };
-
 
 
 

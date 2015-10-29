@@ -5,7 +5,6 @@ Set Material Visibility:
     <span class="materialListTitle"><%= materials[key].name %></span></div>
 <% }); %>
 <% _.each(materials, function(material, key){
-    if (key.substr(0,5) == "super") return;
     if (material.noDelete) return; %>
     <div class="materialColorSwatch">
     <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>

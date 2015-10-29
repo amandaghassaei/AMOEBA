@@ -530,56 +530,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return {x:xScale, y:yScale, z:zScale};
         },
 
-//        _parseSparseCell: function(){
-//
-//            this.cells = [[[null]]];
-//
-//            console.log("parse cells");
-//
-//            if (this.get("numCells") == 0) {
-//                console.warn("no cells in assembly");
-//                this.cells = [[[null]]];
-//                return;
-//            }
-//
-//            var bounds = this.calculateBoundingBox();
-//            this.set("cellsMin", bounds.min.clone().add(this.get("cellsMin")));
-//            var size = bounds.max.sub(bounds.min);
-//
-//            //create array of nulls
-//            var cells = [];
-//            for (var x=0;x<size.x;x++){
-//                cells.push([]);
-//                for (var y=0;y<size.y;y++){
-//                    cells[x].push([]);
-//                    for (var z=0;z<size.z;z++){
-//                        cells[x][y].push(null);
-//                    }
-//                }
-//            }
-//
-//            var min = this.get("cellsMin").sub(bounds.min);
-//            var overlap = [];
-//            var forCAM = appState.get("currentNav") == "navAssemble";
-//            this._loopCells(this.sparseCells, function(cell){
-//                var overlappingCells = cell.addToDenseArray(cells, min, forCAM);
-//                if (overlappingCells) overlap = overlap.concat(overlappingCells);
-//            });
-//            this.set("overlappingCells", overlap);
-//
-//            this.cells = cells;
-//        },
-
-        highlightOverlappingCells: function(){
-            this._loopCells(this.sparseCells, function(cell){
-                cell.setTransparent(true);
-            });
-            _.each(this.get("overlappingCells"), function(cell){
-                cell.show();
-            });
-            three.render();
-        },
-
         showCellAtIndex: function(index){
             index = (new THREE.Vector3()).subVectors(index, this.get("cellsMin"));//index is probably a json object from gcode comment
             var cell = this.cells[index.x][index.y][index.z];

@@ -97,7 +97,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
             options = options || {};
             json = data || {};
 
-            var id = json.id || getNextMaterialID();
+            var id = json.id || getNextCompositeID();
             var material = new DMAMaterial(json, id);
 
             if (options.noAdd) return material;//in the new material menu, you may init a material before saving changes
