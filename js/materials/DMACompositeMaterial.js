@@ -43,34 +43,32 @@ define(['material'], function(DMAMaterial){
             console.log("composite material edited");
             var self = this;
             require(['materials'], function(materials){
-                var compositeChildren = [];
-                var elementaryChildren = [];
 
-                var firstGen = self.getFirstGenChildMaterials(materials);
-                elementaryChildren = _.clone(firstGen.elementaryCells);
-                compositeChildren = _.clone(firstGen.compositeCells);
+                var changed = self.recalcChildren(materials);
 
-                _.each(firstGen.compositeCells, function(compositeID){
-                    var material = materials.getMaterialForId(compositeID);
-                    compositeChildren.concat(material.getCompositeChildren());
-                    elementaryChildren.concat(material.getElementaryChildren());
-                });
-                compositeChildren = _.uniq(compositeChildren);//remove duplicates
-                elementaryChildren = _.uniq(elementaryChildren);
-
-                self.compositeChildren = compositeChildren;
-                self.elementaryChildren = elementaryChildren;
-
-                //getParentComposites
-                if (!_.isEqual(self.getCompositeChildren(), compositeChildren)){
-
-                }
-                if (!_.isEqual(self.getElementaryChildren(), elementaryChildren)){
-                    self.properties = self.getPropertiesFromElements(elementaryChildren)
+                var parentComposites = self.getParentComposites(materials);
+                if (changed){
+                    _.each(parentComposites, function(parentID){
+                        var parent = materials.getMaterialForId(parentID);
+                        parent.recalcChildren(materials);
+                    });
                 }
             });
         }
         return edited;
+    };
+
+    DMACompositeMaterial.prototype.getParentComposites = function(materials){
+        var parentComposites = [];
+        var id = this.getID();
+        _.each(materials.compositeMaterialsList, function(material, key){
+            if (key == id) return;
+            var compositeChildren = material.getCompositeChildren();
+            if (compositeChildren.indexOf(id) >= 0){
+                parentComposites.push(key);
+            }
+        });
+        return parentComposites;
     };
 
     DMACompositeMaterial.prototype.getFirstGenChildMaterials = function(materials){
@@ -88,25 +86,46 @@ define(['material'], function(DMAMaterial){
         return {compositeCells:compositeChildrenFirstGen, elementaryCells:elementaryChildrenFirstGen};
     };
 
-    DMACompositeMaterial.prototype.recalcChildren = function(){
+    DMACompositeMaterial.prototype.recalcChildren = function(materials){
+        var compositeChildren = [];
+        var elementaryChildren = [];
 
-    };
+        var firstGen = this.getFirstGenChildMaterials(materials);
+        elementaryChildren = _.clone(firstGen.elementaryCells);
+        compositeChildren = _.clone(firstGen.compositeCells);
 
-    DMACompositeMaterial.prototype.getPropertiesFromElements = function(elementaryChildren){
-        var properties = [];
-        return properties;
-    };
+        _.each(firstGen.compositeCells, function(compositeID){
+            var material = materials.getMaterialForId(compositeID);
+            compositeChildren.concat(material.getCompositeChildren());
+            elementaryChildren.concat(material.getElementaryChildren());
+        });
 
-    DMACompositeMaterial.prototype._setCompositeChildren = function(compositeChildren){
+        compositeChildren = _.uniq(compositeChildren);
+        elementaryChildren = _.uniq(elementaryChildren);
+
+        var changed = !_.isEqual(this.getElementaryChildren(), elementaryChildren);
+        if (changed){
+            this.properties = this.getPropertiesFromElements(elementaryChildren, materials);
+        }
+
+        changed |= !_.isEqual(this.getCompositeChildren(), compositeChildren);
+
         this.compositeChildren = compositeChildren;
+        this.elementaryChildren = elementaryChildren;
+
+        return changed;
+    };
+
+    DMACompositeMaterial.prototype.getPropertiesFromElements = function(elementaryChildren, materials){
+        var properties = {};
+        _.each(elementaryChildren, function(childID){
+            if (materials.getMaterialForId(childID).getProperties().conductive) properties.conductive = true;
+        });
+        return properties;
     };
 
     DMACompositeMaterial.prototype.getCompositeChildren = function(){
         return this.compositeChildren;
-    };
-
-    DMACompositeMaterial.prototype._setElementaryChildren = function(elementaryChildren){
-
     };
 
     DMACompositeMaterial.prototype.getElementaryChildren = function(){
@@ -147,7 +166,8 @@ define(['material'], function(DMAMaterial){
             cellsMax: this.cellsMax,
             compositeChildren: this.compositeChildren,
             elementaryChildren: this.elementaryChildren,
-            sparseCells: this.sparseCells
+            sparseCells: this.sparseCells,
+            isComposite: true
         });
     };
 

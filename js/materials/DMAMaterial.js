@@ -39,13 +39,13 @@ define(['underscore', 'appState'], function(_, appState){
         var changed = false;
         var self = this;
         _.each(["name", "color", "altColor"], function(key){
-            if (data[key] && data[key] != self[key]) {
+            if (data[key] !== undefined && data[key] != self[key]) {
                 self[key] = data[key];
                 changed = true;
             }
         });
 
-        if (this.name = "" && data.name === undefined){
+        if (this.name == "" && data.name == ""){
             this.name = this.generateMaterialName();
             changed = true;
         }
@@ -141,10 +141,6 @@ define(['underscore', 'appState'], function(_, appState){
     DMAMaterial.prototype.canDelete = function(){
         return !this.noDelete;
     };
-
-//    DMAMaterial.prototype.clone = function(){
-//        return JSON.parse(JSON.stringify(this.toJSON()));
-//    };
 
     DMAMaterial.prototype.toJSON = function(){
         return {

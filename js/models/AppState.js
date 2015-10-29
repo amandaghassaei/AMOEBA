@@ -129,14 +129,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         },
 
         _materialTypeChanged: function(){
-
             var self = this;
             require(['materials'], function(materials){
                 var materialType = self.get("materialType");
                 //verify that correct class is in sync
                 if (!materials.isComposite(materialType)) {
-                    if (!materials.isComposite(self.previous("materialType"))) return;
+//                    if (self.previous("materialType") && !materials.isComposite(self.previous("materialType"))) return;
                     //re init highlighter
+                    if (!self.lattice.getHighlighterFile) return;
                     require([self.lattice.getHighlighterFile()], function(HighlighterClass){
                         globals.highlighter = new HighlighterClass();
                     });
