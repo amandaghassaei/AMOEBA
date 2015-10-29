@@ -57,7 +57,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     function saveMaterial(material){
         var data = {materials:{}};
-        data.materials[materials.getID()] = material.toJSON();
+        data.materials[material.getID()] = material.toJSON();
         _saveFile(data, material.getName(), "json");
     }
 

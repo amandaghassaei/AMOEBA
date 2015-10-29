@@ -108,7 +108,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
         },
 
         deleteMaterialById: function(id){
-            var material = getMaterialForId(id);
+            var material = this.getMaterialForId(id);
             if (!material){
                 myConsole.warn("this material was never saved, deleteMaterial operation cancelled");
                 return false;
@@ -125,6 +125,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
                 myConsole.warn("noDelete flag on this material type, deleteMaterial operation cancelled");
                 return false;
             }
+            var id = material.getID();
             myConsole.write("materials.deleteMaterialById(" + id + "}");
             myConsole.log(JSON.stringify(material.toJSON()));
             if (material.isComposite()){
