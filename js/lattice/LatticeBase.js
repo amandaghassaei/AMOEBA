@@ -154,6 +154,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.makeCellWithJSON(json, function(cell){
 
                 var flattenedCells = cell.getCells();
+                console.log(flattenedCells);
                 console.log(cell);
                 var bounds = cell.getAbsoluteBounds();
 
