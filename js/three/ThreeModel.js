@@ -6,6 +6,7 @@
 define(['underscore', 'three'], function(_, THREE){
 
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
+//    camera.setLens(50);
     var scene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
 
