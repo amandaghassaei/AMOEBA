@@ -195,12 +195,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
 
     DMASuperCell.prototype._loopCells = function(callback){
         var cells = this.sparseCells;
-        console.log(cells);
         if (!cells || cells === undefined) return;
         for (var x=0;x<cells.length;x++){
             for (var y=0;y<cells[0].length;y++){
                 for (var z=0;z<cells[0][0].length;z++){
-                    console.log(cells[x][y][z]);
                     if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
                 }
             }

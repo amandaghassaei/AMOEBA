@@ -13,7 +13,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
         this.material = materials.getMaterialForId(json.materialID || appState.get("materialType"));
-        this.isTransparent = false;
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -35,25 +34,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
 
-    //add stock cell{
-//        this.hide();//stock cell
-//    }
-
-
-
-
-
     //make 3d stuff
 
     DMACell.prototype._buildObject3D = function(){
         var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
-        if (!this.sparseCells) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
+        if (this._isBottomLayer()) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
         object3D.name = "object3D";
         return object3D;
-    };
-
-    DMACell.prototype.getObject3D = function(){//careful, used for stock sim only for now  todo need this?
-        return this.object3D;
     };
 
     DMACell.prototype._rotateCell = function(object3D){
@@ -61,7 +48,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype._translateCell = function(object3D){
-        if (!this.index) return object3D;
         var position = lattice.getPositionForIndex(this.index);
         object3D.position.set(position.x, position.y, position.z);
         return object3D;
@@ -87,8 +73,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return "supercell";
     };
 
-    DMACell.prototype._buildWireframe = function(mesh, geometry, isBeam){//for "cell" view
-        if (isBeam) new THREE.Mesh(geometry, wireframeMaterial.clone());//todo fix this
+    DMACell.prototype._buildWireframe = function(mesh, geometry){//for "cell" view
         return new THREE.Mesh(geometry, wireframeMaterial);
     };
 
@@ -99,21 +84,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //position/index/rotation
 
     DMACell.prototype.getIndex = function(){
-        if (!this.index) {
-//            console.warn("no index for this cell");
-            return null;
-        }
         return this.index.clone();
     };
 
     DMACell.prototype.getAbsoluteIndex = function(){
-        if (!this.index) {
-//            console.warn("no index for this cell");
-            return null;
-        }
         if (!this.superCell) return this.getIndex();
         var superCellIndex = this.superCell.getAbsoluteIndex();
-        if (!superCellIndex) return null;
         return superCellIndex.add(this.superCell.applyRotation(this.getIndex()).round());
     };
 
@@ -125,7 +101,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return this.getDimensions();
     };
 
-    DMACell.prototype.getBounds = function(){//todo need to accound for origin eventually
+    DMACell.prototype.getBounds = function(){//todo need to account for origin eventually
         var index = this.getIndex();
         return {min: index, max: index};
     };
@@ -136,7 +112,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.getLatticeIndex = function(){
-        var parent = lattice.getUItarget();
+        var parent = lattice.getUItarget();//todo no
         return this.getAbsoluteIndex().sub(parent.get("cellsMin"));
     };
 
@@ -232,7 +208,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                 else object3D.remove(child);
             });
         } else if (shouldAdd) object3D.add(children);
-        else object3D.remove(children);
+        else object3D.remove(children);//todo this ok?
     };
 
 
@@ -247,7 +223,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.show = function(mode, callback){
         this.object3D.visible = true;
-        this.setTransparent(false);
         this.setMode(mode, callback);
     };
 
@@ -270,7 +245,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             return null;
         }
         if (!returnTHREEObject) return this.material;
-        if (this.isTransparent) return this.material.getTransparentMaterial();
         return this.material.getThreeMaterial();
     };
 
@@ -284,28 +258,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.object3D.children[1].visible = visible && this.object3D.children[1].name == mode;
     };
 
-    DMACell.prototype.setTransparentByEval = function(evalFunction){
-        this._setTransparent(evalFunction(this))
-    };
-
-    DMACell.prototype.setTransparent = function(transparent){
-        this._setTransparent(transparent);
-    };
-
-    DMACell.prototype._setTransparent = function(transparent){
-        if (transparent == this.isTransparent) return;
-        this.isTransparent = transparent;
-        this._setTHREEMaterial(this.getMaterial(true));
-        this.setWireframeVisibility(!this.isTransparent);
-        if (this.parts) {
-            _.each(this.parts, function(part){
-                part.updateMaterial();
-            });
-        }
-    };
-
     DMACell.prototype.getConditionalMode = function(mode){
-        if (mode == "supercell" && this._isBottomLayer() && this._isTopLayer()) return "cell";
+        if (mode == "supercell" && this._isBottomLayer() && this._isTopLayer()) return "cell";//in super cell mode, cell w/o parent are still visible
         return mode;
     };
 
@@ -381,7 +335,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.getVisibleGeometry = function(){//for save stl
         var geometry = [];
-        if (!this.object3D.visible || this.isTransparent) return geometry;
+        if (!this.object3D.visible) return geometry;
         var meshes = _.filter(this.object3D.children, function(child){
             return child.visible && child instanceof THREE.Mesh
         });
@@ -420,35 +374,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return [];
     };
 
-    DMACell.prototype._initNodes = function(callback){
-//        var PI2 = Math.PI * 2;
-//        var material = new THREE.SpriteCanvasMaterial({
-//            color: 0xffffff,
-//            program: function ( context ) {
-//                context.beginPath();
-//                context.arc( 0, 0, 2, 0, PI2, true );
-//                context.fill();
-//             }
-//        });
-//
-//        var particle = new THREE.Sprite(material);
-//        particle.name = "beam";
-//        this.addChildren(particle);
-        if (callback) callback();
-        return true;
-    };
-
-    DMACell.prototype._initBeams = function(callback){
-        var wireframe = this._buildWireframe(this.object3D.children[0], this._getGeometry(), true);
-        wireframe.name = "beam";
-        if (wireframe.material.wireframeLinewidth) wireframe.material.wireframeLinewidth = 5;
-        else wireframe.material.linewidth = 5;
-        wireframe.material.color = this.getMaterial(true).color;
-        this.addChildren(wireframe);
-        if (callback) callback();
-        return true;
-    };
-
 
 
 
@@ -482,7 +407,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             console.warn("cell overlap, something bad happened");
             return;
         }
-        console.log(cellsArray);
         cellsArray[index.x][index.y][index.z] = this;
     };
 
@@ -531,62 +455,3 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     return DMACell;
 });
-
-
-
-//DMACell.prototype.removePart = function(index){
-//    this.parts[index].destroy();
-//    this.parts[index] = null;
-//    var hasAnyParts = false;//check if all parts have been deleted
-//    _.each(this.parts, function(part){
-//        if (part) hasAnyParts = true;
-//    });
-//    if (!hasAnyParts) lattice.removeCell(this);//if all parts are gone, remove cell
-//};
-//DMACell.prototype._initNodes = function(vertices){
-//    var position = this.getPosition();
-//    var orientation = this.getOrientation();
-//    var nodes = [];
-//    for (var i=0;i<vertices.length;i++){
-//        var vertex = vertices[i].clone();
-//        vertex.applyQuaternion(orientation);
-//        vertex.add(position);
-//        nodes.push(new DmaNode(vertex, i));
-//    }
-//    return nodes;
-//};
-//
-//
-//DMACell.prototype._initBeams = function(nodes, faces){
-//    var beams = [];
-//    var self = this;
-//    var addBeamFunc = function(index1, index2){
-//        var duplicate = false;
-//        _.each(beams, function(beam){
-//            var index = beam.getIndex();
-//            if (index[0] == index1 && index[1] == index2) duplicate = true;
-//        });
-//        if (duplicate) return;
-//        var diff = nodes[index1].getPosition();
-//        diff.sub(nodes[index2].getPosition());
-//        if (diff.length() > self.getScale()*1.01) return;
-//        if (index2>index1) {
-//            beams.push(new DmaBeam(nodes[index1], nodes[index2], self));
-//        }
-//    };
-//    for (var i=0;i<nodes.length;i++){
-//        _.each(faces, function(face){
-//            if (face.a == i) {
-//                addBeamFunc(i, face.b);
-//                addBeamFunc(i, face.c);
-//            } else if (face.b == i){
-//                addBeamFunc(i, face.a);
-//                addBeamFunc(i, face.c);
-//            } else if (face.c == i){
-//                addBeamFunc(i, face.a);
-//                addBeamFunc(i, face.b);
-//            }
-//        })
-//    }
-//    return beams;
-//};

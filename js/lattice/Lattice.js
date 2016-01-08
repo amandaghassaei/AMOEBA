@@ -14,8 +14,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             scale: 1.0,
 
             cellType: "cube",
-            connectionType: "gik",
-            applicationType: "willGik",
+            connectionType: "face",
+            applicationType: "default",
             partType: null,
 
             aspectRatio: null,
