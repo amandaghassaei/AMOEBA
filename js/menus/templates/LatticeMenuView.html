@@ -37,9 +37,9 @@ Type:&nbsp;&nbsp;
         </div><br/><br/>
 <% } %>
 Aspect Ratio:&nbsp;&nbsp;
-    <input data-property="aspectRatio" data-key="x" data-min="0" value="<%= aspectRatio.x %>" placeholder="X" class="form-control lattice floatInput" type="text">&nbsp;
-    <input data-property="aspectRatio" data-key="y" data-min="0" value="<%= aspectRatio.y %>" placeholder="Y" class="form-control lattice floatInput" type="text">&nbsp;
-    <input data-property="aspectRatio" data-key="z" data-min="0" value="<%= aspectRatio.z %>" placeholder="Z" class="form-control lattice floatInput" type="text"><br/><br/>
+    <input data-property="aspectRatio" data-key="x" data-min="0" disabled="disabled" value="<%= aspectRatio.x %>" placeholder="X" class="form-control lattice floatInput" type="text">&nbsp;
+    <input data-property="aspectRatio" data-key="y" data-min="0" disabled="disabled" value="<%= aspectRatio.y %>" placeholder="Y" class="form-control lattice floatInput" type="text">&nbsp;
+    <input data-property="aspectRatio" data-key="z" data-min="0" disabled="disabled" value="<%= aspectRatio.z %>" placeholder="Z" class="form-control lattice floatInput" type="text"><br/><br/>
 <% if (connectionType == "gik") { %>
     Part Length:&nbsp;&nbsp;<input data-property="gikLength" value="<%= gikLength %>" placeholder="Length" class="form-control intInput appState" type="text"><br/><br/>
 <% } %>
