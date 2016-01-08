@@ -123,7 +123,7 @@ define(['jquery', 'underscore', 'three', 'menuParent', 'compositeEditorLattice',
             return _.extend(this.model.toJSON(), materials.toJSON(), materialsPlist, globals, this.material.toJSON(), this.compositeEditor.toJSON(),
                 {
                     dimensions: this.compositeEditor.getSize(),
-                    validCompositeMaterials: _.difference(materials.compositeMaterialsList, compositeParents)
+                    validCompositeMaterials: _.difference(_.keys(materials.compositeMaterialsList), compositeParents)
                 });
         },
 
