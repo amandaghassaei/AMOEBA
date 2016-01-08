@@ -35,7 +35,7 @@ define(['jquery', 'underscore', 'three', 'menuParent', 'compositeEditorLattice',
             this.compositeEditor = this._setToCompositeMode(material.toJSON());
 
             this.listenTo(this.compositeEditor, "change:numCells", this.render);
-//            this.listenTo(this.model, "change", this.render);
+            this.listenTo(this.model, "change", this.render);
         },
 
         _setToCompositeMode: function(json){

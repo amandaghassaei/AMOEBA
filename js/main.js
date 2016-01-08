@@ -62,6 +62,8 @@ require.config({
         //cells
         cell: 'cells/DMACell',
         cubeCell: 'cells/CubeCell',
+        compositeCell: 'cells/supercells/CompositeCell',
+        superCell: 'cells/supercells/DMASuperCell',
 
         //parts
         part: 'parts/DMAPart',

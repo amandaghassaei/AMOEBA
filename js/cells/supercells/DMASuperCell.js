@@ -4,8 +4,8 @@
 
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'materials'],
-    function(_, THREE, three, lattice, appState, DMACell, materials){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cubeCell', 'materials'],
+    function(_, THREE, three, lattice, appState, DMACell, CubeCell, materials){
 
     function DMASuperCell(json, superCell){//supercells might have supercells
 
@@ -77,15 +77,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
                         cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
                     };
 
-                    if (material.sparseCells){
-                        if (material.sparseCells[x][y][z]){
-                            json.index.add(material.cellsMin);
-                            json = _.extend(json, material.sparseCells[x][y][z]);
-                            this._makeSubCellForIndex(json, callback);
-                        }//else no cell in this spot
-                    } else {//if not from composite definition, add subcell at all possible indices in supercell range
+                    if (material.sparseCells[x][y][z]){
+                        json.index.add(material.cellsMin);
+                        json = _.extend(json, material.sparseCells[x][y][z]);
                         this._makeSubCellForIndex(json, callback);
-                    }
+                    }//else no cell in this spot
                 }
             }
         }
@@ -94,12 +90,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'mat
 
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
         var subclassFile = lattice.getCellSubclassFile();
+        console.log(materials);
         if (json.materialID && materials.isComposite(json.materialID)) subclassFile = "compositeCell";
         var self = this;
-        require([subclassFile], function(CellSubclass){
-            var cell = new CellSubclass(json, self);
+//        require([subclassFile], function(CellSubclass){
+            var cell = new CubeCell(json, self);
             if (callback) callback(cell);
-        });
+//        });
     };
 
     DMASuperCell.prototype.setMode = function(mode, callback){

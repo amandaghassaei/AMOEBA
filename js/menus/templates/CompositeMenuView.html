@@ -5,7 +5,7 @@ Origin (xyz): &nbsp;&nbsp;<input data-property="origin" data-key="x" value="<%= 
             <input data-property="origin" data-key="y" value="<%= origin.y %>" placeholder="Y" class="form-control intInput compositeEditor" type="text">&nbsp;
             <input data-property="origin" data-key="z" value="<%= origin.z %>" placeholder="Z" class="form-control intInput compositeEditor" type="text"><br/><br/>
 Display Color: &nbsp;&nbsp;
-    <input id="compositeColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth compositeEditor form-control hexInput" type="text"><br/><br/>
+    <input id="compositeColor" style="border-color: <%= altColor %> ;" data-property="altColor" value="<%= altColor %>" placeholder="Enter HEX" class="halfWidth compositeEditor form-control hexInput" type="text"><br/><br/>
 <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Color</a><br/>
 Available Materials:<br/>
     <% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
