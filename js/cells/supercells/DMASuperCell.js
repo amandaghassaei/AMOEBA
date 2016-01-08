@@ -90,7 +90,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cub
 
     DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
         var subclassFile = lattice.getCellSubclassFile();
-        console.log(materials);
         if (json.materialID && materials.isComposite(json.materialID)) subclassFile = "compositeCell";
         var self = this;
 //        require([subclassFile], function(CellSubclass){
