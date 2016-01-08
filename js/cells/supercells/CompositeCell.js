@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', 'globals', 'materials'],
-    function(_, THREE, three, lattice, appState, DMASuperCell, globals, materials){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell', "cubeCell", 'globals', 'materials'],
+    function(_, THREE, three, lattice, appState, DMASuperCell, CubeCell, globals, materials){
 
     function CompositeCell(json, superCell){
         DMASuperCell.call(this, json, superCell);
@@ -18,14 +18,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return geo;
     };
 
-    CompositeCell.prototype._rotateCell = function(object3D){
-        if (lattice._zIndexRotation) {
-            var index = this.getAbsoluteIndex();
-            return object3D.rotateZ(lattice._zIndexRotationSuperCell(index));
-        }
-        return DMASuperCell.prototype._rotateCell.call(this, object3D);
-    };
-
     CompositeCell.prototype._buildWireframe = function(mesh){
         var wireframe = new THREE.BoxHelper(mesh);
         wireframe.material.color.set(0x000000);
@@ -34,7 +26,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'superCell',
         return wireframe;
     };
 
-    CompositeCell.prototype.getDimensions = function(){//override in gik super cell
+    CompositeCell.prototype._makeCellForJSON = function(json){
+        if (materials.getMaterialForId(json.materialID).isComposite()) return new CompositeCell(json, this);
+        return new CubeCell(json, this);
+    };
+
+    CompositeCell.prototype.getDimensions = function(){
         return this.getMaterial().getDimensions();
     };
 

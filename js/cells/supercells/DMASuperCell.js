@@ -4,8 +4,8 @@
 
 
 
-define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cubeCell', 'materials'],
-    function(_, THREE, three, lattice, appState, DMACell, CubeCell, materials){
+define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell'],
+    function(_, THREE, three, lattice, appState, DMACell){
 
     function DMASuperCell(json, superCell){//supercells might have supercells
 
@@ -13,11 +13,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cub
 
         DMACell.call(this, json, superCell);
 
-        var range;
         var material = this.getMaterial();
-        if (material.cellsMax) range = (new THREE.Vector3(1,1,1)).add(material.cellsMax).sub(material.cellsMin);
-        else range = this.getDimensions();
-        this.sparseCells = this._makeChildCells(range, material);
+        this.sparseCells = this._makeChildCells(this.material.getDimensions(), material);
 
         DMACell.prototype.setMode.call(this, null, function(){
             three.conditionalRender();
@@ -70,32 +67,18 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cub
 
                     cells[x][y].push(null);
 
-                    var json = {index: new THREE.Vector3(x, y, z)};
-                    var callback = function(cell){
-                        var cellIndex = cell.getIndex();
-                        if (material.cellsMin) cellIndex.sub(material.cellsMin);
-                        cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
-                    };
+
 
                     if (material.sparseCells[x][y][z]){
+                        var json = {index: new THREE.Vector3(x, y, z)};
                         json.index.add(material.cellsMin);
                         json = _.extend(json, material.sparseCells[x][y][z]);
-                        this._makeSubCellForIndex(json, callback);
+                        cells[x][y][z] = this._makeCellForJSON(json);
                     }//else no cell in this spot
                 }
             }
         }
         return cells;
-    };
-
-    DMASuperCell.prototype._makeSubCellForIndex = function(json, callback){
-        var subclassFile = lattice.getCellSubclassFile();
-        if (json.materialID && materials.isComposite(json.materialID)) subclassFile = "compositeCell";
-        var self = this;
-//        require([subclassFile], function(CellSubclass){
-            var cell = new CubeCell(json, self);
-            if (callback) callback(cell);
-//        });
     };
 
     DMASuperCell.prototype.setMode = function(mode, callback){
@@ -125,21 +108,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'cell', 'cub
 
     DMASuperCell.prototype._isMiddleLayer = function(){
         return this.superCell !== null && this.superCell !== undefined;
-    };
-
-
-    DMASuperCell.prototype.setTransparentByEval = function(evalFunction){
-        DMACell.prototype.setTransparentByEval.call(this, evalFunction);//todo don't pass down to cells if no change
-        this._loopCells(function(cell){
-            cell.setTransparentByEval(evalFunction);
-        })
-    };
-
-    DMASuperCell.prototype.setTransparent = function(transparent){
-        this._setTransparent(transparent);
-        this._loopCells(function(cell){
-            cell._setTransparent(transparent);
-        })
     };
 
     DMASuperCell.prototype.getCells = function(){

@@ -51,7 +51,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
         var edited = false;
         if (data.sparseCells){
-            edited |= !(_.isEqual(data.sparseCells, this.sparseCells));//must be comparing json
+            edited |= !(_.isEqual(data.sparseCells, this.sparseCells));//todo must be comparing json
             this.sparseCells = data.sparseCells;
             var numCells = 0;
             this.loopCells(function(){
@@ -84,13 +84,11 @@ define(['three', 'material'], function(THREE, DMAMaterial){
         this.loopCells(function(cell, x, y, z){
             var materialID = cell.materialID;//cells json
             var material = materials.getMaterialForId(materialID);
-            if (material.isComposite()){
-                if (compositeChildrenFirstGen.indexOf(materialID) == -1) compositeChildrenFirstGen.push(materialID);
-            } else {
-                if (elementaryChildrenFirstGen.indexOf(materialID) == -1) elementaryChildrenFirstGen.push(materialID);
-            }
+            if (material.isComposite()) compositeChildrenFirstGen.push(materialID);
+            else elementaryChildrenFirstGen.push(materialID);
         });
-        return {compositeCells:compositeChildrenFirstGen, elementaryCells:elementaryChildrenFirstGen};
+        return {compositeCells:_.uniq(compositeChildrenFirstGen),
+            elementaryCells:_.uniq(elementaryChildrenFirstGen)};
     };
 
     DMACompositeMaterial.prototype.recalcChildren = function(materials){
@@ -111,9 +109,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
         elementaryChildren = _.uniq(elementaryChildren);
 
         var changed = !_.isEqual(this.getElementaryChildren(), elementaryChildren);
-        if (changed){
-            this.properties = this.getPropertiesFromElements(elementaryChildren, materials);
-        }
+        if (changed) this.properties = this.getPropertiesFromElements(elementaryChildren, materials);
 
         changed |= !_.isEqual(this.getCompositeChildren(), compositeChildren);
 
@@ -147,7 +143,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
         return true;
     };
 
-    DMACompositeMaterial.prototype.isCompositeChild = function(id){
+    DMACompositeMaterial.prototype.isCompositeChildOf = function(id){
         return this.compositeChildren.indexOf(id)>-1;
     };
 
