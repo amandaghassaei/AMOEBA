@@ -150,7 +150,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         _addCellAtIndex: function(index, json, callback){
             var self = this;
             json = json || {};
-            _.extend(json, {index: index, materialID:appState.get("materialType")});
+            json = _.extend({index: index.clone(), materialID:appState.get("materialType")}, json);
             this.makeCellWithJSON(json, function(cell){
 
                 var flattenedCells = cell.getCells();
@@ -563,9 +563,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         parseCellsJSON: function(sparseCells){
             var cellsMin = this.get("cellsMin");
-            this._loopCells(sparseCells, function(cell, x, y, z, self){
+            this._loopCells(sparseCells, function(json, x, y, z, self){
                 var index = (new THREE.Vector3(x, y, z)).add(cellsMin);
-                var json = _.extend({index: index}, cell);
                 self._addCellAtIndex(index, json);
             });
             three.render();//todo doesn't work
