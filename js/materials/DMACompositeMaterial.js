@@ -97,8 +97,8 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
         _.each(firstGen.compositeCells, function(compositeID){
             var material = materials.getMaterialForId(compositeID);
-            compositeChildren.concat(material.getCompositeChildren());
-            elementaryChildren.concat(material.getElementaryChildren());
+            compositeChildren.push.apply(compositeChildren, material.getCompositeChildren());
+            elementaryChildren.push.apply(elementaryChildren, material.getElementaryChildren());
         });
 
         compositeChildren = _.uniq(compositeChildren);

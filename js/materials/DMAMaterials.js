@@ -146,6 +146,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'lattice', 'materialsPlis
             return this.materialsList[id] || this.compositeMaterialsList[id];
         },
 
+        getAllCompositeKeys: function(){
+            return _.keys(this.compositeMaterialsList);
+        },
+
 
 
 

@@ -120,10 +120,11 @@ define(['jquery', 'underscore', 'three', 'menuParent', 'compositeEditorLattice',
 
         _makeTemplateJSON: function(){
             var compositeParents = this.material.getParentComposites(materials);
+            compositeParents.push(this.material.getID());
             return _.extend(this.model.toJSON(), materials.toJSON(), materialsPlist, globals, this.material.toJSON(), this.compositeEditor.toJSON(),
                 {
                     dimensions: this.compositeEditor.getSize(),
-                    validCompositeMaterials: _.difference(_.keys(materials.compositeMaterialsList), compositeParents)
+                    validCompositeMaterials: _.difference(materials.getAllCompositeKeys(), compositeParents)
                 });
         },
 
