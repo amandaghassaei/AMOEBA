@@ -5,7 +5,7 @@
 
 define(['underscore', 'appState'], function(_, appState){
 
-    var materialNum = 1;
+    var materialNum = 1;//outward facing name
 
     function DMAMaterial(json, id){
         this.id = id;

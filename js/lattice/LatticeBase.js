@@ -291,6 +291,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
+        setSparseCells: function(cells, offset){
+            if (cells === undefined || cells == null) {
+                console.warn("no cells given to setSparseCells");
+                return;
+            }
+            this._setSparseCells(cells, offset);
+        },
+
         _setSparseCells: function(cells, offset){
 
             offset = offset || this.getOffset() || new THREE.Vector3(0,0,0);
@@ -560,18 +568,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 var json = _.extend({index: index}, cell);
                 self._addCellAtIndex(index, json);
             });
-            three.render();
+            three.render();//todo doesn't work
         },
 
         getSaveJSON: function(){
             var data = this.toJSON();
             data.sparseCells = this.sparseCells;
             return data;
-        },
-
-        toJSON: function(){//a minimal toJSON for ui stuff - no need to parse all cells
-            return _.omit(this.attributes, ["nodes"]);//omit makes a copy
-        }//todo something weird here
+        }
 
     });
 });

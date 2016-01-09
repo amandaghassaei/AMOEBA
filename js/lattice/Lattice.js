@@ -19,8 +19,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             partType: null,
 
             aspectRatio: null,
-
-            nodes: []
         }),
 
 
@@ -311,7 +309,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
 
         __clearCells: function(silent){
             three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
-            this.set("nodes", [], {silent:silent});
             if (globals.basePlane) globals.basePlane.set("zIndex", 0, {silent:silent});
         },
 

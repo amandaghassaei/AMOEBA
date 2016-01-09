@@ -15,15 +15,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
 
-        setSparseCells: function(cells, offset){
-            if (cells === undefined || cells == null) {
-                console.warn("no cells given to setSparseCells");
-                return;
-            }
-            this._setSparseCells(cells, offset);
-        },
-
-
 
         //3d ui
 
@@ -38,11 +29,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         getHighlightableCells: function(){
             return three.getCompositeCells();
         },
-
-
-
-
-
 
 
 

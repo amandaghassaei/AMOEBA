@@ -285,19 +285,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
                     });
                 } else setVisiblity();
                 break;
-            case "beam":
-                if (!this.sparseCells && !this.beams) this.beams = this._initBeams(function(){
-                    if (!this.nodes) this.nodes = self._initNodes(function(){
-                        setVisiblity();
-                    });
-                    else setVisiblity();
-                });
-                else setVisiblity();
-                break;
-            case "node":
-//                if (!this.nodes) this.nodes = this._initNodes();
-                setVisiblity();
-                break;
             default:
                 break;
         }
@@ -428,8 +415,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     //            material.dispose();
             this.object3D = null;
         }
-        this.nodes = null;
-        this.beams = null;
         this.superCell = null;
         this.material = null;
         this.index = null;

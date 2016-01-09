@@ -5,11 +5,7 @@
 
 define(['three', 'material'], function(THREE, DMAMaterial){
 
-    var materialNum = 1;
-
-    function getNextMaterialNum(){
-        return materialNum++;
-    }
+    var materialNum = 1;//outward facing name
 
     function DMACompositeMaterial(json, id){
 
