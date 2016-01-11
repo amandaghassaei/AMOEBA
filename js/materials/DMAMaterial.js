@@ -20,7 +20,7 @@ define(['underscore', 'appState'], function(_, appState){
             properties:{}
         };
         json = _.extend(defaults, json);
-        this.set(json);
+        this.set(json, true);
     }
 
     DMAMaterial.prototype.getID = function(){
@@ -74,15 +74,29 @@ define(['underscore', 'appState'], function(_, appState){
         return false;
     };
 
-    DMAMaterial.prototype.set = function(data){
+    DMAMaterial.prototype.set = function(data, silent){
 
-        var changed = this.setMetaData(data);
-        changed |= this.setData(data);
+        var edited = this.setMetaData(data);
+        edited |= this.setData(data);
 
-        require(["materials"], function(materials){
-            //todo update changed properties
-        });
-        return changed;
+        if (silent) return false;
+
+        if (edited){
+            var self = this;
+            require(['materials'], function(materials){
+
+                var changed = self.recalcChildren(materials);
+
+                var parentComposites = self.getParentComposites(materials);
+                if (changed){
+                    _.each(parentComposites, function(parentID){
+                        var parent = materials.getMaterialForId(parentID);
+                        parent.recalcChildren(materials);
+                    });
+                }
+            });
+        }
+        return edited;
     };
 
     DMAMaterial.prototype.getParentComposites = function(materials){

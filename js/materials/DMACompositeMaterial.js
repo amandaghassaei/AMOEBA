@@ -35,7 +35,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
         var self = this;
         _.each(["origin", "cellsMin", "cellsMax", "dimensions"], function(key){
-            if (data[key] && data[key] != self[key]) {
+            if (data[key] && (!self[key] || !self[key].equals(data[key]))) {
                 self[key] = new THREE.Vector3(data[key].x, data[key].y, data[key].z);
                 changed = true;
             }
@@ -47,7 +47,7 @@ define(['three', 'material'], function(THREE, DMAMaterial){
 
         var edited = false;
         if (data.sparseCells){
-            edited |= !(_.isEqual(data.sparseCells, this.sparseCells));//todo must be comparing json
+            edited |= this.compareCellArrays(data.sparseCells);
             this.sparseCells = data.sparseCells;
             var numCells = 0;
             this.loopCells(function(){
@@ -55,23 +55,30 @@ define(['three', 'material'], function(THREE, DMAMaterial){
             });
             this.numCells = numCells;
         }
-
-        if (edited){
-            var self = this;
-            require(['materials'], function(materials){
-
-                var changed = self.recalcChildren(materials);
-
-                var parentComposites = self.getParentComposites(materials);
-                if (changed){
-                    _.each(parentComposites, function(parentID){
-                        var parent = materials.getMaterialForId(parentID);
-                        parent.recalcChildren(materials);
-                    });
-                }
-            });
-        }
         return edited;
+    };
+
+    DMACompositeMaterial.prototype.compareCellArrays = function(sparseCells){
+        var cells = this.sparseCells;
+        if (cells === undefined) return false;
+        for (var x=0;x<cells.length;x++){
+            for (var y=0;y<cells[0].length;y++){
+                for (var z=0;z<cells[0][0].length;z++){
+                    if (cells[x][y][z]){
+                        if (sparseCells[x][y][z] && this.compareCells(cells[x][y][z],sparseCells[x][y][z])){}
+                        else return true;
+                    } else {
+                        if (sparseCells[x][y][z]) return true;
+                    }
+                }
+            }
+        }
+        return false;
+    };
+
+    DMACompositeMaterial.prototype.compareCells = function(cell1, cell2){
+        if (cell1.materialID != cell2.materialID) return false;
+        return true;
     };
 
     DMACompositeMaterial.prototype.getFirstGenChildMaterials = function(materials){
