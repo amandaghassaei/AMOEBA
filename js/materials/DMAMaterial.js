@@ -83,7 +83,7 @@ define(['underscore', 'appState'], function(_, appState){
 
         if (edited){
             var self = this;
-            require(['materials'], function(materials){
+            require(['materials', 'lattice'], function(materials, lattice){
 
                 var changed = self.recalcChildren(materials);
 
@@ -94,6 +94,9 @@ define(['underscore', 'appState'], function(_, appState){
                         parent.recalcChildren(materials);
                     });
                 }
+                parentComposites.push(self.getID());
+//                lattice.reinitAllCellsOfTypes(parentComposites);
+
             });
         }
         return edited;
