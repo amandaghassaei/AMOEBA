@@ -84,15 +84,15 @@ require.config({
         scriptView: 'menus/otherUI/ScriptView',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
+        emSetupMenu: 'menus/EmSetupMenuView',
+        emRunMenu: 'menus/EmRunMenuView',
 
-        //electronic sim
-        eSimPlist: 'plists/ESimPlist',
-        eSim: 'simulation/electronics/eSim',
-        latticeESim: 'simulation/electronics/LatticeEsim',
-        eSimCell: 'simulation/electronics/cells/eSimCell',
-        eSimSuperCell: 'simulation/electronics/cells/eSimSuperCell',
-        eSimField: 'simulation/electronics/eSimField',
-
+        //emSim
+        emSimPlist: 'plists/EMSimPlist',
+        emSim: 'simulation/EM/emSim',
+        emSimlattice: 'simulation/EM/emSimLattice',
+        emSimCell: 'simulation/EM/emSimCell',
+        emSimSuperCell: 'simulation/EM/emSimSuperCell'
     },
 
     shim: {

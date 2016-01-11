@@ -1,10 +1,10 @@
 /**
- * Created by aghassaei on 6/30/15.
+ * Created by aghassaei on 1/11/16.
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/MStaticMenuView.html'],
-    function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'text!menus/templates/EmSetupMenuView.html'],
+    function($, _, MenuParentView, emPlist, template){
 
     return MenuParentView.extend({
 

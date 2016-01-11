@@ -7,11 +7,11 @@ define([], function(){
 
     return {
         allMaterialClasses:{
-            electroMechanical: "Electro-Mechanical"
+            em: "Electro-Mechanical"
         },
 
         allMaterials:{
-            electroMechanical:{
+            em:{
                 brass:{
                     name: "Brass",
                     color: "#b5a642",

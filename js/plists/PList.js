@@ -29,7 +29,7 @@ define(['three'], function(THREE){
                 name: "Composite",
                 parent: "navDesign",
                 tabs:{
-                    composite:"Composite Editor"
+                    composite:"Composite Editor",
                 }
             },
             navSim:{
@@ -37,24 +37,12 @@ define(['three'], function(THREE){
                 tabs:{
                 }
             },
-            electronicNavSim:{
+            emNavSim:{
                 name: "Electronic Simulation",
                 parent: "navSim",
                 tabs:{
-                    eSetup:"Connectivity",
-    //                materialProperties: "Materials",
-                    eStatic:"Statics",
-                    eDynamic:"Dynamics"
-                }
-            },
-            mechanicalNavSim:{
-                name: "Mechanical Simulation",
-                parent: "navSim",
-                tabs:{
-                    mSetup:"Setup",
-    //                materialProperties: "Materials",
-                    mStatic:"Statics",
-                    mDynamic:"Dynamics"
+                    emSetup: "Globals",
+                    emRun: "Run"
                 }
             },
             navOptimize:{
