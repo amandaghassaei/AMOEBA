@@ -29,7 +29,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
             emSim.pause();
         },
 
-        resetSimulation: function(e){
+        _resetSimulation: function(e){
             e.preventDefault();
             emSim.reset();
         },

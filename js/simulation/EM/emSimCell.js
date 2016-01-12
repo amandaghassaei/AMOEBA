@@ -11,16 +11,24 @@ define(["cell"], function(DMACell){
         this.position = cell.getAbsolutePosition();
         this.rotation = cell.getAbsoluteOrientation();
 
-        this.deltaPosition = new THREE.Vector3(0,0,0);
-        this.deltaRotation = new THREE.Quaternion(0,0,0,1);
+        this.deltaPosition = this.setDeltaPosition(new THREE.Vector3(0,0,0));
+        this.deltaRotation = this.setDeltaRotation(new THREE.Quaternion(0,0,0,1));
 
         this.cell = cell;
 
 
     }
 
+    EMSimCell.prototype.setDeltaPosition = function(delta){
+        this.deltaPosition = delta;
+    };
+
+    EMSimCell.prototype.setDeltaRotation = function(delta){
+        this.deltaRotation = delta;
+    };
+
     EMSimCell.prototype._setPosition = function(position){
-        this.cell.object3D.position.set(position);
+        this.cell.object3D.position.set(position.x, position.y, position.z);
     };
 
     EMSimCell.prototype.update = function(){

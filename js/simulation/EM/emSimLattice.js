@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'backbone', 'emSimCell'], function(_, Backbone, EMSimCell){
+define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbone, EMSimCell, three){
 
 
     var EMSimLattice = Backbone.Model.extend({
@@ -90,13 +90,24 @@ define(['underscore', 'backbone', 'emSimCell'], function(_, Backbone, EMSimCell)
         },
 
         iter: function(){
+
             this._loopCellsWithNeighbors(function(cell, neighbors){
-                console.log(neighbors);
+                var numNeighbors = 0;
+                _.each(neighbors, function(neighb){
+                    if (neighb) numNeighbors++;
+                });
+                numNeighbors /= 6;
+                cell.setDeltaPosition(new THREE.Vector3(numNeighbors, numNeighbors, numNeighbors));
+                cell.update();
             });
+            three.render();
         },
 
         reset: function(){
-            console.warn("do something here");
+            this._loopCells(this.cells, function(cell){
+                cell.reset();
+            });
+            three.render();
         }
 
 
