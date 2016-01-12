@@ -40,6 +40,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
 //            while(this.get("isRunning")){
                 emSimLattice.iter();
 //            }
+            this.set("isRunning", false);
         },
 
         pause: function(){
