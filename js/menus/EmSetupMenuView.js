@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'text!menus/templates/EmSetupMenuView.html'],
-    function($, _, MenuParentView, emPlist, template){
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus/templates/EmSetupMenuView.html'],
+    function($, _, MenuParentView, emPlist, emSim, template){
 
     return MenuParentView.extend({
 

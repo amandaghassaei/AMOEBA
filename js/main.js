@@ -90,7 +90,7 @@ require.config({
         //emSim
         emSimPlist: 'plists/EMSimPlist',
         emSim: 'simulation/EM/emSim',
-        emSimlattice: 'simulation/EM/emSimLattice',
+        emSimLattice: 'simulation/EM/emSimLattice',
         emSimCell: 'simulation/EM/emSimCell',
         emSimSuperCell: 'simulation/EM/emSimSuperCell'
     },
