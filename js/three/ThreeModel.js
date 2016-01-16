@@ -151,12 +151,12 @@ define(['underscore', 'three'], function(_, THREE){
         compositeCells = [];
     }
 
-    function startAnimationLoop(){
+    function startAnimationLoop(callback){
         if (appState.get("turnOffRendering") || animationLoopRunning) return;
         stopAnimationFlag = false;
         animationLoopRunning = true;
         console.log("animation started");
-        _loop();
+        _loop(callback);
     }
 
     function stopAnimationLoop(){
@@ -164,14 +164,15 @@ define(['underscore', 'three'], function(_, THREE){
         stopAnimationFlag = true;
     }
 
-    function _loop(){
+    function _loop(callback){
+        if (callback) callback();
         _render();
         if (stopAnimationFlag) {
             animationLoopRunning = false;
             console.log("animation stopped");
             return;
         }
-        requestAnimationFrame(_loop);
+        requestAnimationFrame(function(){_loop(callback);});
     }
 
     function render(){

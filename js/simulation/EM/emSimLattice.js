@@ -96,11 +96,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
                 _.each(neighbors, function(neighb){
                     if (neighb) numNeighbors++;
                 });
-                numNeighbors /= 6;
-                cell.setDeltaPosition(new THREE.Vector3(numNeighbors, numNeighbors, numNeighbors));
+                numNeighbors /= 60;
+                cell.changePosition(new THREE.Vector3(numNeighbors, numNeighbors, numNeighbors));
                 cell.update();
             });
-            three.render();
         },
 
         reset: function(){

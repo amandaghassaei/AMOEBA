@@ -42,6 +42,7 @@ define(['three'], function(THREE){
                 parent: "navSim",
                 tabs:{
                     emSetup: "Globals",
+                    emBoundaryCond: "Boundaries",
                     emRun: "Run"
                 }
             },

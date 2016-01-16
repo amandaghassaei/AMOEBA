@@ -154,7 +154,6 @@ require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'globals',
     var threeView = new ThreeView({model:three});
     globals.threeView = threeView;//todo fix this
 
-//    three.startAnimationLoop();
 
 //    if (lattice.get("connectionType") != "gik") lattice.getUItarget().addCellAtIndex(new THREE.Vector3(0,0,0));//add a cell
 });

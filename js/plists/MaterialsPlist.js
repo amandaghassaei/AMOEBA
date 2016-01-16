@@ -21,7 +21,7 @@ define([], function(){
                     }
                 },
                 fiberGlass: {
-                    name: "Fiberglass",
+                    name: "Insulator",
                     color: "#fef1b5",
 //                    opacity: "0.9",
                     altColor: "#ecf0f1",
@@ -44,10 +44,23 @@ define([], function(){
                     color: "#aaa",
                     altColor: "#8391AC",
                     properties:{}
+                },
+                piezo: {
+                    name: "Piezo",
+                    color: "#aaa",
+                    altColor: "#F5447B",
+                    properties:{}
+                },
+                mosfet: {
+                    name: "MOSFET",
+                    color: "#aaa",
+                    altColor: "#F99987",
+                    properties:{}
                 }
                 //
-                //#F5447B
-                //#F99987
+                //
+                //
+                //#ecf0f1
                 //#8391AC
                 //857B64
                 //FDE2D9

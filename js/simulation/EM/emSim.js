@@ -14,7 +14,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
 
             isRunning: false,
 
-            viewMode: 'default'
+            viewMode: 'default',
+
+            manualSelectFixed: false
 
         },
 
@@ -37,13 +39,13 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
 
         run: function(){
             this.set("isRunning", true);
-//            while(this.get("isRunning")){
+            three.startAnimationLoop(function(){
                 emSimLattice.iter();
-//            }
-            this.set("isRunning", false);
+            });
         },
 
         pause: function(){
+            three.stopAnimationLoop();
             this.set("isRunning", false);
         },
 
