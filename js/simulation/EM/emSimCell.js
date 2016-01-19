@@ -18,6 +18,12 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         var cellVolume = cellSize.x * cellSize.y * cellSize.z;
         this.mass = material.getDensity()*cellVolume;//kg
 
+        this.velocity = null;
+        this.nextVelocity = null;
+        this.deltaPosition = null;
+        this.nextDeltaPosition = null;
+        this.deltaRotation = null;
+
         this._reset();
 
         this.float();
@@ -28,26 +34,27 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return this.mass;//kg
     };
 
-    EMSimCell.prototype.applyAccel = function(accel, dt){
-        var velocity = this._changeVelocity(accel.multiplyScalar(dt));
-        this._changePosition(velocity.multiplyScalar(dt));
-    };
-
-    EMSimCell.prototype._changeVelocity = function(delta){
-        this.velocity.add(delta);
-        return this.velocity.clone();
-    };
-
-    EMSimCell.prototype._changePosition = function(delta){
-        this.deltaPosition.add(delta);
+    EMSimCell.prototype.applyForce = function(force, dt){
+        if (this._isFixed) return;
+        var accel = force.multiplyScalar(1/this.mass);
+        this.nextVelocity = this.getVelocity().add(accel.multiplyScalar(dt));
+        this.nextDeltaPosition = this.getDeltaPosition().add(this.nextVelocity.clone().multiplyScalar(dt));
     };
 
     EMSimCell.prototype._setVelocity = function(velocity){
         this.velocity = velocity;
     };
 
+    EMSimCell.prototype.getVelocity = function(){
+        return this.velocity.clone();
+    };
+
     EMSimCell.prototype._setDeltaPosition = function(delta){
         this.deltaPosition = delta;
+    };
+
+    EMSimCell.prototype.getDeltaPosition = function(){
+        return this.deltaPosition.clone();
     };
 
     EMSimCell.prototype._setDeltaRotation = function(delta){
@@ -84,7 +91,10 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.update = function(){
         if (this._isFixed) return;
-        this._setPosition(this.position.clone().add(this.deltaPosition.clone().multiplyScalar(1/(plist.allUnitTypes[lattice.getUnits()].multiplier))));
+        var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+        this.deltaPosition = this.nextDeltaPosition;
+        this.velocity = this.nextVelocity;
+        this._setPosition(this.position.clone().add(this.deltaPosition.clone().multiplyScalar(multiplier)));
     };
 
     EMSimCell.prototype.reset = function(){

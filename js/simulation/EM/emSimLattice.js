@@ -93,13 +93,52 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
             });
         },
 
+        _neighborLookup: function(index){
+            switch (index){
+                case 0:
+                    return 'x-';
+                case 1:
+                    return 'x+';
+                case 2:
+                    return 'y-';
+                case 3:
+                    return 'y+';
+                case 4:
+                    return 'z-';
+                case 5:
+                    return 'z+';
+            }
+        },
+
+        _neighborAxis: function(index){
+            if (index > 3) return 'z';
+            if (index > 1) return 'y';
+            return 'x';
+        },
+
         iter: function(dt, gravity){
 
+            var self = this;
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 var material = cell.getMaterial();
                 var mass = cell.getMass();
-                var Fg = gravity.clone().multiplyScalar(mass);
-                cell.applyAccel(gravity.clone(), dt);
+                var Ftotal = gravity.clone().multiplyScalar(mass);
+                _.each(neighbors, function(neighbor, index){
+                    if (neighbor === null) return;
+                    var axis = self._neighborAxis(index);
+                    var diff = new THREE.Vector3(0,0,0);
+                    var cellDelta = cell.getDeltaPosition();
+                    var neighborDelta = neighbor.getDeltaPosition();
+                    _.each(diff, function(val, key){
+                        if (key == axis) return;
+                        diff[key] = cellDelta[key] - neighborDelta[key];
+                    });
+                    var k = 1;//material.getElasticMod();
+                    Ftotal.sub(diff.multiplyScalar(k));
+                });
+                cell.applyForce(Ftotal, dt);
+            });
+            this.loopCells(function(cell){
                 cell.update();
             });
         },
