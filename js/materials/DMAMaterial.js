@@ -175,6 +175,14 @@ define(['underscore', 'appState'], function(_, appState){
         return this.properties;
     };
 
+    DMAMaterial.prototype.getDensity = function(){
+        return this.properties.density;
+    };
+
+    DMAMaterial.prototype.getElasticMod = function(){
+        return this.properties.elasMod;
+    };
+
     DMAMaterial.prototype.canDelete = function(){
         return !this.noDelete;
     };

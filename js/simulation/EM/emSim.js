@@ -3,8 +3,8 @@
  */
 
 
-define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice'],
-    function(THREE, _, Backbone, three, appState, emSimLattice, lattice){
+define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice', 'plist'],
+    function(THREE, _, Backbone, three, appState, emSimLattice, lattice, plist){
 
     var emSim = Backbone.Model.extend({
 
@@ -12,6 +12,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             gravity: 9.8,//m/s^2
             gravityVector: new THREE.Vector3(0,0,-1),
+
+            dt: 1,//ms
 
             isRunning: false,
 
@@ -43,8 +45,10 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         run: function(){
             this.set("isRunning", true);
+            var dt = this.get("dt")/1000;
+            var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
             three.startAnimationLoop(function(){
-                emSimLattice.iter();
+                emSimLattice.iter(dt, gravityVect);
             });
         },
 

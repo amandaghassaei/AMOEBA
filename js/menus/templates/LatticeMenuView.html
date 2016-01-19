@@ -40,8 +40,14 @@ Aspect Ratio:&nbsp;&nbsp;
     <input data-property="aspectRatio" data-key="x" data-min="0" disabled="disabled" value="<%= aspectRatio.x %>" placeholder="X" class="form-control lattice floatInput" type="text">&nbsp;
     <input data-property="aspectRatio" data-key="y" data-min="0" disabled="disabled" value="<%= aspectRatio.y %>" placeholder="Y" class="form-control lattice floatInput" type="text">&nbsp;
     <input data-property="aspectRatio" data-key="z" data-min="0" disabled="disabled" value="<%= aspectRatio.z %>" placeholder="Z" class="form-control lattice floatInput" type="text"><br/><br/>
-<% if (connectionType == "gik") { %>
-    Part Length:&nbsp;&nbsp;<input data-property="gikLength" value="<%= gikLength %>" placeholder="Length" class="form-control intInput appState" type="text"><br/><br/>
-<% } %>
+Units:&nbsp;&nbsp;
+    <div class="btn-group">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allUnitTypes[units].name %><span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <% _.each(allUnitTypes, function(unitData, key){ %>
+                <li><a class="lattice dropdownSelector" data-property="units" data-value="<%= key %>" href="#"><%= unitData.name %></a></li>
+            <% }); %>
+        </ul>
+    </div><br/><br/>
 <a href="#" class="clearCells btn btn-block btn-lg btn-danger">Clear All Cells</a><br/>
 Num Cells:&nbsp;&nbsp;<%= numCells %><br/>

@@ -93,15 +93,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
             });
         },
 
-        iter: function(){
+        iter: function(dt, gravity){
 
             this._loopCellsWithNeighbors(function(cell, neighbors){
-                var numNeighbors = 0;
-                _.each(neighbors, function(neighb){
-                    if (neighb) numNeighbors++;
-                });
-                numNeighbors /= 60;
-                cell.changePosition(new THREE.Vector3(numNeighbors, numNeighbors, numNeighbors));
+                var material = cell.getMaterial();
+                var mass = cell.getMass();
+                var Fg = gravity.clone().multiplyScalar(mass);
+                cell.applyAccel(gravity.clone(), dt);
                 cell.update();
             });
         },

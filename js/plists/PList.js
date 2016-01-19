@@ -94,8 +94,14 @@ define(['three'], function(THREE){
         },
 
         allUnitTypes: {
-            mm: "mm",
-            um: "Micron"
+            mm: {
+                name: "mm",
+                multiplier: 0.001
+            },
+            um: {
+                name: "Micron",
+                multiplier: 0.000001
+            }
         }
 
     }
