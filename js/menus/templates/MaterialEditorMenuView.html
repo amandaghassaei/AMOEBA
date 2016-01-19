@@ -9,6 +9,8 @@ Material Properties:<br/>
     <input id="conductive" data-property="conductive" type="checkbox" <% if (properties.conductive){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="materialProperties custom-checkbox">
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
     Conductive</label><br/>
+    Density (kg/m^3): &nbsp;&nbsp;<input data-property="density" value="<%= properties.density %>" placeholder="Density" class="form-control floatInput materialProperties" type="text"><br/><br/>
+    Eleasitc Mod (GPa): &nbsp;&nbsp;<input data-property="elasMod" value="<%= properties.elasMod %>" placeholder="Mod" class="form-control floatInput materialProperties" type="text"><br/><br/>
 <br/>
 <a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Material</a><br/>
 <% if (noDelete){ %>

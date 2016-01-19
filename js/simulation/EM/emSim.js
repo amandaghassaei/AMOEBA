@@ -3,21 +3,23 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice'],
-    function(_, Backbone, three, appState, emSimLattice, lattice){
+define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice'],
+    function(THREE, _, Backbone, three, appState, emSimLattice, lattice){
 
     var emSim = Backbone.Model.extend({
 
         defaults:{
 
             gravity: 9.8,//m/s^2
+            gravityVector: new THREE.Vector3(0,0,-1),
 
             isRunning: false,
 
             viewMode: 'default',
 
             manualSelectFixed: false,
-            showFixed: false
+            showFixed: false,
+            numFixed: 0
 
         },
 
@@ -60,8 +62,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
         fixCellAtPosition: function(position){
             position.sub(lattice.get("cellsMin"));
             var cell = emSimLattice.getCellAtIndex(position);
-            if (cell.isFixed()) cell.float();
-            else cell.fix();
+            var numFixed = this.get("numFixed");
+            if (cell.isFixed()) {
+                numFixed--;
+                cell.float();
+            } else {
+                numFixed++;
+                cell.fix();
+            }
+            this.set("numFixed", numFixed);
         },
 
         _toggleFixedVisibility: function(){

@@ -85,7 +85,8 @@ define(['underscore', 'appState'], function(_, appState){
             var self = this;
             require(['materials', 'lattice'], function(materials, lattice){
 
-                var changed = self.recalcChildren(materials);
+                var changed = false;
+                if (self.isComposite()) changed = self.recalcChildren(materials);
 
                 var parentComposites = self.getParentComposites(materials);
                 if (changed){

@@ -14,8 +14,13 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
         _initialize: function(){
         },
 
-        _makeTemplateJSON: function(){
+        getPropertyOwner: function($target){
+            if ($target.hasClass('emSim')) return emSim;
             return null;
+        },
+
+        _makeTemplateJSON: function(){
+            return emSim.toJSON();
         },
 
         template: _.template(template)

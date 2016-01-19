@@ -17,7 +17,9 @@ define([], function(){
                     color: "#b5a642",
                     altColor: "#857B64",
                     properties:{
-                        conductive: true
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        elasMod: 100//Gpascals (kg/(s^2*m)/1000000000)
                     }
                 },
                 fiberGlass: {
@@ -25,41 +27,55 @@ define([], function(){
                     color: "#fef1b5",
 //                    opacity: "0.9",
                     altColor: "#ecf0f1",
-                    properties:{}
+                    properties:{
+                        conductive: false,
+                        density: 500,//kg/m^3
+                        elasMod: 17.2
+                    }
                 },
                 carbon: {
                     name: "Carbon Composite",
                     color: "#222",
                     altColor: "#000",
-                    properties:{}
-                },
-                rigid:{
-                    name: "Rigid",
-                    color: "#aaa",
-                    altColor: "#9CC9CB",
-                    properties:{}
+                    properties:{
+                        conductive: false,
+                        density: 500,//kg/m^3
+                        elasMod: 181
+                    }
                 },
                 flexure: {
                     name: "Flexure",
                     color: "#aaa",
                     altColor: "#8391AC",
-                    properties:{}
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01
+                    }
                 },
                 piezo: {
                     name: "Piezo",
                     color: "#aaa",
                     altColor: "#F5447B",
-                    properties:{}
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50
+                    }
                 },
                 mosfet: {
                     name: "MOSFET",
                     color: "#aaa",
                     altColor: "#F99987",
-                    properties:{}
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50
+                    }
                 }
                 //
                 //
-                //
+                //#9CC9CB
                 //#ecf0f1
                 //#8391AC
                 //857B64
