@@ -70,6 +70,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return JSON.parse(JSON.stringify(this.cells));
         },
 
+        getCellAtIndex: function(index){
+            return this.cells[index.x][index.y][index.y];
+        },
+
 
 
         //setters

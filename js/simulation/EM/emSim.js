@@ -52,6 +52,14 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
         reset: function(){
             this.set("isRunning", false);
             emSimLattice.reset();
+        },
+
+
+        fixCellAtPosition: function(position){
+            position.sub(lattice.get("cellsMin"));
+            var cell = emSimLattice.getCellAtIndex(position);
+            if (cell.isFixed()) cell.float();
+            else cell.fix();
         }
 
 

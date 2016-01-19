@@ -44,7 +44,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             materialClass: null,
 
             stockSimulationPlaying: false,
-            manualSelectOrigin: false//mode that allows user ot select origin from existing cell
         },
 
         initialize: function(){
@@ -90,7 +89,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         _tabChanged: function(){
             var currentTab = this.get("currentTab");
             if (currentTab != "animate") this.set("stockSimulationPlaying", false);
-            if (currentTab != "cam") this.set("manualSelectOrigin", false);
             if (currentTab == "import" && this.lattice.get("connectionType") == "edgeRot") this.lattice.set("partType", "voxLowPoly");
             this.get("lastNavTab")[this.get("currentNav")] = currentTab;//store tab
             this._updateCellMode(currentTab);

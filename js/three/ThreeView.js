@@ -75,12 +75,13 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
         _mouseUp: function(){
             this.mouseIsDown = false;
-            if (appState.get("currentTab") == "cam" && appState.get("manualSelectOrigin")){
+            if (appState.get("currentTab") == "emBoundaryCond"){
                 var position = globals.highlighter.getHighlightedObjectPosition();
                 if (position){
-                    require(['cam'], function(cam){
-                        cam.set("originPosition", position);
-                        appState.set("manualSelectOrigin", false);
+                    require(['emSim'], function(emSim){
+                        if (emSim.get("manualSelectFixed")){
+                            emSim.fixCellAtPosition(position);
+                        }
                     });
                     return;
                 }

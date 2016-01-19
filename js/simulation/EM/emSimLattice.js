@@ -107,6 +107,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
                 cell.reset();
             });
             three.render();
+        },
+
+        getCellAtIndex: function(index){
+            return this.cells[index.x][index.y][index.z];
         }
 
 

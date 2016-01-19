@@ -43,6 +43,10 @@ define(["cell"], function(DMACell){
         this._isFixed = false;
     };
 
+    EMSimCell.prototype.isFixed = function(){
+        return this._isFixed;
+    };
+
     EMSimCell.prototype.update = function(){
         if (this._isFixed) return;
         this._setPosition(this.position.clone().add(this.deltaPosition));
