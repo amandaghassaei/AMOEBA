@@ -10,7 +10,8 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
     return MenuParentView.extend({
 
         events: {
-            "click #manualSelectFixed":                         "_manualFixedSelection"
+            "click #manualSelectFixed":                         "_manualFixedSelection",
+            "click #toggleFixedVis":                            "_toggleFixedVis"
         },
 
         _initialize: function(){
@@ -20,6 +21,11 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
         _manualFixedSelection: function(e){
             e.preventDefault();
             emSim.set("manualSelectFixed", !emSim.get("manualSelectFixed"));
+        },
+
+        _toggleFixedVis: function(e){
+            e.preventDefault();
+            emSim.set("showFixed", !emSim.get("showFixed"));
         },
 
         _makeTemplateJSON: function(){

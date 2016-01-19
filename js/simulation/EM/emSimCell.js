@@ -35,6 +35,14 @@ define(["cell"], function(DMACell){
         this.cell.object3D.position.set(position.x, position.y, position.z);
     };
 
+    EMSimCell.prototype.show = function(){
+        this.cell.show();
+    };
+
+    EMSimCell.prototype.hide = function(){
+        this.cell.hide();
+    };
+
     EMSimCell.prototype.fix = function(){
         this._isFixed = true;
     };

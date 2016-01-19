@@ -42,10 +42,14 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
 
         destroyCells: function(){
             if (this.cells){
-                this._loopCells(this.cells, function(cell){
+                this.loopCells(function(cell){
                     cell.destroy();
                 });
             }
+        },
+
+        loopCells: function(callback){
+            this._loopCells(this.cells, callback);
         },
 
         _loopCells: function(cells, callback){
@@ -67,7 +71,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
             var sizeX = cells.length;
             var sizeY = cells[0].length;
             var sizeZ = cells[0][0].length;
-            this._loopCells(cells, function(cell, x, y, z, self){
+            this.loopCells(function(cell, x, y, z, self){
 
                 var neighbors = [];
                 if (x == 0) neighbors.push(null);
@@ -103,7 +107,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
         },
 
         reset: function(){
-            this._loopCells(this.cells, function(cell){
+            this.loopCells(function(cell){
                 cell.reset();
             });
             three.render();

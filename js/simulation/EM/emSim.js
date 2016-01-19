@@ -16,13 +16,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
 
             viewMode: 'default',
 
-            manualSelectFixed: false
+            manualSelectFixed: false,
+            showFixed: false
 
         },
 
         initialize: function(){
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
+            this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
 
             this._navChanged();
         },
@@ -60,6 +62,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lat
             var cell = emSimLattice.getCellAtIndex(position);
             if (cell.isFixed()) cell.float();
             else cell.fix();
+        },
+
+        _toggleFixedVisibility: function(){
+            var state = this.get("showFixed");
+            emSimLattice.loopCells(function(cell){
+                if (!state || cell.isFixed()) cell.show();
+                else cell.hide();
+            });
+            three.render();
         }
 
 
