@@ -111,6 +111,11 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             }
         },
 
+        _neighborSign: function(index){
+            if (index%2 == 0) return -1;
+            return 1;
+        },
+
         _neighborAxis: function(index){
             if (index > 3) return 'z';
             if (index > 1) return 'y';
@@ -123,39 +128,46 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
         },
 
         iter: function(dt, gravity, shouldRender){
-
             var self = this;
             var latticePitch = lattice.getPitch();
-            console.log(latticePitch);
             this._loopCellsWithNeighbors(function(cell, neighbors){
-                var material = cell.getMaterial();
                 var mass = cell.getMass();
+                var material = cell.getMaterial();
                 var Ftotal = gravity.clone().multiplyScalar(mass);
                 var velocity = cell.getVelocity();
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
                     var axis = self._neighborAxis(index);
-                    var force = new THREE.Vector3(0,0,0);
+                    var D = new THREE.Vector3(0,0,0);
+                    D[axis] += self._neighborSign(index)*latticePitch[axis];
                     var cellDelta = cell.getDeltaPosition();
                     var neighborDelta = neighbor.getDeltaPosition();
+                    _.each(D, function(val, key){
+                        D[key] += neighborDelta[key] - cellDelta[key];
+                    });
+                    var d = D.clone().multiplyScalar(1-latticePitch[axis]/D.length());
+
                     var length = latticePitch[axis];
                     var crossSectionalArea = 1;
-                    _.each(force, function(val, key){
+                    _.each(d, function(val, key){
                         if (key == axis) return;
                         crossSectionalArea *= latticePitch[key];
                     });
-                    //k=Y*Area/Length
-                    var k = 10;//neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/10000;
-                    if (material.getID() == "brass") k =1000;
-                    var d = k/100000;
-                    _.each(force, function(val, key){
-//                        if (key == axis) {
-//                            force[key] =
-//                        } else {
-                            force[key] = k*(neighborDelta[key] - cellDelta[key]);
-//                            force[key] -= d*(velocity[key]);
-//                        }
+
+                    var k = neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/1000;
+                    if(k>1000) k = 1000;
+
+                    var force = d.multiplyScalar(k);
+                    //todo damping in primary axis
+
+                    var damping = k/100000;
+                   _.each(force, function(val, key){
+                        if (key == axis) return;
+                        force[key] += k*(neighborDelta[key] - cellDelta[key]);
+                        force[key] -= damping*(velocity[key]);
                     });
+
+
 
                     Ftotal.add(force);
                 });
@@ -164,6 +176,42 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             this.loopCells(function(cell){
                 cell.update(shouldRender);
             });
+        },
+
+        sim1Function: function(dt, gravity, cell, neighbors, latticePitch){
+            var self = this;
+            var material = cell.getMaterial();
+            var mass = cell.getMass();
+            var Ftotal = gravity.clone().multiplyScalar(mass);
+            var velocity = cell.getVelocity();
+            _.each(neighbors, function(neighbor, index){
+                if (neighbor === null) return;
+                var axis = self._neighborAxis(index);
+                var force = new THREE.Vector3(0,0,0);
+                var cellDelta = cell.getDeltaPosition();
+                var neighborDelta = neighbor.getDeltaPosition();
+                var length = latticePitch[axis];
+                var crossSectionalArea = 1;
+                _.each(force, function(val, key){
+                    if (key == axis) return;
+                    crossSectionalArea *= latticePitch[key];
+                });
+                //k=Y*Area/Length
+                var k = 10;//neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/10000;
+                if (material.getID() == "brass") k =1000;
+                var d = k/100000;
+                _.each(force, function(val, key){
+//                        if (key == axis) {
+//                            force[key] =
+//                        } else {
+                        force[key] = k*(neighborDelta[key] - cellDelta[key]);
+//                            force[key] -= d*(velocity[key]);
+//                        }
+                });
+
+                Ftotal.add(force);
+            });
+            cell.applyForce(Ftotal, dt);
         },
 
         reset: function(){

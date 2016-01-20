@@ -79,6 +79,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.compositeElasticModulus = function(elasModNeighbor){
         var elasMod = this.getMaterial().getElasticMod();
+        if (elasMod == elasModNeighbor) return elasModNeighbor;
         return 2*elasModNeighbor*elasMod/(elasModNeighbor+elasMod);
     };
 
