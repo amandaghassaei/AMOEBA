@@ -13,7 +13,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             gravity: 9.8,//m/s^2
             gravityVector: new THREE.Vector3(0,0,-1),
 
-            dt: 1,//ms
+            dtSolver: 5,//us
+            dtRender: 100,//frames
 
             isRunning: false,
 
@@ -45,10 +46,14 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         run: function(){
             this.set("isRunning", true);
-            var dt = this.get("dt")/1000;
+            var dt = this.get("dtSolver")/1000000;//convert to sec
+            var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
             three.startAnimationLoop(function(){
-                emSimLattice.iter(dt, gravityVect);
+                for (var i=0;i<renderRate-1;i++){
+                    emSimLattice.iter(dt, gravityVect, false);
+                }
+                emSimLattice.iter(dt, gravityVect, true);
             });
         },
 

@@ -67,6 +67,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             return this.get("aspectRatio").clone();
         },
 
+        getPitch: function(){
+            return this.get("aspectRatio").clone().multiplyScalar(plist.allUnitTypes[this.get("units")].multiplier);//return in m
+        },
+
         getCellType: function(){
             return this.get("cellType");
         },

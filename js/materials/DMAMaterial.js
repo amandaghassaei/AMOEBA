@@ -180,7 +180,7 @@ define(['underscore', 'appState'], function(_, appState){
     };
 
     DMAMaterial.prototype.getElasticMod = function(){
-        return this.properties.elasMod;
+        return this.properties.elasMod*1000000000;
     };
 
     DMAMaterial.prototype.canDelete = function(){

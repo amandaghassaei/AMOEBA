@@ -3,7 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbone, EMSimCell, three){
+define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
+    function(_, Backbone, EMSimCell, three, lattice){
 
 
     var EMSimLattice = Backbone.Model.extend({
@@ -116,30 +117,46 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel'], function(_, Backbo
             return 'x';
         },
 
-        iter: function(dt, gravity){
+        _sign: function(val){
+            if (val >0) return 1;
+            return -1;
+        },
+
+        iter: function(dt, gravity, shouldRender){
 
             var self = this;
+            var latticePitch = lattice.getPitch();
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 var material = cell.getMaterial();
                 var mass = cell.getMass();
                 var Ftotal = gravity.clone().multiplyScalar(mass);
+                var velocity = cell.getVelocity();
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
                     var axis = self._neighborAxis(index);
-                    var diff = new THREE.Vector3(0,0,0);
+                    var force = new THREE.Vector3(0,0,0);
                     var cellDelta = cell.getDeltaPosition();
                     var neighborDelta = neighbor.getDeltaPosition();
-                    _.each(diff, function(val, key){
-                        if (key == axis) return;
-                        diff[key] = cellDelta[key] - neighborDelta[key];
+                    var length = latticePitch[axis];
+                    var crossSectionalArea = 1;
+                    _.each(force, function(val, key){
+                        crossSectionalArea *= latticePitch[key];
                     });
-                    var k = 1;//material.getElasticMod();
-                    Ftotal.sub(diff.multiplyScalar(k));
+                    //k=Y*Area/Length
+                    var k = material.getElasticMod()*crossSectionalArea/length;
+                    var d = k/100000;
+                    _.each(force, function(val, key){
+                        if (key == axis) return;
+                        force[key] = k*(neighborDelta[key] - cellDelta[key]);
+                        force[key] -= d*(velocity[key]);
+                    });
+
+                    Ftotal.add(force);
                 });
                 cell.applyForce(Ftotal, dt);
             });
             this.loopCells(function(cell){
-                cell.update();
+                cell.update(shouldRender);
             });
         },
 

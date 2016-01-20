@@ -14,7 +14,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         this.cell = cell;
 
         var material = cell.getMaterial();
-        var cellSize = lattice.getAspectRatio().multiplyScalar(plist.allUnitTypes[lattice.getUnits()].multiplier);
+        var cellSize = lattice.getPitch();
         var cellVolume = cellSize.x * cellSize.y * cellSize.z;
         this.mass = material.getDensity()*cellVolume;//kg
 
@@ -41,24 +41,12 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         this.nextDeltaPosition = this.getDeltaPosition().add(this.nextVelocity.clone().multiplyScalar(dt));
     };
 
-    EMSimCell.prototype._setVelocity = function(velocity){
-        this.velocity = velocity;
-    };
-
     EMSimCell.prototype.getVelocity = function(){
         return this.velocity.clone();
     };
 
-    EMSimCell.prototype._setDeltaPosition = function(delta){
-        this.deltaPosition = delta;
-    };
-
     EMSimCell.prototype.getDeltaPosition = function(){
         return this.deltaPosition.clone();
-    };
-
-    EMSimCell.prototype._setDeltaRotation = function(delta){
-        this.deltaRotation = delta;
     };
 
     EMSimCell.prototype._setPosition = function(position){
@@ -89,12 +77,12 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return this.cell.getMaterial();
     };
 
-    EMSimCell.prototype.update = function(){
+    EMSimCell.prototype.update = function(shouldRender){
         if (this._isFixed) return;
         var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
         this.deltaPosition = this.nextDeltaPosition;
         this.velocity = this.nextVelocity;
-        this._setPosition(this.position.clone().add(this.deltaPosition.clone().multiplyScalar(multiplier)));
+        if (shouldRender) this._setPosition(this.position.clone().add(this.deltaPosition.clone().multiplyScalar(multiplier)));
     };
 
     EMSimCell.prototype.reset = function(){
@@ -103,9 +91,9 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
     };
 
     EMSimCell.prototype._reset = function(){
-        this._setVelocity(new THREE.Vector3(0,0,0));
-        this._setDeltaPosition(new THREE.Vector3(0,0,0));
-        this._setDeltaRotation(new THREE.Quaternion(0,0,0,1));
+        this.velocity = new THREE.Vector3(0,0,0);
+        this.deltaPosition = new THREE.Vector3(0,0,0);
+        this.deltaRotation = new THREE.Quaternion(0,0,0,1);
     };
 
     EMSimCell.prototype.destroy = function(){
