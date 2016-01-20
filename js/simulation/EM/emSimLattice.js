@@ -156,11 +156,11 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
                     var k = neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/1000;
                     if(k>1000) k = 1000;
+                    var damping = k/100000;
 
                     var force = d.multiplyScalar(k);
                     //todo damping in primary axis
 
-                    var damping = k/100000;
                    _.each(force, function(val, key){
                         if (key == axis) return;
                         force[key] += k*(neighborDelta[key] - cellDelta[key]);
@@ -176,42 +176,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             this.loopCells(function(cell){
                 cell.update(shouldRender);
             });
-        },
-
-        sim1Function: function(dt, gravity, cell, neighbors, latticePitch){
-            var self = this;
-            var material = cell.getMaterial();
-            var mass = cell.getMass();
-            var Ftotal = gravity.clone().multiplyScalar(mass);
-            var velocity = cell.getVelocity();
-            _.each(neighbors, function(neighbor, index){
-                if (neighbor === null) return;
-                var axis = self._neighborAxis(index);
-                var force = new THREE.Vector3(0,0,0);
-                var cellDelta = cell.getDeltaPosition();
-                var neighborDelta = neighbor.getDeltaPosition();
-                var length = latticePitch[axis];
-                var crossSectionalArea = 1;
-                _.each(force, function(val, key){
-                    if (key == axis) return;
-                    crossSectionalArea *= latticePitch[key];
-                });
-                //k=Y*Area/Length
-                var k = 10;//neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/10000;
-                if (material.getID() == "brass") k =1000;
-                var d = k/100000;
-                _.each(force, function(val, key){
-//                        if (key == axis) {
-//                            force[key] =
-//                        } else {
-                        force[key] = k*(neighborDelta[key] - cellDelta[key]);
-//                            force[key] -= d*(velocity[key]);
-//                        }
-                });
-
-                Ftotal.add(force);
-            });
-            cell.applyForce(Ftotal, dt);
         },
 
         reset: function(){
