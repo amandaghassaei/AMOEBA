@@ -155,7 +155,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     });
 
                     var k = neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/1000;
-                    if(k>1000) k = 1000;
+                    if(k>100) k = 100;
                     var damping = k/100000;
 
                     var force = d.multiplyScalar(k);
