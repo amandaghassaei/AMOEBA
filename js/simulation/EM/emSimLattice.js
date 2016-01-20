@@ -126,6 +126,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
             var self = this;
             var latticePitch = lattice.getPitch();
+            console.log(latticePitch);
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 var material = cell.getMaterial();
                 var mass = cell.getMass();
@@ -140,15 +141,20 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     var length = latticePitch[axis];
                     var crossSectionalArea = 1;
                     _.each(force, function(val, key){
+                        if (key == axis) return;
                         crossSectionalArea *= latticePitch[key];
                     });
                     //k=Y*Area/Length
-                    var k = material.getElasticMod()*crossSectionalArea/length;
+                    var k = 10;//neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/10000;
+                    if (material.getID() == "brass") k =1000;
                     var d = k/100000;
                     _.each(force, function(val, key){
-                        if (key == axis) return;
-                        force[key] = k*(neighborDelta[key] - cellDelta[key]);
-                        force[key] -= d*(velocity[key]);
+//                        if (key == axis) {
+//                            force[key] =
+//                        } else {
+                            force[key] = k*(neighborDelta[key] - cellDelta[key]);
+//                            force[key] -= d*(velocity[key]);
+//                        }
                     });
 
                     Ftotal.add(force);

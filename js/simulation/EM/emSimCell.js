@@ -77,6 +77,11 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return this.cell.getMaterial();
     };
 
+    EMSimCell.prototype.compositeElasticModulus = function(elasModNeighbor){
+        var elasMod = this.getMaterial().getElasticMod();
+        return 2*elasModNeighbor*elasMod/(elasModNeighbor+elasMod);
+    };
+
     EMSimCell.prototype.update = function(shouldRender){
         if (this._isFixed) return;
         var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
