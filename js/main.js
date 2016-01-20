@@ -4,6 +4,8 @@
 
 require.config({
 
+    waitSeconds: 0,
+
     baseUrl: 'js',
 
     paths: {
