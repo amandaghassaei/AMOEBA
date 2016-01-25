@@ -122,6 +122,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             return 'x';
         },
 
+        _torqueAxis: function(neighbAxis, axis){
+            if ('x' != neighbAxis && 'x' != axis) return 'x';
+            if ('y' != neighbAxis && 'y' != axis) return 'y';
+            return 'z';
+        },
+
         _sign: function(val){
             if (val >0) return 1;
             return -1;
@@ -134,44 +140,54 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                 var mass = cell.getMass();
                 var material = cell.getMaterial();
                 var Ftotal = gravity.clone().multiplyScalar(mass);
-                var velocity = cell.getVelocity();
+                var velocity = cell.getAbsoluteVelocity();
+
+                var torque = new THREE.Vector3(0,0,0);//rotational forces
+
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
+
                     var axis = self._neighborAxis(index);
                     var D = new THREE.Vector3(0,0,0);
                     D[axis] += self._neighborSign(index)*latticePitch[axis];
-                    var cellDelta = cell.getDeltaPosition();
-                    var neighborDelta = neighbor.getDeltaPosition();
+                    var cellDelta = cell.getTranslation();
+                    var neighborDelta = neighbor.getTranslation();
                     _.each(D, function(val, key){
                         D[key] += neighborDelta[key] - cellDelta[key];
                     });
-                    var d = D.clone().multiplyScalar(1-latticePitch[axis]/D.length());
 
-                    var length = latticePitch[axis];
-                    var crossSectionalArea = 1;
-                    _.each(d, function(val, key){
-                        if (key == axis) return;
-                        crossSectionalArea *= latticePitch[key];
-                    });
+                    var Dhat = D.clone().normalize();
+                    var d = Dhat.clone().multiplyScalar(D.length()-latticePitch[axis]);
 
-                    var k = neighbor.compositeElasticModulus(material.getElasticMod())*crossSectionalArea/length/1000;
-                    if(k>100) k = 100;
-                    var damping = k/100000;
+
+
+
+//                    var length = latticePitch[axis];
+//                    var crossSectionalArea = 1;
+//                    _.each(d, function(val, key){
+//                        if (key == axis) return;
+//                        crossSectionalArea *= latticePitch[key];
+//                    });
+
+                    var k = neighbor.compositeK(material.getK());
+                    var damping = k/100000;//this is arbitrary for now
 
                     var force = d.multiplyScalar(k);
                     //todo damping in primary axis
 
-                   _.each(force, function(val, key){
+                    _.each(force, function(val, key){
                         if (key == axis) return;
-                        force[key] += k*(neighborDelta[key] - cellDelta[key]);
-                        force[key] -= damping*(velocity[key]);
+                        var delta = neighborDelta[key] - cellDelta[key];
+                        var contribution = k*delta - damping*(velocity[key]);
+                        force[key] += contribution;
+                        torque[self._torqueAxis(axis, key)] += latticePitch[key]*contribution;
                     });
-
-
 
                     Ftotal.add(force);
                 });
+
                 cell.applyForce(Ftotal, dt);
+//                cell.applyTorque(torque, dt);
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);

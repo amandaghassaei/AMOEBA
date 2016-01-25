@@ -183,6 +183,10 @@ define(['underscore', 'appState'], function(_, appState){
         return this.properties.elasMod*1000000000;
     };
 
+    DMAMaterial.prototype.getK = function(){
+        return this.properties.k;
+    };
+
     DMAMaterial.prototype.canDelete = function(){
         return !this.noDelete;
     };

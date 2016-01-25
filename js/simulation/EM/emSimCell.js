@@ -8,8 +8,8 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     function EMSimCell(cell){
 
-        this.position = cell.getAbsolutePosition();
-        this.rotation = cell.getAbsoluteOrientation();
+        this.origPosition = cell.getAbsolutePosition();
+//        this.rotation = cell.getAbsoluteOrientation();
 
         this.cell = cell;
 
@@ -17,18 +17,27 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         var cellSize = lattice.getPitch();
         var cellVolume = cellSize.x * cellSize.y * cellSize.z;
         this.mass = material.getDensity()*cellVolume;//kg
+        this.I = 2/5*this.mass*Math.pow(cellSize.x/2, 2);
 
         this.velocity = null;
         this.nextVelocity = null;
-        this.deltaPosition = null;
-        this.nextDeltaPosition = null;
-        this.deltaRotation = null;
+        this.translation = null;
+        this.nextTranslation = null;
+        this.quaternion = null;
+        this.rotation = null;
+        this.nextRotation = null;
+        this.w = null;
+        this.nextW = null;
 
         this._reset();
 
         this.float();
 
     }
+
+    EMSimCell.prototype.getMomentOfInertia = function(){
+        return this.I;
+    };
 
     EMSimCell.prototype.getMass = function(){
         return this.mass;//kg
@@ -38,20 +47,58 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         if (this._isFixed) return;
         var accel = force.multiplyScalar(1/this.mass);
         this.nextVelocity = this.getVelocity().add(accel.multiplyScalar(dt));
-        this.nextDeltaPosition = this.getDeltaPosition().add(this.nextVelocity.clone().multiplyScalar(dt));
+        this.nextTranslation = this.getTranslation().add(this.nextVelocity.clone().multiplyScalar(dt));
+    };
+
+    EMSimCell.prototype.applyTorque = function(torque, dt){
+        if (this._isFixed) return;
+        var accel = torque.multiplyScalar(-1/(1000*this.I));
+        this.nextW = this.getAngularVelocity().add(accel.multiplyScalar(dt));
+        this.nextRotation = this.getRotation().add(this.nextW.clone().multiplyScalar(dt));
+    };
+
+
+
+    
+    EMSimCell.prototype.getAbsoluteVelocity = function(){
+        return this.applyRotation(this.getVelocity());
     };
 
     EMSimCell.prototype.getVelocity = function(){
         return this.velocity.clone();
     };
 
-    EMSimCell.prototype.getDeltaPosition = function(){
-        return this.deltaPosition.clone();
+    EMSimCell.prototype.getAngularVelocity = function(){
+        return this.w.clone();
+    };
+
+    EMSimCell.prototype.getTranslation = function(){
+        return this.translation.clone();
+    };
+
+    EMSimCell.prototype.getRotation = function(){
+        return this.rotation.clone();
     };
 
     EMSimCell.prototype._setPosition = function(position){
         this.cell.object3D.position.set(position.x, position.y, position.z);
     };
+
+    EMSimCell.prototype._setRotation = function(rotation){
+        this.cell.object3D.rotation.set(rotation.x, rotation.y, rotation.z);
+    };
+
+    EMSimCell.prototype.getQuaternion = function(){
+        return this.quaternion.clone();
+    };
+
+    EMSimCell.prototype.applyRotation = function(vector){
+        vector.applyQuaternion(this.getQuaternion());
+        return vector;
+    };
+    
+    
+    
 
     EMSimCell.prototype.show = function(){
         this.cell.show();
@@ -83,31 +130,45 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return 2*elasModNeighbor*elasMod/(elasModNeighbor+elasMod);
     };
 
+    EMSimCell.prototype.compositeK = function(kNeighbor){
+        var k = this.getMaterial().getK();
+        if (k == kNeighbor) return kNeighbor;
+        return 2*kNeighbor*k/(kNeighbor+k);
+    };
+
     EMSimCell.prototype.update = function(shouldRender){
         if (this._isFixed) return;
         var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
-        this.deltaPosition = this.nextDeltaPosition;
+        this.translation = this.nextTranslation;
         this.velocity = this.nextVelocity;
-        if (shouldRender) this._setPosition(this.position.clone().add(this.deltaPosition.clone().multiplyScalar(multiplier)));
+        this.rotation = this.nextRotation;
+        this.w = this.nextW;
+        if (shouldRender) {
+            this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
+//            this._setRotation(this.rotation.clone());
+        }
     };
 
     EMSimCell.prototype.reset = function(){
         this._reset();
-        this._setPosition(this.position.clone());
+        this._setPosition(this.origPosition.clone());
+        this._setRotation(this.rotation.clone());
     };
 
     EMSimCell.prototype._reset = function(){
         this.velocity = new THREE.Vector3(0,0,0);
-        this.deltaPosition = new THREE.Vector3(0,0,0);
-        this.deltaRotation = new THREE.Quaternion(0,0,0,1);
+        this.translation = new THREE.Vector3(0,0,0);
+        this.quaternion = new THREE.Quaternion(0,0,0,1);
+        this.w = new THREE.Vector3(0,0,0);
+        this.rotation = new THREE.Vector3(0,0,0);
     };
 
     EMSimCell.prototype.destroy = function(){
         this.cell = null;
-        this.position = null;
+        this.origPosition = null;
         this.rotation = null;
-        this.deltaPosition = null;
-        this.deltaRotation = null;
+        this.translation = null;
+        this.quaternion = null;
     };
 
     return EMSimCell;
