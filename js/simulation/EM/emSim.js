@@ -30,6 +30,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
+            this.listenTo(this, "change:viewMode", this._viewModechanged);
 
             this._navChanged();
         },
@@ -88,6 +89,26 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 if (!state || cell.isFixed()) cell.show();
                 else cell.hide();
             });
+            three.render();
+        },
+
+
+        _viewModechanged: function(){
+            var viewMode = this.get("viewMode");
+            if (viewMode == "default") {
+                emSimLattice.loopCells(function(cell){
+                    cell.showDefaultColor();
+                });
+            } else if (viewMode == "translation") {
+                var max = 0;
+                emSimLattice.loopCells(function(cell){
+                    var translation = cell.getTranslation().length();
+                    if (translation>max) max = translation;
+                });
+                emSimLattice.loopCells(function(cell){
+                    cell.showTranslation(0, max);
+                });
+            }
             three.render();
         }
 

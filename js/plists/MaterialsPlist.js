@@ -13,7 +13,7 @@ define([], function(){
         allMaterials:{
             em:{
                 brass:{
-                    name: "Structural Conductibe",
+                    name: "Structural Conductive",
                     color: "#b5a642",
                     altColor: "#857B64",
                     properties:{
@@ -24,14 +24,14 @@ define([], function(){
                     }
                 },
                 alum:{
-                    name: "Lightweight Structural Conductibe",
-                    color: "#8391AC",
-                    altColor: "#8391AC",
+                    name: "Lightweight Structural Conductive",
+                    color: "#9CC9CB",
+                    altColor: "#9CC9CB",
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
                         elasMod: 100,//Gpascals (kg/(s^2*m)/1000000000)
-                        k: 100
+                        k: 10
                     }
                 },
                 fiberGlass: {
@@ -74,24 +74,24 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 10
+                        k: 1
                     }
                 },
                 flexureCond: {
                     name: "Flexure Conductive",
-                    color: "#ecf0f1",
-                    altColor: "#ecf0f1",
+                    color: "#F5447B",
+                    altColor: "#F5447B",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 10
+                        k: 1
                     }
                 },
                 piezo: {
                     name: "Piezo",
-                    color: "#F5447B",
-                    altColor: "#F5447B",
+                    color: "#FFCC00",
+                    altColor: "#FFCC00",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
@@ -111,9 +111,9 @@ define([], function(){
                     }
                 },
                 pmos: {
-                    name: "NMOS",
-                    color: "#857B64",
-                    altColor: "#857B64",
+                    name: "PMOS",
+                    color: "#0EE3B8",
+                    altColor: "#0EE3B8",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
@@ -123,8 +123,8 @@ define([], function(){
                 },
                 diode: {
                     name: "Diode",
-                    color: "#FDE2D9",
-                    altColor: "#FDE2D9",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
@@ -134,8 +134,8 @@ define([], function(){
                 },
                 zener: {
                     name: "Zener Diode",
-                    color: "#D77948",
-                    altColor: "#D77948",
+                    color: "#bf390b",
+                    altColor: "#bf390b",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3

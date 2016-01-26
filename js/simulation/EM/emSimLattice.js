@@ -122,6 +122,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             return 'x';
         },
 
+        _neighborOffset: function(index, latticePitch){
+            var offset = new THREE.Vector3(0,0,0);
+            var axisName = this._neighborAxis(index);
+            offset[axisName] = this._neighborSign(index) * latticePitch[axisName];
+            return offset;
+        },
+
         _torqueAxis: function(neighbAxis, axis){
             if ('x' != neighbAxis && 'x' != axis) return 'x';
             if ('y' != neighbAxis && 'y' != axis) return 'y';
@@ -137,57 +144,49 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             var self = this;
             var latticePitch = lattice.getPitch();
             this._loopCellsWithNeighbors(function(cell, neighbors){
+                if (cell.isFixed()) return;
                 var mass = cell.getMass();
                 var material = cell.getMaterial();
                 var Ftotal = gravity.clone().multiplyScalar(mass);
-                var velocity = cell.getAbsoluteVelocity();
+                var velocity = cell.getVelocity();
+//                var w = cell.getAngularVelocity();
 
                 var torque = new THREE.Vector3(0,0,0);//rotational forces
 
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
 
-                    var axis = self._neighborAxis(index);
-                    var D = new THREE.Vector3(0,0,0);
-                    D[axis] += self._neighborSign(index)*latticePitch[axis];
+                    var nominalD = self._neighborOffset(index, latticePitch);
+                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
+
                     var cellDelta = cell.getTranslation();
                     var neighborDelta = neighbor.getTranslation();
-                    _.each(D, function(val, key){
-                        D[key] += neighborDelta[key] - cellDelta[key];
-                    });
-
-                    var Dhat = D.clone().normalize();
-                    var d = Dhat.clone().multiplyScalar(D.length()-latticePitch[axis]);
-
-
-
-
-//                    var length = latticePitch[axis];
-//                    var crossSectionalArea = 1;
-//                    _.each(d, function(val, key){
-//                        if (key == axis) return;
-//                        crossSectionalArea *= latticePitch[key];
-//                    });
+                    var D = neighborDelta.sub(cellDelta).add(nominalD);//offset between neighbors (with nominal component)
 
                     var k = neighbor.compositeK(material.getK());
                     var damping = k/100000;//this is arbitrary for now
 
-                    var force = d.multiplyScalar(k);
-                    //todo damping in primary axis
-
-                    _.each(force, function(val, key){
-                        if (key == axis) return;
-                        var delta = neighborDelta[key] - cellDelta[key];
-                        var contribution = k*delta - damping*(velocity[key]);
-                        force[key] += contribution;
-                        torque[self._torqueAxis(axis, key)] += latticePitch[key]*contribution;
-                    });
+                    var force = D.clone().sub(nominalD).multiplyScalar(k).sub(velocity.clone().multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
+
+//                    var leverArm = rotatedNominalD.clone().multiplyScalar(0.5);
+//                    var rotForce = D.clone().sub(leverArm).sub(neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5)).multiplyScalar(k).sub(w.clone().multiplyScalar(damping));
+//
+//                    var neighborArm = neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5);
+////                    var rotForce = D.clone().sub(leverArm.clone()).sub(neighborArm).multiplyScalar(k);
+//                    torque.add(leverArm.cross(rotForce));
+//
+//                    if (cell.numNeighbors(neighbors)<2){
+//                    }
+
                 });
+
+
 
                 cell.applyForce(Ftotal, dt);
 //                cell.applyTorque(torque, dt);
+
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);

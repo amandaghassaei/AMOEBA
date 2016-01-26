@@ -6,6 +6,11 @@
 define([], function(){
 
     return {
+
+        EMViewModes: {
+            default: "Default",
+            translation: "Translation"
+        }
     }
 
 });

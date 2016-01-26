@@ -52,7 +52,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.applyTorque = function(torque, dt){
         if (this._isFixed) return;
-        var accel = torque.multiplyScalar(-1/(1000*this.I));
+        var accel = torque.multiplyScalar(1/(1000000*this.I));
         this.nextW = this.getAngularVelocity().add(accel.multiplyScalar(dt));
         this.nextRotation = this.getRotation().add(this.nextW.clone().multiplyScalar(dt));
     };
@@ -76,6 +76,10 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return this.translation.clone();
     };
 
+    EMSimCell.prototype.getAbsoluteTranslation = function(){
+        return this.applyRotation(this.getTranslation());
+    };
+
     EMSimCell.prototype.getRotation = function(){
         return this.rotation.clone();
     };
@@ -85,7 +89,9 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
     };
 
     EMSimCell.prototype._setRotation = function(rotation){
-        this.cell.object3D.rotation.set(rotation.x, rotation.y, rotation.z);
+        this.cell.object3D.rotation.set(rotation.x, 0,0);
+//        this.cell.object3D.rotation.set(rotation.x, rotation.y, rotation.z);
+        this.quaternion.setFromEuler(this.cell.object3D.rotation);
     };
 
     EMSimCell.prototype.getQuaternion = function(){
@@ -102,6 +108,25 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.show = function(){
         this.cell.show();
+    };
+
+    EMSimCell.prototype.showDefaultColor = function(){
+        this.cell.setMaterial(this.getMaterial(true));
+    };
+
+    EMSimCell.prototype.showTranslation = function(min, max){
+        var val = this.getTranslation().length();
+        var color = this._colorForVal(val, min, max);
+        var material = new THREE.MeshLambertMaterial({color: color});
+        this.cell._setTHREEMaterial(material);
+    };
+
+    EMSimCell.prototype._colorForVal = function(val, min, max){
+        if (min==max) return new THREE.Color();
+        var scaledVal = (1-(val - min)/(max - min)) * 0.7;
+        var color = new THREE.Color();
+        color.setHSL(scaledVal, 1, 0.5);
+        return color;
     };
 
     EMSimCell.prototype.hide = function(){
@@ -147,6 +172,14 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
             this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
 //            this._setRotation(this.rotation.clone());
         }
+    };
+
+    EMSimCell.prototype.numNeighbors = function(neighbors){
+        var num = 0;
+        _.each(neighbors, function(neighbor){
+            if (neighbor) num++;
+        });
+        return num;
     };
 
     EMSimCell.prototype.reset = function(){

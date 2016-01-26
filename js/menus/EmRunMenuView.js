@@ -17,6 +17,12 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
 
         _initialize: function(){
             this.listenTo(emSim, "change", this.render);
+
+        },
+
+        getPropertyOwner: function($target){
+            if ($target.hasClass('emSim')) return emSim;
+            return null;
         },
 
         _runSimulation: function(e){
@@ -36,7 +42,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
 
 
         _makeTemplateJSON: function(){
-            return emSim.toJSON();
+            return _.extend(emSim.toJSON(), emPlist);
         },
 
         template: _.template(template)

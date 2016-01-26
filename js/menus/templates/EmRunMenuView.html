@@ -5,3 +5,10 @@
     <a href="#" id="runSimulation" class="btn btn-halfWidth btn-lg btn-success">Run Simulation</a>
     <a href="#" id="resetSimulation" class="btn btn-halfWidth btn-lg pull-right btn-default">Reset</a><br/>
 <% } %>
+View Mode:
+<% _.each(EMViewModes, function(EMViewMode, key){ %>
+    <label class="radio">
+        <input type="radio" <% if (key == viewMode){ %>checked<% } %> name="viewMode" value="<%= key %>" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <%= EMViewMode %>
+    </label>
+<% }); %>
