@@ -19,10 +19,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             isRunning: false,
 
             viewMode: 'default',
+            colorMin: null,
+            colorMax: null,
+            autoRangeColor: true,
 
             manualSelectFixed: false,
             showFixed: false,
-            numFixed: 0
+            numFixed: 0,
+
+            numSimMaterials: 20//number of materials used in gradient view
 
         },
 
@@ -30,9 +35,34 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
-            this.listenTo(this, "change:viewMode", this._viewModechanged);
+            this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
 
             this._navChanged();
+
+            this.simMaterials = this._buildSimMaterials();
+        },
+
+        _buildSimMaterials: function(){
+            var materials = [];
+            var numMaterials = this.get("numSimMaterials");
+            for (var i=0;i<numMaterials;i++){
+                materials.push(new THREE.MeshLambertMaterial({color: this._colorForVal(i, 0, numMaterials-1)}));
+            }
+            return materials;
+        },
+
+        _colorForVal : function(val, min, max){
+            if (min==max) return new THREE.Color();
+            var scaledVal = (1-(val - min)/(max - min)) * 0.7;
+            var color = new THREE.Color();
+            color.setHSL(scaledVal, 1, 0.5);
+            return color;
+        },
+
+        _materialForVal: function(val, min, max, numMaterials){
+            var index = Math.round((numMaterials-1)*(val-min)/(max-min));
+            if (min == max) index = 0;
+            return this.simMaterials[index];
         },
 
         _navChanged: function(){
@@ -46,6 +76,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
 
         run: function(){
+            var self = this;
             this.set("isRunning", true);
             var dt = this.get("dtSolver")/1000000;//convert to sec
             var renderRate = this.get("dtRender");
@@ -55,6 +86,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     emSimLattice.iter(dt, gravityVect, false);
                 }
                 emSimLattice.iter(dt, gravityVect, true);
+                if (self.get("viewMode") == "translation"){
+                    self.calcTranslation();
+                }
             });
         },
 
@@ -66,6 +100,10 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         reset: function(){
             this.set("isRunning", false);
             emSimLattice.reset();
+            if (this.get("viewMode") == "translation"){
+                this.calcTranslation();
+            }
+            three.render();
         },
 
 
@@ -100,16 +138,31 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     cell.showDefaultColor();
                 });
             } else if (viewMode == "translation") {
-                var max = 0;
+                this.calcTranslation();
+            }
+            three.render();
+        },
+
+        calcTranslation: function(){
+            var max = 0;
+            var min = 0;
+            var self = this;
+            var numMaterials = this.get("numSimMaterials");
+            if (!this.get("autoRangeColor")){
+                if (this.get("colorMin")) min = this.get("colorMin");
+                if (this.get("colorMax")) max = this.get("colorMax");
+            } else {
                 emSimLattice.loopCells(function(cell){
                     var translation = cell.getTranslation().length();
                     if (translation>max) max = translation;
                 });
-                emSimLattice.loopCells(function(cell){
-                    cell.showTranslation(0, max);
-                });
+                this.set("colorMin", min);
+                this.set("colorMax", max);
             }
-            three.render();
+            emSimLattice.loopCells(function(cell){
+                var val = cell.getTranslation().length();
+                cell.showTranslation(self._materialForVal(val, min, max, numMaterials));
+            });
         }
 
 

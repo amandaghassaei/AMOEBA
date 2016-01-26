@@ -20,7 +20,7 @@ define([], function(){
                         conductive: true,
                         density: 8500,//kg/m^3
                         elasMod: 100,//Gpascals (kg/(s^2*m)/1000000000)
-                        k: 100
+                        k: 1000
                     }
                 },
                 alum:{

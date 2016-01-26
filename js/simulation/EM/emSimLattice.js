@@ -170,12 +170,9 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
                     Ftotal.add(force);
 
-//                    var leverArm = rotatedNominalD.clone().multiplyScalar(0.5);
-//                    var rotForce = D.clone().sub(leverArm).sub(neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5)).multiplyScalar(k).sub(w.clone().multiplyScalar(damping));
-//
-//                    var neighborArm = neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5);
-////                    var rotForce = D.clone().sub(leverArm.clone()).sub(neighborArm).multiplyScalar(k);
-//                    torque.add(leverArm.cross(rotForce));
+                    var leverArm = rotatedNominalD.clone().multiplyScalar(0.5);
+                    var rotForce = D.clone().sub(leverArm).sub(neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5)).multiplyScalar(k/1000000);//.sub(w.clone().multiplyScalar(damping));
+                    torque.add(leverArm.cross(rotForce));
 //
 //                    if (cell.numNeighbors(neighbors)<2){
 //                    }
@@ -185,7 +182,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
 
                 cell.applyForce(Ftotal, dt);
-//                cell.applyTorque(torque, dt);
+                cell.applyTorque(torque, dt);
 
             });
             this.loopCells(function(cell){
@@ -197,7 +194,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             this.loopCells(function(cell){
                 cell.reset();
             });
-            three.render();
         },
 
         getCellAtIndex: function(index){

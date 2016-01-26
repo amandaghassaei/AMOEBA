@@ -1,8 +1,8 @@
 Gravity :&nbsp;&nbsp;
     <input data-property="gravity" value="<%= gravity %>" placeholder="m/s^2" class="form-control floatInput emSim" type="text"><br/><br/>
-Vector :&nbsp;&nbsp;<input data-property="gravityVector" data-key="x" data-min="0" value="<%= gravityVector.x %>" placeholder="X" class="form-control emSim floatInput" type="text">&nbsp;
-    <input data-property="gravityVector" data-key="y" data-min="0" value="<%= gravityVector.y %>" placeholder="Y" class="form-control emSim floatInput" type="text">&nbsp;
-    <input data-property="gravityVector" data-key="z" data-min="0" value="<%= gravityVector.z %>" placeholder="Z" class="form-control emSim floatInput" type="text"><br/><br/>
+Vector :&nbsp;&nbsp;<input data-property="gravityVector" data-key="x" data-min="-1" data-max="1" value="<%= gravityVector.x %>" placeholder="X" class="form-control emSim floatInput" type="text">&nbsp;
+    <input data-property="gravityVector" data-key="y" data-min="-1" data-max="1" value="<%= gravityVector.y %>" placeholder="Y" class="form-control emSim floatInput" type="text">&nbsp;
+    <input data-property="gravityVector" data-key="z" data-min="-1" data-max="1" value="<%= gravityVector.z %>" placeholder="Z" class="form-control emSim floatInput" type="text"><br/><br/>
 Integration Time Step (us) :&nbsp;&nbsp;
     <input data-property="dtSolver" value="<%= dtSolver %>" placeholder="us" class="form-control floatInput emSim" type="text"><br/><br/>
 Num Steps Per Render :&nbsp;&nbsp;

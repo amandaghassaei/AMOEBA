@@ -61,7 +61,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         setNothingHighlighted: function(){
-            this.setDeleteMode(this.highlightedObject, false);
+            if (appState.get("deleteMode")) this.setDeleteMode(this.highlightedObject, false);
             this.highlightedObject = null;
             this.direction = null;
             this.position = null;
@@ -94,7 +94,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 return;
             }
 
-            if (this.highlightedObject != highlighted.myParent) this.setDeleteMode(this.highlightedObject, false);
+            if (appState.get("deleteMode") && this.highlightedObject != highlighted.myParent) this.setDeleteMode(this.highlightedObject, false);
             this.highlightedObject = highlighted.myParent;
 
             if (appState.get("deleteMode")) {

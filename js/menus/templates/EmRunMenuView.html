@@ -1,9 +1,9 @@
 <% if (isRunning) { %>
-    <a href="#" id="pauseSimulation" class="btn btn-block btn-lg btn-warning">Pause</a><br/>
+    <a href="#" id="pauseSimulation" class="btn btn-block btn-lg btn-warning">Pause</a><br/><br/>
 
 <% } else { %>
     <a href="#" id="runSimulation" class="btn btn-halfWidth btn-lg btn-success">Run Simulation</a>
-    <a href="#" id="resetSimulation" class="btn btn-halfWidth btn-lg pull-right btn-default">Reset</a><br/>
+    <a href="#" id="resetSimulation" class="btn btn-halfWidth btn-lg pull-right btn-default">Reset</a><br/><br/>
 <% } %>
 View Mode:
 <% _.each(EMViewModes, function(EMViewMode, key){ %>
@@ -12,3 +12,13 @@ View Mode:
         <%= EMViewMode %>
     </label>
 <% }); %>
+<% if(viewMode == "translation"){ %>
+    <div class="tab1">
+        <label class="checkbox" for="autoRangeColor">
+        <input id="autoRangeColor" data-property="autoRangeColor" type="checkbox" <% if (autoRangeColor){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="emSim custom-checkbox">
+        <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        Auto Range Color</label>
+        Range Min:&nbsp;&nbsp;<input data-property="colorMin" <% if (autoRangeColor){ %>disabled="disabled" <% } %>data-min="0" value="<%= colorMin %>" placeholder="Min" class="form-control emSim floatInput" type="text">&nbsp;&nbsp;
+        Max:&nbsp;&nbsp;<input data-property="colorMax" <% if (autoRangeColor){ %>disabled="disabled" <% } %>data-min="0" value="<%= colorMax %>" placeholder="Max" class="form-control emSim floatInput" type="text"><br/>
+    </div>
+<% } %>

@@ -43,7 +43,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             materialType: null,
             materialClass: null,
 
-            stockSimulationPlaying: false,
+            stockSimulationPlaying: false
         },
 
         initialize: function(){
@@ -215,6 +215,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
     //                this.set("shift", state);
                     break;
                 case 68://d delete mode
+                    var currentNav = this.get("currentNav");
+                    if (plist.allMenus[currentNav].parent == "navSim") return;
                     this.set("deleteMode", state);
                     break;
                 case 86://cell (voxel) mode
