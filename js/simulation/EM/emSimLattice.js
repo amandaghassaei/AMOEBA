@@ -147,10 +147,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                 if (cell.isFixed()) return;
                 var mass = cell.getMass();
                 var material = cell.getMaterial();
-                var Ftotal = gravity.clone().multiplyScalar(mass);
-                var velocity = cell.getVelocity();
+
+                var cellVelocity = cell.getVelocity();
+                var cellDelta = cell.getTranslation();
 //                var w = cell.getAngularVelocity();
 
+                var Ftotal = gravity.clone().multiplyScalar(mass);
                 var torque = new THREE.Vector3(0,0,0);//rotational forces
 
                 _.each(neighbors, function(neighbor, index){
@@ -159,14 +161,17 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     var nominalD = self._neighborOffset(index, latticePitch);
                     var rotatedNominalD = cell.applyRotation(nominalD.clone());
 
-                    var cellDelta = cell.getTranslation();
+
                     var neighborDelta = neighbor.getTranslation();
+                    var neighborVelocity = neighbor.getVelocity();
+
                     var D = neighborDelta.sub(cellDelta).add(nominalD);//offset between neighbors (with nominal component)
+                    var relativeVelocity = cellVelocity.clone().sub(neighborVelocity);
 
-                    var k = neighbor.compositeK(material.getK());
-                    var damping = k/100000;//this is arbitrary for now
+                    var k = neighbor.makeCompositeParam(neighbor.getMaterial().getK(), material.getK());
+                    var damping = 1/100;//this is arbitrary for now
 
-                    var force = D.clone().sub(rotatedNominalD).multiplyScalar(k).sub(velocity.clone().multiplyScalar(damping));//kD-dv
+                    var force = D.clone().sub(rotatedNominalD).multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
 
@@ -188,6 +193,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             this.loopCells(function(cell){
                 cell.update(shouldRender);
             });
+        },
+
+        _vectorAbs: function(vector){//take abs of vector components
+            _.each(vector, function(val, key){
+                vector[key] = Math.abs(val);
+            });
+            return vector;
         },
 
         reset: function(){

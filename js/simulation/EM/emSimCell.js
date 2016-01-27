@@ -140,16 +140,9 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         return this.cell.getMaterial();
     };
 
-    EMSimCell.prototype.compositeElasticModulus = function(elasModNeighbor){
-        var elasMod = this.getMaterial().getElasticMod();
-        if (elasMod == elasModNeighbor) return elasModNeighbor;
-        return 2*elasModNeighbor*elasMod/(elasModNeighbor+elasMod);
-    };
-
-    EMSimCell.prototype.compositeK = function(kNeighbor){
-        var k = this.getMaterial().getK();
-        if (k == kNeighbor) return kNeighbor;
-        return 2*kNeighbor*k/(kNeighbor+k);
+    EMSimCell.prototype.makeCompositeParam = function(param, paramNeighbor){
+        if (param == paramNeighbor) return param;
+        return 2*param*paramNeighbor/(param+paramNeighbor);
     };
 
     EMSimCell.prototype.update = function(shouldRender){
@@ -161,7 +154,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         this.w = this.nextW;
         if (shouldRender) {
             this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
-            this._setRotation(this.rotation.clone());
+//            this._setRotation(this.rotation.clone());
         }
     };
 
