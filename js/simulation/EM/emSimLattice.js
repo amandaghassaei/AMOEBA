@@ -166,7 +166,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     var k = neighbor.compositeK(material.getK());
                     var damping = k/100000;//this is arbitrary for now
 
-                    var force = D.clone().sub(nominalD).multiplyScalar(k).sub(velocity.clone().multiplyScalar(damping));//kD-dv
+                    var force = D.clone().sub(rotatedNominalD).multiplyScalar(k).sub(velocity.clone().multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
 
