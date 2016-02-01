@@ -153,7 +153,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 //                var w = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
-                var torque = new THREE.Vector3(0,0,0);//rotational forces
+                var rotation = new THREE.Vector3(0,0,0);//rotational forces
 
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
@@ -175,19 +175,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
                     Ftotal.add(force);
 
-//                    var leverArm = rotatedNominalD.clone().multiplyScalar(0.5);
-//                    var rotForce = D.clone().sub(leverArm).sub(neighbor.applyRotation(nominalD.clone()).multiplyScalar(0.5)).multiplyScalar(k/1000000);//.sub(w.clone().multiplyScalar(damping));
-//                    torque.add(leverArm.cross(rotForce));
-//
-//                    if (cell.numNeighbors(neighbors)<2){
-//                    }
 
                 });
 
 
 
                 cell.applyForce(Ftotal, dt);
-                cell.applyTorque(torque, dt);
+                cell.setRotation(rotation);
 
             });
             this.loopCells(function(cell){

@@ -50,11 +50,10 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         this.nextTranslation = this.getTranslation().add(this.nextVelocity.clone().multiplyScalar(dt));
     };
 
-    EMSimCell.prototype.applyTorque = function(torque, dt){
+    EMSimCell.prototype.setRotation = function(rotation, dt){
         if (this._isFixed) return;
-        var accel = torque.multiplyScalar(1/this.I);
-        this.nextW = this.getAngularVelocity().add(accel.multiplyScalar(dt));
-        this.nextRotation = this.getRotation().add(this.nextW.clone().multiplyScalar(dt));
+        this.nextW = this.getRotation().sub(rotation).multiplyScalar(1/dt);
+        this.nextRotation = rotation;
     };
 
 
@@ -142,6 +141,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.makeCompositeParam = function(param, paramNeighbor){
         if (param == paramNeighbor) return param;
+        if (paramNeighbor === Infinity) return param*2;
         return 2*param*paramNeighbor/(param+paramNeighbor);
     };
 
@@ -154,7 +154,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
         this.w = this.nextW;
         if (shouldRender) {
             this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
-//            this._setRotation(this.rotation.clone());
+            this._setRotation(this.rotation.clone());
         }
     };
 
