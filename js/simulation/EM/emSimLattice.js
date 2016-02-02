@@ -151,7 +151,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
                 var cellVelocity = cell.getVelocity();
                 var cellDelta = cell.getTranslation();
-//                var w = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
                 var Rtotal = new THREE.Vector3(0,0,0);//rotational forces
@@ -161,7 +160,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     if (neighbor === null) return;
 
                     var nominalD = self._neighborOffset(index, latticePitch);
-                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
+//                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
 
 
                     var neighborTranslation = neighbor.getTranslation();
@@ -177,7 +176,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
                     Ftotal.add(force);
 
-
                     var neighborAxis = self._neighborAxis(index);
                     var rotation = new THREE.Vector3(0,0,0);
 
@@ -190,6 +188,8 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                         rotation[torqueAxis] = k*self._sign(cross[torqueAxis])*Math.asin(cross.length()/nominalD.length()/Dproject.length());
                         Rcontributions[torqueAxis] += k;
                     });
+                    rotation[neighborAxis] = k*neighbor.getRotation();
+                    Rcontributions[neighborAxis] += k;
                     Rtotal.add(rotation);
 
                 });
