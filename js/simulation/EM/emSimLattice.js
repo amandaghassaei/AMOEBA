@@ -135,10 +135,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             return 'z';
         },
 
-        _sign: function(val){
-            if (val >0) return 1;
-            return -1;
-        },
+
 
         iter: function(dt, gravity, shouldRender){
             var self = this;
@@ -153,7 +150,8 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 //                var w = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
-                var rotation = new THREE.Vector3(0,0,0);//rotational forces
+                var Rtotal = new THREE.Vector3(0,0,0);//rotational forces
+                var Rcontributions = new THREE.Vector3(0,0,0);
 
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
@@ -162,26 +160,41 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     var rotatedNominalD = cell.applyRotation(nominalD.clone());
 
 
-                    var neighborDelta = neighbor.getTranslation();
+                    var neighborTranslation = neighbor.getTranslation();
                     var neighborVelocity = neighbor.getVelocity();
 
-                    var D = neighborDelta.sub(cellDelta).add(nominalD);//offset between neighbors (with nominal component)
+                    var D = neighborTranslation.sub(cellDelta).add(nominalD);//offset between neighbors (with nominal component)
                     var relativeVelocity = cellVelocity.clone().sub(neighborVelocity);
 
                     var k = neighbor.makeCompositeParam(neighbor.getMaterial().getK(), material.getK());
                     var damping = 1/100;//this is arbitrary for now
 
-                    var force = D.clone().sub(rotatedNominalD).multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
+                    var force = D.clone().sub(nominalD).clone().multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
 
 
+                    var neighborAxis = self._neighborAxis(index);
+                    var rotation = new THREE.Vector3(0,0,0);
+
+                    _.each(D, function(offset, axis){
+                        if (axis == neighborAxis) return;
+                        var torqueAxis = self._torqueAxis(neighborAxis, axis);
+                        rotation[torqueAxis] = Math.acos(nominalD.clone().dot(D)/nominalD.length()/D.length());
+
+                        Rcontributions[torqueAxis]++;
+                    });
+                    Rtotal.add(rotation);
+
+                });
+
+                _.each(Rcontributions, function(num, key){
+                    Rtotal[key]/=num;
                 });
 
 
-
                 cell.applyForce(Ftotal, dt);
-                cell.setRotation(rotation);
+                cell.setRotation(Rtotal);
 
             });
             this.loopCells(function(cell){
