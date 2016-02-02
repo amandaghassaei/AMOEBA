@@ -37,10 +37,23 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             return [mesh, new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}))];
         },
 
+        _changePlaneType: function(){
+            var type = this.get("planeType");
+            if (type == "xy") this.object3D.rotation.set(0, 0, 0);
+            else if (type == "yz") this.object3D.rotation.set(0, Math.PI/2, 0);
+            else if (type == "xz") this.object3D.rotation.set(-Math.PI/2, 0, 0);
+            else {
+                console.warn("invalid planeType given " + type);
+            }
+            this.set("zIndex", 0, {silent:true});
+            this._setPosition(this.object3D, 0);
+            three.render();
+        },
+
         _renderZIndexChange: function(){
             var zIndex = this.get("zIndex");
-            var zScale = lattice.zScale();
-            this._setPosition(this.object3D, zIndex*zScale);
+            var scale = lattice.getAspectRatio()[this._normalAxis()];
+            this._setPosition(this.object3D, zIndex*scale);
             three.render();
         }
     });

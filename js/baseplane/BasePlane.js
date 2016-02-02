@@ -8,6 +8,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
     return Backbone.Model.extend({
 
         defaults: {
+            planeType: "xy",
             zIndex: 0,
             dimX: 100,
             dimY: 100,
@@ -19,6 +20,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             //bind events
             this.listenTo(this, "change:zIndex", this._renderZIndexChange);
             this.listenTo(appState, "change:basePlaneIsVisible", this._setVisibility);
+
+            this.listenTo(this, "change:planeType", this._changePlaneType);
 
             //draw mesh
             var meshes = this._makeBasePlaneMesh();
@@ -34,10 +37,18 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             this._setVisibility();
         },
 
-        getAbsoluteOrientation: function(){
-            console.log("baseplane orientation");
-            return new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), Math.PI);
+        _normalAxis: function(){
+            var type = this.get("planeType");
+            if (type == "xy") return "z";
+            else if (type == "yz") return "x";
+            return "y";
         },
+
+//        getAbsoluteOrientation: function(){
+//            var vector = new THREE.Vector3(0,0,0);
+//            vector[this._normalAxis()] = 1;
+//            return new THREE.Quaternion().setFromAxisAngle(vector, Math.PI);
+//        },
 
         _setVisibility: function(){
             this.object3D.visible = appState.get("basePlaneIsVisible");
@@ -46,7 +57,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         _setPosition: function(object3D, height){
             if (!object3D || object3D === undefined) object3D = this.object3D;
-            object3D.position.set(0,0,height-lattice.zScale()/2);
+            object3D.position.set(0,0,0);
+            var normalAxis = this._normalAxis();
+            object3D.position[normalAxis] = height-lattice.getAspectRatio()[normalAxis]/2;
         },
 
         getAbsoluteIndex: function(){
@@ -58,13 +71,16 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         },
 
         calcHighlighterParams: function(face, point, index){//index comes from subclass
-            point.z = this.object3D.position.z;//todo this doesn't generalize when baseplane moves
+            var normalAxis = this._normalAxis();
+            point[normalAxis] = this.object3D.position[normalAxis];
             if (!index || index === undefined) index = lattice.getIndexForPosition(point);
-            index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
+            index[normalAxis] = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
             var position = lattice.getPositionForIndex(index);
-            position.z += lattice.zScale()/2;
+            position[normalAxis] += lattice.getAspectRatio()[normalAxis]/2;
             this.highligherIndex = index;
-            return {direction: new THREE.Vector3(0,0,1), position:position};
+            var direction = new THREE.Vector3(0,0,0);
+            direction[normalAxis] = 1;
+            return {direction: direction, position:position};
         },
 
         _removeMesh: function(){

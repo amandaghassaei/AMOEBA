@@ -102,6 +102,13 @@ define(['three'], function(THREE){
                 name: "Micron",
                 multiplier: 0.000001
             }
+        },
+
+        allBaseplaneTypes: {
+            xy: "XY Plane",
+            yz: "YZ Plane",
+            xz: "XZ Plane"
+
         }
 
     }

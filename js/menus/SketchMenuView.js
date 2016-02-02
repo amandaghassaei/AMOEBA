@@ -11,7 +11,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         },
 
         _initialize: function(){
-
+            this.listenTo(globals.baseplane, "change", this.render);
         },
 
         getPropertyOwner: function($target){
@@ -20,7 +20,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         },
 
         _makeTemplateJSON: function(){
-            return globals.baseplane.toJSON();
+            return _.extend(this.model.toJSON(), plist, globals.baseplane.toJSON());
         },
 
         _render: function(){

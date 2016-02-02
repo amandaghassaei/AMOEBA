@@ -1,3 +1,16 @@
-Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex %>" placeholder="us" class="form-control intInput baseplane" type="text"><br/><br/>
+Orientation:&nbsp;&nbsp;<div class="btn-group">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allBaseplaneTypes[planeType] %><span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <% _.each(allBaseplaneTypes, function(val, key){ %>
+                <li><a class="baseplane dropdownSelector" data-property="planeType" data-value="<%= key %>" href="#"><%= val %></a></li>
+            <% }); %>
+        </ul>
+    </div><br/><br/>
+Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex %>" placeholder="us" class="form-control intInput baseplane" type="text"><br/>
+ <label class="checkbox" for="showOneLayer">
+    <input id="showOneLayer" data-property="showOneLayer" type="checkbox" <% if (showOneLayer){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
+    <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+    Show one layer at a time</label>
 
+<br/><br/>
 todo: Sketch and extrude/cut commands
