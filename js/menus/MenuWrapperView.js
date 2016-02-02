@@ -28,8 +28,9 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             this.currentNav = null;
             this.currentTab = null;
 
-            _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show", "_onKeyUp");
+            _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show", "_onKeyUp", "_onMouseWheel");
             $(document).bind('keyup', {}, this._onKeyUp);
+            $(document).bind('mousewheel', this._onMouseWheel);
 
             //bind events
             this.listenTo(this.model, "change:currentNav", function(){
@@ -45,6 +46,23 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             this.listenTo(this.model, "change:menuIsVisible", this._setVisibility);
 
             if (this.model.get("menuIsVisible")) this._populateAndShow();
+        },
+
+        _onMouseWheel: function(e){
+            if ($(".intInput").is(":focus")) {
+                var $target = $(".intInput:focus");
+                var val = $target.val();
+
+                var newVal = parseInt(val);
+                if (isNaN(newVal)) {
+                    console.warn("value is NaN");
+                    return;
+                }
+                if (e.originalEvent.wheelDelta < 0) this._setNumber($target, --newVal);
+                else this._setNumber($target, ++newVal);
+                $target.val(newVal);
+                e.preventDefault();
+            }
         },
 
         _onKeyUp: function(e){
@@ -143,7 +161,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var key = $target.data("key");
 
             //some numbers are relative
-            var owner = this._getPropertyOwner($target);//todo not great here
+            var owner = this._getPropertyOwner($target);
             if (property == "stockPosition" && owner.get(property + "Relative")){
                 if (key) newVal = parseFloat((newVal + owner.get("originPosition")[key]).toFixed(4));
                 else console.warn("no key found for " + property);
