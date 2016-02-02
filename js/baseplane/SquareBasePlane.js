@@ -19,9 +19,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
             for ( var i = - dimX; i <= dimX+1; i ++) {
                 geometry.vertices.push( new THREE.Vector3(-dimX*xScale-xScale/2, i*yScale-yScale/2, 0.01));
-                geometry.vertices.push( new THREE.Vector3(dimX*xScale-xScale/2, i*yScale-yScale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3((dimX+1)*xScale-xScale/2, i*yScale-yScale/2, 0.01));
                 geometry.vertices.push( new THREE.Vector3(i*xScale-xScale/2, -dimX*yScale-yScale/2, 0.01));
-                geometry.vertices.push( new THREE.Vector3(i*xScale-xScale/2, dimX*yScale-yScale/2, 0.01));
+                geometry.vertices.push( new THREE.Vector3(i*xScale-xScale/2, (dimX+1)*yScale-yScale/2, 0.01));
             }
 
             var planeGeometry = new THREE.Geometry();
