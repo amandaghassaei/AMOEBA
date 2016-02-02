@@ -19,8 +19,8 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        elasMod: 100,//Gpascals (kg/(s^2*m)/1000000000)
-                        k: 100
+                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                        k: 1000
                     }
                 },
                 alum:{
@@ -30,8 +30,8 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        elasMod: 100,//Gpascals (kg/(s^2*m)/1000000000)
-                        k: 100
+                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                        k: 1000
                     }
                 },
                 fiberGlass: {
@@ -42,7 +42,7 @@ define([], function(){
                         conductive: false,
                         density: 500,//kg/m^3
                         elasMod: 17.2,
-                        k: 100
+                        k: 1000
                     }
                 },
 //                heatResist: {
@@ -63,7 +63,7 @@ define([], function(){
                         conductive: false,
                         density: 500,//kg/m^3
                         elasMod: 181,
-                        k: 100
+                        k: 1000
                     }
                 },
                 flexure: {
@@ -74,7 +74,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 1
+                        k: 3
                     }
                 },
                 flexureCond: {
@@ -85,7 +85,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 1
+                        k: 3
                     }
                 },
                 piezo: {
@@ -96,7 +96,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 1000
                     }
                 },
                 nmos: {
@@ -107,7 +107,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 1000
                     }
                 },
                 pmos: {
@@ -118,7 +118,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 1000
                     }
                 },
                 diode: {
@@ -129,7 +129,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 1000
                     }
                 },
                 zener: {
@@ -140,7 +140,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 1000
                     }
                 }
             }

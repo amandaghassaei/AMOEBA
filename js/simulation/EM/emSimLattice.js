@@ -181,7 +181,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                         if (axis == neighborAxis) return;
                         var torqueAxis = self._torqueAxis(neighborAxis, axis);
                         rotation[torqueAxis] = Math.acos(nominalD.clone().dot(D)/nominalD.length()/D.length());
-
                         Rcontributions[torqueAxis]++;
                     });
                     Rtotal.add(rotation);
@@ -194,8 +193,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
 
 
                 cell.applyForce(Ftotal, dt);
-                cell.setRotation(Rtotal);
-
+                cell.setRotation(Rtotal, dt);
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);
