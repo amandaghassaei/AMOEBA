@@ -135,6 +135,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             return 'z';
         },
 
+        _sign: function(val){
+            if (val>0) return 1;
+            return -1;
+        },
 
 
         iter: function(dt, gravity, shouldRender){
@@ -180,8 +184,11 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     _.each(D, function(offset, axis){
                         if (axis == neighborAxis) return;
                         var torqueAxis = self._torqueAxis(neighborAxis, axis);
-                        rotation[torqueAxis] = Math.acos(nominalD.clone().dot(D)/nominalD.length()/D.length());
-                        Rcontributions[torqueAxis]++;
+                        var Dproject = D.clone();
+                        Dproject[torqueAxis] = 0;
+                        var cross = nominalD.clone().cross(Dproject);
+                        rotation[torqueAxis] = k*self._sign(cross[torqueAxis])*Math.asin(cross.length()/nominalD.length()/Dproject.length());
+                        Rcontributions[torqueAxis] += k;
                     });
                     Rtotal.add(rotation);
 

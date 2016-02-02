@@ -88,8 +88,8 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
     };
 
     EMSimCell.prototype._setRotation = function(rotation){
-        this.cell.object3D.rotation.set(rotation.x, 0,0);
-//        this.cell.object3D.rotation.set(rotation.x, rotation.y, rotation.z);
+//        this.cell.object3D.rotation.set(rotation.x, 0,0);
+        this.cell.object3D.rotation.set(rotation.x, rotation.y, rotation.z);
         this.quaternion.setFromEuler(this.cell.object3D.rotation);
     };
 
