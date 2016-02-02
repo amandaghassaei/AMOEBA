@@ -9,7 +9,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _initLatticeType: function(){
             require(['squareBaseplane'], function(SquareBasePlane){
-                globals.basePlane = new SquareBasePlane();
+                globals.baseplane = new SquareBasePlane();
             });
             require([this.getHighlighterFile()], function(CubeHighlighter){
                 globals.highlighter = new CubeHighlighter();

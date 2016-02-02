@@ -2,32 +2,28 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'text!sketchMenuTemplate'], function($, _, MenuParentView, plist, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/SketchMenuView.html', 'globals'],
+    function($, _, MenuParentView, plist, template, globals){
 
     return MenuParentView.extend({
 
         events: {
-            "slide #zHeightSlider":                           "_moveSketchPlane"
         },
 
         _initialize: function(){
 
         },
 
-        _moveSketchPlane: function(e){
-            globals.basePlane.set("zIndex", $(e.target).val());
+        getPropertyOwner: function($target){
+            if ($target.hasClass('baseplane')) return globals.baseplane;
+            return null;
         },
 
         _makeTemplateJSON: function(){
-            return globals.basePlane.toJSON();
+            return globals.baseplane.toJSON();
         },
 
         _render: function(){
-            $('#zHeightSlider').slider({
-                formatter: function(value) {
-                    return value;
-                }
-            });
         },
 
         template: _.template(template)

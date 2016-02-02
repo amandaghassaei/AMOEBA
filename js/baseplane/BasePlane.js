@@ -9,7 +9,6 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         defaults: {
             zIndex: 0,
-            object3D: null,
             dimX: 100,
             dimY: 100,
             material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true})
@@ -29,13 +28,11 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
                 object3D.add(mesh);
             });
             object3D.myParent = this;
-            this.set("object3D", object3D);
+            this.object3D = object3D;
             three.sceneAddBasePlane(object3D);
             three.render();
             this._setVisibility();
         },
-
-        updateXYSeparation: function(xySep) {},
 
         getAbsoluteOrientation: function(){
             console.log("baseplane orientation");
@@ -43,12 +40,12 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         },
 
         _setVisibility: function(){
-            this.get("object3D").visible = appState.get("basePlaneIsVisible");
+            this.object3D.visible = appState.get("basePlaneIsVisible");
             three.render();
         },
 
         _setPosition: function(object3D, height){
-            if (!object3D || object3D === undefined) object3D = this.get("object3D");
+            if (!object3D || object3D === undefined) object3D = this.object3D;
             object3D.position.set(0,0,height-lattice.zScale()/2);
         },
 
@@ -61,7 +58,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         },
 
         calcHighlighterParams: function(face, point, index){//index comes from subclass
-            point.z = 0;//todo this doesn't generalize when baseplane moves
+            point.z = this.object3D.position.z;//todo this doesn't generalize when baseplane moves
             if (!index || index === undefined) index = lattice.getIndexForPosition(point);
             index.z = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
             var position = lattice.getPositionForIndex(index);
@@ -71,8 +68,8 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         },
 
         _removeMesh: function(){
-            this.get("object3D").myParent = null;
-            three.sceneRemoveBasePlane(this.get("object3D"));
+            this.object3D.myParent = null;
+            three.sceneRemoveBasePlane(this.object3D);
             three.render();
         },
 
@@ -80,7 +77,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             this.stopListening();
             this.set("zIndex", null, {silent:true});
             this._removeMesh();
-            this.set("object3D", null, {silent:true});
+            this.object3D = null;
             this.set("material", null, {silent:true});
             this.set("unitGeometry", null, {silent:true});
             this.set("dimX", null, {silent:true});
