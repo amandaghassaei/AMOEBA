@@ -27,7 +27,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             highlighterIsVisible:true,
             axesAreVisible: false,
             focusOnLattice: true,
-            showOneLayer: false,
+            showOneLayer: true,
 
             //key bindings
             shift: false,
