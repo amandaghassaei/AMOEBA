@@ -188,7 +188,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                         rotation[torqueAxis] = k*self._sign(cross[torqueAxis])*Math.asin(cross.length()/nominalD.length()/Dproject.length());
                         Rcontributions[torqueAxis] += k;
                     });
-                    rotation[neighborAxis] = k*neighbor.getRotation();
+                    rotation[neighborAxis] += k*neighbor.getRotation()[neighborAxis];
                     Rcontributions[neighborAxis] += k;
                     Rtotal.add(rotation);
 
@@ -205,13 +205,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
             this.loopCells(function(cell){
                 cell.update(shouldRender);
             });
-        },
-
-        _vectorAbs: function(vector){//take abs of vector components
-            _.each(vector, function(val, key){
-                vector[key] = Math.abs(val);
-            });
-            return vector;
         },
 
         reset: function(){
