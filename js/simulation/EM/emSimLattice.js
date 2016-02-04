@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
-    function(_, Backbone, EMSimCell, three, lattice){
+define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three'],
+    function(_, Backbone, EMSimCell, three, lattice, THREE){
 
 
     var EMSimLattice = Backbone.Model.extend({
@@ -152,6 +152,8 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                 var cellVelocity = cell.getVelocity();
                 var cellDelta = cell.getTranslation();
 
+                var cellRotation = cell.getRotation();
+
                 var Ftotal = gravity.clone().multiplyScalar(mass);
                 var Rtotal = new THREE.Vector3(0,0,0);//rotational forces
                 var Rcontributions = new THREE.Vector3(0,0,0);
@@ -160,7 +162,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     if (neighbor === null) return;
 
                     var nominalD = self._neighborOffset(index, latticePitch);
-//                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
+                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
 
 
                     var neighborTranslation = neighbor.getTranslation();
@@ -191,6 +193,16 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice'],
                     rotation[neighborAxis] += k*neighbor.getRotation()[neighborAxis];
                     Rcontributions[neighborAxis] += k;
                     Rtotal.add(rotation);
+
+                    var neighborRotation = neighbor.getRotation();
+                    var bend = cellRotation.clone().sub(neighborRotation);
+                    var bendForce = new THREE.Vector3(0,0,0);
+                    _.each(bend, function(val, key){
+                        if (key == neighborAxis) return;
+                        var bendAxis = self._torqueAxis(key, neighborAxis);
+                        bendForce[bendAxis] = val*k/1000000000;
+                    });
+                    Ftotal.add(cell.applyRotation(bendForce));
 
                 });
 

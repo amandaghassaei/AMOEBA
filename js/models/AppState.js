@@ -3,7 +3,7 @@
  */
 
 //a class to store global app state, model for navbar and menu wrapper
-//never deallocated 
+//never deallocated
 
 define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
     function(_, Backbone, three, THREE, plist, globals){

@@ -67,7 +67,10 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         _navChanged: function(){
             var currentNav = appState.get("currentNav");
-            if (currentNav != "emNavSim") return;
+            if (currentNav != "emNavSim") {
+                this.reset();
+                return;
+            }
 
             emSimLattice.setCells(lattice.getCells());
         },
