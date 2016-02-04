@@ -125,6 +125,7 @@ define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
 
     EMSimCell.prototype.fix = function(){
         this._isFixed = true;
+        this.reset();
     };
 
     EMSimCell.prototype.float = function(){

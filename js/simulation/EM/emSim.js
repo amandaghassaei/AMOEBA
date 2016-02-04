@@ -17,6 +17,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             dtRender: 100,//frames
 
             isRunning: false,
+            needsReset: false,
 
             viewMode: 'default',
             colorMin: null,
@@ -34,6 +35,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         initialize: function(){
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
+            this.listenTo(appState, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
             this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
 
@@ -75,12 +77,20 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             emSimLattice.setCells(lattice.getCells());
         },
 
+        _tabChanged: function(){
+            var currentTab = appState.get("currentTab");
+            if (currentTab != "emRun"){
+                this.reset();
+            }
+        },
+
 
 
 
         run: function(){
             var self = this;
             this.set("isRunning", true);
+            this.set("needsReset", true);
             var dt = this.get("dtSolver")/1000000;//convert to sec
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
@@ -101,7 +111,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         },
 
         reset: function(){
+            three.stopAnimationLoop();
             this.set("isRunning", false);
+            this.set("needsReset", false);
             emSimLattice.reset();
             if (this.get("viewMode") == "translation"){
                 this.calcTranslation();
