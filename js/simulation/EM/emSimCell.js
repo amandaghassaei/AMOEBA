@@ -3,7 +3,7 @@
  */
 
 
-define(["cell", "lattice", "plist"], function(DMACell, lattice, plist){
+define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, THREE){
 
 
     function EMSimCell(cell){

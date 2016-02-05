@@ -71,6 +71,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var currentNav = appState.get("currentNav");
             if (currentNav != "emNavSim") {
                 this.reset();
+                this._viewModechanged();
                 return;
             }
 
@@ -82,6 +83,12 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             if (currentTab != "emRun"){
                 this.reset();
             }
+        },
+
+        _getViewMode: function(){
+            var currentTab = appState.get("currentTab");
+            if (currentTab != "emRun") return "default";
+            return this.get("viewMode");
         },
 
 
@@ -99,7 +106,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     emSimLattice.iter(dt, gravityVect, false);
                 }
                 emSimLattice.iter(dt, gravityVect, true);
-                if (self.get("viewMode") == "translation"){
+                if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }
             });
@@ -115,7 +122,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.set("isRunning", false);
             this.set("needsReset", false);
             emSimLattice.reset();
-            if (this.get("viewMode") == "translation"){
+            if (this._getViewMode == "translation"){
                 this.calcTranslation();
             }
             three.render();
@@ -147,7 +154,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
 
         _viewModechanged: function(){
-            var viewMode = this.get("viewMode");
+            var viewMode = this._getViewMode();
             if (viewMode == "default") {
                 emSimLattice.loopCells(function(cell){
                     cell.showDefaultColor();
