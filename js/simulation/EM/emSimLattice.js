@@ -150,69 +150,94 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
                 var material = cell.getMaterial();
 
                 var cellVelocity = cell.getVelocity();
-                var cellDelta = cell.getTranslation();
+                var cellTranslation = cell.getTranslation();
 
                 var cellRotation = cell.getRotation();
+                //var angularVelocity = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
-                var Rtotal = new THREE.Vector3(0,0,0);//rotational forces
-                var Rcontributions = new THREE.Vector3(0,0,0);
+                var Ttotal = new THREE.Vector3(0,0,0);//rotational forces
+                var Rtotal = new THREE.Vector3(0,0,0);
+                var Rcontrib = 0;
 
                 _.each(neighbors, function(neighbor, index){
                     if (neighbor === null) return;
 
                     var nominalD = self._neighborOffset(index, latticePitch);
-                    var rotatedNominalD = cell.applyRotation(nominalD.clone());
-
+                    var halfNominalD = nominalD.clone().multiplyScalar(0.5);
+                    var neighbRotatedHalfNomD = neighbor.applyRotation(halfNominalD.clone());
+                    var rotatedHalfNomD = cell.applyRotation(halfNominalD.clone());
+                    var rotatedNominalD = rotatedHalfNomD.clone().add(neighbRotatedHalfNomD);
 
                     var neighborTranslation = neighbor.getTranslation();
                     var neighborVelocity = neighbor.getVelocity();
 
-                    var D = neighborTranslation.sub(cellDelta).add(nominalD);//offset between neighbors (with nominal component)
+                    var D = neighborTranslation.sub(cellTranslation).add(nominalD);//offset between neighbors (with nominal component)
                     var relativeVelocity = cellVelocity.clone().sub(neighborVelocity);
 
                     var k = neighbor.makeCompositeParam(neighbor.getMaterial().getK(), material.getK());
                     var damping = 1/100;//this is arbitrary for now
 
-                    var force = D.clone().sub(nominalD).clone().multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
+                    var offset = D.clone().sub(rotatedNominalD);
+                    var force = offset.clone().multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
 
-                    var neighborAxis = self._neighborAxis(index);
-                    var rotation = new THREE.Vector3(0,0,0);
+                    //non-axial rotation
+                    var quaternion = new THREE.Quaternion().setFromUnitVectors(nominalD.clone().normalize(),
+                        D.clone().normalize());
 
-                    _.each(D, function(offset, axis){
-                        if (axis == neighborAxis) return;
-                        var torqueAxis = self._torqueAxis(neighborAxis, axis);
-                        var Dproject = D.clone();
-                        Dproject[torqueAxis] = 0;
-                        var cross = nominalD.clone().cross(Dproject);
-                        rotation[torqueAxis] = k*self._sign(cross[torqueAxis])*Math.asin(cross.length()/nominalD.length()/Dproject.length());
-                        Rcontributions[torqueAxis] += k;
-                    });
-                    rotation[neighborAxis] += k*neighbor.getRotation()[neighborAxis];
-                    Rcontributions[neighborAxis] += k;
-                    Rtotal.add(rotation);
+                    //axial rotation
+                    var axis = neighbRotatedHalfNomD;
+                    var neghborRotation = neighbor.getRotation();
+                    var angle = axis.clone().normalize().dot(neghborRotation);
+                    var torsion = new THREE.Quaternion().setFromAxisAngle(nominalD.clone().normalize(), angle);
 
-                    var neighborRotation = neighbor.getRotation();
-                    var bend = cellRotation.clone().sub(neighborRotation);
-                    var bendForce = new THREE.Vector3(0,0,0);
-                    _.each(bend, function(val, key){
-                        if (key == neighborAxis) return;
-                        var bendAxis = self._torqueAxis(key, neighborAxis);
-                        bendForce[bendAxis] = val*k/1000000000;
-                    });
-                    Ftotal.add(cell.applyRotation(bendForce));
+                    quaternion.multiply(torsion);
+                    var euler = new THREE.Euler().setFromQuaternion(quaternion);
 
-                });
+                    var rotation = new THREE.Vector3(euler.x, euler.y, euler.z);
+                    var weightedRotation = rotation.clone().multiplyScalar(k);
+                    Rtotal.add(weightedRotation);
+                    Rcontrib += k;
 
-                _.each(Rcontributions, function(num, key){
-                    Rtotal[key]/=num;
+                    //var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
+                    //Ttotal.add(torque);
+                    //var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
+                    //Ttotal.add(bendingTorque);
+
+                    //_.each(D, function(offset, axis){
+                    //    if (axis == neighborAxis) return;
+                    //    var torqueAxis = self._torqueAxis(neighborAxis, axis);
+                    //    var Dproject = D.clone();
+                    //    Dproject[torqueAxis] = 0;
+                    //    var nominalDProject = nominalHalfD.clone();
+                    //    nominalDProject[torqueAxis] = 0;
+                    //    var cross = nominalDProject.clone().cross(Dproject);
+                    //    rotation[torqueAxis] = k*self._sign(cross[torqueAxis])*Math.asin(cross.length()/nominalD.length()/Dproject.length());
+                    //    Rcontributions[torqueAxis] += k;
+                    //});
+                    ////rotation[neighborAxis] += k*neighbor.getRotation()[neighborAxis];
+                    ////Rcontributions[neighborAxis] += k;
+                    //Rtotal.add(rotation);
+
+                    //var neighborRotation = neighbor.getRotation();
+                    //var bend = cellRotation.clone().sub(neighborRotation);
+                    //var bendForce = new THREE.Vector3(0,0,0);
+                    //_.each(bend, function(val, key){
+                    //    if (key == neighborAxis) return;
+                    //    var bendAxis = self._torqueAxis(key, neighborAxis);
+                    //    bendForce[bendAxis] = val*k/1000000000;
+                    //});
+                    //Ftotal.add(cell.applyRotation(bendForce));
+
                 });
 
 
                 cell.applyForce(Ftotal, dt);
-                cell.setRotation(Rtotal, dt);
+                cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);
+                //cell.setQuaternion(Qtotal.multiply(1/Qcontrib).normalize());
+                //cell.applyTorque(Ttotal, dt);
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);

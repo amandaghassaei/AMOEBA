@@ -50,6 +50,20 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
         this.nextTranslation = this.getTranslation().add(this.nextVelocity.clone().multiplyScalar(dt));
     };
 
+    EMSimCell.prototype.applyTorque = function(torque, dt){
+        if (this._isFixed) return;
+        var accel = torque.multiplyScalar(1/this.I);
+        this.nextW = this.getAngularVelocity().add(accel.multiplyScalar(dt));
+        this.nextRotation = this.getRotation().add(this.nextW.clone().multiplyScalar(dt));
+    };
+
+
+    EMSimCell.prototype.setQuaternion = function(quaternion){
+        if (this._isFixed) return;
+        this.quaternion = quaternion;
+        this.nextRotation = new THREE.Euler().setFromQuaternion(quaternion);
+    };
+
     EMSimCell.prototype.setRotation = function(rotation, dt){
         if (this._isFixed) return;
         this.nextW = this.getRotation().sub(rotation).multiplyScalar(1/dt);
