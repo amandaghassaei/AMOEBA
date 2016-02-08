@@ -21,6 +21,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
 //            "change #saveAsFileName":                               "_saveAs",//detect enter key
             "click #exportSTL":                                     "_saveSTL",
 
+            "click #openAssembly":                                   "_openAssembly",
             "click .importJSON":                                    "_importJSON",
             "change #jsonInput":                                    "_selectJSONFiles",
             "click .jsonFile":                                      "_loadJSON",
@@ -130,6 +131,10 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
 
 
 
+        _openAssembly: function(e){
+            e.preventDefault();
+            appState.openAssembly();
+        },
 
         _importJSON: function(e){
             e.preventDefault();

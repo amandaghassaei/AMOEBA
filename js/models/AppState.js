@@ -183,6 +183,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             three.resetCameraPosition();
         },
 
+        openAssembly: function(){
+            this.set("currentNav", "navDesign");
+            $("#jsonInput").click();
+        },
 
 
 
@@ -268,7 +272,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 case 79://o open
                     if (e.ctrlKey || e.metaKey){//command
                         e.preventDefault();
-                        $("#jsonInput").click();
+                        this.openAssembly();
                         return;
                     }
                     if (state) {//hide mode
