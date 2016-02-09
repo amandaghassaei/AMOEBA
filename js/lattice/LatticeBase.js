@@ -499,11 +499,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        hideCells: function(){
+        hideCells: function(noRender){
             this._loopCells(this.sparseCells, function(cell){
                 cell.hide();
             });
-            three.render();
+            if (!noRender) three.render();
         },
 
         showCells: function(){
@@ -513,6 +513,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 if (--numCells <= 0) three.render();
             };
             this._loopCells(this.sparseCells, function(cell){
+                cell.setTransparent(false);
                 cell.show(cellMode, renderCallback);
             });
         },
@@ -524,12 +525,52 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
+        setLayerVisibility: function(index, planeType, callback, hideAll){
+            if (hideAll) this.hideCells(true);
+            var x = null;
+            var y = null;
+            var z = null;
+            var cellMin = this.get("cellsMin");
+            if (planeType == "xy") z = index-cellMin.z;
+            else if (planeType == "yz") x = index-cellMin.x;
+            else y = index-cellMin.y;
+            this.loopLayer(x, y, z, function(cell){
+                callback(cell);
+            });
+        },
+
 
 
 
 
 
         //utils
+
+        loopLayer: function(x, y, z, callback){
+            var cells = this.cells;
+            if (x !== null){
+                if (x<0 || x>=cells.length) return;
+                for (var y=0;y<cells[0].length;y++){
+                    for (var z=0;z<cells[0][0].length;z++){
+                        if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
+                    }
+                }
+            } else if (y !== null){
+                if (y<0 || y>=cells[0].length) return;
+                for (var x=0;x<cells.length;x++){
+                    for (var z=0;z<cells[0][0].length;z++){
+                        if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
+                    }
+                }
+            } else if (z !== null){
+                if (z<0 || z>=cells[0][0].length) return;
+                for (var x=0;x<cells.length;x++){
+                    for (var y=0;y<cells[0].length;y++){
+                        if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
+                    }
+                }
+            }
+        },
 
         loopCells: function(callback){
             this._loopCells(this.sparseCells, callback);

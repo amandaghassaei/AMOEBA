@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'appState'], function(_, appState){
+define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
     var materialNum = 1;//outward facing name
 
@@ -143,7 +143,7 @@ define(['underscore', 'appState'], function(_, appState){
     };
 
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){
-        if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent: true, opacity:0.1});
+        if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent: true, opacity:0.4});
         return new THREE.MeshLambertMaterial({color:color});
     };
 

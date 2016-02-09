@@ -18,7 +18,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         initialize: function(){
 
             //bind events
-            this.listenTo(this, "change:zIndex", this._renderZIndexChange);
+            this.listenTo(this, "change:zIndex", this._zIndexChange);
             this.listenTo(appState, "change:basePlaneIsVisible", this._setVisibility);
 
             this.listenTo(this, "change:planeType", this._changePlaneType);

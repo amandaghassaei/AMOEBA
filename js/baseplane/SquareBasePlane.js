@@ -47,14 +47,14 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             }
             this.set("zIndex", 0, {silent:true});
             this._setPosition(this.object3D, 0);
-            three.render();
+            appState.showSketchLayer();
         },
 
-        _renderZIndexChange: function(){
+        _zIndexChange: function(){
             var zIndex = this.get("zIndex");
             var scale = lattice.getAspectRatio()[this._normalAxis()];
             this._setPosition(this.object3D, zIndex*scale);
-            three.render();
+            appState.changeSketchLayer(zIndex);
         }
     });
 });

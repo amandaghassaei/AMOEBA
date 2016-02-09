@@ -27,7 +27,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             highlighterIsVisible:true,
             axesAreVisible: false,
             focusOnLattice: true,
-            showOneLayer: true,
+            showOneLayer: false,
 
             //key bindings
             shift: false,
@@ -65,6 +65,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             this.listenTo(this, "change:turnOffRendering", this._renderingOnOff);
             this.listenTo(this, "change:axesAreVisible", this._showAxes);
             this.listenTo(this, "change:focusOnLattice", this._focusOnLattice);
+            this.listenTo(this, "change:showOneLayer", this.showSketchLayer);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
@@ -104,6 +105,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
         _navChanged: function(){
             //update to last tab open in that section
+            var lastNav = this.previous("currentNav");
+
+            if (lastNav == "navDesign") this.lattice.setOpaque();
+
             var navSelection = this.get("currentNav");
             var nextTab = this.get("lastNavTab")[navSelection] || _.keys(plist.allMenus[navSelection].tabs)[0];
             this.set("currentTab", nextTab, {silent:true});
@@ -186,6 +191,53 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         openAssembly: function(){
             this.set("currentNav", "navDesign");
             $("#jsonInput").click();
+        },
+
+        showSketchLayer: function(){
+            if (this.get("showOneLayer")){
+                var visibleIndex = globals.baseplane.get("zIndex");
+                var planeType = globals.baseplane.get("planeType");
+                this.lattice.setLayerVisibility(visibleIndex, planeType, function(cell){
+                    cell.setTransparent(false);
+                    cell.show();
+                }, true);
+                this.lattice.setLayerVisibility(--visibleIndex, planeType, function(cell){
+                    cell.setTransparent(true);
+                    cell.show();
+                });
+                three.render();
+            } else {
+                this.lattice.showCells();
+            }
+        },
+
+        changeSketchLayer: function(visibleIndex){
+            if (this.get("showOneLayer")){
+                var translucentIndex = visibleIndex - 1;
+                var lastVisibleIndex = globals.baseplane.previous("zIndex");
+                var lastTranlsucentIndex = lastVisibleIndex -1;
+                var planeType = globals.baseplane.get("planeType");
+                this.lattice.setLayerVisibility(visibleIndex, planeType, function(cell){
+                    cell.setTransparent(false);
+                    cell.show();
+                });
+                this.lattice.setLayerVisibility(translucentIndex, planeType, function(cell){
+                    cell.setTransparent(true);
+                    cell.show();
+                });
+                if ((visibleIndex != lastTranlsucentIndex) && (translucentIndex != lastTranlsucentIndex)) {
+                    this.lattice.setLayerVisibility(lastTranlsucentIndex, planeType, function (cell) {
+                        cell.setTransparent(false);
+                        cell.hide();
+                    });
+                }
+                if ((visibleIndex != lastVisibleIndex) && (translucentIndex != lastVisibleIndex)){
+                    this.lattice.setLayerVisibility(lastVisibleIndex, planeType, function (cell) {
+                        cell.hide();
+                    });
+                }
+                three.render();
+            }
         },
 
 

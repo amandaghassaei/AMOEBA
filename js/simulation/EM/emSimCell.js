@@ -120,7 +120,7 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
     
 
     EMSimCell.prototype.show = function(){
-        this.cell.show();
+        this.cell.show();//todo pass mode
     };
 
     EMSimCell.prototype.showDefaultColor = function(){

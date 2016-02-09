@@ -13,6 +13,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         if (json.index) this.index = new THREE.Vector3(json.index.x, json.index.y, json.index.z);
         if (superCell) this.superCell = superCell;
         this.material = materials.getMaterialForId(json.materialID || appState.get("materialType"));
+        this.isTransparent = false;
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
         this.object3D = this._buildObject3D();
@@ -245,6 +246,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
             return null;
         }
         if (!returnTHREEObject) return this.material;
+        if (this.isTransparent) return this.material.getTransparentMaterial();
         return this.material.getThreeMaterial();
     };
 
@@ -256,6 +258,22 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype.setWireframeVisibility = function(visible, mode){
         if (visible && mode === undefined) mode = this.getConditionalMode(appState.get("cellMode"));
         this.object3D.children[1].visible = visible && this.object3D.children[1].name == mode;
+    };
+
+    DMACell.prototype.setTransparent = function(transparent){
+        this._setTransparent(transparent);
+    };
+
+    DMACell.prototype._setTransparent = function(transparent){
+        if (transparent == this.isTransparent) return;
+        this.isTransparent = transparent;
+        this._setTHREEMaterial(this.getMaterial(true));
+        this.setWireframeVisibility(!this.isTransparent);
+        if (this.parts) {
+            _.each(this.parts, function(part){
+                part.updateMaterial();
+            });
+        }
     };
 
     DMACell.prototype.getConditionalMode = function(mode){
