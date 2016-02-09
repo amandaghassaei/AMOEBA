@@ -18,7 +18,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             applicationType: "default",
             partType: null,
 
-            aspectRatio: null,
+            aspectRatio: null
         }),
 
 

@@ -10,6 +10,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         defaults: {
             planeType: "xy",
             zIndex: 0,
+            orientationFlipped: false,
             dimX: 100,
             dimY: 100,
             material: new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.2, wireframe:true})
@@ -22,6 +23,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             this.listenTo(appState, "change:basePlaneIsVisible", this._setVisibility);
 
             this.listenTo(this, "change:planeType", this._changePlaneType);
+            this.listenTo(this, "change:orientationFlipped", this._changeOrientation);
 
             //draw mesh
             var meshes = this._makeBasePlaneMesh();
@@ -59,7 +61,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             if (!object3D || object3D === undefined) object3D = this.object3D;
             object3D.position.set(0,0,0);
             var normalAxis = this._normalAxis();
-            object3D.position[normalAxis] = height-lattice.getAspectRatio()[normalAxis]/2;
+            var scale = lattice.getAspectRatio()[normalAxis];
+            if (this.get("orientationFlipped")) height += 1;
+            object3D.position[normalAxis] = height*scale-scale/2;
         },
 
         getAbsoluteIndex: function(){
@@ -72,14 +76,24 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         calcHighlighterParams: function(face, point, index){//index comes from subclass
             var normalAxis = this._normalAxis();
+            var orientationFlipped = this.get("orientationFlipped");
+
             point[normalAxis] = this.object3D.position[normalAxis];
+            if (orientationFlipped) point[normalAxis] += lattice.getAspectRatio()[normalAxis]/2;
+            else point[normalAxis] -= lattice.getAspectRatio()[normalAxis]/2;
+
             if (!index || index === undefined) index = lattice.getIndexForPosition(point);
-            index[normalAxis] = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
+            //index[normalAxis] = this.get("zIndex") - 1;//pretend we're on the top of the cell underneath the baseplane
             var position = lattice.getPositionForIndex(index);
-            position[normalAxis] += lattice.getAspectRatio()[normalAxis]/2;
+            //if (orientationFlipped) index[normalAxis] -= lattice.getAspectRatio()[normalAxis]/2;
+
+            if (orientationFlipped) position[normalAxis] -= lattice.getAspectRatio()[normalAxis]/2;
+            else position[normalAxis] += lattice.getAspectRatio()[normalAxis]/2;
             this.highligherIndex = index;
+
             var direction = new THREE.Vector3(0,0,0);
             direction[normalAxis] = 1;
+            if (orientationFlipped) direction[normalAxis] = -1;
             return {direction: direction, position:position};
         },
 

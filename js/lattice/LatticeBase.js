@@ -539,13 +539,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        makeHighlightableCells: function(){
+        makeHighlightableCells: function(index){
             if (!appState.get("showOneLayer")) {
                 this.highlightableCells = null;
                 return;
             }
             var cells = [];
-            var index = globals.baseplane.get("zIndex");
             var planeType = globals.baseplane.get("planeType");
             this.loopSketchLayer(index, planeType, function(cell){
                 cells.push(cell.getHighlightableMesh());

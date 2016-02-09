@@ -109,13 +109,15 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             }
 
             if (appState.get("showOneLayer")){//in single layer mode
-                var planeType = globals.baseplane.get("planeType");
-                var normalDirection = "z";
-                if (planeType == "yz") normalDirection = "x";
-                if (planeType == "zx") normalDirection = "y";
-                if (Math.abs(params.direction[normalDirection]) > 0.1){
-                    this.hide();
-                    return;
+                if (this.highlightedObject instanceof DMACell) {
+                    var planeType = globals.baseplane.get("planeType");
+                    var normalDirection = "z";
+                    if (planeType == "yz") normalDirection = "x";
+                    if (planeType == "zx") normalDirection = "y";
+                    if (Math.abs(params.direction[normalDirection]) > 0.1) {
+                        this.hide();
+                        return;
+                    }
                 }
             }
 

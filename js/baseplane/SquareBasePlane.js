@@ -33,7 +33,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             planeGeometry.faces.push(new THREE.Face3(0, 3, 2));
             planeGeometry.computeFaceNormals();
 
-            var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0}));
+            var mesh = new THREE.Mesh(planeGeometry, new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:0.0, side:THREE.DoubleSide}));
             return [mesh, new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:this.get("material").opacity}))];
         },
 
@@ -50,11 +50,15 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             appState.showSketchLayer();
         },
 
+        _changeOrientation: function(){
+            this._setPosition(this.object3D, this.get("zIndex"));
+            appState.showSketchLayer();
+        },
+
         _zIndexChange: function(){
             var zIndex = this.get("zIndex");
-            var scale = lattice.getAspectRatio()[this._normalAxis()];
-            this._setPosition(this.object3D, zIndex*scale);
-            appState.changeSketchLayer(zIndex);
+            this._setPosition(this.object3D, zIndex);
+            appState.changeSketchLayer(zIndex, this.get("orientationFlipped"));
         }
     });
 });

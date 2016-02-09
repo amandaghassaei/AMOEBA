@@ -194,15 +194,17 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         },
 
         showSketchLayer: function(){
-            this.lattice.makeHighlightableCells();
+            var index;
             if (this.get("showOneLayer")){
-                var visibleIndex = globals.baseplane.get("zIndex");
+                index = globals.baseplane.get("zIndex");
                 var planeType = globals.baseplane.get("planeType");
-                this.lattice.loopSketchLayer(visibleIndex, planeType, function(cell){
+                this.lattice.loopSketchLayer(index, planeType, function(cell){
                     cell.setTransparent(false);
                     cell.show();
                 }, true);
-                this.lattice.loopSketchLayer(--visibleIndex, planeType, function(cell){
+                var transIndex = index - 1;
+                if (globals.baseplane.get("orientationFlipped")) transIndex = index +1;
+                this.lattice.loopSketchLayer(transIndex, planeType, function(cell){
                     cell.setTransparent(true);
                     cell.show();
                 });
@@ -210,20 +212,26 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             } else {
                 this.lattice.showCells();
             }
+            this.lattice.makeHighlightableCells(index);
         },
 
-        changeSketchLayer: function(visibleIndex){
-            this.lattice.makeHighlightableCells();
-            if (this.get("showOneLayer")){
-                var translucentIndex = visibleIndex - 1;
+        changeSketchLayer: function(visibleIndex, orientationFlipped){
+            this.lattice.makeHighlightableCells(visibleIndex);
+            if (this.get("showOneLayer")) {
                 var lastVisibleIndex = globals.baseplane.previous("zIndex");
-                var lastTranlsucentIndex = lastVisibleIndex -1;
+                var translucentIndex = visibleIndex - 1;
+                var lastTranlsucentIndex = lastVisibleIndex - 1;
+                if (orientationFlipped){
+                    translucentIndex = visibleIndex + 1;
+                    lastTranlsucentIndex = lastVisibleIndex + 1;
+                }
+
                 var planeType = globals.baseplane.get("planeType");
-                this.lattice.loopSketchLayer(visibleIndex, planeType, function(cell){
+                this.lattice.loopSketchLayer(visibleIndex, planeType, function (cell) {
                     cell.setTransparent(false);
                     cell.show();
                 });
-                this.lattice.loopSketchLayer(translucentIndex, planeType, function(cell){
+                this.lattice.loopSketchLayer(translucentIndex, planeType, function (cell) {
                     cell.setTransparent(true);
                     cell.show();
                 });
@@ -233,7 +241,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                         cell.hide();
                     });
                 }
-                if ((visibleIndex != lastVisibleIndex) && (translucentIndex != lastVisibleIndex)){
+                if ((visibleIndex != lastVisibleIndex) && (translucentIndex != lastVisibleIndex)) {
                     this.lattice.loopSketchLayer(lastVisibleIndex, planeType, function (cell) {
                         cell.hide();
                     });
