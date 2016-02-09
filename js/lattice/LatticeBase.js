@@ -540,7 +540,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         makeHighlightableCells: function(){
-            if (!appState.get("showOneLayer")) this.highlightableCells = null;
+            if (!appState.get("showOneLayer")) {
+                this.highlightableCells = null;
+                return;
+            }
             var cells = [];
             var index = globals.baseplane.get("zIndex");
             var planeType = globals.baseplane.get("planeType");

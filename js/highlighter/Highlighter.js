@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three'],
-    function(_, Backbone, three, appState, lattice, DMACell, THREE){
+define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three', 'globals'],
+    function(_, Backbone, three, appState, lattice, DMACell, THREE, globals){
 
     return Backbone.View.extend({
 
@@ -107,6 +107,18 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 this.hide();
                 return;
             }
+
+            if (appState.get("showOneLayer")){//in single layer mode
+                var planeType = globals.baseplane.get("planeType");
+                var normalDirection = "z";
+                if (planeType == "yz") normalDirection = "x";
+                if (planeType == "zx") normalDirection = "y";
+                if (Math.abs(params.direction[normalDirection]) > 0.1){
+                    this.hide();
+                    return;
+                }
+            }
+
             this.position = params.position;
             this.direction = params.direction;
             this._setPosition(params.position, params.direction);//position of center point

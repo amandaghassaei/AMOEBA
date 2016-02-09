@@ -238,8 +238,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                         cell.hide();
                     });
                 }
-                three.render();
             }
+            three.render();
         },
 
 
