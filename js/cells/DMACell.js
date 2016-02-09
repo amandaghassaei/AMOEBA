@@ -24,7 +24,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     }
 
     DMACell.prototype.addToScene = function(superCell){
-        if (!this.sparseCells) lattice.getUItarget().addHighlightableCell(this.object3D.children[0]);//add mesh as highlightable object, only for lowest level of hierarchy
+        if (!this.sparseCells) lattice.getUItarget().addHighlightableCell(this.getHighlightableMesh());//add mesh as highlightable object, only for lowest level of hierarchy
         if (!superCell || superCell === undefined) three.sceneAdd(this.object3D);//add object3d as child of scene if top level of hierarchy
         if (this.sparseCells){
             var self = this;
@@ -37,11 +37,15 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     //make 3d stuff
 
-    DMACell.prototype._buildObject3D = function(){
+    DMACell.prototype._buildObject3D = function() {
         var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
         if (this._isBottomLayer()) object3D.myParent = this;//reference to get mouse raycasting back, only for lowest level of hierarchy
         object3D.name = "object3D";
         return object3D;
+    };
+
+    DMACell.prototype.getHighlightableMesh = function(){
+        return this.object3D.children[0];
     };
 
     DMACell.prototype._rotateCell = function(object3D){
@@ -237,7 +241,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype._setTHREEMaterial = function(threeMaterial){
-        this.object3D.children[0].material = threeMaterial;
+        this.getHighlightableMesh().material = threeMaterial;
     };
 
     DMACell.prototype.getMaterial = function(returnTHREEObject){
@@ -426,7 +430,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         if (this.object3D) {
             if (this.superCell) this.superCell.removeChildren(this.object3D);
             else if (this.index) three.sceneRemove(this.object3D);
-            if (!this.sparseCells) lattice.getUItarget().removeHighlightableCell(this.object3D.children[0]);//remove mesh as highlightable object
+            if (!this.sparseCells) lattice.getUItarget().removeHighlightableCell(this.getHighlightableMesh());//remove mesh as highlightable object
             this.object3D.myParent = null;
     //            this.object3D.dispose();
     //            geometry.dispose();

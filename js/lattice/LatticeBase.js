@@ -525,7 +525,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        setLayerVisibility: function(index, planeType, callback, hideAll){
+        loopSketchLayer: function(index, planeType, callback, hideAll){
             if (hideAll) this.hideCells(true);
             var x = null;
             var y = null;
@@ -539,6 +539,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
+        makeHighlightableCells: function(){
+            if (!appState.get("showOneLayer")) this.highlightableCells = null;
+            var cells = [];
+            var index = globals.baseplane.get("zIndex");
+            var planeType = globals.baseplane.get("planeType");
+            this.loopSketchLayer(index, planeType, function(cell){
+                cells.push(cell.getHighlightableMesh());
+            });
+            this.highlightableCells = cells;
+        },
 
 
 

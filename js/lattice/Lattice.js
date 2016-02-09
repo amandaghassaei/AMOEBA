@@ -339,16 +339,24 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         //3d ui
 
         addHighlightableCell: function(cell){
+            if (this.highlightableCells) this.highlightableCells.push(cell);
             three.addCell(cell);
         },
 
         removeHighlightableCell: function(cell){
+            if (this.highlightableCells) {
+                var index = this.highlightableCells.indexOf(cell);
+                if (index >= 0) this.highlightableCells.splice(index, 1);
+            }
             three.removeCell(cell);
         },
 
         getHighlightableCells: function(){
+            if (this.highlightableCells) return this.highlightableCells;
             return three.getCells();
         },
+
+
 
 
 
