@@ -48,7 +48,6 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             this.set("max", this.get("bound1").clone().max(this.get("bound2")), {silent: true});
 
             this._sizeChanged();
-
         },
 
         _sizeChanged: function(){
