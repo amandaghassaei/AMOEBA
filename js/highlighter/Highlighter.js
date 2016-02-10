@@ -216,6 +216,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         destroy: function(){
+            this.destroyFillRect();
             this.setNothingHighlighted();
             three.sceneRemove(this.mesh);
             this.mesh = null;

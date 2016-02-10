@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         _initialize: function(){
             this.listenTo(globals.baseplane, "change", this.render);
             this.listenTo(globals.highlighter, "change:fillRect", this._fillRectChanged);
+            if (globals.highlighter.get("fillRect")) this.listenTo(globals.highlighter.get("fillRect"), "change", this.render);
         },
 
         getPropertyOwner: function($target){

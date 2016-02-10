@@ -138,16 +138,17 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 var materialType = self.get("materialType");
                 //verify that correct class is in sync
                 if (!materials.isComposite(materialType)) {
-//                    if (self.previous("materialType") && !materials.isComposite(self.previous("materialType"))) return;
-                    //re init highlighter
-                    if (!self.lattice.getHighlighterFile) return;
-                    require([self.lattice.getHighlighterFile()], function(HighlighterClass){
-                        globals.highlighter = new HighlighterClass();
-                    });
+////                    if (self.previous("materialType") && !materials.isComposite(self.previous("materialType"))) return;
+//                    //re init highlighter
+//                    if (!self.lattice.getHighlighterFile) return;
+//                    require([self.lattice.getHighlighterFile()], function(HighlighterClass){
+//                        globals.highlighter = new HighlighterClass();
+//                    });
                     return;
                 }
                 //composite material
                 require(['superCellHighlighter'], function(SuperCellHighlighter){
+                    globals.highlighter.destroy();
                     globals.highlighter = new SuperCellHighlighter();
                 });
             });
