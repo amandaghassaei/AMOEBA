@@ -263,7 +263,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             var state = e.data.state;
             var currentTab = this.get("currentTab");
 
-            this.set("shift", false);//just in case, this is getting all weird during other meta commands in the browser
+            this.set("shift", e.shiftKey);
 
             if (e.ctrlKey || e.metaKey){
             } else if (state) {
@@ -271,15 +271,12 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 this.downKeys[e.keyCode] = true;
             } else this.downKeys[e.keyCode] = false;
 
-//            console.log(e);
-//            console.log(e.keyCode);
+            //console.log(e);
+            //console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
                     e.stopPropagation();
-                    break;
-                case 16://shift
-    //                this.set("shift", state);
                     break;
                 case 68://d delete mode
                     var currentNav = this.get("currentNav");
@@ -322,7 +319,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     if (e.ctrlKey || e.metaKey){//command
                         e.preventDefault();
                         if (e.shiftKey){
-                            this.set("shift", false);
                             $("#saveAsModel").modal("show");
                         } else {
                             globals.fileSaver.save();

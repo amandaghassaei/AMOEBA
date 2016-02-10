@@ -17,4 +17,24 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
     Flip orientation</label>
 
 <br/><br/>
+
+<% if (fillRect){ %>
+    Sketch:<br/><br/>
+    Size:&nbsp;&nbsp;
+    <input data-property="size" data-key="x" value="<%= fillRect.size.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="size" data-key="y" value="<%= fillRect.size.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="size" data-key="z" value="<%= fillRect.size.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
+    Min:&nbsp;&nbsp;
+    <input data-property="min" data-key="x" value="<%= fillRect.min.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="min" data-key="y" value="<%= fillRect.min.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="min" data-key="z" value="<%= fillRect.min.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
+    Max:&nbsp;&nbsp;
+    <input data-property="max" data-key="x" value="<%= fillRect.max.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="max" data-key="y" value="<%= fillRect.max.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="max" data-key="z" value="<%= fillRect.max.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
+    <a href="#" id="fillRectWithCells" class="btn btn-halfWidth btn-lg btn-success">Fill Sketch</a>
+    <a href="#" id="deleteFillRect" class="btn btn-halfWidth btn-lg pull-right btn-default">Delete Sketch</a><br/><br/>
+
+<% } %>
+
 todo: Sketch and extrude/cut commands

@@ -161,17 +161,48 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         //add/remove cells
 
-        _getNextCellPosition: function(){//add direction vector to current index
+        _getNextCellIndex: function(){//add direction vector to current index
             var newPosition;
             if (this.highlightedObject.nextCellPosition) newPosition = this.highlightedObject.nextCellPosition(this.mesh.position.clone());
             else newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getAbsolutePosition()));
             return lattice.getIndexForPosition(newPosition);
         },
 
+        mouseDown: function(){
+            if (appState.get("shift")){
+                if (!this.isVisible() || !this.highlightedObject) return;
+                var self = this;
+                this.destroyFillRect();
+                require(['fillRect'], function(FillRect){
+                    self.fillRect = new FillRect({bound: self._getNextCellIndex()})
+                    three.render();
+                });
+            }
+        },
+
+        destroyFillRect: function(){
+            if (this.fillRect) this.fillRect.destroy();
+            this.fillRect = null;
+            three.render();
+        },
+
+        adjustFillRect: function(){
+            if (!this.fillRect){
+                console.warn("no fill rect to adjust");
+                return;
+            }
+            this.fillRect.setBound(this._getNextCellIndex());
+            this.hide();
+        },
+
         addRemoveVoxel: function(shouldAdd){
+            if (this.fillRect){
+                //fill rect
+                return;
+            }
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                lattice.getUItarget().addCellAtIndex(this._getNextCellPosition());
+                lattice.getUItarget().addCellAtIndex(this._getNextCellIndex());
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;

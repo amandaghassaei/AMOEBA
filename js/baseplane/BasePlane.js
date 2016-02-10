@@ -36,7 +36,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
             this._setPosition(0);
 
-            three.sceneAddBasePlane(object3D, this.lines);
+            three.sceneAddBasePlane(this.object3D, this.lines);
             three.render();
             this._setVisibility();
         },

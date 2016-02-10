@@ -92,6 +92,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
         _mouseDown: function(){
             this.mouseIsDown = true;
+            globals.highlighter.mouseDown();
         },
 
         _mouseMoved: function(e){
@@ -130,7 +131,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 if (deleteMode){
                     globals.highlighter.addRemoveVoxel(false);
                 } else if (appState.get("shift")){
-                    globals.highlighter.addRemoveVoxel(true);
+                    globals.highlighter.adjustFillRect();
                 }
             }
 

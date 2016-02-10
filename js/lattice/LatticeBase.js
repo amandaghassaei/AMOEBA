@@ -116,33 +116,37 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-//        addCellsInRange: function(range){//add a block of cells (extrude)
-//
-//            this._checkForMatrixExpansion(range.max, range.min);
-//
-//            var cellsMin = this.get("cellsMin");
-//            var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
-//            var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
-//
-//            var materialID = appState.get("materialType");
-//            for (var x=relativeMin.x;x<=relativeMax.x;x++){
-//                for (var y=relativeMin.y;y<=relativeMax.y;y++){
-//                    for (var z=relativeMin.z;z<=relativeMax.z;z++){
-//                        if (!this.sparseCells[x][y][z]) {
-//                            var self = this;
-//                             this.makeCellWithJSON({
-//                                     index: (new THREE.Vector3(x, y, z)).add(cellsMin),
-//                                     materialID: materialID
-//                                 }, function(cell){
-//                                    self.sparseCells[x][y][z] = cell;
-//                                    self.set("numCells", self.get("numCells")+1);
-//                                 });
-//                        } else console.warn("already a cell there");
-//                    }
-//                }
-//            }
-//            three.render();
-//        },
+        addCellsInRange: function(range){//add a block of cells (extrude)
+
+            //this._checkForMatrixExpansion(range.max, range.min);
+
+            var cellsMin = this.get("cellsMin");
+            //var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
+            //var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
+
+            var materialID = appState.get("materialType");
+
+            var callback = null;
+            for (var x=range.min.x;x<=range.max.x;x++){
+                for (var y=range.min.y;y<=range.max.y;y++){
+                    for (var z=range.min.z;z<=range.max.z;z++){
+                        var index = new THREE.Vector3(x, y, z);
+                        if (index.equals(range.max)) callback = function(){three.render();};
+                        this._addCellAtIndex(index, {materialID: materialID}, callback);
+                        //if (!this.sparseCells[x][y][z]) {
+                        //    var self = this;
+                        //     this.makeCellWithJSON({
+                        //             index: (new THREE.Vector3(x, y, z)).add(cellsMin),
+                        //             materialID: materialID
+                        //         }, function(cell){
+                        //            self.sparseCells[x][y][z] = cell;
+                        //            self.set("numCells", self.get("numCells")+1);
+                        //         });
+                        //} else console.warn("already a cell there");
+                    }
+                }
+            }
+        },
 
         addCellAtIndex: function(index, json){
             this._addCellAtIndex(index, json, function(){

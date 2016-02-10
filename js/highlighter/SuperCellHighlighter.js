@@ -62,7 +62,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             three.render();
         },
 
-        _getNextCellPosition: function(){//add direction vector to current index
+        _getNextCellIndex: function(){//add direction vector to current index
             var newIndex = this.highlightedObject.getAbsoluteIndex();
             newIndex.add(this.direction.clone()).round();
             var offset = appState.get("superCellIndex").clone();

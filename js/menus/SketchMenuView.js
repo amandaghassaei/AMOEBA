@@ -8,6 +8,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
     return MenuParentView.extend({
 
         events: {
+            "click #fillRectWithCells":                    "_fillSketch",
+            "click #deleteFillRect":                       "_deleteSketch"
         },
 
         _initialize: function(){
@@ -20,7 +22,19 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist, globals.baseplane.toJSON());
+            var json = _.extend(this.model.toJSON(), plist, globals.baseplane.toJSON(), {fillRect:null});
+            if (globals.highlighter.fillRect) _.extend(json, {fillRect: globals.highlighter.fillRect.toJSON()});
+            return json;
+        },
+
+        _fillSketch: function(e){
+            e.preventDefault();
+            globals.highlighter.fillRect.fill();
+        },
+
+        _deleteSketch: function(e){
+            e.preventDefault();
+            globals.highlighter.destroyFillRect();
         },
 
         _render: function(){

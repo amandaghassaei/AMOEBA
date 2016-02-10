@@ -29,6 +29,7 @@ require.config({
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
+        fillRect: 'three/FillRect',
         axes: 'three/Axes',
         svgRenderer: '../dependencies/svgRenderer',
         threeProjector: '../dependencies/Projector',
