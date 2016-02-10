@@ -12,7 +12,8 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             bound1: null,
             bound2: null,
             min: null,
-            max: null
+            max: null,
+            cutMode: false
         },
         
         initialize: function(options){
@@ -60,7 +61,12 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
         },
         
         fill: function(){
-            lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()})
+            lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
+            globals.highlighter.destroyFillRect();
+        },
+
+        cut: function(){
+            lattice.removeCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
             globals.highlighter.destroyFillRect();
         },
         
@@ -68,7 +74,8 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             return {
                 min: this.get("min"),
                 max: this.get("max"),
-                size: this.getSize()
+                size: this.getSize(),
+                cutMode: this.get("cutMode")
             };
         },
         

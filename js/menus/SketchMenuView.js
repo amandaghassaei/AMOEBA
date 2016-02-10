@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
 
         events: {
             "click #fillRectWithCells":                    "_fillSketch",
+            "click #cutCellsWithRect":                     "_cutSketch",
             "click #deleteFillRect":                       "_deleteSketch"
         },
 
@@ -18,6 +19,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
 
         getPropertyOwner: function($target){
             if ($target.hasClass('baseplane')) return globals.baseplane;
+            if ($target.hasClass('fillRect')) return globals.highlighter.fillRect;
             return null;
         },
 
@@ -30,6 +32,11 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         _fillSketch: function(e){
             e.preventDefault();
             globals.highlighter.fillRect.fill();
+        },
+
+        _cutSketch: function(e){
+            e.preventDefault();
+            globals.highlighter.fillRect.cut();
         },
 
         _deleteSketch: function(e){

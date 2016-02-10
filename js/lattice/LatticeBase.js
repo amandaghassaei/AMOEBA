@@ -148,6 +148,20 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
         },
 
+        removeCellsInRange: function(range){//add a block of cells (extrude)
+
+            console.log(this.sparseCells);
+            for (var x=range.min.x;x<=range.max.x;x++){
+                for (var y=range.min.y;y<=range.max.y;y++){
+                    for (var z=range.min.z;z<=range.max.z;z++){
+                        var index = new THREE.Vector3(x, y, z);
+                        this.removeCellAtIndex(index, true);
+                    }
+                }
+            }
+            three.render();
+        },
+
         addCellAtIndex: function(index, json){
             this._addCellAtIndex(index, json, function(){
                 myConsole.write("lattice.addCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
@@ -233,7 +247,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return position;
         },
 
-        removeCellAtIndex: function(index){
+        removeCellAtIndex: function(index, noRender){
             index = this._getCellsIndexForLatticeIndex(index);
             if (this._checkForIndexOutsideBounds(index) || this.sparseCells[index.x][index.y][index.z] === null){
                 myConsole.warn("no cell at this index, lattice.removeCellAtIndex operation cancelled");
@@ -241,7 +255,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             }
             this._removeCell(this.sparseCells[index.x][index.y][index.z]);
             myConsole.write("lattice.removeCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
-            three.render();
+            if (!noRender) three.render();
         },
 
         removeCell: function(cell){
