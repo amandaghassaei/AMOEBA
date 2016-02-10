@@ -38,6 +38,10 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             if (this.get("bound2") && bound.equals(this.get("bound2"))) {
                 return;
             }
+
+            var normalAxis = globals.baseplane.getNormalAxis();
+            bound[normalAxis] = this.get("bound1")[normalAxis];
+
             this.set("bound2", bound.clone());
     
             this.set("min", this.get("bound1").clone().min(this.get("bound2")), {silent: true});

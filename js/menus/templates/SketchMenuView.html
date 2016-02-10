@@ -16,7 +16,7 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
     Flip orientation</label>
 
-<br/><br/>
+<br/>
 
 <% if (fillRect){ %>
     Sketch:<br/><br/>
@@ -39,4 +39,9 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
         <input id="cutMode" data-property="cutMode" type="checkbox" <% if (fillRect.cutMode){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="fillRect custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Cut Mode</label>
+<% } else if (null){ %>
+
+<% } else { %>
+Shift + Drag to start sketch<br/>
+Shift + CTRL/&#8984; + Drag to select cells
 <% } %>

@@ -41,7 +41,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             this._setVisibility();
         },
 
-        _normalAxis: function(){
+        getNormalAxis: function(){
             var type = this.get("planeType");
             if (type == "xy") return "z";
             else if (type == "yz") return "x";
@@ -69,7 +69,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             var lines = this.lines;
             object3D.position.set(0,0,0);
             lines.position.set(0,0,0);
-            var normalAxis = this._normalAxis();
+            var normalAxis = this.getNormalAxis();
             var scale = lattice.getAspectRatio()[normalAxis];
             if (this.get("orientationFlipped")) height += 1;
             object3D.position[normalAxis] = height*scale-scale/2;
@@ -85,7 +85,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
         },
 
         calcHighlighterParams: function(face, point, index){//index comes from subclass
-            var normalAxis = this._normalAxis();
+            var normalAxis = this.getNormalAxis();
             var orientationFlipped = this.get("orientationFlipped");
 
             point[normalAxis] = this.object3D.position[normalAxis];
