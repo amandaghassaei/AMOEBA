@@ -8,7 +8,8 @@ define(['underscore', 'three'], function(_, THREE){
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
 //    camera.setLens(50);
     var scene = new THREE.Scene();
-    var baseplaneScene = new THREE.Scene();
+    var secondPassScene = new THREE.Scene();
+    var firstPassScene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
     renderer.autoClear = false;
 
@@ -99,9 +100,13 @@ define(['underscore', 'three'], function(_, THREE){
         scene.add(object);
     }
 
+    function secondPassSceneAdd(object){
+        secondPassScene.add(object)
+    }
+
     function sceneAddBasePlane(plane, lines){
         sceneAdd(lines);
-        baseplaneScene.add(plane);
+        firstPassScene.add(plane);
         basePlane.push(plane.children[0]);
     }
 
@@ -141,9 +146,13 @@ define(['underscore', 'three'], function(_, THREE){
         scene.remove(object);
     }
 
+    function secondPassSceneRemove(object){
+        secondPassScene.remove(object)
+    }
+
     function sceneRemoveBasePlane(plane, lines){
         sceneRemove(lines);
-        baseplaneScene.remove(plane);
+        firstPassScene.remove(plane);
         basePlane = [];
     }
 
@@ -187,9 +196,11 @@ define(['underscore', 'three'], function(_, THREE){
     function _render(){
 //        console.log("render");
         renderer.clear();
-        renderer.render(baseplaneScene, camera);
+        renderer.render(firstPassScene, camera);
         renderer.clearDepth();
         renderer.render(scene, camera);
+        renderer.clearDepth();
+        renderer.render(secondPassScene, camera);
     }
 
     function setRenderFlag(){
@@ -221,7 +232,9 @@ define(['underscore', 'three'], function(_, THREE){
         startAnimationLoop: startAnimationLoop,
         stopAnimationLoop: stopAnimationLoop,
         sceneRemove: sceneRemove,
+        secondPassSceneRemove: secondPassSceneRemove,
         sceneAdd: sceneAdd,
+        secondPassSceneAdd: secondPassSceneAdd,
         sceneAddBasePlane: sceneAddBasePlane,
         sceneRemoveBasePlane: sceneRemoveBasePlane,
         domElement: renderer.domElement,

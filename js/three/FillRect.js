@@ -30,6 +30,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
 
             this.object3D = new THREE.Object3D();
             this.object3D.add(this.mesh);
+            this.object3D.add(this._buildWireframe(mesh));
             var arrows = [];
             for (var i=0;i<6;i++){
                 var direction = new THREE.Vector3(0,0,0);
@@ -45,8 +46,14 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
 
             this.setBound(options.bound);
     
-            three.sceneAdd(this.object3D);
+            three.secondPassSceneAdd(this.object3D);
         },
+
+        _buildWireframe: function(mesh){
+            var wireframe = new THREE.BoxHelper(mesh);
+            wireframe.material.color.set(0x666666);
+            return wireframe;
+         },
 
         arrowAxisForIndex: function(i){
             if (Math.floor(i/2) == 0) return 'x';
@@ -77,6 +84,8 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             var scale = lattice.getAspectRatio();
             var center = this.get("min").clone().add(this.get("max").clone().sub(this.get("min")).multiplyScalar(0.5).multiply(scale));
             this.mesh.position.set(center.x, center.y, center.z);
+
+            this.object3D.children[1].update(this.mesh);
 
             for (var i=0;i<6;i++){
                 var axis = this.arrowAxisForIndex(i);
@@ -119,7 +128,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             this.set("bound2", null, {silent:true});
             this.set("min", null, {silent:true});
             this.set("max", null, {silent:true});
-            three.sceneRemove(this.object3D);
+            three.secondPassSceneRemove(this.object3D);
             var self = this;
             _.each(this.arrows, function(arrow, index){
                 arrow.destroy();
