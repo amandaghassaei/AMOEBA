@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three', 'globals'],
-    function(_, Backbone, three, appState, lattice, DMACell, THREE, globals){
+define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three', 'globals', 'arrow'],
+    function(_, Backbone, three, appState, lattice, DMACell, THREE, globals, Arrow){
 
     return Backbone.Model.extend({
 
@@ -13,7 +13,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         direction: null,
         
         defaults: {
-            fillRect: null
+            fillRect: null,
+            sketchEditMode: false
         },
 
         initialize: function(){
@@ -67,9 +68,11 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         setNothingHighlighted: function(){
             if (appState.get("deleteMode")) this.setDeleteMode(this.highlightedObject, false);
+            if (this.highlightedObject && this.highlightedObject instanceof Arrow) this.highlightedObject.highlight(false);
             this.highlightedObject = null;
             this.direction = null;
             this.position = null;
+
             this.hide();
         },
 
@@ -99,11 +102,20 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 return;
             }
 
+            var lastHighlighted = this.highlightedObject;
+
             if (appState.get("deleteMode") && this.highlightedObject != highlighted.myParent) this.setDeleteMode(this.highlightedObject, false);
             this.highlightedObject = highlighted.myParent;
 
             if (appState.get("deleteMode")) {
                 this.setDeleteMode(this.highlightedObject, true);
+                return;
+            }
+
+            if (this.highlightedObject instanceof Arrow){
+                if (lastHighlighted == this.highlightedObject) return;
+                if (lastHighlighted && lastHighlighted instanceof Arrow) lastHighlighted.highlight(false);
+                this.get("fillRect").highlight(this.highlightedObject, true);
                 return;
             }
 
@@ -185,6 +197,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         destroyFillRect: function(){
             if (this.get("fillRect")) this.get("fillRect").destroy();
             this.set("fillRect", null);
+            this.set("sketchEditMode", false);
             three.render();
         },
 
@@ -199,7 +212,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         addRemoveVoxel: function(shouldAdd){
             if (this.get("fillRect")){
-                //fill rect
+                this.set("sketchEditMode", true);
                 return;
             }
             if (shouldAdd){

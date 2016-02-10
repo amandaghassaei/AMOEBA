@@ -6,7 +6,6 @@
 define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
     function(Backbone, lattice, THREE, three, globals, Arrow){
 
-    
     return Backbone.Model.extend({
         
         defaults: {
@@ -32,14 +31,18 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             this.object3D.add(this.mesh);
             this.object3D.add(this._buildWireframe(mesh));
             var arrows = [];
+            var highlightTargets = [];
             for (var i=0;i<6;i++){
                 var direction = new THREE.Vector3(0,0,0);
                 var sign = (i%2 == 0 ? 1 : -1);
                 direction[this.arrowAxisForIndex(i)] = sign;
-                var arrow = new Arrow(direction, 0.5, 2, new THREE.MeshBasicMaterial({color: "#222222"}));
+                var arrow = new Arrow(direction, 0.5, 2);
                 arrows.push(arrow);
-                this.object3D.add(arrow.getObject3D());
+                var arrowMesh = arrow.getObject3D();
+                highlightTargets.push(arrowMesh);
+                this.object3D.add(arrowMesh);
             }
+            this.highlightTargets = highlightTargets;
             this.arrows = arrows;
 
             this.listenTo(this, "change:min change:max", this._sizeChanged);
@@ -54,6 +57,10 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             wireframe.material.color.set(0x666666);
             return wireframe;
          },
+
+        highlight: function(arrow, shouldHighlight){
+            arrow.highlight(shouldHighlight);
+        },
 
         arrowAxisForIndex: function(i){
             if (Math.floor(i/2) == 0) return 'x';
@@ -85,7 +92,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             var center = this.get("min").clone().add(this.get("max").clone().sub(this.get("min")).multiplyScalar(0.5).multiply(scale));
             this.mesh.position.set(center.x, center.y, center.z);
 
-            this.object3D.children[1].update(this.mesh);
+            this.object3D.children[1].update(this.mesh);//update box helper
 
             for (var i=0;i<6;i++){
                 var axis = this.arrowAxisForIndex(i);
@@ -130,6 +137,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             this.set("max", null, {silent:true});
             three.secondPassSceneRemove(this.object3D);
             var self = this;
+            this.highlightTargets = null;
             _.each(this.arrows, function(arrow, index){
                 arrow.destroy();
                 self.arrows[index] = null;

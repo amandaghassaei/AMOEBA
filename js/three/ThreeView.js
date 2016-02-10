@@ -112,11 +112,21 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             this.mouseProjection.setFromCamera(vector, this.model.camera);
 
             var deleteMode = appState.get("deleteMode");
+            var sketchMode = appState.get("shift");
+            var sketchEditMode = globals.highlighter.get("sketchEditMode");
 
-            var objsToIntersect = lattice.getUItarget().getHighlightableCells();
-            if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
-    //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
-            var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
+            var objsToIntersect;
+            var intersections;
+            if (sketchEditMode){
+                objsToIntersect = globals.highlighter.get("fillRect").highlightTargets;
+                intersections = this.mouseProjection.intersectObjects(objsToIntersect, true);
+            } else {
+                objsToIntersect = lattice.getUItarget().getHighlightableCells();
+                if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
+                //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
+                intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
+            }
+
             if (intersections.length == 0) {//no intersections
                 globals.highlighter.setNothingHighlighted();
                 this._setNoPartIntersections();
@@ -125,12 +135,13 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             if(intersections[0].object == globals.highlighter.mesh) return;
 
+
             globals.highlighter.highlight(intersections[0]);
 
             if (this.mouseIsDown) {
                 if (deleteMode){
                     globals.highlighter.addRemoveVoxel(false);
-                } else if (appState.get("shift")){
+                } else if (sketchMode){
                     globals.highlighter.adjustFillRect();
                 }
             }

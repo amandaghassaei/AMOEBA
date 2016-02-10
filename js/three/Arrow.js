@@ -5,19 +5,24 @@
 //create an arrow object3D
 define(['three', 'threeModel'], function(THREE, three){
 
+    var highlightedMaterial = new THREE.MeshBasicMaterial({color:"#0000FF"});
+    var defaultMaterial = new THREE.MeshBasicMaterial({color: "#222222"});
+
     var arrowGeometry = new THREE.CylinderGeometry(0, 1, 1);
     var axisGeometry = new THREE.CylinderGeometry(0.5, 0.5, 1);
     arrowGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0.5,0));
     axisGeometry.applyMatrix(new THREE.Matrix4().makeTranslation(0,0.5,0));
 
     function Arrow(direction, diameter, length, material, position){
-        if (!material) material = new THREE.MeshBasicMaterial({color: "#FF0000"});
+        if (!material) material = defaultMaterial;
+        this.material = material;
         if (!diameter) diameter = 1;
         var xAxisMesh = new THREE.Mesh(axisGeometry, material);
         var xArrowMesh = new THREE.Mesh(arrowGeometry, material);
         var object3D = new THREE.Object3D();
         object3D.add(xArrowMesh);
         object3D.add(xAxisMesh);
+        object3D.myParent = this;
         this.object3D = object3D;
         xArrowMesh.scale.set(diameter, 1, diameter);
         xAxisMesh.scale.set(diameter, 1, diameter);
@@ -46,7 +51,18 @@ define(['three', 'threeModel'], function(THREE, three){
         return this.object3D;
     };
 
+    Arrow.prototype.highlight = function(shouldHighlight){
+        var material = this.material;
+        if (shouldHighlight) material = highlightedMaterial;
+        _.each(this.object3D.children, function(mesh){
+            mesh.material = material;
+        });
+        three.render();
+    };
+
     Arrow.prototype.destroy = function(){
+        this.material = null;
+        this.object3D.myParent = null;
         this.object3D = null;
     };
 
