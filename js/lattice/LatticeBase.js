@@ -150,7 +150,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         removeCellsInRange: function(range){//add a block of cells (extrude)
 
-            console.log(this.sparseCells);
             for (var x=range.min.x;x<=range.max.x;x++){
                 for (var y=range.min.y;y<=range.max.y;y++){
                     for (var z=range.min.z;z<=range.max.z;z++){

@@ -6,11 +6,15 @@
 define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', 'three', 'globals'],
     function(_, Backbone, three, appState, lattice, DMACell, THREE, globals){
 
-    return Backbone.View.extend({
+    return Backbone.Model.extend({
 
         mesh: null,
         highlightedObject: null,
         direction: null,
+        
+        defaults: {
+            fillRect: null
+        },
 
         initialize: function(){
 
@@ -174,29 +178,29 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 var self = this;
                 this.destroyFillRect();
                 require(['fillRect'], function(FillRect){
-                    self.fillRect = new FillRect({bound: self._getNextCellIndex()})
+                    self.set("fillRect", new FillRect({bound: self._getNextCellIndex()}));
                     three.render();
                 });
             }
         },
 
         destroyFillRect: function(){
-            if (this.fillRect) this.fillRect.destroy();
-            this.fillRect = null;
+            if (this.get("fillRect")) this.get("fillRect").destroy();
+            this.set("fillRect", null);
             three.render();
         },
 
         adjustFillRect: function(){
-            if (!this.fillRect){
+            if (!this.get("fillRect")){
                 console.warn("no fill rect to adjust");
                 return;
             }
-            this.fillRect.setBound(this._getNextCellIndex());
+            this.get("fillRect").setBound(this._getNextCellIndex());
             this.hide();
         },
 
         addRemoveVoxel: function(shouldAdd){
-            if (this.fillRect){
+            if (this.get("fillRect")){
                 //fill rect
                 return;
             }

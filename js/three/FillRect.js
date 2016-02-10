@@ -80,6 +80,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
         },
         
         destroy: function(){
+            this.off();
             this.set("bound1", null, {silent:true});
             this.set("bound2", null, {silent:true});
             this.set("min", null, {silent:true});
