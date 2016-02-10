@@ -248,12 +248,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         removeCellAtIndex: function(index, noRender){
-            index = this._getCellsIndexForLatticeIndex(index);
-            if (this._checkForIndexOutsideBounds(index) || this.sparseCells[index.x][index.y][index.z] === null){
+            var cellsIndex = this._getCellsIndexForLatticeIndex(index);
+            if (this._checkForIndexOutsideBounds(index) || this.sparseCells[cellsIndex.x][cellsIndex.y][cellsIndex.z] === null){
                 myConsole.warn("no cell at this index, lattice.removeCellAtIndex operation cancelled");
                 return;
             }
-            this._removeCell(this.sparseCells[index.x][index.y][index.z]);
+            this._removeCell(this.sparseCells[cellsIndex.x][cellsIndex.y][cellsIndex.z]);
             myConsole.write("lattice.removeCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
             if (!noRender) three.render();
         },
