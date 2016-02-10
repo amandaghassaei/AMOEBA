@@ -3,7 +3,8 @@
  */
 
 
-define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backbone, lattice, THREE, three, globals){
+define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
+    function(Backbone, lattice, THREE, three, globals, Arrow){
 
     
     return Backbone.Model.extend({
@@ -27,11 +28,30 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
                 }));
             this.mesh = mesh;
 
+            this.object3D = new THREE.Object3D();
+            this.object3D.add(this.mesh);
+            var arrows = [];
+            for (var i=0;i<6;i++){
+                var direction = new THREE.Vector3(0,0,0);
+                var sign = (i%2 == 0 ? 1 : -1);
+                direction[this.arrowAxisForIndex(i)] = sign;
+                var arrow = new Arrow(direction, 0.5, 2, new THREE.MeshBasicMaterial({color: "#222222"}));
+                arrows.push(arrow);
+                this.object3D.add(arrow.getObject3D());
+            }
+            this.arrows = arrows;
+
             this.listenTo(this, "change:min change:max", this._sizeChanged);
-    
+
             this.setBound(options.bound);
     
-            three.sceneAdd(mesh);
+            three.sceneAdd(this.object3D);
+        },
+
+        arrowAxisForIndex: function(i){
+            if (Math.floor(i/2) == 0) return 'x';
+            if (Math.floor(i/2) == 1) return 'y';
+            return 'z';
         },
         
         setBound: function(bound){
@@ -57,6 +77,17 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             var scale = lattice.getAspectRatio();
             var center = this.get("min").clone().add(this.get("max").clone().sub(this.get("min")).multiplyScalar(0.5).multiply(scale));
             this.mesh.position.set(center.x, center.y, center.z);
+
+            for (var i=0;i<6;i++){
+                var axis = this.arrowAxisForIndex(i);
+                var position = center.clone();
+                if (i%2 == 0) {
+                    position[axis] = this.get("max")[axis] + 1;
+                } else {
+                    position[axis] = this.get("min")[axis] - 1;
+                }
+                this.arrows[i].setPosition(position.multiply(scale));
+            }
         },
         
         getSize: function(){
@@ -88,8 +119,15 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals'], function(Backb
             this.set("bound2", null, {silent:true});
             this.set("min", null, {silent:true});
             this.set("max", null, {silent:true});
-            three.sceneRemove(this.mesh);
+            three.sceneRemove(this.object3D);
+            var self = this;
+            _.each(this.arrows, function(arrow, index){
+                arrow.destroy();
+                self.arrows[index] = null;
+            });
+            this.arrows = null;
             this.mesh = null;
+            this.object3D = null;
         }
         
         

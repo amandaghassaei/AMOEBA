@@ -31,6 +31,7 @@ require.config({
         fillGeometry: 'three/FillGeometry',
         fillRect: 'three/FillRect',
         axes: 'three/Axes',
+        arrow: 'three/Arrow',
         svgRenderer: '../dependencies/svgRenderer',
         threeProjector: '../dependencies/Projector',
 
