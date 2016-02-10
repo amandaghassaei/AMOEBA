@@ -183,7 +183,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         mouseDown: function(){
-            if (appState.get("shift")){
+            if (appState.get("shift")){//create new fill rect
                 if (!this.isVisible() || !this.highlightedObject) return;
                 var self = this;
                 this.destroyFillRect();
@@ -191,6 +191,10 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                     self.set("fillRect", new FillRect({bound: self._getNextCellIndex()}));
                     three.render();
                 });
+            }
+            //push pull arrows
+            if (this.highlightedObject && this.highlightedObject instanceof Arrow){
+                this.get("fillRect").pushPullArrow();
             }
         },
 
