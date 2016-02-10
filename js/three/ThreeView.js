@@ -110,7 +110,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
             this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-            var objsToIntersect = lattice.getUItarget().getHighlightableCells().concat(this.model.getBasePlane());
+            var deleteMode = appState.get("deleteMode");
+
+            var objsToIntersect = lattice.getUItarget().getHighlightableCells();
+            if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
     //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
             if (intersections.length == 0) {//no intersections
@@ -124,7 +127,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             globals.highlighter.highlight(intersections[0]);
 
             if (this.mouseIsDown) {
-                if (appState.get("deleteMode")){
+                if (deleteMode){
                     globals.highlighter.addRemoveVoxel(false);
                 } else if (appState.get("shift")){
                     globals.highlighter.addRemoveVoxel(true);
