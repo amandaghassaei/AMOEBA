@@ -39,25 +39,25 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
 
         _changePlaneType: function(){
             var type = this.get("planeType");
-            if (type == "xy") this.object3D.rotation.set(0, 0, 0);
-            else if (type == "yz") this.object3D.rotation.set(0, Math.PI/2, 0);
-            else if (type == "xz") this.object3D.rotation.set(-Math.PI/2, 0, 0);
+            if (type == "xy") this._setRotation(0, 0, 0);
+            else if (type == "yz") this._setRotation(0, Math.PI/2, 0);
+            else if (type == "xz") this._setRotation(-Math.PI/2, 0, 0);
             else {
                 console.warn("invalid planeType given " + type);
             }
             this.set("zIndex", 0, {silent:true});
-            this._setPosition(this.object3D, 0);
+            this._setPosition(0);
             appState.showSketchLayer();
         },
 
         _changeOrientation: function(){
-            this._setPosition(this.object3D, this.get("zIndex"));
+            this._setPosition(this.get("zIndex"));
             appState.showSketchLayer();
         },
 
         _zIndexChange: function(){
             var zIndex = this.get("zIndex");
-            this._setPosition(this.object3D, zIndex);
+            this._setPosition(zIndex);
             appState.changeSketchLayer(zIndex, this.get("orientationFlipped"));
         }
     });

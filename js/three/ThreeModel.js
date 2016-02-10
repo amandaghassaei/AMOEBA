@@ -8,7 +8,9 @@ define(['underscore', 'three'], function(_, THREE){
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
 //    camera.setLens(50);
     var scene = new THREE.Scene();
+    var baseplaneScene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
+    renderer.autoClear = false;
 
     var svgRenderer = null;
 
@@ -97,9 +99,10 @@ define(['underscore', 'three'], function(_, THREE){
         scene.add(object);
     }
 
-    function sceneAddBasePlane(object){
-        sceneAdd(object);
-        basePlane.push(object.children[0]);
+    function sceneAddBasePlane(plane, lines){
+        sceneAdd(lines);
+        baseplaneScene.add(plane);
+        basePlane.push(plane.children[0]);
     }
 
     function getBasePlane(){
@@ -138,8 +141,9 @@ define(['underscore', 'three'], function(_, THREE){
         scene.remove(object);
     }
 
-    function sceneRemoveBasePlane(object){
-        sceneRemove(object);
+    function sceneRemoveBasePlane(plane, lines){
+        sceneRemove(lines);
+        baseplaneScene.remove(plane);
         basePlane = [];
     }
 
@@ -182,6 +186,9 @@ define(['underscore', 'three'], function(_, THREE){
 
     function _render(){
 //        console.log("render");
+        renderer.clear();
+        renderer.render(baseplaneScene, camera);
+        renderer.clearDepth();
         renderer.render(scene, camera);
     }
 

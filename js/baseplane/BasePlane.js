@@ -28,13 +28,15 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             //draw mesh
             var meshes = this._makeBasePlaneMesh();
             var object3D = new THREE.Object3D();
-            this._setPosition(object3D, 0);
-            _.each(meshes, function(mesh){
-                object3D.add(mesh);
-            });
+
+            object3D.add(meshes[0]);
             object3D.myParent = this;
+            this.lines = meshes[1];
             this.object3D = object3D;
-            three.sceneAddBasePlane(object3D);
+
+            this._setPosition(0);
+
+            three.sceneAddBasePlane(object3D, this.lines);
             three.render();
             this._setVisibility();
         },
@@ -57,13 +59,21 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             three.render();
         },
 
-        _setPosition: function(object3D, height){
-            if (!object3D || object3D === undefined) object3D = this.object3D;
+        _setRotation: function(x, y, z){
+            this.object3D.rotation.set(x, y, z);
+            this.lines.rotation.set(x, y, z);
+        },
+
+        _setPosition: function(height){
+            var object3D = this.object3D;
+            var lines = this.lines;
             object3D.position.set(0,0,0);
+            lines.position.set(0,0,0);
             var normalAxis = this._normalAxis();
             var scale = lattice.getAspectRatio()[normalAxis];
             if (this.get("orientationFlipped")) height += 1;
             object3D.position[normalAxis] = height*scale-scale/2;
+            lines.position[normalAxis] = object3D.position[normalAxis];
         },
 
         getAbsoluteIndex: function(){
@@ -99,7 +109,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 
         _removeMesh: function(){
             this.object3D.myParent = null;
-            three.sceneRemoveBasePlane(this.object3D);
+            three.sceneRemoveBasePlane(this.object3D, this.lines);
             three.render();
         },
 
@@ -108,6 +118,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             this.set("zIndex", null, {silent:true});
             this._removeMesh();
             this.object3D = null;
+            this.lines = null;
             this.set("material", null, {silent:true});
             this.set("unitGeometry", null, {silent:true});
             this.set("dimX", null, {silent:true});
