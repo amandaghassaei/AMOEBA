@@ -3,8 +3,12 @@
  */
 
 
-define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appState'],
-    function(Backbone, lattice, THREE, three, globals, Arrow, appState){
+define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appState'],
+    function(Backbone, _, lattice, THREE, three, globals, Arrow, appState){
+
+    var selectionToolMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0.4, color:0xffffff});
+    var selectedRegionMaterial = new THREE.MeshBasicMaterial({transparent:true, opacity:0.05, color:0xff0000});
+
 
     return Backbone.Model.extend({
         
@@ -22,11 +26,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             this.set("bound1", options.bound.clone());
 
             var scale = lattice.getAspectRatio();
-            var mesh = new THREE.Mesh(new THREE.BoxGeometry(scale.x, scale.y, scale.z), new THREE.MeshBasicMaterial({
-                        transparent:true,
-                        opacity:0.4,
-                        color:0xffffff
-                }));
+            var mesh = new THREE.Mesh(new THREE.BoxGeometry(scale.x, scale.y, scale.z), selectionToolMaterial);
             this.mesh = mesh;
 
             this.object3D = new THREE.Object3D();
@@ -77,6 +77,12 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
                 arrow.setVisibility(visibility || !(self.arrowAxisForIndex(index) == axis));
             });
             three.render();
+        },
+
+        _hideArrows: function(){
+            _.each(this.arrows, function(arrow){
+                arrow.setVisibility(false);
+            });
         },
 
         _buildWireframe: function(mesh){
@@ -195,6 +201,15 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         cut: function(){
             lattice.removeCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
             globals.destroySelection3D();
+        },
+
+        selectRegion: function(){
+            this.mesh.material = selectedRegionMaterial;
+            globals.destroySelectedRegion();
+            globals.set("selectedRegion", this);
+            globals.set("selection3D", null);
+            this._hideArrows();
+            three.render();
         },
         
         destroy: function(){

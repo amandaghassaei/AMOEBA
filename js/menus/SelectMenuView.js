@@ -9,7 +9,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
 
         events: {
             "click .fillCutSelection":                        "_finishSelection",
-            "click #exitSelection":                           "_exitSelection"
+            "click #exitSelection":                           "_exitSelection",
+            "click #selectRegion":                            "_selectRegion",
+            "click #undoSelectRegion":                        "_undoSelection"
         },
 
         _initialize: function(){
@@ -23,8 +25,9 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
         },
 
         _makeTemplateJSON: function(){
-            var json = {selection3D:null};
+            var json = {selection3D:null, selectedRegion: null};
             if (globals.get("selection3D")) _.extend(json, {selection3D: globals.get("selection3D").toJSON()});
+            if (globals.get("selectedRegion")) _.extend(json, {selectedRegion: globals.get("selectedRegion").toJSON()});
             return json;
         },
 
@@ -41,6 +44,17 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
         _exitSelection: function(e){
             e.preventDefault();
             var selection3D = globals.get("selection3D");
+            globals.destroySelection3D();
+        },
+
+        _selectRegion: function(e){
+            e.preventDefault();
+            globals.get("selection3D").selectRegion();
+        },
+
+        _undoSelection: function(e){
+            e.preventDefault();
+            globals.destroySelectedRegion();
             globals.destroySelection3D();
         },
 

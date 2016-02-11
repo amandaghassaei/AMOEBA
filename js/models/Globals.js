@@ -10,7 +10,13 @@ define(['backbone'], function(Backbone){
         defaults:{
             baseplane: null,
             highlighter: null,
-            selection3D: null
+            selection3D: null,
+            selectedRegion: null
+        },
+
+        destroySelectedRegion: function(){
+            if (this.get("selectedRegion")) this.get("selectedRegion").destroy();
+            this.set("selectedRegion", null);
         },
 
         destroySelection3D: function(){

@@ -1,23 +1,45 @@
-<% if (selection3D){ %>
-    Selection Size (xyz):&nbsp;&nbsp;
-    <%= selection3D.size.x %>&nbsp; X &nbsp;<%= selection3D.size.y %>&nbsp; X &nbsp;<%= selection3D.size.z %><br/><br/>
-    Min (xyz):&nbsp;&nbsp;
-    <input data-property="min" data-key="x" data-max="<%= selection3D.max.x %>" value="<%= selection3D.min.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
-    <input data-property="min" data-key="y" data-max="<%= selection3D.max.y %>" value="<%= selection3D.min.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
-    <input data-property="min" data-key="z" data-max="<%= selection3D.max.z %>" value="<%= selection3D.min.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
-    Max (xyz):&nbsp;&nbsp;
-    <input data-property="max" data-key="x" data-min="<%= selection3D.min.x %>" value="<%= selection3D.max.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
-    <input data-property="max" data-key="y" data-min="<%= selection3D.min.y %>" value="<%= selection3D.max.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
-    <input data-property="max" data-key="z" data-min="<%= selection3D.min.z %>" value="<%= selection3D.max.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
-    <% if(selection3D.cutMode){  %><a href="#" class="fillCutSelection btn btn-halfWidth btn-lg btn-success">Cut (ENTER)</a>
-    <% }else{ %><a href="#" class="fillCutSelection btn btn-halfWidth btn-lg btn-success">Fill &nbsp;(ENTER)</a><% } %>
-    <a href="#" id="exitSelection" class="btn btn-halfWidth btn-lg pull-right btn-default">Exit &nbsp;(ESC)</a><br/>
-    <label class="checkbox" for="cutMode">
-        <input id="cutMode" data-property="cutMode" type="checkbox" <% if (selection3D.cutMode){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="selection3D custom-checkbox">
-        <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-        Cut Mode</label>
-    <a href="#" id="selectRegion" class="btn btn-block btn-lg btn-success">Select Region</a><br/>
+<% if (selectedRegion){ %>
+    Clone Region Dimensions:&nbsp;&nbsp;
+    <%= selectedRegion.size.x %>&nbsp; X &nbsp;<%= selectedRegion.size.y %>&nbsp; X &nbsp;<%= selectedRegion.size.z %><br/><br/>
+    <% if (selection3D){ %>
+        Selection Size (xyz):&nbsp;&nbsp;
+        <%= selection3D.size.x %>&nbsp; X &nbsp;<%= selection3D.size.y %>&nbsp; X &nbsp;<%= selection3D.size.z %><br/><br/>
+        Min (xyz):&nbsp;&nbsp;
+        <input data-property="min" data-key="x" data-max="<%= selection3D.max.x %>" value="<%= selection3D.min.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="min" data-key="y" data-max="<%= selection3D.max.y %>" value="<%= selection3D.min.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="min" data-key="z" data-max="<%= selection3D.max.z %>" value="<%= selection3D.min.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
+        Max (xyz):&nbsp;&nbsp;
+        <input data-property="max" data-key="x" data-min="<%= selection3D.min.x %>" value="<%= selection3D.max.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="max" data-key="y" data-min="<%= selection3D.min.y %>" value="<%= selection3D.max.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="max" data-key="z" data-min="<%= selection3D.min.z %>" value="<%= selection3D.max.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
+        <a href="#" class="fillCutSelection btn btn-block btn-lg btn-success">Fill with Clone Region  &nbsp;(ENTER)</a>
+        <a href="#" id="exitSelection" class="btn btn-block btn-lg btn-default">Undo Selection &nbsp;(ESC)</a><br/>
+    <% } else { %>
+        Shift + Drag to select area to paste to<br/>
+    <% } %>
+    <br/>
+    <a href="#" id="undoSelectRegion" class="btn btn-block btn-lg btn-default">Exit Clone Tool</a><br/>
 <% } else { %>
-Shift + Drag to start selection<br/>
-<!-- Shift + CTRL/&#8984; + Drag to select cells-->
+    <% if (selection3D){ %>
+        Selection Size (xyz):&nbsp;&nbsp;
+        <%= selection3D.size.x %>&nbsp; X &nbsp;<%= selection3D.size.y %>&nbsp; X &nbsp;<%= selection3D.size.z %><br/><br/>
+        Min (xyz):&nbsp;&nbsp;
+        <input data-property="min" data-key="x" data-max="<%= selection3D.max.x %>" value="<%= selection3D.min.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="min" data-key="y" data-max="<%= selection3D.max.y %>" value="<%= selection3D.min.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="min" data-key="z" data-max="<%= selection3D.max.z %>" value="<%= selection3D.min.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
+        Max (xyz):&nbsp;&nbsp;
+        <input data-property="max" data-key="x" data-min="<%= selection3D.min.x %>" value="<%= selection3D.max.x %>" placeholder="X" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="max" data-key="y" data-min="<%= selection3D.min.y %>" value="<%= selection3D.max.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
+        <input data-property="max" data-key="z" data-min="<%= selection3D.min.z %>" value="<%= selection3D.max.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
+        <% if(selection3D.cutMode){  %><a href="#" class="fillCutSelection btn btn-halfWidth btn-lg btn-success">Cut (ENTER)</a>
+        <% }else{ %><a href="#" class="fillCutSelection btn btn-halfWidth btn-lg btn-success">Fill &nbsp;(ENTER)</a><% } %>
+        <a href="#" id="exitSelection" class="btn btn-halfWidth btn-lg pull-right btn-default">Exit &nbsp;(ESC)</a><br/>
+        <label class="checkbox" for="cutMode">
+            <input id="cutMode" data-property="cutMode" type="checkbox" <% if (selection3D.cutMode){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="selection3D custom-checkbox">
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Cut Mode</label>
+        <a href="#" id="selectRegion" class="btn btn-block btn-lg btn-success">Clone Region</a><br/>
+    <% } else { %>
+    Shift + Drag to start selection<br/>
+    <% } %>
 <% } %>
