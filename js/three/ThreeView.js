@@ -52,7 +52,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         },
 
         _setControlsEnabled: function(){
-            var state = appState.get("deleteMode") || appState.get("shift") || appState.get("extrudeMode");
+            var state = appState.get("shift") || appState.get("extrudeMode");
             this.controls.noRotate = state;
         },
 
@@ -119,8 +119,6 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var sketchMode = appState.get("shift");
             var sketchEditMode = globals.highlighter.get("sketchEditMode");
 
-
-
             var objsToIntersect;
             if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
                 var dragPlane = this.model.setupDragPlane(globals.highlighter.highlightedObject.getPosition(),
@@ -155,7 +153,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             if (this.mouseIsDown) {
                 if (deleteMode){
-                    globals.highlighter.addRemoveVoxel(false);
+                    //globals.highlighter.addRemoveVoxel(false);
                 } else if (sketchMode){
                     globals.highlighter.adjustFillRect();
                 }
