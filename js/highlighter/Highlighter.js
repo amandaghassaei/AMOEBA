@@ -13,7 +13,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         direction: null,
         
         defaults: {
-            fillRect: null,
+            selection3D: null,
             sketchEditMode: false
         },
 
@@ -35,9 +35,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             //bind events
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
             this.listenTo(appState, "change:currentNav", function(){
-                if (appState.get("currentNav") != "navDesign") this.destroyFillRect();
+                if (appState.get("currentNav") != "navDesign") this.destroySelection3D();
             });
-            //this.listenTo(globals.baseplane, "change:planeType", this.destroyFillRect);
+            //this.listenTo(globals.baseplane, "change:planeType", this.destroySelection3D);
 
             if (this._initialize) this._initialize();
         },
@@ -118,7 +118,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             if (this.highlightingArrow()){
                 if (lastHighlighted == this.highlightedObject) return;
                 if (lastHighlighted && lastHighlighted instanceof Arrow) lastHighlighted.highlight(false);
-                this.get("fillRect").highlight(this.highlightedObject, true);
+                this.get("selection3D").highlight(this.highlightedObject, true);
                 return;
             }
 
@@ -189,9 +189,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             if (appState.get("shift") && appState.get("currentNav") == "navDesign") {//create new fill rect
                 if (!this.isVisible() || !this.highlightedObject) return;
                 var self = this;
-                this.destroyFillRect();
-                require(['fillRect'], function (FillRect) {
-                    self.set("fillRect", new FillRect({bound: self._getNextCellIndex()}));
+                this.destroySelection3D();
+                require(['selection3D'], function (Selection3D) {
+                    self.set("selection3D", new Selection3D({bound: self._getNextCellIndex()}));
                     three.render();
                 });
             }
@@ -201,24 +201,24 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             return this.highlightedObject && this.highlightedObject instanceof Arrow;
         },
 
-        destroyFillRect: function(){
-            if (this.get("fillRect")) this.get("fillRect").destroy();
-            this.set("fillRect", null);
+        destroySelection3D: function(){
+            if (this.get("selection3D")) this.get("selection3D").destroy();
+            this.set("selection3D", null);
             this.set("sketchEditMode", false);
             three.render();
         },
 
-        adjustFillRect: function(){
-            if (!this.get("fillRect")){
+        adjustSelection3D: function(){
+            if (!this.get("selection3D")){
                 console.warn("no fill rect to adjust");
                 return;
             }
-            this.get("fillRect").setBound(this._getNextCellIndex());
+            this.get("selection3D").setBound(this._getNextCellIndex());
             this.hide();
         },
 
         addRemoveVoxel: function(shouldAdd){
-            if (this.get("fillRect")){
+            if (this.get("selection3D")){
                 this.set("sketchEditMode", true);
                 return;
             }
@@ -234,7 +234,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         destroy: function(){
-            this.destroyFillRect();
+            this.destroySelection3D();
             this.setNothingHighlighted();
             three.sceneRemove(this.mesh);
             this.mesh = null;

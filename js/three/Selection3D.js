@@ -13,6 +13,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             bound2: null,
             min: null,
             max: null,
+            size: null,
             cutMode: false
         },
         
@@ -65,7 +66,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             if (!visibility){
                 var height = globals.baseplane.get("zIndex");
                 if (this.get("min")[axis] != height || this.get("max")[axis] != height){
-                    globals.highlighter.destroyFillRect();
+                    globals.highlighter.destroySelection3D();
                     return;
                 }
             }
@@ -140,6 +141,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
 
         _sizeChanged: function(){
             var size = this.getSize();
+            this.set("size", size);
             this.mesh.scale.set(size.x, size.y, size.z);
 
             var scale = lattice.getAspectRatio();
@@ -173,21 +175,12 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         fill: function(){
             lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
             appState.set("showOneLayer", false);
-            globals.highlighter.destroyFillRect();
+            globals.highlighter.destroySelection3D();
         },
 
         cut: function(){
             lattice.removeCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
-            globals.highlighter.destroyFillRect();
-        },
-        
-        toJSON: function(){
-            return {
-                min: this.get("min"),
-                max: this.get("max"),
-                size: this.getSize(),
-                cutMode: this.get("cutMode")
-            };
+            globals.highlighter.destroySelection3D();
         },
         
         destroy: function(){

@@ -11,6 +11,7 @@ define(['three'], function(THREE){
                 tabs:{
                     lattice:"Lattice",
                     sketch:"Sketch",
+                    select:"Select",
                     material:"Materials",
 //                    import:"Import",
                     part:"Part"

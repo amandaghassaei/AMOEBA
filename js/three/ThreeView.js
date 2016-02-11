@@ -125,7 +125,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                     globals.highlighter.highlightedObject.getRotation());
                 objsToIntersect = [dragPlane];
             } else if (sketchEditMode){
-                objsToIntersect = globals.highlighter.get("fillRect").highlightTargets;
+                objsToIntersect = globals.highlighter.get("selection3D").highlightTargets;
             } else {
                  objsToIntersect= lattice.getUItarget().getHighlightableCells();
                 if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
@@ -135,7 +135,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
                 if (!intersections || !intersections[0]) return;
-                globals.highlighter.get("fillRect").dragArrow(globals.highlighter.highlightedObject, intersections[0].point);
+                globals.highlighter.get("selection3D").dragArrow(globals.highlighter.highlightedObject, intersections[0].point);
                 return;
             }
 
@@ -155,7 +155,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 if (deleteMode){
                     //globals.highlighter.addRemoveVoxel(false);
                 } else if (sketchMode){
-                    globals.highlighter.adjustFillRect();
+                    globals.highlighter.adjustSelection3D();
                 }
             }
 

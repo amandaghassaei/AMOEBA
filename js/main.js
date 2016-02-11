@@ -29,7 +29,7 @@ require.config({
         threeModel: 'three/ThreeModel',
         threeView: 'three/ThreeView',
         fillGeometry: 'three/FillGeometry',
-        fillRect: 'three/FillRect',
+        selection3D: 'three/Selection3D',
         axes: 'three/Axes',
         arrow: 'three/Arrow',
         svgRenderer: '../dependencies/svgRenderer',

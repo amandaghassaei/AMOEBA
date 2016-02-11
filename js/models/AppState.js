@@ -295,7 +295,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     this.set("deleteMode", state);
                     break;
                 case 27://esc key
-                    globals.highlighter.destroyFillRect();
+                    globals.highlighter.destroySelection3D();
                     break;
                 case 82://r
                     if (state && (e.ctrlKey || e.metaKey)){
@@ -416,7 +416,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     });
                     break;
                 case 13://enter
-                    if (globals.highlighter.get("sketchEditMode")) globals.highlighter.get("fillRect").finish();
+                    if (globals.highlighter.get("sketchEditMode")) globals.highlighter.get("selection3D").finish();
                     break;
                 default:
                     break;
