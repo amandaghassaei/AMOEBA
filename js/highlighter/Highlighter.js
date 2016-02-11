@@ -34,7 +34,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
             //bind events
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
-            this.listenTo(globals.baseplane, "change:planeType", this.destroyFillRect);
+            //this.listenTo(globals.baseplane, "change:planeType", this.destroyFillRect);
 
             if (this._initialize) this._initialize();
         },

@@ -30,6 +30,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
             _.bindAll(this, "render", "_updateCurrentTab", "_setVisibility", "_hide", "_show", "_onKeyUp", "_onMouseWheel");
             $(document).bind('keyup', {}, this._onKeyUp);
+            $(document).bind('keydown', {}, this._onKeyDown);
             $(document).bind('mousewheel', this._onMouseWheel);
 
             //bind events
@@ -65,7 +66,19 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             }
         },
 
+        _onKeyDown: function(){
+            var hoverEl = document.elementFromPoint(appState.mousePosition.x, appState.mousePosition.y);
+            if (hoverEl.tagName == "CANVAS") {
+                return false;
+            }
+        },
+
         _onKeyUp: function(e){
+            var hoverEl = document.elementFromPoint(appState.mousePosition.x, appState.mousePosition.y);
+            if (hoverEl.tagName == "CANVAS") {
+                return;
+            }
+
             if ($(".unresponsiveInput").is(":focus")) return;
             if ($("#menuWrapper input").is(":focus") && e.keyCode == 13) {//enter key
                 $(e.target).blur();

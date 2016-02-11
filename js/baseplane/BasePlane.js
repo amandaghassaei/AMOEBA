@@ -33,8 +33,7 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             object3D.myParent = this;
             this.lines = meshes[1];
             this.object3D = object3D;
-
-            this._setPosition(0);
+            this._changePlaneType();
 
             three.sceneAddBasePlane(this.object3D, this.lines);
             three.render();

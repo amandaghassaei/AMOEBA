@@ -49,14 +49,14 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             this.arrows = arrows;
 
             this.listenTo(this, "change:min change:max", this._sizeChanged);
-            this.listenTo(appState, "change:showOneLayer", this._setArrowVis);
-            this.listenTo(globals.baseplane, "change:zIndex", this._setArrowVis);
+            //this.listenTo(appState, "change:showOneLayer", this._setArrowVis);
+            //this.listenTo(globals.baseplane, "change:zIndex", this._setArrowVis);
 
             this.setBound(options.bound);
     
             three.secondPassSceneAdd(this.object3D);
 
-            this._setArrowVis();
+            //this._setArrowVis();
         },
 
         _setArrowVis: function(){
@@ -172,6 +172,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         
         fill: function(){
             lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
+            appState.set("showOneLayer", false);
             globals.highlighter.destroyFillRect();
         },
 

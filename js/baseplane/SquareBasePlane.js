@@ -45,8 +45,10 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three', 
             else {
                 console.warn("invalid planeType given " + type);
             }
-            this.set("zIndex", 0, {silent:true});
-            this._setPosition(0);
+            var center = lattice.calcCenterIndex().round();
+            this.set("zIndex", center[this.getNormalAxis()], {silent:true});
+            this._setPosition(this.get("zIndex"));
+            //this._setPosition(0);
             appState.showSketchLayer();
         },
 

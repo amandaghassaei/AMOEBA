@@ -322,11 +322,15 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 return;
             }
             if (!appState.get("focusOnLattice")) return;
+            var center = this.calcCenterIndex();
+            if (globals.threeView && this.getPositionForIndex) globals.threeView.setOrbitControlsFor(this.getPositionForIndex(center));
+        },
+
+        calcCenterIndex: function(){
             var cellsMin = this.get("cellsMin");
             var cellsMax = this.get("cellsMax");
-            if (cellsMax === null || cellsMin === null) return;
-            var center = cellsMax.clone().sub(cellsMin).divideScalar(2).add(cellsMin);
-            if (globals.threeView && this.getPositionForIndex) globals.threeView.setOrbitControlsFor(this.getPositionForIndex(center));
+            if (cellsMax === null || cellsMin === null) return new THREE.Vector3(0,0,0);
+            return cellsMax.clone().sub(cellsMin).divideScalar(2).add(cellsMin);
         },
 
 

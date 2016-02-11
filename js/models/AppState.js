@@ -71,6 +71,13 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
 
             if (this.isMobile()) this.set("menuIsVisible", false);
+
+            var mousePosition = { x: -1, y: -1 };
+            $(document).mousemove(function(event) {
+                mousePosition.x = event.pageX;
+                mousePosition.y = event.pageY;
+            });
+            this.mousePosition = mousePosition;
         },
 
         isMobile: function() {
@@ -212,6 +219,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 three.render();
             } else {
                 this.lattice.showCells();
+                if (this.lattice.get("numCells") == 0) three.render();
             }
             this.lattice.makeHighlightableCells(index);
         },
@@ -257,9 +265,11 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
         _handleKeyStroke: function(e){//receives keyup and keydown
 
-
-            if ($("input").is(':focus')) return;//we are typing in an input
-            if ($("textarea").is(':focus')) return;//we are typing in an input
+            var hoverEl = document.elementFromPoint(this.mousePosition.x, this.mousePosition.y);
+            if (hoverEl.tagName != "CANVAS") {
+                if ($("input").is(':focus')) return;//we are typing in an input
+                if ($("textarea").is(':focus')) return;//we are typing in an input
+            }
 
             var state = e.data.state;
             var currentTab = this.get("currentTab");
