@@ -67,7 +67,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             if (!visibility){
                 var height = globals.get("baseplane").get("zIndex");
                 if (this.get("min")[axis] != height || this.get("max")[axis] != height){
-                    globals.get("highlighter").destroySelection3D();
+                    globals.destroySelection3D();
                     return;
                 }
             }
@@ -87,6 +87,19 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
 
         highlight: function(arrow, shouldHighlight){
             arrow.highlight(shouldHighlight);
+        },
+
+        getObjToIntersect: function(mouseIsDown){
+            var highlighter = globals.get("highlighter");
+            if (mouseIsDown && highlighter.highlightingArrow()) {
+                var highlightedObject = highlighter.highlightedObject;
+                var dragPlane = three.setupDragPlane(highlightedObject.getPosition(), highlightedObject.getRotation());
+                return [dragPlane];
+            }
+            if (this.get("editMode")) {
+                return this.highlightTargets;
+            }
+            return highlighter.getObjToIntersect();
         },
 
         dragArrow: function(arrow, point){
@@ -176,12 +189,12 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         fill: function(){
             lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
             appState.set("showOneLayer", false);
-            globals.get("highlighter").destroySelection3D();
+            globals.destroySelection3D();
         },
 
         cut: function(){
             lattice.removeCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
-            globals.get("highlighter").destroySelection3D();
+            globals.destroySelection3D();
         },
         
         destroy: function(){
@@ -201,6 +214,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             this.arrows = null;
             this.mesh = null;
             this.object3D = null;
+            three.render();
         }
         
         

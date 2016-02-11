@@ -103,7 +103,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             if (!globals.get("highlighter")) return;//highlighter not loaded yet
 
-            if (!appState.get("highlightMode") && !(appState.get("manualSelectOrigin"))) return;
+            //if (!(appState.get("manualSelectOrigin"))) return;//todo ?
 
             if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
                 globals.get("highlighter").setNothingHighlighted();
@@ -115,31 +115,20 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var vector = new THREE.Vector2(2*(e.pageX-this.$el.offset().left)/this.$el.width()-1, 1-2*(e.pageY-this.$el.offset().top)/this.$el.height());
             this.mouseProjection.setFromCamera(vector, this.model.camera);
 
-            var deleteMode = appState.get("deleteMode");
-            var sketchMode = appState.get("shift");
-            var sketchEditMode = false;
-            if (globals.get("highlighter").get("selection3D")) sketchEditMode = globals.get("highlighter").get("selection3D").get("editMode");
+            var target = globals.get("selection3D");
+            if (!target) target = globals.get("highlighter");
 
-            var objsToIntersect;
-            if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
-                var dragPlane = this.model.setupDragPlane(globals.get("highlighter").highlightedObject.getPosition(),
-                    globals.get("highlighter").highlightedObject.getRotation());
-                objsToIntersect = [dragPlane];
-            } else if (sketchEditMode){
-                objsToIntersect = globals.get("highlighter").get("selection3D").highlightTargets;
-            } else {
-                 objsToIntersect= lattice.getUItarget().getHighlightableCells();
-                if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
-                //        if (globals.get("highlighter").isVisible()) objsToIntersect = objsToIntersect.concat(globals.get("highlighter").mesh);
-            }
+            var objsToIntersect = target.getObjToIntersect(this.mouseIsDown);
+
+            var deleteMode = appState.get("deleteMode");
+
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
 
             if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
                 if (!intersections || !intersections[0]) return;
-                globals.get("highlighter").get("selection3D").dragArrow(globals.get("highlighter").highlightedObject, intersections[0].point);
+                globals.get("selection3D").dragArrow(globals.get("highlighter").highlightedObject, intersections[0].point);
                 return;
             }
-
 
             if (intersections.length == 0) {//no intersections
                 globals.get("highlighter").setNothingHighlighted();
@@ -149,13 +138,12 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             if(intersections[0].object == globals.get("highlighter").mesh) return;
 
-
             globals.get("highlighter").highlight(intersections[0]);
 
             if (this.mouseIsDown) {
                 if (deleteMode){
                     //globals.get("highlighter").addRemoveVoxel(false);
-                } else if (sketchMode){
+                } else if (appState.get("shift")){
                     globals.get("highlighter").adjustSelection3D();
                 }
             }

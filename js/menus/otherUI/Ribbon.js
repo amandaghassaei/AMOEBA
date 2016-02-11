@@ -11,7 +11,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
         events: {
             "click .ribbonCellMode":                                 "_updateCellMode",
             "click .ribbonDeleteMode":                               "_updateDeleteMode",
-            "click .highlightMode":                                  "_updateHighlightMode",
             "click #ribbonAxesToggle":                               "_setAxesVis"
         },
 
@@ -23,7 +22,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
             this.listenTo(this.model, "change:cellMode", this.render);
             this.listenTo(this.model, "change:currentNav", this.render);
             this.listenTo(this.model, "change:deleteMode", this.render);
-            this.listenTo(this.model, "change:highlightMode", this.render);
             this.listenTo(this.model, "change:axesAreVisible", this.render);
             this.listenTo(lattice, "change:cellType change:connectionType change:applicationType", this.render);
             this.render();
@@ -37,11 +35,6 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'appState', 'tex
         _updateDeleteMode: function(e){
             e.preventDefault();
             this.model.set("deleteMode", !this.model.get("deleteMode"));
-        },
-
-        _updateHighlightMode: function(e){
-            e.preventDefault();
-            this.model.set("highlightMode", !this.model.get("highlightMode"));
         },
 
         _changeVisibility: function(){

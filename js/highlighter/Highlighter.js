@@ -34,9 +34,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             //bind events
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
             this.listenTo(appState, "change:currentNav", function(){
-                if (appState.get("currentNav") != "navDesign") this.destroySelection3D();
+                if (appState.get("currentNav") != "navDesign") globals.destroySelection3D();
             });
-            //this.listenTo(globals.get("baseplane"), "change:planeType", this.destroySelection3D);
+            //this.listenTo(globals.get("baseplane"), "change:planeType", globals.destroySelection3D);
 
             if (this._initialize) this._initialize();
         },
@@ -95,6 +95,13 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         //highlight
 
+        getObjToIntersect: function(){
+            var objsToIntersect= lattice.getUItarget().getHighlightableCells();
+            if (!appState.get("deleteMode")) objsToIntersect = objsToIntersect.concat(three.getBasePlane());
+            //        if (globals.get("highlighter").isVisible()) objsToIntersect = objsToIntersect.concat(globals.get("highlighter").mesh);
+            return objsToIntersect;
+        },
+
         highlight: function(intersection){
             if (!intersection.object) return;
             var highlighted = intersection.object.parent;//cell mesh parent is object3d
@@ -117,7 +124,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             if (this.highlightingArrow()){
                 if (lastHighlighted == this.highlightedObject) return;
                 if (lastHighlighted && lastHighlighted instanceof Arrow) lastHighlighted.highlight(false);
-                this.get("selection3D").highlight(this.highlightedObject, true);
+                globals.get("selection3D").highlight(this.highlightedObject, true);
                 return;
             }
 
@@ -188,9 +195,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             if (appState.get("shift") && appState.get("currentNav") == "navDesign") {//create new fill rect
                 if (!this.isVisible() || !this.highlightedObject) return;
                 var self = this;
-                this.destroySelection3D();
+                globals.destroySelection3D();
                 require(['selection3D'], function (Selection3D) {
-                    self.set("selection3D", new Selection3D({bound: self._getNextCellIndex()}));
+                    globals.set("selection3D", new Selection3D({bound: self._getNextCellIndex()}));
                     three.render();
                 });
             }
@@ -200,24 +207,17 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             return this.highlightedObject && this.highlightedObject instanceof Arrow;
         },
 
-        destroySelection3D: function(){
-            if (this.get("selection3D")) this.get("selection3D").destroy();
-            this.set("selection3D", null);
-            three.render();
-        },
-
         adjustSelection3D: function(){
-            if (!this.get("selection3D")){
-                console.warn("no fill rect to adjust");
+            if (!globals.get("selection3D")){
                 return;
             }
-            this.get("selection3D").setBound(this._getNextCellIndex());
+            globals.get("selection3D").setBound(this._getNextCellIndex());
             this.hide();
         },
 
         addRemoveVoxel: function(shouldAdd){
-            if (this.get("selection3D")){
-                this.get("selection3D").set("editMode", true);
+            if (globals.get("selection3D")){
+                globals.get("selection3D").set("editMode", true);
                 return;
             }
             if (shouldAdd){
@@ -232,7 +232,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         destroy: function(){
-            this.destroySelection3D();
+            globals.destroySelection3D();
             this.setNothingHighlighted();
             three.sceneRemove(this.mesh);
             this.mesh = null;

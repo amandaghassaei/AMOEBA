@@ -11,7 +11,14 @@ define(['backbone'], function(Backbone){
             baseplane: null,
             highlighter: null,
             selection3D: null
+        },
+
+        destroySelection3D: function(){
+            if (this.get("selection3D")) this.get("selection3D").destroy();
+            this.set("selection3D", null);
         }
+
+
     });
     return new Globals();
 });

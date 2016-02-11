@@ -32,7 +32,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             //key bindings
             shift: false,
             deleteMode: false,
-            highlightMode: true,
             extrudeMode: false,
             cellMode: "cell",//supercell, cell, part, hide
 
@@ -297,7 +296,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     this.set("deleteMode", state);
                     break;
                 case 27://esc key
-                    globals.get("highlighter").destroySelection3D();
+                    globals.destroySelection3D();
                     break;
                 case 82://r
                     if (state && (e.ctrlKey || e.metaKey)){
@@ -418,7 +417,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     });
                     break;
                 case 13://enter
-                    if (state && globals.get("highlighter").get("selection3D") && globals.get("highlighter").get("selection3D").get("editMode")) globals.get("highlighter").get("selection3D").finish();
+                    if (state){
+                        var selection3D = globals.get("selection3D");
+                        if (selection3D && selection3D.get("editMode")) selection3D.finish();
+                    }
                     break;
                 default:
                     break;
