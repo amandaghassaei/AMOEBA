@@ -3,8 +3,8 @@
  */
 
 
-define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
-    function(Backbone, lattice, THREE, three, globals, Arrow){
+define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appState'],
+    function(Backbone, lattice, THREE, three, globals, Arrow, appState){
 
     return Backbone.Model.extend({
         
@@ -102,8 +102,11 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
                 return;
             }
 
+            var bound1 = this.get("bound1");
             var normalAxis = globals.baseplane.getNormalAxis();
-            bound[normalAxis] = this.get("bound1")[normalAxis];
+            if (appState.get("showOneLayer") || !(bound1.x == bound.x || bound1.y == bound.y || bound1.z == bound)){
+                bound[normalAxis] = bound1[normalAxis];
+            }
 
             this.set("bound2", bound.clone());
     

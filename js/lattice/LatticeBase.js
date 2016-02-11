@@ -548,6 +548,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             var y = null;
             var z = null;
             var cellMin = this.get("cellsMin");
+            if (cellMin == null) return;
             if (planeType == "xy") z = index-cellMin.z;
             else if (planeType == "yz") x = index-cellMin.x;
             else y = index-cellMin.y;

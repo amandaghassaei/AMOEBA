@@ -136,6 +136,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
 
             if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
+                if (!intersections || !intersections[0]) return;
                 globals.highlighter.get("fillRect").dragArrow(globals.highlighter.highlightedObject, intersections[0].point);
                 return;
             }
