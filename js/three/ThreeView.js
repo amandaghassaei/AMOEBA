@@ -88,11 +88,15 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             }
             if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
             else globals.highlighter.addRemoveVoxel(!appState.get("deleteMode"));
+            if (globals.highlighter.highlightingArrow()) this.controls.noRotate = false;
         },
 
         _mouseDown: function(){
             this.mouseIsDown = true;
             globals.highlighter.mouseDown();
+            if (globals.highlighter.highlightingArrow()){
+                this.controls.noRotate = true;
+            }
         },
 
         _mouseMoved: function(e){
@@ -115,17 +119,21 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var sketchMode = appState.get("shift");
             var sketchEditMode = globals.highlighter.get("sketchEditMode");
 
+            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
+                globals.highlighter.get("fillRect").dragArrow(this.model.camera, vector);
+                return;
+            }
+
             var objsToIntersect;
             var intersections;
             if (sketchEditMode){
                 objsToIntersect = globals.highlighter.get("fillRect").highlightTargets;
-                intersections = this.mouseProjection.intersectObjects(objsToIntersect, true);
             } else {
-                objsToIntersect = lattice.getUItarget().getHighlightableCells();
+                 objsToIntersect= lattice.getUItarget().getHighlightableCells();
                 if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
                 //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
-                intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
             }
+            var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
 
             if (intersections.length == 0) {//no intersections
                 globals.highlighter.setNothingHighlighted();

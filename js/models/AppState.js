@@ -284,6 +284,9 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     if (plist.allMenus[currentNav].parent == "navSim") return;
                     this.set("deleteMode", state);
                     break;
+                case 27://esc key
+                    globals.highlighter.destroyFillRect();
+                    break;
                 case 86://cell (voxel) mode
                     if (state) {
                         this.lastCellMode = this.get("cellMode");

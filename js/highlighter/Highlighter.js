@@ -68,7 +68,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         setNothingHighlighted: function(){
             if (appState.get("deleteMode")) this.setDeleteMode(this.highlightedObject, false);
-            if (this.highlightedObject && this.highlightedObject instanceof Arrow) this.highlightedObject.highlight(false);
+            if (this.highlightingArrow()) this.highlightedObject.highlight(false);
             this.highlightedObject = null;
             this.direction = null;
             this.position = null;
@@ -112,7 +112,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                 return;
             }
 
-            if (this.highlightedObject instanceof Arrow){
+            if (this.highlightingArrow()){
                 if (lastHighlighted == this.highlightedObject) return;
                 if (lastHighlighted && lastHighlighted instanceof Arrow) lastHighlighted.highlight(false);
                 this.get("fillRect").highlight(this.highlightedObject, true);
@@ -183,19 +183,19 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         mouseDown: function(){
-            if (appState.get("shift")){//create new fill rect
+            if (appState.get("shift")) {//create new fill rect
                 if (!this.isVisible() || !this.highlightedObject) return;
                 var self = this;
                 this.destroyFillRect();
-                require(['fillRect'], function(FillRect){
+                require(['fillRect'], function (FillRect) {
                     self.set("fillRect", new FillRect({bound: self._getNextCellIndex()}));
                     three.render();
                 });
             }
-            //push pull arrows
-            if (this.highlightedObject && this.highlightedObject instanceof Arrow){
-                this.get("fillRect").pushPullArrow();
-            }
+        },
+
+        highlightingArrow: function(){
+            return this.highlightedObject && this.highlightedObject instanceof Arrow;
         },
 
         destroyFillRect: function(){

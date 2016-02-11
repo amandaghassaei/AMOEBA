@@ -39,7 +39,10 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
                 var arrow = new Arrow(direction, 0.5, 2);
                 arrows.push(arrow);
                 var arrowMesh = arrow.getObject3D();
-                highlightTargets.push(arrowMesh);
+                _.each(arrowMesh.children, function(child){
+                    highlightTargets.push(child);
+                });
+
                 this.object3D.add(arrowMesh);
             }
             this.highlightTargets = highlightTargets;
@@ -60,6 +63,10 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
 
         highlight: function(arrow, shouldHighlight){
             arrow.highlight(shouldHighlight);
+        },
+
+        dragArrow: function(camera, mouseVector){
+
         },
 
         arrowAxisForIndex: function(i){
