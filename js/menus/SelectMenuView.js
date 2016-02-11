@@ -8,9 +8,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
     return MenuParentView.extend({
 
         events: {
-            "click #selection3DWithCells":                    "_fillSketch",
-            "click #cutCellsWithRect":                     "_cutSketch",
-            "click #deleteSelection3D":                       "_deleteSketch"
+            "click .fillCutSelection":                        "_finishSelection",
+            "click #exitSelection":                           "_exitSelection"
         },
 
         _initialize: function(){
@@ -34,19 +33,12 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
             this.render();
         },
 
-        _fillSketch: function(e){
+        _finishSelection: function(e){
             e.preventDefault();
-            var selection3D = globals.get("selection3D");
-            selection3D.fill();
+            globals.get("selection3D").finish();
         },
 
-        _cutSketch: function(e){
-            e.preventDefault();
-            var selection3D = globals.get("selection3D");
-            selection3D.cut();
-        },
-
-        _deleteSketch: function(e){
+        _exitSelection: function(e){
             e.preventDefault();
             var selection3D = globals.get("selection3D");
             globals.destroySelection3D();
