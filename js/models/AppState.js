@@ -135,6 +135,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 this.set("highlighterIsVisible", false);
             }
 
+            if (navSelection != "navDesign") this.set("showOneLayer", false);
+
             if (this.get("cellMode") == "hide") this.set("cellMode", "cell");
             this.lattice.showCells();
         },
