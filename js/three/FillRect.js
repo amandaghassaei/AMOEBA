@@ -78,10 +78,10 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
 
             if (sign == "max"){
                 cellIndex -= 2;
-                if (cellIndex < this.get("min")) cellIndex = this.get("min")[axis];
+                if (cellIndex < this.get("min")[axis]) cellIndex = this.get("min")[axis];
             } else {
                 cellIndex += 2;
-                if (cellIndex > this.get("max")) cellIndex = this.get("max")[axis];
+                if (cellIndex > this.get("max")[axis]) cellIndex = this.get("max")[axis];
             }
 
             if (cellIndex == bound[axis]) return;//no change
