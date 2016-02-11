@@ -5,7 +5,7 @@
 //create an arrow object3D
 define(['three', 'threeModel'], function(THREE, three){
 
-    var highlightedMaterial = new THREE.MeshBasicMaterial({color:"#0000FF"});
+    var highlightedMaterial = new THREE.MeshBasicMaterial({color:"#AEEEEE"});
     var defaultMaterial = new THREE.MeshBasicMaterial({color: "#222222"});
 
     var arrowGeometry = new THREE.CylinderGeometry(0, 1, 1);
@@ -39,6 +39,15 @@ define(['three', 'threeModel'], function(THREE, three){
 
     Arrow.prototype.setPosition = function(position){
         this.object3D.position.set(position.x, position.y, position.z);
+    };
+
+    Arrow.prototype.getPosition = function(){
+        return this.object3D.position.clone();
+    };
+
+    Arrow.prototype.getRotation = function(){
+        var rotation = this.object3D.rotation;
+        return new THREE.Vector3(rotation.x, rotation.y, rotation.z);
     };
 
     Arrow.prototype.setDirection = function(direction){

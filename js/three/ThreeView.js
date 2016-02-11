@@ -119,14 +119,14 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var sketchMode = appState.get("shift");
             var sketchEditMode = globals.highlighter.get("sketchEditMode");
 
-            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
-                globals.highlighter.get("fillRect").dragArrow(this.model.camera, vector);
-                return;
-            }
+
 
             var objsToIntersect;
-            var intersections;
-            if (sketchEditMode){
+            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
+                var dragPlane = this.model.setupDragPlane(globals.highlighter.highlightedObject.getPosition(),
+                    globals.highlighter.highlightedObject.getRotation());
+                objsToIntersect = [dragPlane];
+            } else if (sketchEditMode){
                 objsToIntersect = globals.highlighter.get("fillRect").highlightTargets;
             } else {
                  objsToIntersect= lattice.getUItarget().getHighlightableCells();
@@ -134,6 +134,12 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
             }
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
+
+            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
+                globals.highlighter.get("fillRect").dragArrow(globals.highlighter.highlightedObject, intersections[0].point);
+                return;
+            }
+
 
             if (intersections.length == 0) {//no intersections
                 globals.highlighter.setNothingHighlighted();

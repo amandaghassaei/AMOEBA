@@ -35,6 +35,10 @@ define(['underscore', 'three'], function(_, THREE){
 
     var threeView = null;
 
+    var dragPlane = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshBasicMaterial({side: THREE.DoubleSide}));
+    dragPlane.visible = false;
+    firstPassScene.add(dragPlane);
+
     initialize();
 
     function initialize(){
@@ -140,6 +144,14 @@ define(['underscore', 'three'], function(_, THREE){
 
     function getCompositeCells(){
         return compositeCells;
+    }
+
+    function setupDragPlane(position, orientation){
+        var quaternion = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), orientation.normalize());
+        var euler = new THREE.Euler().setFromQuaternion(quaternion);
+        dragPlane.position.set(position.x, position.y, position.z);
+        dragPlane.rotation.set(euler.x, euler.y, euler.z);
+        return dragPlane;
     }
 
     function sceneRemove(object){
@@ -248,6 +260,7 @@ define(['underscore', 'three'], function(_, THREE){
         getBasePlane: getBasePlane,
         removeAllCells: removeAllCells,
         removeAllCompositeCells: removeAllCompositeCells,
+        setupDragPlane: setupDragPlane,
         resetCameraPosition: resetCameraPosition,
         setThreeView: setThreeView,
         saveSVG: saveSVG

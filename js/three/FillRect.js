@@ -65,8 +65,30 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
             arrow.highlight(shouldHighlight);
         },
 
-        dragArrow: function(camera, mouseVector){
+        dragArrow: function(arrow, point){
 
+            var index = this.arrows.indexOf(arrow);
+            var axis = this.arrowAxisForIndex(index);
+
+            var sign = (index%2 == 0 ? "max" : "min");
+            var bound = this.get(sign).clone();
+
+            var scale = lattice.getAspectRatio();
+            var cellIndex = Math.round(point[axis]/scale[axis]);
+
+            if (sign == "max"){
+                cellIndex -= 2;
+                if (cellIndex < this.get("min")) cellIndex = this.get("min")[axis];
+            } else {
+                cellIndex += 2;
+                if (cellIndex > this.get("max")) cellIndex = this.get("max")[axis];
+            }
+
+            if (cellIndex == bound[axis]) return;//no change
+
+            bound[axis] = cellIndex;
+
+            this.set(sign, bound);
         },
 
         arrowAxisForIndex: function(i){
@@ -111,6 +133,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow'],
                 }
                 this.arrows[i].setPosition(position.multiply(scale));
             }
+            three.render();
         },
         
         getSize: function(){
