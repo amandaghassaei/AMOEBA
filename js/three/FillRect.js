@@ -142,6 +142,11 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         getSize: function(){
             return this.get("max").clone().sub(this.get("min")).add(new THREE.Vector3(1,1,1));
         },
+
+        finish: function(){
+            if (this.get("cutMode")) this.cut();
+            else this.fill();
+        },
         
         fill: function(){
             lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});

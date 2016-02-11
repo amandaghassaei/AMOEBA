@@ -273,7 +273,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             } else this.downKeys[e.keyCode] = false;
 
             //console.log(e);
-            //console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
@@ -395,6 +394,9 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     require(['eSim'], function(eSim){
                         eSim.setZSimHeight(eSim.get("simZHeight")-1);
                     });
+                    break;
+                case 13://enter
+                    if (globals.highlighter.get("sketchEditMode")) globals.highlighter.get("fillRect").finish();
                     break;
                 default:
                     break;
