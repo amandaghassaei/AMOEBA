@@ -118,11 +118,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         addCellsInRange: function(range){//add a block of cells (extrude)
 
-            //this._checkForMatrixExpansion(range.max, range.min);
+            var cellOutsideCurrentBounds = this._checkForIndexOutsideBounds(range.min) || this._checkForIndexOutsideBounds(range.max);
+            if (cellOutsideCurrentBounds) this._expandCellsMatrix(range.max, range.min);
 
             var cellsMin = this.get("cellsMin");
-            //var relativeMin = (new THREE.Vector3()).subVectors(range.min, cellsMin);
-            //var relativeMax = (new THREE.Vector3()).subVectors(range.max, this.get("cellsMin"));
 
             var materialID = appState.get("materialType");
 
@@ -132,17 +131,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     for (var z=range.min.z;z<=range.max.z;z++){
                         var index = new THREE.Vector3(x, y, z);
                         if (index.equals(range.max)) callback = function(){three.render();};
-                        this._addCellAtIndex(index, {materialID: materialID}, callback);
-                        //if (!this.sparseCells[x][y][z]) {
-                        //    var self = this;
-                        //     this.makeCellWithJSON({
-                        //             index: (new THREE.Vector3(x, y, z)).add(cellsMin),
-                        //             materialID: materialID
-                        //         }, function(cell){
-                        //            self.sparseCells[x][y][z] = cell;
-                        //            self.set("numCells", self.get("numCells")+1);
-                        //         });
-                        //} else console.warn("already a cell there");
+                        this._addCellAtIndex(index, {materialID: materialID}, callback, true);
                     }
                 }
             }
@@ -154,10 +143,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 for (var y=range.min.y;y<=range.max.y;y++){
                     for (var z=range.min.z;z<=range.max.z;z++){
                         var index = new THREE.Vector3(x, y, z);
-                        this.removeCellAtIndex(index, true);
+                        this.removeCellAtIndex(index, true, true);
                     }
                 }
             }
+            this._checkForMatrixContraction();
             three.render();
         },
 
@@ -168,7 +158,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        _addCellAtIndex: function(index, json, callback){
+        _addCellAtIndex: function(index, json, callback, noCheck){
             var self = this;
             json = json || {};
             json = _.extend({index: index.clone(), materialID:appState.get("materialType")}, json);
@@ -183,9 +173,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     return;
                 }
 
-                //todo optional do not check bounds
-                var cellOutsideCurrentBounds = self._checkForIndexOutsideBounds(bounds.min) || self._checkForIndexOutsideBounds(bounds.max);
-                if (cellOutsideCurrentBounds) self._expandCellsMatrix(bounds.max, bounds.min);
+                if (!noCheck) {
+                    var cellOutsideCurrentBounds = self._checkForIndexOutsideBounds(bounds.min) || self._checkForIndexOutsideBounds(bounds.max);
+                    if (cellOutsideCurrentBounds) self._expandCellsMatrix(bounds.max, bounds.min);
+                }
                 var relIndex = self._getCellsIndexForLatticeIndex(index);
 
                 if (flattenedCells === null) flattenedCells = [[[cell]]];
@@ -246,13 +237,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return position;
         },
 
-        removeCellAtIndex: function(index, noRender){
+        removeCellAtIndex: function(index, noRender, noCheck){
             var cellsIndex = this._getCellsIndexForLatticeIndex(index);
             if (this._checkForIndexOutsideBounds(index) || this.sparseCells[cellsIndex.x][cellsIndex.y][cellsIndex.z] === null){
                 myConsole.warn("no cell at this index, lattice.removeCellAtIndex operation cancelled");
                 return;
             }
-            this._removeCell(this.sparseCells[cellsIndex.x][cellsIndex.y][cellsIndex.z]);
+            this._removeCell(this.sparseCells[cellsIndex.x][cellsIndex.y][cellsIndex.z], noCheck);
             myConsole.write("lattice.removeCellAtIndex(" + index.x +", " + index.y + ", " + index.z + ")");
             if (!noRender) three.render();
         },
@@ -268,7 +259,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        _removeCell: function(cell){
+        _removeCell: function(cell, noCheck){
             var json = cell.toJSON();//log data
             json.index = cell.getIndex();
             myConsole.log(JSON.stringify(json));
@@ -289,7 +280,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return;
             }
 
-            this._checkForMatrixContraction();
+            if (!noCheck) this._checkForMatrixContraction();
         },
 
         clearCells: function(silent){
