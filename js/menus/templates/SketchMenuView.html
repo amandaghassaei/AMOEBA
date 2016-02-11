@@ -20,18 +20,16 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
 
 <% if (fillRect){ %>
     Sketch:<br/><br/>
-    Size:&nbsp;&nbsp;
-    <input data-property="size" data-key="x" value="<%= fillRect.size.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="size" data-key="y" value="<%= fillRect.size.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="size" data-key="z" value="<%= fillRect.size.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
-    Min:&nbsp;&nbsp;
-    <input data-property="min" data-key="x" value="<%= fillRect.min.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="min" data-key="y" value="<%= fillRect.min.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="min" data-key="z" value="<%= fillRect.min.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
-    Max:&nbsp;&nbsp;
-    <input data-property="max" data-key="x" value="<%= fillRect.max.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="max" data-key="y" value="<%= fillRect.max.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
-    <input data-property="max" data-key="z" value="<%= fillRect.max.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
+    Size (xyz):&nbsp;&nbsp;
+    <%= fillRect.size.x %>&nbsp; X &nbsp;<%= fillRect.size.y %>&nbsp; X &nbsp;<%= fillRect.size.z %><br/><br/>
+    Min (xyz):&nbsp;&nbsp;
+    <input data-property="min" data-key="x" data-max="<%= fillRect.max.x %>" value="<%= fillRect.min.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="min" data-key="y" data-max="<%= fillRect.max.y %>" value="<%= fillRect.min.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="min" data-key="z" data-max="<%= fillRect.max.z %>" value="<%= fillRect.min.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
+    Max (xyz):&nbsp;&nbsp;
+    <input data-property="max" data-key="x" data-min="<%= fillRect.min.x %>" value="<%= fillRect.max.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="max" data-key="y" data-min="<%= fillRect.min.y %>" value="<%= fillRect.max.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
+    <input data-property="max" data-key="z" data-min="<%= fillRect.min.z %>" value="<%= fillRect.max.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
     <% if(fillRect.cutMode){  %><a href="#" id="cutCellsWithRect" class="btn btn-halfWidth btn-lg btn-success">Cut Sketch</a>
     <% }else{ %><a href="#" id="fillRectWithCells" class="btn btn-halfWidth btn-lg btn-success">Fill Sketch</a><% } %>
     <a href="#" id="deleteFillRect" class="btn btn-halfWidth btn-lg pull-right btn-default">Delete Sketch</a><br/>
@@ -39,9 +37,7 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
         <input id="cutMode" data-property="cutMode" type="checkbox" <% if (fillRect.cutMode){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="fillRect custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Cut Mode</label>
-<% } else if (null){ %>
-
 <% } else { %>
 Shift + Drag to start sketch<br/>
-Shift + CTRL/&#8984; + Drag to select cells
+<!-- Shift + CTRL/&#8984; + Drag to select cells-->
 <% } %>
