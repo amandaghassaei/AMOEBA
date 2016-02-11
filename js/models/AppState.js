@@ -418,7 +418,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     });
                     break;
                 case 13://enter
-                    if (globals.get("highlighter").get("sketchEditMode")) globals.get("highlighter").get("selection3D").finish();
+                    if (state && globals.get("highlighter").get("selection3D") && globals.get("highlighter").get("selection3D").get("editMode")) globals.get("highlighter").get("selection3D").finish();
                     break;
                 default:
                     break;

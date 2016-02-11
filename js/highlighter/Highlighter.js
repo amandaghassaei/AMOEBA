@@ -13,8 +13,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         direction: null,
         
         defaults: {
-            selection3D: null,
-            sketchEditMode: false
+            selection3D: null
         },
 
         initialize: function(){
@@ -204,7 +203,6 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         destroySelection3D: function(){
             if (this.get("selection3D")) this.get("selection3D").destroy();
             this.set("selection3D", null);
-            this.set("sketchEditMode", false);
             three.render();
         },
 
@@ -219,7 +217,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         addRemoveVoxel: function(shouldAdd){
             if (this.get("selection3D")){
-                this.set("sketchEditMode", true);
+                this.get("selection3D").set("editMode", true);
                 return;
             }
             if (shouldAdd){

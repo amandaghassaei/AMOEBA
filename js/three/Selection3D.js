@@ -14,7 +14,8 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             min: null,
             max: null,
             size: null,
-            cutMode: false
+            cutMode: false,
+            editMode:false//arrows are draggable when in edit mode
         },
         
         initialize: function(options){

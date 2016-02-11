@@ -117,7 +117,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             var deleteMode = appState.get("deleteMode");
             var sketchMode = appState.get("shift");
-            var sketchEditMode = globals.get("highlighter").get("sketchEditMode");
+            var sketchEditMode = false;
+            if (globals.get("highlighter").get("selection3D")) sketchEditMode = globals.get("highlighter").get("selection3D").get("editMode");
 
             var objsToIntersect;
             if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
