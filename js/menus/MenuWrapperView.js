@@ -68,14 +68,14 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _onKeyDown: function(){
             var hoverEl = document.elementFromPoint(appState.mousePosition.x, appState.mousePosition.y);
-            if (hoverEl.tagName == "CANVAS") {
+            if (hoverEl && hoverEl.tagName == "CANVAS") {
                 return false;
             }
         },
 
         _onKeyUp: function(e){
             var hoverEl = document.elementFromPoint(appState.mousePosition.x, appState.mousePosition.y);
-            if (hoverEl.tagName == "CANVAS") {
+            if (hoverEl && hoverEl.tagName == "CANVAS") {
                 return;
             }
 

@@ -26,6 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'lattice', 'text!menus/temp
             var $target = $(e.target);
             if ($target.hasClass("customClick")) return;
             e.preventDefault();
+            if ($target.hasClass('disabled')) return;
             if ($target.prop("tagName") == "SPAN") $target = $target.parent();
             var property = $target.data("property");
             var value = $target.data("value");

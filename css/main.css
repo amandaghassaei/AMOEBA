@@ -256,6 +256,10 @@ input.intInput, input.floatInput{
     white-space: normal;
 }
 
+.dropdown-submenu a.disabled{
+    color: #999999!important;
+}
+
 .dropdown-submenu li:hover{
     background-color: #428bca!important;
 }

@@ -266,7 +266,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         _handleKeyStroke: function(e){//receives keyup and keydown
 
             var hoverEl = document.elementFromPoint(this.mousePosition.x, this.mousePosition.y);
-            if (hoverEl.tagName != "CANVAS") {
+            if (hoverEl && hoverEl.tagName != "CANVAS") {
                 if ($("input").is(':focus')) return;//we are typing in an input
                 if ($("textarea").is(':focus')) return;//we are typing in an input
             }
@@ -283,6 +283,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             } else this.downKeys[e.keyCode] = false;
 
             //console.log(e);
+            //console.log(e.keyCode);
             switch(e.keyCode){
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
@@ -295,6 +296,15 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     break;
                 case 27://esc key
                     globals.highlighter.destroyFillRect();
+                    break;
+                case 82://r
+                    if (state && (e.ctrlKey || e.metaKey)){
+                        if (e.shiftKey){
+                            e.preventDefault();
+                            location.reload();
+                            return;
+                        }
+                    }
                     break;
                 case 86://cell (voxel) mode
                     if (state) {

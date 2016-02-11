@@ -34,6 +34,9 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
             //bind events
             this.listenTo(appState, "change:deleteMode", this._updateDeleteMode);
+            this.listenTo(appState, "change:currentNav", function(){
+                if (appState.get("currentNav") != "navDesign") this.destroyFillRect();
+            });
             //this.listenTo(globals.baseplane, "change:planeType", this.destroyFillRect);
 
             if (this._initialize) this._initialize();
@@ -183,7 +186,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         },
 
         mouseDown: function(){
-            if (appState.get("shift")) {//create new fill rect
+            if (appState.get("shift") && appState.get("currentNav") == "navDesign") {//create new fill rect
                 if (!this.isVisible() || !this.highlightedObject) return;
                 var self = this;
                 this.destroyFillRect();
