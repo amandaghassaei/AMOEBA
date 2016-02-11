@@ -55,7 +55,9 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
 //        },
 
         _setVisibility: function(){
-            this.object3D.visible = appState.get("basePlaneIsVisible");
+            var visible = appState.get("basePlaneIsVisible");
+            this.object3D.visible = visible;
+            this.lines.visible = visible;
             three.render();
         },
 

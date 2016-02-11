@@ -30,9 +30,9 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
     <input data-property="max" data-key="x" data-min="<%= fillRect.min.x %>" value="<%= fillRect.max.x %>" placeholder="X" class="form-control fillRect intInput" type="text">&nbsp;
     <input data-property="max" data-key="y" data-min="<%= fillRect.min.y %>" value="<%= fillRect.max.y %>" placeholder="Y" class="form-control fillRect intInput" type="text">&nbsp;
     <input data-property="max" data-key="z" data-min="<%= fillRect.min.z %>" value="<%= fillRect.max.z %>" placeholder="Z" class="form-control fillRect intInput" type="text"><br/><br/>
-    <% if(fillRect.cutMode){  %><a href="#" id="cutCellsWithRect" class="btn btn-halfWidth btn-lg btn-success">Cut Sketch</a>
-    <% }else{ %><a href="#" id="fillRectWithCells" class="btn btn-halfWidth btn-lg btn-success">Fill Sketch</a><% } %>
-    <a href="#" id="deleteFillRect" class="btn btn-halfWidth btn-lg pull-right btn-default">Delete Sketch</a><br/>
+    <% if(fillRect.cutMode){  %><a href="#" id="cutCellsWithRect" class="btn btn-halfWidth btn-lg btn-success">Cut Sketch (ENTER</a>
+    <% }else{ %><a href="#" id="fillRectWithCells" class="btn btn-halfWidth btn-lg btn-success">Fill (ENTER)</a><% } %>
+    <a href="#" id="deleteFillRect" class="btn btn-halfWidth btn-lg pull-right btn-default">Exit Sketch (ESC)</a><br/>
     <label class="checkbox" for="cutMode">
         <input id="cutMode" data-property="cutMode" type="checkbox" <% if (fillRect.cutMode){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="fillRect custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
