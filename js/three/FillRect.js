@@ -49,10 +49,32 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             this.arrows = arrows;
 
             this.listenTo(this, "change:min change:max", this._sizeChanged);
+            this.listenTo(appState, "change:showOneLayer", this._setArrowVis);
+            this.listenTo(globals.baseplane, "change:zIndex", this._setArrowVis);
 
             this.setBound(options.bound);
     
             three.secondPassSceneAdd(this.object3D);
+
+            this._setArrowVis();
+        },
+
+        _setArrowVis: function(){
+            var visibility = !appState.get("showOneLayer");
+            var axis = globals.baseplane.getNormalAxis();
+            if (!visibility){
+                var height = globals.baseplane.get("zIndex");
+                if (this.get("min")[axis] != height || this.get("max")[axis] != height){
+                    globals.highlighter.destroyFillRect();
+                    return;
+                }
+            }
+
+            var self = this;
+            _.each(this.arrows, function(arrow, index){
+                arrow.setVisibility(visibility || !(self.arrowAxisForIndex(index) == axis));
+            });
+            three.render();
         },
 
         _buildWireframe: function(mesh){
@@ -169,6 +191,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         
         destroy: function(){
             this.off();
+            this.stopListening();
             this.set("bound1", null, {silent:true});
             this.set("bound2", null, {silent:true});
             this.set("min", null, {silent:true});
