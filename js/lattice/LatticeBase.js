@@ -554,7 +554,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 return;
             }
             var cells = [];
-            var planeType = globals.baseplane.get("planeType");
+            var planeType = globals.get("baseplane").get("planeType");
             this.loopSketchLayer(index, planeType, function(cell){
                 cells.push(cell.getHighlightableMesh());
             });

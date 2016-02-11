@@ -151,14 +151,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 //                    //re init highlighter
 //                    if (!self.lattice.getHighlighterFile) return;
 //                    require([self.lattice.getHighlighterFile()], function(HighlighterClass){
-//                        globals.highlighter = new HighlighterClass();
+//                        globals.get("highlighter") = new HighlighterClass();
 //                    });
                     return;
                 }
                 //composite material
                 require(['superCellHighlighter'], function(SuperCellHighlighter){
-                    globals.highlighter.destroy();
-                    globals.highlighter = new SuperCellHighlighter();
+                    globals.get("highlighter").destroy();
+                    globals.get("highlighter").set(new SuperCellHighlighter());
                 });
             });
 
@@ -206,14 +206,14 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         showSketchLayer: function(){
             var index;
             if (this.get("showOneLayer")){
-                index = globals.baseplane.get("zIndex");
-                var planeType = globals.baseplane.get("planeType");
+                index = globals.get("baseplane").get("zIndex");
+                var planeType = globals.get("baseplane").get("planeType");
                 this.lattice.loopSketchLayer(index, planeType, function(cell){
                     cell.setTransparent(false);
                     cell.show();
                 }, true);
                 var transIndex = index - 1;
-                if (globals.baseplane.get("orientationFlipped")) transIndex = index +1;
+                if (globals.get("baseplane").get("orientationFlipped")) transIndex = index +1;
                 this.lattice.loopSketchLayer(transIndex, planeType, function(cell){
                     cell.setTransparent(true);
                     cell.show();
@@ -229,7 +229,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
         changeSketchLayer: function(visibleIndex, orientationFlipped){
             this.lattice.makeHighlightableCells(visibleIndex);
             if (this.get("showOneLayer")) {
-                var lastVisibleIndex = globals.baseplane.previous("zIndex");
+                var lastVisibleIndex = globals.get("baseplane").previous("zIndex");
                 var translucentIndex = visibleIndex - 1;
                 var lastTranlsucentIndex = lastVisibleIndex - 1;
                 if (orientationFlipped){
@@ -237,7 +237,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     lastTranlsucentIndex = lastVisibleIndex + 1;
                 }
 
-                var planeType = globals.baseplane.get("planeType");
+                var planeType = globals.get("baseplane").get("planeType");
                 this.lattice.loopSketchLayer(visibleIndex, planeType, function (cell) {
                     cell.setTransparent(false);
                     cell.show();
@@ -297,7 +297,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     this.set("deleteMode", state);
                     break;
                 case 27://esc key
-                    globals.highlighter.destroySelection3D();
+                    globals.get("highlighter").destroySelection3D();
                     break;
                 case 82://r
                     if (state && (e.ctrlKey || e.metaKey)){
@@ -418,7 +418,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     });
                     break;
                 case 13://enter
-                    if (globals.highlighter.get("sketchEditMode")) globals.highlighter.get("selection3D").finish();
+                    if (globals.get("highlighter").get("sketchEditMode")) globals.get("highlighter").get("selection3D").finish();
                     break;
                 default:
                     break;

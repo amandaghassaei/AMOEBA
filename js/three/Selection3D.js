@@ -51,7 +51,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
 
             this.listenTo(this, "change:min change:max", this._sizeChanged);
             //this.listenTo(appState, "change:showOneLayer", this._setArrowVis);
-            //this.listenTo(globals.baseplane, "change:zIndex", this._setArrowVis);
+            //this.listenTo(globals.get("baseplane"), "change:zIndex", this._setArrowVis);
 
             this.setBound(options.bound);
     
@@ -62,11 +62,11 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
 
         _setArrowVis: function(){
             var visibility = !appState.get("showOneLayer");
-            var axis = globals.baseplane.getNormalAxis();
+            var axis = globals.get("baseplane").getNormalAxis();
             if (!visibility){
-                var height = globals.baseplane.get("zIndex");
+                var height = globals.get("baseplane").get("zIndex");
                 if (this.get("min")[axis] != height || this.get("max")[axis] != height){
-                    globals.highlighter.destroySelection3D();
+                    globals.get("highlighter").destroySelection3D();
                     return;
                 }
             }
@@ -126,7 +126,7 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
             }
 
             var bound1 = this.get("bound1");
-            var normalAxis = globals.baseplane.getNormalAxis();
+            var normalAxis = globals.get("baseplane").getNormalAxis();
             if (appState.get("showOneLayer") || !(bound1.x == bound.x || bound1.y == bound.y || bound1.z == bound)){
                 bound[normalAxis] = bound1[normalAxis];
             }
@@ -175,12 +175,12 @@ define(['backbone', 'lattice', 'three', 'threeModel', 'globals', 'arrow', 'appSt
         fill: function(){
             lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
             appState.set("showOneLayer", false);
-            globals.highlighter.destroySelection3D();
+            globals.get("highlighter").destroySelection3D();
         },
 
         cut: function(){
             lattice.removeCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()});
-            globals.highlighter.destroySelection3D();
+            globals.get("highlighter").destroySelection3D();
         },
         
         destroy: function(){

@@ -192,7 +192,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             this._clearCells();
             if (this._undo) this._undo();//undo subclass methods
             if (globals.basePlane) globals.basePlane.destroy();
-            if (globals.highlighter) globals.highlighter.destroy();
+            if (globals.get("highlighter")) globals.get("highlighter").destroy();
 
             if (cellsMax && cellsMin) this._expandCellsMatrix(cellsMax, cellsMin);
 

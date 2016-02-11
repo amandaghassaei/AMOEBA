@@ -37,7 +37,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.listenTo(appState, "change:currentNav", function(){
                 if (appState.get("currentNav") != "navDesign") this.destroySelection3D();
             });
-            //this.listenTo(globals.baseplane, "change:planeType", this.destroySelection3D);
+            //this.listenTo(globals.get("baseplane"), "change:planeType", this.destroySelection3D);
 
             if (this._initialize) this._initialize();
         },
@@ -130,7 +130,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
             if (appState.get("showOneLayer")){//in single layer mode
                 if (this.highlightedObject instanceof DMACell) {
-                    var normalAxis = globals.baseplane.getNormalAxis();
+                    var normalAxis = globals.get("baseplane").getNormalAxis();
                     if (Math.abs(params.direction[normalAxis]) > 0.1) {
                         this.hide();
                         return;

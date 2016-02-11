@@ -11,16 +11,16 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
         },
 
         _initialize: function(){
-            this.listenTo(globals.baseplane, "change", this.render);
+            this.listenTo(globals.get("baseplane"), "change", this.render);
         },
 
         getPropertyOwner: function($target){
-            if ($target.hasClass('baseplane')) return globals.baseplane;
+            if ($target.hasClass('baseplane')) return globals.get("baseplane");
             return null;
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(this.model.toJSON(), plist, globals.baseplane.toJSON());
+            return _.extend(this.model.toJSON(), plist, globals.get("baseplane").toJSON());
         },
 
         _render: function(){

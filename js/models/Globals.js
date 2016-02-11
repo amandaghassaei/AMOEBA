@@ -4,10 +4,14 @@
 
 //globals namespace, not sure if there's a way to get around this
 
-define([], function(){
+define(['backbone'], function(Backbone){
 
-    return {
-        baseplane: null,
-        highlighter: null
-    };
+    var Globals = Backbone.Model.extend({
+        defaults:{
+            baseplane: null,
+            highlighter: null,
+            selection3D: null
+        }
+    });
+    return new Globals();
 });

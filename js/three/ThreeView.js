@@ -69,14 +69,14 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         ////////////////////////////////////////////////////////////////////////////////
 
         _mouseOut: function(){
-            if (globals.highlighter) globals.highlighter.setNothingHighlighted();
+            if (globals.get("highlighter")) globals.get("highlighter").setNothingHighlighted();
             this._setNoPartIntersections();
         },
 
         _mouseUp: function(){
             this.mouseIsDown = false;
             if (appState.get("currentTab") == "emBoundaryCond"){
-                var position = globals.highlighter.getHighlightedObjectPosition();
+                var position = globals.get("highlighter").getHighlightedObjectPosition();
                 if (position){
                     require(['emSim'], function(emSim){
                         if (emSim.get("manualSelectFixed")){
@@ -87,26 +87,26 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 }
             }
             if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
-            else globals.highlighter.addRemoveVoxel(!appState.get("deleteMode"));
-            if (globals.highlighter.highlightingArrow()) this.controls.noRotate = false;
+            else globals.get("highlighter").addRemoveVoxel(!appState.get("deleteMode"));
+            if (globals.get("highlighter").highlightingArrow()) this.controls.noRotate = false;
         },
 
         _mouseDown: function(){
             this.mouseIsDown = true;
-            globals.highlighter.mouseDown();
-            if (globals.highlighter.highlightingArrow()){
+            globals.get("highlighter").mouseDown();
+            if (globals.get("highlighter").highlightingArrow()){
                 this.controls.noRotate = true;
             }
         },
 
         _mouseMoved: function(e){
 
-            if (!globals.highlighter) return;//highlighter not loaded yet
+            if (!globals.get("highlighter")) return;//highlighter not loaded yet
 
             if (!appState.get("highlightMode") && !(appState.get("manualSelectOrigin"))) return;
 
             if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
-                globals.highlighter.setNothingHighlighted();
+                globals.get("highlighter").setNothingHighlighted();
                 this._setNoPartIntersections();
                 return;
             }
@@ -117,45 +117,45 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             var deleteMode = appState.get("deleteMode");
             var sketchMode = appState.get("shift");
-            var sketchEditMode = globals.highlighter.get("sketchEditMode");
+            var sketchEditMode = globals.get("highlighter").get("sketchEditMode");
 
             var objsToIntersect;
-            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
-                var dragPlane = this.model.setupDragPlane(globals.highlighter.highlightedObject.getPosition(),
-                    globals.highlighter.highlightedObject.getRotation());
+            if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
+                var dragPlane = this.model.setupDragPlane(globals.get("highlighter").highlightedObject.getPosition(),
+                    globals.get("highlighter").highlightedObject.getRotation());
                 objsToIntersect = [dragPlane];
             } else if (sketchEditMode){
-                objsToIntersect = globals.highlighter.get("selection3D").highlightTargets;
+                objsToIntersect = globals.get("highlighter").get("selection3D").highlightTargets;
             } else {
                  objsToIntersect= lattice.getUItarget().getHighlightableCells();
                 if (!deleteMode) objsToIntersect = objsToIntersect.concat(this.model.getBasePlane());
-                //        if (globals.highlighter.isVisible()) objsToIntersect = objsToIntersect.concat(globals.highlighter.mesh);
+                //        if (globals.get("highlighter").isVisible()) objsToIntersect = objsToIntersect.concat(globals.get("highlighter").mesh);
             }
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
 
-            if (this.mouseIsDown && globals.highlighter.highlightingArrow()){
+            if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
                 if (!intersections || !intersections[0]) return;
-                globals.highlighter.get("selection3D").dragArrow(globals.highlighter.highlightedObject, intersections[0].point);
+                globals.get("highlighter").get("selection3D").dragArrow(globals.get("highlighter").highlightedObject, intersections[0].point);
                 return;
             }
 
 
             if (intersections.length == 0) {//no intersections
-                globals.highlighter.setNothingHighlighted();
+                globals.get("highlighter").setNothingHighlighted();
                 this._setNoPartIntersections();
                 return;
             }
 
-            if(intersections[0].object == globals.highlighter.mesh) return;
+            if(intersections[0].object == globals.get("highlighter").mesh) return;
 
 
-            globals.highlighter.highlight(intersections[0]);
+            globals.get("highlighter").highlight(intersections[0]);
 
             if (this.mouseIsDown) {
                 if (deleteMode){
-                    //globals.highlighter.addRemoveVoxel(false);
+                    //globals.get("highlighter").addRemoveVoxel(false);
                 } else if (sketchMode){
-                    globals.highlighter.adjustSelection3D();
+                    globals.get("highlighter").adjustSelection3D();
                 }
             }
 
@@ -183,11 +183,11 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
         _handlePartIntersections: function(intersections, distanceToNearestCell){
             var part = intersections[0].object.myPart;
-            if (globals.highlighter.isVisible() && intersections[0].distance > distanceToNearestCell){
+            if (globals.get("highlighter").isVisible() && intersections[0].distance > distanceToNearestCell){
                 this._setNoPartIntersections();
                 return;
             }
-            globals.highlighter.hide();
+            globals.get("highlighter").hide();
             if (part!= this.currentIntersectedPart){
                 if (this.currentIntersectedPart) this.currentIntersectedPart.unhighlight();
                 part.highlight();
