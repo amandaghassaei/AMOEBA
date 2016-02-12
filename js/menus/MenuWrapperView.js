@@ -59,8 +59,12 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                     console.warn("value is NaN");
                     return;
                 }
-                if (e.originalEvent.wheelDelta < 0) this._setNumber($target, --newVal);
-                else this._setNumber($target, ++newVal);
+
+                var increment = parseInt($target.data("incr"));
+                if (isNaN(increment)) increment = 1;
+                var sign = (e.originalEvent.wheelDelta < 0) ? -1 : 1;
+                newVal += sign*increment;
+                this._setNumber($target, newVal);
                 $target.val(newVal);
                 e.preventDefault();
             }
@@ -151,6 +155,15 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
                 console.warn("value is NaN");
                 return;
             }
+
+            var increment = parseInt($target.data("incr"));
+            if (isNaN(increment)) increment = 1;
+
+            var origVal = parseInt($target.prop("defaultValue"));
+            if ((newVal-origVal)%increment != 0){
+                newVal = origVal + Math.round((newVal-origVal)/increment)*increment;
+            }
+
             this._setNumber($target, newVal);
         },
 
