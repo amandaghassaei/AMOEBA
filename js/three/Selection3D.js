@@ -19,11 +19,14 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             max: null,
             size: null,
             cutMode: false,
-            editMode:false//arrows are draggable when in edit mode
+            editMode:false,//arrows are draggable when in edit mode
+            sizeIncrement: new THREE.Vector3(1,1,1)
         },
         
         initialize: function(options){
             this.set("bound1", options.bound.clone());
+
+            if (globals.get("selectedRegion")) this.set("sizeIncrement", globals.get("selectedRegion").get("size").clone());
 
             var scale = lattice.getAspectRatio();
             var mesh = new THREE.Mesh(new THREE.BoxGeometry(scale.x, scale.y, scale.z), selectionToolMaterial);
@@ -113,32 +116,32 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             var index = this.arrows.indexOf(arrow);
             var axis = this.arrowAxisForIndex(index);
 
-            var sign = (index%2 == 0 ? "max" : "min");
-            var bound = this.get(sign).clone();
+            var dir = (index%2 == 0 ? "max" : "min");
+            var bound = this.get(dir).clone();
+            var oppDir = (index%2 == 0 ? "min" : "max");
+            var oppBound = this.get(oppDir).clone();
+
+            var sizeIncrement = this.get("sizeIncrement")[axis];
 
             var scale = lattice.getAspectRatio();
             var cellIndex = Math.round(point[axis]/scale[axis]);
 
-            if (sign == "max"){
-                cellIndex -= 2;
-                if (!shouldTranslate && cellIndex < this.get("min")[axis]) cellIndex = this.get("min")[axis];
+
+            if (!shouldTranslate){
+                var sign = (dir == "max") ? 1 : -1;
+                cellIndex += sign*2;
+                var n = Math.round((cellIndex - oppBound[axis] + sign)/sizeIncrement);
+                if (n*sign <= 0) n = sign;
+                cellIndex = oppBound[axis] + sizeIncrement*n - sign;
             } else {
-                cellIndex += 2;
-                if (!shouldTranslate && cellIndex > this.get("max")[axis]) cellIndex = this.get("max")[axis];
+                oppBound[axis] -= bound[axis] - cellIndex;
+                this.set(oppDir, oppBound, {silent:true});
             }
 
             if (cellIndex == bound[axis]) return;//no change
 
-            if (shouldTranslate){
-                var translation = bound[axis] - cellIndex;
-                var oppSign = (index%2 == 0 ? "min" : "max");
-                var oppBound = this.get(oppSign).clone();
-                oppBound[axis] -= translation;
-                this.set(oppSign, oppBound, {silent:true});
-            }
             bound[axis] = cellIndex;
-
-            this.set(sign, bound);
+            this.set(dir, bound);
         },
 
         arrowAxisForIndex: function(i){
@@ -157,6 +160,15 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             if (appState.get("showOneLayer") || !(bound1.x == bound.x || bound1.y == bound.y || bound1.z == bound)){
                 bound[normalAxis] = bound1[normalAxis];
             }
+
+            var sizeIncr = this.get("sizeIncrement");
+
+            _.each(bound, function(index, axis){
+                var sign = (index >= bound1[axis]) ? 1 : -1;
+                var n = Math.round((index - bound1[axis] + sign)/sizeIncr[axis]);
+                if (n == 0) n = sign;
+                bound[axis] = bound1[axis] + sizeIncr[axis]*n - sign;
+            });
 
             this.set("bound2", bound.clone());
     
@@ -195,7 +207,8 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
         },
 
         finish: function(){
-            if (this.get("cutMode")) this.cut();
+            if (globals.get("selectedRegion")) console.log("clone");
+            else if (this.get("cutMode")) this.cut();
             else this.fill();
         },
         
