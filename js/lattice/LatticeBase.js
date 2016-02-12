@@ -137,12 +137,30 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
             var materialID = appState.get("materialType");
 
+            var lastCellIndex = range.max;
+            if (clone){
+                var cloneSize = clone.get("size");
+                var lastCloneIndex = new THREE.Vector3(0,0,0);
+                for (var x=0;x<cloneSize.x;x++){
+                    for (var y=0;y<cloneSize.y;y++){
+                        for (var z=0;z<cloneSize.z;z++){
+                            var relIndex = new THREE.Vector3(x, y, z);
+                            var cell = clone.cellAtIndex(relIndex);
+                            if (!cell) continue;
+                            lastCellIndex = relIndex;
+                        }
+                    }
+                }
+                var numCopies = range.max.clone().sub(range.min).add(new THREE.Vector3(1,1,1)).divide(cloneSize).floor();
+                lastCellIndex = range.min.clone().add(numCopies.sub(new THREE.Vector3(1,1,1)).multiply(cloneSize).add(lastCloneIndex));
+            }
+
             var callback = null;
             for (var x=range.min.x;x<=range.max.x;x++){
                 for (var y=range.min.y;y<=range.max.y;y++){
                     for (var z=range.min.z;z<=range.max.z;z++){
                         var index = new THREE.Vector3(x, y, z);
-                        if (index.equals(range.max)) callback = function(){three.render();};
+                        if (index.equals(lastCellIndex)) callback = function(){three.render();};
                         if (clone){
                             var relIndex = index.clone().sub(range.min);
                             var cloneSize = clone.get("size");
@@ -151,11 +169,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                             });
                             var cell = clone.cellAtIndex(relIndex);
                             if (!cell) continue;
-                            this._addCellAtIndex(index, {materialID: cell.getMaterialID()}, null, true);
-                            if (callback) callback();
-                        } else {
-                            this._addCellAtIndex(index, {materialID: materialID}, callback, true);
+                            materialID = cell.getMaterialID();
                         }
+                        this._addCellAtIndex(index, {materialID: materialID}, callback, true);
                     }
                 }
             }
