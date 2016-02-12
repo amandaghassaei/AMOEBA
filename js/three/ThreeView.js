@@ -74,6 +74,9 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         _mouseOut: function(){
             if (globals.get("highlighter")) globals.get("highlighter").setNothingHighlighted();
             this._setNoPartIntersections();
+            this.controls.noRotate = false;
+            this.controls.noPan = false;
+            this.controls.noZoom = false;
         },
 
         _isDragging: function(){
