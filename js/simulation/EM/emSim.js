@@ -131,7 +131,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         fixCellAtPosition: function(position){
             position.sub(lattice.get("cellsMin"));
-            var cell = emSimLattice.getCellAtIndex(position);
+            var cell = emSimLattice._getCellAtIndex(position);
             var numFixed = this.get("numFixed");
             if (cell.isFixed()) {
                 numFixed--;

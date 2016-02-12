@@ -77,6 +77,8 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 mousePosition.y = event.pageY;
             });
             this.mousePosition = mousePosition;
+
+            this._showAxes();
         },
 
         isMobile: function() {

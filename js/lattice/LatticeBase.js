@@ -46,7 +46,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
         getOffset: function(){
-            if (this.get("cellMin")) return this.get("cellsMin").clone();
+            if (this.get("cellsMin")) return this.get("cellsMin").clone();
             return null;
         },
 
@@ -70,8 +70,22 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return JSON.parse(JSON.stringify(this.cells));
         },
 
+        getSparseCellAtIndex: function(index){
+            if (this._checkForIndexOutsideBounds(index)) return null;
+            return this._getSparseCellAtIndex(this._getCellsIndexForLatticeIndex(index));
+        },
+
+        _getSparseCellAtIndex: function(index){
+            return this.sparseCells[index.x][index.y][index.z];
+        },
+
         getCellAtIndex: function(index){
-            return this.cells[index.x][index.y][index.y];
+            if (this._checkForIndexOutsideBounds(index)) return null;
+            return this._getCellAtIndex(index);
+        },
+
+        _getCellAtIndex: function(index){
+            return this.cells[index.x][index.y][index.z];
         },
 
 
@@ -116,12 +130,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             });
         },
 
-        addCellsInRange: function(range){//add a block of cells (extrude)
+        addCellsInRange: function(range, clone){//add a block of cells (extrude)
 
             var cellOutsideCurrentBounds = this._checkForIndexOutsideBounds(range.min) || this._checkForIndexOutsideBounds(range.max);
             if (cellOutsideCurrentBounds) this._expandCellsMatrix(range.max, range.min);
-
-            var cellsMin = this.get("cellsMin");
 
             var materialID = appState.get("materialType");
 
@@ -131,7 +143,19 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                     for (var z=range.min.z;z<=range.max.z;z++){
                         var index = new THREE.Vector3(x, y, z);
                         if (index.equals(range.max)) callback = function(){three.render();};
-                        this._addCellAtIndex(index, {materialID: materialID}, callback, true);
+                        if (clone){
+                            var relIndex = index.clone().sub(range.min);
+                            var cloneSize = clone.get("size");
+                            _.each(relIndex, function(val, key){
+                                relIndex[key] = val%cloneSize[key];
+                            });
+                            var cell = clone.cellAtIndex(relIndex);
+                            if (!cell) continue;
+                            this._addCellAtIndex(index, {materialID: cell.getMaterialID()}, null, true);
+                            if (callback) callback();
+                        } else {
+                            this._addCellAtIndex(index, {materialID: materialID}, callback, true);
+                        }
                     }
                 }
             }

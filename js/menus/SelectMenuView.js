@@ -56,7 +56,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
             e.preventDefault();
             globals.destroySelectedRegion();
             globals.destroySelection3D();
-
+            this.render();
         },
 
         _render: function(){

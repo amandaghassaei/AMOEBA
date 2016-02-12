@@ -206,10 +206,20 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             return this.get("max").clone().sub(this.get("min")).add(new THREE.Vector3(1,1,1));
         },
 
+        cellAtIndex: function(relIndex){
+            return lattice.getSparseCellAtIndex(this.get("min").clone().add(relIndex));
+        },
+
         finish: function(){
-            if (globals.get("selectedRegion")) console.log("clone");
+            if (globals.get("selectedRegion")) this.clone();
             else if (this.get("cutMode")) this.cut();
             else this.fill();
+        },
+
+        clone: function(){
+            lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()}, globals.get("selectedRegion"));
+            appState.set("showOneLayer", false);
+            globals.destroySelection3D();
         },
         
         fill: function(){

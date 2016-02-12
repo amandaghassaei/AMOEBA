@@ -230,10 +230,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
             this.loopCells(function(cell){
                 cell.reset();
             });
-        },
-
-        getCellAtIndex: function(index){
-            return this.cells[index.x][index.y][index.z];
         }
 
 
