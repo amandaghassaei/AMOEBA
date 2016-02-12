@@ -105,8 +105,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                     return;
                 }
             }
-            if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
-            else globals.get("highlighter").addRemoveVoxel(!appState.get("deleteMode"));
+            //if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
+            globals.get("highlighter").addRemoveVoxel(!appState.get("deleteMode"));
             if (globals.get("highlighter").highlightingArrow()) {
                 this.controls.noRotate = false;
                 this.controls.noPan = false;
@@ -143,7 +143,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             //if (!(appState.get("manualSelectOrigin"))) return;//todo ?
 
-            if (this.leftClick && !this.controls.noRotate) {//in the middle of a camera move
+            if (this._isDragging() && !this.controls.noRotate) {//in the middle of a camera move
                 globals.get("highlighter").setNothingHighlighted();
                 this._setNoPartIntersections();
                 return;
