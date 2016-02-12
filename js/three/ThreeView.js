@@ -14,7 +14,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             "mouseout":                             "_mouseOut"
         },
 
-        mouseIsDown: false,//store state of mouse click inside this el
+        leftClick: false,//store state of mouse click inside this el
+        rightClick: false,
 
         //intersections/object highlighting
         mouseProjection: new THREE.Raycaster(),
@@ -54,6 +55,8 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         _setControlsEnabled: function(){
             var state = appState.get("shift") || appState.get("extrudeMode");
             this.controls.noRotate = state;
+            this.controls.noPan = state;
+            this.controls.noZoom = state;
         },
 
         reset3DNavigation: function(){
@@ -73,8 +76,24 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             this._setNoPartIntersections();
         },
 
-        _mouseUp: function(){
-            this.mouseIsDown = false;
+        _isDragging: function(){
+            return this.leftClick || this.rightClick;
+        },
+
+        _mouseUp: function(e){
+            switch (e.which) {
+                case 1:
+                    this.leftClick = false;
+                    break;
+                case 2:
+                    //middle
+                    break;
+                case 3:
+                    this.rightClick = false;
+                    break;
+                default:
+                    break;
+            }
             if (appState.get("currentTab") == "emBoundaryCond"){
                 var position = globals.get("highlighter").getHighlightedObjectPosition();
                 if (position){
@@ -88,14 +107,33 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             }
             if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
             else globals.get("highlighter").addRemoveVoxel(!appState.get("deleteMode"));
-            if (globals.get("highlighter").highlightingArrow()) this.controls.noRotate = false;
+            if (globals.get("highlighter").highlightingArrow()) {
+                this.controls.noRotate = false;
+                this.controls.noPan = false;
+                this.controls.noZoom = false;
+            }
         },
 
-        _mouseDown: function(){
-            this.mouseIsDown = true;
+        _mouseDown: function(e){
+            switch (e.which) {
+                case 1:
+                    this.leftClick = true;
+                    break;
+                case 2:
+                    //middle
+                    break;
+                case 3:
+                    this.rightClick = true;
+                    break;
+                default:
+                    break;
+            }
+
             globals.get("highlighter").mouseDown();
             if (globals.get("highlighter").highlightingArrow()){
                 this.controls.noRotate = true;
+                this.controls.noPan = true;
+                this.controls.noZoom = true;
             }
         },
 
@@ -105,7 +143,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             //if (!(appState.get("manualSelectOrigin"))) return;//todo ?
 
-            if (this.mouseIsDown && !this.controls.noRotate) {//in the middle of a camera move
+            if (this.leftClick && !this.controls.noRotate) {//in the middle of a camera move
                 globals.get("highlighter").setNothingHighlighted();
                 this._setNoPartIntersections();
                 return;
@@ -118,15 +156,15 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             var target = globals.get("selection3D");
             if (!target) target = globals.get("highlighter");
 
-            var objsToIntersect = target.getObjToIntersect(this.mouseIsDown);
+            var objsToIntersect = target.getObjToIntersect(this._isDragging());
 
             var deleteMode = appState.get("deleteMode");
 
             var intersections = this.mouseProjection.intersectObjects(objsToIntersect, false);
 
-            if (this.mouseIsDown && globals.get("highlighter").highlightingArrow()){
+            if (this._isDragging() && globals.get("highlighter").highlightingArrow()){
                 if (!intersections || !intersections[0]) return;
-                globals.get("selection3D").dragArrow(globals.get("highlighter").highlightedObject, intersections[0].point);
+                globals.get("selection3D").dragArrow(globals.get("highlighter").highlightedObject, intersections[0].point, this.rightClick);
                 return;
             }
 
@@ -140,7 +178,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             globals.get("highlighter").highlight(intersections[0]);
 
-            if (this.mouseIsDown) {
+            if (this.leftClick) {
                 if (deleteMode){
                     //globals.get("highlighter").addRemoveVoxel(false);
                 } else if (appState.get("shift")){

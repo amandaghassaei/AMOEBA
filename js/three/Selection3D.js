@@ -108,7 +108,7 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             return highlighter.getObjToIntersect();
         },
 
-        dragArrow: function(arrow, point){
+        dragArrow: function(arrow, point, shouldTranslate){
 
             var index = this.arrows.indexOf(arrow);
             var axis = this.arrowAxisForIndex(index);
@@ -121,14 +121,21 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
 
             if (sign == "max"){
                 cellIndex -= 2;
-                if (cellIndex < this.get("min")[axis]) cellIndex = this.get("min")[axis];
+                if (!shouldTranslate && cellIndex < this.get("min")[axis]) cellIndex = this.get("min")[axis];
             } else {
                 cellIndex += 2;
-                if (cellIndex > this.get("max")[axis]) cellIndex = this.get("max")[axis];
+                if (!shouldTranslate && cellIndex > this.get("max")[axis]) cellIndex = this.get("max")[axis];
             }
 
             if (cellIndex == bound[axis]) return;//no change
 
+            if (shouldTranslate){
+                var translation = bound[axis] - cellIndex;
+                var oppSign = (index%2 == 0 ? "min" : "max");
+                var oppBound = this.get(oppSign).clone();
+                oppBound[axis] -= translation;
+                this.set(oppSign, oppBound, {silent:true});
+            }
             bound[axis] = cellIndex;
 
             this.set(sign, bound);
