@@ -230,7 +230,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
             this.loopCells(function(cell){
                 cell.reset();
             });
-        }
+        },
+
+        _getCellAtIndex: function(index){
+            return this.cells[index.x][index.y][index.z];
+        },
+
 
 
     });
