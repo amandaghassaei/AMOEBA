@@ -1,5 +1,7 @@
+<% if(signalConflict){ %>
+<div class="inlineWarning">Two signals are connected to the same wire, please fix conflict before running simulation.
+    Problem indicated in red below.</div><% } %>
 <% if (_.keys(wires).length > 0){ %>
-    Net List:</br>
     <label class="radio">
         <input type="radio" <% if (visibleWire == -2){ %>checked<% } %> name="visibleWire" value="-2" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show Everything
@@ -8,11 +10,15 @@
         <input type="radio" <% if (visibleWire == -1){ %>checked<% } %> name="visibleWire" value="-1" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show All Wires
     </label>
+    Net List:</br>
     <% var index = 0;  _.each(wires, function(wire, id){ %>
-        <label class="radio">
+        <label class="radio <% if(wire.signals.length > 1){ %>red<% } %>">
             <input type="radio" <% if (id == visibleWire){ %>checked<% } %> name="visibleWire" value="<%= id %>" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
             Wire <%= ++index %> ( <%= wire.cells.length %> cell<% if (wire.cells.length > 1){ %>s<% } %> )
+            <% if(wire.signals.length == 1){ %>&nbsp;&nbsp;&nbsp;&nbsp;<a data-id="<%= id %>" class="editSignal">Edit Signal...</a><% } %>
         </label>
     <% }); %>
     <br/>
+<% } else { %>
+    No Wires
 <% } %>

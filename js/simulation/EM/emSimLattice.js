@@ -10,11 +10,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
     var EMSimLattice = Backbone.Model.extend({
 
         defaults: {
-            wires: {}
+            wires: {},
+            signals: [],
+            signalConflict: false
         },
 
         initialize: function(){
-
+            this.listenTo(this, "change:wires", this._assignSignalsToWires);
         },
 
         setCells: function(cells){
@@ -26,7 +28,16 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 cell.setNeighbors(neighbors);
             });
+            this._precomputeSignals(this.cells);
             this._precomputeWires(this.cells);
+        },
+
+        _precomputeSignals: function(cells){
+            var signals = [];
+            this._loopCells(cells, function(cell){
+                if (cell.isSignalGenerator()) signals.push(cell);
+            });
+            this.set("signals", signals);
         },
 
         _precomputeWires: function(cells){
@@ -38,6 +49,16 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 cell.propagateWireGroup();
             });
             this._calcNumberDCConnectedComponents(cells);
+        },
+
+        _assignSignalsToWires: function(){
+            var wires = this.get("wires");
+            var signalConflict = false;
+            _.each(this.get("signals"), function(signal){
+                signalConflict |= wires[signal.getWireGroup()].addSignal(signal);
+            });
+            console.log(signalConflict);
+            this.set("signalConflict", signalConflict);
         },
 
         _calcNumberDCConnectedComponents: function(cells){

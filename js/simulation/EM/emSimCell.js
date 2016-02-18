@@ -143,6 +143,10 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
 
 
+    EMSimCell.prototype.isSignalGenerator = function(){
+        return this.cell.getMaterialID() == "signal";
+    };
+
     EMSimCell.prototype.isConductive = function(){
         return this.getMaterial().isConductive();
     };

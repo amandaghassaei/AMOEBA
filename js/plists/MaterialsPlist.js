@@ -98,6 +98,17 @@ define([], function(){
                         elasMod: 50,
                         k: 1000
                     }
+                },
+                signal: {
+                    name: "Signal Generator",
+                    color: "#0EE3B8",
+                    altColor: "#0EE3B8",
+                    properties:{
+                        conductive: true,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
                 }
                 //nmos: {
                 //    name: "NMOS",
