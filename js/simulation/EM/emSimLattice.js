@@ -152,7 +152,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
                 var cellVelocity = cell.getVelocity();
                 var cellTranslation = cell.getTranslation();
 
-                var cellRotation = cell.getRotation();
+                //var cellRotation = cell.getRotation();
                 //var angularVelocity = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
@@ -182,23 +182,23 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
 
                     Ftotal.add(force);
 
-                    //non-axial rotation
-                    var quaternion = new THREE.Quaternion().setFromUnitVectors(nominalD.clone().normalize(),
-                        D.clone().normalize());
-
-                    //axial rotation
-                    var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                    var neghborRotation = neighbor.getRotation();
-                    var angle = axis.clone().normalize().dot(neghborRotation);
-                    var torsion = new THREE.Quaternion().setFromAxisAngle(nominalD.clone().normalize(), angle);
-
-                    quaternion.multiply(torsion);
-                    var euler = new THREE.Euler().setFromQuaternion(quaternion);
-
-                    var rotation = new THREE.Vector3(euler.x, euler.y, euler.z);
-                    var weightedRotation = rotation.clone().multiplyScalar(k);
-                    Rtotal.add(weightedRotation);
-                    Rcontrib += k;
+                    ////non-axial rotation
+                    //var quaternion = new THREE.Quaternion().setFromUnitVectors(nominalD.clone().normalize(),
+                    //    D.clone().normalize());
+                    //
+                    ////axial rotation
+                    //var axis = rotatedNominalD;//neighbRotatedHalfNomD
+                    //var neghborRotation = neighbor.getRotation();
+                    //var angle = axis.clone().normalize().dot(neghborRotation);
+                    //var torsion = new THREE.Quaternion().setFromAxisAngle(nominalD.clone().normalize(), angle);
+                    //
+                    //quaternion.multiply(torsion);
+                    //var euler = new THREE.Euler().setFromQuaternion(quaternion);
+                    //
+                    //var rotation = new THREE.Vector3(euler.x, euler.y, euler.z);
+                    //var weightedRotation = rotation.clone().multiplyScalar(k);
+                    //Rtotal.add(weightedRotation);
+                    //Rcontrib += k;
 
                     //var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
                     //Ttotal.add(torque);
@@ -219,7 +219,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
 
 
                 cell.applyForce(Ftotal, dt);
-                cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);
+                //cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);

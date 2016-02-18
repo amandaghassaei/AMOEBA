@@ -23,17 +23,17 @@ define([], function(){
                         k: 1000
                     }
                 },
-                alum:{
-                    name: "Lightweight Structural Conductive",
-                    color: "#9CC9CB",
-                    altColor: "#9CC9CB",
-                    properties:{
-                        conductive: true,
-                        density: 8500,//kg/m^3
-                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
-                        k: 1000
-                    }
-                },
+                //alum:{
+                //    name: "Lightweight Structural Conductive",
+                //    color: "#9CC9CB",
+                //    altColor: "#9CC9CB",
+                //    properties:{
+                //        conductive: true,
+                //        density: 8500,//kg/m^3
+                //        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                //        k: 1000
+                //    }
+                //},
                 fiberGlass: {
                     name: "Structural Insulating",
                     color: "#fef1b5",
@@ -55,15 +55,26 @@ define([], function(){
 //                        elasMod: 17.2
 //                    }
 //                },
-                carbon: {
-                    name: "Resistive",
-                    color: "#222",
-                    altColor: "#000",
+//                carbon: {
+//                    name: "Resistive",
+//                    color: "#222",
+//                    altColor: "#000",
+//                    properties:{
+//                        conductive: false,
+//                        density: 500,//kg/m^3
+//                        elasMod: 181,
+//                        k: 1000
+//                    }
+//                },
+                flexureCond: {
+                    name: "Flexure Conductive",
+                    color: "#F5447B",
+                    altColor: "#F5447B",
                     properties:{
                         conductive: false,
-                        density: 500,//kg/m^3
-                        elasMod: 181,
-                        k: 1000
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
                     }
                 },
                 flexure: {
@@ -74,18 +85,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 3
-                    }
-                },
-                flexureCond: {
-                    name: "Flexure Conductive",
-                    color: "#F5447B",
-                    altColor: "#F5447B",
-                    properties:{
-                        conductive: false,
-                        density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 3
+                        k: 30
                     }
                 },
                 piezo: {
@@ -98,51 +98,51 @@ define([], function(){
                         elasMod: 50,
                         k: 1000
                     }
-                },
-                nmos: {
-                    name: "NMOS",
-                    color: "#F99987",
-                    altColor: "#F99987",
-                    properties:{
-                        conductive: false,
-                        density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 1000
-                    }
-                },
-                pmos: {
-                    name: "PMOS",
-                    color: "#0EE3B8",
-                    altColor: "#0EE3B8",
-                    properties:{
-                        conductive: false,
-                        density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 1000
-                    }
-                },
-                diode: {
-                    name: "Diode",
-                    color: "#dfccaf",
-                    altColor: "#dfccaf",
-                    properties:{
-                        conductive: false,
-                        density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 1000
-                    }
-                },
-                zener: {
-                    name: "Zener Diode",
-                    color: "#bf390b",
-                    altColor: "#bf390b",
-                    properties:{
-                        conductive: false,
-                        density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 1000
-                    }
                 }
+                //nmos: {
+                //    name: "NMOS",
+                //    color: "#F99987",
+                //    altColor: "#F99987",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //},
+                //pmos: {
+                //    name: "PMOS",
+                //    color: "#0EE3B8",
+                //    altColor: "#0EE3B8",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //},
+                //diode: {
+                //    name: "Diode",
+                //    color: "#dfccaf",
+                //    altColor: "#dfccaf",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //},
+                //zener: {
+                //    name: "Zener Diode",
+                //    color: "#bf390b",
+                //    altColor: "#bf390b",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //}
             }
         }
     }

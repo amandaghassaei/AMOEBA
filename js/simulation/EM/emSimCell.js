@@ -169,7 +169,7 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
         this.w = this.nextW;
         if (shouldRender) {
             this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
-            this._setRotation(this.rotation.clone());
+            //this._setRotation(this.rotation.clone());
         }
     };
 
