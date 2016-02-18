@@ -3,7 +3,7 @@
  */
 
 
-define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, THREE){
+define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell, lattice, plist, THREE){
 
 
     function EMSimCell(cell){
@@ -33,7 +33,17 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
 
         this.float();
 
+        this.neighbors = [];
+
     }
+
+    EMSimCell.prototype.setNeighbors = function(neighbors){//precompute neighbors
+        this.neighbors = neighbors;
+    };
+
+    EMSimCell.prototype.getNeighbors = function(){
+        return this.neighbors;
+    };
 
     EMSimCell.prototype.getMomentOfInertia = function(){
         return this.I;
@@ -133,6 +143,36 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
 
 
 
+    EMSimCell.prototype.isConductive = function(){
+        return this.getMaterial().isConductive();
+    };
+
+    EMSimCell.prototype.setWireGroup = function(num, force){
+        if (force) this._wireGroup = num;
+        else if (this._wireGroup>num){
+            this._wireGroup = num;
+            this.propagateWireGroup(num);
+        }
+    };
+
+    EMSimCell.prototype.getWireGroup = function(){
+        return this._wireGroup;
+    };
+
+    EMSimCell.prototype.propagateWireGroup = function(num){
+        if (!this.isConductive()) return;
+        if (num === undefined) num = this._wireGroup;
+        _.each(this.neighbors, function(neighbor){
+            if(neighbor) neighbor.setWireGroup(num);
+        });
+    };
+
+    EMSimCell.prototype.conductiveGroupVisible = function(allVisible, groupNum){
+        return this.isConductive() && (allVisible || groupNum == this._wireGroup);
+    };
+
+
+
     EMSimCell.prototype.hide = function(){
         this.cell.hide();
     };
@@ -201,6 +241,11 @@ define(["cell", "lattice", "plist", "three"], function(DMACell, lattice, plist, 
         this.rotation = null;
         this.translation = null;
         this.quaternion = null;
+        var self = this;
+        _.each(this.neighbors, function(neighbor, index){
+            self.neighbors[index] = null;
+        });
+        this.neighbors = null;
     };
 
     return EMSimCell;

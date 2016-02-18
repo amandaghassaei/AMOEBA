@@ -175,6 +175,10 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         return this.properties;
     };
 
+    DMAMaterial.prototype.isConductive = function(){
+        return this.properties.conductive;
+    };
+
     DMAMaterial.prototype.getDensity = function(){
         return this.properties.density;
     };

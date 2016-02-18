@@ -96,7 +96,8 @@ require.config({
         emSim: 'simulation/EM/emSim',
         emSimLattice: 'simulation/EM/emSimLattice',
         emSimCell: 'simulation/EM/emSimCell',
-        emSimSuperCell: 'simulation/EM/emSimSuperCell'
+        emSimSuperCell: 'simulation/EM/emSimSuperCell',
+        emWire: 'simulation/EM/emWire'
     },
 
     shim: {

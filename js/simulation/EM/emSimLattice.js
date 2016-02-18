@@ -3,14 +3,14 @@
  */
 
 
-define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three'],
-    function(_, Backbone, EMSimCell, three, lattice, THREE){
+define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three', 'emWire'],
+    function(_, Backbone, EMSimCell, three, lattice, THREE, EMWire){
 
 
     var EMSimLattice = Backbone.Model.extend({
 
         defaults: {
-
+            wires: []
         },
 
         initialize: function(){
@@ -23,6 +23,34 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
             this._loopCells(cells, function(cell, x, y, z, self){
                 self.cells[x][y][z] = new EMSimCell(cell);
             });
+            this._loopCellsWithNeighbors(function(cell, neighbors){
+                cell.setNeighbors(neighbors);
+            });
+            this._precomputeWires(this.cells);
+        },
+
+        _precomputeWires: function(cells){
+            var num = 1;
+            this._loopCells(cells, function(cell){
+                cell.setWireGroup(num++, true);
+            });
+            this._loopCells(cells, function(cell){
+                cell.propagateWireGroup();
+            });
+            this._calcNumberDCConnectedComponents(cells);
+            //this._showConductors();
+        },
+
+        _calcNumberDCConnectedComponents: function(cells){
+            var wires = {};
+            this._loopCells(cells, function(cell){
+                if (cell.isConductive()) {
+                    var groupNum = cell.getWireGroup();
+                    if (!wires[groupNum]) wires[groupNum] = new EMWire();
+                    wires[groupNum].addCell(cell);
+                }
+            });
+            this.set("wires", wires);
         },
 
         _initEmptyArray: function(cells){
@@ -73,25 +101,35 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
             var sizeY = cells[0].length;
             var sizeZ = cells[0][0].length;
             this.loopCells(function(cell, x, y, z, self){
-
-                var neighbors = [];
-                if (x == 0) neighbors.push(null);
-                else neighbors.push(cells[x-1][y][z]);
-                if (x == sizeX-1) neighbors.push(null);
-                else neighbors.push(cells[x+1][y][z]);
-
-                if (y == 0) neighbors.push(null);
-                else neighbors.push(cells[x][y-1][z]);
-                if (y == sizeY-1) neighbors.push(null);
-                else neighbors.push(cells[x][y+1][z]);
-
-                if (z == 0) neighbors.push(null);
-                else neighbors.push(cells[x][y][z-1]);
-                if (z == sizeZ-1) neighbors.push(null);
-                else neighbors.push(cells[x][y][z+1]);
-
+                var neighbors = self._calcNeighbors(cells, x, y, z, sizeX, sizeY, sizeZ);
                 callback(cell, neighbors, x, y, z, self);
             });
+        },
+
+        calcNeighbors: function(cell){
+            var index = cell.getAbsoluteIndex();
+            index.sub(this.get("cellsMin"));
+            return this._calcNeighbors(this.cells, index.x, index.y, index.z, this.cells.length, this.cells[0].length, this.cells[0][0].length);
+        },
+
+        _calcNeighbors: function(cells, x, y, z, sizeX, sizeY, sizeZ){
+            var neighbors = [];
+            if (x == 0) neighbors.push(null);
+            else neighbors.push(cells[x-1][y][z]);
+            if (x == sizeX-1) neighbors.push(null);
+            else neighbors.push(cells[x+1][y][z]);
+
+            if (y == 0) neighbors.push(null);
+            else neighbors.push(cells[x][y-1][z]);
+            if (y == sizeY-1) neighbors.push(null);
+            else neighbors.push(cells[x][y+1][z]);
+
+            if (z == 0) neighbors.push(null);
+            else neighbors.push(cells[x][y][z-1]);
+            if (z == sizeZ-1) neighbors.push(null);
+            else neighbors.push(cells[x][y][z+1]);
+
+            return neighbors;
         },
 
         _neighborLookup: function(index){
@@ -144,13 +182,15 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three']
         iter: function(dt, gravity, shouldRender){
             var self = this;
             var latticePitch = lattice.getPitch();
-            this._loopCellsWithNeighbors(function(cell, neighbors){
+            this._loopCells(this.cells, function(cell){
                 if (cell.isFixed()) return;
                 var mass = cell.getMass();
                 var material = cell.getMaterial();
 
                 var cellVelocity = cell.getVelocity();
                 var cellTranslation = cell.getTranslation();
+
+                var neighbors = cell.getNeighbors();
 
                 //var cellRotation = cell.getRotation();
                 //var angularVelocity = cell.getAngularVelocity();
