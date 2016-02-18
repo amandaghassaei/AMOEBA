@@ -57,7 +57,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             _.each(this.get("signals"), function(signal){
                 signalConflict |= wires[signal.getWireGroup()].addSignal(signal);
             });
-            console.log(signalConflict);
             this.set("signalConflict", signalConflict);
         },
 

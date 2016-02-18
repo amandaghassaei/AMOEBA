@@ -9,6 +9,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
     return MenuParentView.extend({
 
         events: {
+            "click .editSignal":                                  "_openSignalEditor",
         },
 
         _initialize: function(){
@@ -18,6 +19,16 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
         getPropertyOwner: function($target){
             if ($target.hasClass('emSim')) return emSim;
             return null;
+        },
+
+        _openSignalEditor: function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            var wireId = $(e.target).data("id");
+            var signalCell = emSimLattice.get("wires")[wireId].getSignal();
+            require(['menuWrapper'], function(menuWrapper){
+                menuWrapper.initTabWithObject(signalCell, "signal", "emNavSignal")
+            });
         },
 
         _makeTemplateJSON: function(){

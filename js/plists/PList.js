@@ -48,6 +48,13 @@ define(['three'], function(THREE){
                     emRun: "Run"
                 }
             },
+            emNavSignal:{
+                name: "Composite",
+                parent: "navSim",
+                tabs:{
+                    signal:"Signal Editor"
+                }
+            },
             navOptimize:{
                 name: "Optimize",
                 tabs:{

@@ -18,6 +18,10 @@ define(['underscore'], function(_){
         return this.signals.length > 1;
     };
 
+    EMWire.prototype.getSignal = function(){
+        return this.signals[0];
+    };
+
 
     EMWire.prototype.destroy = function(){
         var self = this;
