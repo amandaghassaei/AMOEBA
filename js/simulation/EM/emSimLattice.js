@@ -10,7 +10,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
     var EMSimLattice = Backbone.Model.extend({
 
         defaults: {
-            wires: []
+            wires: {}
         },
 
         initialize: function(){
@@ -38,7 +38,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 cell.propagateWireGroup();
             });
             this._calcNumberDCConnectedComponents(cells);
-            //this._showConductors();
         },
 
         _calcNumberDCConnectedComponents: function(cells){
@@ -239,12 +238,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     //var weightedRotation = rotation.clone().multiplyScalar(k);
                     //Rtotal.add(weightedRotation);
                     //Rcontrib += k;
-
+                    //
                     //var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
                     //Ttotal.add(torque);
                     //var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
                     //Ttotal.add(bendingTorque);
-
+                    //
                     //var neighborRotation = neighbor.getRotation();
                     //var bend = cellRotation.clone().sub(neighborRotation);
                     //var bendForce = new THREE.Vector3(0,0,0);

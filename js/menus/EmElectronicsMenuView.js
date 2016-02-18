@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus/templates/EMElectronicsMenuView.html'],
-    function($, _, MenuParentView, emPlist, emSim, template){
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emSim', 'text!menus/templates/EMElectronicsMenuView.html'],
+    function($, _, MenuParentView, emPlist, emSimLattice, emSim, template){
 
     return MenuParentView.extend({
 
@@ -12,7 +12,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
         },
 
         _initialize: function(){
-
+            this.listenTo(emSim, "change", this.render);
         },
 
         getPropertyOwner: function($target){
@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(emSim.toJSON(), emPlist);
+            return _.extend(emSimLattice.toJSON(), emPlist, emSim.toJSON());
         },
 
         template: _.template(template)

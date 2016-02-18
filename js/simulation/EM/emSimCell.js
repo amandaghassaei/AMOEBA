@@ -173,6 +173,10 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
 
 
+    EMSimCell.prototype.setTransparent = function(transparent){
+        this.cell.setTransparent(transparent);
+    };
+
     EMSimCell.prototype.hide = function(){
         this.cell.hide();
     };

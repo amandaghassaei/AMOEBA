@@ -28,7 +28,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             showFixed: false,
             numFixed: 0,
 
-            numSimMaterials: 20//number of materials used in gradient view
+            numSimMaterials: 20,//number of materials used in gradient view
+
+            visibleWire: -1//-2 show all, -1 show conductors, or wire id
 
         },
 
@@ -38,6 +40,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.listenTo(appState, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
             this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
+            this.listenTo(this, "change:visibleWire", function(){this._showConductors();});
 
             this._navChanged();
 
@@ -76,6 +79,11 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             }
 
             emSimLattice.setCells(lattice.getCells());
+
+            var currentTab = appState.get("currentTab");
+            if (currentTab == "emElectronics"){
+                this._showConductors();
+            }
         },
 
         _tabChanged: function(){
@@ -83,6 +91,29 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             if (currentTab != "emRun"){
                 this.reset();
             }
+            if (currentTab == "emElectronics"){
+                this._showConductors();
+                return;
+            }
+            var previousTab = appState.previous("currentTab");
+            if (previousTab == "emElectronics"){
+                this._showConductors(-2);//show all if not in electronics tab
+            }
+        },
+
+        _showConductors: function(groupNum){
+            if (groupNum === undefined) groupNum = this.get("visibleWire");
+            console.log(groupNum);
+            if (_.keys(emSimLattice.get("wires")).length == 0 || groupNum == -2){
+                lattice.setOpaque();
+                three.render();
+                return;
+            }
+            var allVisible = groupNum == -1;
+            emSimLattice.loopCells(function(cell){
+                cell.setTransparent(!cell.conductiveGroupVisible(allVisible, groupNum));
+            });
+            three.render();
         },
 
         _getViewMode: function(){
