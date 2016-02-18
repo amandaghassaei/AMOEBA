@@ -103,7 +103,6 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         _showConductors: function(groupNum){
             if (groupNum === undefined) groupNum = this.get("visibleWire");
-            console.log(groupNum);
             if (_.keys(emSimLattice.get("wires")).length == 0 || groupNum == -2){
                 lattice.setOpaque();
                 three.render();

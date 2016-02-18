@@ -71,7 +71,7 @@ define([], function(){
                     color: "#F5447B",
                     altColor: "#F5447B",
                     properties:{
-                        conductive: false,
+                        conductive: true,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
                         k: 30
