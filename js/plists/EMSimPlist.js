@@ -10,6 +10,13 @@ define([], function(){
         EMViewModes: {
             default: "Default",
             translation: "Translation"
+        },
+
+        signalWaveformTypes: {
+            sine: "Sine",
+            triangle: "Triangle",
+            square: "Square (Pulse)",
+            saw: "Sawtooth"
         }
     }
 

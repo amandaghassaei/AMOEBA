@@ -21,7 +21,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
         },
 
         _makeTemplateJSON: function(){
-            return {}
+            return _.extend({frequency: 100, waveformType: "saw"}, emPlist);
         },
 
         template: _.template(template)
