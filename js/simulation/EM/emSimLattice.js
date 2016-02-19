@@ -21,6 +21,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
 
         setCells: function(cells, fixedIndices){
             console.log("reset emSim lattice");
+
+            var signals = this._saveSignals();
+            //var fixedIndices = this._saveFixed();
+
             this.destroyCells();
             this.cells = this._initEmptyArray(cells);
             this._loopCells(cells, function(cell, x, y, z, self){
@@ -30,12 +34,11 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 cell.setNeighbors(neighbors);
             });
             var cellsMin = lattice.get("cellsMin");
-            var self = this;
             var change = false;
             for (var i=fixedIndices.length-1;i>=0;i--){
                 var index = fixedIndices[i];
                 var latticeIndex = index.clone().sub(cellsMin);
-                var cell = self.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+                var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
                 if (cell) cell.fix();
                 else {//remove from fixedIndices
                     fixedIndices.splice(i, 1);
@@ -43,18 +46,52 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 }
             }
             if(change) require(['emSim'], function(emSim){
-                emSim.trigger("change");//fixed indices has changed
+                emSim.trigger("change");//fixed indices or signals has changed
             });
+
+            for (var i=signals.length-1;i>=0;i--) {
+                var index = signals[i].index;
+                var latticeIndex = index.clone().sub(cellsMin);
+                var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+                if (cell && cell.isSignalGenerator()) {
+                    var params = signals[i].params;
+                    cell.setAsSignalGenerator(params.pwm, params.frequency, params.waveformType)
+                }
+            }
 
             this._precomputeSignals(this.cells);
             this._precomputeWires(this.cells);
+        },
+
+        _saveFixed: function(){
+            var fixed = [];
+            var cells = this.cells;
+            if (!cells) return fixed;
+            this._loopCells(cells, function(cell){
+                if (cell.isFixed()) {
+                    fixed.push(cell.getAbsoluteIndex());
+                }
+            });
+            return fixed;
+        },
+
+        _saveSignals: function(){
+            var signals = [];
+            var cells = this.cells;
+            if (!cells) return signals;
+            this._loopCells(cells, function(cell){
+                if (cell.isSignalGenerator()) {
+                    var json = {index: cell.getAbsoluteIndex(), params: cell.toJSON()};
+                    signals.push(json);
+                }
+            });
+            return signals;
         },
 
         _precomputeSignals: function(cells){
             var signals = [];
             this._loopCells(cells, function(cell){
                 if (cell.isSignalGenerator()) {
-                    cell.setAsSignalGenerator();
                     signals.push(cell);
                 }
             });

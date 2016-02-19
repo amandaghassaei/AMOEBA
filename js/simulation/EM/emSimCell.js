@@ -36,7 +36,13 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
         this.neighbors = [];
 
+        if (this.isSignalGenerator()) this.setAsSignalGenerator();
+
     }
+
+    EMSimCell.prototype.getAbsoluteIndex = function(){
+        return this.cell.getAbsoluteIndex();
+    };
 
     EMSimCell.prototype.setNeighbors = function(neighbors){//precompute neighbors
         this.neighbors = neighbors;
@@ -145,6 +151,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
 
     EMSimCell.prototype.isSignalGenerator = function(){
+        if (!this.cell.material) return false;
         return this.cell.getMaterialID() == "signal";
     };
 

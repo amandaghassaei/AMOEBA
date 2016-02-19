@@ -285,10 +285,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             //console.log(e);
             //console.log(e.keyCode);
             switch(e.keyCode){
-                case 8://delete key - causes back nav in chrome, super annoying
-                    e.preventDefault();
-                    e.stopPropagation();
-                    break;
                 case 68://d delete mode
                     var currentNav = this.get("currentNav");
                     if (plist.allMenus[currentNav].parent == "navSim") return;
@@ -421,6 +417,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                         if (selection3D && selection3D.get("editMode")) selection3D.finish();
                     }
                     break;
+                case 8://delete key - causes back nav in chrome, super annoying
+                    e.preventDefault();
+                    e.stopPropagation();
+                    //also continue to case 46
                 case 46://delete
                     if (state){
                         var selection3D = globals.get("selection3D");
