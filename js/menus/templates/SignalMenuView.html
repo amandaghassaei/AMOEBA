@@ -1,14 +1,13 @@
 Waveform:<br/>
 <% _.each(signalWaveformTypes, function(waveform, key){ %>
     <label class="radio">
-        <input type="radio" <% if (waveformType == key){ %>checked<% } %> name="waveformType" value="key" data-toggle="radio" class="custom-radio signal"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <input type="radio" <% if (waveformType == key){ %>checked<% } %> name="waveformType" value="<%= key %>" data-toggle="radio" class="custom-radio signal"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         <%= signalWaveformTypes[key] %>
     </label>
 <% }); %>
-Frequency: &nbsp;&nbsp;<input data-property="frequency" data-min="0" value="<%= frequency %>" placeholder="X" class="form-control signal floatInput" type="text">
+Frequency (Hz): &nbsp;&nbsp;<input data-property="frequency" data-min="0" value="<%= frequency %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% if(waveformType == "square"){ %>
-PWM: &nbsp;&nbsp;<input data-property="pwm" data-min="0" data-max="100" value="<%= pwm %>" placeholder="X" class="form-control signal floatInput" type="text">
+PWM: &nbsp;&nbsp;<input data-property="pwm" data-min="0" data-max="100" value="<%= pwm %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% } %>
-<br/><br/>
-<a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Composite</a><br/>
+<a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Changes</a><br/>
 <a id="cancelExitMenu" href="#" class="btn btn-block btn-lg btn-default">Cancel / Exit</a><br/><br/>

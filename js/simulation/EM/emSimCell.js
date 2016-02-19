@@ -147,10 +147,11 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.cell.getMaterialID() == "signal";
     };
 
-    EMSimCell.prototype.setAsSignalGenerator = function(){
-        this.pwm = 50;
-        this.frequency = 20;
-        this.waveformType = "sine";
+    EMSimCell.prototype.setAsSignalGenerator = function(pwm, frequency, waveformType){
+        if (pwm !== undefined) this.pwm = pwm;
+        else this.pwm = 50;
+        this.frequency = frequency || 20;
+        this.waveformType = waveformType || "sine";
     };
 
     EMSimCell.prototype.isConductive = function(){
