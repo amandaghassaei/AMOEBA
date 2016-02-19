@@ -5,7 +5,7 @@ Waveform:<br/>
         <%= signalWaveformTypes[key] %>
     </label>
 <% }); %>
-Frequency (Hz): &nbsp;&nbsp;<input data-property="frequency" data-min="0" value="<%= frequency %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
+Frequency (Hz): &nbsp;&nbsp;<input data-property="frequency" data-min="0.001" value="<%= frequency %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% if(waveformType == "square"){ %>
 PWM: &nbsp;&nbsp;<input data-property="pwm" data-min="0" data-max="100" value="<%= pwm %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% } %>
