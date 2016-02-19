@@ -97,7 +97,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var currentTab = appState.get("currentTab");
             var currentNav = appState.get("currentNav");
             var lastNav = appState.previous("currentNav");
-            if ((lastNav == "emSim" || currentNav == "emSim")) {
+            if ((lastNav == "emNavSim" || currentNav == "emNavSim")) {
                 if (currentTab != "emRun"){
                     this.reset();
                 }
@@ -141,13 +141,16 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.set("isRunning", true);
             this.set("needsReset", true);
             var dt = this.get("dtSolver")/1000000;//convert to sec
+            var time = 0;
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
-                    emSimLattice.iter(dt, gravityVect, false);
+                    time += dt;
+                    emSimLattice.iter(dt, time, gravityVect, false);
                 }
-                emSimLattice.iter(dt, gravityVect, true);
+                time += dt;
+                emSimLattice.iter(dt, time, gravityVect, true);
                 if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }

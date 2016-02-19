@@ -16,6 +16,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         var material = cell.getMaterial();
         var cellSize = lattice.getPitch();
         var cellVolume = cellSize.x * cellSize.y * cellSize.z;
+        this.nominalSize = cellSize;
         this.mass = material.getDensity()*cellVolume;//kg
         this.I = 2/5*this.mass*Math.pow(cellSize.x/2, 2);
 
@@ -158,6 +159,18 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.getMaterial().isConductive();
     };
 
+    EMSimCell.prototype.isPiezo = function(){
+        return this.cell.getMaterialID() == "piezo";
+    };
+
+    EMSimCell.prototype.setNominalSize = function(size){
+        this.nominalSize = size;
+    };
+
+    EMSimCell.prototype.getNominalSize = function(){
+        return this.nominalSize;
+    };
+
     EMSimCell.prototype.setWireGroup = function(num, force){
         if (force) this._wireGroup = num;
         else if (this._wireGroup>num){
@@ -168,6 +181,14 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
     EMSimCell.prototype.getWireGroup = function(){
         return this._wireGroup;
+    };
+
+    EMSimCell.prototype.setVoltage = function(voltage){
+        this.voltage = voltage;
+    };
+
+    EMSimCell.prototype.getVoltage = function(){
+        return this.voltage;
     };
 
     EMSimCell.prototype.propagateWireGroup = function(num){

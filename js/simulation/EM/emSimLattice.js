@@ -189,6 +189,23 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             }
         },
 
+        _oppNeighborLookup: function(index){
+            switch (index){
+                case 0:
+                    return 1;
+                case 1:
+                    return 0;
+                case 2:
+                    return 3;
+                case 3:
+                    return 2;
+                case 4:
+                    return 5;
+                case 5:
+                    return 4;
+            }
+        },
+
         _neighborSign: function(index){
             if (index%2 == 0) return -1;
             return 1;
@@ -207,6 +224,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             return offset;
         },
 
+        _actuatedOffset: function(index, cell, neighbor){
+            var offset = new THREE.Vector3(0,0,0);
+            var axisName = this._neighborAxis(index);
+            offset[axisName] = this._neighborSign(index)/2 * (cell.getNominalSize()[axisName] + neighbor.getNominalSize()[axisName]);
+            return offset;
+        },
+
         _torqueAxis: function(neighbAxis, axis){
             if ('x' != neighbAxis && 'x' != axis) return 'x';
             if ('y' != neighbAxis && 'y' != axis) return 'y';
@@ -219,9 +243,46 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
         },
 
 
-        iter: function(dt, gravity, shouldRender){
+        iter: function(dt, time, gravity, shouldRender){
             var self = this;
             var latticePitch = lattice.getPitch();
+
+            //update electronics instantly
+            var wires = this.get("wires");
+            _.each(wires, function(wire){
+                wire.setVoltage(wire.calcVotage(time));
+            });
+
+            //calculate size of piezos
+            this._loopCells(this.cells, function(cell){
+
+                if (!cell.isPiezo()) return;
+
+                var neighbors = cell.getNeighbors();
+                _.each(neighbors, function(neighbor, index){
+                    if (neighbor === null) return;
+
+                    var nominalSize = latticePitch;
+
+                    if (neighbor.isConductive()){
+                        var oppNeighbor = neighbors[self._oppNeighborLookup(index)];
+                        if (oppNeighbor.isConductive()){
+                            var numConductiveNeighbors = 0;
+                            _.each(neighbors, function(neighbor){
+                                if (neighbor && neighbor.isConductive()) numConductiveNeighbors++;
+                            });
+                            if (numConductiveNeighbors == 2){//must be exactly two conductive neighbors
+                                var diff = Math.abs(neighbor.getVoltage() - oppNeighbor.getVoltage());
+                                var axis = self._neighborAxis(index);
+                                nominalSize[axis] = nominalSize[axis]*(1-0.1*diff);
+                                cell.setNominalSize(nominalSize);
+                            }
+                        }
+                    }
+                })
+
+            });
+
             this._loopCells(this.cells, function(cell){
                 if (cell.isFixed()) return;
                 var mass = cell.getMass();
@@ -243,10 +304,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     if (neighbor === null) return;
 
                     var nominalD = self._neighborOffset(index, latticePitch);
-                    var halfNominalD = nominalD.clone().multiplyScalar(0.5);
-                    var neighbRotatedHalfNomD = neighbor.applyRotation(halfNominalD.clone());
-                    var rotatedHalfNomD = cell.applyRotation(halfNominalD.clone());
-                    var rotatedNominalD = rotatedHalfNomD.clone().add(neighbRotatedHalfNomD);
+                    var actuatedD = self._actuatedOffset(index, cell, neighbor);
+
+                    //var halfNominalD = actuatedD.clone().multiplyScalar(0.5);
+                    //var neighbRotatedHalfNomD = neighbor.applyRotation(halfNominalD.clone());
+                    //var rotatedHalfNomD = cell.applyRotation(halfNominalD.clone());
+                    //var rotatedNominalD = rotatedHalfNomD.clone().add(neighbRotatedHalfNomD);
 
                     var neighborTranslation = neighbor.getTranslation();
                     var neighborVelocity = neighbor.getVelocity();
@@ -257,7 +320,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     var k = neighbor.makeCompositeParam(neighbor.getMaterial().getK(), material.getK());
                     var damping = 1/100;//this is arbitrary for now
 
-                    var offset = D.clone().sub(rotatedNominalD);
+                    var offset = D.clone().sub(actuatedD);
                     var force = offset.clone().multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
