@@ -30,7 +30,7 @@ define(['three'], function(THREE){
                 name: "Composite",
                 parent: "navDesign",
                 tabs:{
-                    composite:"Composite Editor",
+                    composite:"Composite Editor"
                 }
             },
             navSim:{
@@ -50,7 +50,8 @@ define(['three'], function(THREE){
             },
             emNavSignal:{
                 name: "Composite",
-                parent: "navSim",
+                parentNav: "navSim",
+                parent: "emNavSim",
                 tabs:{
                     signal:"Signal Editor"
                 }

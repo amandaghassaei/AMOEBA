@@ -147,6 +147,12 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.cell.getMaterialID() == "signal";
     };
 
+    EMSimCell.prototype.setAsSignalGenerator = function(){
+        this.pwm = 50;
+        this.frequency = 20;
+        this.waveformType = "sine";
+    };
+
     EMSimCell.prototype.isConductive = function(){
         return this.getMaterial().isConductive();
     };
@@ -254,6 +260,16 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
             self.neighbors[index] = null;
         });
         this.neighbors = null;
+    };
+
+    EMSimCell.prototype.toJSON = function(){
+        var json = {};
+        if (this.isSignalGenerator()){
+            json.frequency = this.frequency;
+            json.pwm = this.pwm;
+            json.waveformType = this.waveformType;
+        }
+        return json;
     };
 
     return EMSimCell;

@@ -113,14 +113,11 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
         _navChanged: function(){
             //update to last tab open in that section
-            var lastNav = this.previous("currentNav");
-
-            if (lastNav == "navDesign") this.lattice.setOpaque();
-
             var navSelection = this.get("currentNav");
             var nextTab = this.get("lastNavTab")[navSelection] || _.keys(plist.allMenus[navSelection].tabs)[0];
             this.set("currentTab", nextTab, {silent:true});
 
+            if (plist.allMenus[navSelection].parentNav) navSelection = plist.allMenus[navSelection].parentNav;
             if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
 
             if (navSelection == "navDesign") {

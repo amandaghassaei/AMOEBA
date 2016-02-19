@@ -13,15 +13,15 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
 
         _initialize: function(options){
             this.signal = options.myObject;
-            console.log(this.signal);
         },
 
         getPropertyOwner: function($target){
+            if ($target.hasClass('signal')) return this.signal;
             return null;
         },
 
         _makeTemplateJSON: function(){
-            return _.extend({frequency: 100, waveformType: "saw"}, emPlist);
+            return _.extend(this.signal.toJSON(), emPlist);
         },
 
         template: _.template(template)

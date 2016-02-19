@@ -71,33 +71,43 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         },
 
         _navChanged: function(){
+
             var currentNav = appState.get("currentNav");
-            if (currentNav != "emNavSim") {
+            if (plist.allMenus[currentNav].parentNav) currentNav = plist.allMenus[currentNav].parentNav;
+            if (plist.allMenus[currentNav].parent) currentNav = plist.allMenus[currentNav].parent;
+
+            if (currentNav != "navSim") {
                 this.reset();
                 this._viewModechanged();
                 return;
             }
 
-            emSimLattice.setCells(lattice.getCells());
+            var previous = appState.previous("currentNav");
+            if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim") emSimLattice.setCells(lattice.getCells());
 
             var currentTab = appState.get("currentTab");
-            if (currentTab == "emElectronics"){
+            if (currentTab == "emElectronics" || currentTab == "signal"){
                 this._showConductors();
             }
         },
 
         _tabChanged: function(){
             var currentTab = appState.get("currentTab");
-            if (currentTab != "emRun"){
-                this.reset();
-            }
-            if (currentTab == "emElectronics"){
-                this._showConductors();
-                return;
-            }
-            var previousTab = appState.previous("currentTab");
-            if (previousTab == "emElectronics"){
-                this._showConductors(-2);//show all if not in electronics tab
+            var currentNav = appState.get("currentNav");
+            var lastNav = appState.previous("currentNav");
+            if ((lastNav == "emSim" || currentNav == "emSim")) {
+                if (currentTab != "emRun"){
+                    this.reset();
+                }
+
+                if (currentTab == "emElectronics" || currentTab == "signal") {
+                    this._showConductors();
+                    return;
+                }
+                var previousTab = appState.previous("currentTab");
+                if (previousTab == "emElectronics") {
+                    this._showConductors(-2);//show all if not in electronics tab
+                }
             }
         },
 

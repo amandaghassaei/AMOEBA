@@ -69,7 +69,8 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
         _updateNavSelectionUI: function(){
             this._deselectAllNavItems();
             var navSelection = this.model.get("currentNav");
-            if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
+            if (plist.allMenus[navSelection].parentNav) navSelection = plist.allMenus[navSelection].parentNav;
+            else if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
             _.each($(".menuHoverControls"), function(link){
                 var $link = $(link);
                 if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight

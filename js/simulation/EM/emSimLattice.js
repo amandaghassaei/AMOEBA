@@ -20,6 +20,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
         },
 
         setCells: function(cells){
+            console.warn("reset emSim lattice");
             this.destroyCells();
             this.cells = this._initEmptyArray(cells);
             this._loopCells(cells, function(cell, x, y, z, self){
@@ -35,7 +36,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
         _precomputeSignals: function(cells){
             var signals = [];
             this._loopCells(cells, function(cell){
-                if (cell.isSignalGenerator()) signals.push(cell);
+                if (cell.isSignalGenerator()) {
+                    cell.setAsSignalGenerator();
+                    signals.push(cell);
+                }
             });
             this.set("signals", signals);
         },
