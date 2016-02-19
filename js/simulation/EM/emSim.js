@@ -40,7 +40,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.listenTo(appState, "change:currentTab", this._tabChanged);
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
             this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
-            this.listenTo(this, "change:visibleWire", function(){this._showConductors();});
+            this.listenTo(this, "change:visibleWire", function(){this.showConductors();});
 
             this._navChanged();
 
@@ -89,7 +89,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             var currentTab = appState.get("currentTab");
             if (currentTab == "emElectronics" || currentTab == "signal"){
-                this._showConductors();
+                this.showConductors();
             }
         },
 
@@ -102,18 +102,18 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     this.reset();
                 }
 
-                if (currentTab == "emElectronics" || currentTab == "signal") {
-                    this._showConductors();
+                if (currentTab == "emElectronics") {
+                    this.showConductors();
                     return;
                 }
                 var previousTab = appState.previous("currentTab");
                 if (previousTab == "emElectronics") {
-                    this._showConductors(-2);//show all if not in electronics tab
+                    this.showConductors(-2);//show all if not in electronics tab
                 }
             }
         },
 
-        _showConductors: function(groupNum){
+        showConductors: function(groupNum){
             if (groupNum === undefined) groupNum = this.get("visibleWire");
             if (_.keys(emSimLattice.get("wires")).length == 0 || groupNum == -2){
                 lattice.setOpaque();

@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus/templates/EmRunMenuView.html'],
-    function($, _, MenuParentView, emPlist, emSim, template){
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'emSimLattice', 'text!menus/templates/EmRunMenuView.html'],
+    function($, _, MenuParentView, emPlist, emSim, emSimLattice, template){
 
     return MenuParentView.extend({
 
@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'text!menus
 
 
         _makeTemplateJSON: function(){
-            return _.extend(emSim.toJSON(), emPlist);
+            return _.extend(emSim.toJSON(), emSimLattice.toJSON(), emPlist);
         },
 
         template: _.template(template)

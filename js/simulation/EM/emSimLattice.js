@@ -20,7 +20,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
         },
 
         setCells: function(cells, fixedIndices){
-            console.warn("reset emSim lattice");
+            console.log("reset emSim lattice");
             this.destroyCells();
             this.cells = this._initEmptyArray(cells);
             this._loopCells(cells, function(cell, x, y, z, self){

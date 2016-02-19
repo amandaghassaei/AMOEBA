@@ -1,3 +1,6 @@
+<% if(signalConflict){ %>
+<div class="inlineWarning">Multiple signals are connected to the same wire, please go back to Design tab and fix conflict before running simulation.</div>
+<% } %>
 <% if (isRunning) { %>
     <a href="#" id="pauseSimulation" class="btn btn-block btn-lg btn-warning">Pause</a><br/>
 

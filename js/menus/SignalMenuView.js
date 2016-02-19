@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'text!menus/templates/SignalMenuView.html'],
-    function($, _, MenuParentView, emPlist, emSimLattice, template){
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emSim', 'text!menus/templates/SignalMenuView.html'],
+    function($, _, MenuParentView, emPlist, emSimLattice, emSim, template){
 
         var signal = {};
 
@@ -16,6 +16,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'tex
         _initialize: function(options){
             this.signal = options.myObject;
             _.extend(signal, this.signal.toJSON());
+            emSim.showConductors(this.signal.getWireGroup());
         },
 
         getPropertyOwner: function($target){

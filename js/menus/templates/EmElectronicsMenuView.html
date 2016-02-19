@@ -1,6 +1,7 @@
 <% if(signalConflict){ %>
-<div class="inlineWarning">Two signals are connected to the same wire, please fix conflict before running simulation.
-    Problem indicated in red below.</div><% } %>
+<div class="inlineWarning">Multiple signals are connected to the same wire, please go back to Design tab and fix conflict before running simulation.
+    Problem indicated in red below.</div>
+<% } %>
 <% if (_.keys(wires).length > 0){ %>
     <label class="radio">
         <input type="radio" <% if (visibleWire == -2){ %>checked<% } %> name="visibleWire" value="-2" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
