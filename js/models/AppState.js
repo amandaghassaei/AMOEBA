@@ -421,6 +421,12 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                         if (selection3D && selection3D.get("editMode")) selection3D.finish();
                     }
                     break;
+                case 46://delete
+                    if (state){
+                        var selection3D = globals.get("selection3D");
+                        if (selection3D && selection3D.get("editMode")) selection3D.cut();
+                    }
+                    break;
                 default:
                     break;
             }
