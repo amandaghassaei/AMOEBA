@@ -25,7 +25,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
         },
 
         saveExitMenu: function(){
-            this.signal.setAsSignalGenerator(signal.pwm, signal.frequency, signal.waveformType);
+            this.signal.setAsSignalGenerator(signal);
             return true;
         },
 

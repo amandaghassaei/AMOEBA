@@ -54,8 +54,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 var latticeIndex = index.clone().sub(cellsMin);
                 var cell = this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
                 if (cell && cell.isSignalGenerator()) {
-                    var params = signals[i].params;
-                    cell.setAsSignalGenerator(params.pwm, params.frequency, params.waveformType)
+                    cell.setAsSignalGenerator(signals[i].params)
                 }
             }
 
@@ -81,7 +80,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             if (!cells) return signals;
             this._loopCells(cells, function(cell){
                 if (cell.isSignalGenerator()) {
-                    var json = {index: cell.getAbsoluteIndex(), params: cell.toJSON()};
+                    var json = {index: cell.getAbsoluteIndex(), params: cell.getSignalJSON()};
                     signals.push(json);
                 }
             });

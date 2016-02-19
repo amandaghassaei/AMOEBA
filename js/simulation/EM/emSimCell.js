@@ -155,11 +155,30 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.cell.getMaterialID() == "signal";
     };
 
-    EMSimCell.prototype.setAsSignalGenerator = function(pwm, frequency, waveformType){
-        if (pwm !== undefined) this.pwm = pwm;
-        else this.pwm = 50;
-        this.frequency = frequency || 20;
-        this.waveformType = waveformType || "sine";
+    EMSimCell.prototype.setAsSignalGenerator = function(json){
+        if (json){
+            this.pwm = json.pwm;
+            this.frequency = json.frequency;
+            this.phase = json.phase;
+            this.waveformType = json.waveformType;
+            this.invertSignal = json.invertSignal;
+        } else {
+            this.pwm = 0.5;
+            this.frequency = 10;
+            this.phase = 0;
+            this.waveformType = "sine";
+            this.invertSignal = false;
+        }
+    };
+
+    EMSimCell.prototype.getSignalJSON = function(){
+        return {
+            pwm: this.pwm,
+            phase: this.phase,
+            frequency: this.frequency,
+            waveformType: this.waveformType,
+            invertSignal: this.invertSignal
+        }
     };
 
     EMSimCell.prototype.isConductive = function(){
@@ -293,11 +312,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
 
     EMSimCell.prototype.toJSON = function(){
         var json = {};
-        if (this.isSignalGenerator()){
-            json.frequency = this.frequency;
-            json.pwm = this.pwm;
-            json.waveformType = this.waveformType;
-        }
+        if (this.isSignalGenerator()) _.extend(json, this.getSignalJSON());
         return json;
     };
 

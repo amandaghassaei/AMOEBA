@@ -28,16 +28,17 @@ define(['underscore'], function(_){
         var frequency = signal.frequency;
         var period = 1/frequency;
         var waveform = signal.waveformType;
-        var currentPhase = (time%period)/period;
+        var currentPhase = ((time + signal.phase*period)%period)/period;
         if (waveform == "sine"){
             return 0.5*Math.sin(2*Math.PI*currentPhase) + 0.5;
         }
         if (waveform == "square"){
             var pwm = signal.pwm;
-            if (currentPhase < pwm/100) return 1;
+            if (currentPhase < pwm) return 1;
             return 0;
         }
         if (waveform == "saw"){
+            if (signal.invertSignal) return 1-currentPhase;
             return currentPhase;
         }
         if (waveform == "triangle"){

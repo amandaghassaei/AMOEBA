@@ -271,7 +271,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _getOwnerProperty: function(owner, property){
             if (owner[this._getGetterName(property)]) return owner[this._getGetterName(property)]();
             else if (owner instanceof Backbone.Model) return owner.get(property);
-            console.warn("grabbing property " + property + " directly from object");
             return owner[property];
         },
 

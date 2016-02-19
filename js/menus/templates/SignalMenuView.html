@@ -5,9 +5,18 @@ Waveform:<br/>
         <%= signalWaveformTypes[key] %>
     </label>
 <% }); %>
+<% if(waveformType == "saw"){ %>
+    <div class="tab1">
+        <label class="checkbox" for="invertSignal">
+        <input id="invertSignal" data-property="invertSignal" type="checkbox" <% if (invertSignal){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="signal custom-checkbox">
+        <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        Ramp Down</label>
+    </div>
+<% } %>
 Frequency (Hz): &nbsp;&nbsp;<input data-property="frequency" data-min="0.001" value="<%= frequency %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% if(waveformType == "square"){ %>
-PWM: &nbsp;&nbsp;<input data-property="pwm" data-min="0" data-max="100" value="<%= pwm %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
+PWM (0-1): &nbsp;&nbsp;<input data-property="pwm" data-min="0" data-max="1" value="<%= pwm %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <% } %>
+Phase (0-1): &nbsp;&nbsp;<input data-property="phase" data-min="0" data-max="1" value="<%= phase %>" placeholder="X" class="form-control signal floatInput" type="text"><br/><br/>
 <a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Changes</a><br/>
 <a id="cancelExitMenu" href="#" class="btn btn-block btn-lg btn-default">Cancel / Exit</a><br/><br/>
