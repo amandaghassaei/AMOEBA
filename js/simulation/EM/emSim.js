@@ -83,7 +83,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             }
 
             var previous = appState.previous("currentNav");
-            if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim") emSimLattice.setCells(lattice.getCells());
+            if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim"){
+                emSimLattice.setCells(lattice.getCells(), this.get("fixedIndices"));
+            }
 
             var currentTab = appState.get("currentTab");
             if (currentTab == "emElectronics" || currentTab == "signal"){

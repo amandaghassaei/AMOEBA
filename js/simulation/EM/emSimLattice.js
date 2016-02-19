@@ -19,7 +19,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this.listenTo(this, "change:wires", this._assignSignalsToWires);
         },
 
-        setCells: function(cells){
+        setCells: function(cells, fixedIndices){
             console.warn("reset emSim lattice");
             this.destroyCells();
             this.cells = this._initEmptyArray(cells);
@@ -29,6 +29,22 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 cell.setNeighbors(neighbors);
             });
+            var cellsMin = lattice.get("cellsMin");
+            var self = this;
+            var change = false;
+            _.each(fixedIndices, function(index, i){
+                var latticeIndex = index.clone().sub(cellsMin);
+                var cell = self.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+                if (cell) cell.fix();
+                else {//remove from fixedIndices
+                    fixedIndices.splice(i, 1);
+                    change = true;
+                }
+            });
+            if(change) require(['emSim'], function(emSim){
+                emSim.trigger("change");//fixed indices has changed
+            });
+
             this._precomputeSignals(this.cells);
             this._precomputeWires(this.cells);
         },
