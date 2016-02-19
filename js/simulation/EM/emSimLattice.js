@@ -32,7 +32,8 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             var cellsMin = lattice.get("cellsMin");
             var self = this;
             var change = false;
-            _.each(fixedIndices, function(index, i){
+            for (var i=fixedIndices.length-1;i>=0;i--){
+                var index = fixedIndices[i];
                 var latticeIndex = index.clone().sub(cellsMin);
                 var cell = self.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
                 if (cell) cell.fix();
@@ -40,7 +41,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     fixedIndices.splice(i, 1);
                     change = true;
                 }
-            });
+            }
             if(change) require(['emSim'], function(emSim){
                 emSim.trigger("change");//fixed indices has changed
             });
