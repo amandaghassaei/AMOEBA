@@ -259,10 +259,11 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 if (!cell.isPiezo()) return;
 
                 var neighbors = cell.getNeighbors();
+                var shouldSkip = false;
                 _.each(neighbors, function(neighbor, index){
-                    if (neighbor === null) return;
+                    if (shouldSkip || neighbor === null) return;
 
-                    var nominalSize = latticePitch;
+                    var nominalSize = latticePitch.clone();
 
                     if (neighbor.isConductive()){
                         var oppNeighbor = neighbors[self._oppNeighborLookup(index)];
@@ -274,13 +275,13 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                             if (numConductiveNeighbors == 2){//must be exactly two conductive neighbors
                                 var diff = Math.abs(neighbor.getVoltage() - oppNeighbor.getVoltage());
                                 var axis = self._neighborAxis(index);
-                                nominalSize[axis] = nominalSize[axis]*(1-0.1*diff);
+                                nominalSize[axis] = nominalSize[axis]*(1+0.1*diff);
                                 cell.setNominalSize(nominalSize);
+                                shouldSkip = true;
                             }
                         }
                     }
-                })
-
+                });
             });
 
             this._loopCells(this.cells, function(cell){

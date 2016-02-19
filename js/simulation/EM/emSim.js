@@ -27,6 +27,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             manualSelectFixed: false,
             showFixed: false,
             fixedIndices: [],
+            signals: [],
 
             numSimMaterials: 20,//number of materials used in gradient view
 
