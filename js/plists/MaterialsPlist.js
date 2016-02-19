@@ -74,7 +74,7 @@ define([], function(){
                         conductive: true,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 30
+                        k: 3
                     }
                 },
                 flexure: {
@@ -85,7 +85,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
-                        k: 30
+                        k: 3
                     }
                 },
                 piezo: {

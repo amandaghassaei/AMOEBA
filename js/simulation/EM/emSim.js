@@ -26,7 +26,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             manualSelectFixed: false,
             showFixed: false,
-            numFixed: 0,
+            fixedIndices: [],
 
             numSimMaterials: 20,//number of materials used in gradient view
 
@@ -169,18 +169,20 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         },
 
 
-        fixCellAtPosition: function(position){
-            position.sub(lattice.get("cellsMin"));
+        fixCellAtPosition: function(index){
+            var position = index.clone().sub(lattice.get("cellsMin"));
             var cell = emSimLattice._getCellAtIndex(position);
-            var numFixed = this.get("numFixed");
+            var fixedIndices = this.get("fixedIndices");
             if (cell.isFixed()) {
-                numFixed--;
+                _.each(fixedIndices, function(fixedIndex, i){
+                    if (fixedIndex.equals(index)) fixedIndices.splice(i, 1);
+                });
                 cell.float();
             } else {
-                numFixed++;
+                fixedIndices.push(index.clone());
                 cell.fix();
             }
-            this.set("numFixed", numFixed);
+            this.trigger("change");
         },
 
         _toggleFixedVisibility: function(){
