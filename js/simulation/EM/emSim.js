@@ -180,6 +180,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var fixedIndices = this.get("fixedIndices");
             if (cell.isFixed()) {
                 _.each(fixedIndices, function(fixedIndex, i){
+                    console.log(fixedIndex);
                     if (fixedIndex.equals(index)) fixedIndices.splice(i, 1);
                 });
                 cell.float();

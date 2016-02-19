@@ -343,10 +343,10 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     var nominalD = self._neighborOffset(index, latticePitch);
                     var actuatedD = self._actuatedOffset(index, cell, neighbor);
 
-                    //var halfNominalD = actuatedD.clone().multiplyScalar(0.5);
-                    //var neighbRotatedHalfNomD = neighbor.applyRotation(halfNominalD.clone());
-                    //var rotatedHalfNomD = cell.applyRotation(halfNominalD.clone());
-                    //var rotatedNominalD = rotatedHalfNomD.clone().add(neighbRotatedHalfNomD);
+                    var halfNominalD = actuatedD.clone().multiplyScalar(0.5);
+                    var neighbRotatedHalfNomD = neighbor.applyRotation(halfNominalD.clone());
+                    var rotatedHalfNomD = cell.applyRotation(halfNominalD.clone());
+                    var rotatedNominalD = rotatedHalfNomD.clone().add(neighbRotatedHalfNomD);
 
                     var neighborTranslation = neighbor.getTranslation();
                     var neighborVelocity = neighbor.getVelocity();
@@ -357,7 +357,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     var k = neighbor.makeCompositeParam(neighbor.getMaterial().getK(), material.getK());
                     var damping = 1/100;//this is arbitrary for now
 
-                    var offset = D.clone().sub(actuatedD);
+                    var offset = D.clone().sub(rotatedNominalD);
                     var force = offset.clone().multiplyScalar(k).sub(relativeVelocity.multiplyScalar(damping));//kD-dv
 
                     Ftotal.add(force);
@@ -380,10 +380,12 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     //Rtotal.add(weightedRotation);
                     //Rcontrib += k;
                     //
-                    //var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
-                    //Ttotal.add(torque);
-                    //var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
-                    //Ttotal.add(bendingTorque);
+                    ////var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
+                    ////Ttotal.add(torque);
+                    ////var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
+                    ////Ttotal.add(bendingTorque);
+                    //
+                    //var neighborAxis = self._neighborAxis(index);
                     //
                     //var neighborRotation = neighbor.getRotation();
                     //var bend = cellRotation.clone().sub(neighborRotation);
