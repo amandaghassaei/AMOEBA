@@ -3,7 +3,7 @@
  */
 
 
-define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emSim', 'text!menus/templates/EmElectronicsMenuView.html'],
+define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emSim', ],
     function($, _, MenuParentView, emPlist, emSimLattice, emSim, template){
 
     return MenuParentView.extend({
