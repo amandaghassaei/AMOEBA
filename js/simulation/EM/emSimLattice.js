@@ -17,6 +17,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
 
         initialize: function(){
             this.listenTo(this, "change:wires", this._assignSignalsToWires);
+
         },
 
         setCells: function(cells, fixedIndices){
@@ -30,6 +31,9 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this._loopCells(cells, function(cell, x, y, z, self){
                 self.cells[x][y][z] = new EMSimCell(cell);
             });
+
+            this._precomputeConstants();
+
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 cell.setNeighbors(neighbors);
             });
@@ -61,6 +65,36 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this._precomputeSignals(this.cells);
             this._precomputeWires(this.cells);
         },
+
+        _precomputeConstants: function(cells){
+            var xlength = this.cells.length;
+            var ylength = this.cells[0].length;
+            var zlength = this.cells[0][0].length;
+            var sizeCells = xlength*ylength*zlength;
+            var sizeCompositeConstantArray = sizeCells*6;
+            var compositeKs = new Float32Array(sizeCompositeConstantArray);
+            var compositeDs = new Float32Array(sizeCompositeConstantArray);
+            var masses = new Float32Array(sizeCells);
+            var self = this;
+            this.loopCells(function(cell, neighbors, x, y, z){
+                var index = ylength*zlength*x + zlength*y + z;
+                _.each(neighbors, function(neighbor, i){
+                    compositeKs[index+i] = self._makeCompositeParam(cell.getK(), neighbor.getK());
+                    compositeDs[index+i] = compositeKs[index+i]/100;//this is arbitrary for now
+                });
+                masses[index] = cell.getMass();
+            });
+            this.compositeKs = compositeKs;
+            this.compositeDs = compositeDs;
+            this.masses = masses;
+        },
+
+        _makeCompositeParam: function(param1, param2){
+            if (param1 == param2) return param1;
+            //if (paramNeighbor === Infinity) return param*2;
+            return 2*param1*param2/(param1+param2);
+        },
+
 
         _saveFixed: function(){
             var fixed = [];
