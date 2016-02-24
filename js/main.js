@@ -91,6 +91,8 @@ require.config({
         emSetupMenu: 'menus/EmSetupMenuView',
         emRunMenu: 'menus/EmRunMenuView',
 
+        //simulation
+
         //emSim
         emSimPlist: 'plists/EMSimPlist',
         emSim: 'simulation/EM/emSim',

@@ -32,7 +32,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 self.cells[x][y][z] = new EMSimCell(cell);
             });
 
-            this._precomputeConstants();
+            this._precomputeShaderMatrices(this.cells);
 
             this._loopCellsWithNeighbors(function(cell, neighbors){
                 cell.setNeighbors(neighbors);
@@ -66,27 +66,38 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this._precomputeWires(this.cells);
         },
 
-        _precomputeConstants: function(cells){
-            var xlength = this.cells.length;
-            var ylength = this.cells[0].length;
-            var zlength = this.cells[0][0].length;
+        _precomputeShaderMatrices: function(cells){
+            var xlength = cells.length;
+            var ylength = cells[0].length;
+            var zlength = cells[0][0].length;
             var sizeCells = xlength*ylength*zlength;
             var sizeCompositeConstantArray = sizeCells*6;
             var compositeKs = new Float32Array(sizeCompositeConstantArray);
             var compositeDs = new Float32Array(sizeCompositeConstantArray);
-            var masses = new Float32Array(sizeCells);
+            var cellMasses = new Float32Array(sizeCells);
+            var cellKs = new Float32Array(sizeCells);
+            var cellTranslations = new Float32Array(sizeCells*4);//these need to be 4x arrays bc they will be frag buffer
+            var cellVelocities = new Float32Array(sizeCells*4);//these need to be 4x arrays bc they will be frag buffer
+            var fixedCells = new Int8Array(sizeCells);
             var self = this;
             this.loopCells(function(cell, neighbors, x, y, z){
                 var index = ylength*zlength*x + zlength*y + z;
                 _.each(neighbors, function(neighbor, i){
-                    compositeKs[index+i] = self._makeCompositeParam(cell.getK(), neighbor.getK());
-                    compositeDs[index+i] = compositeKs[index+i]/100;//this is arbitrary for now
+                    compositeKs[index*6+i] = self._makeCompositeParam(cell.getK(), neighbor.getK());
+                    compositeDs[index*6+i] = compositeKs[index+i]/100;//this is arbitrary for now
                 });
-                masses[index] = cell.getMass();
+                cellMasses[index] = cell.getMass();
+                cellKs[index] = cell.getK();
+                fixedCells[index] = cell.isFixed() ? 1 : 0;
+
             });
             this.compositeKs = compositeKs;
             this.compositeDs = compositeDs;
-            this.masses = masses;
+            this.cellMasses = cellMasses;
+            this.cellKs = cellKs;
+            this.cellTranslations = cellTranslations;
+            this.cellVelocities = cellVelocities;
+            this.fixedCells = fixedCells;
         },
 
         _makeCompositeParam: function(param1, param2){
@@ -312,10 +323,9 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             return -1;
         },
 
+        _iterElectronics: function(time, latticePitch){
 
-        iter: function(dt, time, gravity, shouldRender){
             var self = this;
-            var latticePitch = lattice.getPitch();
 
             //update electronics instantly
             var wires = this.get("wires");
@@ -353,6 +363,14 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     }
                 });
             });
+        },
+
+
+        iter: function(dt, time, gravity, shouldRender){
+            var self = this;
+            var latticePitch = lattice.getPitch();
+
+            this._iterElectronics(time, latticePitch);
 
             this._loopCells(this.cells, function(cell){
                 if (cell.isFixed()) return;
@@ -440,6 +458,23 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this.loopCells(function(cell){
                 cell.update(shouldRender);
             });
+        },
+
+        iterShader: function(dt, time, gravity, shouldRender){
+
+            var self = this;
+            var latticePitch = lattice.getPitch();
+
+            this._iterElectronics(time, latticePitch);
+
+            if (shouldRender) {
+                this.loopCells(function (cell, x, y, z) {
+                    var ylength = self.cells[0].length;
+                    var zlength = self.cells[0][0].length;
+                    var index = 4*(ylength*zlength*x + zlength*y + z);
+                    cell.setTranslation(new THREE.Vector3(self.cellTranslations[index], self.cellTranslations[index+1], self.cellTranslations[index+2]));
+                });
+            }
         },
 
         reset: function(){

@@ -102,6 +102,12 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.w.clone();
     };
 
+    EMSimCell.prototype.setTranslation = function(translation){
+        this.translation = translation;
+        var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+        this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
+    };
+
     EMSimCell.prototype.getTranslation = function(){
         return this.translation.clone();
     };
@@ -259,6 +265,10 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         if (param == paramNeighbor) return param;
         if (paramNeighbor === Infinity) return param*2;
         return 2*param*paramNeighbor/(param+paramNeighbor);
+    };
+
+    EMSimCell.prototype.getK = function(){
+        return this.cell.material.getK();
     };
 
     EMSimCell.prototype.update = function(shouldRender){
