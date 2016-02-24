@@ -17,28 +17,6 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
 
         initialize: function(){
             this.listenTo(this, "change:wires", this._assignSignalsToWires);
-
-            this._makeShader();
-        },
-
-        _makeShader: function(){
-            this.calcShader = new THREE.ShaderMaterial( {
-
-                uniforms: {
-                    time: { type: "f", value: 1.0 },
-                    resolution: { type: "v2", value: new THREE.Vector2() }
-                },
-                //attributes: {
-                //    vertexOpacity: { type: 'f', value: [] }
-                //},
-                defines: {
-                    FOO: 15,
-                    BAR: true
-                },
-                vertexShader: document.getElementById('vertexShader').textContent,
-                fragmentShader: document.getElementById('fragmentShader').textContent
-
-            } );
         },
 
         setCells: function(cells, fixedIndices){
@@ -115,7 +93,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
             this.compositeKs = compositeKs;
             this.compositeDs = compositeDs;
             this.cellMasses = cellMasses;
-            this.cellKs = cellKs;
+            //this.cellKs = cellKs;
             this.cellTranslations = cellTranslations;
             this.cellVelocities = cellVelocities;
             this.fixedCells = fixedCells;

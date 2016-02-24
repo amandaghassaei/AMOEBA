@@ -13,34 +13,29 @@ define(['glBoilerplate'], function(glBoilerplate){
 
     function GPUMath(){
         this.program = {};
-        this.frameBuffers = [this.makeFrameBuffer(), this.makeFrameBuffer()];
-        this.states = [null, null];
+        this.frameBuffers = {};
+        this.textures = {};
         this.index = 0;
         this.currentProgram = null;
     }
 
-    GPUMath.prototype.setInitialStateFromData = function(data){
-        this.setInitialStateFromTexture(this.makeTexture(data));
+    GPUMath.prototype.initTextureFromData = function(textureName, data){
 
-        this.state[1] = this.makeTexture(data);//just init another matrix of same size
+        var texture = this._makeTexture(textureName, data);
+        this.textures[textureName] = texture;
+        var framebuffer = this.frameBuffers[textureName];
+        if (!framebuffer) {
+            framebuffer = this.makeFrameBuffer();
+            this.frameBuffers[textureName] = framebuffer;
+        }
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[1]);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.states[1], 0);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, framebuffer);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
 
         gl.viewport(0, 0, data.length, 1);
     };
 
-    GPUMath.prototype.setInitialStateFromTexture = function(texture){
-
-        this.state[0] = texture;
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[0]);
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.states[0], 0);
-
-        this.index = 0;
-    };
-
-    GPUMath.prototype.makeTexture = function(data){
+    GPUMath.prototype._makeTexture = function(data){
 
         var texture = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, texture);
@@ -51,7 +46,7 @@ define(['glBoilerplate'], function(glBoilerplate){
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.FLOAT, data);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, data.length, 1, 0, gl.RGBA, gl.FLOAT, data);
 
         return texture;
     };
@@ -102,23 +97,16 @@ define(['glBoilerplate'], function(glBoilerplate){
         else if (type == "3f") gl.uniformf(location, val.x, val.y, val.z);
     };
 
-    GPUMath.prototype.setCurrentProgram = function(programName){
-        this.currentProgram = programName;
-    };
+    GPUMath.prototype.step = function(programName, inputTextures, outputTexture){
 
-    GPUMath.prototype.step = function(){
-
-        gl.useProgram(programs[this.currentProgram].program);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[(this.index+1)%2]);
-        gl.bindTexture(gl.TEXTURE_2D, this.states[this.index%2]);
+        gl.useProgram(programs[programName].program);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[outputTexture]);
+        var self = this;
+        _.each(textures, function(textureName){
+            gl.bindTexture(gl.TEXTURE_2D, self.textures[textureName]);
+        });
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);//draw to framebuffer
-
-        this.index++;
-    };
-
-    GPUMath.prototype.getCurrentStateTexture = function(){
-        return this.states[this.index%2];
     };
 
     return new GPUMath;
