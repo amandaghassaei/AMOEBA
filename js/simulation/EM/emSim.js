@@ -144,6 +144,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var time = 0;
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
+
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     time += dt;

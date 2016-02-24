@@ -21,6 +21,22 @@
     <link rel="stylesheet" type="text/css" href="dependencies/codemirror/codemirror.css">
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <script id="vertexShader" type="x-shader/x-vertex">
+        attribute vec2 a_position;
+
+        void main() {
+           gl_Position = vec4(a_position, 0, 1);
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        void main() {
+            gl_FragColor = vec4(0,0,0,0);
+        }
+    </script>
+
+
     <script data-main="js/main" src="dependencies/require/require.js"></script>
 
 </head>
@@ -142,6 +158,7 @@
 <div id="contextMenuWrapper"><div id="contextMenu"></div></div>
 
 <div id="threeContainer"></div>
+<canvas id="gpuMathCanvas"></canvas>
 
 
 </body>

@@ -92,6 +92,8 @@ require.config({
         emRunMenu: 'menus/EmRunMenuView',
 
         //simulation
+        glBoilerplate: "simulation/GLBoilerplate",
+        GPUMath: "simulation/GPUMath",
 
         //emSim
         emSimPlist: 'plists/EMSimPlist',

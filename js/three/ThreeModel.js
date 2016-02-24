@@ -237,6 +237,10 @@ define(['underscore', 'three'], function(_, THREE){
         })
     }
 
+    function getGLContext(){
+        return renderer.context;
+    }
+
     return {//return public properties/methods
         render: render,
         conditionalRender: conditionalRender,
@@ -263,7 +267,8 @@ define(['underscore', 'three'], function(_, THREE){
         setupDragPlane: setupDragPlane,
         resetCameraPosition: resetCameraPosition,
         setThreeView: setThreeView,
-        saveSVG: saveSVG
+        saveSVG: saveSVG,
+        getGLContext: getGLContext
     }
 
 });
