@@ -124,7 +124,9 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                 this.set("basePlaneIsVisible", true);
                 this.set("highlighterIsVisible", true);
             } else if (navSelection == "navSim"){
-                this.set("basePlaneIsVisible", false);
+                this.set("basePlaneIsVisible", true);
+                globals.get("baseplane").set("planeType", 'xy');
+                globals.get("baseplane").set("zIndex", 0);
                 this.set("highlighterIsVisible", false);
             } else if (navSelection == "navAssemble"){
                 this.set("highlighterIsVisible", false);
