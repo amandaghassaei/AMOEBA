@@ -381,8 +381,8 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
 
                 var neighbors = cell.getNeighbors();
 
-                //var cellRotation = cell.getRotation();
-                //var angularVelocity = cell.getAngularVelocity();
+                var cellRotation = cell.getRotation();
+                var angularVelocity = cell.getAngularVelocity();
 
                 var Ftotal = gravity.clone().multiplyScalar(mass);
                 var Rtotal = new THREE.Vector3(0,0,0);
@@ -413,46 +413,51 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
 
                     Ftotal.add(force);
 
-                    ////non-axial rotation
-                    //var quaternion = new THREE.Quaternion().setFromUnitVectors(nominalD.clone().normalize(),
-                    //    D.clone().normalize());
-                    //
-                    ////axial rotation
-                    //var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                    //var neghborRotation = neighbor.getRotation();
-                    //var angle = axis.clone().normalize().dot(neghborRotation);
-                    //var torsion = new THREE.Quaternion().setFromAxisAngle(nominalD.clone().normalize(), angle);
-                    //
-                    //quaternion.multiply(torsion);
-                    //var euler = new THREE.Euler().setFromQuaternion(quaternion);
-                    //
-                    //var rotation = new THREE.Vector3(euler.x, euler.y, euler.z);
-                    //var weightedRotation = rotation.clone().multiplyScalar(k);
-                    //Rtotal.add(weightedRotation);
-                    //Rcontrib += k;
-                    //
-                    ////var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
-                    ////Ttotal.add(torque);
-                    ////var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
-                    ////Ttotal.add(bendingTorque);
-                    //
-                    //var neighborAxis = self._neighborAxis(index);
-                    //
-                    //var neighborRotation = neighbor.getRotation();
-                    //var bend = cellRotation.clone().sub(neighborRotation);
-                    //var bendForce = new THREE.Vector3(0,0,0);
-                    //_.each(bend, function(val, key){
-                    //    if (key == neighborAxis) return;
-                    //    var bendAxis = self._torqueAxis(key, neighborAxis);
-                    //    bendForce[bendAxis] = val*k/1000000000;
-                    //});
-                    //Ftotal.add(cell.applyRotation(bendForce));
+                    //non-axial rotation
+                    var quaternion = new THREE.Quaternion().setFromUnitVectors(nominalD.clone().normalize(),
+                        D.clone().normalize());
+
+                    //axial rotation
+                    var axis = rotatedNominalD;//neighbRotatedHalfNomD
+                    var neghborRotation = neighbor.getRotation();
+                    var angle = axis.clone().normalize().dot(neghborRotation);
+                    var torsion = new THREE.Quaternion().setFromAxisAngle(nominalD.clone().normalize(), angle);
+
+                    quaternion.multiply(torsion);
+                    var euler = new THREE.Euler().setFromQuaternion(quaternion);
+
+                    var rotation = new THREE.Vector3(euler.x, euler.y, euler.z);
+                    var weightedRotation = rotation.clone().multiplyScalar(k);
+                    Rtotal.add(weightedRotation);
+                    Rcontrib += k;
+
+                    //var torque = nominalHalfD.cross(offset.multiplyScalar(k/1000));
+                    //Ttotal.add(torque);
+                    //var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
+                    //Ttotal.add(bendingTorque);
+
+                    var neighborAxis = self._neighborAxis(index);
+
+                    var neighborRotation = neighbor.getRotation();
+                    var bend = cellRotation.clone().sub(neighborRotation);
+                    var bendForce = new THREE.Vector3(0,0,0);
+                    _.each(bend, function(val, key){
+                        if (key == neighborAxis) return;
+                        var bendAxis = self._torqueAxis(key, neighborAxis);
+                        bendForce[bendAxis] = val*k/1000000000;
+                    });
+                    Ftotal.add(cell.applyRotation(bendForce));
 
                 });
 
 
+                //simple collision detection
+                var zPosition = cell.getAbsolutePosition().z;
+                var collisionK = 1;
+                if (zPosition<0) Ftotal.add((new THREE.Vector3(0,0,-zPosition*collisionK)).sub(new THREE.Vector3(0,0,cell.getVelocity().z*collisionK/10)));
+
                 cell.applyForce(Ftotal, dt);
-                //cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);
+                cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);
             });
             this.loopCells(function(cell){
                 cell.update(shouldRender);

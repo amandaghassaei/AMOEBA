@@ -108,6 +108,11 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
     };
 
+    EMSimCell.prototype.getAbsolutePosition = function(){
+        var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+        return this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier))
+    };
+
     EMSimCell.prototype.getTranslation = function(){
         return this.translation.clone();
     };
@@ -280,7 +285,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         this.w = this.nextW;
         if (shouldRender) {
             this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
-            //this._setRotation(this.rotation.clone());
+            this._setRotation(this.rotation.clone());
         }
     };
 

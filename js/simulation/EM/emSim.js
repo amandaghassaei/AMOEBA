@@ -151,7 +151,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     emSimLattice.iter(dt, time, gravityVect, false);
                 }
                 time += dt;
-                emSimLattice.iterShader(dt, time, gravityVect, true);
+                emSimLattice.iter(dt, time, gravityVect, true);
                 if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }
