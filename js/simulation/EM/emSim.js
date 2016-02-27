@@ -13,7 +13,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             gravity: 9.8,//m/s^2
             gravityVector: new THREE.Vector3(0,0,-1),
 
-            dtSolver: 50,//us
+            dtSolver: 10,//us
             dtRender: 100,//frames
 
             isRunning: false,

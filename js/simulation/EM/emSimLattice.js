@@ -354,7 +354,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                             if (numConductiveNeighbors == 2){//must be exactly two conductive neighbors
                                 var diff = Math.abs(neighbor.getVoltage() - oppNeighbor.getVoltage());
                                 var axis = self._neighborAxis(index);
-                                nominalSize[axis] = nominalSize[axis]*(1+0.1*diff);
+                                nominalSize[axis] = nominalSize[axis]*(1+0.3*diff);
                                 cell.setNominalSize(nominalSize);
                                 shouldSkip = true;
                             }
