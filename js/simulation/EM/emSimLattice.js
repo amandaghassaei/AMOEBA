@@ -29,6 +29,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
                 var textureDim = this._calcTextureSize(numCells);//calc size of texture for pow of two
                 var textureSize = textureDim*textureDim;
 
+                this.originalPosition = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*4);
                 this.lastTranslation = new Float32Array(textureSize*4);
                 this.velocity = new Float32Array(textureSize*4);
@@ -53,14 +54,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
                     var rgbaIndex = 4*index;
 
                     var position = cell.getAbsolutePosition();
-                    self.lastTranslation[rgbaIndex] = position.x;
-                    self.lastTranslation[rgbaIndex+1] = position.y;
-                    self.lastTranslation[rgbaIndex+2] = position.z;
+                    self.originalPosition[rgbaIndex] = position.x;
+                    self.originalPosition[rgbaIndex+1] = position.y;
+                    self.originalPosition[rgbaIndex+2] = position.z;
 
-                    var cellIndex = cell.getAbsoluteIndex();
-                    self.cellsArrayMapping[rgbaIndex] = cellIndex.x;
-                    self.cellsArrayMapping[rgbaIndex+1] = cellIndex.y;
-                    self.cellsArrayMapping[rgbaIndex+2] = cellIndex.z;
+                    self.cellsArrayMapping[rgbaIndex] = x;
+                    self.cellsArrayMapping[rgbaIndex+1] = y;
+                    self.cellsArrayMapping[rgbaIndex+2] = z;
 
                     self.mass[rgbaIndex] = self._calcCellMass(cell);
 
@@ -83,8 +83,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
 
                         var neighborIndex3D = neighbor.getAbsoluteIndex().sub(cellsMin);
                         var neighborMappingIndex1D = neighborMapping[neighborIndex3D.x][neighborIndex3D.y][neighborIndex3D.z];
-                        self.neighborsXMapping[compositeIndex + neighborIndex%3] = 4*(neighborMappingIndex1D%textureDim);
-                        self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
+                        //add an extra 1 to both of these, so 0,0 doesn't get confused with no neighbor
+                        self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim+1;
+                        self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim)+1;
 
                         var compositeK = self._calcCompositeParam(self._getCellK(cell), self._getCellK(neighbor));
 
@@ -98,8 +99,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
             },
 
             _calcTextureSize: function(numCells){
+                if (numCells == 1) return 2;
                 for (var i=0;i<numCells;i++){
-                    if (Math.pow(2, 2*i) > numCells){
+                    if (Math.pow(2, 2*i) >= numCells){
                         return Math.pow(2, i);
                     }
                 }
