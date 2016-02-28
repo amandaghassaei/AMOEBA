@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'GPUMath'],
-    function(_, Backbone, three, lattice, THREE, EMWire, gpuMath) {
+define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'emWire', 'GPUMath'],
+    function(_, Backbone, three, lattice, plist, THREE, EMWire, gpuMath) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -29,6 +29,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
                 var textureDim = this._calcTextureSize(numCells);//calc size of texture for pow of two
                 var textureSize = textureDim*textureDim;
 
+                this.textureSize = [textureDim, textureDim];
                 this.originalPosition = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*4);
                 this.lastTranslation = new Float32Array(textureSize*4);
@@ -181,11 +182,80 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'three', 'emWire', 'G
                 return neighbors;
             },
 
-            iter: function(){
+            iter: function(dt, time, gravity, shouldRender){
+
+                var textureSize = this.textureSize[0]*this.textureSize[1];
+                for (var i=0;i<textureSize;i++){
+
+                    var rgbaIndex = i*4;
+
+                    var mass = this.mass[rgbaIndex];
+                    if (mass == 0) continue;
+                    var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];
+
+                    var translation = [this.lastTranslation[rgbaIndex], this.lastTranslation[rgbaIndex+1], this.lastTranslation[rgbaIndex+2]];
+                    var velocity = [this.lastVelocity[rgbaIndex], this.lastVelocity[rgbaIndex+1], this.lastVelocity[rgbaIndex+2]];
+
+                    var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
+                    velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
+                    translation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
+
+                    this.translation[rgbaIndex] = translation[0];
+                    this.translation[rgbaIndex+1] = translation[1];
+                    this.translation[rgbaIndex+2] = translation[2];
+
+                    this.velocity[rgbaIndex] = velocity[0];
+                    this.velocity[rgbaIndex+1] = velocity[1];
+                    this.velocity[rgbaIndex+2] = velocity[2];
+                }
+
+                if (shouldRender){
+                    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+                    var cells = lattice.getCells();
+                    for (var i=0;i<textureSize;i++) {
+
+                        var rgbaIndex = i*4;
+                        if (this.mass[rgbaIndex] == 0) continue;//no cell here
+
+                        var translation = [this.translation[rgbaIndex], this.translation[rgbaIndex+1], this.translation[rgbaIndex+2]];
+                        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
+
+                        var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
+
+                        position[0] += multiplier*translation[0];
+                        position[1] += multiplier*translation[1];
+                        position[2] += multiplier*translation[2];
+
+                        cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                    }
+                }
+
+                this._swapArrays("velocity", "lastVelocity");
+                this._swapArrays("translation", "lastTranslation");
 
             },
 
+            _swapArrays: function(array1Name, array2Name){
+                var temp = this[array1Name];
+                this[array1Name] = this[array2Name];
+                this[array2Name] = temp;
+            },
+
             reset: function(){
+                var textureSize = this.textureSize[0]*this.textureSize[1];
+                var cells = lattice.getCells();
+                for (var i=0;i<textureSize;i++) {
+
+                    var rgbaIndex = i*4;
+                    if (this.mass[rgbaIndex] == 0) continue;//no cell here
+
+                    var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
+                    var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
+                    cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                }
+
+                this.lastTranslation = new Float32Array(textureSize*4);
+                this.lastVelocity = new Float32Array(textureSize*4);
 
             }
 
