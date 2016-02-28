@@ -440,7 +440,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     //console.log(parsedPixels);
                     for (var i=0;i<textureSize;i++){
                         var rgbaIndex = 4*i;
-                        if (this.fixed[rgbaIndex] < 0) continue;//no cell here
+                        if (this.fixed[rgbaIndex] < 0) break;//no more cells
 
                         var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
                         var parsePixelsIndex = 3*i;
