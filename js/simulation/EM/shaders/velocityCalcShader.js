@@ -34,10 +34,10 @@ void main(){
 
     vec3 force = u_gravity*mass;
 
-    for (float i=0.0;i<2.0;i++){
+    for (float i=0.0;i<2.0;i+=1.0){
 
         float xIndex = 2.0*(fragCoord.x-0.5) + 0.5;
-        if (i>1.0) xIndex += 4.0;
+        if (i>0.0) xIndex += 1.0;
 
         vec2 mappingIndex = vec2(xIndex/(u_textureDim.x*2.0), scaledFragCoord.y);
         vec3 neighborsXMapping = texture2D(u_neighborsXMapping, mappingIndex).xyz;
@@ -49,15 +49,15 @@ void main(){
             if (neighborsXMapping[j] < 0.0) continue;//no neighbor
 
             vec2 neighborIndex = vec2(neighborsXMapping[j], neighborsYMapping[j]);
-
             neighborIndex.x += 0.5;
             neighborIndex.y += 0.5;
 
-            vec3 neighborTranslation = texture2D(u_lastTranslation, neighborIndex/u_textureDim).xyz;
-            vec3 neighborVelocity = texture2D(u_lastVelocity, neighborIndex/u_textureDim).xyz;
+            vec2 scaledNeighborIndex = neighborIndex/u_textureDim;
+            vec3 neighborTranslation = texture2D(u_lastTranslation, scaledNeighborIndex).xyz;
+            vec3 neighborVelocity = texture2D(u_lastVelocity, scaledNeighborIndex).xyz;
 
             float k = compositeKs[j];
-            float d = 0.0;//0.01;//compositeDs[j];
+            float d = 0.01;//compositeDs[j];
 
             force += k*(neighborTranslation-lastTranslation) + d*(neighborVelocity-lastVelocity);
         }

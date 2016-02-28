@@ -437,6 +437,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     var parsedPixels = new Float32Array(pixels.buffer);
                     var cells = lattice.getCells();
                     var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+                    //console.log(parsedPixels);
                     for (var i=0;i<textureSize;i++){
                         var rgbaIndex = 4*i;
                         if (this.fixed[rgbaIndex] < 0) continue;//no cell here
