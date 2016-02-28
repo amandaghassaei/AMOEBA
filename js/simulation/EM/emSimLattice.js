@@ -235,7 +235,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
 
                         var k = this.compositeKs[neighborsIndex + j%3];
-                        var d = 0;//this.compositeDs[neighborsIndex + j%3];
+                        var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
 
                         force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
                         force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
@@ -245,8 +245,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
                     translation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
-
-
 
                     this.translation[rgbaIndex] = translation[0];
                     this.translation[rgbaIndex+1] = translation[1];
