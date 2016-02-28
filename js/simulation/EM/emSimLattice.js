@@ -55,8 +55,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 this.fixed = new Float32Array(textureSize*4);//todo int8
                 this.mass = new Float32Array(textureSize*4);
 
-                this.neighborsXMapping = new Int16Array(textureSize*8);//-1 equals no neighb
-                this.neighborsYMapping = new Int16Array(textureSize*8);
+                this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
+                this.neighborsYMapping = new Float32Array(textureSize*8);//would have done int16, but no int types have > 8 bits
                 this.compositeKs = new Float32Array(textureSize*8);
                 this.compositeDs = new Float32Array(textureSize*8);
 
@@ -198,12 +198,20 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
                 gpuMath.initTextureFromData("u_fixed", textureDim, textureDim, "FLOAT", this.fixed);
+                gpuMath.initTextureFromData("u_neighborsXMapping", textureDim*2, textureDim, "FLOAT", this.neighborsXMapping);
+                gpuMath.initTextureFromData("u_neighborsYMapping", textureDim*2, textureDim, "FLOAT", this.neighborsYMapping);
+                gpuMath.initTextureFromData("u_compositeKs", textureDim*2, textureDim, "FLOAT", this.compositeKs);
+                gpuMath.initTextureFromData("u_compositeDs", textureDim*2, textureDim, "FLOAT", this.compositeDs);
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_fixed", 3, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsXMapping", 4, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsYMapping", 5, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 6, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 7, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
@@ -416,7 +424,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             iter: function(dt, time, gravity, shouldRender){
 
-                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
+                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed", "u_neighborsXMapping",
+                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs"], "u_velocity");
                 gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
 
                 if (shouldRender) {
@@ -467,25 +476,22 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     var quaternion = [this.lastQuaternion[rgbaIndex], this.lastQuaternion[rgbaIndex+1], this.lastQuaternion[rgbaIndex+2], this.lastQuaternion[rgbaIndex+3]];
                     var euler = [this.lastRotation[rgbaIndex], this.lastRotation[rgbaIndex+1], this.lastRotation[rgbaIndex+2]];
 
-					var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
-                    var isActuator = wiring[0] == -1;
+                    for (var j=0;j<6;j++){
 
-                    //for (var j=0;j<6;j++){
-                    //
-                    //    var neighborsIndex = i*8;
-                    //    if (j>2) neighborsIndex += 4;
-                    //    if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
-                    //    var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
-                    //    var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
-                    //    var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
-                    //
-                    //    var k = this.compositeKs[neighborsIndex + j%3];
-                    //    var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
-                    //
-                    //    force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
-                    //    force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
-                    //    force[2] += k*(neighborTranslation[2]-translation[2]) + d*(neighborVelocity[2]-velocity[2]);
-                    //}
+                        var neighborsIndex = i*8;
+                        if (j>2) neighborsIndex += 4;
+                        if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
+                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
+                        var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
+                        var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
+
+                        var k = this.compositeKs[neighborsIndex + j%3];
+                        var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
+
+                        force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
+                        force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
+                        force[2] += k*(neighborTranslation[2]-translation[2]) + d*(neighborVelocity[2]-velocity[2]);
+                    }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
