@@ -2,6 +2,8 @@ precision mediump float;
 
 uniform vec2 u_textureDim;
 
+uniform sampler2D u_lastVelocity;
+uniform sampler2D u_lastTranslation;
 uniform sampler2D u_mass;
 uniform sampler2D u_fixed;
 

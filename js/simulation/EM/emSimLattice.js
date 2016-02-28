@@ -183,11 +183,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.reset();
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
-                gpuMath.initTextureFromData("velocity", textureDim, textureDim, "FLOAT", this.velocity);
-                gpuMath.initFrameBufferForTexture("velocity");
-                gpuMath.initTextureFromData("lastVelocity", textureDim, textureDim, "FLOAT", this.lastVelocity);
+                gpuMath.initTextureFromData("u_velocity", textureDim, textureDim, "FLOAT", this.velocity);
+                gpuMath.initFrameBufferForTexture("u_velocity");
+                gpuMath.initTextureFromData("u_lastVelocity", textureDim, textureDim, "FLOAT", this.lastVelocity);
                 //gpuMath.initFrameBufferForTexture("lastVelocity");
-                gpuMath.initTextureFromData("lastTranslation", textureDim, textureDim, "FLOAT", this.lastTranslation);
+                gpuMath.initTextureFromData("u_lastTranslation", textureDim, textureDim, "FLOAT", this.lastTranslation);
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
                 gpuMath.initTextureFromData("u_fixed", textureDim, textureDim, "FLOAT", this.fixed);
 
@@ -398,10 +398,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
-                gpuMath.step("velocityCalc", ["lastVelocity", "lastTranslation", "u_mass", "u_fixed"], "velocity");
+                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
 
                 gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
-                gpuMath.step("packToBytes", ["velocity"], "outputBytes");
+                gpuMath.step("packToBytes", ["u_velocity"], "outputBytes");
 
                 //if (shouldRender) {
                     var pixels = new Uint8Array(textureSize * 12);
