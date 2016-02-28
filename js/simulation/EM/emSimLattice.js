@@ -3,8 +3,9 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'three', 'emWire', 'GPUMath'],
-    function(_, Backbone, three, lattice, plist, emSimCell, THREE, EMWire, gpuMath) {
+define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
+    "text!simulation/EM/shaders/velocityCalcShader.js"],
+    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -41,7 +42,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 this.originalPosition = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*4);
                 this.lastTranslation = new Float32Array(textureSize*4);
-                this.velocity = new Float32Array(textureSize*4);
+                this.velocity = new Uint8Array(textureSize*4);//todo float
                 this.lastVelocity = new Float32Array(textureSize*4);
 
                 this.quaternion = new Float32Array(textureSize*4);
@@ -174,12 +175,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     emSim.trigger("change");//fixed indices or signals has changed
                 });
 
-                this._setupGPU();
+                this._setupGPU(textureDim);
 
             },
 
-            _setupGPU: function(){
-
+            _setupGPU: function(textureDim){
+                gpuMath.reset();
+                gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
+                gpuMath.initTextureFromData("velocity", textureDim, textureDim, "UNSIGNED_BYTE", this.velocity);
+                gpuMath.initFrameBufferForTexture("velocity");
             },
 
             _calcTextureSize: function(numCells){
@@ -373,6 +377,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
+
+                gpuMath.step("velocityCalc", [], "velocity");
+                var pixels = new Uint8Array(textureSize*4);
+                gpuMath.readPixels(0, 0, this.textureSize[0], this.textureSize[1], pixels);
+                var parsedPixels = new Float32Array(pixels.buffer);
+                console.log(parsedPixels);
+                return;
+
+
                 for (var i=0;i<textureSize;i++){
 
                     var rgbaIndex = i*4;

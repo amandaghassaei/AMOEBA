@@ -170,17 +170,17 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var groundHeight = this.get("groundHeight");
             var friction = this.get("friction");
 
-            three.startAnimationLoop(function(){
-                for (var i=0;i<renderRate-1;i++){
-                    self.time += dt;
-                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, false);
-                }
-                self.time += dt;
-                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, true);
-                if (self._getViewMode() == "translation"){
-                    self.calcTranslation();
-                }
-            });
+            //three.startAnimationLoop(function(){
+            //    for (var i=0;i<renderRate-1;i++){
+            //        time += dt;
+                    emSimLattice.iter(dt, self.time, gravityVect, false);
+                //}
+            //    time += dt;
+            //    emSimLattice.iter(dt, time, gravityVect, true);
+            //    if (self._getViewMode() == "translation"){
+            //        self.calcTranslation();
+            //    }
+            //});
         },
 
         pause: function(){

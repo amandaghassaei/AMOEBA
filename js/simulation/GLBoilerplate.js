@@ -85,7 +85,7 @@ define([], function(){
     function createProgramFromSource(
         gl, vertexShader, fragmentShader) {
       var vertexShader = createShaderFromSource(gl, vertexShader, gl.VERTEX_SHADER);
-      var fragmentShader = createShaderFromSource(gl, fragmentShader, FRAGMENT_SHADER);
+      var fragmentShader = createShaderFromSource(gl, fragmentShader, gl.FRAGMENT_SHADER);
       return createProgram(gl, vertexShader, fragmentShader);
     }
 

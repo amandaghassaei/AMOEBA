@@ -12,16 +12,12 @@ define(['glBoilerplate'], function(glBoilerplate){
 
 
     function GPUMath(){
-        this.programs = {};
-        this.frameBuffers = {};
-        this.textures = {};
-        this.index = 0;
-        this.currentProgram = null;
+        this.reset();
     }
 
     GPUMath.prototype.createProgram = function(programName, vertexShader, fragmentShader){
         var programs = this.programs;
-        var program = programs[name].program;
+        var program = programs[name];
         if (program) {
             console.warn("already a program with the name " + programName);
             return;
@@ -30,18 +26,18 @@ define(['glBoilerplate'], function(glBoilerplate){
         gl.useProgram(program);
         glBoilerplate.loadVertexData(gl, program);
         programs[programName] = {
-            programs: program,
+            program: program,
             uniforms: {}
         };
     };
 
-    GPUMath.prototype.initTextureFromData = function(name, width, height, type, data){
+    GPUMath.prototype.initTextureFromData = function(name, width, height, typeName, data){
         var texture = this.textures[name];
         if (texture) {
             console.warn("already a texture with the name " + name);
             return;
         }
-        texture = glBoilerplate.makeTexture(gl, width, height, type, data);
+        texture = glBoilerplate.makeTexture(gl, width, height, gl[typeName], data);
         this.textures[name] = texture;
     };
 
@@ -89,7 +85,7 @@ define(['glBoilerplate'], function(glBoilerplate){
 
     GPUMath.prototype.step = function(programName, inputTextures, outputTexture){
 
-        gl.useProgram(programs[programName].program);
+        gl.useProgram(this.programs[programName].program);
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[outputTexture]);
         var self = this;
         _.each(inputTextures, function(textureName){
@@ -97,6 +93,17 @@ define(['glBoilerplate'], function(glBoilerplate){
         });
 
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);//draw to framebuffer
+    };
+
+    GPUMath.prototype.readPixels = function(xMin, yMin, width, height, array){
+        gl.readPixels(xMin, yMin, width, height, gl.RGBA, gl.UNSIGNED_BYTE, array);
+    };
+
+    GPUMath.prototype.reset = function(){
+        this.programs = {};
+        this.frameBuffers = {};
+        this.textures = {};
+        this.index = 0;
     };
 
     return new GPUMath;
