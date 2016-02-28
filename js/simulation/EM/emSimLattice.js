@@ -389,7 +389,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 return !state;
             },
 
-            iter: function(dt, time, gravity, groundHeight, friction, shouldRender){
+            setConstants: function(dt, gravity){
+                gpuMath.setProgram("velocityCalc");
+                gpuMath.setUniformForProgram("velocityCalc", "u_dt", dt, "1f");
+                gpuMath.setUniformForProgram("velocityCalc", "u_gravity", [gravity.x, gravity.y, gravity.z], "3f");
+            },
+
+            iter: function(dt, time, gravity, shouldRender){
 
                 var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
 

@@ -73,7 +73,7 @@ define(['glBoilerplate'], function(glBoilerplate){
             location = gl.getUniformLocation(this.programs[programName].program, name);
             uniforms[name] = location;
         }
-        if (type == "f") gl.uniform1f(location, val);
+        if (type == "1f") gl.uniform1f(location, val);
         else if (type == "2f") gl.uniform2f(location, val[0], val[1]);
         else if (type == "3f") gl.uniform3f(location, val[0], val[1], val[2]);
         else if (type == "1i") gl.uniform1i(location, val);
@@ -83,6 +83,10 @@ define(['glBoilerplate'], function(glBoilerplate){
         gl.viewport(0, 0, width, height);
         canvas.clientWidth = width;
         canvas.clientHeight = height;
+    };
+
+    GPUMath.prototype.setProgram = function(programName){
+        gl.useProgram(this.programs[programName].program);
     };
 
     GPUMath.prototype.step = function(programName, inputTextures, outputTexture){

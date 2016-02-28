@@ -167,8 +167,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
-            var groundHeight = this.get("groundHeight");
-            var friction = this.get("friction");
+			var groundHeight = this.get("groundHeight");
+			var friction = this.get("friction");
+            emSimLattice.setConstants(dt, gravityVect);
 
             //three.startAnimationLoop(function(){
             //    for (var i=0;i<renderRate-1;i++){
