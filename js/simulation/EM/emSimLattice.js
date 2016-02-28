@@ -4,8 +4,8 @@
 
 
 define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
-    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js"],
-    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader) {
+    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js", "text!simulation/EM/shaders/positionCalcShader.js"],
+    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader, positionCalcShader) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -52,7 +52,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
-                this.fixed = new Float32Array(textureSize*4);//todo uint8
+                this.fixed = new Float32Array(textureSize*4);//todo int8
                 this.mass = new Float32Array(textureSize*4);
 
                 this.neighborsXMapping = new Int16Array(textureSize*8);//-1 equals no neighb
@@ -68,6 +68,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 var cellsMin = lattice.get("cellsMin");
 
                 var index = 0;
+                var self = this;
+                for (var i=0;i<textureSize;i++){
+                    this.fixed[4*i] = -1;//indicates no cell is present
+                }
                 this._loopCells(cells, function(cell, x, y, z){
 
                     var rgbaIndex = 4*index;
@@ -82,6 +86,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     self.cellsArrayMapping[rgbaIndex+2] = z;
 
                     self.mass[rgbaIndex] = self._calcCellMass(cell);
+                    self.fixed[rgbaIndex] = 0;//indicated a cell is present
 
                     self.cellsIndexMapping[x][y][z] = index;
 
@@ -182,20 +187,30 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             _setupGPU: function(textureDim){
                 gpuMath.reset();
 
-                gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
+                gpuMath.initTextureFromData("u_translation", textureDim, textureDim, "FLOAT", this.translation);
+                gpuMath.initFrameBufferForTexture("u_translation");
+                gpuMath.initTextureFromData("u_lastTranslation", textureDim, textureDim, "FLOAT", this.lastTranslation);
+                gpuMath.initFrameBufferForTexture("u_lastTranslation");
                 gpuMath.initTextureFromData("u_velocity", textureDim, textureDim, "FLOAT", this.velocity);
                 gpuMath.initFrameBufferForTexture("u_velocity");
                 gpuMath.initTextureFromData("u_lastVelocity", textureDim, textureDim, "FLOAT", this.lastVelocity);
-                //gpuMath.initFrameBufferForTexture("lastVelocity");
-                gpuMath.initTextureFromData("u_lastTranslation", textureDim, textureDim, "FLOAT", this.lastTranslation);
+                gpuMath.initFrameBufferForTexture("u_lastVelocity");
+
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
                 gpuMath.initTextureFromData("u_fixed", textureDim, textureDim, "FLOAT", this.fixed);
 
-                gpuMath.setUniformForProgram("velocityCalc", "lastVelocity", 0, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "lastTranslation", 1, "1i");
+                gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
+                gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_fixed", 3, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
+
+                gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
+                gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
+                gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1l");
+                gpuMath.setUniformForProgram("positionCalc", "u_fixed", 2, "1i");
+                gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
                 gpuMath.initTextureFromData("outputBytes", textureDim*3, textureDim, "UNSIGNED_BYTE", null);
@@ -203,7 +218,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.setUniformForProgram("packToBytes", "u_floatTextureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.setSize(textureDim, textureDim);
-
             },
 
             _calcTextureSize: function(numCells){
@@ -251,7 +265,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             isFixedAtIndex: function(index){
                 var rgbaIndex = 4*(this.cellsIndexMapping[index.x][index.y][index.z]);
-                return this.fixed[rgbaIndex];
+                return this.fixed[rgbaIndex] == 1;
             },
 
             _precomputeSignals: function(cells){
@@ -384,6 +398,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             fixCellAtIndex: function(index){
                 var rgbaIndex = 4*this.cellsIndexMapping[index.x][index.y][index.z];
                 var state = this.fixed[rgbaIndex];
+                if (state == -1){
+                    console.warn("no cell at index " + index.x + ", " + index.y + ", " + index.z);
+                }
                 this.fixed[rgbaIndex] = !state;
                 //todo update gpu texture
                 return !state;
@@ -393,31 +410,51 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.setProgram("velocityCalc");
                 gpuMath.setUniformForProgram("velocityCalc", "u_dt", dt, "1f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_gravity", [gravity.x, gravity.y, gravity.z], "3f");
+                gpuMath.setProgram("positionCalc");
+                gpuMath.setUniformForProgram("positionCalc", "u_dt", dt, "1f");
             },
 
             iter: function(dt, time, gravity, shouldRender){
 
-                var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+                //gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
+                //gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
+                //
+                //if (shouldRender) {
+                //    var textureSize = this.textureSize[0]*this.textureSize[1];
+                //    gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
+                //    gpuMath.step("packToBytes", ["u_translation"], "outputBytes");
+                //    var pixels = new Uint8Array(textureSize * 12);
+                //    gpuMath.readPixels(0, 0, this.textureSize[0] * 3, this.textureSize[1], pixels);
+                //    var parsedPixels = new Float32Array(pixels.buffer);
+                //    var cells = lattice.getCells();
+                //    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+                //    for (var i=0;i<textureSize;i++){
+                //        var rgbaIndex = 4*i;
+                //        if (this.fixed[rgbaIndex] < 0) continue;//no cell here
+                //
+                //        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
+                //        var parsePixelsIndex = 3*i;
+                //        var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
+                //        var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
+                //        position[0] += multiplier*translation[0];
+                //        position[1] += multiplier*translation[1];
+                //        position[2] += multiplier*translation[2];
+                //        cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                //    }
+                //
+                //    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
+                //}
+                //
+                //gpuMath.swapTextures("u_velocity", "u_lastVelocity");
+                //gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                //return;
 
-                var latticePitch = lattice.getPitch();
-                latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
+				//simple collision detection
+                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
+                    var collisionK = 1;
+                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
-
-                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
-
-                gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
-                gpuMath.step("packToBytes", ["u_velocity"], "outputBytes");
-
-                //if (shouldRender) {
-                    var pixels = new Uint8Array(textureSize * 12);
-                    gpuMath.readPixels(0, 0, this.textureSize[0] * 3, this.textureSize[1], pixels);
-                    var parsedPixels = new Float32Array(pixels.buffer);
-                    console.log(parsedPixels);
-                    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
-                //}
-                return;
-
 
                 for (var i=0;i<textureSize;i++){
 
@@ -434,91 +471,25 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     var quaternion = [this.lastQuaternion[rgbaIndex], this.lastQuaternion[rgbaIndex+1], this.lastQuaternion[rgbaIndex+2], this.lastQuaternion[rgbaIndex+3]];
                     var euler = [this.lastRotation[rgbaIndex], this.lastRotation[rgbaIndex+1], this.lastRotation[rgbaIndex+2]];
 
-                    var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
+					var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
                     var isActuator = wiring[0] == -1;
 
-                    for (var j=0;j<6;j++){
-
-                        var neighborsIndex = i*8;
-                        if (j>2) neighborsIndex += 4;
-                        if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
-
-                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
-                        var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
-                        var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
-                        var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex+1], this.lastQuaternion[neighborIndex+2], this.lastQuaternion[neighborIndex+3]];
-                        var neighborEuler = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2]];
-
-                        var nominalD = this._neighborOffset(j, latticePitch);
-                        var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
-                        var neighborAxis = Math.floor(j/2);
-                        var actuation = 0;
-                        if (isActuator && wiring[neighborAxis+1]>0) {
-                            actuation += 0.3*this._getActuatorVoltage(wiring[neighborAxis+1]-1, time);
-                        }
-                        var neighborWiring = [this.wires[neighborIndex], this.wires[neighborIndex+1], this.wires[neighborIndex+2], this.wires[neighborIndex+3]];
-                        if (neighborWiring[0] == -1 && neighborWiring[neighborAxis+1]>0){
-                            actuation += 0.3*this._getActuatorVoltage(neighborWiring[neighborAxis+1]-1, time);
-                        }
-                        actuatedD[neighborAxis] *= 1+actuation;
-
-                        var halfNominalD = [actuatedD[0]*0.5, actuatedD[1]*0.5, actuatedD[2]*0.5];
-                        var rotatedHalfNomD = this._applyQuaternion(halfNominalD, quaternion);
-                        var neighbRotatedHalfNomD = this._applyQuaternion(halfNominalD, neighborQuaternion);
-                        var rotatedNominalD = [rotatedHalfNomD[0] + neighbRotatedHalfNomD[0], rotatedHalfNomD[1] + neighbRotatedHalfNomD[1], rotatedHalfNomD[2] + neighbRotatedHalfNomD[2]];
-
-                        var k = this.compositeKs[neighborsIndex + j%3];
-                        var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
-
-                        var D = [neighborTranslation[0]-translation[0] + nominalD[0],
-                            neighborTranslation[1]-translation[1] + nominalD[1],
-                            neighborTranslation[2]-translation[2] + nominalD[2]];
-
-                        force[0] += k*(D[0] - rotatedNominalD[0]) + d*(neighborVelocity[0]-velocity[0]);
-                        force[1] += k*(D[1] - rotatedNominalD[1]) + d*(neighborVelocity[1]-velocity[1]);
-                        force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
-
-                        //non-axial rotation
-                        var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
-
-                        //axial rotation
-                        var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                        var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
-                        var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
-
-                        var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
-                        rTotal[0] += rotaionEuler[0]*k;
-                        rTotal[1] += rotaionEuler[1]*k;
-                        rTotal[2] += rotaionEuler[2]*k;
-                        rContrib += k;
-
-                        //var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
-                        //var bendForce = [0,0,0];
-                        //for (var l=0;l<3;l++){
-                        //    if (l == neighborAxis) continue;
-                        //    bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
-                        //}
-
-                        //var bendingForce = this._applyQuaternion(bendForce, quaternion);
-                        //force[0] += bendingForce[0];
-                        //force[1] += bendingForce[1];
-                        //force[2] += bendingForce[2];
-                    }
-
-                    //simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+multiplier*translation[2]-groundHeight;
-                    var collisionK = 1;
-                    if (zPosition<0) {
-                        var normalForce = -zPosition * collisionK - collisionK / 10 * velocity[2];
-                        force[2] += normalForce;
-                        if (friction) {
-                            var mu = 10;
-                            if (velocity[0] > 0) force[0] -= mu * normalForce;
-                            else if (velocity[0] < 0) force[0] += mu * normalForce;
-                            if (velocity[1] > 0) force[1] -= mu * normalForce;
-                            else if (velocity[1] < 0) force[1] += mu * normalForce;
-                        }
-                    }
+                    //for (var j=0;j<6;j++){
+                    //
+                    //    var neighborsIndex = i*8;
+                    //    if (j>2) neighborsIndex += 4;
+                    //    if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
+                    //    var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
+                    //    var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
+                    //    var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
+                    //
+                    //    var k = this.compositeKs[neighborsIndex + j%3];
+                    //    var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
+                    //
+                    //    force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
+                    //    force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
+                    //    force[2] += k*(neighborTranslation[2]-translation[2]) + d*(neighborVelocity[2]-velocity[2]);
+                    //}
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
@@ -562,6 +533,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         position[0] += multiplier*translation[0];
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
+
+                        console.log(position);
+                        console.log(time);
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                         cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2]);
@@ -787,7 +761,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     this.lastQuaternion[4*i+3] = 1;//w = 1
                     this.quaternion[4*i+3] = 1;
                 }
-
+				this._setupGPU(this.textureSize[0]);
             }
 
         });

@@ -1,12 +1,10 @@
 precision mediump float;
 
 uniform vec2 u_textureDim;
-uniform vec3 u_gravity;
 uniform float u_dt;
 
-uniform sampler2D u_lastVelocity;
+uniform sampler2D u_velocity;
 uniform sampler2D u_lastTranslation;
-uniform sampler2D u_mass;
 uniform sampler2D u_fixed;
 
 void main(){
@@ -23,13 +21,10 @@ void main(){
         return;
     }
 
-    float mass = texture2D(u_mass, scaledFragCoord).x;
     vec3 lastTranslation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
-    vec3 lastVelocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
+    vec3 velocity = texture2D(u_velocity, scaledFragCoord).xyz;
 
-    vec3 force = u_gravity*mass;
-    vec3 acceleration = force/mass;
-    vec3 velocity = lastVelocity + acceleration*u_dt;
+    vec3 translation = lastTranslation + velocity*u_dt;
 
-    gl_FragColor = vec4(velocity, 0);
+    gl_FragColor = vec4(translation, 0);
 }

@@ -100,6 +100,15 @@ define(['glBoilerplate'], function(glBoilerplate){
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);//draw to framebuffer
     };
 
+    GPUMath.prototype.swapTextures = function(texture1Name, texture2Name){
+        var temp = this.textures[texture1Name];
+        this.textures[texture1Name] = this.textures[texture2Name];
+        this.textures[texture2Name] = temp;
+        temp = this.frameBuffers[texture1Name];
+        this.frameBuffers[texture1Name] = this.frameBuffers[texture2Name];
+        this.frameBuffers[texture2Name] = temp;
+    };
+
     GPUMath.prototype.readPixels = function(xMin, yMin, width, height, array){
         gl.readPixels(xMin, yMin, width, height, gl.RGBA, gl.UNSIGNED_BYTE, array);
     };

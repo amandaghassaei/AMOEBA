@@ -171,17 +171,17 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 			var friction = this.get("friction");
             emSimLattice.setConstants(dt, gravityVect);
 
-            //three.startAnimationLoop(function(){
-            //    for (var i=0;i<renderRate-1;i++){
-            //        time += dt;
+            three.startAnimationLoop(function(){
+                for (var i=0;i<renderRate-1;i++){
+                    time += dt;
                     emSimLattice.iter(dt, self.time, gravityVect, false);
+                }
+                self.time += dt;
+                emSimLattice.iter(dt, self.time, gravityVect, true);
+                //if (self._getViewMode() == "translation"){
+                //    self.calcTranslation();
                 //}
-            //    time += dt;
-            //    emSimLattice.iter(dt, time, gravityVect, true);
-            //    if (self._getViewMode() == "translation"){
-            //        self.calcTranslation();
-            //    }
-            //});
+            });
         },
 
         pause: function(){
