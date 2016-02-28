@@ -391,7 +391,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.step("velocityCalc", [], "velocity");
 
                 gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
-                gpuMath.step("packToBytes", [], "outputBytes");
+                gpuMath.step("packToBytes", ["velocity"], "outputBytes");
 
                 var pixels = new Uint8Array(textureSize*3*4);
                 gpuMath.readPixels(0, 0, this.textureSize[0]*3, this.textureSize[1], pixels);
