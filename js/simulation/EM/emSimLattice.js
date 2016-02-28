@@ -35,7 +35,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.lastTranslation = new Float32Array(textureSize*4);
                 this.velocity = new Float32Array(textureSize*4);
                 this.lastVelocity = new Float32Array(textureSize*4);
-                this.cellsArrayMapping = new Int16Array(textureSize*4);
+                this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
                 this.fixed = new Uint8Array(textureSize*4);
                 this.mass = new Float32Array(textureSize*4);
@@ -45,7 +45,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.compositeKs = new Float32Array(textureSize*8);
                 this.compositeDs = new Float32Array(textureSize*8);
 
-                this.cellsIndexMapping = this._initEmptyArray(cells);
+                this.cellsIndexMapping = this._initEmptyArray(cells);//3d array holds rgba index of cell (for use within this class)
                 var cellsMin = lattice.get("cellsMin");
 
                 var index = 0;
