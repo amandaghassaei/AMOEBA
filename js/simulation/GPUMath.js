@@ -70,11 +70,12 @@ define(['glBoilerplate'], function(glBoilerplate){
         var uniforms = this.programs[programName].uniforms;
         var location = uniforms[name];
         if (!location) {
-            location = gl.getUniformLocation(programs[programName], "name");
+            location = gl.getUniformLocation(this.programs[programName].program, name);
             uniforms[name] = location;
         }
-        if (type == "f") gl.uniformf(location, val);
-        else if (type == "3f") gl.uniformf(location, val[0], val[1], val[2]);
+        if (type == "f") gl.uniform1f(location, val);
+        else if (type == "2f") gl.uniform2f(location, val[0], val[1]);
+        else if (type == "3f") gl.uniform3f(location, val[0], val[1], val[2]);
     };
 
     GPUMath.prototype.setSize = function(width, height){

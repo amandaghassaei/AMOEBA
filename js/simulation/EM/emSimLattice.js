@@ -4,8 +4,8 @@
 
 
 define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
-    "text!simulation/EM/shaders/velocityCalcShader.js"],
-    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader) {
+    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js"],
+    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -42,7 +42,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 this.originalPosition = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*4);
                 this.lastTranslation = new Float32Array(textureSize*4);
-                this.velocity = new Uint8Array(textureSize*4);//todo float
+                this.velocity = new Float32Array(textureSize*4);
                 this.lastVelocity = new Float32Array(textureSize*4);
 
                 this.quaternion = new Float32Array(textureSize*4);
@@ -181,9 +181,16 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             _setupGPU: function(textureDim){
                 gpuMath.reset();
+
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
-                gpuMath.initTextureFromData("velocity", textureDim, textureDim, "UNSIGNED_BYTE", this.velocity);
+                gpuMath.initTextureFromData("velocity", textureDim, textureDim, "FLOAT", this.velocity);
                 gpuMath.initFrameBufferForTexture("velocity");
+
+                gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
+                gpuMath.initTextureFromData("outputBytes", textureDim, textureDim, "UNSIGNED_BYTE", null);
+                gpuMath.initFrameBufferForTexture("outputBytes");
+                gpuMath.setUniformForProgram("packToBytes", "u_floatTextureDim", [textureDim, textureDim], "2f");
+
             },
 
             _calcTextureSize: function(numCells){
@@ -379,6 +386,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
                 gpuMath.step("velocityCalc", [], "velocity");
+                gpuMath.step("packToBytes", [], "outputBytes");
+
                 var pixels = new Uint8Array(textureSize*4);
                 gpuMath.readPixels(0, 0, this.textureSize[0], this.textureSize[1], pixels);
                 var parsedPixels = new Float32Array(pixels.buffer);
