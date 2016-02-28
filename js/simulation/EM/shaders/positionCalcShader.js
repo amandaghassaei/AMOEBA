@@ -1,4 +1,4 @@
-precision mediump float;
+precision highp float;
 
 uniform vec2 u_textureDim;
 uniform float u_dt;

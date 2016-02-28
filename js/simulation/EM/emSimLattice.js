@@ -208,7 +208,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
                 gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
-                gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1l");
+                gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_fixed", 2, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
@@ -416,43 +416,39 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             iter: function(dt, time, gravity, shouldRender){
 
-                //gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
-                //gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
-                //
-                //if (shouldRender) {
-                //    var textureSize = this.textureSize[0]*this.textureSize[1];
-                //    gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
-                //    gpuMath.step("packToBytes", ["u_translation"], "outputBytes");
-                //    var pixels = new Uint8Array(textureSize * 12);
-                //    gpuMath.readPixels(0, 0, this.textureSize[0] * 3, this.textureSize[1], pixels);
-                //    var parsedPixels = new Float32Array(pixels.buffer);
-                //    var cells = lattice.getCells();
-                //    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
-                //    for (var i=0;i<textureSize;i++){
-                //        var rgbaIndex = 4*i;
-                //        if (this.fixed[rgbaIndex] < 0) continue;//no cell here
-                //
-                //        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
-                //        var parsePixelsIndex = 3*i;
-                //        var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
-                //        var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
-                //        position[0] += multiplier*translation[0];
-                //        position[1] += multiplier*translation[1];
-                //        position[2] += multiplier*translation[2];
-                //        cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                //    }
-                //
-                //    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
-                //}
-                //
-                //gpuMath.swapTextures("u_velocity", "u_lastVelocity");
-                //gpuMath.swapTextures("u_translation", "u_lastTranslation");
-                //return;
+                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed"], "u_velocity");
+                gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
 
-				//simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
-                    var collisionK = 1;
-                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
+                if (shouldRender) {
+                    var textureSize = this.textureSize[0]*this.textureSize[1];
+                    gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
+                    gpuMath.step("packToBytes", ["u_translation"], "outputBytes");
+                    var pixels = new Uint8Array(textureSize * 12);
+                    gpuMath.readPixels(0, 0, this.textureSize[0] * 3, this.textureSize[1], pixels);
+                    var parsedPixels = new Float32Array(pixels.buffer);
+                    var cells = lattice.getCells();
+                    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+                    for (var i=0;i<textureSize;i++){
+                        var rgbaIndex = 4*i;
+                        if (this.fixed[rgbaIndex] < 0) continue;//no cell here
+
+                        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
+                        var parsePixelsIndex = 3*i;
+                        var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
+                        var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
+                        position[0] += multiplier*translation[0];
+                        position[1] += multiplier*translation[1];
+                        position[2] += multiplier*translation[2];
+                        cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                    }
+
+                    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
+                }
+
+                gpuMath.swapTextures("u_velocity", "u_lastVelocity");
+                gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                return;
+
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
@@ -534,8 +530,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
 
-                        console.log(position);
-                        console.log(time);
+
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                         cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2]);

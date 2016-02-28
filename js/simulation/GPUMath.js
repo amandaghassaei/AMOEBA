@@ -77,6 +77,9 @@ define(['glBoilerplate'], function(glBoilerplate){
         else if (type == "2f") gl.uniform2f(location, val[0], val[1]);
         else if (type == "3f") gl.uniform3f(location, val[0], val[1], val[2]);
         else if (type == "1i") gl.uniform1i(location, val);
+        else {
+            console.warn("no uniform for type " + type);
+        }
     };
 
     GPUMath.prototype.setSize = function(width, height){
