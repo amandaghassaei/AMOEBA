@@ -76,6 +76,7 @@ define(['glBoilerplate'], function(glBoilerplate){
         if (type == "f") gl.uniform1f(location, val);
         else if (type == "2f") gl.uniform2f(location, val[0], val[1]);
         else if (type == "3f") gl.uniform3f(location, val[0], val[1], val[2]);
+        else if (type == "1i") gl.uniform1i(location, val);
     };
 
     GPUMath.prototype.setSize = function(width, height){
@@ -88,11 +89,10 @@ define(['glBoilerplate'], function(glBoilerplate){
 
         gl.useProgram(this.programs[programName].program);
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[outputTexture]);
-        var self = this;
-        _.each(inputTextures, function(textureName){
-            gl.bindTexture(gl.TEXTURE_2D, self.textures[textureName]);
-        });
-
+        for (var i=0;i<inputTextures.length;i++){
+            gl.activeTexture(gl.TEXTURE0 + i);
+            gl.bindTexture(gl.TEXTURE_2D, this.textures[inputTextures[i]]);
+        }
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);//draw to framebuffer
     };
 
