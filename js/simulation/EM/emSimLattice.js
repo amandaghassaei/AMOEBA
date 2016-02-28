@@ -40,7 +40,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.fixed = new Uint8Array(textureSize*4);
                 this.mass = new Float32Array(textureSize*4);
 
-                this.neighborsXMapping = new Int16Array(textureSize*8);
+                this.neighborsXMapping = new Int16Array(textureSize*8);//-1 equals no neighb
                 this.neighborsYMapping = new Int16Array(textureSize*8);
                 this.compositeKs = new Float32Array(textureSize*8);
                 this.compositeDs = new Float32Array(textureSize*8);
@@ -75,16 +75,19 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                     _.each(neighbors, function(neighbor, neighborIndex){
 
-                        if (!neighbor) return;
-
                         var compositeIndex = index*8;
                         if (neighborIndex > 2) compositeIndex += 4;
 
+                        if (!neighbor) {
+                            self.neighborsXMapping[compositeIndex + neighborIndex%3] = -1;
+                            self.neighborsYMapping[compositeIndex + neighborIndex%3] = -1;
+                            return;
+                        }
+
                         var neighborIndex3D = neighbor.getAbsoluteIndex().sub(cellsMin);
                         var neighborMappingIndex1D = self.cellsIndexMapping[neighborIndex3D.x][neighborIndex3D.y][neighborIndex3D.z];
-                        //add an extra 1 to both of these, so 0,0 doesn't get confused with no neighbor
-                        self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim+1;
-                        self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim)+1;
+                        self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim;
+                        self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
 
                         var compositeK = self._calcCompositeParam(self._getCellK(cell), self._getCellK(neighbor));
 
@@ -229,8 +232,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                         var neighborsIndex = i*8;
                         if (j>2) neighborsIndex += 4;
-                        if (this.neighborsXMapping[neighborsIndex + j%3] == 0) continue;
-                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] - 1 + this.textureSize[0]*(this.neighborsYMapping[neighborsIndex + j%3] - 1));
+                        if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
+                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
                         var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
 
