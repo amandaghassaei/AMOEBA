@@ -174,6 +174,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     emSim.trigger("change");//fixed indices or signals has changed
                 });
 
+                this._setupGPU();
+
+            },
+
+            _setupGPU: function(){
+
             },
 
             _calcTextureSize: function(numCells){
