@@ -13,7 +13,7 @@ void main(){
 
     float isFixed = texture2D(u_fixed, scaledFragCoord).x;
     if (isFixed < 0.0){//no cell
-        gl_FragColor = vec4(0, 0, 0, 0);
+        gl_FragColor = vec4(3, 3, 3, 3);
         return;
     }
     if (isFixed == 1.0) {

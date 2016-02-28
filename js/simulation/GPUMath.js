@@ -31,9 +31,9 @@ define(['glBoilerplate'], function(glBoilerplate){
         };
     };
 
-    GPUMath.prototype.initTextureFromData = function(name, width, height, typeName, data){
+    GPUMath.prototype.initTextureFromData = function(name, width, height, typeName, data, shouldReplace){
         var texture = this.textures[name];
-        if (texture) {
+        if (!shouldReplace && texture) {
             console.warn("already a texture with the name " + name);
             return;
         }

@@ -402,7 +402,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     console.warn("no cell at index " + index.x + ", " + index.y + ", " + index.z);
                 }
                 this.fixed[rgbaIndex] = !state;
-                //todo update gpu texture
+                gpuMath.initTextureFromData("u_fixed", this.textureSize[0], this.textureSize[1], "FLOAT", this.fixed, true);
                 return !state;
             },
 
