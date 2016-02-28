@@ -38,5 +38,5 @@ vec4 encode_float (float val) {
 void main(){
     vec2 fragCoord = gl_FragCoord.xy;
     //vec4 data = texture2D(u_image, fragCoord/u_matrixDim);
-    gl_FragColor = encode_float(u_floatTextureDim.x);
+    gl_FragColor = encode_float(fragCoord.x);
 }

@@ -187,9 +187,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.initFrameBufferForTexture("velocity");
 
                 gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
-                gpuMath.initTextureFromData("outputBytes", textureDim, textureDim, "UNSIGNED_BYTE", null);
+                gpuMath.initTextureFromData("outputBytes", textureDim*3, textureDim, "UNSIGNED_BYTE", null);
                 gpuMath.initFrameBufferForTexture("outputBytes");
                 gpuMath.setUniformForProgram("packToBytes", "u_floatTextureDim", [textureDim, textureDim], "2f");
+
+                gpuMath.setSize(textureDim, textureDim);
 
             },
 
@@ -385,13 +387,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
+
                 gpuMath.step("velocityCalc", [], "velocity");
+
+                gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
                 gpuMath.step("packToBytes", [], "outputBytes");
 
-                var pixels = new Uint8Array(textureSize*4);
-                gpuMath.readPixels(0, 0, this.textureSize[0], this.textureSize[1], pixels);
+                var pixels = new Uint8Array(textureSize*3*4);
+                gpuMath.readPixels(0, 0, this.textureSize[0]*3, this.textureSize[1], pixels);
                 var parsedPixels = new Float32Array(pixels.buffer);
                 console.log(parsedPixels);
+                gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
                 return;
 
 
