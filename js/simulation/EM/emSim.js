@@ -175,27 +175,24 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         },
 
 
-        fixCellAtPosition: function(index){
+        fixCellAtIndex: function(index){
             var position = index.clone().sub(lattice.get("cellsMin"));
-            var cell = emSimLattice._getCellAtIndex(position);
+            var fixed = emSimLattice.fixCellAtIndex(position);
             var fixedIndices = this.get("fixedIndices");
-            if (cell.isFixed()) {
+            if (fixed) fixedIndices.push(index.clone());
+            else {
                 _.each(fixedIndices, function(fixedIndex, i){
-                    console.log(fixedIndex);
                     if (fixedIndex.equals(index)) fixedIndices.splice(i, 1);
                 });
-                cell.float();
-            } else {
-                fixedIndices.push(index.clone());
-                cell.fix();
             }
             this.trigger("change");
         },
 
         _toggleFixedVisibility: function(){
             var state = this.get("showFixed");
-            emSimLattice.loopCells(function(cell){
-                if (!state || cell.isFixed()) cell.show();
+            var cellsMin = lattice.get("cellsMin");
+            lattice.loopCells(function(cell, x, y, z){
+                if (!state || emSimLattice.isFixedAtIndex(new THREE.Vector3(x,y,z))) cell.show();
                 else cell.hide();
             });
             three.render();
@@ -203,14 +200,14 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
 
         _viewModechanged: function(){
-            var viewMode = this._getViewMode();
-            if (viewMode == "default") {
-                emSimLattice.loopCells(function(cell){
-                    cell.showDefaultColor();
-                });
-            } else if (viewMode == "translation") {
-                this.calcTranslation();
-            }
+            //var viewMode = this._getViewMode();
+            //if (viewMode == "default") {
+            //    emSimLattice.loopCells(function(cell){
+            //        cell.showDefaultColor();
+            //    });
+            //} else if (viewMode == "translation") {
+            //    this.calcTranslation();
+            //}
             three.render();
         },
 

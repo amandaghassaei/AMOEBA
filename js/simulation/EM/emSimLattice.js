@@ -18,7 +18,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 //this.listenTo(this, "change:wires", this._assignSignalsToWires);
             },
 
-            setCells: function(cells){
+            setCells: function(cells, fixedIndices){
 
                 var numCells = lattice.get("numCells");
                 if (numCells == 0){
@@ -45,7 +45,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.compositeKs = new Float32Array(textureSize*8);
                 this.compositeDs = new Float32Array(textureSize*8);
 
-                var neighborMapping = this._initEmptyArray(cells);
+                this.cellsIndexMapping = this._initEmptyArray(cells);
                 var cellsMin = lattice.get("cellsMin");
 
                 var index = 0;
@@ -65,9 +65,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                     self.mass[rgbaIndex] = self._calcCellMass(cell);
 
-                    //todo fixed
-
-                    neighborMapping[x][y][z] = index;
+                    self.cellsIndexMapping[x][y][z] = index;
 
                     index++;
                 });
@@ -83,7 +81,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         if (neighborIndex > 2) compositeIndex += 4;
 
                         var neighborIndex3D = neighbor.getAbsoluteIndex().sub(cellsMin);
-                        var neighborMappingIndex1D = neighborMapping[neighborIndex3D.x][neighborIndex3D.y][neighborIndex3D.z];
+                        var neighborMappingIndex1D = self.cellsIndexMapping[neighborIndex3D.x][neighborIndex3D.y][neighborIndex3D.z];
                         //add an extra 1 to both of these, so 0,0 doesn't get confused with no neighbor
                         self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim+1;
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim)+1;
@@ -91,10 +89,28 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         var compositeK = self._calcCompositeParam(self._getCellK(cell), self._getCellK(neighbor));
 
                         self.compositeKs[compositeIndex + neighborIndex%3] = compositeK;
-                        self.compositeDs[compositeIndex + neighborIndex%3] = compositeK/100;//this is arbitrary for now
+                        self.compositeDs[compositeIndex + neighborIndex%3] = compositeK/1000;//this is arbitrary for now
                     });
 
                     index++;
+                });
+
+                var change = false;
+                for (var i=fixedIndices.length-1;i>=0;i--){
+                    var fixedIndex = fixedIndices[i];
+                    var latticeIndex = fixedIndex.clone().sub(cellsMin);
+                    var cell = cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
+                    if (cell) {
+                        var rgbaIndex = 4*(this.cellsIndexMapping[latticeIndex.x][latticeIndex.y][latticeIndex.z]);
+                        this.fixed[rgbaIndex] = 1;
+                    } else {//remove from fixedIndices
+                        fixedIndices.splice(i, 1);
+                        change = true;
+                    }
+                }
+
+                if (change) require(['emSim'], function(emSim){
+                    emSim.trigger("change");//fixed indices or signals has changed
                 });
 
             },
@@ -142,6 +158,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 return 2*param1*param2/(param1+param2);
             },
 
+            isFixedAtIndex: function(index){
+                var rgbaIndex = 4*(this.cellsIndexMapping[index.x][index.y][index.z]);
+                return this.fixed[rgbaIndex];
+            },
+
             _loopCells: function(cells, callback){
                 for (var x=0;x<cells.length;x++){
                     for (var y=0;y<cells[0].length;y++){
@@ -182,13 +203,21 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 return neighbors;
             },
 
+            fixCellAtIndex: function(index){
+                var rgbaIndex = 4*this.cellsIndexMapping[index.x][index.y][index.z];
+                var state = this.fixed[rgbaIndex];
+                this.fixed[rgbaIndex] = !state;
+                //todo update gpu texture
+                return !state;
+            },
+
             iter: function(dt, time, gravity, shouldRender){
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
                 for (var i=0;i<textureSize;i++){
 
                     var rgbaIndex = i*4;
-
+                    if (this.fixed[rgbaIndex]) continue;
                     var mass = this.mass[rgbaIndex];
                     if (mass == 0) continue;
                     var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];
@@ -196,9 +225,28 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     var translation = [this.lastTranslation[rgbaIndex], this.lastTranslation[rgbaIndex+1], this.lastTranslation[rgbaIndex+2]];
                     var velocity = [this.lastVelocity[rgbaIndex], this.lastVelocity[rgbaIndex+1], this.lastVelocity[rgbaIndex+2]];
 
+                    for (var j=0;j<6;j++){
+
+                        var neighborsIndex = i*8;
+                        if (j>2) neighborsIndex += 4;
+                        if (this.neighborsXMapping[neighborsIndex + j%3] == 0) continue;
+                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] - 1 + this.textureSize[0]*(this.neighborsYMapping[neighborsIndex + j%3] - 1));
+                        var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
+                        var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
+
+                        var k = this.compositeKs[neighborsIndex + j%3];
+                        var d = this.compositeDs[neighborsIndex + j%3];
+
+                        force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
+                        force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
+                        force[2] += k*(neighborTranslation[2]-translation[2]) + d*(neighborVelocity[2]-velocity[2]);
+                    }
+
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
                     translation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
+
+
 
                     this.translation[rgbaIndex] = translation[0];
                     this.translation[rgbaIndex+1] = translation[1];
@@ -232,7 +280,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                 this._swapArrays("velocity", "lastVelocity");
                 this._swapArrays("translation", "lastTranslation");
-
             },
 
             _swapArrays: function(array1Name, array2Name){

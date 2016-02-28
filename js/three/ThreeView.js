@@ -102,7 +102,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 if (position){
                     require(['emSim'], function(emSim){
                         if (emSim.get("manualSelectFixed")){
-                            emSim.fixCellAtPosition(position);
+                            emSim.fixCellAtIndex(position);
                         }
                     });
                     return;
