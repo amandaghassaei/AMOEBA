@@ -37,6 +37,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.lastVelocity = new Float32Array(textureSize*4);
                 this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
+                this.quaternion = new Float32Array(textureSize*4);
+                this.lastQuaternion = new Float32Array(textureSize*4);
                 this.rotation = new Float32Array(textureSize*4);
                 this.lastRotation = new Float32Array(textureSize*4);
 
@@ -70,7 +72,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                     self.cellsIndexMapping[x][y][z] = index;
 
-                    self.lastRotation[rgbaIndex+3] = 1;//quat = (0,0,0,1)
+                    self.lastQuaternion[rgbaIndex+3] = 1;//quat = (0,0,0,1)
 
                     index++;
                 });
@@ -221,14 +223,14 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
             iter: function(dt, time, gravity, shouldRender){
 
-                var latticePitch = lattice.getAspectRatio();
+                var latticePitch = lattice.getPitch();
                 latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
                 for (var i=0;i<textureSize;i++){
 
                     var rgbaIndex = i*4;
-                    if (this.fixed[rgbaIndex]) continue;
+                    if (this.fixed[rgbaIndex] == 1) continue;
                     var mass = this.mass[rgbaIndex];
                     if (mass == 0) continue;
                     var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];
@@ -237,8 +239,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                     var translation = [this.lastTranslation[rgbaIndex], this.lastTranslation[rgbaIndex+1], this.lastTranslation[rgbaIndex+2]];
                     var velocity = [this.lastVelocity[rgbaIndex], this.lastVelocity[rgbaIndex+1], this.lastVelocity[rgbaIndex+2]];
-                    var quaternion = [this.lastRotation[rgbaIndex], this.lastRotation[rgbaIndex+1], this.lastRotation[rgbaIndex+2], this.lastRotation[rgbaIndex+3]];
-                    var euler = this._eulerFromQuaternion(quaternion);
+                    var quaternion = [this.lastQuaternion[rgbaIndex], this.lastQuaternion[rgbaIndex+1], this.lastQuaternion[rgbaIndex+2], this.lastQuaternion[rgbaIndex+3]];
+                    var euler = [this.lastRotation[rgbaIndex], this.lastRotation[rgbaIndex+1], this.lastRotation[rgbaIndex+2]];
 
                     for (var j=0;j<6;j++){
 
@@ -249,7 +251,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
                         var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
-                        var neighborQuaternion = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2], this.lastRotation[neighborIndex+3]];
+                        var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex+1], this.lastQuaternion[neighborIndex+2], this.lastQuaternion[neighborIndex+3]];
+                        var neighborEuler = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2]];
 
                         var nominalD = this._neighborOffset(j, latticePitch);
                         var actuatedD = nominalD;
@@ -271,21 +274,20 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
 
                         //non-axial rotation
-                        var axisOrientation = this._quaternionFromUnitVectors(this._normalize3D(nominalD),
-                            this._normalize3D(D));
+                        var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
+
                         //axial rotation
                         var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                        var neighborEuler = this._eulerFromQuaternion(neighborQuaternion);
                         var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
                         var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
 
-                        var torsionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(axisOrientation, torsion));
-                        rTotal[0] += torsionEuler[0]*k;
-                        rTotal[1] += torsionEuler[1]*k;
-                        rTotal[2] += torsionEuler[2]*k;
+                        var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
+                        rTotal[0] += rotaionEuler[0]*k;
+                        rTotal[1] += rotaionEuler[1]*k;
+                        rTotal[2] += rotaionEuler[2]*k;
                         rContrib += k;
 
-                        var neighborAxis = Math.floor(j/2)
+                        var neighborAxis = Math.floor(j/2);
                         var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
                         var bendForce = [0,0,0];
                         for (var l=0;l<3;l++){
@@ -314,11 +316,14 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     rTotal[0] /= rContrib;
                     rTotal[1] /= rContrib;
                     rTotal[2] /= rContrib;
+                    this.rotation[rgbaIndex] = rTotal[0];
+                    this.rotation[rgbaIndex+1] = rTotal[1];
+                    this.rotation[rgbaIndex+2] = rTotal[2];
                     var nextQuaternion = this._quaternionFromEuler(rTotal);
-                    this.rotation[rgbaIndex] = nextQuaternion[0];
-                    this.rotation[rgbaIndex+1] = nextQuaternion[1];
-                    this.rotation[rgbaIndex+2] = nextQuaternion[2];
-                    this.rotation[rgbaIndex+3] = nextQuaternion[3];
+                    this.quaternion[rgbaIndex] = nextQuaternion[0];
+                    this.quaternion[rgbaIndex+1] = nextQuaternion[1];
+                    this.quaternion[rgbaIndex+2] = nextQuaternion[2];
+                    this.quaternion[rgbaIndex+3] = nextQuaternion[3];
                 }
 
                 if (shouldRender){
@@ -339,13 +344,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         position[2] += multiplier*translation[2];
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                        var rotation = this._eulerFromQuaternion([this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2], this.rotation[rgbaIndex+3]]);
-                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2]);
                     }
                 }
 
                 this._swapArrays("velocity", "lastVelocity");
                 this._swapArrays("translation", "lastTranslation");
+                this._swapArrays("quaternion", "lastQuaternion");
                 this._swapArrays("rotation", "lastRotation");
             },
 
@@ -497,7 +502,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
             _neighborOffset: function(index, latticePitch){
                 var offset = [0,0,0];
-                offset[index%3] = this._neighborSign(index) * latticePitch[index%3];
+                var neighborAxis = Math.floor(index/2);
+                offset[neighborAxis] = this._neighborSign(index)*latticePitch[neighborAxis];
                 return offset;
             },
 
@@ -522,10 +528,14 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 }
 
                 this.lastTranslation = new Float32Array(textureSize*4);
+                this.translation = new Float32Array(textureSize*4);
                 this.lastVelocity = new Float32Array(textureSize*4);
-                this.lastRotation = new Float32Array(textureSize*4);
+                this.velocity = new Float32Array(textureSize*4);
+                this.lastQuaternion = new Float32Array(textureSize*4);
+                this.quaternion = new Float32Array(textureSize*4);
                 for (var i=0;i<textureSize;i++){
-                    this.lastRotation[4*i+3] = 1;//w = 1
+                    this.lastQuaternion[4*i+3] = 1;//w = 1
+                    this.quaternion[4*i+3] = 1;
                 }
 
             }
