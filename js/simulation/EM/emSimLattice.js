@@ -301,6 +301,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         force[2] += bendingForce[2];
                     }
 
+                    //simple collision detection
+                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
+                    var collisionK = 1;
+                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
+
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
                     translation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
