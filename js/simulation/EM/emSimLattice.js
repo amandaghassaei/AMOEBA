@@ -459,6 +459,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.swapTextures("u_translation", "u_lastTranslation");
                 return;
 
+                var latticePitch = lattice.getPitch();
+                latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
@@ -482,17 +484,64 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         var neighborsIndex = i*8;
                         if (j>2) neighborsIndex += 4;
                         if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
+
                         var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
                         var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
+                        var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex+1], this.lastQuaternion[neighborIndex+2], this.lastQuaternion[neighborIndex+3]];
+                        var neighborEuler = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2]];
+
+                        var nominalD = this._neighborOffset(j, latticePitch);
+                        var actuatedD = nominalD;
+
+                        var halfNominalD = [actuatedD[0]*0.5, actuatedD[1]*0.5, actuatedD[2]*0.5];
+                        var rotatedHalfNomD = this._applyQuaternion(halfNominalD, quaternion);
+                        var neighbRotatedHalfNomD = this._applyQuaternion(halfNominalD, neighborQuaternion);
+                        var rotatedNominalD = [rotatedHalfNomD[0] + neighbRotatedHalfNomD[0], rotatedHalfNomD[1] + neighbRotatedHalfNomD[1], rotatedHalfNomD[2] + neighbRotatedHalfNomD[2]];
 
                         var k = this.compositeKs[neighborsIndex + j%3];
                         var d = 0.01;//this.compositeDs[neighborsIndex + j%3];
 
-                        force[0] += k*(neighborTranslation[0]-translation[0]) + d*(neighborVelocity[0]-velocity[0]);
-                        force[1] += k*(neighborTranslation[1]-translation[1]) + d*(neighborVelocity[1]-velocity[1]);
-                        force[2] += k*(neighborTranslation[2]-translation[2]) + d*(neighborVelocity[2]-velocity[2]);
+                        var D = [neighborTranslation[0]-translation[0] + nominalD[0],
+                            neighborTranslation[1]-translation[1] + nominalD[1],
+                            neighborTranslation[2]-translation[2] + nominalD[2]];
+
+                        force[0] += k*(D[0] - rotatedNominalD[0]) + d*(neighborVelocity[0]-velocity[0]);
+                        force[1] += k*(D[1] - rotatedNominalD[1]) + d*(neighborVelocity[1]-velocity[1]);
+                        force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
+
+                        //non-axial rotation
+                        var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
+
+                        //axial rotation
+                        var axis = rotatedNominalD;//neighbRotatedHalfNomD
+                        var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
+                        var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
+
+                        var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
+                        rTotal[0] += rotaionEuler[0]*k;
+                        rTotal[1] += rotaionEuler[1]*k;
+                        rTotal[2] += rotaionEuler[2]*k;
+                        rContrib += k;
+
+                        var neighborAxis = Math.floor(j/2);
+                        var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
+                        var bendForce = [0,0,0];
+                        for (var l=0;l<3;l++){
+                            if (l == neighborAxis) continue;
+                            bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
+                        }
+
+                        var bendingForce = this._applyQuaternion(bendForce, quaternion);
+                        force[0] += bendingForce[0];
+                        force[1] += bendingForce[1];
+                        force[2] += bendingForce[2];
                     }
+
+                    //simple collision detection
+                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
+                    var collisionK = 1;
+                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
@@ -536,8 +585,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         position[0] += multiplier*translation[0];
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
-
-
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                         cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2]);
