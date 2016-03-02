@@ -35,12 +35,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.lastTranslation = new Float32Array(textureSize*4);
                 this.velocity = new Float32Array(textureSize*4);
                 this.lastVelocity = new Float32Array(textureSize*4);
-                this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
                 this.quaternion = new Float32Array(textureSize*4);
                 this.lastQuaternion = new Float32Array(textureSize*4);
                 this.rotation = new Float32Array(textureSize*4);
                 this.lastRotation = new Float32Array(textureSize*4);
+
+                this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
                 this.fixed = new Uint8Array(textureSize*4);
                 this.mass = new Float32Array(textureSize*4);

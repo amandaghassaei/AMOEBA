@@ -23,6 +23,18 @@ define([], function(){
                         k: 1000
                     }
                 },
+                flexureCond: {
+                    name: "Flexure Conductive",
+                    color: "#9e947e",
+                    altColor: "#9e947e",
+                    texture: "stripes",
+                    properties:{
+                        conductive: true,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
                 //alum:{
                 //    name: "Lightweight Structural Conductive",
                 //    color: "#9CC9CB",
@@ -36,8 +48,8 @@ define([], function(){
                 //},
                 fiberGlass: {
                     name: "Structural Insulating",
-                    color: "#fef1b5",
-                    altColor: "#ecf0f1",
+                    color: "#8391AC",
+                    altColor: "#8391AC",
                     properties:{
                         conductive: false,
                         density: 500,//kg/m^3
@@ -66,21 +78,12 @@ define([], function(){
 //                        k: 1000
 //                    }
 //                },
-                flexureCond: {
-                    name: "Flexure Conductive",
-                    color: "#F5447B",
-                    altColor: "#F5447B",
-                    properties:{
-                        conductive: true,
-                        density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
-                    }
-                },
+
                 flexure: {
                     name: "Flexure Insulating",
-                    color: "#8391AC",
-                    altColor: "#8391AC",
+                    color: "#a2acc0",
+                    altColor: "#a2acc0",
+                    texture: "stripes",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3

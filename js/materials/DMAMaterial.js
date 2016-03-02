@@ -21,6 +21,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         };
         json = _.extend(defaults, json);
         this.set(json, true);
+        if (json.texture) this.texture = json.texture;
     }
 
     DMAMaterial.prototype.getID = function(){
@@ -37,7 +38,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
         var changed = false;
         var self = this;
-        _.each(["name", "color", "altColor", "noDelete"], function(key){
+        _.each(["name", "color", "altColor", "noDelete", "texture"], function(key){
             if (data[key] !== undefined && data[key] != self[key]) {
                 self[key] = data[key];
                 changed = true;
@@ -144,7 +145,9 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){
         if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent: true, opacity:0.4});
-        return new THREE.MeshLambertMaterial({color:color});
+        var json = {color: color};
+        if (this.texture) json.map = THREE.ImageUtils.loadTexture("assets/textures/"+this.texture+".png");
+        return new THREE.MeshLambertMaterial(json);
     };
 
     DMAMaterial.prototype.getThreeMaterial = function(){
@@ -202,7 +205,8 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
                 id: this.getID(),
                 altColor: this.altColor,
                 noDelete: this.noDelete,
-                properties: this.getProperties()
+                properties: this.getProperties(),
+                texture: this.texture
             }
     };
 

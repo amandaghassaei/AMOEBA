@@ -397,6 +397,7 @@ label {
     margin-right: 10px;
     border-radius: 3px;
     border: 1px solid #ddd;
+    overflow: hidden;
 }
 
 .materialColorSwatch>span{
