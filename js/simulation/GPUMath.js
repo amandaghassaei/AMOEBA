@@ -10,6 +10,9 @@ define(['glBoilerplate'], function(glBoilerplate){
     gl.getExtension('OES_texture_float');
     gl.disable(gl.DEPTH_TEST);
 
+    var maxTexturesInFragmentShader = gl.getParameter(gl.MAX_TEXTURE_IMAGE_UNITS);
+    console.log(maxTexturesInFragmentShader + " textures max");
+
 
     function GPUMath(){
         this.reset();

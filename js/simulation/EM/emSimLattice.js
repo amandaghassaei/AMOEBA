@@ -202,6 +202,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.initTextureFromData("u_neighborsYMapping", textureDim*2, textureDim, "FLOAT", this.neighborsYMapping);
                 gpuMath.initTextureFromData("u_compositeKs", textureDim*2, textureDim, "FLOAT", this.compositeKs);
                 gpuMath.initTextureFromData("u_compositeDs", textureDim*2, textureDim, "FLOAT", this.compositeDs);
+                gpuMath.initTextureFromData("u_originalPosition", textureDim, textureDim, "FLOAT", this.originalPosition);
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
@@ -212,7 +213,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.setUniformForProgram("velocityCalc", "u_neighborsYMapping", 5, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 6, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 7, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_originalPosition", 8, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                gpuMath.setUniformForProgram("velocityCalc", "u_multiplier", 1/(plist.allUnitTypes[lattice.getUnits()].multiplier), "1f");
+                var latticePitch = lattice.getPitch();
+                gpuMath.setUniformForProgram("velocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
                 gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
@@ -425,7 +430,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             iter: function(dt, time, gravity, shouldRender){
 
                 gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs"], "u_velocity");
+                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition"], "u_velocity");
                 gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
 
                 if (shouldRender) {
@@ -437,7 +442,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     var parsedPixels = new Float32Array(pixels.buffer);
                     var cells = lattice.getCells();
                     var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
-                    //console.log(parsedPixels);
                     for (var i=0;i<textureSize;i++){
                         var rgbaIndex = 4*i;
                         if (this.fixed[rgbaIndex] < 0) break;//no more cells
@@ -445,6 +449,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
                         var parsePixelsIndex = 3*i;
                         var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
+                        //console.log(translation);
                         var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
                         position[0] += multiplier*translation[0];
                         position[1] += multiplier*translation[1];
@@ -461,6 +466,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 var latticePitch = lattice.getPitch();
                 latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
+                var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
 
                 var textureSize = this.textureSize[0]*this.textureSize[1];
 
@@ -539,7 +545,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     }
 
                     //simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
+                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier;
                     var collisionK = 1;
                     if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
 
@@ -571,6 +577,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 }
 
                 if (shouldRender){
+
                     var cells = lattice.getCells();
                     for (var i=0;i<textureSize;i++) {
 

@@ -3,8 +3,6 @@ precision mediump float;
 uniform vec2 u_textureDim;
 uniform vec3 u_gravity;
 uniform float u_dt;
-uniform float u_multiplier;
-uniform vec3 u_latticePitch;
 
 uniform sampler2D u_lastVelocity;
 uniform sampler2D u_lastTranslation;
@@ -14,7 +12,6 @@ uniform sampler2D u_neighborsXMapping;
 uniform sampler2D u_neighborsYMapping;
 uniform sampler2D u_compositeKs;
 uniform sampler2D u_compositeDs;
-uniform sampler2D u_originalPosition;
 
 
 void main(){
@@ -32,11 +29,6 @@ void main(){
     vec3 lastVelocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
 
     vec3 force = u_gravity*mass;
-
-    //simple collision
-    float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + lastTranslation.z*u_multiplier;
-    float collisionK = 1.0;
-    if (zPosition < 0.0) force.z = force.z -zPosition*collisionK-lastVelocity.z*collisionK/10.0;
 
     for (float i=0.0;i<2.0;i+=1.0){
 
@@ -68,7 +60,8 @@ void main(){
     }
 
 
-    vec3 velocity = lastVelocity + force/mass*u_dt;
+    vec3 acceleration = force/mass;
+    vec3 velocity = lastVelocity + acceleration*u_dt;
 
     gl_FragColor = vec4(velocity, 0);
 }
