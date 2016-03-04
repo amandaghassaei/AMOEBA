@@ -15,6 +15,43 @@ uniform sampler2D u_neighborsYMapping;
 uniform sampler2D u_compositeKs;
 uniform sampler2D u_compositeDs;
 uniform sampler2D u_originalPosition;
+uniform sampler2D u_lastQuaternion;
+
+vec3 applyQuaternion(vec3 vector, vec4 quaternion) {
+
+    float x = vector[0];
+    float y = vector[1];
+    float z = vector[2];
+
+    float qx = quaternion[0];
+    float qy = quaternion[1];
+    float qz = quaternion[2];
+    float qw = quaternion[3];
+
+    // calculate quat * vector
+
+    float ix =  qw * x + qy * z - qz * y;
+    float iy =  qw * y + qz * x - qx * z;
+    float iz =  qw * z + qx * y - qy * x;
+    float iw = - qx * x - qy * y - qz * z;
+
+    // calculate result * inverse quat
+    return vec3(ix * qw + iw * - qx + iy * - qz - iz * - qy, iy * qw + iw * - qy + iz * - qx - ix * - qz, iz * qw + iw * - qz + ix * - qy - iy * - qx);
+}
+
+float neighborSign(float i){
+    if (mod(i,2.0) == 0.0) return -1.0;
+    return 1.0;
+}
+
+vec3 neighborOffset(float i){
+    vec3 offset = vec3(0);
+    int neighborAxis = int(floor(i/2.0));
+    if (neighborAxis == 0) offset[0] = neighborSign(i)*u_latticePitch[0];
+    else if (neighborAxis == 1) offset[1] = neighborSign(i)*u_latticePitch[1];
+    else if (neighborAxis == 2) offset[2] = neighborSign(i)*u_latticePitch[2];
+    return offset;
+}
 
 
 void main(){
@@ -30,6 +67,7 @@ void main(){
     float mass = texture2D(u_mass, scaledFragCoord).x;
     vec3 lastTranslation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
     vec3 lastVelocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
+    vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
 
     vec3 force = u_gravity*mass;
 
@@ -49,6 +87,7 @@ void main(){
         vec3 compositeKs = texture2D(u_compositeKs, mappingIndex).xyz;
         vec3 compositeDs = texture2D(u_compositeDs, mappingIndex).xyz;
 
+
         for (int j=0;j<3;j++){
             if (neighborsXMapping[j] < 0.0) continue;//no neighbor
 
@@ -59,11 +98,21 @@ void main(){
             vec2 scaledNeighborIndex = neighborIndex/u_textureDim;
             vec3 neighborTranslation = texture2D(u_lastTranslation, scaledNeighborIndex).xyz;
             vec3 neighborVelocity = texture2D(u_lastVelocity, scaledNeighborIndex).xyz;
+            vec4 neighborQuaternion = texture2D(u_lastQuaternion, scaledNeighborIndex);
+
+            vec3 nominalD = neighborOffset(i*3.0+float(j));
+            vec3 actuatedD = nominalD;
+
+            vec3 halfNominalD = actuatedD*0.5;
+            vec3 rotatedHalfNomD = applyQuaternion(halfNominalD, quaternion);
+            vec3 neighbRotatedHalfNomD = applyQuaternion(halfNominalD, neighborQuaternion);
+            vec3 rotatedNominalD = rotatedHalfNomD + neighbRotatedHalfNomD;
+
 
             float k = compositeKs[j];
             float d = 0.01;//compositeDs[j];
 
-            force += k*(neighborTranslation-lastTranslation) + d*(neighborVelocity-lastVelocity);
+            force += k*(neighborTranslation - lastTranslation + nominalD - rotatedNominalD) + d*(neighborVelocity - lastVelocity);
         }
     }
 

@@ -2,6 +2,7 @@ precision mediump float;
 
 uniform vec2 u_floatTextureDim;
 uniform sampler2D u_floatTexture;
+uniform float u_vectorLength;
 
 
 float shift_right (float v, float amt) {
@@ -37,10 +38,11 @@ vec4 encode_float (float val) {
 
 void main(){
     vec2 fragCoord = gl_FragCoord.xy;
-    float textureXcoord = floor((fragCoord.x - 0.5)/3.0) + 0.5;
+    float textureXcoord = floor((fragCoord.x - 0.5)/u_vectorLength) + 0.5;
     vec4 data = texture2D(u_floatTexture, vec2(textureXcoord, fragCoord.y)/u_floatTextureDim);
-    float textureIndex = mod(fragCoord.x-0.5, 3.0);
-    if (textureIndex == 0.0) gl_FragColor = encode_float(data.x);
-    else if (textureIndex == 1.0) gl_FragColor = encode_float(data.y);
-    else if (textureIndex == 2.0) gl_FragColor = encode_float(data.z);
+    float textureIndex = mod(fragCoord.x-0.5, u_vectorLength);
+    if (textureIndex == 0.0) gl_FragColor = encode_float(data[0]);
+    else if (textureIndex == 1.0) gl_FragColor = encode_float(data[1]);
+    else if (textureIndex == 2.0) gl_FragColor = encode_float(data[2]);
+    else if (textureIndex == 3.0) gl_FragColor = encode_float(data[3]);
 }

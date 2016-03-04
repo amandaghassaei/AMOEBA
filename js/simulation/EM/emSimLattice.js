@@ -3,9 +3,11 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
-    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js", "text!simulation/EM/shaders/positionCalcShader.js"],
-    function(_, Backbone, three, lattice, plist, emSimCell, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader, positionCalcShader) {
+define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
+    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js", "text!simulation/EM/shaders/positionCalcShader.js",
+    "text!simulation/EM/shaders/quaternionCalcShader.js"],
+    function(_, Backbone, three, lattice, plist, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader,
+             positionCalcShader, quaternionCalcShader) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -91,6 +93,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     self.cellsIndexMapping[x][y][z] = index;
 
                     self.lastQuaternion[rgbaIndex+3] = 1;//quat = (0,0,0,1)
+                    self.quaternion[rgbaIndex+3] = 1;
 
                     if (cell.isConductive()) {
                         var wireID = cell.getWireGroup();
@@ -187,6 +190,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             _setupGPU: function(textureDim){
                 gpuMath.reset();
 
+                var latticePitch = lattice.getPitch();
+
                 gpuMath.initTextureFromData("u_translation", textureDim, textureDim, "FLOAT", this.translation);
                 gpuMath.initFrameBufferForTexture("u_translation");
                 gpuMath.initTextureFromData("u_lastTranslation", textureDim, textureDim, "FLOAT", this.lastTranslation);
@@ -195,6 +200,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.initFrameBufferForTexture("u_velocity");
                 gpuMath.initTextureFromData("u_lastVelocity", textureDim, textureDim, "FLOAT", this.lastVelocity);
                 gpuMath.initFrameBufferForTexture("u_lastVelocity");
+                gpuMath.initTextureFromData("u_quaternion", textureDim, textureDim, "FLOAT", this.quaternion);
+                gpuMath.initFrameBufferForTexture("u_quaternion");
+                gpuMath.initTextureFromData("u_lastQuaternion", textureDim, textureDim, "FLOAT", this.lastQuaternion);
+                gpuMath.initFrameBufferForTexture("u_lastQuaternion");
 
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
                 gpuMath.initTextureFromData("u_fixed", textureDim, textureDim, "FLOAT", this.fixed);
@@ -203,6 +212,16 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.initTextureFromData("u_compositeKs", textureDim*2, textureDim, "FLOAT", this.compositeKs);
                 gpuMath.initTextureFromData("u_compositeDs", textureDim*2, textureDim, "FLOAT", this.compositeDs);
                 gpuMath.initTextureFromData("u_originalPosition", textureDim, textureDim, "FLOAT", this.originalPosition);
+
+                gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
+                gpuMath.setUniformForProgram("quaternionCalc", "u_lastTranslation", 0, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_fixed", 2, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsXMapping", 3, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsYMapping", 4, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_compositeKs", 5, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
@@ -214,9 +233,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 6, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 7, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_originalPosition", 8, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_lastQuaternion", 9, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_multiplier", 1/(plist.allUnitTypes[lattice.getUnits()].multiplier), "1f");
-                var latticePitch = lattice.getPitch();
                 gpuMath.setUniformForProgram("velocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
@@ -226,8 +245,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
-                gpuMath.initTextureFromData("outputBytes", textureDim*3, textureDim, "UNSIGNED_BYTE", null);
-                gpuMath.initFrameBufferForTexture("outputBytes");
+                gpuMath.initTextureFromData("outputPositionBytes", textureDim*3, textureDim, "UNSIGNED_BYTE", null);
+                gpuMath.initFrameBufferForTexture("outputPositionBytes");
+                gpuMath.initTextureFromData("outputQuaternionBytes", textureDim*4, textureDim, "UNSIGNED_BYTE", null);
+                gpuMath.initFrameBufferForTexture("outputQuaternionBytes");
                 gpuMath.setUniformForProgram("packToBytes", "u_floatTextureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.setSize(textureDim, textureDim);
@@ -429,27 +450,33 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             iter: function(dt, time, gravity, shouldRender){
 
+                gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
+                    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion");
                 gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition"], "u_velocity");
+                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion"],
+                    "u_velocity");
                 gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
 
                 if (shouldRender) {
                     var textureSize = this.textureSize[0]*this.textureSize[1];
-                    gpuMath.setSize(this.textureSize[0]*3, this.textureSize[1]);
-                    gpuMath.step("packToBytes", ["u_translation"], "outputBytes");
-                    var pixels = new Uint8Array(textureSize * 12);
-                    gpuMath.readPixels(0, 0, this.textureSize[0] * 3, this.textureSize[1], pixels);
+
+                    //get position
+                    var vectorLength = 3;
+                    gpuMath.setProgram("packToBytes");
+                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
+                    var pixels = new Uint8Array(textureSize * 4*vectorLength);
+                    gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
                     var parsedPixels = new Float32Array(pixels.buffer);
                     var cells = lattice.getCells();
                     var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
                     for (var i=0;i<textureSize;i++){
                         var rgbaIndex = 4*i;
                         if (this.fixed[rgbaIndex] < 0) break;//no more cells
-
                         var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
-                        var parsePixelsIndex = 3*i;
+                        var parsePixelsIndex = vectorLength*i;
                         var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
-                        //console.log(translation);
                         var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
                         position[0] += multiplier*translation[0];
                         position[1] += multiplier*translation[1];
@@ -457,11 +484,30 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                     }
 
+                    vectorLength = 4;
+                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
+                    pixels = new Uint8Array(textureSize * 4*vectorLength);
+                    gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                    parsedPixels = new Float32Array(pixels.buffer);
+                    for (var i=0;i<textureSize;i++){
+                        var rgbaIndex = 4*i;
+                        if (this.fixed[rgbaIndex] < 0) break;//no more cells
+                        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
+                        var parsePixelsIndex = vectorLength*i;
+                        var quaternion = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2], parsedPixels[parsePixelsIndex+3]];
+                        //console.log(quaternion);
+                        var rotation = this._eulerFromQuaternion(quaternion);
+                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                    }
+
                     gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
                 }
 
                 gpuMath.swapTextures("u_velocity", "u_lastVelocity");
                 gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
                 return;
 
                 var latticePitch = lattice.getPitch();
@@ -530,18 +576,18 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         rTotal[2] += rotaionEuler[2]*k;
                         rContrib += k;
 
-                        var neighborAxis = Math.floor(j/2);
-                        var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
-                        var bendForce = [0,0,0];
-                        for (var l=0;l<3;l++){
-                            if (l == neighborAxis) continue;
-                            bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
-                        }
-
-                        var bendingForce = this._applyQuaternion(bendForce, quaternion);
-                        force[0] += bendingForce[0];
-                        force[1] += bendingForce[1];
-                        force[2] += bendingForce[2];
+                        //var neighborAxis = Math.floor(j/2);
+                        //var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
+                        //var bendForce = [0,0,0];
+                        //for (var l=0;l<3;l++){
+                        //    if (l == neighborAxis) continue;
+                        //    bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
+                        //}
+                        //
+                        //var bendingForce = this._applyQuaternion(bendForce, quaternion);
+                        //force[0] += bendingForce[0];
+                        //force[1] += bendingForce[1];
+                        //force[2] += bendingForce[2];
                     }
 
                     //simple collision detection
@@ -592,6 +638,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         position[0] += multiplier*translation[0];
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
+
+                        var quaternion = [this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]];
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                         cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.rotation[rgbaIndex], this.rotation[rgbaIndex+1], this.rotation[rgbaIndex+2]);
