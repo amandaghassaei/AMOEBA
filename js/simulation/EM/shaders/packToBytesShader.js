@@ -38,11 +38,11 @@ vec4 encode_float (float val) {
 
 void main(){
     vec2 fragCoord = gl_FragCoord.xy;
-    float textureXcoord = floor((fragCoord.x - 0.5)/u_vectorLength) + 0.5;
+    float textureXcoord = floor((fragCoord.x - 0.5)/u_vectorLength+0.0001) + 0.5;
     vec4 data = texture2D(u_floatTexture, vec2(textureXcoord, fragCoord.y)/u_floatTextureDim);
-    float textureIndex = mod(fragCoord.x-0.5, u_vectorLength);
-    if (textureIndex == 0.0) gl_FragColor = encode_float(data[0]);
-    else if (textureIndex == 1.0) gl_FragColor = encode_float(data[1]);
-    else if (textureIndex == 2.0) gl_FragColor = encode_float(data[2]);
-    else if (textureIndex == 3.0) gl_FragColor = encode_float(data[3]);
+    int textureIndex = int(floor(mod(fragCoord.x-0.5+0.0001, u_vectorLength)));
+    if (textureIndex == 0) gl_FragColor = encode_float(data[0]);
+    else if (textureIndex == 1) gl_FragColor = encode_float(data[1]);
+    else if (textureIndex == 2) gl_FragColor = encode_float(data[2]);
+    else if (textureIndex == 3) gl_FragColor = encode_float(data[3]);
 }

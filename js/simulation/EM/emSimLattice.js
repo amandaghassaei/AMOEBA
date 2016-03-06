@@ -54,7 +54,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
-                this.fixed = new Float32Array(textureSize*4);//todo int8
+                this.fixed = new Float32Array(textureSize*4);
                 this.mass = new Float32Array(textureSize*4);
 
                 this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
@@ -467,21 +467,23 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
                     gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
                     var pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                    var parsedPixels = new Float32Array(pixels.buffer);
-                    var cells = lattice.getCells();
-                    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
-                    for (var i=0;i<textureSize;i++){
-                        var rgbaIndex = 4*i;
-                        if (this.fixed[rgbaIndex] < 0) break;//no more cells
-                        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
-                        var parsePixelsIndex = vectorLength*i;
-                        var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2]];
-                        var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
-                        position[0] += multiplier*translation[0];
-                        position[1] += multiplier*translation[1];
-                        position[2] += multiplier*translation[2];
-                        cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                    if (gpuMath.readyToRead()) {
+                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                        var parsedPixels = new Float32Array(pixels.buffer);
+                        var cells = lattice.getCells();
+                        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
+                        for (var i = 0; i < textureSize; i++) {
+                            var rgbaIndex = 4 * i;
+                            if (this.fixed[rgbaIndex] < 0) continue;//no more cells
+                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                            var parsePixelsIndex = vectorLength * i;
+                            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
+                            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
+                            position[0] += multiplier * translation[0];
+                            position[1] += multiplier * translation[1];
+                            position[2] += multiplier * translation[2];
+                            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                        }
                     }
 
                     vectorLength = 4;
@@ -489,17 +491,19 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
                     gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
                     pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                    parsedPixels = new Float32Array(pixels.buffer);
-                    for (var i=0;i<textureSize;i++){
-                        var rgbaIndex = 4*i;
-                        if (this.fixed[rgbaIndex] < 0) break;//no more cells
-                        var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
-                        var parsePixelsIndex = vectorLength*i;
-                        var quaternion = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex+1], parsedPixels[parsePixelsIndex+2], parsedPixels[parsePixelsIndex+3]];
-                        //console.log(quaternion);
-                        var rotation = this._eulerFromQuaternion(quaternion);
-                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                    if (gpuMath.readyToRead()) {
+                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                        parsedPixels = new Float32Array(pixels.buffer);
+                        for (var i = 0; i < textureSize; i++) {
+                            var rgbaIndex = 4 * i;
+                            if (this.fixed[rgbaIndex] < 0) break;//no more cells
+                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                            var parsePixelsIndex = vectorLength * i;
+                            var quaternion = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]];
+                            //console.log(quaternion);
+                            var rotation = this._eulerFromQuaternion(quaternion);
+                            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                        }
                     }
 
                     gpuMath.setSize(this.textureSize[0], this.textureSize[1]);

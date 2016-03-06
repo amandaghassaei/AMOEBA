@@ -125,13 +125,13 @@ vec4 multiplyQuaternions(vec4 a, vec4 b){
 }
 
 float neighborSign(float i){
-    if (mod(i,2.0) == 0.0) return -1.0;
+    if (mod(i+0.001,2.0) < 0.5) return -1.0;
     return 1.0;
 }
 
 vec3 neighborOffset(float i){
     vec3 offset = vec3(0);
-    int neighborAxis = int(floor(i/2.0));
+    int neighborAxis = int(floor(i/2.0+0.001));
     if (neighborAxis == 0) offset[0] = neighborSign(i)*u_latticePitch[0];
     else if (neighborAxis == 1) offset[1] = neighborSign(i)*u_latticePitch[1];
     else if (neighborAxis == 2) offset[2] = neighborSign(i)*u_latticePitch[2];
@@ -140,6 +140,7 @@ vec3 neighborOffset(float i){
 
 
 void main(){
+
     vec2 fragCoord = gl_FragCoord.xy;
     vec2 scaledFragCoord = fragCoord/u_textureDim;
 

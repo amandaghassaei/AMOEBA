@@ -36,17 +36,18 @@ vec3 applyQuaternion(vec3 vector, vec4 quaternion) {
     float iw = - qx * x - qy * y - qz * z;
 
     // calculate result * inverse quat
-    return vec3(ix * qw + iw * - qx + iy * - qz - iz * - qy, iy * qw + iw * - qy + iz * - qx - ix * - qz, iz * qw + iw * - qz + ix * - qy - iy * - qx);
+    return vec3(ix * qw + iw * - qx + iy * - qz - iz * - qy, iy * qw + iw * - qy + iz * - qx - ix * - qz,
+        iz * qw + iw * - qz + ix * - qy - iy * - qx);
 }
 
 float neighborSign(float i){
-    if (mod(i,2.0) == 0.0) return -1.0;
+    if (mod(i+0.001,2.0) < 0.5) return -1.0;
     return 1.0;
 }
 
 vec3 neighborOffset(float i){
     vec3 offset = vec3(0);
-    int neighborAxis = int(floor(i/2.0));
+    int neighborAxis = int(floor(i/2.0+0.001));
     if (neighborAxis == 0) offset[0] = neighborSign(i)*u_latticePitch[0];
     else if (neighborAxis == 1) offset[1] = neighborSign(i)*u_latticePitch[1];
     else if (neighborAxis == 2) offset[2] = neighborSign(i)*u_latticePitch[2];
@@ -103,10 +104,9 @@ void main(){
             vec3 nominalD = neighborOffset(i*3.0+float(j));
             vec3 actuatedD = nominalD;
 
-            vec3 halfNominalD = actuatedD*0.5;
-            vec3 rotatedHalfNomD = applyQuaternion(halfNominalD, quaternion);
-            vec3 neighbRotatedHalfNomD = applyQuaternion(halfNominalD, neighborQuaternion);
-            vec3 rotatedNominalD = rotatedHalfNomD + neighbRotatedHalfNomD;
+            vec3 rotatedNomD = applyQuaternion(nominalD, quaternion);
+            vec3 neighbRotatedNomD = applyQuaternion(nominalD, neighborQuaternion);
+            vec3 rotatedNominalD = (rotatedNomD + neighbRotatedNomD)*0.5;
 
 
             float k = compositeKs[j];
@@ -118,6 +118,5 @@ void main(){
 
 
     vec3 velocity = lastVelocity + force/mass*u_dt;
-
     gl_FragColor = vec4(velocity, 0);
 }

@@ -115,6 +115,10 @@ define(['glBoilerplate'], function(glBoilerplate){
         this.frameBuffers[texture2Name] = temp;
     };
 
+    GPUMath.prototype.readyToRead = function(){
+        return gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE;
+    };
+
     GPUMath.prototype.readPixels = function(xMin, yMin, width, height, array){
         gl.readPixels(xMin, yMin, width, height, gl.RGBA, gl.UNSIGNED_BYTE, array);
     };
