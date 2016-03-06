@@ -8,6 +8,7 @@ define(['underscore', 'three'], function(_, THREE){
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
 //    camera.setLens(50);
     var scene = new THREE.Scene();
+    var simScene = new THREE.Scene();
     var secondPassScene = new THREE.Scene();
     var firstPassScene = new THREE.Scene();
     var renderer = new THREE.WebGLRenderer({antialias:true});//antialiasing is not supported in ff and on mac+chrome
@@ -104,6 +105,11 @@ define(['underscore', 'three'], function(_, THREE){
         scene.add(object);
     }
 
+    function simSceneAdd(object){
+        simSceneClear();
+        simScene.add(object);
+    }
+
     function secondPassSceneAdd(object){
         secondPassScene.add(object)
     }
@@ -158,6 +164,10 @@ define(['underscore', 'three'], function(_, THREE){
         scene.remove(object);
     }
 
+    function simSceneClear(){
+        if (simScene.children.length>0) simScene.remove(simScene.children[0]);
+    }
+
     function secondPassSceneRemove(object){
         secondPassScene.remove(object)
     }
@@ -205,6 +215,16 @@ define(['underscore', 'three'], function(_, THREE){
         _render();
     }
 
+    function _renderSim(){
+//        console.log("render sim");
+        renderer.clear();
+        renderer.render(firstPassScene, camera);
+        renderer.clearDepth();
+        renderer.render(simScene, camera);
+        renderer.clearDepth();
+        renderer.render(secondPassScene, camera);
+    }
+
     function _render(){
 //        console.log("render");
         renderer.clear();
@@ -248,8 +268,10 @@ define(['underscore', 'three'], function(_, THREE){
         startAnimationLoop: startAnimationLoop,
         stopAnimationLoop: stopAnimationLoop,
         sceneRemove: sceneRemove,
+        simSceneRemove: simSceneClear,
         secondPassSceneRemove: secondPassSceneRemove,
         sceneAdd: sceneAdd,
+        simSceneAdd: simSceneAdd,
         secondPassSceneAdd: secondPassSceneAdd,
         sceneAddBasePlane: sceneAddBasePlane,
         sceneRemoveBasePlane: sceneRemoveBasePlane,
