@@ -1,14 +1,14 @@
 <% if (allMenus[currentNav].parent) currentNav = allMenus[currentNav].parent; %>
 <div class="btn-toolbar">
     <div class="btn-group">
-        <a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#"><img data-type="supercell" src="assets/imgs/super-sm.png"></a>
-        <a data-type="cell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "cell"){ %> ribbon-selected<% } %>" href="#"><img data-type="cell" src="assets/imgs/cell-sm.png"></a>
-        <% if (allLattices[cellType].connection[connectionType].type[applicationType].parts){ %>
-            <a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>
-        <% } %>
+        <!--<a data-type="supercell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "supercell"){ %> ribbon-selected<% } %>" href="#"><img data-type="supercell" src="assets/imgs/super-sm.png"></a>-->
+        <!--<a data-type="cell" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "cell"){ %> ribbon-selected<% } %>" href="#"><img data-type="cell" src="assets/imgs/cell-sm.png"></a>-->
+        <!--<% if (allLattices[cellType].connection[connectionType].type[applicationType].parts){ %>-->
+            <!--<a data-type="part" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "part"){ %> ribbon-selected<% } %>" href="#"><img data-type="part" src="assets/imgs/part-sm.png"></a>-->
+        <!--<% } %>-->
         <!--<a data-type="beam" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "beam"){ %> ribbon-selected<% } %>" href="#">Beam</a>-->
         <% if (currentNav != "navDesign"){%>
-            <a data-type="hide" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "hide"){ %> ribbon-selected"<% } %>">Hide</a>
+            <!--<a data-type="hide" class="btn btn-primary btn-ribbon ribbonCellMode<% if (cellMode == "hide"){ %> ribbon-selected"<% } %>">Hide</a>-->
         <% }else{ %>
             <a class="btn btn-primary btn-ribbon ribbonDeleteMode<% if (deleteMode){ %> ribbon-selected"<% } %>"><span class="fui-cross"></span></a>
         <% } %>

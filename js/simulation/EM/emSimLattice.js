@@ -520,6 +520,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
             },
 
             reset: function(){
+                if (!this.textureSize) return;//no cells
                 var textureSize = this.textureSize[0]*this.textureSize[1];
                 var cells = lattice.getCells();
                 for (var i=0;i<textureSize;i++) {
