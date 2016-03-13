@@ -3,8 +3,8 @@
  */
 
 
-define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell, lattice, plist, THREE){
-
+define(["underscore", "cell", "lattice", "plist", "three"],
+    function(_, DMACell, lattice, plist, THREE){
 
     function EMSimCell(cell){
 
@@ -158,14 +158,15 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         this.cell._setTHREEMaterial(material);
     };
 
-
-
-    EMSimCell.prototype.isSignalGenerator = function(){
-        if (!this.cell.material) return false;
-        return this.cell.getMaterialID() == "signal";
+    DMACell.prototype.isAcutator = function(){
+        return this.getMaterialID() == "piezo";
     };
 
-    EMSimCell.prototype.setAsSignalGenerator = function(json){
+    DMACell.prototype.isSignalGenerator = function(){
+        return this.getMaterialID() == "signal";
+    };
+
+    DMACell.prototype.setAsSignalGenerator = function(json){
         if (json){
             this.pwm = json.pwm;
             this.frequency = json.frequency;
@@ -181,7 +182,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         }
     };
 
-    EMSimCell.prototype.getSignalJSON = function(){
+    DMACell.prototype.getSignalJSON = function(){
         return {
             pwm: this.pwm,
             phase: this.phase,
@@ -191,7 +192,7 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         }
     };
 
-    EMSimCell.prototype.isConductive = function(){
+    DMACell.prototype.isConductive = function(){
         return this.getMaterial().isConductive();
     };
 
@@ -207,16 +208,23 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.nominalSize;
     };
 
-    EMSimCell.prototype.setWireGroup = function(num, force){
+    DMACell.prototype.setWireGroup = function(num, force){
         if (force) this._wireGroup = num;
         else if (this._wireGroup>num){
             this._wireGroup = num;
-            this.propagateWireGroup(num);
+            var self = this;
+            require(['emSimLattice'], function(emSimLattice){
+                self.propagateWireGroup(emSimLattice.calcNeighbors(self.getIndex()), num);
+            });
         }
     };
 
-    EMSimCell.prototype.getWireGroup = function(){
+    DMACell.prototype.getWireGroup = function(){
         return this._wireGroup;
+    };
+
+    DMACell.prototype.getNeighbors = function(){
+
     };
 
     EMSimCell.prototype.setVoltage = function(voltage){
@@ -227,15 +235,15 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
         return this.voltage;
     };
 
-    EMSimCell.prototype.propagateWireGroup = function(num){
+    DMACell.prototype.propagateWireGroup = function(neighbors, num){
         if (!this.isConductive()) return;
         if (num === undefined) num = this._wireGroup;
-        _.each(this.neighbors, function(neighbor){
+        _.each(neighbors, function(neighbor){
             if(neighbor) neighbor.setWireGroup(num);
         });
     };
 
-    EMSimCell.prototype.conductiveGroupVisible = function(allVisible, groupNum){
+    DMACell.prototype.conductiveGroupVisible = function(allVisible, groupNum){
         return this.isConductive() && (allVisible || groupNum == this._wireGroup);
     };
 
@@ -322,12 +330,6 @@ define(["underscore", "cell", "lattice", "plist", "three"], function(_, DMACell,
             self.neighbors[index] = null;
         });
         this.neighbors = null;
-    };
-
-    EMSimCell.prototype.toJSON = function(){
-        var json = {};
-        if (this.isSignalGenerator()) _.extend(json, this.getSignalJSON());
-        return json;
     };
 
     return EMSimCell;

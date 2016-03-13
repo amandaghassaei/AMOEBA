@@ -3,8 +3,8 @@
  */
 
 
-define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'emWire', 'GPUMath'],
-    function(_, Backbone, three, lattice, plist, THREE, EMWire, gpuMath) {
+define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell', 'three', 'emWire', 'GPUMath'],
+    function(_, Backbone, three, lattice, plist, emSimCell, THREE, EMWire, gpuMath) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -15,7 +15,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
             },
 
             initialize: function(){
-                //this.listenTo(this, "change:wires", this._assignSignalsToWires);
+                this.listenTo(this, "change:wires", this._assignSignalsToWires);
             },
 
             setCells: function(cells, fixedIndices){
@@ -26,8 +26,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     return;
                 }
 
+                var self = this;
+
                 var textureDim = this._calcTextureSize(numCells);//calc size of texture for pow of two
                 var textureSize = textureDim*textureDim;
+
+                this._precomputeSignals(cells);
+                this._precomputeWires(cells);
 
                 this.textureSize = [textureDim, textureDim];
                 this.originalPosition = new Float32Array(textureSize*4);
@@ -51,11 +56,37 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 this.compositeKs = new Float32Array(textureSize*8);
                 this.compositeDs = new Float32Array(textureSize*8);
 
+                this.wires = new Int16Array(textureSize*4);//also stores actuator mask as -1
+                var wires = this.get("wires");
+                this.wiresMeta = new Float32Array(_.keys(wires).length*4);
+                var index = 0;
+                _.each(wires, function(wire){
+                    var i = index*4;
+                    var signal = wire.getSignal();
+                    if (!signal) {
+                        self.wiresMeta[i] = -1;//no signal generator on this wire
+                        return;
+                    }
+                    var waveformType = signal.waveformType;
+                    if (waveformType == "sine"){
+                        self.wiresMeta[i] = 0;
+                    } else if (waveformType == "square"){
+                        self.wiresMeta[i] = 1;
+                        self.wiresMeta[i+3] = signal.pwm
+                    } else if (waveformType == "saw"){
+                        self.wiresMeta[i] = 2;
+                        if (signal.invertSignal) self.wiresMeta[i+3] = 1;
+                    } else if (waveformType == "triangle"){
+                        self.wiresMeta[i] = 3;
+                    }
+                    self.wiresMeta[i+1] = signal.frequency;
+                    self.wiresMeta[i+2] = signal.phase;
+                });
+
                 this.cellsIndexMapping = this._initEmptyArray(cells);//3d array holds rgba index of cell (for use within this class)
                 var cellsMin = lattice.get("cellsMin");
 
-                var index = 0;
-                var self = this;
+                index = 0;
                 this._loopCells(cells, function(cell, x, y, z){
 
                     var rgbaIndex = 4*index;
@@ -75,12 +106,21 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
 
                     self.lastQuaternion[rgbaIndex+3] = 1;//quat = (0,0,0,1)
 
+                    if (cell.isConductive()) {
+                        var wireID = cell.getWireGroup();
+                        var keys = _.keys(wires);
+                        var wireIndex = keys.indexOf(""+wireID);//keys are strings
+                        if (wireIndex<0) console.warn("invalid wire id " + wireID);
+                        self.wires[rgbaIndex] = wireIndex+1;
+                    }
+
                     index++;
                 });
 
                 index = 0;
                 this._loopCellsWithNeighbors(cells, function(cell, neighbors, x, y, z){
 
+                    var rgbaIndex = 4*index;
                     _.each(neighbors, function(neighbor, neighborIndex){
 
                         var compositeIndex = index*8;
@@ -102,6 +142,30 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         self.compositeKs[compositeIndex + neighborIndex%3] = compositeK;
                         self.compositeDs[compositeIndex + neighborIndex%3] = compositeK/1000;//this is arbitrary for now
                     });
+
+                    if (cell.isAcutator()){
+                        var numNeighboringWires = 0;
+                        var wireID = -1;
+                        var neighborAxis = -1;
+                        _.each(neighbors, function (neighbor, neighborIndex) {
+                            if (neighbor && neighbor.isConductive()) {
+                                numNeighboringWires++;
+                                if (neighborAxis < 0) neighborAxis = Math.floor(neighborIndex/2);
+                                else if (Math.floor(neighborIndex/2) != neighborAxis) numNeighboringWires -= 100;//throw wiring error
+                                if (wireID < 0) wireID = neighbor.getWireGroup();
+                                else if (neighbor.getWireGroup() != wireID) numNeighboringWires -= 100;
+                            }
+                        });
+                        if (numNeighboringWires == 2 && neighborAxis >= 0  && wireID >= 0){
+                            self.wires[rgbaIndex] = -1;//-1 indicates actuator mask
+                            //use remaining three spots to indicate axial direction and wire group num
+                            var keys = _.keys(wires);
+                            var wireIndex = keys.indexOf(""+wireID);//keys are strings
+                            if (wireIndex<0) console.warn("invalid wire id " + wireID);
+                            self.wires[rgbaIndex+neighborAxis+1] = wireIndex+1;
+                        } else  console.warn("invalid actuator wiring");
+                    }
+
 
                     index++;
                 });
@@ -174,6 +238,49 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 return this.fixed[rgbaIndex];
             },
 
+            _precomputeSignals: function(cells){
+                var signals = [];
+                this._loopCells(cells, function(cell){
+                    if (cell.isSignalGenerator()) {
+                        cell.setAsSignalGenerator();
+                        signals.push(cell);
+                    }
+                });
+                this.set("signals", signals);
+            },
+
+            _assignSignalsToWires: function(){
+                var wires = this.get("wires");
+                var signalConflict = false;
+                _.each(this.get("signals"), function(signal){
+                    signalConflict |= wires[signal.getWireGroup()].addSignal(signal);
+                });
+                this.set("signalConflict", signalConflict);
+            },
+
+            _precomputeWires: function(cells){
+                var num = 1;
+                this._loopCells(cells, function(cell){
+                    cell.setWireGroup(num++, true);
+                });
+                this._loopCellsWithNeighbors(cells, function(cell, neighbors){
+                    cell.propagateWireGroup(neighbors);
+                });
+                this._calcNumberDCConnectedComponents(cells);
+            },
+
+            _calcNumberDCConnectedComponents: function(cells){
+                var wires = {};
+                this._loopCells(cells, function(cell){
+                    if (cell.isConductive()) {
+                        var groupNum = cell.getWireGroup();
+                        if (!wires[groupNum]) wires[groupNum] = new EMWire();
+                        wires[groupNum].addCell(cell);
+                    }
+                });
+                this.set("wires", wires);
+            },
+
             _loopCells: function(cells, callback){
                 for (var x=0;x<cells.length;x++){
                     for (var y=0;y<cells[0].length;y++){
@@ -192,6 +299,19 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     var neighbors = self._calcNeighbors(cells, x, y, z, sizeX, sizeY, sizeZ);
                     callback(cell, neighbors, x, y, z, self);
                 });
+            },
+
+            loopCells: function(callback){
+                this._loopCells(lattice.getCells(), callback);
+            },
+
+            calcNeighbors: function(index){
+                var cells = lattice.getCells();
+                var sizeX = cells.length;
+                var sizeY = cells[0].length;
+                var sizeZ = cells[0][0].length;
+                var offset = lattice.get("cellsMin");
+                return this._calcNeighbors(cells, index.x-offset.x, index.y-offset.y, index.z-offset.z, sizeX, sizeY, sizeZ);
             },
 
             _calcNeighbors: function(cells, x, y, z, sizeX, sizeY, sizeZ){
@@ -243,6 +363,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                     var quaternion = [this.lastQuaternion[rgbaIndex], this.lastQuaternion[rgbaIndex+1], this.lastQuaternion[rgbaIndex+2], this.lastQuaternion[rgbaIndex+3]];
                     var euler = [this.lastRotation[rgbaIndex], this.lastRotation[rgbaIndex+1], this.lastRotation[rgbaIndex+2]];
 
+                    var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
+                    var isActuator = wiring[0] == -1;
+
                     for (var j=0;j<6;j++){
 
                         var neighborsIndex = i*8;
@@ -256,7 +379,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         var neighborEuler = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2]];
 
                         var nominalD = this._neighborOffset(j, latticePitch);
-                        var actuatedD = nominalD;
+                        var actuatedD = this._neighborOffset(j, latticePitch);
+                        var neighborAxis = Math.floor(j/2);
+                        var actuation = 0;
+                        if (isActuator && wiring[neighborAxis+1]>0) {
+                            actuation += 0.3*this._getActuatorVoltage(wiring[neighborAxis+1]-1, time);
+                        }
+                        var neighborWiring = [this.wires[neighborIndex], this.wires[neighborIndex+1], this.wires[neighborIndex+2], this.wires[neighborIndex+3]];
+                        if (neighborWiring[0] == -1 && neighborWiring[neighborAxis+1]>0){
+                            actuation += 0.3*this._getActuatorVoltage(neighborWiring[neighborAxis+1]-1, time);
+                        }
+                        actuatedD[neighborAxis] *= 1+actuation;
 
                         var halfNominalD = [actuatedD[0]*0.5, actuatedD[1]*0.5, actuatedD[2]*0.5];
                         var rotatedHalfNomD = this._applyQuaternion(halfNominalD, quaternion);
@@ -288,7 +421,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                         rTotal[2] += rotaionEuler[2]*k;
                         rContrib += k;
 
-                        var neighborAxis = Math.floor(j/2);
                         var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
                         var bendForce = [0,0,0];
                         for (var l=0;l<3;l++){
@@ -511,6 +643,36 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'three', 'em
                 var neighborAxis = Math.floor(index/2);
                 offset[neighborAxis] = this._neighborSign(index)*latticePitch[neighborAxis];
                 return offset;
+            },
+
+            _getActuatorVoltage: function(wireIndex, time){
+                var wireMeta = [this.wiresMeta[wireIndex], this.wiresMeta[wireIndex+1], this.wiresMeta[wireIndex+2], this.wiresMeta[wireIndex+3]];
+                var type = wireMeta[0];
+                if (type == -1) {
+                    //no signal connected
+                    return 0;
+                }
+                var frequency = wireMeta[1];
+                var period = 1/frequency;
+                var phase = wireMeta[2];
+                var currentPhase = ((time + phase*period)%period)/period;
+                if (type == 0){
+                    return 0.5*Math.sin(2*Math.PI*currentPhase);
+                }
+                if (type == 1){
+                    var pwm = wireMeta[3];
+                    if (currentPhase < pwm) return 0.5;
+                    return -0.5;
+                }
+                if (type == 2){
+                    if (wireMeta[3]>0) return 0.5-currentPhase;
+                    return currentPhase;
+                }
+                if (type == 3){
+                    if (currentPhase < 0.5) return currentPhase*2-0.5;
+                    return 0.5-(currentPhase-0.5)*2;
+                }
+                return 0;
             },
 
             _swapArrays: function(array1Name, array2Name){

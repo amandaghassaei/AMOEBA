@@ -15,7 +15,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
 
         _initialize: function(options){
             this.signal = options.myObject;
-            _.extend(signal, this.signal.toJSON());
+            _.extend(signal, this.signal.getSignalJSON());
             emSim.showConductors(this.signal.getWireGroup());
         },
 
