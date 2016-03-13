@@ -25,8 +25,8 @@ define([], function(){
                 },
                 flexureCond: {
                     name: "Flexure Conductive",
-                    color: "#9e947e",
-                    altColor: "#9e947e",
+                    color: "#b4ac9c",
+                    altColor: "#b4ac9c",
                     texture: "stripes",
                     properties:{
                         conductive: true,

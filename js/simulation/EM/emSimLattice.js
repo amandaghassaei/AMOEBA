@@ -387,7 +387,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         var neighborEuler = [this.lastRotation[neighborIndex], this.lastRotation[neighborIndex+1], this.lastRotation[neighborIndex+2]];
 
                         var nominalD = this._neighborOffset(j, latticePitch);
-                        var actuatedD = this._neighborOffset(j, latticePitch);
+                        var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
                         var neighborAxis = Math.floor(j/2);
                         var actuation = 0;
                         if (isActuator && wiring[neighborAxis+1]>0) {
@@ -693,17 +693,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             reset: function(){
                 if (!this.textureSize) return;//no cells
                 var textureSize = this.textureSize[0]*this.textureSize[1];
-                var cells = lattice.getCells();
-                for (var i=0;i<textureSize;i++) {
 
-                    var rgbaIndex = i*4;
-                    if (this.mass[rgbaIndex] == 0) continue;//no cell here
-
-                    var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex+1], this.cellsArrayMapping[rgbaIndex+2]];
-                    var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex+1], this.originalPosition[rgbaIndex+2]];
-                    cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                    cells[index[0]][index[1]][index[2]].object3D.rotation.set(0, 0, 0);
-                }
+                var self = this;
+                this._loopCells(lattice.getCells(), function(cell){
+                    var index = cell.getAbsoluteIndex().sub(lattice.get("cellsMin"));
+                    var rgbaIndex = 4*self.cellsIndexMapping[index.x][index.y][index.z];
+                    var position = [self.originalPosition[rgbaIndex], self.originalPosition[rgbaIndex+1], self.originalPosition[rgbaIndex+2]];
+                    cell.object3D.position.set(position[0], position[1], position[2]);
+                    cell.object3D.rotation.set(0, 0, 0);
+                });
 
                 this.lastTranslation = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*4);

@@ -44,6 +44,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             this._navChanged();
 
+            this.time = 0;
+
             this.simMaterials = this._buildSimMaterials();
         },
 
@@ -141,17 +143,17 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.set("isRunning", true);
             this.set("needsReset", true);
             var dt = this.get("dtSolver")/1000000;//convert to sec
-            var time = 0;
+
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
-                    time += dt;
-                    emSimLattice.iter(dt, time, gravityVect, false);
+                    self.time += dt;
+                    emSimLattice.iter(dt, self.time, gravityVect, false);
                 }
-                time += dt;
-                emSimLattice.iter(dt, time, gravityVect, true);
+                self.time += dt;
+                emSimLattice.iter(dt, self.time, gravityVect, true);
                 if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }
@@ -168,6 +170,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.set("isRunning", false);
             this.set("needsReset", false);
             emSimLattice.reset();
+            this.time = 0;
             if (this._getViewMode == "translation"){
                 this.calcTranslation();
             }
