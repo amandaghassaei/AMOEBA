@@ -218,11 +218,36 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         if (force) this._wireGroup = num;
         else if (this._wireGroup>num){
             this._wireGroup = num;
-            var self = this;
-            require(['emSimLattice'], function(emSimLattice){
-                self.propagateWireGroup(emSimLattice.calcNeighbors(self.getIndex()), num);
-            });
+            this.propagateWireGroup(this.calcNeighbors(this.getIndex()), num);
         }
+    };
+
+    DMACell.prototype.calcNeighbors = function(index){
+        var cells = lattice.getCells();
+        var sizeX = cells.length;
+        var sizeY = cells[0].length;
+        var sizeZ = cells[0][0].length;
+        var offset = lattice.get("cellsMin");
+        var x = index.x-offset.x;
+        var y = index.y-offset.y;
+        var z = index.z-offset.z;
+        var neighbors = [];
+        if (x == 0) neighbors.push(null);
+        else neighbors.push(cells[x-1][y][z]);
+        if (x == sizeX-1) neighbors.push(null);
+        else neighbors.push(cells[x+1][y][z]);
+
+        if (y == 0) neighbors.push(null);
+        else neighbors.push(cells[x][y-1][z]);
+        if (y == sizeY-1) neighbors.push(null);
+        else neighbors.push(cells[x][y+1][z]);
+
+        if (z == 0) neighbors.push(null);
+        else neighbors.push(cells[x][y][z-1]);
+        if (z == sizeZ-1) neighbors.push(null);
+        else neighbors.push(cells[x][y][z+1]);
+
+        return neighbors;
     };
 
     DMACell.prototype.getWireGroup = function(){

@@ -271,6 +271,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     }
                     wiresMeta[i+1] = signal.frequency;
                     wiresMeta[i+2] = signal.phase;
+
+                    index++;
                 });
                 this.wiresMeta = wiresMeta;
             },
@@ -652,6 +654,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             },
 
             _getActuatorVoltage: function(wireIndex, time){
+                wireIndex *= 4;
                 var wireMeta = [this.wiresMeta[wireIndex], this.wiresMeta[wireIndex+1], this.wiresMeta[wireIndex+2], this.wiresMeta[wireIndex+3]];
                 var type = wireMeta[0];
                 if (type == -1) {
