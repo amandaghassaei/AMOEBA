@@ -58,35 +58,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
                 this.wires = new Int16Array(textureSize*4);//also stores actuator mask as -1
                 var wires = this.get("wires");
-                this.wiresMeta = new Float32Array(_.keys(wires).length*4);
-                var index = 0;
-                _.each(wires, function(wire){
-                    var i = index*4;
-                    var signal = wire.getSignal();
-                    if (!signal) {
-                        self.wiresMeta[i] = -1;//no signal generator on this wire
-                        return;
-                    }
-                    var waveformType = signal.waveformType;
-                    if (waveformType == "sine"){
-                        self.wiresMeta[i] = 0;
-                    } else if (waveformType == "square"){
-                        self.wiresMeta[i] = 1;
-                        self.wiresMeta[i+3] = signal.pwm
-                    } else if (waveformType == "saw"){
-                        self.wiresMeta[i] = 2;
-                        if (signal.invertSignal) self.wiresMeta[i+3] = 1;
-                    } else if (waveformType == "triangle"){
-                        self.wiresMeta[i] = 3;
-                    }
-                    self.wiresMeta[i+1] = signal.frequency;
-                    self.wiresMeta[i+2] = signal.phase;
-                });
+                this.resetWiresMetaTexture(wires);
 
                 this.cellsIndexMapping = this._initEmptyArray(cells);//3d array holds rgba index of cell (for use within this class)
                 var cellsMin = lattice.get("cellsMin");
 
-                index = 0;
+                var index = 0;
                 this._loopCells(cells, function(cell, x, y, z){
 
                     var rgbaIndex = 4*index;
@@ -267,6 +244,35 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     cell.propagateWireGroup(neighbors);
                 });
                 this._calcNumberDCConnectedComponents(cells);
+            },
+
+            resetWiresMetaTexture: function(wires){
+                if (!wires) wires = this.get("wires");
+                var wiresMeta = new Float32Array(_.keys(wires).length*4);
+                var index = 0;
+                _.each(wires, function(wire){
+                    var i = index*4;
+                    var signal = wire.getSignal();
+                    if (!signal) {
+                        wiresMeta[i] = -1;//no signal generator on this wire
+                        return;
+                    }
+                    var waveformType = signal.waveformType;
+                    if (waveformType == "sine"){
+                        wiresMeta[i] = 0;
+                    } else if (waveformType == "square"){
+                        wiresMeta[i] = 1;
+                        wiresMeta[i+3] = signal.pwm
+                    } else if (waveformType == "saw"){
+                        wiresMeta[i] = 2;
+                        if (signal.invertSignal) wiresMeta[i+3] = 1;
+                    } else if (waveformType == "triangle"){
+                        wiresMeta[i] = 3;
+                    }
+                    wiresMeta[i+1] = signal.frequency;
+                    wiresMeta[i+2] = signal.phase;
+                });
+                this.wiresMeta = wiresMeta;
             },
 
             _calcNumberDCConnectedComponents: function(cells){
@@ -666,7 +672,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 }
                 if (type == 2){
                     if (wireMeta[3]>0) return 0.5-currentPhase;
-                    return currentPhase;
+                    return currentPhase-0.5;
                 }
                 if (type == 3){
                     if (currentPhase < 0.5) return currentPhase*2-0.5;

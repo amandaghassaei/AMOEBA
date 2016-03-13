@@ -174,11 +174,17 @@ define(["underscore", "cell", "lattice", "plist", "three"],
             this.waveformType = json.waveformType;
             this.invertSignal = json.invertSignal;
         } else {
-            this.pwm = 0.5;
-            this.frequency = 10;
-            this.phase = 0;
-            this.waveformType = "sine";
-            this.invertSignal = false;
+            json = {
+                pwm: 0.5,
+                frequency: 10,
+                phase: 0,
+                waveformType: "sine",
+                invertSignal: false
+            };
+            var self = this;
+            _.each(json, function(val, key){
+                if (self[key] === undefined) self[key] = val;
+            });
         }
     };
 

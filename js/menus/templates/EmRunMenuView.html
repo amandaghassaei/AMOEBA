@@ -10,13 +10,13 @@
 <% } else { %>
     <a href="#" id="runSimulation" class="btn btn-block btn-lg btn-success">Run Simulation</a><br/>
 <% } %>
-View Mode:
-<% _.each(EMViewModes, function(EMViewMode, key){ %>
-    <label class="radio">
-        <input type="radio" <% if (key == viewMode){ %>checked<% } %> name="viewMode" value="<%= key %>" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-        <%= EMViewMode %>
-    </label>
-<% }); %>
+<!--View Mode:-->
+<!--<% _.each(EMViewModes, function(EMViewMode, key){ %>-->
+    <!--<label class="radio">-->
+        <!--<input type="radio" <% if (key == viewMode){ %>checked<% } %> name="viewMode" value="<%= key %>" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>-->
+        <!--<%= EMViewMode %>-->
+    <!--</label>-->
+<!--<% }); %>-->
 <% if(viewMode == "translation"){ %>
     <div class="tab1">
         <label class="checkbox" for="autoRangeColor">
