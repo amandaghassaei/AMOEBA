@@ -23,3 +23,15 @@
 <% } else { %>
     No Wires
 <% } %>
+<% if (actuators.length>0){ %>
+    Actuators ( <%= actuators.length %> ):<br/>
+    <% _.each(actuators, function(actuator, index){ %>
+        <label class="radio <% if(!actuator.valid){ %>red<% } %>">
+            <input type="radio" <% if (visibleWire == -3 && index == visibleActuator){ %>checked<% } %> name="visibleActuator" value="<%= index %>" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Actuator <%= ++index %> <% if(actuator.wireIndex !== undefined){ %>( Wire <%= actuator.wireIndex+1 %> )<% } %>
+        </label>
+    <% }); %>
+    <br/>
+<% }else{ %>
+    No Actuators
+<% } %>

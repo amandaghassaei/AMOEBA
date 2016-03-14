@@ -30,7 +30,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             numSimMaterials: 20,//number of materials used in gradient view
 
-            visibleWire: -1//-2 show all, -1 show conductors, or wire id
+            visibleWire: -1,//-2 show all, -1 show conductors, or wire id, -3 show actuators, -4 show problem actuators
+            visibleActuator: 0
 
         },
 
@@ -41,6 +42,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
             this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
             this.listenTo(this, "change:visibleWire", function(){this.showConductors();});
+            this.listenTo(this, "change:visibleActuator", function(){this.showActuator();});
 
             this._navChanged();
 
@@ -113,6 +115,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     this.showConductors(-2);//show all if not in electronics tab
                 }
             }
+        },
+
+        showActuator: function(index){
+            if (index === undefined) index = this.get("visibleActuator");
+            emSimLattice.loopCells(function(cell){
+                cell.setTransparent(true);
+            });
+            emSimLattice.get("actuators")[index].cell.setTransparent(false);
+            three.render();
         },
 
         showConductors: function(groupNum){

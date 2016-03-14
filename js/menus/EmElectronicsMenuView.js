@@ -10,6 +10,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
 
         events: {
             "click .editSignal":                                  "_openSignalEditor",
+            "click input[name='visibleActuator']":                 "_showActuator"
         },
 
         _initialize: function(){
@@ -19,6 +20,10 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
         getPropertyOwner: function($target){
             if ($target.hasClass('emSim')) return emSim;
             return null;
+        },
+
+        _showActuator: function(){
+            emSim.set("visibleWire", -3, {silent:true});
         },
 
         _openSignalEditor: function(e){

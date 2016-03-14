@@ -9,9 +9,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
         var EMSimLattice = Backbone.Model.extend({
 
             defaults: {
-               wires: {},
-               signals: [],
-               signalConflict: false
+                wires: {},
+                signals: [],
+                signalConflict: false,
+                actuators: []
             },
 
             initialize: function(){
@@ -94,6 +95,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     index++;
                 });
 
+                var actuators = [];
                 index = 0;
                 this._loopCellsWithNeighbors(cells, function(cell, neighbors, x, y, z){
 
@@ -140,12 +142,18 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                             var wireIndex = keys.indexOf(""+wireID);//keys are strings
                             if (wireIndex<0) console.warn("invalid wire id " + wireID);
                             self.wires[rgbaIndex+neighborAxis+1] = wireIndex+1;
-                        } else  console.warn("invalid actuator wiring");
+                            actuators.push({cell: cell, valid: true, wireIndex: wireIndex});
+                        } else {
+                            actuators.push({cell: cell, valid: false});
+                            console.warn("invalid actuator wiring");
+                        }
                     }
 
 
                     index++;
                 });
+
+                this.set("actuators", actuators);
 
                 var change = false;
                 for (var i=fixedIndices.length-1;i>=0;i--){
