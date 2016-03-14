@@ -624,10 +624,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 return [vector[0]/length, vector[1]/length, vector[2]/length, vector[3]/length];
             },
 
-            _invertQuaternion: function(quaternion){
-                return [-quaternion[0], -quaternion[1], -quaternion[2], quaternion[3]];
-            },
-
             _applyQuaternion: function (vector, quaternion) {
 
                 var x = vector[0];
