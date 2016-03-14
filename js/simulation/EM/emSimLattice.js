@@ -352,6 +352,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             iter: function(dt, time, gravity, shouldRender){
 
+                var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
+
                 var latticePitch = lattice.getPitch();
                 latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];
 
@@ -429,23 +431,28 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                         rTotal[2] += rotaionEuler[2]*k;
                         rContrib += k;
 
-                        var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
-                        var bendForce = [0,0,0];
-                        for (var l=0;l<3;l++){
-                            if (l == neighborAxis) continue;
-                            bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
-                        }
+                        //var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
+                        //var bendForce = [0,0,0];
+                        //for (var l=0;l<3;l++){
+                        //    if (l == neighborAxis) continue;
+                        //    bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
+                        //}
 
-                        var bendingForce = this._applyQuaternion(bendForce, quaternion);
-                        force[0] += bendingForce[0];
-                        force[1] += bendingForce[1];
-                        force[2] += bendingForce[2];
+                        //var bendingForce = this._applyQuaternion(bendForce, quaternion);
+                        //force[0] += bendingForce[0];
+                        //force[1] += bendingForce[1];
+                        //force[2] += bendingForce[2];
                     }
 
                     //simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2];
+                    var zPosition = this.originalPosition[rgbaIndex+2]+multiplier*translation[2];
                     var collisionK = 1;
-                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
+                    if (zPosition<0) {
+                        var collisionForce = [0,0,-zPosition*collisionK];
+                        force[0] += collisionForce[0];
+                        force[1] += collisionForce[1];
+                        force[2] += collisionForce[2];
+                    }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
@@ -459,9 +466,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     this.velocity[rgbaIndex+1] = velocity[1];
                     this.velocity[rgbaIndex+2] = velocity[2];
 
-                    rTotal[0] /= rContrib;
-                    rTotal[1] /= rContrib;
-                    rTotal[2] /= rContrib;
+                    if (rContrib>0) {
+                        rTotal[0] /= rContrib;
+                        rTotal[1] /= rContrib;
+                        rTotal[2] /= rContrib;
+                    }
                     this.rotation[rgbaIndex] = rTotal[0];
                     this.rotation[rgbaIndex+1] = rTotal[1];
                     this.rotation[rgbaIndex+2] = rTotal[2];
@@ -473,7 +482,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 }
 
                 if (shouldRender){
-                    var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
                     var cells = lattice.getCells();
                     for (var i=0;i<textureSize;i++) {
 
@@ -614,6 +622,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
             _normalize4D: function(vector){
                 var length = Math.sqrt(vector[0]*vector[0] + vector[1]*vector[1] + vector[2]*vector[2] + vector[3]*vector[3]);
                 return [vector[0]/length, vector[1]/length, vector[2]/length, vector[3]/length];
+            },
+
+            _invertQuaternion: function(quaternion){
+                return [-quaternion[0], -quaternion[1], -quaternion[2], quaternion[3]];
             },
 
             _applyQuaternion: function (vector, quaternion) {
