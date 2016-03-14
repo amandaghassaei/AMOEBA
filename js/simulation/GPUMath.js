@@ -95,9 +95,10 @@ define(['glBoilerplate'], function(glBoilerplate){
         gl.useProgram(this.programs[programName].program);
     };
 
-    GPUMath.prototype.step = function(programName, inputTextures, outputTexture){
+    GPUMath.prototype.step = function(programName, inputTextures, outputTexture, time){
 
         gl.useProgram(this.programs[programName].program);
+        if (time) this.setUniformForProgram(programName, "u_time", time, "1f");
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffers[outputTexture]);
         for (var i=0;i<inputTextures.length;i++){
             gl.activeTexture(gl.TEXTURE0 + i);
