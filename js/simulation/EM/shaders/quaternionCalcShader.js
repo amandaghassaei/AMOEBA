@@ -145,8 +145,8 @@ vec3 neighborOffset(float i, int neighborAxis){
     return offset;
 }
 
-int calcNeighborAxis(int i){
-    return int(floor(float(i)/2.0+0.001));
+int calcNeighborAxis(float i){
+    return int(floor(i/2.0+0.001));
 }
 
 int convertToInt(float num){
@@ -154,9 +154,9 @@ int convertToInt(float num){
 }
 
 float getActuatorVoltage(float wireIndex){
-    vec2 wireCoord = vec2(0.5, (floor(wireIndex*4.0+0.001)+0.5)/u_wiresMetaLength);
+    vec2 wireCoord = vec2(0.5, (floor(wireIndex+0.001)+0.5)/u_wiresMetaLength);
     vec4 wireMeta = texture2D(u_wiresMeta, wireCoord);
-    int type = convertToInt(1.2);
+    int type = convertToInt(wireMeta[0]);
     if (type == -1) {
         //no signal connected
         return 0.0;
@@ -198,6 +198,9 @@ void main(){
     vec3 translation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
     vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
 
+    vec4 wiring = texture2D(u_wires, scaledFragCoord);
+    bool isActuator = wiring.x < -0.5;//-1
+
     vec3 rTotal = vec3(0);
     float rContrib = 0.0;
 
@@ -211,13 +214,10 @@ void main(){
         vec3 neighborsYMapping = texture2D(u_neighborsYMapping, mappingIndex).xyz;
         vec3 compositeKs = texture2D(u_compositeKs, mappingIndex).xyz;
 
-        vec4 wiring = texture2D(u_wires, mappingIndex);
-        bool isActuator = wiring.x < 0.5;//-1
-
         for (int j=0;j<3;j++){
             if (neighborsXMapping[j] < 0.0) continue;//no neighbor
 
-            int neighborAxis = calcNeighborAxis(j);
+            int neighborAxis = calcNeighborAxis(i*3.0+float(j));
 
             vec2 neighborIndex = vec2(neighborsXMapping[j], neighborsYMapping[j]);
             neighborIndex.x += 0.5;
@@ -241,13 +241,13 @@ void main(){
                 }
             }
             vec4 neighborWiring = texture2D(u_wires, scaledNeighborIndex);
-            if (neighborWiring[0] < 0.5){
-                if (neighborWiring[1]>0.1){
+            if (neighborWiring[0] < -0.5){
+                if (neighborAxis == 0 && neighborWiring[1]>0.1){
                     actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
-                } else if (neighborWiring[2]>0.1){
-                    actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
-                } else if (neighborWiring[3]>0.1){
-                    actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
+                } else if (neighborAxis == 1 && neighborWiring[2]>0.1){
+                    actuation += 0.3*getActuatorVoltage(neighborWiring[2]-1.0);
+                } else if (neighborAxis == 2 && neighborWiring[3]>0.1){
+                    actuation += 0.3*getActuatorVoltage(neighborWiring[3]-1.0);
                 }
             }
             if (neighborAxis == 0) actuatedD[0] *= 1.0+actuation;

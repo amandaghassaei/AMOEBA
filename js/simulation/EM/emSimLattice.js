@@ -241,9 +241,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 7, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_originalPosition", 8, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastQuaternion", 9, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_wires", 10, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_wiresMeta", 11, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_multiplier", 1/(plist.allUnitTypes[lattice.getUnits()].multiplier), "1f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
+                gpuMath.setUniformForProgram("velocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
+                gpuMath.setUniformForProgram("velocityCalc", "u_time", 0, "1f");
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
                 gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
@@ -369,6 +373,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     index++;
                 });
                 this.wiresMeta = wiresMeta;
+                gpuMath.initTextureFromData("u_wiresMeta", 1, this.wiresMeta.length/4, "FLOAT", this.wiresMeta, true);
             },
 
             _calcNumberDCConnectedComponents: function(cells){
@@ -460,8 +465,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
                     "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
                 gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion"],
-                    "u_velocity");
+                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
+                    "u_wiresMeta"], "u_velocity", time);
                 gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
 
                 if (shouldRender) {
