@@ -11,6 +11,7 @@
         <input type="radio" <% if (visibleWire == -1){ %>checked<% } %> name="visibleWire" value="-1" data-toggle="radio" class="custom-radio emSim"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Show All Wires
     </label>
+    <br/>
     Net List:</br>
     <% var index = 0;  _.each(wires, function(wire, id){ %>
         <label class="radio <% if(wire.signals.length > 1){ %>red<% } %>">
