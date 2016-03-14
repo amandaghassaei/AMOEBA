@@ -173,7 +173,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
-                    time += dt;
+                    self.time += dt;
                     emSimLattice.iter(dt, self.time, gravityVect, false);
                 }
                 self.time += dt;
