@@ -10,6 +10,7 @@ uniform vec3 u_latticePitch;
 uniform float u_wiresMetaLength;
 uniform float u_time;
 uniform float u_groundHeight;
+uniform float u_friction;
 
 
 uniform sampler2D u_lastVelocity;
@@ -125,7 +126,17 @@ void main(){
     //simple collision
     float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + lastTranslation.z*u_multiplier - u_groundHeight;
     float collisionK = 1.0;
-    if (zPosition < 0.0) force.z += -zPosition*collisionK-lastVelocity.z*collisionK/10.0;
+    if (zPosition < 0.0) {
+        float normalForce = -zPosition*collisionK-lastVelocity.z*collisionK/10.0;
+        force.z += normalForce;
+        if (u_friction > 0.5){
+            float mu = 10.0;
+            if (lastVelocity.x > 0.0) force.x -= mu * normalForce;
+            else if (lastVelocity.x < 0.0) force.x += mu * normalForce;
+            if (lastVelocity.y > 0.0) force.y -= mu * normalForce;
+            else if (lastVelocity.y < 0.0) force.y += mu * normalForce;
+        }
+    }
 
     for (float i=0.0;i<2.0;i+=1.0){
 

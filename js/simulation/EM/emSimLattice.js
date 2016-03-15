@@ -452,16 +452,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 return !state;
             },
 
-            setConstants: function(dt, gravity, groundHeight){
+            setConstants: function(dt, gravity, groundHeight, friction){
                 gpuMath.setProgram("velocityCalc");
                 gpuMath.setUniformForProgram("velocityCalc", "u_dt", dt, "1f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_gravity", [gravity.x, gravity.y, gravity.z], "3f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_groundHeight", groundHeight, "1f");
+                gpuMath.setUniformForProgram("velocityCalc", "u_friction", friction, "1f");
                 gpuMath.setProgram("positionCalc");
                 gpuMath.setUniformForProgram("positionCalc", "u_dt", dt, "1f");
             },
 
-            iter: function(dt, time, gravity, groundHeight, shouldRender){
+            iter: function(dt, time, gravity, groundHeight, friction, shouldRender){
 
                 gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
                     "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
@@ -623,7 +624,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     //simple collision detection
                     var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier-groundHeight;
                     var collisionK = 1;
-                    if (zPosition<0) force[2] += -zPosition*collisionK-velocity[2]*collisionK/10;
+                    if (zPosition<0) {
+                        var normalForce = -zPosition*collisionK-velocity[2]*collisionK/10;
+                        force[2] += normalForce;
+                        if (friction) {
+                            var mu = 10;
+                            if (velocity[0] > 0) force[0] -= mu * normalForce;
+                            else if (velocity[0] < 0) force[0] += mu * normalForce;
+                            if (velocity[1] > 0) force[1] -= mu * normalForce;
+                            else if (velocity[1] < 0) force[1] += mu * normalForce;
+                        }
+                    }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
