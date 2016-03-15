@@ -44,7 +44,10 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
             assembly:_getLatticeDataToSave(),
             materials:_getMaterialsDataToSave()
         };
-        _saveFile(data, name, "json");
+        require(["emSim"], function(emSim){
+            data.emSim = emSim.getSaveData();
+            _saveFile(data, name, "json");
+        });
     }
 
     function saveAssembler(){
@@ -106,6 +109,11 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         if (sparseCells) lattice.setSparseCells(sparseCells);
         ribbon.render();
         menuWrapper.render();
+        if (data.emSim){
+            require(["emSim"], function(emSim){
+                emSim.loadData(data.emSim);
+            });
+        }
     }
 
     function _loadAssembler(data){

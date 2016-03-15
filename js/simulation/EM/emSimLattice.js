@@ -21,6 +21,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
 
             setCells: function(cells, fixedIndices){
 
+                console.log("set cells");
+
                 var numCells = lattice.get("numCells");
                 if (numCells == 0){
                     console.warn("no cells");

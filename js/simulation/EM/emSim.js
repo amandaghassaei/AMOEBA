@@ -245,6 +245,46 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 var val = cell.getTranslation().length();
                 cell.showTranslation(self._materialForVal(val, min, max, numMaterials));
             });
+        },
+
+        getSaveData: function(){
+            var json = {
+                gravity: this.get("gravity"),
+                gravityVector: this.get("gravityVector"),
+		        dtSolver: this.get("dtSolver"),
+		        dtRender: this.get("dtRender"),
+                fixedIndices: this.get("fixedIndices")
+            };
+            var signals = [];
+            _.each(emSimLattice.get("signals"), function(signal){
+                signals.push(_.extend(signal.getSignalJSON(), {index:signal.getAbsoluteIndex()}));
+            });
+            var latticeJson = {signals:signals};
+            return _.extend(json, {lattice:latticeJson});
+        },
+
+        loadData: function(data){
+            if (data.gravity) this.set("gravity", data.gravity);
+            if (data.gravityVector) this.set("gravityVector", new THREE.Vector3(data.gravityVector.x, data.gravityVector.y, data.gravityVector.z));
+            if (data.dtSolver) this.set("dtSolver", data.dtSolver);
+            if (data.dtRender) this.set("dtRender", data.dtRender);
+            if (data.fixedIndices) {
+                var fixedIndices = [];
+                _.each(data.fixedIndices, function(index){
+                    fixedIndices.push(new THREE.Vector3(index.x, index.y, index.z));
+                });
+                this.set("fixedIndices", fixedIndices);
+            }
+            if (data.lattice && data.lattice.signals){
+                var cells = lattice.getCells();
+                var cellsMin = lattice.get("cellsMin");
+                _.each(data.lattice.signals, function(signal){
+                    var index = new THREE.Vector3(signal.index.x, signal.index.y, signal.index.z);
+                    var json = _.omit(signal, "index");
+                    index.sub(cellsMin);
+                    cells[index.x][index.y][index.z].setAsSignalGenerator(json);
+                });
+            }
         }
 
 
