@@ -9,3 +9,7 @@ Num Steps Per Render :&nbsp;&nbsp;
     <input data-property="dtRender" value="<%= dtRender %>" placeholder="frames" class="form-control intInput emSim" type="text"><br/><br/>
 Ground Height :&nbsp;&nbsp;
     <input data-property="groundHeight" value="<%= groundHeight %>" placeholder="Height" class="form-control intInput emSim" type="text"><br/><br/>
+<label class="checkbox" for="friction">
+    <input id="friction" data-property="friction" type="checkbox" <% if (friction){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="emSim custom-checkbox">
+    <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+    Friction</label>

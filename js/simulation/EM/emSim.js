@@ -33,7 +33,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             visibleWire: -1,//-2 show all, -1 show conductors, or wire id, -3 show actuators, -4 show problem actuators
             visibleActuator: 0,
 
-            groundHeight: 0
+            groundHeight: 0,
+            friction: true
         },
 
         initialize: function(){
@@ -167,14 +168,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
             var groundHeight = this.get("groundHeight");
+            var friction = this.get("friction");
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
-                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, false);
+                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, false);
                 }
                 self.time += dt;
-                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, true);
+                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, true);
                 if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }
@@ -266,7 +268,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 gravityVector: this.get("gravityVector"),
 		        dtSolver: this.get("dtSolver"),
 		        dtRender: this.get("dtRender"),
-                fixedIndices: this.get("fixedIndices")
+                fixedIndices: this.get("fixedIndices"),
+                groundHeight: this.get("groundHeight"),
+                friction: this.get("friction")
             };
             var signals = [];
             _.each(emSimLattice.get("signals"), function(signal){
@@ -281,6 +285,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             if (data.gravityVector) this.set("gravityVector", new THREE.Vector3(data.gravityVector.x, data.gravityVector.y, data.gravityVector.z));
             if (data.dtSolver) this.set("dtSolver", data.dtSolver);
             if (data.dtRender) this.set("dtRender", data.dtRender);
+            if (data.groundHeight) this.set("groundHeight", data.groundHeight);
+            if (data.friction) this.set("friction", data.friction);
             if (data.fixedIndices) {
                 var fixedIndices = [];
                 _.each(data.fixedIndices, function(index){

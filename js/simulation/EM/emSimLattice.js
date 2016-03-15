@@ -359,7 +359,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 return !state;
             },
 
-            iter: function(dt, time, gravity, groundHeight, shouldRender){
+            iter: function(dt, time, gravity, groundHeight, friction, shouldRender){
 
                 var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
 
@@ -457,7 +457,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     var zPosition = this.originalPosition[rgbaIndex+2]+multiplier*translation[2]-groundHeight;
                     var collisionK = 1;
                     if (zPosition<0) {
-                        force[2] += -zPosition*collisionK-collisionK/10*velocity[2];
+                        var normalForce = -zPosition * collisionK - collisionK / 10 * velocity[2];
+                        force[2] += normalForce;
+                        if (friction) {
+                            var mu = 10;
+                            if (velocity[0] > 0) force[0] -= mu * normalForce;
+                            else if (velocity[0] < 0) force[0] += mu * normalForce;
+                            if (velocity[1] > 0) force[1] -= mu * normalForce;
+                            else if (velocity[1] < 0) force[1] += mu * normalForce;
+                        }
                     }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];

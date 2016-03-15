@@ -20,7 +20,7 @@ define([], function(){
                         conductive: true,
                         density: 8500,//kg/m^3
                         elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
-                        k: 100
+                        k: 500
                     }
                 },
                 flexureCond: {
@@ -54,7 +54,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 17.2,
-                        k: 100
+                        k: 500
                     }
                 },
 //                heatResist: {
@@ -99,7 +99,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 50
+                        k: 200
                     }
                 },
                 signal: {
@@ -110,7 +110,7 @@ define([], function(){
                         conductive: true,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 50
+                        k: 200
                     }
                 }
                 //nmos: {
