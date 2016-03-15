@@ -360,7 +360,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 return !state;
             },
 
-            iter: function(dt, time, gravity, shouldRender){
+            iter: function(dt, time, gravity, groundHeight, shouldRender){
 
                 var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
 
@@ -455,10 +455,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                     }
 
                     //simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+multiplier*translation[2];
+                    var zPosition = this.originalPosition[rgbaIndex+2]+multiplier*translation[2]-groundHeight;
                     var collisionK = 1;
-                    if (zPosition<0) {
-                        var collisionForce = [0,0,-zPosition*collisionK];
+                    if (zPosition) {
+                        var collisionForce = [0,0,-zPosition*collisionK-collisionK/10*velocity[2]];
                         force[0] += collisionForce[0];
                         force[1] += collisionForce[1];
                         force[2] += collisionForce[2];

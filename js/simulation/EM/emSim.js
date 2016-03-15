@@ -3,8 +3,8 @@
  */
 
 
-define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice', 'plist'],
-    function(THREE, _, Backbone, three, appState, emSimLattice, lattice, plist){
+define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice', 'plist', 'globals'],
+    function(THREE, _, Backbone, three, appState, emSimLattice, lattice, plist, globals){
 
     var emSim = Backbone.Model.extend({
 
@@ -31,8 +31,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             numSimMaterials: 20,//number of materials used in gradient view
 
             visibleWire: -1,//-2 show all, -1 show conductors, or wire id, -3 show actuators, -4 show problem actuators
-            visibleActuator: 0
+            visibleActuator: 0,
 
+            groundHeight: 0
         },
 
         initialize: function(){
@@ -43,12 +44,18 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
             this.listenTo(this, "change:visibleWire", function(){this.showConductors();});
             this.listenTo(this, "change:visibleActuator", function(){this.showActuator();});
+            this.listenTo(this, "change:groundHeight", this._changeGroundHeight);
 
             this._navChanged();
 
             this.time = 0;
 
             this.simMaterials = this._buildSimMaterials();
+        },
+
+        _changeGroundHeight: function(){
+            var height = this.get("groundHeight");
+            globals.get("baseplane").set("zIndex", height);
         },
 
         _buildSimMaterials: function(){
@@ -85,6 +92,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 this._viewModechanged();
                 return;
             }
+
+            this._changeGroundHeight();
 
             var previous = appState.previous("currentNav");
             if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim"){
@@ -157,14 +166,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             var renderRate = this.get("dtRender");
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
+            var groundHeight = this.get("groundHeight");
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
-                    emSimLattice.iter(dt, self.time, gravityVect, false);
+                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, false);
                 }
                 self.time += dt;
-                emSimLattice.iter(dt, self.time, gravityVect, true);
+                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, true);
                 if (self._getViewMode() == "translation"){
                     self.calcTranslation();
                 }
