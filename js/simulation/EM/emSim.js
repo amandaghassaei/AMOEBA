@@ -169,15 +169,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
 			var groundHeight = this.get("groundHeight");
 			var friction = this.get("friction");
-            emSimLattice.setConstants(dt, gravityVect);
+            emSimLattice.setConstants(dt, gravityVect, groundHeight);
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
-                    emSimLattice.iter(dt, self.time, gravityVect, false);
+                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, false);
                 }
                 self.time += dt;
-                emSimLattice.iter(dt, self.time, gravityVect, true);
+                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, true);
                 //if (self._getViewMode() == "translation"){
                 //    self.calcTranslation();
                 //}
