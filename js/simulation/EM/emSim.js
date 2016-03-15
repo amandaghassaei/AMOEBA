@@ -205,9 +205,12 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var fixedIndices = this.get("fixedIndices");
             if (fixed) fixedIndices.push(index.clone());
             else {
-                _.each(fixedIndices, function(fixedIndex, i){
-                    if (fixedIndex.equals(index)) fixedIndices.splice(i, 1);
-                });
+                for (var i=0;i<fixedIndices.length;i++){
+                    if (fixedIndices[i].equals(index)) {
+                        fixedIndices.splice(i, 1);
+                        break;
+                    }
+                }
             }
             this.trigger("change");
         },
