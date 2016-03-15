@@ -161,8 +161,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emSimCell',
                 for (var i=fixedIndices.length-1;i>=0;i--){
                     var fixedIndex = fixedIndices[i];
                     var latticeIndex = fixedIndex.clone().sub(cellsMin);
-                    var cell = cells[latticeIndex.x][latticeIndex.y][latticeIndex.z];
-                    if (cell) {
+                    if (cells[latticeIndex.x] && cells[latticeIndex.x][latticeIndex.y] && cells[latticeIndex.x][latticeIndex.y][latticeIndex.z]) {
                         var rgbaIndex = 4*(this.cellsIndexMapping[latticeIndex.x][latticeIndex.y][latticeIndex.z]);
                         this.fixed[rgbaIndex] = 1;
                     } else {//remove from fixedIndices
