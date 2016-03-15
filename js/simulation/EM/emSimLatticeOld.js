@@ -436,17 +436,17 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                     //var bendingTorque = neighbor.getRotation().sub(cellRotation).multiplyScalar(k/1000000);
                     //Ttotal.add(bendingTorque);
 
-                    var neighborAxis = self._neighborAxis(index);
-
-                    var neighborRotation = neighbor.getRotation();
-                    var bend = cellRotation.clone().sub(neighborRotation);
-                    var bendForce = new THREE.Vector3(0,0,0);
-                    _.each(bend, function(val, key){
-                        if (key == neighborAxis) return;
-                        var bendAxis = self._torqueAxis(key, neighborAxis);
-                        bendForce[bendAxis] = val*k/1000000000;
-                    });
-                    Ftotal.add(cell.applyRotation(bendForce));
+                    //var neighborAxis = self._neighborAxis(index);
+                    //
+                    //var neighborRotation = neighbor.getRotation();
+                    //var bend = cellRotation.clone().sub(neighborRotation);
+                    //var bendForce = new THREE.Vector3(0,0,0);
+                    //_.each(bend, function(val, key){
+                    //    if (key == neighborAxis) return;
+                    //    var bendAxis = self._torqueAxis(key, neighborAxis);
+                    //    bendForce[bendAxis] = val*k/1000000000;
+                    //});
+                    //Ftotal.add(cell.applyRotation(bendForce));
 
                 });
 
@@ -454,7 +454,7 @@ define(['underscore', 'backbone', 'emSimCell', 'threeModel', 'lattice', 'three',
                 //simple collision detection
                 var zPosition = cell.getAbsolutePosition().z;
                 var collisionK = 1;
-                if (zPosition<0) Ftotal.add((new THREE.Vector3(0,0,-zPosition*collisionK)).sub(new THREE.Vector3(0,0,cell.getVelocity().z*collisionK/10)));
+                if (zPosition<0) Ftotal.add((new THREE.Vector3(0,0,-zPosition*collisionK)).sub(new THREE.Vector3(0,0,cell.getVelocity().z*collisionK/100)));
 
                 cell.applyForce(Ftotal, dt);
                 cell.setRotation(Rtotal.multiplyScalar(1/Rcontrib), dt);

@@ -52,7 +52,7 @@ define([], function(){
                     altColor: "#8a2be2",
                     properties:{
                         conductive: false,
-                        density: 500,//kg/m^3
+                        density: 3500,//kg/m^3
                         elasMod: 17.2,
                         k: 100
                     }
@@ -99,7 +99,7 @@ define([], function(){
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 50
                     }
                 },
                 signal: {
@@ -110,7 +110,7 @@ define([], function(){
                         conductive: true,
                         density: 6500,//kg/m^3
                         elasMod: 50,
-                        k: 100
+                        k: 50
                     }
                 }
                 //nmos: {
