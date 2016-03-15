@@ -48,8 +48,8 @@ define([], function(){
                 //},
                 fiberGlass: {
                     name: "Structural Insulating",
-                    color: "#8391AC",
-                    altColor: "#8391AC",
+                    color: "#8a2be2",
+                    altColor: "#8a2be2",
                     properties:{
                         conductive: false,
                         density: 500,//kg/m^3
@@ -81,8 +81,8 @@ define([], function(){
 
                 flexure: {
                     name: "Flexure Insulating",
-                    color: "#a2acc0",
-                    altColor: "#a2acc0",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
                     texture: "stripes",
                     properties:{
                         conductive: false,
