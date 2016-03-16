@@ -626,3 +626,8 @@ label {
 .tab1 {
     padding: 0 0 0 25px;
 }
+
+.waveformIcon {
+    margin-left: 10px;
+    width: 40px;
+}
