@@ -2,7 +2,7 @@ Waveform:<br/>
 <% _.each(signalWaveformTypes, function(waveform, key){ %>
     <label class="radio">
         <input type="radio" <% if (waveformType == key){ %>checked<% } %> name="waveformType" value="<%= key %>" data-toggle="radio" class="custom-radio signal"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
-        <%= signalWaveformTypes[key] %>
+        <%= signalWaveformTypes[key] %><img class="waveformIcon" src="assets/imgs/waveforms/<%= key %>.png">
     </label>
 <% }); %>
 <% if(waveformType == "saw"){ %>
