@@ -274,6 +274,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             };
             var signals = [];
             _.each(emSimLattice.get("signals"), function(signal){
+                if (!signal.index) return;//deleted
                 signals.push(_.extend(signal.getSignalJSON(), {index:signal.getAbsoluteIndex()}));
             });
             var latticeJson = {signals:signals};
