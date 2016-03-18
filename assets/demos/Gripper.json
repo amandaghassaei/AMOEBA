@@ -1,0 +1,2297 @@
+{
+	"assembly": {
+		"cellsMin": {
+			"x": -11,
+			"y": -1,
+			"z": 0
+		},
+		"cellsMax": {
+			"x": -5,
+			"y": 35,
+			"z": 2
+		},
+		"numCells": 435,
+		"units": "mm",
+		"scale": 1,
+		"cellType": "cube",
+		"connectionType": "face",
+		"applicationType": "default",
+		"partType": null,
+		"aspectRatio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"sparseCells": [
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					},
+					{
+						"materialID": "fiberGlass"
+					}
+				]
+			]
+		]
+	},
+	"materials": {},
+	"emSim": {
+		"gravity": 9.8,
+		"gravityVector": {
+			"x": 0,
+			"y": 0,
+			"z": -1
+		},
+		"dtSolver": 10,
+		"dtRender": 100,
+		"fixedIndices": [],
+		"groundHeight": 0,
+		"friction": true,
+		"lattice": {
+			"signals": [
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": true,
+					"index": {
+						"x": -7,
+						"y": 1,
+						"z": 0
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -7,
+						"y": 5,
+						"z": 0
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -7,
+						"y": 15,
+						"z": 0
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -7,
+						"y": 19,
+						"z": 0
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -7,
+						"y": 29,
+						"z": 0
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -7,
+						"y": 33,
+						"z": 0
+					}
+				}
+			]
+		}
+	}
+}

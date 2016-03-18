@@ -14,6 +14,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
             defaults: {
                 wires: {},
                 signals: [],
+                signalsData: [],//from load file
                 signalConflict: false,
                 actuators: []
             },
@@ -321,6 +322,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         signals.push(cell);
                     }
                 });
+                _.each(this.get("signalsData"), function(data){
+                    var index = data.index;
+                    if (cells && cells[index.x] && cells[index.x][index.y] && cells[index.x][index.y][index.z]){
+                        cells[index.x][index.y][index.z].setAsSignalGenerator(data.json)
+                    }
+                });
+                this.set("signalsData", []);
                 this.set("signals", signals);
             },
 

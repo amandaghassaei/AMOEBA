@@ -1,0 +1,579 @@
+{
+	"assembly": {
+		"cellsMin": {
+			"x": -12,
+			"y": 4,
+			"z": 0
+		},
+		"cellsMax": {
+			"x": -5,
+			"y": 11,
+			"z": 2
+		},
+		"numCells": 61,
+		"units": "mm",
+		"scale": 1,
+		"cellType": "cube",
+		"connectionType": "face",
+		"applicationType": "default",
+		"partType": null,
+		"aspectRatio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"sparseCells": [
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "fiberGlass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "piezo"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "brass"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			]
+		]
+	},
+	"materials": {},
+	"emSim": {
+		"gravity": 9.8,
+		"gravityVector": {
+			"x": 0,
+			"y": 0,
+			"z": -1
+		},
+		"dtSolver": 10,
+		"dtRender": 100,
+		"fixedIndices": [
+			{
+				"x": -5,
+				"y": 8,
+				"z": 0
+			},
+			{
+				"x": -5,
+				"y": 7,
+				"z": 0
+			},
+			{
+				"x": -5,
+				"y": 6,
+				"z": 0
+			},
+			{
+				"x": -5,
+				"y": 5,
+				"z": 0
+			},
+			{
+				"x": -5,
+				"y": 4,
+				"z": 0
+			},
+			{
+				"x": -8,
+				"y": 11,
+				"z": 0
+			},
+			{
+				"x": -9,
+				"y": 11,
+				"z": 0
+			},
+			{
+				"x": -10,
+				"y": 11,
+				"z": 0
+			},
+			{
+				"x": -11,
+				"y": 11,
+				"z": 0
+			},
+			{
+				"x": -12,
+				"y": 11,
+				"z": 0
+			}
+		],
+		"groundHeight": 0,
+		"friction": true,
+		"lattice": {
+			"signals": [
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -10,
+						"y": 10,
+						"z": 2
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0.25,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -6,
+						"y": 6,
+						"z": 2
+					}
+				}
+			]
+		}
+	}
+}

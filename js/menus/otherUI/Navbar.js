@@ -167,7 +167,8 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
 
         _loadJSON: function(e){
             e.preventDefault();
-            var url = "data/" + $(e.target).data("file");
+            this.model.set("currentNav", "navDesign");
+            var url = $(e.target).data("file");
             $.getJSON( url, function(data) {
                 fileSaver.loadFile(data);
             });
