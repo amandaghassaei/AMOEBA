@@ -12,6 +12,29 @@ define([], function(){
 
         allMaterials:{
             em:{
+                fiberGlass: {
+                    name: "Structural Insulating",
+                    color: "#8a2be2",
+                    altColor: "#8a2be2",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 17.2,
+                        k: 500
+                    }
+                },
+                flexure: {
+                    name: "Flexure Insulating",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
+                    texture: "stripes",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
                 brass:{
                     name: "Structural Conductive",
                     color: "#b5a642",
@@ -46,17 +69,7 @@ define([], function(){
                 //        k: 1000
                 //    }
                 //},
-                fiberGlass: {
-                    name: "Structural Insulating",
-                    color: "#8a2be2",
-                    altColor: "#8a2be2",
-                    properties:{
-                        conductive: false,
-                        density: 3500,//kg/m^3
-                        elasMod: 17.2,
-                        k: 500
-                    }
-                },
+
 //                heatResist: {
 //                    name: "Structural Heat-Resistant",
 //                    color: "#9CC9CB",
@@ -79,18 +92,7 @@ define([], function(){
 //                    }
 //                },
 
-                flexure: {
-                    name: "Flexure Insulating",
-                    color: "#cda4f3",
-                    altColor: "#cda4f3",
-                    texture: "stripes",
-                    properties:{
-                        conductive: false,
-                        density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
-                    }
-                },
+
                 piezo: {
                     name: "Piezo",
                     color: "#FFCC00",

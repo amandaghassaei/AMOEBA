@@ -381,6 +381,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     index++;
                 });
                 this.wiresMeta = wiresMeta;
+                if (this.wiresMeta.length == 0) this.wiresMeta = new Float32Array(4);//don't send in empty array as texture
                 gpuMath.initTextureFromData("u_wiresMeta", 1, this.wiresMeta.length/4, "FLOAT", this.wiresMeta, true);
             },
 
