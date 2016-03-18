@@ -114,6 +114,10 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             three.render();
         },
 
+        reset: function(){
+            this.set(this.defaults);
+        },
+
         destroy: function(){
             this.stopListening();
             this.set("zIndex", null, {silent:true});

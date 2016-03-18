@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'text!menus/templates/MenuWrapperView.html'],
-    function($, _, plist, Backbone, lattice, appState, template){
+define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'text!menus/templates/MenuWrapperView.html', 'globals'],
+    function($, _, plist, Backbone, lattice, appState, template, globals){
 
     var MenuWrapperView = Backbone.View.extend({
 
@@ -233,6 +233,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _clearCells: function(e){
             e.preventDefault();
             lattice.getUItarget().clearCells();
+            globals.get("baseplane").reset();
         },
 
         _getPropertyOwner: function($target){
