@@ -298,12 +298,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             }
             if (data.lattice && data.lattice.signals){
                 var signalsData = [];
-                var cells = lattice.getCells();//todo problem
-                var cellsMin = lattice.get("cellsMin");
                 _.each(data.lattice.signals, function(signal){
                     var index = new THREE.Vector3(signal.index.x, signal.index.y, signal.index.z);
                     var json = _.omit(signal, "index");
-                    index.sub(cellsMin);
                     signalsData.push({index: index, json:json});
                 });
                 emSimLattice.set("signalsData", signalsData);

@@ -322,10 +322,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         signals.push(cell);
                     }
                 });
+
+                var cellsMin = lattice.get("cellsMin");
                 _.each(this.get("signalsData"), function(data){
-                    var index = data.index;
+                    var index = data.index.sub(cellsMin);
                     if (cells && cells[index.x] && cells[index.x][index.y] && cells[index.x][index.y][index.z]){
-                        cells[index.x][index.y][index.z].setAsSignalGenerator(data.json)
+                        cells[index.x][index.y][index.z].setAsSignalGenerator(data.json);
                     }
                 });
                 this.set("signalsData", []);
