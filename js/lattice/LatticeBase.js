@@ -340,6 +340,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             this.set("cellsMin", null, {silent:silent});
             this.set("numCells", 0, {silent:silent});
             if (this.__clearCells) this.__clearCells(silent);
+            if (globals.get("baseplane")) globals.get("baseplane").reset();
             three.render();
         },
 
