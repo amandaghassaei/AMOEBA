@@ -197,6 +197,13 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             three.resetCameraPosition();
         },
 
+        hideAllUi: function(){
+            this.set("menuIsVisible", false);
+            this.set("ribbonIsVisible", false);
+            this.set("consoleIsVisible", false);
+            this.set("scriptIsVisible", false);
+        },
+
         openAssembly: function(){
             this.set("currentNav", "navDesign");
             $("#jsonInput").click();

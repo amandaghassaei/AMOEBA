@@ -261,7 +261,7 @@ input.intInput, input.floatInput{
 }
 
 .dropdown-submenu li:hover{
-    background-color: #428bca!important;
+    background-color: #aaa!important;
 }
 
 .dropdown-submenu>.dropdown-menu {

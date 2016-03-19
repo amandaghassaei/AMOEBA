@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState', 'plist'],
-    function($, _, Backbone, fileSaver, NavViewMenu, appState, plist){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState', 'plist', 'threeModel'],
+    function($, _, Backbone, fileSaver, NavViewMenu, appState, plist, three){
 
     return Backbone.View.extend({
 
@@ -27,7 +27,9 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             "click .jsonFile":                                      "_loadJSON",
 
             "click #viewMenuDropdown":                              "_renderViewMenu",
-            "click #videoRendering":                                "_videoRenderingSetup"
+            "click #videoRendering":                                "_videoRenderingSetup",
+            "click #photoSetup":                                    "_photoSetup",
+            "click #undoPhotoSetup":                                "_undoPhotoSetup"
         },
 
         initialize: function(){
@@ -109,6 +111,26 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
          _videoRenderingSetup: function(e){
             e.preventDefault();
             window.resizeTo(1000, 700);//todo this doesn't work
+        },
+
+        _photoSetup: function(e){
+            e.preventDefault();
+            appState.hideAllUi();
+            var navSelection = appState.get("currentNav");
+            if (plist.allMenus[navSelection].parentNav) navSelection = plist.allMenus[navSelection].parentNav;
+            if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
+            if (navSelection != "navSim") appState.set("basePlaneIsVisible", false);
+            appState.set("highlighterIsVisible", false);
+            three.setBackgroundColor(0xffffff);
+        },
+
+        _undoPhotoSetup: function(e){
+            e.preventDefault();
+            appState.set("menuIsVisible", true);
+            appState.set("ribbonIsVisible", true);
+            appState.set("basePlaneIsVisible", true);
+            if (appState.get("currentNav") == "navDesign") appState.set("highlighterIsVisible", true);
+            three.setBackgroundColor(0xcccccc);
         },
 
 

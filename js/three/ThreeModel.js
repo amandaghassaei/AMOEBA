@@ -261,6 +261,10 @@ define(['underscore', 'three'], function(_, THREE){
         return renderer.context;
     }
 
+    function setBackgroundColor(color){
+        renderer.setClearColor(color, 1);
+    }
+
     return {//return public properties/methods
         render: render,
         conditionalRender: conditionalRender,
@@ -290,7 +294,8 @@ define(['underscore', 'three'], function(_, THREE){
         resetCameraPosition: resetCameraPosition,
         setThreeView: setThreeView,
         saveSVG: saveSVG,
-        getGLContext: getGLContext
+        getGLContext: getGLContext,
+        setBackgroundColor: setBackgroundColor
     }
 
 });
