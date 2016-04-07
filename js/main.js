@@ -32,7 +32,7 @@ require.config({
         selection3D: 'three/Selection3D',
         axes: 'three/Axes',
         arrow: 'three/Arrow',
-        svgRenderer: '../dependencies/svgRenderer',
+        svgRenderer: '../dependencies/SVGRenderer',
         threeProjector: '../dependencies/Projector',
 
         //plist
