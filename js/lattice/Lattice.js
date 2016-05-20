@@ -16,15 +16,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             cellType: "cube",
             connectionType: "face",
             applicationType: "default",
-            partType: null,
 
             aspectRatio: null
         }),
 
 
         __initialize: function(){
-
-            this.listenTo(this, "change:partType", this._updatePartType);
 
             this.listenTo(this, "change:cellType", function(){
                 this._cellTypeChanged();
@@ -37,7 +34,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             });
             this.listenTo(this, "change:aspectRatio", function(){
                 var aspectRatio = this.getAspectRatio();
-                myConsole.write("lattice.setAspectRatio(" + aspectRatio.x + ", " + aspectRatio.y + ", " + aspectRatio.z +")");
+                //myConsole.write("lattice.setAspectRatio(" + aspectRatio.x + ", " + aspectRatio.y + ", " + aspectRatio.z +")");
                 this.reloadCells();
             });
 
@@ -47,6 +44,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             });
 
             this._applicationTypeChanged();
+
+            var self = this;
+            require(["cubeCell"], function(CubeCell){//todo fix this
+                self.cellSubclass = CubeCell;
+            });
         },
 
 
@@ -201,7 +203,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 _.extend(self, subclassObject);
                 self._initLatticeType();//init for lattice subclass
                 if (numCells > 0) {
-                    self._bindRenderToNumCells(numCells);
                     self._setSparseCells(self.sparseCells, cellsMin);
                 }
             });
@@ -358,62 +359,8 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         getHighlightableCells: function(){
             if (this.highlightableCells) return this.highlightableCells;
             return three.getCells();
-        },
-
-
-
-
-
-
-
-
-
-        //composite Cells
-
-        _navChanged: function(){
-            var currentNav = appState.get("currentNav");
-            if (currentNav != "navComposite" && this.compositeEditor) this.exitCompositeEditing();
-
-            currentNav = plist.allMenus[currentNav].parent || currentNav;
-//            if (currentNav == "navAssemble") this._parseSparseCell();
-        },
-
-        setToCompositeMode: function(compositeLattice){
-            this.compositeEditor = compositeLattice;
-        },
-
-        inCompositeMode: function(){
-            return this.compositeEditor !== null && this.compositeEditor !== undefined;
-        },
-
-        exitCompositeEditing: function(){
-            if (this.compositeEditor) this.compositeEditor.destroy();
-            this.compositeEditor = null;
-            this.showCells();
-        },
-
-        getUItarget: function(){
-            if (this.inCompositeMode()) return this.compositeEditor;
-            return this;
-        },
-
-        reinitAllCellsOfTypes: function(types){//when material definition is changed
-            //todo add cells array to this
-            this._loopCells(this.sparseCells, function(cell, x, y, z, self){
-                var material = cell.getMaterial();
-                if (material && material.isComposite() && types.indexOf(material.getID()) > -1){
-                    //re-init cell;
-                    var json = cell.toJSON();
-                    json.index = cell.getIndex();
-                    self.makeCellWithJSON(json, function(newCell){
-                        self.sparseCells[x][y][z] = newCell;
-                        cell.destroy();
-                    });
-                }
-            });
         }
     });
-
 
 
     var lattice = new Lattice();

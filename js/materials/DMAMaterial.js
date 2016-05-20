@@ -97,7 +97,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
                     });
                 }
                 parentComposites.push(self.getID());
-//                lattice.reinitAllCellsOfTypes(parentComposites);
 
             });
         }

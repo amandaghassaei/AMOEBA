@@ -3,8 +3,9 @@
  */
 
 
-define(['underscore', 'three'], function(_, THREE){
+define(['underscore', 'three', 'combinedCamera'], function(_, THREE){
 
+    //var camera = new THREE.CombinedCamera( window.innerWidth / 2, window.innerHeight / 2, 60, 0.01, 1000, - 500, 1000 );
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
 //    camera.setLens(50);
     var scene = new THREE.Scene();
@@ -23,7 +24,6 @@ define(['underscore', 'three'], function(_, THREE){
 
     //store all meshes to highlight
     var cells = [];
-    var compositeCells = [];
 //    var parts = [];
     var basePlane = [];
 
@@ -44,8 +44,8 @@ define(['underscore', 'three'], function(_, THREE){
 
     function initialize(){
 
-        resetCameraPosition();
         camera.up.set(0,0,1);//set z axis as "up"
+        resetCameraPosition();
 
 //        scene.fog = new THREE.FogExp2(fogColor, 0.001);
 
@@ -90,6 +90,14 @@ define(['underscore', 'three'], function(_, THREE){
         render();
     }
 
+    function orthographicCamera(){
+        camera.toOrthographic();
+    }
+
+    function perspectiveCamera(){
+        camera.toPerspective();
+    }
+
     function onWindowResize(){
         camera.aspect = window.innerWidth/window.innerHeight;
         camera.updateProjectionMatrix();
@@ -128,28 +136,14 @@ define(['underscore', 'three'], function(_, THREE){
         cells.push(cell);
     }
 
-    function addCompositeCell(cell){
-        compositeCells.push(cell);
-    }
-
     function removeCell(cell){
         var index = cells.indexOf(cell);
         if (index < 0) return;
         cells.splice(index, 1);
     }
 
-    function removeCompositeCell(cell){
-        var index = compositeCells.indexOf(cell);
-        if (index < 0) return;
-        compositeCells.splice(index, 1);
-    }
-
     function getCells(){
         return cells;
-    }
-
-    function getCompositeCells(){
-        return compositeCells;
     }
 
     function setupDragPlane(position, orientation){
@@ -180,10 +174,6 @@ define(['underscore', 'three'], function(_, THREE){
 
     function removeAllCells(){
         cells = [];
-    }
-
-    function removeAllCompositeCells(){
-        compositeCells = [];
     }
 
     function startAnimationLoop(callback){
@@ -282,20 +272,18 @@ define(['underscore', 'three'], function(_, THREE){
         domElement: renderer.domElement,
         camera: camera,
         getCells: getCells,
-        getCompositeCells: getCompositeCells,
         addCell: addCell,
-        addCompositeCell: addCompositeCell,
         removeCell: removeCell,
-        removeCompositeCell: removeCompositeCell,
         getBasePlane: getBasePlane,
         removeAllCells: removeAllCells,
-        removeAllCompositeCells: removeAllCompositeCells,
         setupDragPlane: setupDragPlane,
         resetCameraPosition: resetCameraPosition,
         setThreeView: setThreeView,
         saveSVG: saveSVG,
         getGLContext: getGLContext,
-        setBackgroundColor: setBackgroundColor
+        setBackgroundColor: setBackgroundColor,
+        orthographicCamera: orthographicCamera,
+        perspectiveCamera: perspectiveCamera
     }
 
 });

@@ -25,10 +25,8 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
                     opacity:0.4,
                     color:0xffffff
                 }));
-            if (this._makeWireframe) this._makeWireframe(this.mesh);
 
             three.sceneAdd(this.mesh);
-            this._setScale();
             this.hide();
 
             //bind events
@@ -96,7 +94,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         //highlight
 
         getObjToIntersect: function(){
-            var objsToIntersect= lattice.getUItarget().getHighlightableCells();
+            var objsToIntersect= three.getCells();
             if (!appState.get("deleteMode")) objsToIntersect = objsToIntersect.concat(three.getBasePlane());
             //        if (globals.get("highlighter").isVisible()) objsToIntersect = objsToIntersect.concat(globals.get("highlighter").mesh);
             return objsToIntersect;
@@ -159,7 +157,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
 
         getHighlightedObjectPosition: function(){//origin selection
             if (this.highlightedObject instanceof DMACell) {
-                var position = this.highlightedObject.getAbsolutePosition();
+                var position = this.highlightedObject.getPosition();
                 return new THREE.Vector3(parseFloat(position.x.toFixed(4)),
                     parseFloat(position.y.toFixed(4)),
                     parseFloat(position.z.toFixed(4)));
@@ -176,18 +174,12 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             this.mesh.rotation.set(direction.y*Math.PI/2, direction.x*Math.PI/2, 0);
         },
 
-        _setScale: function(){
-        },
-
-
 
 
         //add/remove cells
 
         _getNextCellIndex: function(){//add direction vector to current index
-            var newPosition;
-            if (this.highlightedObject.nextCellPosition) newPosition = this.highlightedObject.nextCellPosition(this.mesh.position.clone());
-            else newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getAbsolutePosition()));
+            var newPosition = this.mesh.position.clone().add(this.mesh.position.clone().sub(this.highlightedObject.getPosition()));
             return lattice.getIndexForPosition(newPosition);
         },
 
@@ -222,11 +214,11 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             }
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                lattice.getUItarget().addCellAtIndex(this._getNextCellIndex());
+                lattice.addCellAtIndex(this._getNextCellIndex());
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;
-                lattice.getUItarget().removeCell(this.highlightedObject.getParent());
+                lattice.removeCell(this.highlightedObject.getParent());
             }
             this.setNothingHighlighted();
         },

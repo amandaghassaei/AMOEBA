@@ -94,7 +94,7 @@ define([], function(){
 
 
                 piezo: {
-                    name: "Piezo",
+                    name: "Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
                     properties:{

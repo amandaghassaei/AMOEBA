@@ -34,6 +34,7 @@ require.config({
         arrow: 'three/Arrow',
         svgRenderer: '../dependencies/SVGRenderer',
         threeProjector: '../dependencies/Projector',
+        combinedCamera: 'three/CombinedCamera',
 
         //plist
         plist: 'plists/PList',
@@ -48,7 +49,6 @@ require.config({
         //lattice classes and extra methods
         latticeBase: 'lattice/LatticeBase',
         lattice: 'lattice/Lattice',
-        compositeEditorLattice: 'lattice/CompositeEditorLattice',
         latticeImportGeo: 'lattice/ImportGeo',
 
         //lattice "subclasses"
@@ -66,8 +66,6 @@ require.config({
         //cells
         cell: 'cells/DMACell',
         cubeCell: 'cells/CubeCell',
-        compositeCell: 'cells/supercells/CompositeCell',
-        superCell: 'cells/supercells/DMASuperCell',
 
         //parts
         part: 'parts/DMAPart',
@@ -120,6 +118,10 @@ require.config({
             exports: 'geometryToSTLBin'
         },
         threeProjector: {
+            deps: ['three'],
+            exports: "THREE"
+        },
+        combinedCamera: {
             deps: ['three'],
             exports: "THREE"
         },

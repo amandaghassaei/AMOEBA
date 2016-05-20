@@ -107,23 +107,9 @@ define(['lattice', 'plist', 'console'], function(lattice, plist, myConsole){
             lattice.clearCells();
         },
 
-        getSparseCells: function(){
-            myConsole.write("lattice.getSparseCells()");
-            return lattice.getSparseCells();
-        },
-
-        setSparseCells: function(cells){
-            lattice.setSparseCells(cells);
-        },
-
         getCells: function(){
             myConsole.write("lattice.getCells()");
             return lattice.getCells();
-        },
-
-        loopSparseCells: function(){
-            myConsole.write("lattice.loopSparseCells()");
-
         },
 
         loopCells: function(){

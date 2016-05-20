@@ -77,12 +77,12 @@ define(['underscore', 'backbone', 'appState', 'lattice', 'threeModel', 'three'],
             lines.position[normalAxis] = object3D.position[normalAxis];
         },
 
-        getAbsoluteIndex: function(){
+        getIndex: function(){
             return this.highligherIndex.clone();
         },
 
-        getAbsolutePosition: function(){
-            return lattice.getPositionForIndex(this.getAbsoluteIndex());
+        getPosition: function(){
+            return lattice.getPositionForIndex(this.getIndex());
         },
 
         calcHighlighterParams: function(face, point, index){//index comes from subclass

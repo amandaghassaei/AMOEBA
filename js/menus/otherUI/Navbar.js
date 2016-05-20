@@ -29,7 +29,9 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             "click #viewMenuDropdown":                              "_renderViewMenu",
             "click #videoRendering":                                "_videoRenderingSetup",
             "click #photoSetup":                                    "_photoSetup",
-            "click #undoPhotoSetup":                                "_undoPhotoSetup"
+            "click #undoPhotoSetup":                                "_undoPhotoSetup",
+            "click #orthoCamera":                                   "_orthoCamera",
+            "click #perspectiveCamera":                             "_perspectiveCamera"
         },
 
         initialize: function(){
@@ -131,6 +133,16 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             appState.set("basePlaneIsVisible", true);
             if (appState.get("currentNav") == "navDesign") appState.set("highlighterIsVisible", true);
             three.setBackgroundColor(0xcccccc);
+        },
+
+        _orthoCamera: function(e){
+            e.preventDefault();
+            three.orthographicCamera();
+        },
+
+        _perspectiveCamera: function(e){
+            e.preventDefault();
+            three.perspectiveCamera();
         },
 
 
