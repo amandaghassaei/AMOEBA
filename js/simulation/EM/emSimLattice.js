@@ -80,7 +80,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                     var rgbaIndex = 4*index;
 
-                    var position = cell.getAbsolutePosition();
+                    var position = cell.getPosition();
                     self.originalPosition[rgbaIndex] = position.x;
                     self.originalPosition[rgbaIndex+1] = position.y;
                     self.originalPosition[rgbaIndex+2] = position.z;
@@ -124,7 +124,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             return;
                         }
 
-                        var neighborIndex3D = neighbor.getAbsoluteIndex().sub(cellsMin);
+                        var neighborIndex3D = neighbor.getIndex().sub(cellsMin);
                         var neighborMappingIndex1D = self.cellsIndexMapping[neighborIndex3D.x][neighborIndex3D.y][neighborIndex3D.z];
                         self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim;
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
@@ -900,7 +900,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 var self = this;
                 this._loopCells(lattice.getCells(), function(cell){
-                    var index = cell.getAbsoluteIndex().sub(lattice.get("cellsMin"));
+                    var index = cell.getIndex().sub(lattice.get("cellsMin"));
                     var rgbaIndex = 4*self.cellsIndexMapping[index.x][index.y][index.z];
                     var position = [self.originalPosition[rgbaIndex], self.originalPosition[rgbaIndex+1], self.originalPosition[rgbaIndex+2]];
                     cell.object3D.position.set(position[0], position[1], position[2]);

@@ -8,7 +8,7 @@ define(["underscore", "cell", "lattice", "plist", "three"],
 
     function EMSimCell(cell){
 
-        this.origPosition = cell.getAbsolutePosition();
+        this.origPosition = cell.getPosition();
 //        this.rotation = cell.getAbsoluteOrientation();
 
         this.cell = cell;
@@ -40,8 +40,8 @@ define(["underscore", "cell", "lattice", "plist", "three"],
 
     }
 
-    EMSimCell.prototype.getAbsoluteIndex = function(){
-        return this.cell.getAbsoluteIndex();
+    EMSimCell.prototype.getIndex = function(){
+        return this.cell.getIndex();
     };
 
     EMSimCell.prototype.setNeighbors = function(neighbors){//precompute neighbors
@@ -108,7 +108,7 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         this._setPosition(this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier)));
     };
 
-    EMSimCell.prototype.getAbsolutePosition = function(){
+    EMSimCell.prototype.getPosition = function(){
         var multiplier = 1/(plist.allUnitTypes[lattice.getUnits()].multiplier);
         return this.origPosition.clone().add(this.translation.clone().multiplyScalar(multiplier))
     };

@@ -160,6 +160,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             if (this.get("showOneLayer")){
                 index = globals.get("baseplane").get("zIndex");
                 var planeType = globals.get("baseplane").get("planeType");
+                this.lattice.hideCells(true);
                 this.lattice.loopSketchLayer(index, planeType, function(cell){
                     cell.setTransparent(false);
                     cell.show();

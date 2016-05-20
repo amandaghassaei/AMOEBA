@@ -16,14 +16,14 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         },
 
 
-        initialize: function(options, classProperties, callback){
+        initialize: function(options){
 
             this.cells = [[[null]]];//3D matrix containing all cells and null, dynamic size
 
             //bind events
             this.listenTo(appState, "change:cellMode", this._updateForMode);//show hide cells
 
-            if (this.__initialize) this.__initialize(options, callback);
+            if (this.__initialize) this.__initialize(options);
         },
 
 
@@ -454,8 +454,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        loopSketchLayer: function(index, planeType, callback, hideAll){
-            if (hideAll) this.hideCells(true);
+        loopSketchLayer: function(index, planeType, callback){
             var x = null;
             var y = null;
             var z = null;
