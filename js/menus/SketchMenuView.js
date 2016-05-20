@@ -12,6 +12,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Ske
 
         _initialize: function(){
             this.listenTo(globals.get("baseplane"), "change", this.render);
+            this.listenTo(this.model, "change", this.render);
         },
 
         getPropertyOwner: function($target){

@@ -94,7 +94,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
         //highlight
 
         getObjToIntersect: function(){
-            var objsToIntersect= three.getCells();
+            var objsToIntersect= lattice.getHighlightableCells();
             if (!appState.get("deleteMode")) objsToIntersect = objsToIntersect.concat(three.getBasePlane());
             //        if (globals.get("highlighter").isVisible()) objsToIntersect = objsToIntersect.concat(globals.get("highlighter").mesh);
             return objsToIntersect;
