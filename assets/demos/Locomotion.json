@@ -212,19 +212,19 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -243,7 +243,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -252,10 +252,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "signal"
@@ -263,40 +263,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
-					},
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
-					},
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -313,240 +283,270 @@
 					null
 				],
 				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -565,7 +565,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -574,10 +574,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "signal"
@@ -585,40 +585,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
-					},
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
-					},
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -635,240 +605,270 @@
 					null
 				],
 				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -887,7 +887,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -896,10 +896,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "signal"
@@ -907,40 +907,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
-					},
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
-					},
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -957,240 +927,270 @@
 					null
 				],
 				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				]
-			],
-			[
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -1209,7 +1209,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -1218,10 +1218,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "signal"
@@ -1229,10 +1229,10 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]
@@ -1250,19 +1250,19 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null
 				]

@@ -26,56 +26,56 @@
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -84,42 +84,42 @@
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -131,7 +131,7 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -140,42 +140,42 @@
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "flexureCond"
@@ -186,7 +186,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -195,7 +195,7 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "flexureCond"
@@ -208,42 +208,42 @@
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -255,7 +255,7 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -264,56 +264,56 @@
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -322,21 +322,21 @@
 			[
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "flexureCond"
@@ -347,14 +347,14 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -378,7 +378,7 @@
 			[
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
@@ -390,7 +390,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					{
@@ -404,7 +404,7 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
@@ -428,21 +428,21 @@
 			[
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
 						"materialID": "flexureCond"
@@ -453,14 +453,14 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null

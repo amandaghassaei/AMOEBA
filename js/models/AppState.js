@@ -5,8 +5,8 @@
 //a class to store global app state, model for navbar and menu wrapper
 //never deallocated
 
-define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
-    function(_, Backbone, three, THREE, plist, globals){
+define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'materialsPlist', 'globals'],
+    function(_, Backbone, three, THREE, plist, materialsPlist, globals){
 
     var AppState = Backbone.Model.extend({
 
@@ -60,6 +60,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             this.listenTo(this, "change:axesAreVisible", this._showAxes);
             this.listenTo(this, "change:focusOnLattice", this._focusOnLattice);
             this.listenTo(this, "change:showOneLayer", this.showSketchLayer);
+            this.listenTo(this, "change:hierLevel", this._updateHierarchicalLevel);
 
             this.downKeys = {};//track keypresses to prevent repeat keystrokes on hold
             this.lastCellMode = this.get("cellMode");//store this to toggle on/off hide mode
@@ -217,6 +218,15 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
             three.render();
         },
 
+        _updateHierarchicalLevel: function(){
+            //save last assembly
+            globals.saveHierarchicalAssembly(this.previous("hierLevel"));
+            this.lattice.clearCells();
+            var currentLevel = this.get("hierLevel");
+            this.set("materialClass", (_.keys(materialsPlist.allMaterialClasses[currentLevel]))[0]);
+            globals.loadHierarchicalAssembly(currentLevel);
+        },
+
 
 
         //key bindings
@@ -320,7 +330,6 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
                     e.preventDefault();
                     e.stopPropagation();
                     //also continue to case 46
-                    break;
                 case 46://delete
                     if (state){
                         var selection3D = globals.get("selection3D");

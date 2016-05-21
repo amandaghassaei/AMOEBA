@@ -45,7 +45,7 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!menus/te
 
         _buildWall: function(e){
             e.preventDefault();
-            lattice.getUItarget().addCellsInRange({min:{x:-5,y:-5,z:0}, max:{x:5,y:5,z:3}});
+            lattice.addCellsInRange({min:{x:-5,y:-5,z:0}, max:{x:5,y:5,z:3}});
         },
 
         _readDataURL: function(event, numFiles, filename, files){

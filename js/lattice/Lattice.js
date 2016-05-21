@@ -282,7 +282,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             if (latticeData.parts) newPartType = _.keys(latticeData.parts)[0];
             this.set("partType", newPartType, {silent:true});
 
-            var newMaterialClass = (latticeData.materialClasses || _.keys(materialsPlist.allMaterialClasses))[0];
+            var newMaterialClass = (_.keys(materialsPlist.allMaterialClasses[appState.get("hierLevel")]))[0];
             appState.set("materialClass", newMaterialClass);
 
             if (latticeData.options){

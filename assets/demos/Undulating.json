@@ -335,41 +335,13 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					}
-				],
-				[
-					{
-						"materialID": "flexure"
-					},
-					null,
-					null,
-					null,
-					{
-						"materialID": "flexure"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
@@ -391,41 +363,13 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					}
-				],
-				[
-					{
-						"materialID": "flexure"
-					},
-					null,
-					null,
-					null,
-					{
-						"materialID": "flexure"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
@@ -447,41 +391,13 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					}
-				],
-				[
-					{
-						"materialID": "flexure"
-					},
-					null,
-					null,
-					null,
-					{
-						"materialID": "flexure"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
@@ -503,41 +419,13 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					}
-				],
-				[
-					{
-						"materialID": "flexure"
-					},
-					null,
-					null,
-					null,
-					{
-						"materialID": "flexure"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
-					},
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
@@ -559,13 +447,125 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "actuator"
 					},
 					{
 						"materialID": "flexureCond"

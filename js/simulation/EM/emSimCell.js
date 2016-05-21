@@ -159,7 +159,7 @@ define(["underscore", "cell", "lattice", "plist", "three"],
     };
 
     DMACell.prototype.isAcutator = function(){
-        return this.getMaterialID() == "piezo";
+        return this.getMaterialID() == "actuator";
     };
 
     DMACell.prototype.isSignalGenerator = function(){
@@ -202,8 +202,8 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         return this.getMaterial().isConductive();
     };
 
-    EMSimCell.prototype.isPiezo = function(){
-        return this.cell.getMaterialID() == "piezo";
+    EMSimCell.prototype.isActuator = function(){
+        return this.cell.getMaterialID() == "actuator";
     };
 
     EMSimCell.prototype.setNominalSize = function(size){

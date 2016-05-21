@@ -3,24 +3,19 @@
  */
 
 
-define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWrapper'], function(_, saveAs, lattice, materials, ribbon, menuWrapper){
+define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWrapper', 'globals'],
+    function(_, saveAs, lattice, materials, ribbon, menuWrapper, globals){
 
-    function _saveFile(data, name, extension, noQuotes){
+    function _saveFile(data, name, extension){
 //        require(['jsonFn'], function(JSONfn){
 //        console.log(data.toString());
             var jsonString = JSON.stringify(data, null, '\t');
 
-            if (noQuotes){
-                jsonString = jsonString.replace(/"/g, '');
-            }
+            //if (noQuotes){
+            //    jsonString = jsonString.replace(/"/g, '');
+            //}
 
             saveData(jsonString, name, extension);
-            if (data.assembler){
-                jsonString.replace(/\\"/g,"\uFFFF"); //U+ FFFF
-                jsonString = jsonString.replace(/\"([^"]+)\":/g,"$1:").replace(/\uFFFF/g,"\\\"");
-                var blob = new Blob([jsonString], {type: "text/plain;charset=utf-8"});
-                saveAs(blob, name + "-forAmanda" + "." + extension);
-            }
 //        });
     }
 
@@ -50,13 +45,16 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         });
     }
 
-    function saveAssembler(){
-
+    function generateSaveString(){
+        var data = {
+            assembly:_getLatticeDataToSave(),
+            materials:_getMaterialsDataToSave()
+        };
+        var jsonString = JSON.stringify(data, null, '\t');
+        return jsonString;
     }
 
-    function saveSequences(seqArray, name){
-        _saveFile(seqArray, name || "seqs", "txt", true);
-    }
+
 
     function saveMaterial(material){
         var data = {materials:{}};
@@ -66,12 +64,6 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
     function saveMachineConfig(data){
         _saveFile(data, "Machine Config", "json");
-    }
-
-    function _getAssemblerDataToSave(){
-        var assemblerData = _.omit(globals.cam.toJSON(), ["origin", "stock", "exporter", "appState", "lattice", "machine", "simLineNumber"]);
-        if (!globals.cam.get("editsMadeToProgram")) assemblerData.dataOut = "";
-        return assemblerData;
     }
 
     function _getLatticeDataToSave(){
@@ -88,10 +80,6 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
 
 
     function loadFile(data){//parsed json todo make this better - load composite
-        if (data.assembler) {
-            _loadAssembler(data.assembler);
-            return;
-        }
         if (!data.materials){
             console.warn("no material definitions in this file");
             return;
@@ -114,13 +102,6 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
                 emSim.loadData(data.emSim);
             });
         }
-    }
-
-    function _loadAssembler(data){
-        require(['cam'], function(cam){
-            cam.selectMachine(data);
-            console.log("loaded");
-        });
     }
 
     function _setData(object, data){
@@ -152,17 +133,19 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         saveData(data, "script", "js");
     }
 
-
-    return {//return public methods
+    var publicMethods = {//return public methods
 //        save: save,
         save: save,
         saveData: saveData,
+        generateSaveString: generateSaveString,
         saveMaterial: saveMaterial,
         saveMachineConfig: saveMachineConfig,
-//        saveAssembler: saveAssembler,
         loadFile: loadFile,
-        saveSequences: saveSequences,
         saveSTL: saveSTL,
         saveConsoleScript: saveConsoleScript
-    }
+    };
+
+    globals.set("fileSaver", publicMethods);
+
+    return publicMethods;
 });

@@ -232,7 +232,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
         _clearCells: function(e){
             e.preventDefault();
-            lattice.getUItarget().clearCells();
+            lattice.clearCells();
         },
 
         _getPropertyOwner: function($target){

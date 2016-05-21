@@ -31,96 +31,14 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "piezo"
-					},
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "piezo"
-					},
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
@@ -146,7 +64,89 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "actuator"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "actuator"
 					},
 					null,
 					null
@@ -190,29 +190,29 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
@@ -238,31 +238,31 @@
 				],
 				[
 					{
-						"materialID": "piezo"
+						"materialID": "actuator"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				]
 			],
@@ -274,7 +274,7 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -310,7 +310,7 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					null,
 					null
@@ -425,24 +425,24 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -476,81 +476,59 @@
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				]
 			],
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -558,79 +536,21 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -638,21 +558,79 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -660,43 +638,21 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -704,87 +660,117 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					null,
-					null
 				],
 				[
 					{
 						"materialID": "flexureCond"
 					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
 					},
 					null,
 					null
@@ -798,88 +784,80 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				]
 			],
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -887,79 +865,21 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -967,21 +887,79 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -989,43 +967,21 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1033,87 +989,117 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					null,
-					null
 				],
 				[
 					{
 						"materialID": "flexureCond"
 					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
 					},
 					null,
 					null
@@ -1127,99 +1113,69 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					null,
 					null
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				]
 			],
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "signal"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1227,68 +1183,10 @@
 						"materialID": "signal"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "brass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1296,10 +1194,32 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1307,10 +1227,68 @@
 						"materialID": "signal"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1318,32 +1296,10 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "flexureCond"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1351,10 +1307,10 @@
 						"materialID": "signal"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1362,68 +1318,32 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1431,10 +1351,10 @@
 						"materialID": "signal"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1442,32 +1362,68 @@
 						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "flexureCond"
+						"materialID": "conductive"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1475,257 +1431,177 @@
 						"materialID": "signal"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "brass"
+						"materialID": "flexureCond"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				]
 			],
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -1755,326 +1631,326 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				]
 			],
 			[
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					null,
-					null,
-					null
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					}
-				],
-				[
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
-					},
-					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
@@ -2104,101 +1980,225 @@
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					}
 				],
 				[
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
 					},
 					{
-						"materialID": "fiberGlass"
+						"materialID": "insulating"
+					}
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
 					}
 				]
 			]

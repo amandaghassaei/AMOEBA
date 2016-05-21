@@ -23,7 +23,6 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/templates/NavHierarchica
             e.preventDefault();
             var $target = $(e.target);
             if ($target.data("hierlevel")) this.model.set("hierLevel", $target.data("hierlevel"));
-            console.log(this.model.get("hierLevel"));
         },
 
 
