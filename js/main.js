@@ -79,6 +79,7 @@ require.config({
         //UI
         navbar: 'menus/otherUI/Navbar',
         navViewMenu: 'menus/otherUI/NavViewMenu',//view dropdown
+        navHierarchicalMenu: 'menus/otherUI/NavHierarchicalMenu',//design dropdown
         ribbon: 'menus/otherUI/Ribbon',
         modalView: 'menus/otherUI/ModalView',
         console: 'menus/otherUI/Console',

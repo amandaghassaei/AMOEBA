@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appState', 'plist', 'threeModel'],
-    function($, _, Backbone, fileSaver, NavViewMenu, appState, plist, three){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'navHierarchicalMenu', 'appState', 'plist', 'threeModel'],
+    function($, _, Backbone, fileSaver, NavViewMenu, NavHierarchicalMenu, appState, plist, three){
 
     return Backbone.View.extend({
 
@@ -13,6 +13,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
         events: {
             "click #showHideMenu":                                  "_setMenuVisibility",
             "click .menuHoverControls":                             "_setNavSelection",
+            "click .hierDropdown":                                  "_setHierarchicalLevel",
             "shown.bs.modal .modal":                                "_showModal",
             "hide.bs.modal .modal":                                 "_hideModal",
 
@@ -37,6 +38,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
         initialize: function(){
 
             this.viewMenu = new NavViewMenu({model:this.model});
+            this.hierarchicalMenu = new NavHierarchicalMenu({model:this.model});
 
             _.bindAll(this, "_setMenuVisibility", "_setNavSelection");
 
@@ -63,8 +65,9 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             if (navSelection == "navSim"){//choose which simulation package to pull up
                 this.model.set("currentNav", appState.get("materialClass") + "NavSim");
                 return;
-            } else if (navSelection == "navAssemble"){//choose which assembly package to pull up
-                if (this.model.get("materialClass") == "dna") navSelection = "navDNAAssemble";
+            } else if (navSelection == "navDesign" && appState.get("currentNav") == "navDesign"){//optionally show the design dropdown
+                this.hierarchicalMenu.render();
+                $(e.target).parent().addClass("open");
             }
 
             if (navSelection) this.model.set("currentNav", navSelection);
@@ -77,8 +80,13 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
             else if (plist.allMenus[navSelection].parent) navSelection = plist.allMenus[navSelection].parent;
             _.each($(".menuHoverControls"), function(link){
                 var $link = $(link);
-                if ($link.data("menuId") == navSelection) $link.parent().addClass("open");//highlight
+                if ($link.data("menuId") == navSelection) $link.parent().addClass("navSelectedTab");//highlight
             });
+        },
+
+        _setHierarchicalLevel: function(e){
+            e.preventDefault();
+            $(".open").removeClass("open");
         },
 
         _logo: function(){
@@ -93,6 +101,7 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'appStat
 
         _deselectAllNavItems: function(){
             $(".open").removeClass("open");//no highlight
+            $(".navSelectedTab").removeClass("navSelectedTab");//no highlight
         },
 
         _showModal: function(e){

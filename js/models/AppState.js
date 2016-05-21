@@ -37,7 +37,10 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'globals'],
 
             realisticColorScheme: false,
             materialType: null,
-            materialClass: null
+            materialClass: null,
+
+            //hierarchy
+            hierLevel: "function"//element, function, module, system
         },
 
         initialize: function(){

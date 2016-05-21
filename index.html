@@ -114,7 +114,13 @@
               <li><a id="exportSTL" href="#">Export STL</a></li>
           </ul>
         </li>
-        <li><a data-menu-id="navDesign" class="menuHoverControls" href="#">Design</a></li>
+          <li class="dropdown navDropdown" id="navDesignTab">
+          <a href="#" data-menu-id="navDesign" class="menuHoverControls">Design <b class="caret"></b></a>
+          <span class="dropdown-arrow"></span>
+          <ul id="navHierarchicalMenu" class="dropdown-menu">
+          </ul>
+        </li>
+        <!--<li><a data-menu-id="navDesign" class="menuHoverControls" href="#">Design</a></li>-->
         <li><a data-menu-id="navSim" class="menuHoverControls" href="#">Simulate</a></li>
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" id="viewMenuDropdown" data-toggle="dropdown">View <b class="caret"></b></a>

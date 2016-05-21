@@ -406,7 +406,7 @@ label {
     padding-bottom: 20px;
 }
 
-#navViewMenu .dropdown-menu span{
+#navViewMenu .dropdown-menu span, #navHierarchicalMenu span{
     margin-right:10px;
 }
 
@@ -497,6 +497,16 @@ label {
 
 .dropdown-menu>li>a{
     padding: 6px 9px;
+}
+
+.navbar-inverse .navbar-nav > .navSelectedTab > a, .navbar-inverse .navbar-nav > .navSelectedTab > a:hover, .navbar-inverse .navbar-nav > .navSelectedTab > a:focus{
+    color: #fff;
+    background-color: #aaa;
+    border-left-color: transparent;
+}
+
+#navDesignTab>.dropdown-menu{
+    min-width: 112px;
 }
 
 .navbar-inverse .navbar-nav > .dropdown > a .caret {
