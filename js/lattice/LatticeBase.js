@@ -9,7 +9,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
     return Backbone.Model.extend({
 
         defaults: {
-
             cellsMin: null,//min position of cells matrix
             cellsMax: null,//max position of cells matrix
             numCells: 0
@@ -63,7 +62,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         getCellAtIndex: function(index){
             if (this._checkForIndexOutsideBounds(index)) return null;
-            return this._getCellAtIndex(index);
+            return this._getCellAtIndex(this._getCellsIndexForLatticeIndex(index));
         },
 
         _getCellAtIndex: function(index){
@@ -75,14 +74,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
         //setters
 
 
-
-
-
-        //lattice type
-
-        _getLatticePlistData: function(){
-            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("applicationType")];
-        },
 
 
 
@@ -144,14 +135,20 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _addCellAtIndex: function(index, json, noCheck){
             json = json || {};
+
+            if (this.getCellAtIndex(index)) {
+                console.warn("already a cell there");
+                return;
+            }
+
             json = _.extend({index: index.clone(), materialID:appState.get("materialType")}, json);
             var cell = this.makeCellWithJSON(json);
 
             if (!noCheck) {
-                var cellOutsideCurrentBounds = this._checkForIndexOutsideBounds(index) || this._checkForIndexOutsideBounds(index);
+                var cellOutsideCurrentBounds = this._checkForIndexOutsideBounds(index);
                 if (cellOutsideCurrentBounds) this._expandCellsMatrix(index, index);
             }
-            var latticeIndex = cell.getLatticeIndex();
+            var latticeIndex = this._getCellsIndexForLatticeIndex(index);
             this.cells[latticeIndex.x][latticeIndex.y][latticeIndex.z] = cell;//cell index in this.cells array
             this.set("numCells", this.get("numCells")+1);
         },
@@ -235,6 +232,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
 
         _clearCells: function(silent){
             if (silent === undefined) silent = false;
+            three.removeAllCells();//todo flag to avoid redundancy here
             this._loopCells(this.cells, function(cell){//send destroy to top level
                 cell.destroy();
             });
@@ -282,7 +280,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 this.set("cellsMin", indicesMin);
                 var size = indicesMax.clone().sub(indicesMin);
                 this._expandArray(this.cells, size, false);
-                this._expandArray(this.cells, size, false);
                 return;
             }
 
@@ -291,12 +288,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (!indicesMax.equals(lastMax)) {
                 var size = indicesMax.clone().sub(lastMax);
                 this._expandArray(this.cells, size, false);
-                this._expandArray(this.cells, size, false);
                 this.set("cellsMax", indicesMax);
             }
             if (!indicesMin.equals(lastMin)) {
                 var size = lastMin.clone().sub(indicesMin);
-                this._expandArray(this.cells, size, true);
                 this._expandArray(this.cells, size, true);
                 this.set("cellsMin", indicesMin);
             }
@@ -367,8 +362,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             if (maxDiff.equals(zero) && minDiff.equals(zero)) return;
 
             this._contractCellsArray(this.cells, false, maxDiff);
-            this._contractCellsArray(this.cells, false, maxDiff);
-            this._contractCellsArray(this.cells, true, minDiff);
             this._contractCellsArray(this.cells, true, minDiff);
 
             this.set("cellsMax", newMax, {silent:true});

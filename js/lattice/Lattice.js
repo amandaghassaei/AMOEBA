@@ -89,6 +89,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             return this.get("partType");
         },
 
+        //lattice type
+
+        _getLatticePlistData: function(){
+            return plist.allLattices[this.get("cellType")].connection[this.get("connectionType")].type[this.get("applicationType")];
+        },
+
 
 
         //setters
@@ -232,12 +238,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         },
 
         _setDefaultCellMode: function(){//if no part associated with this lattice type set to cell mode
-            var latticeData = this._getLatticePlistData();
-            if (!latticeData.parts){
-                var currentMode = appState.get("cellMode");
-                if (currentMode == "cell" || currentMode == "supercell") return;
-                appState.set("cellMode", "cell");
-            }
+            appState.set("cellMode", "cell");
         },
 
 
@@ -313,7 +314,6 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
         //events
 
         __clearCells: function(silent){
-            three.removeAllCells();//todo add flag in cell destroy to avoid redundancy here
             if (globals.basePlane) globals.basePlane.set("zIndex", 0, {silent:silent});
         },
 

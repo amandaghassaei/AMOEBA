@@ -207,7 +207,7 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
         },
 
         cellAtIndex: function(relIndex){
-            return lattice.getSparseCellAtIndex(this.get("min").clone().add(relIndex));
+            return lattice.getCellAtIndex(this.get("min").clone().add(relIndex));
         },
 
         finish: function(){
