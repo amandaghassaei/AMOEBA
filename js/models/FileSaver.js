@@ -106,7 +106,7 @@ define(['underscore', 'fileSaverLib', 'lattice', 'materials', 'ribbon', 'menuWra
         lattice.clearCells();
         var cells = data.assembly.cells;
         _setData(lattice, _.omit(data.assembly, "cells"));
-        if (cells) lattice.setSparseCells(cells);
+        if (cells) lattice.setCells(cells);
         ribbon.render();
         menuWrapper.render();
         if (data.emSim){

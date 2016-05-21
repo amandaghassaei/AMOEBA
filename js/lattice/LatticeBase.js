@@ -246,21 +246,21 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
-        //setSparsecells: function(cells, offset){
-        //    if (cells === undefined || cells == null) {
-        //        console.warn("no cells given to setcells");
-        //        return;
-        //    }
-        //    this._setcells(cells, offset);
-        //},
-        //
-        //_setSparsecells: function(cells, offset){
-        //
-        //    offset = offset || this.getOffset() || new THREE.Vector3(0,0,0);
-        //    if(this.get("numCells")>0) this.clearCells();
-        //    this.set("cellsMin", new THREE.Vector3(offset.x, offset.y, offset.z));
-        //    this.parseCellsJSON(cells);
-        //},
+        setCells: function(cells, offset){
+            if (cells === undefined || cells == null) {
+                console.warn("no cells given to setcells");
+                return;
+            }
+            this._setCells(cells, offset);
+        },
+
+        _setCells: function(cells, offset){
+
+            offset = offset || this.getOffset() || new THREE.Vector3(0,0,0);
+            if(this.get("numCells")>0) this.clearCells();
+            this.set("cellsMin", new THREE.Vector3(offset.x, offset.y, offset.z));
+            this.parseCellsJSON(cells);
+        },
 
 
 
@@ -546,7 +546,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 var index = (new THREE.Vector3(x, y, z)).add(cellsMin);
                 self._addCellAtIndex(index, json);
             });
-            three.render();//todo doesn't work
+            three.render();
         },
 
         getSaveJSON: function(){

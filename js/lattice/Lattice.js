@@ -209,12 +209,12 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
                 _.extend(self, subclassObject);
                 self._initLatticeType();//init for lattice subclass
                 if (numCells > 0) {
-                    self._setSparseCells(self.sparseCells, cellsMin);
+                    self._setCells(self.cells, cellsMin);
                 }
             });
         },
 
-        setSparseCells: function(cells, offset){
+        setCells: function(cells, offset){
             if (cells === undefined || cells == null) {
                 console.warn("no cells given to setSparseCells");
                 return;
@@ -223,7 +223,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             var cellsString = JSON.stringify(cells);
             myConsole.write("lattice.setCells(" + cellsString + ", " + JSON.stringify(offset) + ")");
 
-            this._setSparseCells(JSON.parse(cellsString), offset);
+            this._setCells(JSON.parse(cellsString), offset);
         },
 
         _getSubclassForLatticeType: function(){
