@@ -4,7 +4,7 @@
 
 
 define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
-    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/EM/shaders/packToBytesShader.js", "text!simulation/EM/shaders/positionCalcShader.js",
+    "text!simulation/EM/shaders/velocityCalcShader.js", "text!simulation/shaders/packToBytesShader.js", "text!simulation/EM/shaders/positionCalcShader.js",
     "text!simulation/EM/shaders/quaternionCalcShader.js", 'emSimCell'],
     function(_, Backbone, three, lattice, plist, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader,
              positionCalcShader, quaternionCalcShader) {
