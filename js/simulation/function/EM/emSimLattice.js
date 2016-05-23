@@ -476,7 +476,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("positionCalc", "u_dt", dt, "1f");
             },
 
-            iter: function(dt, time, gravity, groundHeight, friction, shouldRender){
+            iter: function(time, runConstants, shouldRender){
 
                 gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
                     "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
@@ -541,6 +541,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.swapTextures("u_translation", "u_lastTranslation");
                 gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
                 return;
+
+                var gravity = runConstants.gravity;
+                var groundHeight = runConstants.groundHeight;
+                var friction = runConstants.friction;
+                var dt = runConstants.dt;
 
                 var latticePitch = lattice.getPitch();
                 latticePitch = [latticePitch.x, latticePitch.y, latticePitch.z];

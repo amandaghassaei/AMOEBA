@@ -93,6 +93,7 @@ require.config({
         //simulation
         glBoilerplate: "simulation/GLBoilerplate",
         GPUMath: "simulation/GPUMath",
+        Sim: "simulation/Sim",
 
         //emSim
         emSimPlist: 'plists/EMSimPlist',

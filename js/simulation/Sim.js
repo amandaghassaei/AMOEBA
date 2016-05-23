@@ -26,7 +26,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
             fixedIndices: []
         },
 
-        initialize: function(){
+        _initialize: function(){
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(appState, "change:currentTab", this._tabChanged);
@@ -74,21 +74,18 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
             var self = this;
             this.set("isRunning", true);
             this.set("needsReset", true);
-            var dt = this.get("dtSolver")/1000000;//convert to sec
 
+            var dt = this.get("dtSolver")/1000000;//convert to sec
             var renderRate = this.get("dtRender");
-            var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
-			var groundHeight = this.get("groundHeight");
-			var friction = this.get("friction");
-            this.simLattice.setConstants(dt, gravityVect, groundHeight, friction);
+            var runConstants = this._setRunConstants();
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
-                    this.simLattice.iter(dt, self.time, gravityVect, groundHeight, friction, false);
+                    self.simLattice.iter(self.time, runConstants, false);
                 }
                 self.time += dt;
-                this.simLattice.iter(dt, self.time, gravityVect, groundHeight, friction, true);
+                self.simLattice.iter(self.time, runConstants, true);
                 //if (self._getViewMode() == "translation"){
                 //    self.calcTranslation();
                 //}
@@ -132,8 +129,9 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
         _toggleFixedVisibility: function(){
             var state = this.get("showFixed");
             var cellsMin = lattice.get("cellsMin");
+            var self = this;
             lattice.loopCells(function(cell, x, y, z){
-                if (!state || this.simLattice.isFixedAtIndex(new THREE.Vector3(x,y,z))) cell.show();
+                if (!state || self.simLattice.isFixedAtIndex(new THREE.Vector3(x,y,z))) cell.show();
                 else cell.hide();
             });
             three.render();
