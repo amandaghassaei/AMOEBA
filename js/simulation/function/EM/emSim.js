@@ -4,7 +4,7 @@
 
 
 define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLattice', 'lattice', 'plist', 'globals'],
-    function(THREE, _, Backbone, three, appState, emSimLattice, lattice, plist, globals){
+    function(THREE, _, Backbone, three, appState, EmSimLattice, lattice, plist, globals){
 
     var emSim = Backbone.Model.extend({
 
@@ -38,6 +38,8 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         },
 
         initialize: function(){
+            
+            this.simLattice = new EmSimLattice();
 
             this.listenTo(appState, "change:currentNav", this._navChanged);
             this.listenTo(appState, "change:currentTab", this._tabChanged);
@@ -98,7 +100,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
             var previous = appState.previous("currentNav");
             if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim"){
-                emSimLattice.setCells(lattice.getCells(), this.get("fixedIndices"));
+                this.simLattice.setCells(lattice.getCells(), this.get("fixedIndices"));
             }
 
             var currentTab = appState.get("currentTab");
@@ -129,22 +131,22 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         showActuator: function(index){
             if (index === undefined) index = this.get("visibleActuator");
-            emSimLattice.loopCells(function(cell){
+            this.simLattice.loopCells(function(cell){
                 cell.setTransparent(true);
             });
-            emSimLattice.get("actuators")[index].cell.setTransparent(false);
+            this.simLattice.get("actuators")[index].cell.setTransparent(false);
             three.render();
         },
 
         showConductors: function(groupNum){
             if (groupNum === undefined) groupNum = this.get("visibleWire");
-            if (_.keys(emSimLattice.get("wires")).length == 0 || groupNum == -2){
+            if (_.keys(this.simLattice.get("wires")).length == 0 || groupNum == -2){
                 lattice.setOpaque();
                 three.render();
                 return;
             }
             var allVisible = groupNum == -1;
-            emSimLattice.loopCells(function(cell){
+            this.simLattice.loopCells(function(cell){
                 cell.setTransparent(!cell.conductiveGroupVisible(allVisible, groupNum));
             });
             three.render();
@@ -169,15 +171,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var gravityVect = this.get("gravityVector").clone().normalize().multiplyScalar(this.get("gravity"));
 			var groundHeight = this.get("groundHeight");
 			var friction = this.get("friction");
-            emSimLattice.setConstants(dt, gravityVect, groundHeight, friction);
+            this.simLattice.setConstants(dt, gravityVect, groundHeight, friction);
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
-                    emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, false);
+                    self.simLattice.iter(dt, self.time, gravityVect, groundHeight, friction, false);
                 }
                 self.time += dt;
-                emSimLattice.iter(dt, self.time, gravityVect, groundHeight, friction, true);
+                self.simLattice.iter(dt, self.time, gravityVect, groundHeight, friction, true);
                 //if (self._getViewMode() == "translation"){
                 //    self.calcTranslation();
                 //}
@@ -193,7 +195,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             three.stopAnimationLoop();
             this.set("isRunning", false);
             this.set("needsReset", false);
-            emSimLattice.reset();
+            this.simLattice.reset();
             this.time = 0;
             if (this._getViewMode == "translation"){
                 this.calcTranslation();
@@ -204,7 +206,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
 
         fixCellAtIndex: function(index){
             var position = index.clone().sub(lattice.get("cellsMin"));
-            var fixed = emSimLattice.fixCellAtIndex(position);
+            var fixed = this.simLattice.fixCellAtIndex(position);
             var fixedIndices = this.get("fixedIndices");
             if (fixed) fixedIndices.push(index.clone());
             else {
@@ -222,7 +224,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
             var state = this.get("showFixed");
             var cellsMin = lattice.get("cellsMin");
             lattice.loopCells(function(cell, x, y, z){
-                if (!state || emSimLattice.isFixedAtIndex(new THREE.Vector3(x,y,z))) cell.show();
+                if (!state || this.simLattice.isFixedAtIndex(new THREE.Vector3(x,y,z))) cell.show();
                 else cell.hide();
             });
             three.render();
@@ -232,7 +234,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
         _viewModechanged: function(){
             //var viewMode = this._getViewMode();
             //if (viewMode == "default") {
-            //    emSimLattice.loopCells(function(cell){
+            //    this.simLattice.loopCells(function(cell){
             //        cell.showDefaultColor();
             //    });
             //} else if (viewMode == "translation") {
@@ -250,14 +252,14 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 if (this.get("colorMin")) min = this.get("colorMin");
                 if (this.get("colorMax")) max = this.get("colorMax");
             } else {
-                emSimLattice.loopCells(function(cell){
+                this.simLattice.loopCells(function(cell){
                     var translation = cell.getTranslation().length();
                     if (translation>max) max = translation;
                 });
                 this.set("colorMin", min);
                 this.set("colorMax", max);
             }
-            emSimLattice.loopCells(function(cell){
+            this.simLattice.loopCells(function(cell){
                 var val = cell.getTranslation().length();
                 cell.showTranslation(self._materialForVal(val, min, max, numMaterials));
             });
@@ -274,7 +276,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                 friction: this.get("friction")
             };
             var signals = [];
-            _.each(emSimLattice.get("signals"), function(signal){
+            _.each(this.simLattice.get("signals"), function(signal){
                 if (!signal.index) return;//deleted
                 signals.push(_.extend(signal.getSignalJSON(), {index:signal.getIndex()}));
             });
@@ -303,7 +305,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'emSimLatti
                     var json = _.omit(signal, "index");
                     signalsData.push({index: index, json:json});
                 });
-                emSimLattice.set("signalsData", signalsData);
+                this.simLattice.set("signalsData", signalsData);
             }
         }
 

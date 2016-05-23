@@ -30,14 +30,14 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
             e.stopPropagation();
             e.preventDefault();
             var wireId = $(e.target).data("id");
-            var signalCell = emSimLattice.get("wires")[wireId].getSignal();
+            var signalCell = emSim.simLattice.get("wires")[wireId].getSignal();
             require(['menuWrapper'], function(menuWrapper){
                 menuWrapper.initTabWithObject(signalCell, "signal", "emNavSignal")
             });
         },
 
         _makeTemplateJSON: function(){
-            return _.extend(emSimLattice.toJSON(), emPlist, emSim.toJSON());
+            return _.extend(emSim.simLattice.toJSON(), emPlist, emSim.toJSON());
         },
 
         template: _.template(template)

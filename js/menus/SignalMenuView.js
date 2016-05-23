@@ -26,7 +26,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSimLattice', 'emS
 
         saveExitMenu: function(){
             this.signal.setAsSignalGenerator(signal);
-            emSimLattice.resetWiresMetaTexture();
+            emSim.simLattice.resetWiresMetaTexture();
             return true;
         },
 

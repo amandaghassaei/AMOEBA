@@ -42,7 +42,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'emSimLatti
 
 
         _makeTemplateJSON: function(){
-            return _.extend(emSim.toJSON(), emSimLattice.toJSON(), emPlist);
+            return _.extend(emSim.toJSON(), emSim.simLattice.toJSON(), emPlist);
         },
 
         template: _.template(template)

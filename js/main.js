@@ -96,11 +96,16 @@ require.config({
 
         //emSim
         emSimPlist: 'plists/EMSimPlist',
-        emSim: 'simulation/EM/emSim',
-        emSimLattice: 'simulation/EM/emSimLattice',
-        emSimCell: 'simulation/EM/emSimCell',
-        emSimSuperCell: 'simulation/EM/emSimSuperCell',
-        emWire: 'simulation/EM/emWire'
+        emSim: 'simulation/function/EM/emSim',
+        emSimLattice: 'simulation/function/EM/emSimLattice',
+        emSimCell: 'simulation/function/EM/emSimCell',
+        emWire: 'simulation/function/EM/emWire',
+
+        //elementFEASim
+        elementFEASimPlist: 'plists/EMSimPlist',
+        elementFEASim: 'simulation/element/FEA/elementFEASim',
+        elementFEASimLattice: 'simulation/element/FEA/elementFEASimLattice',
+        elementFEASimCell: 'simulation/element/FEA/elementFEASimCell'
     },
 
     shim: {
