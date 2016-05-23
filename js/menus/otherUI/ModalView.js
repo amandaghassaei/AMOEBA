@@ -3,7 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'text!menus/templates/ModalView.html'], function($, _, Backbone, template){
+define(['jquery', 'underscore', 'backbone', 'text!menus/templates/ModalView.html', 'text!menus/templates/ModalViewSmall.html'],
+    function($, _, Backbone, template, templateSmall){
 
     return Backbone.View.extend({
 
@@ -18,7 +19,11 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/templates/ModalView.html
         },
 
         render: function(data){
-            this.$el.html(this.template(data));
+            if (data.small){
+                this.$el.html(this.templateSmall(data));
+            } else {
+                this.$el.html(this.template(data));
+            }
             this.$el.modal("show");
         },
 
@@ -30,6 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/templates/ModalView.html
 //            Backbone.View.prototype.remove.call(this);
         },
 
-        template: _.template(template)
+        template: _.template(template),
+        templateSmall: _.template(templateSmall)
     });
 });

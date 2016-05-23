@@ -63,6 +63,11 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'navViewMenu', 'navHier
             }
             e.preventDefault();
             if (navSelection == "navSim"){//choose which simulation package to pull up
+                var hierLevel = appState.get("hierLevel");
+                if (hierLevel == "element" || hierLevel == "module" || hierLevel == "system"){
+                    $("#comingSoon").modal("show");
+                    return;
+                }
                 this.model.set("currentNav", appState.get("materialClass") + "NavSim");
                 return;
             } else if (navSelection == "navDesign" && appState.get("currentNav") == "navDesign"){//optionally show the design dropdown

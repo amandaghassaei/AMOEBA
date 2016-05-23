@@ -29,6 +29,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 var numCells = lattice.get("numCells");
                 if (numCells == 0){
+                    require(["modalView"], function(ModalView){
+                        new ModalView({small: true, title:"", text:"No cells in assembly.<br/>Please go back to 'Design' tab and add cells."});
+                    });
                     console.warn("no cells");
                     return;
                 }

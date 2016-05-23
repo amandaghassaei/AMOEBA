@@ -641,3 +641,19 @@ label {
     margin-left: 10px;
     width: 40px;
 }
+
+.modal-header{
+        text-align: center;
+    border: 0px;
+}
+
+.modal-content{
+    -webkit-border-radius:0px;
+    -moz-border-radius:0px;
+    border-radius:0px;
+    text-align: center;
+}
+
+#comingSoon, #genericModal{
+    top:20%;
+}
