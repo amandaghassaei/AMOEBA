@@ -8,7 +8,8 @@ define([], function(){
     return {
         allMaterialClasses:{
             element:{
-                element: "Elemental Bricks"
+                elementMech: "Elemental Mechanical",
+                elementElectronic: "Elemental Electronic"
             },
             function:{
                 em: "Functional Bricks"
@@ -24,7 +25,7 @@ define([], function(){
         allMaterials:{
             em:{
                 insulating: {
-                    name: "Structural Insulating",
+                    name: "Structural",
                     color: "#8a2be2",
                     altColor: "#8a2be2",
                     properties:{
@@ -34,8 +35,44 @@ define([], function(){
                         k: 500
                     }
                 },
-                flexure: {
-                    name: "Flexure Insulating",
+                hinge1DOF: {
+                    name: "1 DOF Hinge",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
+                    texture: "stripes",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
+                hinge2DOF: {
+                    name: "2 DOF Hinge",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
+                    texture: "stripes",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
+                flexureTorsion: {
+                    name: "Torsion Flexure",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
+                    texture: "stripes",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
+                shear1DOF: {
+                    name: "Shear Flexure",
                     color: "#cda4f3",
                     altColor: "#cda4f3",
                     texture: "stripes",
@@ -47,7 +84,7 @@ define([], function(){
                     }
                 },
                 conductive:{
-                    name: "Structural Conductive",
+                    name: "Structural Electronic Routing",
                     color: "#b5a642",
                     altColor: "#857B64",
                     properties:{
@@ -58,7 +95,7 @@ define([], function(){
                     }
                 },
                 flexureCond: {
-                    name: "Flexure Conductive",
+                    name: "Iso-Flexible Electronic Routing",
                     color: "#b4ac9c",
                     altColor: "#b4ac9c",
                     texture: "stripes",
@@ -69,43 +106,41 @@ define([], function(){
                         k: 30
                     }
                 },
-                //alum:{
-                //    name: "Lightweight Structural Conductive",
-                //    color: "#9CC9CB",
-                //    altColor: "#9CC9CB",
-                //    properties:{
-                //        conductive: true,
-                //        density: 8500,//kg/m^3
-                //        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
-                //        k: 1000
-                //    }
-                //},
-
-//                heatResist: {
-//                    name: "Structural Heat-Resistant",
-//                    color: "#9CC9CB",
-//                    altColor: "#9CC9CB",
-//                    properties:{
-//                        conductive: false,
-//                        density: 500,//kg/m^3
-//                        elasMod: 17.2
-//                    }
-//                },
-//                carbon: {
-//                    name: "Resistive",
-//                    color: "#222",
-//                    altColor: "#000",
-//                    properties:{
-//                        conductive: false,
-//                        density: 500,//kg/m^3
-//                        elasMod: 181,
-//                        k: 1000
-//                    }
-//                },
-
-
-                actuator: {
-                    name: "Actuator",
+                actuatorLinear: {
+                    name: "Linear Actuator",
+                    color: "#FFCC00",
+                    altColor: "#FFCC00",
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 200
+                    }
+                },
+                actuatorBend: {
+                    name: "Bending Actuator",
+                    color: "#FFCC00",
+                    altColor: "#FFCC00",
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 200
+                    }
+                },
+                actuatorTorsion: {
+                    name: "Torsional Actuator",
+                    color: "#FFCC00",
+                    altColor: "#FFCC00",
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 200
+                    }
+                },
+                actuatorShear: {
+                    name: "Shear Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
                     properties:{
@@ -125,58 +160,47 @@ define([], function(){
                         elasMod: 50,
                         k: 200
                     }
+                },
+                script: {
+                    name: "Programmable Logic",
+                    color: "#0EE3B8",
+                    altColor: "#0EE3B8",
+                    properties:{
+                        conductive: true,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 200
+                    }
                 }
-                //nmos: {
-                //    name: "NMOS",
-                //    color: "#F99987",
-                //    altColor: "#F99987",
-                //    properties:{
-                //        conductive: false,
-                //        density: 6500,//kg/m^3
-                //        elasMod: 50,
-                //        k: 1000
-                //    }
-                //},
-                //pmos: {
-                //    name: "PMOS",
-                //    color: "#0EE3B8",
-                //    altColor: "#0EE3B8",
-                //    properties:{
-                //        conductive: false,
-                //        density: 6500,//kg/m^3
-                //        elasMod: 50,
-                //        k: 1000
-                //    }
-                //},
-                //diode: {
-                //    name: "Diode",
-                //    color: "#dfccaf",
-                //    altColor: "#dfccaf",
-                //    properties:{
-                //        conductive: false,
-                //        density: 6500,//kg/m^3
-                //        elasMod: 50,
-                //        k: 1000
-                //    }
-                //},
-                //zener: {
-                //    name: "Zener Diode",
-                //    color: "#bf390b",
-                //    altColor: "#bf390b",
-                //    properties:{
-                //        conductive: false,
-                //        density: 6500,//kg/m^3
-                //        elasMod: 50,
-                //        k: 1000
-                //    }
-                //}
             },
-            element:{
+            elementMech: {
+                brass: {
+                    name: "Brass",
+                    color: "#b5a642",
+                    altColor: "#857B64",
+                    properties: {
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                        k: 500
+                    }
+                },
+                alum: {
+                    name: "Aluminum",
+                    color: "#9CC9CB",
+                    altColor: "#9CC9CB",
+                    properties: {
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                        k: 1000
+                    }
+                },
                 fiberglass: {
                     name: "Fiberglass",
                     color: "#8a2be2",
                     altColor: "#8a2be2",
-                    properties:{
+                    properties: {
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 17.2,
@@ -188,43 +212,68 @@ define([], function(){
                     color: "#cda4f3",
                     altColor: "#cda4f3",
                     texture: "stripes",
-                    properties:{
+                    properties: {
                         conductive: false,
                         density: 3500,//kg/m^3
                         elasMod: 0.01,
                         k: 30
                     }
                 },
-                brass:{
+                //heatResist: {
+                //    name: "Kapton",
+                //    color: "#9CC9CB",
+                //    altColor: "#9CC9CB",
+                //    properties:{
+                //        conductive: false,
+                //        density: 500,//kg/m^3
+                //        elasMod: 17.2
+                //    }
+                //},
+
+                piezo: {
+                    name: "Piezo",
+                    color: "#FFCC00",
+                    altColor: "#FFCC00",
+                    properties: {
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 200
+                    }
+                }
+            },
+            elementElectronic:{
+                brass: {
                     name: "Brass",
                     color: "#b5a642",
                     altColor: "#857B64",
-                    properties:{
+                    properties: {
                         conductive: true,
                         density: 8500,//kg/m^3
                         elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
                         k: 500
                     }
                 },
-                alum:{
+                alum: {
                     name: "Aluminum",
                     color: "#9CC9CB",
                     altColor: "#9CC9CB",
-                    properties:{
+                    properties: {
                         conductive: true,
                         density: 8500,//kg/m^3
                         elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
                         k: 1000
                     }
                 },
-                heatResist: {
-                    name: "Kapton",
-                    color: "#9CC9CB",
-                    altColor: "#9CC9CB",
-                    properties:{
+                fiberglass: {
+                    name: "Fiberglass",
+                    color: "#8a2be2",
+                    altColor: "#8a2be2",
+                    properties: {
                         conductive: false,
-                        density: 500,//kg/m^3
-                        elasMod: 17.2
+                        density: 3500,//kg/m^3
+                        elasMod: 17.2,
+                        k: 500
                     }
                 },
                 carbon: {
@@ -236,17 +285,6 @@ define([], function(){
                         density: 500,//kg/m^3
                         elasMod: 181,
                         k: 1000
-                    }
-                },
-                piezo: {
-                    name: "Piezo",
-                    color: "#FFCC00",
-                    altColor: "#FFCC00",
-                    properties:{
-                        conductive: false,
-                        density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
                     }
                 },
                 nmos: {
@@ -271,32 +309,98 @@ define([], function(){
                         k: 1000
                     }
                 },
-                diode: {
-                    name: "Diode",
+                //diode: {
+                //    name: "Diode",
+                //    color: "#dfccaf",
+                //    altColor: "#dfccaf",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //},
+                //zener: {
+                //    name: "Zener Diode",
+                //    color: "#bf390b",
+                //    altColor: "#bf390b",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        elasMod: 50,
+                //        k: 1000
+                //    }
+                //}
+            },
+            module: {
+                routing: {
+                    name: "Routing",
                     color: "#dfccaf",
-                    altColor: "#dfccaf",
-                    properties:{
+                    altColor: "#857B64",
+                    properties: {
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
                         k: 1000
                     }
                 },
-                zener: {
-                    name: "Zener Diode",
-                    color: "#bf390b",
-                    altColor: "#bf390b",
-                    properties:{
+                clamp: {
+                    name: "Clamp",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
+                    properties: {
                         conductive: false,
                         density: 6500,//kg/m^3
                         elasMod: 50,
                         k: 1000
                     }
-                }
-            },
-            module: {
-                diode: {
-                    name: "Diode",
+                },
+                actuator: {
+                    name: "Linear Actuator",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
+                    properties: {
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                gripper: {
+                    name: "Gripper",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
+                    properties: {
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                readHead: {
+                    name: "Read Head",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
+                    properties: {
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                writeHead: {
+                    name: "Write Head",
+                    color: "#dfccaf",
+                    altColor: "#dfccaf",
+                    properties: {
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                script: {
+                    name: "Micro Controller",
                     color: "#dfccaf",
                     altColor: "#dfccaf",
                     properties: {
@@ -308,8 +412,30 @@ define([], function(){
                 }
             },
             system: {
-                zener: {
-                    name: "Zener Diode",
+                structural: {
+                    name: "Structural",
+                    color: "#bf390b",
+                    altColor: "#bf390b",
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                mobile: {
+                    name: "Mobile",
+                    color: "#bf390b",
+                    altColor: "#bf390b",
+                    properties:{
+                        conductive: false,
+                        density: 6500,//kg/m^3
+                        elasMod: 50,
+                        k: 1000
+                    }
+                },
+                register: {
+                    name: "Register",
                     color: "#bf390b",
                     altColor: "#bf390b",
                     properties:{

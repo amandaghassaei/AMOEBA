@@ -224,6 +224,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'materialsPlis
             this.lattice.clearCells();
             var currentLevel = this.get("hierLevel");
             this.set("materialClass", (_.keys(materialsPlist.allMaterialClasses[currentLevel]))[0]);
+            console.log(this.get("materialClass"));
             globals.loadHierarchicalAssembly(currentLevel);
         },
 

@@ -32,11 +32,6 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
             this._initialize();
         },
 
-        _changeGroundHeight: function(){
-            var height = this.get("groundHeight");
-            globals.get("baseplane").set("zIndex", height);
-        },
-
 
         //events
 
@@ -108,9 +103,16 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
             three.render();
         },
 
+        _changeGroundHeight: function(){
+            var height = this.get("groundHeight");
+            globals.get("baseplane").set("zIndex", height);
+        },
 
 
 
+
+
+        //run
 
         _setRunConstants: function(){
             var dt = this.get("dtSolver")/1000000;//convert to sec
