@@ -571,6 +571,18 @@ label {
 #contextMenu li:hover{
     background-color: #aaa;
 }
+#contextMenu li.divider{
+    height:2px;
+}
+
+#contextMenu li>a{
+    padding:6px 9px;
+    line-height:1.429;
+    color: #e1e4e7;
+    display: block;
+    font-weight:400;
+    white-space: nowrap;
+}
 
 #contextMenu ul {
     padding: 2px 0 2px 0;

@@ -84,19 +84,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         },
 
         _mouseUp: function(e){
-            switch (e.which) {
-                case 1:
-                    this.leftClick = false;
-                    break;
-                case 2:
-                    //middle
-                    break;
-                case 3:
-                    this.rightClick = false;
-                    break;
-                default:
-                    break;
-            }
+
             if (appState.get("currentTab") == "emBoundaryCond"){
                 var position = globals.get("highlighter").getHighlightedObjectPosition();
                 if (position){
@@ -109,11 +97,33 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
                 }
             }
             //if (this.currentIntersectedPart) this.currentIntersectedPart.removeFromCell();
-            globals.get("highlighter").addRemoveVoxel(!appState.get("deleteMode"));
-            if (globals.get("highlighter").highlightingArrow()) {
-                this.controls.noRotate = false;
-                this.controls.noPan = false;
-                this.controls.noZoom = false;
+            var highlighter = globals.get("highlighter");
+            if (this.rightClick && !this.leftClick){
+                if (highlighter.highlightingCell()){
+                    require(['cellContextMenu'], function(cellContextMenu){
+                        cellContextMenu.render(highlighter.highlightedObject);
+                    });
+                }
+            } else if (this.leftClick && !this.rightClick) {
+                highlighter.addRemoveVoxel(!appState.get("deleteMode"));
+                if (highlighter.highlightingArrow()) {
+                    this.controls.noRotate = false;
+                    this.controls.noPan = false;
+                    this.controls.noZoom = false;
+                }
+            }
+            switch (e.which) {
+                case 1:
+                    this.leftClick = false;
+                    break;
+                case 2:
+                    //middle
+                    break;
+                case 3:
+                    this.rightClick = false;
+                    break;
+                default:
+                    break;
             }
         },
 

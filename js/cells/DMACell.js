@@ -115,6 +115,22 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return this.object3D.position.clone();
     };
 
+    DMACell.prototype.rotateX = function(){
+        this.object3D.rotateX(Math.PI/2);
+    };
+
+    DMACell.prototype.rotateY = function(){
+        this.object3D.rotateY(Math.PI/2);
+    };
+
+    DMACell.prototype.rotateZ = function(){
+        this.object3D.rotateZ(Math.PI/2);
+    };
+
+    DMACell.prototype.getRotation = function(){
+        return this.object3D.rotation;
+    };
+
     DMACell.prototype.getOrientation = function(){
         return this.object3D.quaternion.clone();
     };

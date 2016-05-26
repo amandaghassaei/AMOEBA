@@ -24,7 +24,7 @@ define(['three', 'threeModel'], function(THREE, three){
         object3D.add(xAxisMesh);
         object3D.myParent = this;
         this.object3D = object3D;
-        xArrowMesh.scale.set(diameter, 1, diameter);
+        xArrowMesh.scale.set(diameter, diameter, diameter);
         xAxisMesh.scale.set(diameter, 1, diameter);
 
         if (position) this.setPosition(position);

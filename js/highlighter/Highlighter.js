@@ -199,6 +199,10 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             return this.highlightedObject && this.highlightedObject instanceof Arrow;
         },
 
+        highlightingCell: function(){
+            return this.highlightedObject && this.highlightedObject instanceof DMACell;
+        },
+
         adjustSelection3D: function(){
             if (!globals.get("selection3D")){
                 return;

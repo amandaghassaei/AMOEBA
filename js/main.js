@@ -31,6 +31,7 @@ require.config({
         fillGeometry: 'three/FillGeometry',
         selection3D: 'three/Selection3D',
         axes: 'three/Axes',
+        axesClass: 'three/AxesClass',
         arrow: 'three/Arrow',
         svgRenderer: '../dependencies/SVGRenderer',
         threeProjector: '../dependencies/Projector',
@@ -89,6 +90,7 @@ require.config({
         menuParent: 'menus/MenuParentView',
         emSetupMenu: 'menus/EmSetupMenuView',
         emRunMenu: 'menus/EmRunMenuView',
+        cellContextMenu: 'menus/contextMenu/CellContextMenu',
 
         //simulation
         glBoilerplate: "simulation/GLBoilerplate",
