@@ -35,11 +35,12 @@ define([], function(){
                         k: 500
                     }
                 },
-                hinge1DOF: {
+                bending1DOF: {
                     name: "1 DOF Hinge",
                     color: "#cda4f3",
                     altColor: "#cda4f3",
                     texture: "stripes",
+                    mesh: "bending1dof",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
@@ -47,11 +48,12 @@ define([], function(){
                         k: 30
                     }
                 },
-                hinge2DOF: {
+                bending2DOF: {
                     name: "2 DOF Hinge",
                     color: "#cda4f3",
                     altColor: "#cda4f3",
                     texture: "stripes",
+                    mesh: "bending2dof",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
@@ -59,11 +61,12 @@ define([], function(){
                         k: 30
                     }
                 },
-                flexureTorsion: {
+                torsion1DOF: {
                     name: "Torsion Flexure",
                     color: "#cda4f3",
                     altColor: "#cda4f3",
                     texture: "stripes",
+                    mesh: "torsion1dof",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
@@ -106,7 +109,7 @@ define([], function(){
                         k: 30
                     }
                 },
-                actuatorLinear: {
+                actuatorLinear1DOF: {
                     name: "Linear Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
@@ -117,10 +120,11 @@ define([], function(){
                         k: 200
                     }
                 },
-                actuatorBend: {
+                actuatorBending1DOF: {
                     name: "Bending Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
+                    mesh: "bending1dof",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
@@ -128,10 +132,11 @@ define([], function(){
                         k: 200
                     }
                 },
-                actuatorTorsion: {
+                actuatorTorsion1DOF: {
                     name: "Torsional Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
+                    mesh: "torsion1dof",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
@@ -229,7 +234,6 @@ define([], function(){
                 //        elasMod: 17.2
                 //    }
                 //},
-
                 piezo: {
                     name: "Piezo",
                     color: "#FFCC00",

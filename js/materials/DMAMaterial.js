@@ -7,6 +7,103 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
     var materialNum = 1;//outward facing name
 
+    var torsion1dof = new THREE.Geometry();
+        //torsion
+    torsion1dof.vertices = [
+        new THREE.Vector3(0.5, 0.5, 0.5),
+        new THREE.Vector3(0.5, 0.5, -0.5),
+        new THREE.Vector3(0.5, -0.5, 0.5),
+        new THREE.Vector3(0.5, -0.5, -0.5),
+        new THREE.Vector3(-0.5, 0.5, 0.5),
+        new THREE.Vector3(-0.5, 0.5, -0.5),
+        new THREE.Vector3(-0.5, -0.5, 0.5),
+        new THREE.Vector3(-0.5, -0.5, -0.5)
+
+    ];
+    torsion1dof.faces  = [
+        new THREE.Face3(5, 0, 2),
+        new THREE.Face3(5, 2, 1),
+        new THREE.Face3(4, 3, 6),
+        new THREE.Face3(3, 4, 7),
+        new THREE.Face3(1, 2, 6),
+        new THREE.Face3(1, 6, 3),
+        new THREE.Face3(0, 7, 4),
+        new THREE.Face3(0, 5, 7),
+        new THREE.Face3(2, 0, 4),
+        new THREE.Face3(2, 4, 6),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7)
+    ];
+
+    var bending1dof = new THREE.Geometry();
+
+        //1dof hinge vertices and faces
+    bending1dof.vertices = [
+        new THREE.Vector3(0.5, 0.5, 0.5),
+        new THREE.Vector3(0.5, 0.5, -0.5),
+        new THREE.Vector3(0.5, -0.5, 0.5),
+        new THREE.Vector3(0.5, -0.5, -0.5),
+        new THREE.Vector3(-0.5, 0.5, 0.5),
+        new THREE.Vector3(-0.5, 0.5, -0.5),
+        new THREE.Vector3(-0.5, -0.5, 0.5),
+        new THREE.Vector3(-0.5, -0.5, -0.5),
+        new THREE.Vector3(0, 0, 0.5),
+        new THREE.Vector3(0, 0, -0.5)
+    ];
+    bending1dof.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 5, 6),
+        new THREE.Face3(6, 5, 7),
+        new THREE.Face3(3, 2, 8),
+        new THREE.Face3(3, 8, 9),
+        new THREE.Face3(9, 6, 7),
+        new THREE.Face3(9, 8, 6),
+        new THREE.Face3(0, 1, 8),
+        new THREE.Face3(1, 9, 8),
+        new THREE.Face3(4, 9, 5),
+        new THREE.Face3(8, 9, 4),
+        new THREE.Face3(2, 0, 8),
+        new THREE.Face3(8, 4, 6),
+        new THREE.Face3(1, 3, 9),
+        new THREE.Face3(5, 9, 7)
+    ];
+
+    var bending2dof = new THREE.Geometry();
+
+        //2dof hinge vertices and faces
+    bending2dof.vertices = [
+        new THREE.Vector3(0.5, 0.5, 0.5),
+        new THREE.Vector3(0.5, 0.5, -0.5),
+        new THREE.Vector3(0.5, -0.5, 0.5),
+        new THREE.Vector3(0.5, -0.5, -0.5),
+        new THREE.Vector3(-0.5, 0.5, 0.5),
+        new THREE.Vector3(-0.5, 0.5, -0.5),
+        new THREE.Vector3(-0.5, -0.5, 0.5),
+        new THREE.Vector3(-0.5, -0.5, -0.5),
+        new THREE.Vector3(0, 0, 0)
+    ];
+    bending2dof.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 5, 6),
+        new THREE.Face3(6, 5, 7),
+        new THREE.Face3(3, 2, 8),
+        new THREE.Face3(8, 6, 7),
+        new THREE.Face3(8, 8, 6),
+        new THREE.Face3(0, 1, 8),
+        new THREE.Face3(4, 8, 5),
+        new THREE.Face3(8, 8, 4),
+        new THREE.Face3(2, 0, 8),
+        new THREE.Face3(8, 4, 6),
+        new THREE.Face3(1, 3, 8),
+        new THREE.Face3(5, 8, 7)
+    ];
+
+    torsion1dof.computeFaceNormals();
+    bending1dof.computeFaceNormals();
+    bending2dof.computeFaceNormals();
+
     function DMAMaterial(json, id){
         this.id = id;
 
@@ -22,6 +119,12 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         json = _.extend(defaults, json);
         this.set(json, true);
         if (json.texture) this.texture = json.texture;
+        if (json.mesh) {
+            if (json.mesh == "torsion1dof") this.mesh = torsion1dof;
+            else if (json.mesh == "bending1dof") this.mesh = bending1dof;
+            else if (json.mesh == "bending2dof") this.mesh = bending2dof;
+            else console.warn("no mesh for type " + json.mesh);
+        }
     }
 
     DMAMaterial.prototype.getID = function(){
@@ -193,6 +296,10 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         return this.properties.k;
     };
 
+    DMAMaterial.prototype.getMesh = function(){
+        return this.mesh;
+    };
+
     DMAMaterial.prototype.canDelete = function(){
         return !this.noDelete;
     };
@@ -205,7 +312,8 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
                 altColor: this.altColor,
                 noDelete: this.noDelete,
                 properties: this.getProperties(),
-                texture: this.texture
+                texture: this.texture,
+                mesh: this.mesh
             }
     };
 

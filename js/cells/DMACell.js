@@ -59,9 +59,19 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var meshes = [];
         var mesh = new THREE.Mesh(geometry, this.getMaterial(true));
         mesh.name = this._getMeshName();
+
         meshes.push(mesh);
 
-        var wireframe = this._buildWireframe(mesh, geometry);
+        var wireframeMesh = mesh;
+        var partGeo = this._getPartGeo();
+        if (partGeo){
+            var partMesh = new THREE.Mesh(partGeo, this.getMaterial(true));
+            meshes.push(partMesh);
+            wireframeMesh = partMesh;
+            mesh.visible = false;
+        }
+
+        var wireframe = this._buildWireframe(wireframeMesh, geometry);
         if (!wireframe) return meshes;
         wireframe.name = this._getMeshName();
         meshes.push(wireframe);
