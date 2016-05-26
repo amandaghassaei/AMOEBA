@@ -113,6 +113,7 @@ define([], function(){
                     name: "Linear Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
+                    texture: "cubeTexture",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
