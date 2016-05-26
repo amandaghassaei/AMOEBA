@@ -43,6 +43,12 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return this.object3D.children[0];
     };
 
+    DMACell.prototype.getVisibleMesh = function(){
+        var children = this.object3D.children;
+        if (children[1].name == "part") return children[1];
+        return children[0];
+    };
+
     DMACell.prototype._rotateCell = function(object3D){
         return object3D;//by default, no mesh transformations
     };
@@ -66,6 +72,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var partGeo = this._getPartGeo();
         if (partGeo){
             var partMesh = new THREE.Mesh(partGeo, this.getMaterial(true));
+            partMesh.name = "part";
             meshes.push(partMesh);
             wireframeMesh = partMesh;
             mesh.visible = false;
@@ -196,7 +203,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype._setTHREEMaterial = function(threeMaterial){
-        this.getHighlightableMesh().material = threeMaterial;
+        this.getVisibleMesh().material = threeMaterial;
     };
 
     DMACell.prototype.getMaterial = function(returnTHREEObject){
