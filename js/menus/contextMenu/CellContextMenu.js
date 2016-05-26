@@ -32,7 +32,7 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/contextMenu/CellContextM
 
         showMenu: function(position){
             var padding = parseInt($wrapper.css("padding"));
-            var left = position.x-padding;
+            var left = position.x;
             if ($('body').width()-200 < left) left -= 200;
             $wrapper.css({left:left, top: position.y-padding});
             $wrapper.show();
