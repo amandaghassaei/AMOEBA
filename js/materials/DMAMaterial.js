@@ -100,12 +100,79 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(5, 8, 7)
     ];
 
+    var wireStraight = new THREE.Geometry();
+    //    //box vertices
+    wireStraight.vertices = [
+        new THREE.Vector3(0.3, 0.3, 0.5),
+        new THREE.Vector3(0.3, 0.3, -0.5),
+        new THREE.Vector3(0.3, -0.3, 0.5),
+        new THREE.Vector3(0.3, -0.3, -0.5),
+        new THREE.Vector3(-0.3, 0.3, 0.5),
+        new THREE.Vector3(-0.3, 0.3, -0.5),
+        new THREE.Vector3(-0.3, -0.3, 0.5),
+        new THREE.Vector3(-0.3, -0.3, -0.5)
+
+    ];
+        //box
+    wireStraight.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 5, 6),
+        new THREE.Face3(6, 5, 7),
+        new THREE.Face3(3, 2, 6),
+        new THREE.Face3(3, 6, 7),
+        new THREE.Face3(0, 1, 4),
+        new THREE.Face3(4, 1, 5),
+        new THREE.Face3(2, 0, 4),
+        new THREE.Face3(2, 4, 6),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7)
+    ];
+
+    var wireBent = new THREE.Geometry();
+    //    //box vertices
+    wireBent.vertices = [
+        new THREE.Vector3(0.5, 0.3, -0.3),
+        new THREE.Vector3(0.3, 0.3, -0.5),
+        new THREE.Vector3(0.5, -0.3, -0.3),
+        new THREE.Vector3(0.3, -0.3, -0.5),
+        new THREE.Vector3(-0.3, 0.3, 0.3),
+        new THREE.Vector3(-0.3, 0.3, -0.5),
+        new THREE.Vector3(-0.3, -0.3, 0.3),
+        new THREE.Vector3(-0.3, -0.3, -0.5),
+        new THREE.Vector3(0.5, 0.3, 0.3),
+        new THREE.Vector3(0.5, -0.3, 0.3)
+    ];
+        //box
+    wireBent.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 5, 6),
+        new THREE.Face3(6, 5, 7),
+        new THREE.Face3(3, 2, 6),
+        new THREE.Face3(3, 6, 7),
+        new THREE.Face3(0, 1, 4),
+        new THREE.Face3(4, 1, 5),
+        new THREE.Face3(2, 0, 8),
+        new THREE.Face3(2, 8, 9),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7),
+        new THREE.Face3(9, 8, 4),
+        new THREE.Face3(9, 4, 6),
+        new THREE.Face3(2, 9, 6),
+        new THREE.Face3(0, 4, 8)
+    ];
+
     torsion1dof.computeFaceNormals();
     bending1dof.computeFaceNormals();
     bending2dof.computeFaceNormals();
+    wireStraight.computeFaceNormals();
+    wireBent.computeFaceNormals();
     assignUVs(torsion1dof);
     assignUVs(bending1dof);
     assignUVs(bending2dof);
+    assignUVs(wireStraight);
+    assignUVs(wireBent);
 
     function assignUVs( geometry ){
         geometry.computeBoundingBox();
@@ -147,6 +214,8 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
             if (json.mesh == "torsion1dof") this.mesh = torsion1dof;
             else if (json.mesh == "bending1dof") this.mesh = bending1dof;
             else if (json.mesh == "bending2dof") this.mesh = bending2dof;
+            else if (json.mesh == "wireStraight") this.mesh = wireStraight;
+            else if (json.mesh == "wireBent") this.mesh = wireBent;
             else console.warn("no mesh for type " + json.mesh);
         }
     }

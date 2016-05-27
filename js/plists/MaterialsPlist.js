@@ -87,9 +87,22 @@ define([], function(){
                     }
                 },
                 conductive:{
-                    name: "Structural Electronic Routing",
+                    name: "Electronic Routing (Straight)",
                     color: "#b5a642",
                     altColor: "#857B64",
+                    mesh: "wireStraight",
+                    properties:{
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
+                        k: 500
+                    }
+                },
+                conductiveBend:{
+                    name: "Electronic Routing (Bend)",
+                    color: "#b5a642",
+                    altColor: "#857B64",
+                    mesh: "wireBent",
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
@@ -98,10 +111,24 @@ define([], function(){
                     }
                 },
                 flexureCond: {
-                    name: "Iso-Flexible Electronic Routing",
+                    name: "Iso-Flex Electronic Routing (Straight)",
                     color: "#b4ac9c",
                     altColor: "#b4ac9c",
                     texture: "stripes",
+                    mesh: "wireStraight",
+                    properties:{
+                        conductive: true,
+                        density: 3500,//kg/m^3
+                        elasMod: 0.01,
+                        k: 30
+                    }
+                },
+                flexureCondBend: {
+                    name: "Iso-Flex Electronic Routing (Bend)",
+                    color: "#b4ac9c",
+                    altColor: "#b4ac9c",
+                    texture: "stripes",
+                    mesh: "wireBent",
                     properties:{
                         conductive: true,
                         density: 3500,//kg/m^3
