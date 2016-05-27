@@ -101,7 +101,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
     ];
 
     var wireStraight = new THREE.Geometry();
-    //    //box vertices
     wireStraight.vertices = [
         new THREE.Vector3(0.3, 0.3, 0.5),
         new THREE.Vector3(0.3, 0.3, -0.5),
@@ -113,7 +112,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Vector3(-0.3, -0.3, -0.5)
 
     ];
-        //box
     wireStraight.faces  = [
         new THREE.Face3(1, 0, 2),
         new THREE.Face3(1, 2, 3),
@@ -130,7 +128,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
     ];
 
     var wireBent = new THREE.Geometry();
-    //    //box vertices
     wireBent.vertices = [
         new THREE.Vector3(0.5, 0.3, -0.3),
         new THREE.Vector3(0.3, 0.3, -0.5),
@@ -143,7 +140,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Vector3(0.5, 0.3, 0.3),
         new THREE.Vector3(0.5, -0.3, 0.3)
     ];
-        //box
     wireBent.faces  = [
         new THREE.Face3(1, 0, 2),
         new THREE.Face3(1, 2, 3),
@@ -163,16 +159,112 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(0, 4, 8)
     ];
 
+    var siliconModule = new THREE.Geometry();
+    siliconModule.vertices = [
+        new THREE.Vector3(0.4, 0.4, 0.4),
+        new THREE.Vector3(0.4, 0.4, -0.4),
+        new THREE.Vector3(0.4, -0.4, 0.4),
+        new THREE.Vector3(0.4, -0.4, -0.4),
+        new THREE.Vector3(-0.4, 0.4, 0.4),
+        new THREE.Vector3(-0.4, 0.4, -0.4),
+        new THREE.Vector3(-0.4, -0.4, 0.4),
+        new THREE.Vector3(-0.4, -0.4, -0.4),
+
+        new THREE.Vector3(0.4, 0.3, 0.3),
+        new THREE.Vector3(0.4, 0.3, -0.3),
+        new THREE.Vector3(0.4, -0.3, 0.3),
+        new THREE.Vector3(0.4, -0.3, -0.3),
+
+        new THREE.Vector3(-0.4, 0.3, 0.3),
+        new THREE.Vector3(-0.4, 0.3, -0.3),
+        new THREE.Vector3(-0.4, -0.3, 0.3),
+        new THREE.Vector3(-0.4, -0.3, -0.3),
+
+        new THREE.Vector3(0.5, 0.3, 0.3),
+        new THREE.Vector3(0.5, 0.3, -0.3),
+        new THREE.Vector3(0.5, -0.3, 0.3),
+        new THREE.Vector3(0.5, -0.3, -0.3),
+
+        new THREE.Vector3(-0.5, 0.3, 0.3),
+        new THREE.Vector3(-0.5, 0.3, -0.3),
+        new THREE.Vector3(-0.5, -0.3, 0.3),
+        new THREE.Vector3(-0.5, -0.3, -0.3)
+    ];
+    siliconModule.faces  = [
+        new THREE.Face3(3, 2, 6),
+        new THREE.Face3(3, 6, 7),
+        new THREE.Face3(0, 1, 4),
+        new THREE.Face3(4, 1, 5),
+        new THREE.Face3(2, 0, 4),
+        new THREE.Face3(2, 4, 6),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7),
+
+        new THREE.Face3(0,8,1),
+        new THREE.Face3(1,8,9),
+        new THREE.Face3(2,3,10),
+        new THREE.Face3(3,11,10),
+        new THREE.Face3(2,10,0),
+        new THREE.Face3(0,10,8),
+        new THREE.Face3(3,1,11),
+        new THREE.Face3(11,1,9),
+
+        new THREE.Face3(4,5,12),
+        new THREE.Face3(5,13,12),
+        new THREE.Face3(7,6,14),
+        new THREE.Face3(15,7,14),
+        new THREE.Face3(14,6,4),
+        new THREE.Face3(14,4,12),
+        new THREE.Face3(5,7,15),
+        new THREE.Face3(5,15,13),
+
+        new THREE.Face3(8,16,9),
+        new THREE.Face3(9,16,17),
+        new THREE.Face3(10,11,18),
+        new THREE.Face3(11,19,18),
+        new THREE.Face3(10,18,8),
+        new THREE.Face3(8,18,16),
+        new THREE.Face3(11,9,19),
+        new THREE.Face3(19,9,17),
+
+        new THREE.Face3(17, 16, 18),
+        new THREE.Face3(17, 18, 19),
+
+        new THREE.Face3(4,5,12),
+        new THREE.Face3(5,13,12),
+        new THREE.Face3(7,6,14),
+        new THREE.Face3(15,7,14),
+        new THREE.Face3(14,6,4),
+        new THREE.Face3(14,4,12),
+        new THREE.Face3(5,7,15),
+        new THREE.Face3(5,15,13),
+
+        new THREE.Face3(12,13,20),
+        new THREE.Face3(13,21,20),
+        new THREE.Face3(15,14,22),
+        new THREE.Face3(23,15,22),
+        new THREE.Face3(22,14,12),
+        new THREE.Face3(22,12,20),
+        new THREE.Face3(13,15,23),
+        new THREE.Face3(13,23,21),
+
+        new THREE.Face3(20, 21, 22),
+        new THREE.Face3(22, 21, 23)
+
+    ];
+
     torsion1dof.computeFaceNormals();
     bending1dof.computeFaceNormals();
     bending2dof.computeFaceNormals();
     wireStraight.computeFaceNormals();
     wireBent.computeFaceNormals();
+    siliconModule.computeFaceNormals();
     assignUVs(torsion1dof);
     assignUVs(bending1dof);
     assignUVs(bending2dof);
     assignUVs(wireStraight);
     assignUVs(wireBent);
+    assignUVs(siliconModule);
 
     function assignUVs( geometry ){
         geometry.computeBoundingBox();
@@ -216,6 +308,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
             else if (json.mesh == "bending2dof") this.mesh = bending2dof;
             else if (json.mesh == "wireStraight") this.mesh = wireStraight;
             else if (json.mesh == "wireBent") this.mesh = wireBent;
+            else if (json.mesh == "siliconModule") this.mesh = siliconModule;
             else console.warn("no mesh for type " + json.mesh);
         }
     }

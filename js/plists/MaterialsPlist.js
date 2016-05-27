@@ -187,6 +187,7 @@ define([], function(){
                     name: "Signal Generator",
                     color: "#0EE3B8",
                     altColor: "#0EE3B8",
+                    mesh: "siliconModule",
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
@@ -198,6 +199,7 @@ define([], function(){
                     name: "Programmable Logic",
                     color: "#0EE3B8",
                     altColor: "#0EE3B8",
+                    mesh: "siliconModule",
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
