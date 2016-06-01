@@ -32,6 +32,10 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
             this._initialize();
         },
 
+        isActive: function(){
+            return appState.get("currentNav") == "emNavSim";
+        },
+
 
         //events
 

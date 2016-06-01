@@ -104,11 +104,11 @@ require.config({
         emSimCell: 'simulation/function/EM/emSimCell',
         emWire: 'simulation/function/EM/emWire',
 
-        //elementFEASim
-        elementFEASimPlist: 'plists/EMSimPlist',
-        elementFEASim: 'simulation/element/FEA/elementFEASim',
-        elementFEASimLattice: 'simulation/element/FEA/elementFEASimLattice',
-        elementFEASimCell: 'simulation/element/FEA/elementFEASimCell'
+        //elementMechSim
+        elementMechSimPlist: 'plists/EMSimPlist',
+        elementMechSim: 'simulation/element/Mech/elementMechSim',
+        elementMechSimLattice: 'simulation/element/Mech/elementMechSimLattice',
+        elementMechSimCell: 'simulation/element/Mech/elementMechSimCell'
     },
 
     shim: {

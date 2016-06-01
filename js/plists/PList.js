@@ -48,6 +48,15 @@ define(['three'], function(THREE){
                     emRun: "Run"
                 }
             },
+            elementMechNavSim:{
+                name: "Element FEA Simulation",
+                parent: "navSim",
+                tabs:{
+                    elementMechSetup: "Globals",
+                    elementMechBoundaryCond: "Boundaries",
+                    elementMechRun: "Run"
+                }
+            },
             emNavSignal:{
                 name: "Composite",
                 parentNav: "navSim",

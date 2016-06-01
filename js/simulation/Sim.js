@@ -28,10 +28,22 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
 
         _initialize: function(){
 
-            this.listenTo(appState, "change:currentNav", this._navChanged);
-            this.listenTo(appState, "change:currentTab", this._tabChanged);
-            this.listenTo(this, "change:showFixed", this._toggleFixedVisibility);
-            this.listenTo(this, "change:viewMode change:colorMax change:colorMin", this._viewModechanged);
+            this.listenTo(appState, "change:currentNav", function(){
+                if (!this.isActive()) return;
+                this._navChanged();
+            });
+            this.listenTo(appState, "change:currentTab", function(){
+                if (!this.isActive()) return;
+                this._tabChanged();
+            });
+            this.listenTo(this, "change:showFixed", function(){
+                if (!this.isActive()) return;
+                this._toggleFixedVisibility();
+            });
+            this.listenTo(this, "change:viewMode change:colorMax change:colorMin", function(){
+                if (!this.isActive()) return;
+                this._viewModechanged();
+            });
 
             this._navChanged();
 

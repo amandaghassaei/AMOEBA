@@ -250,7 +250,6 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
         new THREE.Face3(20, 21, 22),
         new THREE.Face3(22, 21, 23)
-
     ];
 
     torsion1dof.computeFaceNormals();

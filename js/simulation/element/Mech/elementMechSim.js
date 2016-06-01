@@ -3,8 +3,8 @@
  */
 
 
-define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emSimLattice', 'lattice', 'plist', 'globals'],
-    function(THREE, _, Backbone, three, appState, Sim, EmSimLattice, lattice, plist, globals){
+define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'elementMechSimLattice', 'lattice', 'plist', 'globals'],
+    function(THREE, _, Backbone, three, appState, Sim, ElementMechSimLattice, lattice, plist, globals){
 
     var elementFEASim = Sim.extend({
 
@@ -17,12 +17,16 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
 
         initialize: function(){
 
-            this.simLattice = new EmSimLattice();
+            this.simLattice = new ElementMechSimLattice();
 
             this.listenTo(this, "change:visibleWire", function(){this.showConductors();});
             this.listenTo(this, "change:visibleActuator", function(){this.showActuator();});
 
             this._initialize();
+        },
+
+        isActive: function(){
+            return appState.get("currentNav") == "elementMechNavSim";
         },
 
 
@@ -40,17 +44,16 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
                 return;
             }
 
-            this._changeGroundHeight();
-
             var previous = appState.previous("currentNav");
             if (previous != "emNavSignal" && plist.allMenus[appState.get("currentNav")].parent != "emNavSim"){
                 this.simLattice.setCells(lattice.getCells(), this.get("fixedIndices"));
             }
 
-            var currentTab = appState.get("currentTab");
-            if (currentTab == "emElectronics" || currentTab == "signal"){
-                this.showConductors();
-            }
+            //var currentTab = appState.get("currentTab");
+            //if (currentTab == "emElectronics" || currentTab == "signal"){
+            //    this.showConductors();
+            //}
+
         },
 
         _tabChanged: function(){
