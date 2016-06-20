@@ -2,8 +2,8 @@
  * Created by ghassaei on 5/31/16.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'elementMechSimPlist', 'elementMechSim', 'text!menus/templates/ElementMechBoundaryCondMenuView.html'],
-    function($, _, MenuParentView, elementMechSimPlist, elementMechSim, template){
+define(['jquery', 'underscore', 'menuParent', 'elementMechSim', 'text!menus/templates/ElementMechBoundaryCondMenuView.html'],
+    function($, _, MenuParentView, elementMechSim, template){
 
     return MenuParentView.extend({
 

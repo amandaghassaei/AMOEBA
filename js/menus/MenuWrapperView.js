@@ -368,13 +368,11 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
 
             if (this.menu) this.menu.destroy();
             var self = this;
-            console.log("menus/" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "MenuView");
+            //console.log("menus/" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "MenuView");
             require(["menus/" + tabName.charAt(0).toUpperCase() + tabName.slice(1) + "MenuView"], function(MenuView){
                 var data = {model:self.model};
                 if (object) data.myObject = object;
                 self.menu = new MenuView(data);
-                console.log(tabName);
-                console.log(self.menu);
                 self.menu.render();
             });
         },
