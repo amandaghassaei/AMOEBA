@@ -111,7 +111,7 @@ define([], function(){
                     }
                 },
                 flexureCond: {
-                    name: "Iso-Flex Electronic Routing (Straight)",
+                    name: "Flex Electronic Routing (Straight)",
                     color: "#b4ac9c",
                     altColor: "#b4ac9c",
                     texture: "stripes",
@@ -124,7 +124,7 @@ define([], function(){
                     }
                 },
                 flexureCondBend: {
-                    name: "Iso-Flex Electronic Routing (Bend)",
+                    name: "Flex Electronic Routing (Bend)",
                     color: "#b4ac9c",
                     altColor: "#b4ac9c",
                     texture: "stripes",

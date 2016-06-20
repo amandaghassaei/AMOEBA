@@ -254,7 +254,13 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     };
 
     DMACell.prototype.setWireframeVisibility = function(visible){
-        this.object3D.children[1].visible = visible;
+        this.getWireFrameMesh().visible = visible;
+    };
+
+    DMACell.prototype.getWireFrameMesh = function(){
+        var children = this.object3D.children;
+        if (children[1].name == "part") return children[2];
+        return children[1];
     };
 
 
@@ -265,15 +271,6 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         var geometry = [];
         if (this.isTransparent) return geometry;
         if (!this.object3D.visible) return geometry;
-        //var meshes = _.filter(this.object3D.children, function(child){
-        //    return child.visible && child instanceof THREE.Mesh
-        //});
-        //if (meshes.length > 0) {
-        //    var self = this;
-        //    _.each(meshes, function(mesh){
-        //        geometry.push();
-        //    });
-        //}
         var mesh = this.getVisibleMesh();
         if (mesh.visible) geometry.push({geo: mesh.geometry, offset:this.getPosition(), orientation:mesh.quaternion.clone().multiply(this.getOrientation())});
         return geometry;
