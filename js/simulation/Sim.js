@@ -90,6 +90,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
             var dt = this.get("dtSolver")/1000000;//convert to sec
             var renderRate = this.get("dtRender");
             var runConstants = this._setRunConstants();
+            runConstants.dt = dt;
 
             three.startAnimationLoop(function(){
                 for (var i=0;i<renderRate-1;i++){

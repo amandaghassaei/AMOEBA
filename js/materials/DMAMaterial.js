@@ -477,12 +477,8 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         return this.properties.density;
     };
 
-    DMAMaterial.prototype.getElasticMod = function(){
-        return this.properties.elasMod*1000000000;
-    };
-
-    DMAMaterial.prototype.getK = function(){
-        return this.properties.k;
+    DMAMaterial.prototype.getLongitudalK = function(){
+        return this.properties.longitudalK;
     };
 
     DMAMaterial.prototype.getMesh = function(){
