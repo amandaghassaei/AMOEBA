@@ -328,9 +328,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.toJSON = function(){
         var data = {
-            materialID: this.getMaterialID(),
-            quaternion: this.getOrientation()
+            materialID: this.getMaterialID()
         };
+        var quaternion = this.getOrientation();
+        if (quaternion.x == 0 && quaternion.y == 0 && quaternion.z == 0 && quaternion.w == 1) return data;
+        data.quaternion = quaternion;
         return data;
     };
 
