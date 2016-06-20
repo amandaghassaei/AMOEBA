@@ -481,6 +481,18 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         return this.properties.longitudalK;
     };
 
+    DMAMaterial.prototype.getShearK = function(){
+        return this.properties.shearK;
+    };
+
+    DMAMaterial.prototype.getBendingK = function(){
+        return this.properties.bendingK;
+    };
+
+    DMAMaterial.prototype.getTorsionK = function(){
+        return this.properties.torsionK;
+    };
+
     DMAMaterial.prototype.getMesh = function(){
         return this.mesh;
     };
