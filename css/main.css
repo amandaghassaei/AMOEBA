@@ -669,3 +669,17 @@ label {
 #comingSoon, #genericModal{
     top:20%;
 }
+
+.materialVisibility{
+    display: block;
+    position: relative;
+    margin-bottom: 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 20px;
+    margin-top: 10px;
+}
+
+.leftOffset{
+    left: 30px!important;
+}

@@ -440,6 +440,13 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             three.render();
         },
 
+        refreshCellsMaterial: function(){
+            this._loopCells(this.cells, function(cell){
+                cell.refreshMaterial();
+            });
+            three.render();
+        },
+
         setOpaque: function(){
             this._loopCells(this.cells, function(cell){
                 cell.setTransparent(false);

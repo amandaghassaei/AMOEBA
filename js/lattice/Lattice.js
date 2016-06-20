@@ -334,6 +334,10 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'materialsPlis
             return cellsMax.clone().sub(cellsMin).divideScalar(2).add(cellsMin);
         },
 
+        _navChanged: function(){
+            this.refreshCellsMaterial();
+        },
+
 
 
 

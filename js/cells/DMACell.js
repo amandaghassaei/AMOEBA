@@ -244,6 +244,10 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype._setTransparent = function(transparent){
         if (transparent == this.isTransparent) return;
         this.isTransparent = transparent;
+        this.refreshMaterial();
+    };
+
+    DMACell.prototype.refreshMaterial = function(){
         this._setTHREEMaterial(this.getMaterial(true));
         this.setWireframeVisibility(!this.isTransparent);
         if (this.parts) {
@@ -270,6 +274,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
     DMACell.prototype.getVisibleGeometry = function(){//for save stl
         var geometry = [];
         if (this.isTransparent) return geometry;
+        if (this.getMaterial().isTransparent()) return geometry;
         if (!this.object3D.visible) return geometry;
         var mesh = this.getVisibleMesh();
         if (mesh.visible) geometry.push({geo: mesh.geometry, offset:this.getPosition(), orientation:mesh.quaternion.clone().multiply(this.getOrientation())});

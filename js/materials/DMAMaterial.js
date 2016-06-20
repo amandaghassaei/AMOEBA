@@ -296,7 +296,9 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
             color: randomColor,
             altColor: randomColor,
             noDelete: false,
-            properties:{}
+            properties:{},
+            hidden: false,//global material visibility setting
+            transparent:false//global material visibility setting
         };
         json = _.extend(defaults, json);
         this.set(json, true);
@@ -442,6 +444,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
             console.warn("no three material found for material " + this.getID());
             return null;
         }
+        if (this.isTransparent()) return this.getTransparentMaterial();
         return this.threeMaterial;
     };
 
@@ -489,6 +492,17 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         return !this.noDelete;
     };
 
+    DMAMaterial.prototype.setTransparent = function(state){
+        this.transparent = state;
+        require(['lattice'], function(lattice){
+            lattice.refreshCellsMaterial();
+        });
+    };
+
+    DMAMaterial.prototype.isTransparent = function(){
+        return this.transparent && appState.get("currentNav") == "navDesign";
+    };
+
     DMAMaterial.prototype.toJSON = function(){
         return {
                 name: this.name,
@@ -498,7 +512,9 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
                 noDelete: this.noDelete,
                 properties: this.getProperties(),
                 texture: this.texture,
-                mesh: this.mesh
+                mesh: this.mesh,
+                hidden: this.hidden,
+                transparent: this.transparent
             }
     };
 

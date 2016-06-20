@@ -84,7 +84,6 @@ require.config({
         ribbon: 'menus/otherUI/Ribbon',
         modalView: 'menus/otherUI/ModalView',
         console: 'menus/otherUI/Console',
-        contextMenu: 'menus/contextMenu/ContextMenu',
         scriptView: 'menus/otherUI/ScriptView',
         menuWrapper: 'menus/MenuWrapperView',
         menuParent: 'menus/MenuParentView',
@@ -166,7 +165,7 @@ require.config({
 
 //init stuff
 require(['appState', 'lattice', 'navbar', 'threeModel', 'threeView', 'globals',
-    'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView', 'contextMenu', 'console'],
+    'flatUI', 'bootstrapSlider', 'ribbon', 'menuWrapper', 'scriptView', 'console'],
     function(appState, lattice, Navbar, three, ThreeView, globals){
 
     new Navbar({model:appState});

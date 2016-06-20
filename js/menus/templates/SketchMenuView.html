@@ -1,4 +1,4 @@
-Orientation:&nbsp;&nbsp;<div class="btn-group">
+Selection Plane Orientation:&nbsp;&nbsp;<div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allBaseplaneTypes[planeType] %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
             <% _.each(allBaseplaneTypes, function(val, key){ %>
@@ -6,7 +6,7 @@ Orientation:&nbsp;&nbsp;<div class="btn-group">
             <% }); %>
         </ul>
     </div><br/><br/>
-Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex %>" placeholder="us" class="form-control intInput baseplane" type="text"><br/>
+Selection Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex %>" placeholder="us" class="form-control intInput baseplane" type="text"><br/>
  <label class="checkbox" for="showOneLayer">
     <input id="showOneLayer" data-property="showOneLayer" type="checkbox" <% if (showOneLayer){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
@@ -15,5 +15,31 @@ Sketch Plane Height:&nbsp;&nbsp;<input data-property="zIndex" value="<%= zIndex 
     <input id="orientationFlipped" data-property="orientationFlipped" type="checkbox" <% if (orientationFlipped){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="baseplane custom-checkbox">
     <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
     Flip orientation</label>
-
 <br/>
+Material Visibility:
+<% _.each(_.keys(allMaterials[materialClass]), function(key){ %>
+    <% var material = materials[key];%>
+<label class="checkbox colorSwatches materialVisibility">
+    <input data-id="<%= key %>" data-property="transparent" type="checkbox" <% if (!material.transparent){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="material custom-checkbox">
+    <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+    <!--<input data-property="<%= key %>" type="checkbox" <% if (material.hidden){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="leftOffset custom-checkbox">-->
+    <!--<span class="leftOffset icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>-->
+    <div class="materialColorSwatch">
+    <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>">
+        <% if (material.texture) {%><img src="assets/textures/<%= material.texture %>Thumb.png"><% } %>
+    </div>
+    <span><span class="materialListTitle"><%= material.name %></span></span></div>
+</label>
+<% }); %>
+<% _.each(materials, function(material, key){ %>
+    <% if(material.noDelete) return; %>
+<label class="checkbox colorSwatches materialVisibility">
+    <input data-id="<%= key %>" data-property="transparent" type="checkbox" <% if (!material.transparent){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="material custom-checkbox">
+    <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+    <!--<input data-property="<%= key %>" type="checkbox" <% if (material.hidden){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="leftOffset custom-checkbox">-->
+    <!--<span class="leftOffset icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>-->
+    <div class="materialColorSwatch">
+        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>"></div>
+        <span><span><%= material.name %></span></span></div>
+</label>
+<% }); %>
