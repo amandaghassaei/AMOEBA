@@ -271,11 +271,11 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         //if (meshes.length > 0) {
         //    var self = this;
         //    _.each(meshes, function(mesh){
-        //        geometry.push({geo: mesh.geometry, offset:self.getAbsolutePosition(), orientation:mesh.quaternion.clone().multiply(self.getAbsoluteOrientation())});
+        //        geometry.push();
         //    });
         //}
-        var mesh = this.getHighlightableMesh();
-        if (mesh.visible) geometry.push(mesh);
+        var mesh = this.getVisibleMesh();
+        if (mesh.visible) geometry.push({geo: mesh.geometry, offset:this.getPosition(), orientation:mesh.quaternion.clone().multiply(this.getOrientation())});
         return geometry;
     };
 

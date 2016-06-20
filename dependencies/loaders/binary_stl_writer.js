@@ -40,7 +40,6 @@ var geometryToSTLBin = function(geometryArray) {
             }
 
         } else {
-
             var tris = geometry.faces;
             var verts = geometry.vertices;
 
