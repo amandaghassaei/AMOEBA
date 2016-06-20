@@ -31,8 +31,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        elasMod: 17.2,
-                        k: 500
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 bending1DOF: {
@@ -44,8 +46,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:30},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 bending2DOF: {
@@ -57,8 +61,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:30,z:30},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 torsion1DOF: {
@@ -70,8 +76,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:30}
                     }
                 },
                 shear1DOF: {
@@ -82,8 +90,24 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:30,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
+                    }
+                },
+                isoFlex: {
+                    name: "Iso-Flexible",
+                    color: "#cda4f3",
+                    altColor: "#cda4f3",
+                    texture: "stripes",
+                    properties:{
+                        conductive: false,
+                        density: 3500,//kg/m^3
+                        longitudalK:{x:30,y:30,z:30},
+                        shearK:{x:30,y:30,z:30},
+                        bendingK:{x:30,y:30,z:30},
+                        torsionK:{x:30,y:30,z:30}
                     }
                 },
                 conductive:{
@@ -94,8 +118,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
-                        k: 500
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 conductiveBend:{
@@ -106,8 +132,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        elasMod: 1000,//Gpascals (kg/(s^2*m)/10000000000)
-                        k: 500
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 flexureCond: {
@@ -119,8 +147,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:30,y:30,z:30},
+                        shearK:{x:30,y:30,z:30},
+                        bendingK:{x:30,y:30,z:30},
+                        torsionK:{x:30,y:30,z:30}
                     }
                 },
                 flexureCondBend: {
@@ -132,8 +162,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 3500,//kg/m^3
-                        elasMod: 0.01,
-                        k: 30
+                        longitudalK:{x:30,y:30,z:30},
+                        shearK:{x:30,y:30,z:30},
+                        bendingK:{x:30,y:30,z:30},
+                        torsionK:{x:30,y:30,z:30}
                     }
                 },
                 actuatorLinear1DOF: {
@@ -144,8 +176,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 actuatorBending1DOF: {
@@ -156,8 +190,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 actuatorTorsion1DOF: {
@@ -168,8 +204,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 actuatorShear: {
@@ -179,8 +217,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 signal: {
@@ -191,8 +231,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 script: {
@@ -203,8 +245,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
-                        elasMod: 50,
-                        k: 200
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{x:500,y:500,z:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 }
             },

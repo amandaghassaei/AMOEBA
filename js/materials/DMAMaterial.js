@@ -310,6 +310,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
             else if (json.mesh == "wireStraight") this.mesh = wireStraight;
             else if (json.mesh == "wireBent") this.mesh = wireBent;
             else if (json.mesh == "siliconModule") this.mesh = siliconModule;
+            else if (json.mesh.vertices) this.mesh = json.mesh;//we've passed in a mesh object
             else console.warn("no mesh for type " + json.mesh);
         }
     }

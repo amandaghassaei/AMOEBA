@@ -683,3 +683,7 @@ label {
 .leftOffset{
     left: 30px!important;
 }
+
+.normalStylingCheckbox{
+    font-size: 18px!important;
+}

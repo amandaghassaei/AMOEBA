@@ -4,15 +4,26 @@ Display Color: &nbsp;&nbsp;
 <a id="newRandomColor" href="#" class="btn btn-block btn-lg btn-default">New Random Display Color</a><br/>
 Realistic Color: &nbsp;&nbsp;
     <input id="materialAltColor" style="border-color: <%= color %> ;" data-property="color" value="<%= color %>" placeholder="Enter HEX" class="halfWidth materialEditor form-control hexInput" type="text"><br/><br/>
-Material Properties:<br/>
+Material Properties:<br/><br/>
     <div class="tab1">
-        <label class="checkbox" for="conductive">
+        <label class="checkbox normalStylingCheckbox" for="conductive">
         <input id="conductive" data-property="conductive" type="checkbox" <% if (properties.conductive){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="materialProperties custom-checkbox">
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Conductive</label>
         Density (kg/m^3): &nbsp;&nbsp;<input data-property="density" value="<%= properties.density %>" placeholder="Density" class="form-control floatInput materialProperties" type="text"><br/><br/>
-        <!--Elasitc Mod (GPa): &nbsp;&nbsp;<input data-property="elasMod" value="<%= properties.elasMod %>" placeholder="Mod" class="form-control floatInput materialProperties" type="text"><br/><br/>-->
-        k (N/m): &nbsp;&nbsp;<input data-property="k" value="<%= properties.k %>" placeholder="K" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Material Stiffness (XYZ):<br/><br/>
+        Axial K: &nbsp;&nbsp;<input data-property="longitudalK" data-key="x" value="<%= properties.longitudalK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="longitudalK" data-key="y" value="<%= properties.longitudalK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="longitudalK" data-key="z" value="<%= properties.longitudalK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Shear K: &nbsp;&nbsp;<input data-property="shearK" data-key="x" value="<%= properties.shearK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="shearK" data-key="y" value="<%= properties.shearK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="shearK" data-key="z" value="<%= properties.shearK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Bending K: &nbsp;&nbsp;<input data-property="bendingK" data-key="x" value="<%= properties.bendingK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="bendingK" data-key="y" value="<%= properties.bendingK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="bendingK" data-key="z" value="<%= properties.bendingK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Torsional K: &nbsp;&nbsp;<input data-property="torsionK" data-key="x" value="<%= properties.torsionK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="torsionK" data-key="y" value="<%= properties.torsionK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
+            <input data-property="torsionK" data-key="z" value="<%= properties.torsionK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
     </div>
 <br/>
 <a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Material</a><br/>
