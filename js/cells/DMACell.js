@@ -17,7 +17,7 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         this.isTransparent = false;
 
         //object 3d is parent to all 3d elements owned by cell: cell mesh and wireframe, parts, beams, nodes, etc
-        var object3D = this._buildObject3D();
+        var object3D = this._buildObject3D(json.quaternion);
         this.object3D = object3D;//save object3D reference
         var cellMeshes = this._buildCellMeshes();//cell mesh and wireframe
         this.addChildren(cellMeshes, object3D);//build cell meshes
@@ -27,8 +27,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     //make 3d stuff
 
-    DMACell.prototype._buildObject3D = function() {
-        var object3D = this._translateCell(this._rotateCell(new THREE.Object3D()));
+    DMACell.prototype._buildObject3D = function(quaternion) {
+        var object3D = this._translateCell(this._rotateCell(new THREE.Object3D(), quaternion));
         object3D.myParent = this;//reference to get mouse raycasting back
         object3D.name = "object3D";
         return object3D;
@@ -49,7 +49,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
         return children[0];
     };
 
-    DMACell.prototype._rotateCell = function(object3D){
+    DMACell.prototype._rotateCell = function(object3D, quaternion){
+        if (quaternion) object3D.quaternion.set(quaternion._x, quaternion._y, quaternion._z, quaternion._w);
         return object3D;//by default, no mesh transformations
     };
 
@@ -327,7 +328,8 @@ define(['underscore', 'three', 'threeModel', 'lattice', 'appState', 'globals', '
 
     DMACell.prototype.toJSON = function(){
         var data = {
-            materialID: this.getMaterialID()
+            materialID: this.getMaterialID(),
+            quaternion: this.getOrientation()
         };
         return data;
     };
