@@ -11,19 +11,22 @@ Material Properties:<br/><br/>
         <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
         Conductive</label>
         Density (kg/m^3): &nbsp;&nbsp;<input data-property="density" value="<%= properties.density %>" placeholder="Density" class="form-control floatInput materialProperties" type="text"><br/><br/>
-        Material Stiffness (XYZ):<br/><br/>
+        Material Stiffness (XYZ unless noted):<br/><br/>
         Axial K: &nbsp;&nbsp;<input data-property="longitudalK" data-key="x" value="<%= properties.longitudalK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="longitudalK" data-key="y" value="<%= properties.longitudalK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="longitudalK" data-key="z" value="<%= properties.longitudalK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
-        Shear K: &nbsp;&nbsp;<input data-property="shearK" data-key="x" value="<%= properties.shearK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="shearK" data-key="y" value="<%= properties.shearK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="shearK" data-key="z" value="<%= properties.shearK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+            <input data-property="longitudalK" data-key="y" value="<%= properties.longitudalK.y %>" placeholder="Y" class="form-control floatInput materialProperties" type="text">
+            <input data-property="longitudalK" data-key="z" value="<%= properties.longitudalK.z %>" placeholder="Z" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Shear K (XY XZ): &nbsp;&nbsp;<input data-property="shearK" data-key="xy" value="<%= properties.shearK.xy %>" placeholder="XY" class="form-control floatInput materialProperties" type="text">
+            <input data-property="shearK" data-key="xz" value="<%= properties.shearK.xz %>" placeholder="XZ" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Shear K (YX YZ): &nbsp;&nbsp;<input data-property="shearK" data-key="yx" value="<%= properties.shearK.yx %>" placeholder="YX" class="form-control floatInput materialProperties" type="text">
+            <input data-property="shearK" data-key="yz" value="<%= properties.shearK.yz %>" placeholder="YZ" class="form-control floatInput materialProperties" type="text"><br/><br/>
+        Shear K (ZX ZY): &nbsp;&nbsp;<input data-property="shearK" data-key="zx" value="<%= properties.shearK.zx %>" placeholder="ZX" class="form-control floatInput materialProperties" type="text">
+            <input data-property="shearK" data-key="zy" value="<%= properties.shearK.zy %>" placeholder="ZY" class="form-control floatInput materialProperties" type="text"><br/><br/>
         Bending K: &nbsp;&nbsp;<input data-property="bendingK" data-key="x" value="<%= properties.bendingK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="bendingK" data-key="y" value="<%= properties.bendingK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="bendingK" data-key="z" value="<%= properties.bendingK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+            <input data-property="bendingK" data-key="y" value="<%= properties.bendingK.y %>" placeholder="Y" class="form-control floatInput materialProperties" type="text">
+            <input data-property="bendingK" data-key="z" value="<%= properties.bendingK.z %>" placeholder="Z" class="form-control floatInput materialProperties" type="text"><br/><br/>
         Torsional K: &nbsp;&nbsp;<input data-property="torsionK" data-key="x" value="<%= properties.torsionK.x %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="torsionK" data-key="y" value="<%= properties.torsionK.y %>" placeholder="X" class="form-control floatInput materialProperties" type="text">
-            <input data-property="torsionK" data-key="z" value="<%= properties.torsionK.z %>" placeholder="X" class="form-control floatInput materialProperties" type="text"><br/><br/>
+            <input data-property="torsionK" data-key="y" value="<%= properties.torsionK.y %>" placeholder="Y" class="form-control floatInput materialProperties" type="text">
+            <input data-property="torsionK" data-key="z" value="<%= properties.torsionK.z %>" placeholder="Z" class="form-control floatInput materialProperties" type="text"><br/><br/>
     </div>
 <br/>
 <a id="saveExitMenu" href="#" class="btn btn-block btn-lg btn-success">Save Material</a><br/>

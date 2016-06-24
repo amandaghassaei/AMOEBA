@@ -63,8 +63,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
                 this.neighborsYMapping = new Float32Array(textureSize*8);//would have done int16, but no int types have > 8 bits
-                this.compositeKs = new Float32Array(textureSize*8*12);
-                this.compositeDs = new Float32Array(textureSize*8*12);
+                this.compositeKs = new Float32Array(textureSize*8*15);
+                this.compositeDs = new Float32Array(textureSize*8*15);
 
                 //todo int array
                 this.wires = new Float32Array(textureSize*4);//also stores actuator mask as -1
@@ -133,13 +133,23 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
 
                         //todo apply rotation here
-                        _.each(["longitudal", "shear", "bending", "torsion"], function(dof, dofIndex){
+                        _.each(["longitudal", "bending", "torsion"], function(dof, dofIndex){
+                            var cellK = self._getCellK(cell, dof);
+                            var neighborK = self._getCellK(neighbor, dof);
                             _.each(["x", "y", "z"], function(axis, axisIndex){
-                                var compositeK = self._calcCompositeParam(self._getCellK(cell, dof)[axis], self._getCellK(neighbor, dof)[axis]);
+                                var compositeK = self._calcCompositeParam(cellK[axis], neighborK[axis]);
                                 var offset = (dofIndex*3+axisIndex)*textureSize*8;
                                 self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
                                 self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
                             });
+                        });
+                        var cellK = self._getCellK(cell,"shear");//shear last bc it has six elements instead of 3
+                        var neighborK = self._getCellK(neighbor, "shear");
+                        _.each(["xy", "xz", "yx", "yz", "zx", "zy"], function(axis, axisIndex){
+                            var compositeK = self._calcCompositeParam(cellK[axis], neighborK[axis]);
+                            var offset = (3*3+axisIndex)*textureSize*8;
+                            self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
+                            self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
                         });
 
 
@@ -618,13 +628,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var d = 10/1000;
                         //todo don't need all these at once
                         var longitudalK = [this.compositeKs[neighborsIndex + j%3], this.compositeKs[neighborsIndex + j%3 + textureSize*8], this.compositeKs[neighborsIndex + j%3 + 2*textureSize*8]];
-                        var shearK = [this.compositeKs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 5*textureSize*8]];
-                        var bendingK = [this.compositeKs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 8*textureSize*8]];
-                        var torsionK = [this.compositeKs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 11*textureSize*8]];
+                        var bendingK = [this.compositeKs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 5*textureSize*8]];
+                        var torsionK = [this.compositeKs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 8*textureSize*8]];
+                        var shearK = [this.compositeKs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 11*textureSize*8],
+                            this.compositeKs[neighborsIndex + j%3 + 12*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 13*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 14*textureSize*8]];
                         var longitudalD = [this.compositeDs[neighborsIndex + j%3], this.compositeDs[neighborsIndex + j%3 + textureSize*8], this.compositeDs[neighborsIndex + j%3 + 2*textureSize*8]];
-                        var shearD = [this.compositeDs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 5*textureSize*8]];
-                        var bendingD = [this.compositeDs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 8*textureSize*8]];
-                        var torsionD = [this.compositeDs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 11*textureSize*8]];
+                        var bendingD = [this.compositeDs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 5*textureSize*8]];
+                        var torsionD = [this.compositeDs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 8*textureSize*8]];
+                        var shearD = [this.compositeDs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 11*textureSize*8],
+                        this.compositeDs[neighborsIndex + j%3 + 12*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 13*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 14*textureSize*8]];
 
                         var D = [neighborTranslation[0]-translation[0] + nominalD[0],
                             neighborTranslation[1]-translation[1] + nominalD[1],
@@ -637,6 +649,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             if (axis == neighborAxis){
                                 _k = longitudalK[axis];
                                 _d = longitudalD[axis];
+                            } else {
+                                var shearIndex = this._shearIndex(neighborAxis, axis);
+                                _k = shearK[shearIndex];
+                                _d = shearD[shearIndex];
                             }
                             force[axis] += _k*(D[axis] - rotatedNominalD[axis]) + _d*(neighborVelocity[axis]-velocity[axis]);
                         }
@@ -746,6 +762,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 this._swapArrays("translation", "lastTranslation");
                 this._swapArrays("quaternion", "lastQuaternion");
                 this._swapArrays("rotation", "lastRotation");
+            },
+
+            _shearIndex: function(neighborAxis, axis){
+                var index = neighborAxis*3+axis-1;
+                if (index<3) return index;
+                return index-1;
             },
 
             _torqueAxis: function(neighbAxis, axis){
