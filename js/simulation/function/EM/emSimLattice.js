@@ -657,11 +657,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             force[_axis] += _k*(D[_axis] - rotatedNominalD[_axis]) + _d*(neighborVelocity[_axis]-velocity[_axis]);
                         }
 
-                        //
-                        //force[0] += k*(D[0] - rotatedNominalD[0]) + d*(neighborVelocity[0]-velocity[0]);
-                        //force[1] += k*(D[1] - rotatedNominalD[1]) + d*(neighborVelocity[1]-velocity[1]);
-                        //force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
-
                         //non-axial rotation
                         var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
 
@@ -679,7 +674,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                                 _k = torsionK[_axis];
                                 _d = torsionD[_axis];
                             } else {
-                                _k = bendingK[_axis];
+                                _k = bendingK[_axis];4
                                 _d = bendingD[_axis];
                             }
                             rTotal[_axis] += rotaionEuler[_axis]*_k;
