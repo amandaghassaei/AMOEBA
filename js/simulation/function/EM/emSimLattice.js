@@ -674,7 +674,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                                 _k = torsionK[_axis];
                                 _d = torsionD[_axis];
                             } else {
-                                _k = bendingK[_axis];4
+                                _k = bendingK[_axis];
                                 _d = bendingD[_axis];
                             }
                             rTotal[_axis] += rotaionEuler[_axis]*_k;
