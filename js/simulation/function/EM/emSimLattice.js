@@ -132,10 +132,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim;
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
 
+                        //todo apply rotation here
                         _.each(["longitudal", "shear", "bending", "torsion"], function(dof, dofIndex){
                             _.each(["x", "y", "z"], function(axis, axisIndex){
                                 var compositeK = self._calcCompositeParam(self._getCellK(cell, dof)[axis], self._getCellK(neighbor, dof)[axis]);
-                                var offset = (dofIndex*axisIndex+axisIndex)*textureSize*8;
+                                var offset = (dofIndex*3+axisIndex)*textureSize*8;
                                 self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
                                 self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
                             });
@@ -613,8 +614,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var neighbRotatedHalfNomD = this._applyQuaternion(halfNominalD, neighborQuaternion);
                         var rotatedNominalD = [rotatedHalfNomD[0] + neighbRotatedHalfNomD[0], rotatedHalfNomD[1] + neighbRotatedHalfNomD[1], rotatedHalfNomD[2] + neighbRotatedHalfNomD[2]];
 
-                        var k = this.compositeKs[neighborsIndex + j%3];
-                        var d = this.compositeDs[neighborsIndex + j%3];
+                        var k = 10;
+                        var d = 10/1000;
+                        //todo don't need all these at once
                         var longitudalK = [this.compositeKs[neighborsIndex + j%3], this.compositeKs[neighborsIndex + j%3 + textureSize*8], this.compositeKs[neighborsIndex + j%3 + 2*textureSize*8]];
                         var shearK = [this.compositeKs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 5*textureSize*8]];
                         var bendingK = [this.compositeKs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 8*textureSize*8]];
@@ -628,27 +630,37 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             neighborTranslation[1]-translation[1] + nominalD[1],
                             neighborTranslation[2]-translation[2] + nominalD[2]];
 
-                        //longitudal
+                        //longitudal and shear
+                        for (var axis=0;axis<3;axis++){
+                            var _k = k;
+                            var _d = d;
+                            if (axis == neighborAxis){
+                                _k = longitudalK[axis];
+                                _d = longitudalD[axis];
+                            }
+                            force[axis] += _k*(D[axis] - rotatedNominalD[axis]) + _d*(neighborVelocity[axis]-velocity[axis]);
+                        }
+
 
                         //shear
+                        //
+                        //force[0] += k*(D[0] - rotatedNominalD[0]) + d*(neighborVelocity[0]-velocity[0]);
+                        //force[1] += k*(D[1] - rotatedNominalD[1]) + d*(neighborVelocity[1]-velocity[1]);
+                        //force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
 
-                        force[0] += k*(D[0] - rotatedNominalD[0]) + d*(neighborVelocity[0]-velocity[0]);
-                        force[1] += k*(D[1] - rotatedNominalD[1]) + d*(neighborVelocity[1]-velocity[1]);
-                        force[2] += k*(D[2] - rotatedNominalD[2]) + d*(neighborVelocity[2]-velocity[2]);
-
-                        //non-axial rotation
-                        var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
-
-                        //axial rotation
-                        var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                        var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
-                        var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
-
-                        var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
-                        rTotal[0] += rotaionEuler[0]*k;
-                        rTotal[1] += rotaionEuler[1]*k;
-                        rTotal[2] += rotaionEuler[2]*k;
-                        rContrib += k;
+                        ////non-axial rotation
+                        //var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
+                        //
+                        ////axial rotation
+                        //var axis = rotatedNominalD;//neighbRotatedHalfNomD
+                        //var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
+                        //var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
+                        //
+                        //var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
+                        //rTotal[0] += rotaionEuler[0]*k;
+                        //rTotal[1] += rotaionEuler[1]*k;
+                        //rTotal[2] += rotaionEuler[2]*k;
+                        //rContrib += k;
 
                         //var neighborAxis = Math.floor(j/2);
                         //var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
