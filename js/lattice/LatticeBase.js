@@ -96,6 +96,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                 for (var y=range.min.y;y<=range.max.y;y++){
                     for (var z=range.min.z;z<=range.max.z;z++){
                         var index = new THREE.Vector3(x, y, z);
+                        var quaternion = null;
                         if (clone){
                             var relIndex = index.clone().sub(range.min);
                             var cloneSize = clone.get("size");
@@ -105,8 +106,9 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                             var cell = clone.cellAtIndex(relIndex);
                             if (!cell) continue;
                             materialID = cell.getMaterialID();
+                            quaternion = cell.getOrientation();
                         }
-                        this._addCellAtIndex(index, {materialID: materialID}, true);
+                        this._addCellAtIndex(index, {materialID: materialID, quaternion: quaternion}, true);
                     }
                 }
             }

@@ -34,6 +34,7 @@ define(['underscore', 'backbone', 'threeModel', 'three', 'plist', 'materialsPlis
             deleteMode: false,
             extrudeMode: false,
             cellMode: "cell",//cell, hide
+            currentDesignOrientation: null,//current rotation set for placing parts
 
             realisticColorScheme: false,
             materialType: null,

@@ -65,6 +65,7 @@ define(['jquery', 'underscore', 'backbone', 'text!menus/contextMenu/CellContextM
             else if (axis == "z") this.cell.rotateZ();
             else console.warn("unknown axis " + axis);
             cellAxesVis.setRotation(this.cell.getRotation());
+            appState.set("currentDesignOrientation", this.cell.getOrientation());
             three.render();
         },
 

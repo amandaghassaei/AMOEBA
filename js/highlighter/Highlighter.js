@@ -218,7 +218,7 @@ define(['underscore', 'backbone', 'threeModel', 'appState', 'lattice', 'cell', '
             }
             if (shouldAdd){
                 if (!this.isVisible() || !this.highlightedObject) return;
-                lattice.addCellAtIndex(this._getNextCellIndex());
+                lattice.addCellAtIndex(this._getNextCellIndex(), {quaternion: appState.get("currentDesignOrientation")});
             } else {
                 if (!this.highlightedObject) return;
                 if (!(this.highlightedObject instanceof DMACell)) return;
