@@ -46,9 +46,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.textureSize = [textureDim, textureDim];
                 this.originalPosition = new Float32Array(textureSize*4);
-                this.translation = new Float32Array(textureSize*8);//first have is translation, second half is rotation
+                this.translation = new Float32Array(textureSize*8);//first half is translation, second half is rotation
                 this.lastTranslation = new Float32Array(textureSize*8);
-                this.velocity = new Float32Array(textureSize*8);
+                this.velocity = new Float32Array(textureSize*8);//first half is translation, second half is rotation
                 this.lastVelocity = new Float32Array(textureSize*8);
 
                 this.quaternion = new Float32Array(textureSize*4);
@@ -599,7 +599,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     for (var j=0;j<6;j++){
 
                         var _force = [0,0,0];
-                        var _rForce = [0,0,0];
 
                         var neighborsIndex = i*8;
                         if (j>2) neighborsIndex += 4;
@@ -615,7 +614,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //var nominalD = this._neighborOffset(j, latticePitch);
                         //var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
                         var neighborAxis = Math.floor(j/2);
-                        var neighborDirection = this._neighborSign(j);
                         //var actuation = 0;
                         //if (isActuator && wiring[neighborAxis+1]>0) {
                         //    actuation += 0.3*this._getActuatorVoltage(wiring[neighborAxis+1]-1, time);
@@ -626,8 +624,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //}
                         //actuatedD[neighborAxis] *= 1+actuation;
 
-                        //var k = 100;
-                        //var d = 100/1000;
                         //todo don't need all these at once
                         var longitudalK = [this.compositeKs[neighborsIndex + j%3], this.compositeKs[neighborsIndex + j%3 + textureSize*8], this.compositeKs[neighborsIndex + j%3 + 2*textureSize*8]];
                         var bendingK = [this.compositeKs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 5*textureSize*8]];
@@ -663,7 +659,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                                 _force[_axis] += longitudalK[_axis]*translationalDeltaXYZ[_axis] + longitudalD[_axis]*velocityDeltaXYZ[_axis];
                             } else {
                                 var shearIndex = this._shearIndex(neighborAxis, _axis);
-                                _force[_axis] += shearK[shearIndex]*translationalDelta[_axis] + shearD[shearIndex]*velocityDeltaXYZ[_axis];
+                                _force[_axis] += shearK[shearIndex]*translationalDeltaXYZ[_axis] + shearD[shearIndex]*velocityDeltaXYZ[_axis];
                             }
 
                         }
@@ -675,43 +671,22 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var torque = this._crossVectors(cellHalfNominalD, _force);//cellHalfNominalD = lever arm
                         rForce = this._addVectors(rForce, torque);
 
+                        //bending and torsion
+                        for (var _axis=0;_axis<3;_axis++) {
+                            if (_axis == neighborAxis){
+                                rForce[_axis] += 0.001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                            } else {
+                                rForce[_axis] += 0.001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                            }
+                        }
+                        //console.log(rotation);
+                        //console.log(neighborRotation);
+                        //console.log(angVelocity);
+                        //console.log(neighborAngVelocity);
+                        //console.log(quaternion);
+                        //console.log(rForce);
+                        //console.log("");
 
-                        ////non-axial rotation
-                        //var nonAxialRotation = this._quaternionFromUnitVectors(this._normalize3D(nominalD), this._normalize3D(D));
-                        //
-                        ////axial rotation
-                        //var axis = rotatedNominalD;//neighbRotatedHalfNomD
-                        //var angle = this._dotVectors(neighborEuler, this._normalize3D(axis));
-                        //var torsion = this._quaternionFromAxisAngle(this._normalize3D(nominalD), angle);
-                        //
-                        ////torsion and bending
-                        //var rotaionEuler = this._eulerFromQuaternion(this._multiplyQuaternions(nonAxialRotation, torsion));
-                        //for (var _axis=0;_axis<3;_axis++){
-                        //    var _k;
-                        //    var _d;
-                        //    if (_axis == neighborAxis){
-                        //        _k = torsionK[_axis];
-                        //        _d = torsionD[_axis];
-                        //    } else {
-                        //        _k = bendingK[_axis];
-                        //        _d = bendingD[_axis];
-                        //    }
-                        //    rTotal[_axis] += rotaionEuler[_axis]*_k;
-                        //    rContrib[_axis] += _k;
-                        //}
-
-                        //var neighborAxis = Math.floor(j/2);
-                        //var bend = [euler[0]-neighborEuler[0], euler[1]-neighborEuler[1], euler[2]-neighborEuler[2]];
-                        //var bendForce = [0,0,0];
-                        //for (var l=0;l<3;l++){
-                        //    if (l == neighborAxis) continue;
-                        //    bendForce[this._torqueAxis(l, neighborAxis)] = bend[l]*k/1000000000;
-                        //}
-                        //
-                        //var bendingForce = this._applyQuaternion(bendForce, quaternion);
-                        //force[0] += bendingForce[0];
-                        //force[1] += bendingForce[1];
-                        //force[2] += bendingForce[2];
                     }
 
                     ////simple collision detection
@@ -732,7 +707,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
                     translation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
-                    //console.log(translation[2]);
 
                     this.translation[rgbaIndex] = translation[0];
                     this.translation[rgbaIndex+1] = translation[1];
