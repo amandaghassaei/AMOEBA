@@ -672,13 +672,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         rForce = this._addVectors(rForce, torque);
 
                         //bending and torsion
-                        for (var _axis=0;_axis<3;_axis++) {
-                            if (_axis == neighborAxis){
-                                rForce[_axis] += 0.001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            } else {
-                                rForce[_axis] += 0.001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            }
-                        }
+                        //for (var _axis=0;_axis<3;_axis++) {
+                        //    if (_axis == neighborAxis){
+                        //        rForce[_axis] += 0.001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    } else {
+                        //        rForce[_axis] += 0.001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    }
+                        //}
                         //console.log(rotation);
                         //console.log(neighborRotation);
                         //console.log(angVelocity);
@@ -751,7 +751,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
 
-                        var quaternion = [this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]];
+                        //var quaternion = [this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]];
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
                         cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.translation[rgbaIndex+4*textureSize], this.translation[rgbaIndex+1+4*textureSize], this.translation[rgbaIndex+2+4*textureSize]);
@@ -877,7 +877,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var s2 = Math.sin(euler[1] / 2);
                 var s3 = Math.sin(euler[2] / 2);
 
-                return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];
+                return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 - s1 * s2 * c3, c1 * c2 * c3 + s1 * s2 * s3];//zyx
+                //return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];//xyz
             },
 
             _clamp: function ( x, a, b ) {
