@@ -12,7 +12,8 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'emSimLatti
 
             "click #runSimulation":                      "_runSimulation",
             "click #pauseSimulation":                    "_pauseSimulation",
-            "click #resetSimulation":                    "_resetSimulation"
+            "click #resetSimulation":                    "_resetSimulation",
+            "click #stepSimulation":                     "_stepSimulation"
         },
 
         _initialize: function(){
@@ -27,7 +28,7 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'emSimLatti
 
         _runSimulation: function(e){
             e.preventDefault();
-            emSim.run();
+            emSim.run(false);
         },
 
         _pauseSimulation: function(e){
@@ -38,6 +39,11 @@ define(['jquery', 'underscore', 'menuParent', 'emSimPlist', 'emSim', 'emSimLatti
         _resetSimulation: function(e){
             e.preventDefault();
             emSim.reset();
+        },
+
+        _stepSimulation: function(e){
+            e.preventDefault();
+            emSim.run(true);
         },
 
 

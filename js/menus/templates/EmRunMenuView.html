@@ -7,9 +7,12 @@
 <% } else if (needsReset) { %>
     <a href="#" id="runSimulation" class="btn btn-halfWidth btn-lg btn-success">Continue</a>
     <a href="#" id="resetSimulation" class="btn btn-halfWidth btn-lg pull-right btn-default">Reset</a><br/><br/>
+<a href="#" id="stepSimulation" class="btn btn-block btn-lg btn-default">Step Forward</a><br/>
 <% } else { %>
     <a href="#" id="runSimulation" class="btn btn-block btn-lg btn-success">Run Simulation</a><br/>
+    <a href="#" id="stepSimulation" class="btn btn-block btn-lg btn-default">Step Forward</a><br/>
 <% } %>
+
 <!--View Mode:-->
 <!--<% _.each(EMViewModes, function(EMViewMode, key){ %>-->
     <!--<label class="radio">-->

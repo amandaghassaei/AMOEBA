@@ -82,17 +82,15 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
 
 
 
-        run: function(){
+        run: function(singleStepMode){
             var self = this;
-            this.set("isRunning", true);
-            this.set("needsReset", true);
 
             var dt = this.get("dtSolver")/1000000;//convert to sec
             var renderRate = this.get("dtRender");
             var runConstants = this._setRunConstants();
             runConstants.dt = dt;
 
-            three.startAnimationLoop(function(){
+            var animationCallback = function(){
                 for (var i=0;i<renderRate-1;i++){
                     self.time += dt;
                     self.simLattice.iter(self.time, runConstants, false);
@@ -102,7 +100,18 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
                 //if (self._getViewMode() == "translation"){
                 //    self.calcTranslation();
                 //}
-            });
+            };
+
+            this.set("needsReset", true);
+
+            if (singleStepMode) {
+                animationCallback();
+                three.render();
+                return;
+            }
+
+            this.set("isRunning", true);
+            three.startAnimationLoop(animationCallback);
         },
 
         pause: function(){
@@ -121,6 +130,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'lattice'],
             }
             three.render();
         },
+
 
 
         fixCellAtIndex: function(index){
