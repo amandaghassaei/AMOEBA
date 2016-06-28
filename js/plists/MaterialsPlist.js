@@ -103,7 +103,7 @@ define([], function(){
                     texture: "stripes",
                     properties:{
                         conductive: false,
-                        density: 8500,//kg/m^3
+                        density: 38500,//kg/m^3
                         longitudalK:{x:10,y:10,z:10},
                         shearK:{xy:10,xz:10,yx:10,yz:10,zx:10,zy:10},
                         bendingK:{x:10,y:10,z:10},
