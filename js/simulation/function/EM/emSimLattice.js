@@ -661,14 +661,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                                 var shearIndex = this._shearIndex(neighborAxis, _axis);
                                 _force[_axis] += shearK[shearIndex]*translationalDeltaXYZ[_axis] + shearD[shearIndex]*velocityDeltaXYZ[_axis];
                             }
-
                         }
-                        //convert _force vector back into correct reference frame
+                        //convert _force vector back into world reference frame
                         _force = this._applyQuaternion(_force, averageRotation);
                         force = this._addVectors(force, _force);
 
-                        //translational forces cause rotation in cell
-                        var torque = this._crossVectors(cellHalfNominalD, _force);//cellHalfNominalD = lever arm
+                        //translational forces cause rotation in cell - convert to cell reference frame
+                        var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
                         rForce = this._addVectors(rForce, torque);
 
                         //bending and torsion
@@ -877,8 +876,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var s2 = Math.sin(euler[1] / 2);
                 var s3 = Math.sin(euler[2] / 2);
 
-                return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 - s1 * s2 * c3, c1 * c2 * c3 + s1 * s2 * s3];//zyx
-                //return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];//xyz
+                //return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 - s1 * s2 * c3, c1 * c2 * c3 + s1 * s2 * s3];//zyx
+                return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];//xyz
             },
 
             _clamp: function ( x, a, b ) {
