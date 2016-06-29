@@ -7,6 +7,8 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
 
     var materialNum = 1;//outward facing name
 
+    var customMeshTypes = [];
+
     var torsion1dof = new THREE.Geometry();
         //torsion
     torsion1dof.vertices = [
@@ -34,6 +36,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(1, 3, 5),
         new THREE.Face3(5, 3, 7)
     ];
+    customMeshTypes["torsion1dof"] = torsion1dof;
 
     var bending1dof = new THREE.Geometry();
 
@@ -68,6 +71,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(1, 3, 9),
         new THREE.Face3(5, 9, 7)
     ];
+    customMeshTypes["bending1dof"] = bending1dof;
 
     var bending2dof = new THREE.Geometry();
 
@@ -99,6 +103,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(1, 3, 8),
         new THREE.Face3(5, 8, 7)
     ];
+    customMeshTypes["bending2dof"] = bending2dof;
 
     var wireStraight = new THREE.Geometry();
     wireStraight.vertices = [
@@ -126,6 +131,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(1, 3, 5),
         new THREE.Face3(5, 3, 7)
     ];
+    customMeshTypes["wireStraight"] = wireStraight;
 
     var wireBent = new THREE.Geometry();
     wireBent.vertices = [
@@ -158,6 +164,94 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(2, 9, 6),
         new THREE.Face3(0, 4, 8)
     ];
+    customMeshTypes["wireBent"] = wireBent;
+
+    var wireJunction1 = new THREE.Geometry();
+    wireJunction1.vertices = [
+        new THREE.Vector3(0.5, 0.3, -0.3),
+        new THREE.Vector3(0.3, 0.3, -0.5),
+        new THREE.Vector3(0.5, -0.3, -0.3),
+        new THREE.Vector3(0.3, -0.3, -0.5),
+        new THREE.Vector3(-0.5, 0.3, 0.3),
+        new THREE.Vector3(-0.3, 0.3, -0.5),
+        new THREE.Vector3(-0.5, -0.3, 0.3),
+        new THREE.Vector3(-0.3, -0.3, -0.5),
+        new THREE.Vector3(0.5, 0.3, 0.3),
+        new THREE.Vector3(0.5, -0.3, 0.3),
+
+        new THREE.Vector3(-0.5, -0.3, -0.3),
+        new THREE.Vector3(-0.5, 0.3, -0.3)
+    ];
+    wireJunction1.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 11, 6),
+        new THREE.Face3(6, 11, 10),
+        new THREE.Face3(3, 2, 6),
+        new THREE.Face3(3, 6, 7),
+        new THREE.Face3(0, 1, 4),
+        new THREE.Face3(4, 1, 5),
+        new THREE.Face3(2, 0, 8),
+        new THREE.Face3(2, 8, 9),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7),
+        new THREE.Face3(9, 8, 4),
+        new THREE.Face3(9, 4, 6),
+        new THREE.Face3(2, 9, 6),
+        new THREE.Face3(0, 4, 8),
+        new THREE.Face3(10, 11, 7),
+        new THREE.Face3(11, 5, 7),
+        new THREE.Face3(7, 6, 10),
+        new THREE.Face3(5, 11, 4)
+    ];
+    customMeshTypes["wireJunction1"] = wireJunction1;
+
+    var wireJunction2 = new THREE.Geometry();
+    wireJunction2.vertices = [
+        new THREE.Vector3(0.5, 0.3, -0.3),
+        new THREE.Vector3(0.3, 0.3, -0.5),
+        new THREE.Vector3(0.5, -0.3, -0.3),
+        new THREE.Vector3(0.3, -0.3, -0.5),
+        new THREE.Vector3(-0.3, 0.3, 0.3),
+        new THREE.Vector3(-0.3, 0.3, -0.5),
+        new THREE.Vector3(-0.3, -0.3, 0.3),
+        new THREE.Vector3(-0.3, -0.3, -0.5),
+        new THREE.Vector3(0.5, 0.3, 0.3),
+        new THREE.Vector3(0.5, -0.3, 0.3),
+
+        new THREE.Vector3(0.3, 0.5, 0.3),
+        new THREE.Vector3(0.3, 0.5, -0.3),
+        new THREE.Vector3(-0.3, 0.5, 0.3),
+        new THREE.Vector3(-0.3, 0.5, -0.3)
+    ];
+    wireJunction2.faces  = [
+        new THREE.Face3(1, 0, 2),
+        new THREE.Face3(1, 2, 3),
+        new THREE.Face3(4, 5, 6),
+        new THREE.Face3(6, 5, 7),
+        new THREE.Face3(3, 2, 6),
+        new THREE.Face3(3, 6, 7),
+        new THREE.Face3(8, 10, 4),
+        new THREE.Face3(4, 10, 12),
+        new THREE.Face3(2, 0, 8),
+        new THREE.Face3(2, 8, 9),
+        new THREE.Face3(1, 3, 5),
+        new THREE.Face3(5, 3, 7),
+        new THREE.Face3(9, 8, 4),
+        new THREE.Face3(9, 4, 6),
+        new THREE.Face3(2, 9, 6),
+        new THREE.Face3(0, 10, 8),
+
+        new THREE.Face3(10, 11, 12),
+        new THREE.Face3(12, 11, 13),
+        new THREE.Face3(4, 12, 5),
+        new THREE.Face3(12, 13, 5),
+        new THREE.Face3(13, 11, 5),
+        new THREE.Face3(11, 1, 5),
+        new THREE.Face3(0, 11, 10),
+        new THREE.Face3(0, 1, 11)
+    ];
+    customMeshTypes["wireJunction2"] = wireJunction2;
 
     var siliconModule = new THREE.Geometry();
     siliconModule.vertices = [
@@ -251,19 +345,13 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         new THREE.Face3(20, 21, 22),
         new THREE.Face3(22, 21, 23)
     ];
+    customMeshTypes["siliconModule"] = siliconModule;
 
-    torsion1dof.computeFaceNormals();
-    bending1dof.computeFaceNormals();
-    bending2dof.computeFaceNormals();
-    wireStraight.computeFaceNormals();
-    wireBent.computeFaceNormals();
-    siliconModule.computeFaceNormals();
-    assignUVs(torsion1dof);
-    assignUVs(bending1dof);
-    assignUVs(bending2dof);
-    assignUVs(wireStraight);
-    assignUVs(wireBent);
-    assignUVs(siliconModule);
+    _.each(_.keys(customMeshTypes), function(key){
+        var mesh = customMeshTypes[key];
+        mesh.computeFaceNormals();
+        assignUVs(mesh);
+    });
 
     function assignUVs( geometry ){
         geometry.computeBoundingBox();
@@ -304,14 +392,9 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
         this.set(json, true);
         if (json.texture) this.texture = json.texture;
         if (json.mesh) {
-            if (json.mesh == "torsion1dof") this.mesh = torsion1dof;
-            else if (json.mesh == "bending1dof") this.mesh = bending1dof;
-            else if (json.mesh == "bending2dof") this.mesh = bending2dof;
-            else if (json.mesh == "wireStraight") this.mesh = wireStraight;
-            else if (json.mesh == "wireBent") this.mesh = wireBent;
-            else if (json.mesh == "siliconModule") this.mesh = siliconModule;
-            else if (json.mesh.vertices) this.mesh = json.mesh;//we've passed in a mesh object
-            else console.warn("no mesh for type " + json.mesh);
+            var mesh = customMeshTypes[json.mesh];
+            if (mesh === undefined) console.warn("no mesh for type " + json.mesh);
+            else if (mesh.vertices) this.mesh = mesh;//we've passed in a mesh object
         }
     }
 

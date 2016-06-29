@@ -138,6 +138,34 @@ define([], function(){
                         torsionK:{x:500,y:500,z:500}
                     }
                 },
+                conductiveJunction1:{
+                    name: "Electronic Routing (Split Type 1)",
+                    color: "#b5a642",
+                    altColor: "#857B64",
+                    mesh: "wireJunction1",
+                    properties:{
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{xy:500,xz:500,yx:500,yz:500,zx:500,zy:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
+                    }
+                },
+                conductiveJunction2:{
+                    name: "Electronic Routing (Split Type 2)",
+                    color: "#b5a642",
+                    altColor: "#857B64",
+                    mesh: "wireJunction2",
+                    properties:{
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{xy:500,xz:500,yx:500,yz:500,zx:500,zy:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
+                    }
+                },
                 flexureCond: {
                     name: "Flex Electronic Routing (Straight)",
                     color: "#b4ac9c",
@@ -166,6 +194,36 @@ define([], function(){
                         shearK:{xy:30,xz:30,yx:30,yz:30,zx:30,zy:30},
                         bendingK:{x:30,y:30,z:30},
                         torsionK:{x:30,y:30,z:30}
+                    }
+                },
+                flexureCondJunction1:{
+                    name: "Electronic Routing (Split Type 1)",
+                    color: "#b4ac9c",
+                    altColor: "#b4ac9c",
+                    texture: "stripes",
+                    mesh: "wireJunction1",
+                    properties:{
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{xy:500,xz:500,yx:500,yz:500,zx:500,zy:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
+                    }
+                },
+                flexureCondJunction2:{
+                    name: "Electronic Routing (Split Type 1)",
+                    color: "#b4ac9c",
+                    altColor: "#b4ac9c",
+                    texture: "stripes",
+                    mesh: "wireJunction2",
+                    properties:{
+                        conductive: true,
+                        density: 8500,//kg/m^3
+                        longitudalK:{x:500,y:500,z:500},
+                        shearK:{xy:500,xz:500,yx:500,yz:500,zx:500,zy:500},
+                        bendingK:{x:500,y:500,z:500},
+                        torsionK:{x:500,y:500,z:500}
                     }
                 },
                 actuatorLinear1DOF: {
