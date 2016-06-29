@@ -642,16 +642,16 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var cellHalfNominalD = this._applyQuaternion(halfNominalD, quaternion);//halfNominalD in cell's reference frame
                         var neighborHalfNominalD = this._applyQuaternion(halfNominalD, neighborQuaternion);//halfNominalD in neighbor's reference frame
 
-                        var averageRotation = this._averageQuaternions(quaternion, neighborQuaternion);
-                        var averageRotationInverse = this._invertQuaternion(averageRotation);
+                        var averageQuaternion = this._averageQuaternions(quaternion, neighborQuaternion);
+                        var averageQuaternionInverse = this._invertQuaternion(averageQuaternion);
                         var translationalDelta = [
                             neighborTranslation[0]-translation[0]+nominalD[0]-cellHalfNominalD[0]-neighborHalfNominalD[0],
                             neighborTranslation[1]-translation[1]+nominalD[1]-cellHalfNominalD[1]-neighborHalfNominalD[1],
                             neighborTranslation[2]-translation[2]+nominalD[2]-cellHalfNominalD[2]-neighborHalfNominalD[2]
                         ];
-                        var translationalDeltaXYZ = this._applyQuaternion(translationalDelta, averageRotationInverse);
+                        var translationalDeltaXYZ = this._applyQuaternion(translationalDelta, averageQuaternionInverse);
                         var velocityDelta = [neighborVelocity[0]-velocity[0], neighborVelocity[1]-velocity[1], neighborVelocity[2]-velocity[2]];
-                        var velocityDeltaXYZ = this._applyQuaternion(velocityDelta, averageRotationInverse);
+                        var velocityDeltaXYZ = this._applyQuaternion(velocityDelta, averageQuaternionInverse);
 
                         //longitudal and shear
                         for (var _axis=0;_axis<3;_axis++){
@@ -663,19 +663,22 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             }
                         }
                         //convert _force vector back into world reference frame
-                        _force = this._applyQuaternion(_force, averageRotation);
+                        _force = this._applyQuaternion(_force, averageQuaternion);
                         force = this._addVectors(force, _force);
 
                         //translational forces cause rotation in cell - convert to cell reference frame
                         var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
-                        rForce = this._addVectors(rForce, torque);
+                        rForce[0] += torque[0];
+                        rForce[1] += torque[1];
+                        rForce[2] += torque[2];
 
+                        //todo this is causing instability
                         //bending and torsion
                         //for (var _axis=0;_axis<3;_axis++) {
                         //    if (_axis == neighborAxis){
-                        //        rForce[_axis] += 0.001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //        rForce[_axis] += 0.000001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                         //    } else {
-                        //        rForce[_axis] += 0.001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //        rForce[_axis] += 0.000001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                         //    }
                         //}
                         //console.log(rotation);
@@ -716,8 +719,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     this.velocity[rgbaIndex+2] = velocity[2];
 
                     var angAcceleration = [rForce[0]/I, rForce[1]/I, rForce[2]/I];
-                    angVelocity = [angVelocity[0] + angAcceleration[0]*dt, angVelocity[1] + angAcceleration[1]*dt, angVelocity[2] + angAcceleration[2]*dt];
-                    rotation  = [rotation[0] + angVelocity[0]*dt, rotation[1] + angVelocity[1]*dt, rotation[2] + angVelocity[2]*dt];
+                    angVelocity = [angVelocity[0] + angAcceleration[0]*dt, angVelocity[1] + angAcceleration[1]*dt, angVelocity[2] + angAcceleration[2]*dt];//todo is this right?
+                    var rotationDelta  = [angVelocity[0]*dt, angVelocity[1]*dt, angVelocity[2]*dt];
+                    var quaternionDelta = this._quaternionFromEuler(rotationDelta, "ZYX");
+
+                    var nextQuaternion = this._multiplyQuaternions(quaternion, quaternionDelta);
+                    rotation = this._eulerFromQuaternion(nextQuaternion);
 
                     this.translation[rgbaIndex+4*textureSize] = rotation[0];
                     this.translation[rgbaIndex+1+4*textureSize] = rotation[1];
@@ -726,7 +733,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     this.velocity[rgbaIndex+4*textureSize] = angVelocity[0];
                     this.velocity[rgbaIndex+1+4*textureSize] = angVelocity[1];
                     this.velocity[rgbaIndex+2+4*textureSize] = angVelocity[2];
-                    var nextQuaternion = this._quaternionFromEuler(rotation);
+
                     this.quaternion[rgbaIndex] = nextQuaternion[0];
                     this.quaternion[rgbaIndex+1] = nextQuaternion[1];
                     this.quaternion[rgbaIndex+2] = nextQuaternion[2];
@@ -750,10 +757,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
 
-                        //var quaternion = [this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]];
+                        var quaternion = new THREE.Quaternion(this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]);
+                        var rotation = new THREE.Euler().setFromQuaternion( quaternion, "XYZ" );
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(this.translation[rgbaIndex+4*textureSize], this.translation[rgbaIndex+1+4*textureSize], this.translation[rgbaIndex+2+4*textureSize]);
+                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation.x, rotation.y, rotation.z);
                     }
                 }
 
@@ -867,7 +875,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 return this._setFromRotationMatrix(this._makeRotationMatrixFromQuaternion(quaternion));
             },
 
-            _quaternionFromEuler: function (euler) {
+            _quaternionFromEuler: function (euler, order) {
 
                 var c1 = Math.cos(euler[0] / 2);
                 var c2 = Math.cos(euler[1] / 2);
@@ -876,8 +884,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var s2 = Math.sin(euler[1] / 2);
                 var s3 = Math.sin(euler[2] / 2);
 
-                //return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 - s1 * s2 * c3, c1 * c2 * c3 + s1 * s2 * s3];//zyx
-                return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];//xyz
+                if (order == "ZYX") return [s1 * c2 * c3 - c1 * s2 * s3, c1 * s2 * c3 + s1 * c2 * s3, c1 * c2 * s3 - s1 * s2 * c3, c1 * c2 * c3 + s1 * s2 * s3];//zyx
+                if (order == "XYZ") return [s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3];//xyz
+                console.warn("unknown rotation order " + order);
+                return [0,0,0];
             },
 
             _clamp: function ( x, a, b ) {
