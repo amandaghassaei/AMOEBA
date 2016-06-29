@@ -86,7 +86,7 @@ define([], function(){
                     name: "Shear Flexure",
                     color: "#cda4f3",
                     altColor: "#cda4f3",
-                    texture: "stripes",
+                    texture: "cubeTextureShearFlex",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
@@ -214,6 +214,7 @@ define([], function(){
                     name: "Shear Actuator",
                     color: "#FFCC00",
                     altColor: "#FFCC00",
+                    texture: "cubeTextureShear",
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
