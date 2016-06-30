@@ -210,14 +210,14 @@ define(['backbone', 'underscore', 'lattice', 'three', 'threeModel', 'globals', '
             return lattice.getCellAtIndex(this.get("min").clone().add(relIndex));
         },
 
-        finish: function(){
-            if (globals.get("selectedRegion")) this.clone();
+        finish: function(cloneParams){
+            if (globals.get("selectedRegion")) this.clone(cloneParams);
             else if (this.get("cutMode")) this.cut();
             else this.fill();
         },
 
-        clone: function(){
-            lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()}, globals.get("selectedRegion"));
+        clone: function(params){
+            lattice.addCellsInRange({min: this.get("min").clone(), max: this.get("max").clone()}, globals.get("selectedRegion"), params);
             appState.set("showOneLayer", false);
             globals.destroySelection3D();
         },

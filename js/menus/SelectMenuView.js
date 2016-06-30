@@ -38,7 +38,8 @@ define(['jquery', 'underscore', 'menuParent', 'plist', 'text!menus/templates/Sel
 
         _finishSelection: function(e){
             e.preventDefault();
-            globals.get("selection3D").finish();
+            var params = {mirrorX:$("#mirrorX").is(':checked'), mirrorY:$("#mirrorY").is(':checked'), mirrorZ:$("#mirrorZ").is(':checked')};
+            globals.get("selection3D").finish(params);
         },
 
         _exitSelection: function(e){

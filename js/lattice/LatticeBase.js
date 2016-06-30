@@ -85,7 +85,7 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
             return new this.cellSubclass(json);
         },
 
-        addCellsInRange: function(range, clone){//add a block of cells (extrude)
+        addCellsInRange: function(range, clone, params){//add a block of cells (extrude)
 
             var cellOutsideCurrentBounds = this._checkForIndexOutsideBounds(range.min) || this._checkForIndexOutsideBounds(range.max);
             if (cellOutsideCurrentBounds) this._expandCellsMatrix(range.max, range.min);
@@ -99,6 +99,11 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                         var quaternion = null;
                         if (clone){
                             var relIndex = index.clone().sub(range.min);
+
+                            if (params.mirrorX) relIndex.x = range.max.x-range.min.x-relIndex.x;
+                            if (params.mirrorY) relIndex.y = range.max.y-range.min.y-relIndex.y;
+                            if (params.mirrorZ) relIndex.z = range.max.z-range.min.z-relIndex.z;
+
                             var cloneSize = clone.get("size");
                             _.each(relIndex, function(val, key){
                                 relIndex[key] = val%cloneSize[key];
@@ -107,6 +112,16 @@ define(['underscore', 'backbone', 'appState', 'globals', 'plist', 'three', 'thre
                             if (!cell) continue;
                             materialID = cell.getMaterialID();
                             quaternion = cell.getOrientation();
+
+                            if (materialID == "conductiveJunction2" || materialID == "flexureCondJunction2"){//todo make this better
+                                if (params.mirrorX) quaternion = new THREE.Quaternion(0, 0, 0.7071067811865476, 0.7071067811865476).multiply(quaternion.clone());
+                                if (params.mirrorY) quaternion = new THREE.Quaternion(0, 0, -0.7071067811865476, 0.7071067811865476).multiply(quaternion.clone());
+                                if (params.mirrorZ) quaternion = new THREE.Quaternion(1, 0, 0, 0).multiply(quaternion.clone());
+                            } else {
+                                if (params.mirrorX) quaternion = new THREE.Quaternion(0, 0, 1, 0).multiply(new THREE.Quaternion(1, 0, 0, 0)).multiply(quaternion.clone());
+                                if (params.mirrorY) quaternion = new THREE.Quaternion(0, 0, 1, 0).multiply(new THREE.Quaternion(0, 1, 0, 0)).multiply(quaternion.clone());
+                                if (params.mirrorZ) quaternion = new THREE.Quaternion(0, 1, 0, 0).multiply(new THREE.Quaternion(0, 0, 1, 0)).multiply(quaternion.clone());
+                            }
                         }
                         this._addCellAtIndex(index, {materialID: materialID, quaternion: quaternion}, true);
                     }

@@ -13,6 +13,18 @@
         <input data-property="max" data-key="y" data-incr="<%= selection3D.sizeIncrement.y %>" data-min="<%= selection3D.min.y + selection3D.sizeIncrement.y - 1 %>" value="<%= selection3D.max.y %>" placeholder="Y" class="form-control selection3D intInput" type="text">&nbsp;
         <input data-property="max" data-key="z" data-incr="<%= selection3D.sizeIncrement.z %>" data-min="<%= selection3D.min.z + selection3D.sizeIncrement.z - 1 %>" value="<%= selection3D.max.z %>" placeholder="Z" class="form-control selection3D intInput" type="text"><br/><br/>
         <a href="#" class="fillCutSelection btn btn-block btn-lg btn-success">Fill with Clone Region  &nbsp;(ENTER)</a>
+        <label class="checkbox" for="mirrorX">
+            <input id="mirrorX" type="checkbox" value="" data-toggle="checkbox" class="custom-checkbox">
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Mirror X</label>
+        <label class="checkbox" for="mirrorY">
+            <input id="mirrorY" type="checkbox" value="" data-toggle="checkbox" class="custom-checkbox">
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Mirror Y</label>
+        <label class="checkbox" for="mirrorZ">
+            <input id="mirrorZ" type="checkbox" value="" data-toggle="checkbox" class="custom-checkbox">
+            <span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+            Mirror Z</label><br/>
         <a href="#" id="exitSelection" class="btn btn-block btn-lg btn-default">Undo Selection &nbsp;(ESC)</a><br/>
     <% } else { %>
         Shift + Drag to select area to paste to<br/>

@@ -212,7 +212,7 @@ define([], function(){
                     }
                 },
                 flexureCondJunction2:{
-                    name: "Electronic Routing (Split Type 1)",
+                    name: "Electronic Routing (Split Type 2)",
                     color: "#b4ac9c",
                     altColor: "#b4ac9c",
                     texture: "stripes",
@@ -315,7 +315,7 @@ define([], function(){
                 brass: {
                     name: "Brass",
                     color: "#b5a642",
-                    altColor: "#857B64",
+                    altColor: "#ababcc",
                     properties: {
                         conductive: true,
                         density: 8500,//kg/m^3
@@ -348,7 +348,7 @@ define([], function(){
                 rubber: {
                     name: "Rubber",
                     color: "#cda4f3",
-                    altColor: "#cda4f3",
+                    altColor: "#f5e8d0",
                     texture: "stripes",
                     properties: {
                         conductive: false,
