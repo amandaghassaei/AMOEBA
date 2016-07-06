@@ -674,15 +674,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                         //todo this is causing instability
                         //bending and torsion
-                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(neighborQuaternion), quaternion);
+                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
                         //var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        for (var _axis=0;_axis<3;_axis++) {
-                            if (_axis == neighborAxis){
-                                rForce[_axis] += 0.000001*torsionK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            } else {
-                                rForce[_axis] += 0.000001*bendingK[_axis]*(neighborRotation[_axis]-rotation[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            }
-                        }
+                        //for (var _axis=0;_axis<3;_axis++) {
+                        //    if (_axis == neighborAxis){
+                        //        rForce[_axis] += 0.00001*torsionK[_axis]*(diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    } else {
+                        //        rForce[_axis] += 0.00001*bendingK[_axis]*(diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    }
+                        //}
                         //console.log(rotation);
                         //console.log(neighborRotation);
                         //console.log(angVelocity);
