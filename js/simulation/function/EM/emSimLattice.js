@@ -674,39 +674,31 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                         //todo this is causing instability
                         //bending and torsion
-                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
-                        //var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        //for (var _axis=0;_axis<3;_axis++) {
-                        //    if (_axis == neighborAxis){
-                        //        rForce[_axis] += 0.00001*torsionK[_axis]*(diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        //    } else {
-                        //        rForce[_axis] += 0.00001*bendingK[_axis]*(diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        //    }
-                        //}
-                        //console.log(rotation);
-                        //console.log(neighborRotation);
-                        //console.log(angVelocity);
-                        //console.log(neighborAngVelocity);
-                        //console.log(quaternion);
-                        //console.log(rForce);
-                        //console.log("");
-
+                        var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
+                        var diffEuler = this._eulerFromQuaternion(quaternionDiff);
+                        for (var _axis=0;_axis<3;_axis++) {
+                            if (_axis == neighborAxis){
+                                rForce[_axis] += 0.00001*torsionK[_axis]*(diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                            } else {
+                                rForce[_axis] += 0.00001*bendingK[_axis]*(diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                            }
+                        }
                     }
 
-                    ////simple collision detection
-                    //var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier-groundHeight;
-                    //var collisionK = 1;
-                    //if (zPosition<0) {
-                    //    var normalForce = -zPosition*collisionK-velocity[2]*collisionK/10;
-                    //    force[2] += normalForce;
-                    //    if (friction) {
-                    //        var mu = 10;
-                    //        if (velocity[0] > 0) force[0] -= mu * normalForce;
-                    //        else if (velocity[0] < 0) force[0] += mu * normalForce;
-                    //        if (velocity[1] > 0) force[1] -= mu * normalForce;
-                    //        else if (velocity[1] < 0) force[1] += mu * normalForce;
-                    //    }
-                    //}
+                    //simple collision detection
+                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier-groundHeight;
+                    var collisionK = 1;
+                    if (zPosition<0) {
+                        var normalForce = -zPosition*collisionK-velocity[2]*collisionK/10;
+                        force[2] += normalForce;
+                        if (friction) {
+                            var mu = 10;
+                            if (velocity[0] > 0) force[0] -= mu * normalForce;
+                            else if (velocity[0] < 0) force[0] += mu * normalForce;
+                            if (velocity[1] > 0) force[1] -= mu * normalForce;
+                            else if (velocity[1] < 0) force[1] += mu * normalForce;
+                        }
+                    }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     velocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
