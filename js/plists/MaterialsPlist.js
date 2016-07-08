@@ -91,7 +91,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:10,xz:150,yx:150,yz:150,zx:150,zy:150},
+                        shearK:{xy:1,xz:150,yx:150,yz:150,zx:150,zy:150},
                         bendingK:{x:150,y:150,z:150},
                         torsionK:{x:150,y:150,z:150}
                     }

@@ -46,6 +46,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.textureSize = [textureDim, textureDim];
                 this.originalPosition = new Float32Array(textureSize*4);
+                this.originalQuaternion = new Float32Array(textureSize*4);
                 this.translation = new Float32Array(textureSize*8);//first half is translation, second half is rotation
                 this.lastTranslation = new Float32Array(textureSize*8);
                 this.velocity = new Float32Array(textureSize*8);//first half is translation, second half is rotation
@@ -87,6 +88,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     self.originalPosition[rgbaIndex] = position.x;
                     self.originalPosition[rgbaIndex+1] = position.y;
                     self.originalPosition[rgbaIndex+2] = position.z;
+
+                    var quaternion = cell.getOrientation();
+                    self.originalQuaternion[rgbaIndex] = quaternion.x;
+                    self.originalQuaternion[rgbaIndex+1] = quaternion.y;
+                    self.originalQuaternion[rgbaIndex+2] = quaternion.z;
+                    self.originalQuaternion[rgbaIndex+3] = quaternion.w;
 
                     self.cellsArrayMapping[rgbaIndex] = x;
                     self.cellsArrayMapping[rgbaIndex+1] = y;
@@ -137,7 +144,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             var cellK = self._getCellK(cell, dof);
                             var neighborK = self._getCellK(neighbor, dof);
                             _.each(["x", "y", "z"], function(axis, axisIndex){
-                                var compositeK = self._calcCompositeParam(cellK[axis], neighborK[axis]);
+                                var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis, cell)], neighborK[self._getRotatedAxis(axis, neighbor)]);
                                 var offset = (dofIndex*3+axisIndex)*textureSize*8;
                                 self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
                                 self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
@@ -146,7 +153,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var cellK = self._getCellK(cell,"shear");//shear last bc it has six elements instead of 3
                         var neighborK = self._getCellK(neighbor, "shear");
                         _.each(["xy", "xz", "yx", "yz", "zx", "zy"], function(axis, axisIndex){
-                            var compositeK = self._calcCompositeParam(cellK[axis], neighborK[axis]);
+                            var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis[0], cell)+self._getRotatedAxis(axis[1], cell)],
+                                neighborK[self._getRotatedAxis(axis[0], neighbor)+self._getRotatedAxis(axis[1], neighbor)]);
                             var offset = (3*3+axisIndex)*textureSize*8;
                             self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
                             self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
@@ -208,6 +216,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this._setupGPU(textureDim);
 
+            },
+
+            _getRotatedAxis: function(_axis, _cell){
+                var vector = new THREE.Vector3();
+                vector[_axis] = 1;
+                vector.applyQuaternion(_cell.getOrientation());
+                if (Math.abs(vector.x)>0.9) return "x";
+                if (Math.abs(vector.y)>0.9) return "y";
+                if (Math.abs(vector.z)>0.9) return "z";
+                console.warn("bad rotation for cell given");
+                return "x";
             },
 
             _setupGPU: function(textureDim){
@@ -751,11 +770,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         position[1] += multiplier*translation[1];
                         position[2] += multiplier*translation[2];
 
-                        var quaternion = new THREE.Quaternion(this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]);
-                        var rotation = new THREE.Euler().setFromQuaternion( quaternion, "XYZ" );
+                        var quaternion = this._multiplyQuaternions([this.quaternion[rgbaIndex], this.quaternion[rgbaIndex+1], this.quaternion[rgbaIndex+2], this.quaternion[rgbaIndex+3]],
+                            [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
+                        var rotation = this._eulerFromQuaternion(quaternion);
 
                         cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation.x, rotation.y, rotation.z);
+                        cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
                     }
                 }
 
@@ -888,7 +908,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 return ( x < a ) ? a : ( ( x > b ) ? b : x );
             },
 
-            _setFromRotationMatrix: function (te) {
+            _setFromRotationMatrix: function (te) {//xyz
                 // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
                 var m11 = te[0], m12 = te[4], m13 = te[8];
                 var m21 = te[ 1 ], m22 = te[ 5 ], m23 = te[ 9 ];
@@ -1050,7 +1070,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var rgbaIndex = 4*self.cellsIndexMapping[index.x][index.y][index.z];
                     var position = [self.originalPosition[rgbaIndex], self.originalPosition[rgbaIndex+1], self.originalPosition[rgbaIndex+2]];
                     cell.object3D.position.set(position[0], position[1], position[2]);
-                    cell.object3D.rotation.set(0, 0, 0);
+                    var rotation = self._eulerFromQuaternion([self.originalQuaternion[rgbaIndex], self.originalQuaternion[rgbaIndex+1], self.originalQuaternion[rgbaIndex+2], self.originalQuaternion[rgbaIndex+3]]);
+                    cell.object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
                 });
 
                 this.lastTranslation = new Float32Array(textureSize*8);
