@@ -48,7 +48,7 @@ define([], function(){
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
-                        bendingK:{x:80,y:80,z:1},
+                        bendingK:{x:80,y:80,z:2},
                         torsionK:{x:80,y:80,z:80}
                     }
                 },
@@ -63,7 +63,7 @@ define([], function(){
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
-                        bendingK:{x:80,y:1,z:1},
+                        bendingK:{x:80,y:2,z:2},
                         torsionK:{x:80,y:80,z:80}
                     }
                 },
@@ -91,7 +91,7 @@ define([], function(){
                         conductive: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
-                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:1,zy:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:2,zy:80},
                         bendingK:{x:80,y:80,z:80},
                         torsionK:{x:80,y:80,z:80}
                     }

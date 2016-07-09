@@ -47,20 +47,20 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 this.textureSize = [textureDim, textureDim];
                 this.originalPosition = new Float32Array(textureSize*4);
                 this.originalQuaternion = new Float32Array(textureSize*4);
-                this.translation = new Float32Array(textureSize*8);//first half is translation, second half is rotation
-                this.lastTranslation = new Float32Array(textureSize*8);
-                this.velocity = new Float32Array(textureSize*8);//first half is translation, second half is rotation
-                this.lastVelocity = new Float32Array(textureSize*8);
+                this.translation = new Float32Array(textureSize*4);
+                this.lastTranslation = new Float32Array(textureSize*4);
+                this.velocity = new Float32Array(textureSize*4);
+                this.lastVelocity = new Float32Array(textureSize*4);
 
                 this.quaternion = new Float32Array(textureSize*4);
                 this.lastQuaternion = new Float32Array(textureSize*4);
-                this.rotation = new Float32Array(textureSize*4);
-                this.lastRotation = new Float32Array(textureSize*4);
+                this.angVelocity = new Float32Array(textureSize*4);
+                this.lastAngVelocity = new Float32Array(textureSize*4);
 
                 this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
-                this.fixed = new Float32Array(textureSize*4);
-                this.mass = new Float32Array(textureSize*4);
+                //todo add moment of inertia
+                this.mass = new Float32Array(textureSize*4);//first element is mass, second element in fixed, third element is moment of inertia
 
                 this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
                 this.neighborsYMapping = new Float32Array(textureSize*8);//would have done int16, but no int types have > 8 bits
@@ -78,7 +78,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var index = 0;
                 var self = this;
                 for (var i=0;i<textureSize;i++){
-                    this.fixed[4*i] = -1;//indicates no cell is present
+                    this.mass[4*i+1] = -1;//indicates no cell is present
                 }
                 this._loopCells(cells, function(cell, x, y, z){
 
@@ -100,7 +100,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     self.cellsArrayMapping[rgbaIndex+2] = z;
 
                     self.mass[rgbaIndex] = self._calcCellMass(cell);
-                    self.fixed[rgbaIndex] = 0;//indicated a cell is present
+                    self.mass[rgbaIndex+1] = 0;//indicated a cell is present
 
                     self.cellsIndexMapping[x][y][z] = index;
 
@@ -139,7 +139,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim;
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
 
-                        //todo apply rotation here
                         _.each(["longitudal", "bending", "torsion"], function(dof, dofIndex){
                             var cellK = self._getCellK(cell, dof);
                             var neighborK = self._getCellK(neighbor, dof);
@@ -203,7 +202,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var latticeIndex = fixedIndex.clone().sub(cellsMin);
                     if (cells[latticeIndex.x] && cells[latticeIndex.x][latticeIndex.y] && cells[latticeIndex.x][latticeIndex.y][latticeIndex.z]) {
                         var rgbaIndex = 4*(this.cellsIndexMapping[latticeIndex.x][latticeIndex.y][latticeIndex.z]);
-                        this.fixed[rgbaIndex] = 1;
+                        this.mass[rgbaIndex+1] = 1;
                     } else {//remove from fixedIndices
                         fixedIndices.splice(i, 1);
                         change = true;
@@ -246,21 +245,40 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.initFrameBufferForTexture("u_quaternion");
                 gpuMath.initTextureFromData("u_lastQuaternion", textureDim, textureDim, "FLOAT", this.lastQuaternion);
                 gpuMath.initFrameBufferForTexture("u_lastQuaternion");
+                gpuMath.initTextureFromData("u_angVelocity", textureDim, textureDim, "FLOAT", this.angVelocity);
+                gpuMath.initFrameBufferForTexture("u_angVelocity");
+                gpuMath.initTextureFromData("u_lastAngVelocity", textureDim, textureDim, "FLOAT", this.lastAngVelocity);
+                gpuMath.initFrameBufferForTexture("u_lastAngVelocity");
 
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
-                gpuMath.initTextureFromData("u_fixed", textureDim, textureDim, "FLOAT", this.fixed);
                 gpuMath.initTextureFromData("u_neighborsXMapping", textureDim*2, textureDim, "FLOAT", this.neighborsXMapping);
                 gpuMath.initTextureFromData("u_neighborsYMapping", textureDim*2, textureDim, "FLOAT", this.neighborsYMapping);
-                gpuMath.initTextureFromData("u_compositeKs", textureDim*2, textureDim, "FLOAT", this.compositeKs);
-                gpuMath.initTextureFromData("u_compositeDs", textureDim*2, textureDim, "FLOAT", this.compositeDs);
+                gpuMath.initTextureFromData("u_compositeKs", textureDim*2*15, textureDim, "FLOAT", this.compositeKs);
+                gpuMath.initTextureFromData("u_compositeDs", textureDim*2*15, textureDim, "FLOAT", this.compositeDs);
                 gpuMath.initTextureFromData("u_originalPosition", textureDim, textureDim, "FLOAT", this.originalPosition);
                 gpuMath.initTextureFromData("u_wires", textureDim, textureDim, "FLOAT", this.wires);//todo byte
                 gpuMath.initTextureFromData("u_wiresMeta", 1, this.wiresMeta.length/4, "FLOAT", this.wiresMeta);
 
+
+                //programs
+                gpuMath.createProgram("angVelocityCalc", vertexShader, quaternionCalcShader);
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastTranslation", 0, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastQuaternion", 1, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_mass", 2, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsXMapping", 3, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsYMapping", 4, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_compositeKs", 5, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wires", 6, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMeta", 7, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
+
                 gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
                 gpuMath.setUniformForProgram("quaternionCalc", "u_lastTranslation", 0, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_fixed", 2, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsXMapping", 3, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsYMapping", 4, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_compositeKs", 5, "1i");
@@ -275,7 +293,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_mass", 2, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_fixed", 3, "1i");
+                //gpuMath.setUniformForProgram("velocityCalc", "u_fixed", 3, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_neighborsXMapping", 4, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_neighborsYMapping", 5, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 6, "1i");
@@ -293,7 +311,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
                 gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1i");
-                gpuMath.setUniformForProgram("positionCalc", "u_fixed", 2, "1i");
+                //gpuMath.setUniformForProgram("positionCalc", "u_fixed", 2, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
@@ -356,7 +374,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
             isFixedAtIndex: function(index){
                 var rgbaIndex = 4*(this.cellsIndexMapping[index.x][index.y][index.z]);
-                return this.fixed[rgbaIndex] == 1;
+                return this.mass[rgbaIndex+1] == 1;
             },
 
             _precomputeSignals: function(cells){
@@ -499,12 +517,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
             fixCellAtIndex: function(index){
                 var rgbaIndex = 4*this.cellsIndexMapping[index.x][index.y][index.z];
-                var state = this.fixed[rgbaIndex];
+                var state = this.mass[rgbaIndex+1];
                 if (state == -1){
                     console.warn("no cell at index " + index.x + ", " + index.y + ", " + index.z);
                 }
-                this.fixed[rgbaIndex] = !state;
-                gpuMath.initTextureFromData("u_fixed", this.textureSize[0], this.textureSize[1], "FLOAT", this.fixed, true);
+                this.mass[rgbaIndex+1] = !state;
+                gpuMath.initTextureFromData("u_mass", this.textureSize[0], this.textureSize[1], "FLOAT", this.mass, true);
                 return !state;
             },
 
@@ -544,7 +562,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 //        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
                 //        for (var i = 0; i < textureSize; i++) {
                 //            var rgbaIndex = 4 * i;
-                //            if (this.fixed[rgbaIndex] < 0) continue;//no more cells
+                //            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
                 //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
                 //            var parsePixelsIndex = vectorLength * i;
                 //            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
@@ -566,7 +584,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 //        parsedPixels = new Float32Array(pixels.buffer);
                 //        for (var i = 0; i < textureSize; i++) {
                 //            var rgbaIndex = 4 * i;
-                //            if (this.fixed[rgbaIndex] < 0) break;//no more cells
+                //            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
                 //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
                 //            var parsePixelsIndex = vectorLength * i;
                 //            var quaternion = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]];
@@ -598,7 +616,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 for (var i=0;i<textureSize;i++){
 
                     var rgbaIndex = i*4;
-                    if (this.fixed[rgbaIndex] == 1) continue;
+                    if (this.mass[rgbaIndex+1] == 1) continue;
                     var mass = this.mass[rgbaIndex];
                     if (mass == 0) continue;
                     var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];//translational force
@@ -609,8 +627,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var translation = [this.lastTranslation[rgbaIndex], this.lastTranslation[rgbaIndex+1], this.lastTranslation[rgbaIndex+2]];
                     var velocity = [this.lastVelocity[rgbaIndex], this.lastVelocity[rgbaIndex+1], this.lastVelocity[rgbaIndex+2]];
                     var quaternion = [this.lastQuaternion[rgbaIndex], this.lastQuaternion[rgbaIndex+1], this.lastQuaternion[rgbaIndex+2], this.lastQuaternion[rgbaIndex+3]];
-                    var rotation = [this.lastTranslation[rgbaIndex+textureSize*4], this.lastTranslation[rgbaIndex+1+textureSize*4], this.lastTranslation[rgbaIndex+2+textureSize*4]];
-                    var angVelocity = [this.lastVelocity[rgbaIndex+textureSize*4], this.lastVelocity[rgbaIndex+1+textureSize*4], this.lastVelocity[rgbaIndex+2+textureSize*4]];
+                    //var rotation = [this.lastTranslation[rgbaIndex+textureSize*4], this.lastTranslation[rgbaIndex+1+textureSize*4], this.lastTranslation[rgbaIndex+2+textureSize*4]];
+                    var angVelocity = [this.lastAngVelocity[rgbaIndex], this.lastAngVelocity[rgbaIndex+1], this.lastAngVelocity[rgbaIndex+2]];
 
                     var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
                     var isActuator = wiring[0] == -1;
@@ -627,8 +645,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex + 1], this.lastTranslation[neighborIndex + 2]];
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex + 1], this.lastVelocity[neighborIndex + 2]];
                         var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex + 1], this.lastQuaternion[neighborIndex + 2], this.lastQuaternion[neighborIndex + 3]];
-                        var neighborRotation = [this.lastTranslation[neighborIndex + 4 * textureSize], this.lastTranslation[neighborIndex + 1 + 4 * textureSize], this.lastTranslation[neighborIndex + 2 + 4 * textureSize]];
-                        var neighborAngVelocity = [this.lastVelocity[neighborIndex + 4 * textureSize], this.lastVelocity[neighborIndex + 1 + 4 * textureSize], this.lastVelocity[neighborIndex + 2 + 4 * textureSize]];
+                        //var neighborRotation = [this.lastTranslation[neighborIndex + 4 * textureSize], this.lastTranslation[neighborIndex + 1 + 4 * textureSize], this.lastTranslation[neighborIndex + 2 + 4 * textureSize]];
+                        //var neighborAngVelocity = [this.lastVelocity[neighborIndex + 4 * textureSize], this.lastVelocity[neighborIndex + 1 + 4 * textureSize], this.lastVelocity[neighborIndex + 2 + 4 * textureSize]];
 
                         //var nominalD = this._neighborOffset(j, latticePitch);
                         //var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
@@ -732,22 +750,18 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     this.velocity[rgbaIndex+2] = velocity[2];
 
                     var angAcceleration = [rForce[0]/I, rForce[1]/I, rForce[2]/I];
-                    angVelocity = [angVelocity[0] + angAcceleration[0]*dt, angVelocity[1] + angAcceleration[1]*dt, angVelocity[2] + angAcceleration[2]*dt];//todo is this right?
+                    angVelocity = [angVelocity[0] + angAcceleration[0]*dt, angVelocity[1] + angAcceleration[1]*dt, angVelocity[2] + angAcceleration[2]*dt];
                     var rotationDelta  = [angVelocity[0]*dt, angVelocity[1]*dt, angVelocity[2]*dt];
                     var quaternionDelta = this._quaternionFromEuler(rotationDelta, "ZYX");
+
+                    this.lastAngVelocity[rgbaIndex] = angVelocity[0];
+                    this.lastAngVelocity[rgbaIndex+1] = angVelocity[1];
+                    this.lastAngVelocity[rgbaIndex+2] = angVelocity[2];
 
                     var nextQuaternion = this._multiplyQuaternions(quaternion, quaternionDelta);
                     rotation = this._eulerFromQuaternion(nextQuaternion);
 
-                    this.translation[rgbaIndex+4*textureSize] = rotation[0];
-                    this.translation[rgbaIndex+1+4*textureSize] = rotation[1];
-                    this.translation[rgbaIndex+2+4*textureSize] = rotation[2];
-
-                    this.velocity[rgbaIndex+4*textureSize] = angVelocity[0];
-                    this.velocity[rgbaIndex+1+4*textureSize] = angVelocity[1];
-                    this.velocity[rgbaIndex+2+4*textureSize] = angVelocity[2];
-
-                    nextQuaternion = this._normalize4D(nextQuaternion);
+                    //nextQuaternion = this._normalize4D(nextQuaternion);
                     this.quaternion[rgbaIndex] = nextQuaternion[0];
                     this.quaternion[rgbaIndex+1] = nextQuaternion[1];
                     this.quaternion[rgbaIndex+2] = nextQuaternion[2];
@@ -1086,12 +1100,14 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     cell.object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
                 });
 
-                this.lastTranslation = new Float32Array(textureSize*8);
-                this.translation = new Float32Array(textureSize*8);
-                this.lastVelocity = new Float32Array(textureSize*8);
-                this.velocity = new Float32Array(textureSize*8);
+                this.lastTranslation = new Float32Array(textureSize*4);
+                this.translation = new Float32Array(textureSize*4);
+                this.lastVelocity = new Float32Array(textureSize*4);
+                this.velocity = new Float32Array(textureSize*4);
                 this.lastQuaternion = new Float32Array(textureSize*4);
                 this.quaternion = new Float32Array(textureSize*4);
+                this.lastAngVelocity = new Float32Array(textureSize*4);
+                this.angVelocity = new Float32Array(textureSize*4);
                 for (var i=0;i<textureSize;i++){
                     this.lastQuaternion[4*i+3] = 1;//w = 1
                     this.quaternion[4*i+3] = 1;
