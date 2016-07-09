@@ -555,71 +555,71 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
             iter: function(time, runConstants, shouldRender){
 
-                //gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
-                //    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
-                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
-                    "u_wiresMeta"], "u_velocity", time);
-                gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
-
-                if (shouldRender) {
-                    var textureSize = this.textureSize[0]*this.textureSize[1];
-
-                    //get position
-                    var vectorLength = 3;
-                    gpuMath.setProgram("packToBytes");
-                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
-                    var pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    if (gpuMath.readyToRead()) {
-                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                        var parsedPixels = new Float32Array(pixels.buffer);
-                        var cells = lattice.getCells();
-                        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
-                        for (var i = 0; i < textureSize; i++) {
-                            var rgbaIndex = 4 * i;
-                            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
-                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                            var parsePixelsIndex = vectorLength * i;
-                            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
-                            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
-                            position[0] += multiplier * translation[0];
-                            position[1] += multiplier * translation[1];
-                            position[2] += multiplier * translation[2];
-                            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                        }
-                    }
-
-                    vectorLength = 4;
-                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
-                    pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    if (gpuMath.readyToRead()) {
-                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                        parsedPixels = new Float32Array(pixels.buffer);
-                        for (var i = 0; i < textureSize; i++) {
-                            var rgbaIndex = 4 * i;
-                            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
-                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                            var parsePixelsIndex = vectorLength * i;
-
-                            var quaternion = this._multiplyQuaternions([parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]],
-                                [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
-                            var rotation = this._eulerFromQuaternion(quaternion);
-
-                            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-                        }
-                    }
-
-                    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
-                }
-
-                gpuMath.swapTextures("u_velocity", "u_lastVelocity");
-                gpuMath.swapTextures("u_translation", "u_lastTranslation");
-                //gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
-                return;
+                ////gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
+                ////    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
+                //gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
+                //    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
+                //    "u_wiresMeta"], "u_velocity", time);
+                //gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
+                //
+                //if (shouldRender) {
+                //    var textureSize = this.textureSize[0]*this.textureSize[1];
+                //
+                //    //get position
+                //    var vectorLength = 3;
+                //    gpuMath.setProgram("packToBytes");
+                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                //    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
+                //    var pixels = new Uint8Array(textureSize * 4*vectorLength);
+                //    if (gpuMath.readyToRead()) {
+                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                //        var parsedPixels = new Float32Array(pixels.buffer);
+                //        var cells = lattice.getCells();
+                //        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
+                //        for (var i = 0; i < textureSize; i++) {
+                //            var rgbaIndex = 4 * i;
+                //            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
+                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                //            var parsePixelsIndex = vectorLength * i;
+                //            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
+                //            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
+                //            position[0] += multiplier * translation[0];
+                //            position[1] += multiplier * translation[1];
+                //            position[2] += multiplier * translation[2];
+                //            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                //        }
+                //    }
+                //
+                //    vectorLength = 4;
+                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                //    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
+                //    pixels = new Uint8Array(textureSize * 4*vectorLength);
+                //    if (gpuMath.readyToRead()) {
+                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                //        parsedPixels = new Float32Array(pixels.buffer);
+                //        for (var i = 0; i < textureSize; i++) {
+                //            var rgbaIndex = 4 * i;
+                //            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
+                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                //            var parsePixelsIndex = vectorLength * i;
+                //
+                //            var quaternion = this._multiplyQuaternions([parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]],
+                //                [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
+                //            var rotation = this._eulerFromQuaternion(quaternion);
+                //
+                //            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                //        }
+                //    }
+                //
+                //    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
+                //}
+                //
+                //gpuMath.swapTextures("u_velocity", "u_lastVelocity");
+                //gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                ////gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
+                //return;
 
                 var gravity = runConstants.gravity;
                 var groundHeight = runConstants.groundHeight;
@@ -682,8 +682,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                         var translationalK = [this.compositeKs[i*8*6 + j*8], this.compositeKs[i*8*6 + j*8 + 1], this.compositeKs[i*8*6 + j*8 + 2]];
                         var translationalD = [this.compositeDs[i*8*6 + j*8], this.compositeDs[i*8*6 + j*8 + 1], this.compositeDs[i*8*6 + j*8 + 2]];
-                        var rotationalK = [this.compositeKs[i*8*6 + j*8 + 3], this.compositeKs[i*8*6 + j*8 + 4], this.compositeKs[i*8*6 + j*8 + 5]];
-                        var rotationalD = [this.compositeDs[i*8*6 + j*8 + 3], this.compositeDs[i*8*6 + j*8 + 4], this.compositeDs[i*8*6 + j*8 + 5]];
+                        var rotationalK = [this.compositeKs[i*8*6 + j*8 + 4], this.compositeKs[i*8*6 + j*8 + 5], this.compositeKs[i*8*6 + j*8 + 6]];
+                        var rotationalD = [this.compositeDs[i*8*6 + j*8 + 4], this.compositeDs[i*8*6 + j*8 + 5], this.compositeDs[i*8*6 + j*8 + 6]];
 
                         //convert translational offsets to correct reference frame
                         var nominalD = this._neighborOffset(j, latticePitch);
@@ -710,23 +710,19 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         _force = this._applyQuaternion(_force, averageQuaternion);
                         force = this._addVectors(force, _force);
 
-                        ////translational forces cause rotation in cell - convert to cell reference frame
-                        //var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
-                        //rForce[0] += torque[0];
-                        //rForce[1] += torque[1];
-                        //rForce[2] += torque[2];
-                        //
-                        ////todo this is causing instability
-                        ////bending and torsion
-                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
-                        //var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        //for (var _axis = 0; _axis < 3; _axis++) {
-                        //    if (_axis == neighborAxis) {
-                        //        rForce[_axis] += 0.00001 * torsionK[_axis] * (diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        //    } else {
-                        //        rForce[_axis] += 0.00001 * bendingK[_axis] * (diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        //    }
-                        //}
+                        //translational forces cause rotation in cell - convert to cell reference frame
+                        var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
+                        rForce[0] += torque[0];
+                        rForce[1] += torque[1];
+                        rForce[2] += torque[2];
+
+                        //todo this is causing instability
+                        //bending and torsion
+                        var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
+                        var diffEuler = this._eulerFromQuaternion(quaternionDiff);
+                        for (var _axis = 0; _axis < 3; _axis++) {
+                            rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// + rotationalD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        }
                     }
 
                     //simple collision detection
@@ -803,8 +799,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this._swapArrays("velocity", "lastVelocity");
                 this._swapArrays("translation", "lastTranslation");
-                //this._swapArrays("quaternion", "lastQuaternion");
-                //this._swapArrays("rotation", "lastRotation");
+                this._swapArrays("quaternion", "lastQuaternion");
+                this._swapArrays("rotation", "lastRotation");
             },
 
             _addVectors: function(vector1, vector2){
