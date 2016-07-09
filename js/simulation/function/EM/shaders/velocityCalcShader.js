@@ -16,7 +16,6 @@ uniform float u_friction;
 uniform sampler2D u_lastVelocity;
 uniform sampler2D u_lastTranslation;
 uniform sampler2D u_mass;
-uniform sampler2D u_fixed;
 uniform sampler2D u_neighborsXMapping;
 uniform sampler2D u_neighborsYMapping;
 uniform sampler2D u_compositeKs;
@@ -102,39 +101,111 @@ float getActuatorVoltage(float wireIndex){
     return 0.0;
 }
 
+vec4 averageQuaternions(vec4 quaternion1, vec4 quaternion2){
+    float x = quaternion1[0], y = quaternion1[1], z = quaternion1[2], w = quaternion1[3];
+    float _x1 = quaternion1[0], _y1 = quaternion1[1], _z1 = quaternion1[2], _w1 = quaternion1[3];
+    float _x2 = quaternion2[0], _y2 = quaternion2[1], _z2 = quaternion2[2], _w2 = quaternion2[3];
+
+    // http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
+
+    float cosHalfTheta = w * _w2 + x * _x2 + y * _y2 + z * _z2;
+
+    if ( cosHalfTheta < 0.0 ) {
+
+        _w1 = - _w2;
+        _x1 = - _x2;
+        _y1 = - _y2;
+        _z1 = - _z2;
+
+        cosHalfTheta = - cosHalfTheta;
+
+    } else {
+
+        _w1 = _w2;
+        _x1 = _x2;
+        _y1 = _y2;
+        _z1 = _z2;
+
+    }
+
+    if ( cosHalfTheta >= 1.0 ) {
+
+        _w1 = w;
+        _x1 = x;
+        _y1 = y;
+        _z1 = z;
+
+        return vec4(_x1, _y1, _z1, _w1);
+
+    }
+
+    float halfTheta = acos( cosHalfTheta );
+    float sinHalfTheta = sqrt( 1.0 - cosHalfTheta * cosHalfTheta );
+
+    if ( abs( sinHalfTheta ) < 0.001 ) {
+
+        _w1 = 0.5 * ( w + _w1 );
+        _x1 = 0.5 * ( x + _x1 );
+        _y1 = 0.5 * ( y + _y1 );
+        _z1 = 0.5 * ( z + _z1 );
+
+        return vec4(_x1, _y1, _z1, _w1);
+
+    }
+
+    float ratioA = sin( ( 0.5 ) * halfTheta ) / sinHalfTheta,
+    ratioB = sin( 0.5 * halfTheta ) / sinHalfTheta;
+
+    _w1 = ( w * ratioA + _w1 * ratioB );
+    _x1 = ( x * ratioA + _x1 * ratioB );
+    _y1 = ( y * ratioA + _y1 * ratioB );
+    _z1 = ( z * ratioA + _z1 * ratioB );
+
+    return vec4(_x1, _y1, _z1, _w1);
+}
+
+vec4 normalize4D(vec4 vector){
+    float length = sqrt(vector[0]*vector[0] + vector[1]*vector[1] + vector[2]*vector[2] + vector[3]*vector[3]);
+    return vec4(vector[0]/length, vector[1]/length, vector[2]/length, vector[3]/length);
+}
+
+vec4 invertQuaternion (vec4 quaternion){
+    return normalize4D(vec4(quaternion[0]*-1.0, quaternion[1]*-1.0, quaternion[2]*-1.0, quaternion[3]));
+}
 
 void main(){
+
     vec2 fragCoord = gl_FragCoord.xy;
     vec2 scaledFragCoord = fragCoord/u_textureDim;
 
-    float isFixed = texture2D(u_fixed, scaledFragCoord).x;
+    float isFixed = texture2D(u_mass, scaledFragCoord).y;
     if (isFixed < 0.0 || isFixed == 1.0){//no cell or is fixed
         gl_FragColor = vec4(0, 0, 0, 0);
         return;
     }
 
     float mass = texture2D(u_mass, scaledFragCoord).x;
-    vec3 lastTranslation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
-    vec3 lastVelocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
+    vec3 force = u_gravity*mass;
+
+    vec3 translation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
+    vec3 velocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
     vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
 
     vec4 wiring = texture2D(u_wires, scaledFragCoord);
     bool isActuator = wiring[0] < -0.5;//-1
 
-    vec3 force = u_gravity*mass;
-
     //simple collision
-    float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + lastTranslation.z*u_multiplier - u_groundHeight;
+    float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + translation.z*u_multiplier - u_groundHeight;
     float collisionK = 1.0;
     if (zPosition < 0.0) {
-        float normalForce = -zPosition*collisionK-lastVelocity.z*collisionK/10.0;
+        float normalForce = -zPosition*collisionK-velocity.z*collisionK/10.0;
         force.z += normalForce;
         if (u_friction > 0.5){
             float mu = 10.0;
-            if (lastVelocity.x > 0.0) force.x -= mu * normalForce;
-            else if (lastVelocity.x < 0.0) force.x += mu * normalForce;
-            if (lastVelocity.y > 0.0) force.y -= mu * normalForce;
-            else if (lastVelocity.y < 0.0) force.y += mu * normalForce;
+            if (velocity.x > 0.0) force.x -= mu * normalForce;
+            else if (velocity.x < 0.0) force.x += mu * normalForce;
+            if (velocity.y > 0.0) force.y -= mu * normalForce;
+            else if (velocity.y < 0.0) force.y += mu * normalForce;
         }
     }
 
@@ -146,8 +217,12 @@ void main(){
         vec2 mappingIndex = vec2(xIndex/(u_textureDim.x*2.0), scaledFragCoord.y);
         vec3 neighborsXMapping = texture2D(u_neighborsXMapping, mappingIndex).xyz;
         vec3 neighborsYMapping = texture2D(u_neighborsYMapping, mappingIndex).xyz;
-        vec3 compositeKs = texture2D(u_compositeKs, mappingIndex).xyz;
-        vec3 compositeDs = texture2D(u_compositeDs, mappingIndex).xyz;
+        vec3 longitudalK = texture2D(u_compositeKs, mappingIndex).xyz;
+        vec3 shearK1 = vec3(10,10,10);
+        vec3 shearK2 = vec3(10,10,10);
+        vec3 longitudalD = texture2D(u_compositeDs, mappingIndex).xyz;
+        vec3 shearD1 = vec3(0.03, 0.03, 0.03);
+        vec3 shearD2 = vec3(0.03, 0.03, 0.03);
 
 
         for (int j=0;j<3;j++){
@@ -165,44 +240,66 @@ void main(){
             vec4 neighborQuaternion = texture2D(u_lastQuaternion, scaledNeighborIndex);
 
             vec3 nominalD = neighborOffset(i*3.0+float(j));
-            vec3 actuatedD = vec3(nominalD[0], nominalD[1], nominalD[2]);
-            float actuation = 0.0;
-            if (isActuator){
-                if (neighborAxis == 0 && wiring[1]>0.1){//>0
-                    actuation += 0.3*getActuatorVoltage(wiring[1]-1.0);
-                } else if (neighborAxis == 1 && wiring[2]>0.1){
-                    actuation += 0.3*getActuatorVoltage(wiring[2]-1.0);
-                } else if (neighborAxis == 2 && wiring[3]>0.1){
-                    actuation += 0.3*getActuatorVoltage(wiring[3]-1.0);
+            vec3 halfNominalD = nominalD/2.0;
+            vec3 cellHalfNominalD = applyQuaternion(halfNominalD, quaternion);//halfNominalD in cell's reference frame
+            vec3 neighborHalfNominalD = applyQuaternion(halfNominalD, neighborQuaternion);//halfNominalD in neighbor's reference frame
+            //vec3 actuatedD = vec3(nominalD[0], nominalD[1], nominalD[2]);
+            //float actuation = 0.0;
+            //if (isActuator){
+            //    if (neighborAxis == 0 && wiring[1]>0.1){//>0
+            //        actuation += 0.3*getActuatorVoltage(wiring[1]-1.0);
+            //    } else if (neighborAxis == 1 && wiring[2]>0.1){
+            //        actuation += 0.3*getActuatorVoltage(wiring[2]-1.0);
+            //    } else if (neighborAxis == 2 && wiring[3]>0.1){
+            //        actuation += 0.3*getActuatorVoltage(wiring[3]-1.0);
+            //    }
+            //}
+            //vec4 neighborWiring = texture2D(u_wires, scaledNeighborIndex);
+            //if (neighborWiring[0] < -0.5){
+            //    if (neighborAxis == 0 && neighborWiring[1]>0.1){
+            //        actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
+            //    } else if (neighborAxis == 1 && neighborWiring[2]>0.1){
+            //        actuation += 0.3*getActuatorVoltage(neighborWiring[2]-1.0);
+            //    } else if (neighborAxis == 2 && neighborWiring[3]>0.1){
+            //        actuation += 0.3*getActuatorVoltage(neighborWiring[3]-1.0);
+            //    }
+            //}
+            //if (neighborAxis == 0) actuatedD[0] *= 1.0+actuation;
+            //else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
+            //else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
+
+            vec4 averageQuaternion = averageQuaternions(quaternion, neighborQuaternion);
+            vec4 averageQuaternionInverse = invertQuaternion(averageQuaternion);
+
+            vec3 translationalDelta = neighborTranslation - translation + nominalD - cellHalfNominalD - neighborHalfNominalD;
+            vec3 translationalDeltaXYZ = applyQuaternion(translationalDelta, averageQuaternionInverse);
+            vec3 velocityDelta = neighborVelocity-velocity;
+            vec3 velocityDeltaXYZ = applyQuaternion(velocityDelta, averageQuaternionInverse);
+
+            vec3 _force = vec3(0.0,0.0,0.0);
+            //longitudal and shear
+            for (int _axis = 0; _axis < 3; _axis++) {
+                if (_axis == neighborAxis) {
+                    _force[_axis] += longitudalK[_axis] * translationalDeltaXYZ[_axis] + longitudalD[_axis] * velocityDeltaXYZ[_axis];
+                } else {
+                    if (neighborAxis == 0){
+                        if (_axis == 1) _force[_axis] += shearK1[0] * translationalDeltaXYZ[_axis] + shearD1[0] * velocityDeltaXYZ[_axis];
+                        else if (_axis == 2) _force[_axis] += shearK1[1] * translationalDeltaXYZ[_axis] + shearD1[1] * velocityDeltaXYZ[_axis];
+                    } else if (neighborAxis == 1){
+                        if (_axis == 0) _force[_axis] += shearK1[2] * translationalDeltaXYZ[_axis] + shearD1[2] * velocityDeltaXYZ[_axis];
+                        else if (_axis == 2) _force[_axis] += shearK2[0] * translationalDeltaXYZ[_axis] + shearD2[0] * velocityDeltaXYZ[_axis];
+                    } else if (neighborAxis == 2){
+                        if (_axis == 0) _force[_axis] += shearK2[1] * translationalDeltaXYZ[_axis] + shearD2[1] * velocityDeltaXYZ[_axis];
+                        else if (_axis == 1) _force[_axis] += shearK2[2] * translationalDeltaXYZ[_axis] + shearD2[2] * velocityDeltaXYZ[_axis];
+                    }
                 }
             }
-            vec4 neighborWiring = texture2D(u_wires, scaledNeighborIndex);
-            if (neighborWiring[0] < -0.5){
-                if (neighborAxis == 0 && neighborWiring[1]>0.1){
-                    actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
-                } else if (neighborAxis == 1 && neighborWiring[2]>0.1){
-                    actuation += 0.3*getActuatorVoltage(neighborWiring[2]-1.0);
-                } else if (neighborAxis == 2 && neighborWiring[3]>0.1){
-                    actuation += 0.3*getActuatorVoltage(neighborWiring[3]-1.0);
-                }
-            }
-            if (neighborAxis == 0) actuatedD[0] *= 1.0+actuation;
-            else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
-            else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
-
-            vec3 rotatedNomD = applyQuaternion(actuatedD, quaternion);
-            vec3 neighbRotatedNomD = applyQuaternion(actuatedD, neighborQuaternion);
-            vec3 rotatedNominalD = (rotatedNomD + neighbRotatedNomD)*0.5;
-
-
-            float k = compositeKs[j];
-            float d = 0.01;//compositeDs[j];
-
-            force += k*(neighborTranslation - lastTranslation + nominalD - rotatedNominalD) + d*(neighborVelocity - lastVelocity);
+            //convert _force vector back into world reference frame
+            _force = applyQuaternion(_force, averageQuaternion);
+            force += _force;
         }
     }
 
-
-    vec3 velocity = lastVelocity + force/mass*u_dt;
+    velocity += force/mass*u_dt;
     gl_FragColor = vec4(velocity, 0);
 }

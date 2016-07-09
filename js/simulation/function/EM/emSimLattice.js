@@ -261,47 +261,46 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
 
                 //programs
-                gpuMath.createProgram("angVelocityCalc", vertexShader, quaternionCalcShader);
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastTranslation", 0, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastQuaternion", 1, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_mass", 2, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsXMapping", 3, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsYMapping", 4, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_compositeKs", 5, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_wires", 6, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMeta", 7, "1i");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
-                gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
-
-                gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
-                gpuMath.setUniformForProgram("quaternionCalc", "u_lastTranslation", 0, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_mass", 2, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsXMapping", 3, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsYMapping", 4, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_compositeKs", 5, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_wires", 6, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMeta", 7, "1i");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_textureDim", [textureDim, textureDim], "2f");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
-                gpuMath.setUniformForProgram("quaternionCalc", "u_time", 0, "1f");
+                //gpuMath.createProgram("angVelocityCalc", vertexShader, quaternionCalcShader);
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_lastTranslation", 0, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_lastQuaternion", 1, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_mass", 2, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsXMapping", 3, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsYMapping", 4, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_compositeKs", 5, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_wires", 6, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMeta", 7, "1i");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
+                //gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
+                //
+                //gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_lastTranslation", 0, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_mass", 2, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsXMapping", 3, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsYMapping", 4, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_compositeKs", 5, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_wires", 6, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMeta", 7, "1i");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_time", 0, "1f");
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_mass", 2, "1i");
-                //gpuMath.setUniformForProgram("velocityCalc", "u_fixed", 3, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsXMapping", 4, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsYMapping", 5, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 6, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 7, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_originalPosition", 8, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_lastQuaternion", 9, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_wires", 10, "1i");
-                gpuMath.setUniformForProgram("velocityCalc", "u_wiresMeta", 11, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsXMapping", 3, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_neighborsYMapping", 4, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_compositeKs", 5, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_compositeDs", 6, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_originalPosition", 7, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_lastQuaternion", 8, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_wires", 9, "1i");
+                gpuMath.setUniformForProgram("velocityCalc", "u_wiresMeta", 10, "1i");
                 gpuMath.setUniformForProgram("velocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_multiplier", 1/(plist.allUnitTypes[lattice.getUnits()].multiplier), "1f");
                 gpuMath.setUniformForProgram("velocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
@@ -311,7 +310,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
                 gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1i");
-                //gpuMath.setUniformForProgram("positionCalc", "u_fixed", 2, "1i");
+                gpuMath.setUniformForProgram("positionCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
 
                 gpuMath.createProgram("packToBytes", vertexShader, packToBytesShader);
@@ -540,67 +539,69 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 //gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
                 //    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
-                //gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_fixed", "u_neighborsXMapping",
-                //    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
-                //    "u_wiresMeta"], "u_velocity", time);
-                //gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_fixed"], "u_translation");
-                //
-                //if (shouldRender) {
-                //    var textureSize = this.textureSize[0]*this.textureSize[1];
-                //
-                //    //get position
-                //    var vectorLength = 3;
-                //    gpuMath.setProgram("packToBytes");
-                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                //    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
-                //    var pixels = new Uint8Array(textureSize * 4*vectorLength);
-                //    if (gpuMath.readyToRead()) {
-                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                //        var parsedPixels = new Float32Array(pixels.buffer);
-                //        var cells = lattice.getCells();
-                //        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
-                //        for (var i = 0; i < textureSize; i++) {
-                //            var rgbaIndex = 4 * i;
-                //            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
-                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                //            var parsePixelsIndex = vectorLength * i;
-                //            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
-                //            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
-                //            position[0] += multiplier * translation[0];
-                //            position[1] += multiplier * translation[1];
-                //            position[2] += multiplier * translation[2];
-                //            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                //        }
-                //    }
-                //
-                //    vectorLength = 4;
-                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                //    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
-                //    pixels = new Uint8Array(textureSize * 4*vectorLength);
-                //    if (gpuMath.readyToRead()) {
-                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                //        parsedPixels = new Float32Array(pixels.buffer);
-                //        for (var i = 0; i < textureSize; i++) {
-                //            var rgbaIndex = 4 * i;
-                //            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
-                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                //            var parsePixelsIndex = vectorLength * i;
-                //            var quaternion = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]];
-                //            //console.log(quaternion);
-                //            var rotation = this._eulerFromQuaternion(quaternion);
-                //            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-                //        }
-                //    }
-                //
-                //    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
-                //}
-                //
-                //gpuMath.swapTextures("u_velocity", "u_lastVelocity");
-                //gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
+                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
+                    "u_wiresMeta"], "u_velocity", time);
+                gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
+
+                if (shouldRender) {
+                    var textureSize = this.textureSize[0]*this.textureSize[1];
+
+                    //get position
+                    var vectorLength = 3;
+                    gpuMath.setProgram("packToBytes");
+                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
+                    var pixels = new Uint8Array(textureSize * 4*vectorLength);
+                    if (gpuMath.readyToRead()) {
+                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                        var parsedPixels = new Float32Array(pixels.buffer);
+                        var cells = lattice.getCells();
+                        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
+                        for (var i = 0; i < textureSize; i++) {
+                            var rgbaIndex = 4 * i;
+                            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
+                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                            var parsePixelsIndex = vectorLength * i;
+                            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
+                            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
+                            position[0] += multiplier * translation[0];
+                            position[1] += multiplier * translation[1];
+                            position[2] += multiplier * translation[2];
+                            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                        }
+                    }
+
+                    vectorLength = 4;
+                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
+                    pixels = new Uint8Array(textureSize * 4*vectorLength);
+                    if (gpuMath.readyToRead()) {
+                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                        parsedPixels = new Float32Array(pixels.buffer);
+                        for (var i = 0; i < textureSize; i++) {
+                            var rgbaIndex = 4 * i;
+                            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
+                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                            var parsePixelsIndex = vectorLength * i;
+
+                            var quaternion = this._multiplyQuaternions([parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]],
+                                [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
+                            var rotation = this._eulerFromQuaternion(quaternion);
+
+                            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                        }
+                    }
+
+                    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
+                }
+
+                gpuMath.swapTextures("u_velocity", "u_lastVelocity");
+                gpuMath.swapTextures("u_translation", "u_lastTranslation");
                 //gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
-                //return;
+                return;
 
                 var gravity = runConstants.gravity;
                 var groundHeight = runConstants.groundHeight;
@@ -616,7 +617,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 for (var i=0;i<textureSize;i++){
 
                     var rgbaIndex = i*4;
-                    if (this.mass[rgbaIndex+1] == 1) continue;
+                    if (this.mass[rgbaIndex+1] == 1) continue;//fixed
                     var mass = this.mass[rgbaIndex];
                     if (mass == 0) continue;
                     var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];//translational force
@@ -703,23 +704,23 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         _force = this._applyQuaternion(_force, averageQuaternion);
                         force = this._addVectors(force, _force);
 
-                        //translational forces cause rotation in cell - convert to cell reference frame
-                        var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
-                        rForce[0] += torque[0];
-                        rForce[1] += torque[1];
-                        rForce[2] += torque[2];
-
-                        //todo this is causing instability
-                        //bending and torsion
-                        var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
-                        var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        for (var _axis = 0; _axis < 3; _axis++) {
-                            if (_axis == neighborAxis) {
-                                rForce[_axis] += 0.00001 * torsionK[_axis] * (diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            } else {
-                                rForce[_axis] += 0.00001 * bendingK[_axis] * (diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                            }
-                        }
+                        ////translational forces cause rotation in cell - convert to cell reference frame
+                        //var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
+                        //rForce[0] += torque[0];
+                        //rForce[1] += torque[1];
+                        //rForce[2] += torque[2];
+                        //
+                        ////todo this is causing instability
+                        ////bending and torsion
+                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
+                        //var diffEuler = this._eulerFromQuaternion(quaternionDiff);
+                        //for (var _axis = 0; _axis < 3; _axis++) {
+                        //    if (_axis == neighborAxis) {
+                        //        rForce[_axis] += 0.00001 * torsionK[_axis] * (diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    } else {
+                        //        rForce[_axis] += 0.00001 * bendingK[_axis] * (diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        //    }
+                        //}
                     }
 
                     //simple collision detection
@@ -796,8 +797,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this._swapArrays("velocity", "lastVelocity");
                 this._swapArrays("translation", "lastTranslation");
-                this._swapArrays("quaternion", "lastQuaternion");
-                this._swapArrays("rotation", "lastRotation");
+                //this._swapArrays("quaternion", "lastQuaternion");
+                //this._swapArrays("rotation", "lastRotation");
             },
 
             _addVectors: function(vector1, vector2){
