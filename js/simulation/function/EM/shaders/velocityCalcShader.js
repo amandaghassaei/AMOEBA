@@ -218,6 +218,9 @@ void main(){
         vec3 neighborsXMapping = texture2D(u_neighborsXMapping, mappingIndex).xyz;
         vec3 neighborsYMapping = texture2D(u_neighborsYMapping, mappingIndex).xyz;
         vec3 longitudalK = texture2D(u_compositeKs, mappingIndex).xyz;
+
+
+
         vec3 shearK1 = vec3(10,10,10);
         vec3 shearK2 = vec3(10,10,10);
         vec3 longitudalD = texture2D(u_compositeDs, mappingIndex).xyz;

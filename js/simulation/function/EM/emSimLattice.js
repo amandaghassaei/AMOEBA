@@ -64,8 +64,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
                 this.neighborsYMapping = new Float32Array(textureSize*8);//would have done int16, but no int types have > 8 bits
-                this.compositeKs = new Float32Array(textureSize*8*15);
-                this.compositeDs = new Float32Array(textureSize*8*15);
+                this.compositeKs = new Float32Array(textureSize*8*6);
+                this.compositeDs = new Float32Array(textureSize*8*6);
 
                 //todo int array
                 this.wires = new Float32Array(textureSize*4);//also stores actuator mask as -1
@@ -125,7 +125,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var rgbaIndex = 4*index;
                     _.each(neighbors, function(neighbor, neighborIndex){
 
-                        var compositeIndex = index*8;
+                        var compositeIndex = index*8;//[x0, x1, x2, ---][x3,x4, x5, ---]
                         if (neighborIndex > 2) compositeIndex += 4;
 
                         if (!neighbor) {
@@ -139,28 +139,41 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         self.neighborsXMapping[compositeIndex + neighborIndex%3] = neighborMappingIndex1D%textureDim;
                         self.neighborsYMapping[compositeIndex + neighborIndex%3] = parseInt(neighborMappingIndex1D/textureDim);
 
-                        _.each(["longitudal", "bending", "torsion"], function(dof, dofIndex){
-                            var cellK = self._getCellK(cell, dof);
-                            var neighborK = self._getCellK(neighbor, dof);
-                            _.each(["x", "y", "z"], function(axis, axisIndex){
+
+                        //[l, s, s, ---][t, b, b, ---]
+                        var neighborAxis = Math.floor(neighborIndex / 2);
+                        var neighborAxisName = self._getAxisName(neighborAxis);
+                        _.each(["x", "y", "z"], function(axis, axisIndex){
+                            if (axisIndex == neighborAxis) {//longitudal
+                                var cellK = self._getCellK(cell, "longitudal");
+                                var neighborK = self._getCellK(neighbor, "longitudal");
                                 var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis, cell)], neighborK[self._getRotatedAxis(axis, neighbor)]);
-                                var offset = (dofIndex*3+axisIndex)*textureSize*8;
-                                self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
-                                self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
-                            });
+                                self.compositeKs[index*8*6 + neighborIndex*8 + axisIndex] = compositeK;
+                                self.compositeDs[index*8*6 + neighborIndex*8 + axisIndex] = compositeK/1000;//this is arbitrary for now
+                            } else {//shear
+                                var cellK = self._getCellK(cell, "shear");
+                                var neighborK = self._getCellK(neighbor, "shear");
+                                var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(neighborAxisName, cell)+self._getRotatedAxis(axis, cell)],
+                                neighborK[self._getRotatedAxis(neighborAxisName, neighbor)+self._getRotatedAxis(axis, neighbor)]);
+                                self.compositeKs[index*8*6 + neighborIndex*8 + axisIndex] = compositeK;
+                                self.compositeDs[index*8*6 + neighborIndex*8 + axisIndex] = compositeK/1000;//this is arbitrary for now
+                            }
                         });
-                        var cellK = self._getCellK(cell,"shear");//shear last bc it has six elements instead of 3
-                        var neighborK = self._getCellK(neighbor, "shear");
-                        _.each(["xy", "xz", "yx", "yz", "zx", "zy"], function(axis, axisIndex){
-                            var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis[0], cell)+self._getRotatedAxis(axis[1], cell)],
-                                neighborK[self._getRotatedAxis(axis[0], neighbor)+self._getRotatedAxis(axis[1], neighbor)]);
-                            var offset = (3*3+axisIndex)*textureSize*8;
-                            self.compositeKs[compositeIndex + neighborIndex%3 + offset] = compositeK;
-                            self.compositeDs[compositeIndex + neighborIndex%3 + offset] = compositeK/1000;//this is arbitrary for now
+                        _.each(["x", "y", "z"], function(axis, axisIndex){
+                            if (axisIndex == neighborAxis) {//torsion
+                                var cellK = self._getCellK(cell, "torsion");
+                                var neighborK = self._getCellK(neighbor, "torsion");
+                                var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis, cell)], neighborK[self._getRotatedAxis(axis, neighbor)]);
+                                self.compositeKs[index*8*6 + neighborIndex*8 + 4 + axisIndex] = compositeK;
+                                self.compositeDs[index*8*6 + neighborIndex*8 + 4 + axisIndex] = compositeK/1000;//this is arbitrary for now
+                            } else {//bending
+                                var cellK = self._getCellK(cell, "bending");
+                                var neighborK = self._getCellK(neighbor, "bending");
+                                var compositeK = self._calcCompositeParam(cellK[self._getRotatedAxis(axis, cell)], neighborK[self._getRotatedAxis(axis, neighbor)]);
+                                self.compositeKs[index*8*6 + neighborIndex*8 + 4 + axisIndex] = compositeK;
+                                self.compositeDs[index*8*6 + neighborIndex*8 + 4 + axisIndex] = compositeK/1000;//this is arbitrary for now
+                            }
                         });
-
-
-
                     });
 
                     if (cell.isAcutator()){
@@ -224,8 +237,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 if (Math.abs(vector.x)>0.9) return "x";
                 if (Math.abs(vector.y)>0.9) return "y";
                 if (Math.abs(vector.z)>0.9) return "z";
-                console.warn("bad rotation for cell given");
+                console.warn("bad rotation for cell given " + _axis);
                 return "x";
+            },
+
+            _getAxisName: function(index){
+                var axes = ["x", "y", "z"];
+                return axes[index];
             },
 
             _setupGPU: function(textureDim){
@@ -253,8 +271,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.initTextureFromData("u_mass", textureDim, textureDim, "FLOAT", this.mass);
                 gpuMath.initTextureFromData("u_neighborsXMapping", textureDim*2, textureDim, "FLOAT", this.neighborsXMapping);
                 gpuMath.initTextureFromData("u_neighborsYMapping", textureDim*2, textureDim, "FLOAT", this.neighborsYMapping);
-                gpuMath.initTextureFromData("u_compositeKs", textureDim*2*15, textureDim, "FLOAT", this.compositeKs);
-                gpuMath.initTextureFromData("u_compositeDs", textureDim*2*15, textureDim, "FLOAT", this.compositeDs);
+                gpuMath.initTextureFromData("u_compositeKs", textureDim*2*6, textureDim, "FLOAT", this.compositeKs);
+                gpuMath.initTextureFromData("u_compositeDs", textureDim*2*6, textureDim, "FLOAT", this.compositeDs);
                 gpuMath.initTextureFromData("u_originalPosition", textureDim, textureDim, "FLOAT", this.originalPosition);
                 gpuMath.initTextureFromData("u_wires", textureDim, textureDim, "FLOAT", this.wires);//todo byte
                 gpuMath.initTextureFromData("u_wiresMeta", 1, this.wiresMeta.length/4, "FLOAT", this.wiresMeta);
@@ -537,71 +555,71 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
             iter: function(time, runConstants, shouldRender){
 
-                //gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
-                //    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
-                gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
-                    "u_wiresMeta"], "u_velocity", time);
-                gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
-
-                if (shouldRender) {
-                    var textureSize = this.textureSize[0]*this.textureSize[1];
-
-                    //get position
-                    var vectorLength = 3;
-                    gpuMath.setProgram("packToBytes");
-                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
-                    var pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    if (gpuMath.readyToRead()) {
-                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                        var parsedPixels = new Float32Array(pixels.buffer);
-                        var cells = lattice.getCells();
-                        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
-                        for (var i = 0; i < textureSize; i++) {
-                            var rgbaIndex = 4 * i;
-                            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
-                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                            var parsePixelsIndex = vectorLength * i;
-                            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
-                            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
-                            position[0] += multiplier * translation[0];
-                            position[1] += multiplier * translation[1];
-                            position[2] += multiplier * translation[2];
-                            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
-                        }
-                    }
-
-                    vectorLength = 4;
-                    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
-                    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
-                    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
-                    pixels = new Uint8Array(textureSize * 4*vectorLength);
-                    if (gpuMath.readyToRead()) {
-                        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
-                        parsedPixels = new Float32Array(pixels.buffer);
-                        for (var i = 0; i < textureSize; i++) {
-                            var rgbaIndex = 4 * i;
-                            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
-                            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
-                            var parsePixelsIndex = vectorLength * i;
-
-                            var quaternion = this._multiplyQuaternions([parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]],
-                                [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
-                            var rotation = this._eulerFromQuaternion(quaternion);
-
-                            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
-                        }
-                    }
-
-                    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
-                }
-
-                gpuMath.swapTextures("u_velocity", "u_lastVelocity");
-                gpuMath.swapTextures("u_translation", "u_lastTranslation");
-                //gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
-                return;
+                ////gpuMath.step("quaternionCalc", ["u_lastTranslation", "u_lastQuaternion", "u_fixed", "u_neighborsXMapping",
+                ////    "u_neighborsYMapping", "u_compositeKs"], "u_quaternion", "u_wires", "u_wiresMeta", time);
+                //gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
+                //    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
+                //    "u_wiresMeta"], "u_velocity", time);
+                //gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
+                //
+                //if (shouldRender) {
+                //    var textureSize = this.textureSize[0]*this.textureSize[1];
+                //
+                //    //get position
+                //    var vectorLength = 3;
+                //    gpuMath.setProgram("packToBytes");
+                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                //    gpuMath.step("packToBytes", ["u_translation"], "outputPositionBytes");
+                //    var pixels = new Uint8Array(textureSize * 4*vectorLength);
+                //    if (gpuMath.readyToRead()) {
+                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                //        var parsedPixels = new Float32Array(pixels.buffer);
+                //        var cells = lattice.getCells();
+                //        var multiplier = 1 / (plist.allUnitTypes[lattice.getUnits()].multiplier);
+                //        for (var i = 0; i < textureSize; i++) {
+                //            var rgbaIndex = 4 * i;
+                //            if (this.mass[rgbaIndex+1] < 0) continue;//no more cells
+                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                //            var parsePixelsIndex = vectorLength * i;
+                //            var translation = [parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2]];
+                //            var position = [this.originalPosition[rgbaIndex], this.originalPosition[rgbaIndex + 1], this.originalPosition[rgbaIndex + 2]];
+                //            position[0] += multiplier * translation[0];
+                //            position[1] += multiplier * translation[1];
+                //            position[2] += multiplier * translation[2];
+                //            cells[index[0]][index[1]][index[2]].object3D.position.set(position[0], position[1], position[2]);
+                //        }
+                //    }
+                //
+                //    vectorLength = 4;
+                //    gpuMath.setUniformForProgram("packToBytes", "u_vectorLength", vectorLength, "1f");
+                //    gpuMath.setSize(this.textureSize[0]*vectorLength, this.textureSize[1]);
+                //    gpuMath.step("packToBytes", ["u_quaternion"], "outputQuaternionBytes");
+                //    pixels = new Uint8Array(textureSize * 4*vectorLength);
+                //    if (gpuMath.readyToRead()) {
+                //        gpuMath.readPixels(0, 0, this.textureSize[0] * vectorLength, this.textureSize[1], pixels);
+                //        parsedPixels = new Float32Array(pixels.buffer);
+                //        for (var i = 0; i < textureSize; i++) {
+                //            var rgbaIndex = 4 * i;
+                //            if (this.mass[rgbaIndex+1] < 0) break;//no more cells
+                //            var index = [this.cellsArrayMapping[rgbaIndex], this.cellsArrayMapping[rgbaIndex + 1], this.cellsArrayMapping[rgbaIndex + 2]];
+                //            var parsePixelsIndex = vectorLength * i;
+                //
+                //            var quaternion = this._multiplyQuaternions([parsedPixels[parsePixelsIndex], parsedPixels[parsePixelsIndex + 1], parsedPixels[parsePixelsIndex + 2], parsedPixels[parsePixelsIndex + 3]],
+                //                [this.originalQuaternion[rgbaIndex], this.originalQuaternion[rgbaIndex+1], this.originalQuaternion[rgbaIndex+2], this.originalQuaternion[rgbaIndex+3]]);
+                //            var rotation = this._eulerFromQuaternion(quaternion);
+                //
+                //            cells[index[0]][index[1]][index[2]].object3D.rotation.set(rotation[0], rotation[1], rotation[2]);
+                //        }
+                //    }
+                //
+                //    gpuMath.setSize(this.textureSize[0], this.textureSize[1]);
+                //}
+                //
+                //gpuMath.swapTextures("u_velocity", "u_lastVelocity");
+                //gpuMath.swapTextures("u_translation", "u_lastTranslation");
+                ////gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
+                //return;
 
                 var gravity = runConstants.gravity;
                 var groundHeight = runConstants.groundHeight;
@@ -662,17 +680,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //}
                         //actuatedD[neighborAxis] *= 1+actuation;
 
-                        //todo don't need all these at once
-                        var longitudalK = [this.compositeKs[neighborsIndex + j % 3], this.compositeKs[neighborsIndex + j % 3 + textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 2 * textureSize * 8]];
-                        var bendingK = [this.compositeKs[neighborsIndex + j % 3 + 3 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 4 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 5 * textureSize * 8]];
-                        var torsionK = [this.compositeKs[neighborsIndex + j % 3 + 6 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 7 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 8 * textureSize * 8]];
-                        var shearK = [this.compositeKs[neighborsIndex + j % 3 + 9 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 10 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 11 * textureSize * 8],
-                            this.compositeKs[neighborsIndex + j % 3 + 12 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 13 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 14 * textureSize * 8]];
-                        var longitudalD = [this.compositeDs[neighborsIndex + j % 3], this.compositeDs[neighborsIndex + j % 3 + textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 2 * textureSize * 8]];
-                        var bendingD = [this.compositeDs[neighborsIndex + j % 3 + 3 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 4 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 5 * textureSize * 8]];
-                        var torsionD = [this.compositeDs[neighborsIndex + j % 3 + 6 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 7 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 8 * textureSize * 8]];
-                        var shearD = [this.compositeDs[neighborsIndex + j % 3 + 9 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 10 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 11 * textureSize * 8],
-                            this.compositeDs[neighborsIndex + j % 3 + 12 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 13 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 14 * textureSize * 8]];
+                        var translationalK = [this.compositeKs[i*8*6 + j*8], this.compositeKs[i*8*6 + j*8 + 1], this.compositeKs[i*8*6 + j*8 + 2]];
+                        var translationalD = [this.compositeDs[i*8*6 + j*8], this.compositeDs[i*8*6 + j*8 + 1], this.compositeDs[i*8*6 + j*8 + 2]];
+                        var rotationalK = [this.compositeKs[i*8*6 + j*8 + 3], this.compositeKs[i*8*6 + j*8 + 4], this.compositeKs[i*8*6 + j*8 + 5]];
+                        var rotationalD = [this.compositeDs[i*8*6 + j*8 + 3], this.compositeDs[i*8*6 + j*8 + 4], this.compositeDs[i*8*6 + j*8 + 5]];
 
                         //convert translational offsets to correct reference frame
                         var nominalD = this._neighborOffset(j, latticePitch);
@@ -693,12 +704,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                         //longitudal and shear
                         for (var _axis = 0; _axis < 3; _axis++) {
-                            if (_axis == neighborAxis) {
-                                _force[_axis] += longitudalK[_axis] * translationalDeltaXYZ[_axis] + longitudalD[_axis] * velocityDeltaXYZ[_axis];
-                            } else {
-                                var shearIndex = this._shearIndex(neighborAxis, _axis);
-                                _force[_axis] += shearK[shearIndex] * translationalDeltaXYZ[_axis] + shearD[shearIndex] * velocityDeltaXYZ[_axis];
-                            }
+                            _force[_axis] += translationalK[_axis]*translationalDeltaXYZ[_axis] + translationalD[_axis]*velocityDeltaXYZ[_axis];
                         }
                         //convert _force vector back into world reference frame
                         _force = this._applyQuaternion(_force, averageQuaternion);
