@@ -221,7 +221,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
             _getRotatedAxis: function(_axis, _cell){
                 var vector = new THREE.Vector3();
                 vector[_axis] = 1;
-                vector.applyQuaternion(_cell.getOrientation());
+                vector.applyQuaternion(_cell.getOrientation().inverse());
                 if (Math.abs(vector.x)>0.9) return "x";
                 if (Math.abs(vector.y)>0.9) return "y";
                 if (Math.abs(vector.z)>0.9) return "z";
@@ -615,24 +615,24 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
                     var isActuator = wiring[0] == -1;
 
-                    for (var j=0;j<6;j++){
+                    for (var j=0;j<6;j++) {
 
-                        var _force = [0,0,0];
+                        var _force = [0, 0, 0];
 
-                        var neighborsIndex = i*8;
-                        if (j>2) neighborsIndex += 4;
-                        if (this.neighborsXMapping[neighborsIndex + j%3] < 0) continue;
+                        var neighborsIndex = i * 8;
+                        if (j > 2) neighborsIndex += 4;
+                        if (this.neighborsXMapping[neighborsIndex + j % 3] < 0) continue;
 
-                        var neighborIndex = 4*(this.neighborsXMapping[neighborsIndex + j%3] + this.textureSize[0]*this.neighborsYMapping[neighborsIndex + j%3]);
-                        var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex+1], this.lastTranslation[neighborIndex+2]];
-                        var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex+1], this.lastVelocity[neighborIndex+2]];
-                        var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex+1], this.lastQuaternion[neighborIndex+2], this.lastQuaternion[neighborIndex+3]];
-                        var neighborRotation = [this.lastTranslation[neighborIndex+4*textureSize], this.lastTranslation[neighborIndex+1+4*textureSize], this.lastTranslation[neighborIndex+2+4*textureSize]];
-                        var neighborAngVelocity = [this.lastVelocity[neighborIndex+4*textureSize], this.lastVelocity[neighborIndex+1+4*textureSize], this.lastVelocity[neighborIndex+2+4*textureSize]];
+                        var neighborIndex = 4 * (this.neighborsXMapping[neighborsIndex + j % 3] + this.textureSize[0] * this.neighborsYMapping[neighborsIndex + j % 3]);
+                        var neighborTranslation = [this.lastTranslation[neighborIndex], this.lastTranslation[neighborIndex + 1], this.lastTranslation[neighborIndex + 2]];
+                        var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex + 1], this.lastVelocity[neighborIndex + 2]];
+                        var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex + 1], this.lastQuaternion[neighborIndex + 2], this.lastQuaternion[neighborIndex + 3]];
+                        var neighborRotation = [this.lastTranslation[neighborIndex + 4 * textureSize], this.lastTranslation[neighborIndex + 1 + 4 * textureSize], this.lastTranslation[neighborIndex + 2 + 4 * textureSize]];
+                        var neighborAngVelocity = [this.lastVelocity[neighborIndex + 4 * textureSize], this.lastVelocity[neighborIndex + 1 + 4 * textureSize], this.lastVelocity[neighborIndex + 2 + 4 * textureSize]];
 
                         //var nominalD = this._neighborOffset(j, latticePitch);
                         //var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
-                        var neighborAxis = Math.floor(j/2);
+                        var neighborAxis = Math.floor(j / 2);
                         //var actuation = 0;
                         //if (isActuator && wiring[neighborAxis+1]>0) {
                         //    actuation += 0.3*this._getActuatorVoltage(wiring[neighborAxis+1]-1, time);
@@ -644,16 +644,16 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //actuatedD[neighborAxis] *= 1+actuation;
 
                         //todo don't need all these at once
-                        var longitudalK = [this.compositeKs[neighborsIndex + j%3], this.compositeKs[neighborsIndex + j%3 + textureSize*8], this.compositeKs[neighborsIndex + j%3 + 2*textureSize*8]];
-                        var bendingK = [this.compositeKs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 5*textureSize*8]];
-                        var torsionK = [this.compositeKs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 8*textureSize*8]];
-                        var shearK = [this.compositeKs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 11*textureSize*8],
-                            this.compositeKs[neighborsIndex + j%3 + 12*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 13*textureSize*8], this.compositeKs[neighborsIndex + j%3 + 14*textureSize*8]];
-                        var longitudalD = [this.compositeDs[neighborsIndex + j%3], this.compositeDs[neighborsIndex + j%3 + textureSize*8], this.compositeDs[neighborsIndex + j%3 + 2*textureSize*8]];
-                        var bendingD = [this.compositeDs[neighborsIndex + j%3 + 3*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 4*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 5*textureSize*8]];
-                        var torsionD = [this.compositeDs[neighborsIndex + j%3 + 6*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 7*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 8*textureSize*8]];
-                        var shearD = [this.compositeDs[neighborsIndex + j%3 + 9*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 10*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 11*textureSize*8],
-                        this.compositeDs[neighborsIndex + j%3 + 12*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 13*textureSize*8], this.compositeDs[neighborsIndex + j%3 + 14*textureSize*8]];
+                        var longitudalK = [this.compositeKs[neighborsIndex + j % 3], this.compositeKs[neighborsIndex + j % 3 + textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 2 * textureSize * 8]];
+                        var bendingK = [this.compositeKs[neighborsIndex + j % 3 + 3 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 4 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 5 * textureSize * 8]];
+                        var torsionK = [this.compositeKs[neighborsIndex + j % 3 + 6 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 7 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 8 * textureSize * 8]];
+                        var shearK = [this.compositeKs[neighborsIndex + j % 3 + 9 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 10 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 11 * textureSize * 8],
+                            this.compositeKs[neighborsIndex + j % 3 + 12 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 13 * textureSize * 8], this.compositeKs[neighborsIndex + j % 3 + 14 * textureSize * 8]];
+                        var longitudalD = [this.compositeDs[neighborsIndex + j % 3], this.compositeDs[neighborsIndex + j % 3 + textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 2 * textureSize * 8]];
+                        var bendingD = [this.compositeDs[neighborsIndex + j % 3 + 3 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 4 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 5 * textureSize * 8]];
+                        var torsionD = [this.compositeDs[neighborsIndex + j % 3 + 6 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 7 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 8 * textureSize * 8]];
+                        var shearD = [this.compositeDs[neighborsIndex + j % 3 + 9 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 10 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 11 * textureSize * 8],
+                            this.compositeDs[neighborsIndex + j % 3 + 12 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 13 * textureSize * 8], this.compositeDs[neighborsIndex + j % 3 + 14 * textureSize * 8]];
 
                         //convert translational offsets to correct reference frame
                         var nominalD = this._neighborOffset(j, latticePitch);
@@ -664,21 +664,21 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var averageQuaternion = this._averageQuaternions(quaternion, neighborQuaternion);
                         var averageQuaternionInverse = this._invertQuaternion(averageQuaternion);
                         var translationalDelta = [
-                            neighborTranslation[0]-translation[0]+nominalD[0]-cellHalfNominalD[0]-neighborHalfNominalD[0],
-                            neighborTranslation[1]-translation[1]+nominalD[1]-cellHalfNominalD[1]-neighborHalfNominalD[1],
-                            neighborTranslation[2]-translation[2]+nominalD[2]-cellHalfNominalD[2]-neighborHalfNominalD[2]
+                            neighborTranslation[0] - translation[0] + nominalD[0] - cellHalfNominalD[0] - neighborHalfNominalD[0],
+                            neighborTranslation[1] - translation[1] + nominalD[1] - cellHalfNominalD[1] - neighborHalfNominalD[1],
+                            neighborTranslation[2] - translation[2] + nominalD[2] - cellHalfNominalD[2] - neighborHalfNominalD[2]
                         ];
                         var translationalDeltaXYZ = this._applyQuaternion(translationalDelta, averageQuaternionInverse);
-                        var velocityDelta = [neighborVelocity[0]-velocity[0], neighborVelocity[1]-velocity[1], neighborVelocity[2]-velocity[2]];
+                        var velocityDelta = [neighborVelocity[0] - velocity[0], neighborVelocity[1] - velocity[1], neighborVelocity[2] - velocity[2]];
                         var velocityDeltaXYZ = this._applyQuaternion(velocityDelta, averageQuaternionInverse);
 
                         //longitudal and shear
-                        for (var _axis=0;_axis<3;_axis++){
-                            if (_axis == neighborAxis){
-                                _force[_axis] += longitudalK[_axis]*translationalDeltaXYZ[_axis] + longitudalD[_axis]*velocityDeltaXYZ[_axis];
+                        for (var _axis = 0; _axis < 3; _axis++) {
+                            if (_axis == neighborAxis) {
+                                _force[_axis] += longitudalK[_axis] * translationalDeltaXYZ[_axis] + longitudalD[_axis] * velocityDeltaXYZ[_axis];
                             } else {
                                 var shearIndex = this._shearIndex(neighborAxis, _axis);
-                                _force[_axis] += shearK[shearIndex]*translationalDeltaXYZ[_axis] + shearD[shearIndex]*velocityDeltaXYZ[_axis];
+                                _force[_axis] += shearK[shearIndex] * translationalDeltaXYZ[_axis] + shearD[shearIndex] * velocityDeltaXYZ[_axis];
                             }
                         }
                         //convert _force vector back into world reference frame
@@ -695,11 +695,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //bending and torsion
                         var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
                         var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        for (var _axis=0;_axis<3;_axis++) {
-                            if (_axis == neighborAxis){
-                                rForce[_axis] += 0.00001*torsionK[_axis]*(diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                        for (var _axis = 0; _axis < 3; _axis++) {
+                            if (_axis == neighborAxis) {
+                                rForce[_axis] += 0.00001 * torsionK[_axis] * (diffEuler[_axis]);// + torsionD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                             } else {
-                                rForce[_axis] += 0.00001*bendingK[_axis]*(diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
+                                rForce[_axis] += 0.00001 * bendingK[_axis] * (diffEuler[_axis]);// + bendingD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                             }
                         }
                     }
@@ -747,6 +747,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     this.velocity[rgbaIndex+1+4*textureSize] = angVelocity[1];
                     this.velocity[rgbaIndex+2+4*textureSize] = angVelocity[2];
 
+                    nextQuaternion = this._normalize4D(nextQuaternion);
                     this.quaternion[rgbaIndex] = nextQuaternion[0];
                     this.quaternion[rgbaIndex+1] = nextQuaternion[1];
                     this.quaternion[rgbaIndex+2] = nextQuaternion[2];
@@ -858,13 +859,24 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
             },
 
             _invertQuaternion: function(quaternion){
-                return [quaternion[0]*-1, quaternion[1]*-1, quaternion[2]*-1, quaternion[3]];
+                return this._normalize4D([quaternion[0]*-1, quaternion[1]*-1, quaternion[2]*-1, quaternion[3]]);
             },
 
             _shearIndex: function(neighborAxis, axis){
-                var index = neighborAxis*3+axis-1;
-                if (index<3) return index;
-                return index-1;
+                if (neighborAxis == 0){
+                    if (axis == 1) return 0;
+                    if (axis == 2) return 1;
+                    else console.warn("problem");
+                } else if (neighborAxis == 1){
+                    if (axis == 0) return 2;
+                    if (axis == 2) return 3;
+                    else console.warn("problem");
+                } else if (neighborAxis == 2){
+                    if (axis == 0) return 4;
+                    if (axis == 1) return 5;
+                    else console.warn("problem");
+                } else console.warn("problem");
+                return 0;
             },
 
             _torqueAxis: function(neighbAxis, axis){

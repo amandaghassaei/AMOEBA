@@ -31,10 +31,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 bending1DOF: {
@@ -46,10 +46,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:30},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:1},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 bending2DOF: {
@@ -61,10 +61,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:30,z:30},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:1,z:1},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 torsion1DOF: {
@@ -76,10 +76,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:30}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:1}
                     }
                 },
                 shear1DOF: {
@@ -90,10 +90,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:1,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:1,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 isoFlex: {
@@ -118,10 +118,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 conductiveBend:{
@@ -132,10 +132,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 conductiveJunction1:{
@@ -146,10 +146,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 conductiveJunction2:{
@@ -160,10 +160,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 flexureCond: {
@@ -205,10 +205,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 flexureCondJunction2:{
@@ -220,10 +220,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 8500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 actuatorLinear1DOF: {
@@ -234,10 +234,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 actuatorBending1DOF: {
@@ -248,10 +248,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 actuatorTorsion1DOF: {
@@ -262,10 +262,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 actuatorShear: {
@@ -276,10 +276,10 @@ define([], function(){
                     properties:{
                         conductive: false,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 signal: {
@@ -290,10 +290,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 },
                 script: {
@@ -304,10 +304,10 @@ define([], function(){
                     properties:{
                         conductive: true,
                         density: 6500,//kg/m^3
-                        longitudalK:{x:150,y:150,z:150},
-                        shearK:{xy:150,xz:150,yx:150,yz:150,zx:150,zy:150},
-                        bendingK:{x:150,y:150,z:150},
-                        torsionK:{x:150,y:150,z:150}
+                        longitudalK:{x:80,y:80,z:80},
+                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                        bendingK:{x:80,y:80,z:80},
+                        torsionK:{x:80,y:80,z:80}
                     }
                 }
             },
