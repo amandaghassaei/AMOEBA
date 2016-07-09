@@ -217,16 +217,6 @@ void main(){
         vec2 mappingIndex = vec2(xIndex/(u_textureDim.x*2.0), scaledFragCoord.y);
         vec3 neighborsXMapping = texture2D(u_neighborsXMapping, mappingIndex).xyz;
         vec3 neighborsYMapping = texture2D(u_neighborsYMapping, mappingIndex).xyz;
-        vec3 longitudalK = texture2D(u_compositeKs, mappingIndex).xyz;
-
-
-
-        vec3 shearK1 = vec3(10,10,10);
-        vec3 shearK2 = vec3(10,10,10);
-        vec3 longitudalD = texture2D(u_compositeDs, mappingIndex).xyz;
-        vec3 shearD1 = vec3(0.03, 0.03, 0.03);
-        vec3 shearD2 = vec3(0.03, 0.03, 0.03);
-
 
         for (int j=0;j<3;j++){
             if (neighborsXMapping[j] < 0.0) continue;//no neighbor
@@ -271,6 +261,11 @@ void main(){
             //else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
             //else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
 
+            float kIndex_x = ((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5)/(u_textureDim.x*12.0);
+            vec2 kIndex = vec2(kIndex_x, scaledFragCoord.y);
+            vec3 translationalK = texture2D(u_compositeKs, kIndex).xyz;
+            vec3 translationalD = texture2D(u_compositeDs, kIndex).xyz;
+
             vec4 averageQuaternion = averageQuaternions(quaternion, neighborQuaternion);
             vec4 averageQuaternionInverse = invertQuaternion(averageQuaternion);
 
@@ -279,24 +274,7 @@ void main(){
             vec3 velocityDelta = neighborVelocity-velocity;
             vec3 velocityDeltaXYZ = applyQuaternion(velocityDelta, averageQuaternionInverse);
 
-            vec3 _force = vec3(0.0,0.0,0.0);
-            //longitudal and shear
-            for (int _axis = 0; _axis < 3; _axis++) {
-                if (_axis == neighborAxis) {
-                    _force[_axis] += longitudalK[_axis] * translationalDeltaXYZ[_axis] + longitudalD[_axis] * velocityDeltaXYZ[_axis];
-                } else {
-                    if (neighborAxis == 0){
-                        if (_axis == 1) _force[_axis] += shearK1[0] * translationalDeltaXYZ[_axis] + shearD1[0] * velocityDeltaXYZ[_axis];
-                        else if (_axis == 2) _force[_axis] += shearK1[1] * translationalDeltaXYZ[_axis] + shearD1[1] * velocityDeltaXYZ[_axis];
-                    } else if (neighborAxis == 1){
-                        if (_axis == 0) _force[_axis] += shearK1[2] * translationalDeltaXYZ[_axis] + shearD1[2] * velocityDeltaXYZ[_axis];
-                        else if (_axis == 2) _force[_axis] += shearK2[0] * translationalDeltaXYZ[_axis] + shearD2[0] * velocityDeltaXYZ[_axis];
-                    } else if (neighborAxis == 2){
-                        if (_axis == 0) _force[_axis] += shearK2[1] * translationalDeltaXYZ[_axis] + shearD2[1] * velocityDeltaXYZ[_axis];
-                        else if (_axis == 1) _force[_axis] += shearK2[2] * translationalDeltaXYZ[_axis] + shearD2[2] * velocityDeltaXYZ[_axis];
-                    }
-                }
-            }
+            vec3 _force = translationalK*translationalDeltaXYZ + translationalD*velocityDeltaXYZ;
             //convert _force vector back into world reference frame
             _force = applyQuaternion(_force, averageQuaternion);
             force += _force;
