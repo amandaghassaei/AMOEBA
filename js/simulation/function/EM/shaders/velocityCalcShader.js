@@ -261,8 +261,7 @@ void main(){
             //else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
             //else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
 
-            float kIndex_x = ((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5)/(u_textureDim.x*12.0);
-            vec2 kIndex = vec2(kIndex_x, scaledFragCoord.y);
+            vec2 kIndex = vec2(((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5)/(u_textureDim.x*12.0), scaledFragCoord.y);
             vec3 translationalK = texture2D(u_compositeKs, kIndex).xyz;
             vec3 translationalD = texture2D(u_compositeDs, kIndex).xyz;
 
