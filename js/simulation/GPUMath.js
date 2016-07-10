@@ -116,6 +116,17 @@ define(['glBoilerplate'], function(glBoilerplate){
         this.frameBuffers[texture2Name] = temp;
     };
 
+    GPUMath.prototype.swap3Textures = function(texture1Name, texture2Name, texture3Name){
+        var temp = this.textures[texture3Name];
+        this.textures[texture3Name] = this.textures[texture2Name];
+        this.textures[texture2Name] = this.textures[texture1Name];
+        this.textures[texture1Name] = temp;
+        temp = this.frameBuffers[texture3Name];
+        this.frameBuffers[texture3Name] = this.frameBuffers[texture2Name];
+        this.frameBuffers[texture2Name] = this.frameBuffers[texture1Name];
+        this.frameBuffers[texture1Name] = temp;
+    };
+
     GPUMath.prototype.readyToRead = function(){
         return gl.checkFramebufferStatus(gl.FRAMEBUFFER) == gl.FRAMEBUFFER_COMPLETE;
     };
