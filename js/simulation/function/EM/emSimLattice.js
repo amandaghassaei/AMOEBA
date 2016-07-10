@@ -280,7 +280,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
 
                 //programs
-
                 gpuMath.createProgram("angVelocityCalc", vertexShader, angVelocityCalcShader);
                 gpuMath.setUniformForProgram("angVelocityCalc", "u_lastAngVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("angVelocityCalc", "u_lastVelocity", 1, "1i");
