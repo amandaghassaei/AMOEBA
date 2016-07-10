@@ -11,7 +11,7 @@ uniform float u_wiresMetaLength;
 uniform float u_time;
 
 
-uniform sampler2D u_angularVelocity;
+uniform sampler2D u_lastAngVelocity;
 uniform sampler2D u_lastVelocity;
 uniform sampler2D u_lastTranslation;
 uniform sampler2D u_mass;
@@ -284,7 +284,7 @@ void main(){
     vec3 translation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
     vec3 velocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
     vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
-    vec3 angVelocity = texture2D(u_angularVelocity, scaledFragCoord).xyz;
+    vec3 angVelocity = texture2D(u_lastAngVelocity, scaledFragCoord).xyz;
 
     vec4 wiring = texture2D(u_wires, scaledFragCoord);
     bool isActuator = wiring[0] < -0.5;//-1
@@ -372,6 +372,6 @@ void main(){
         }
     }
 
-    angVelocity += torque/momOfInertia;
+    angVelocity += (torque/momOfInertia)*u_dt;
     gl_FragColor = vec4(angVelocity, 0);
 }

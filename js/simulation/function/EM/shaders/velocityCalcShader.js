@@ -178,13 +178,15 @@ void main(){
     vec2 fragCoord = gl_FragCoord.xy;
     vec2 scaledFragCoord = fragCoord/u_textureDim;
 
-    float isFixed = texture2D(u_mass, scaledFragCoord).y;
+    vec3 massData = texture2D(u_mass, scaledFragCoord).xyz;
+
+    float isFixed = massData.y;
     if (isFixed < 0.0 || isFixed == 1.0){//no cell or is fixed
         gl_FragColor = vec4(0, 0, 0, 0);
         return;
     }
 
-    float mass = texture2D(u_mass, scaledFragCoord).x;
+    float mass = massData.x;
     vec3 force = u_gravity*mass;
 
     vec3 translation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
