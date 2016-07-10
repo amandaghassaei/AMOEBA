@@ -300,7 +300,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
 
                 gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
-                gpuMath.setUniformForProgram("quaternionCalc", "u_angVelocity", 0, "1i");
+                gpuMath.setUniformForProgram("quaternionCalc", "u_lastAngVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("quaternionCalc", "u_textureDim", [textureDim, textureDim], "2f");
@@ -324,7 +324,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("velocityCalc", "u_time", 0, "1f");
 
                 gpuMath.createProgram("positionCalc", vertexShader, positionCalcShader);
-                gpuMath.setUniformForProgram("positionCalc", "u_velocity", 0, "1i");
+                gpuMath.setUniformForProgram("positionCalc", "u_lastVelocity", 0, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_lastTranslation", 1, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_mass", 2, "1i");
                 gpuMath.setUniformForProgram("positionCalc", "u_textureDim", [textureDim, textureDim], "2f");
@@ -560,7 +560,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.step("velocityCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
                     "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_originalPosition", "u_lastQuaternion", "u_wires",
                     "u_wiresMeta"], "u_velocity", time);
-                gpuMath.step("positionCalc", ["u_velocity", "u_lastTranslation", "u_mass"], "u_translation");
+                gpuMath.step("positionCalc", ["u_lastVelocity", "u_lastTranslation", "u_mass"], "u_translation");
                 gpuMath.step("angVelocityCalc", ["u_lastAngVelocity", "u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
                     "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_lastQuaternion", "u_wires",
                     "u_wiresMeta"], "u_angVelocity", time);
@@ -805,7 +805,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 this._swapArrays("velocity", "lastVelocity");
                 this._swapArrays("translation", "lastTranslation");
                 this._swapArrays("quaternion", "lastQuaternion");
-                this._swapArrays("rotation", "lastRotation");
+                this._swapArrays("angVelocity", "lastAngVelocity");
             },
 
             _addVectors: function(vector1, vector2){
