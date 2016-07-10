@@ -5,9 +5,9 @@
 
 define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'GPUMath', "text!simulation/shaders/vertexShader.js",
     "text!simulation/function/EM/shaders/velocityCalcShader.js", "text!simulation/shaders/packToBytesShader.js", "text!simulation/function/EM/shaders/positionCalcShader.js",
-    "text!simulation/function/EM/shaders/quaternionCalcShader.js", 'emSimCell'],
+    "text!simulation/function/EM/shaders/angVelocityCalcShader.js", 'emSimCell'],
     function(_, Backbone, three, lattice, plist, EMWire, gpuMath, vertexShader, velocityCalcShader, packToBytesShader,
-             positionCalcShader, quaternionCalcShader) {
+             positionCalcShader, angVelocityCalcShader) {
 
         var EMSimLattice = Backbone.Model.extend({
 
@@ -59,7 +59,6 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 this.cellsArrayMapping = new Int16Array(textureSize*4);//holds lattice index of cell (for rendering from texture)
 
-                //todo add moment of inertia
                 this.mass = new Float32Array(textureSize*4);//first element is mass, second element in fixed, third element is moment of inertia
 
                 this.neighborsXMapping = new Float32Array(textureSize*8);//-1 equals no neighb
@@ -101,6 +100,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                     self.mass[rgbaIndex] = self._calcCellMass(cell);
                     self.mass[rgbaIndex+1] = 0;//indicated a cell is present
+                    var latticePitch = lattice.getPitch();
+                    self.mass[rgbaIndex+2] = 1/6*self.mass[rgbaIndex]*latticePitch.x*latticePitch.x;//moment of inertia for a cube
 
                     self.cellsIndexMapping[x][y][z] = index;
 
@@ -279,6 +280,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
 
                 //programs
+                //gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
                 //gpuMath.createProgram("angVelocityCalc", vertexShader, quaternionCalcShader);
                 //gpuMath.setUniformForProgram("angVelocityCalc", "u_lastTranslation", 0, "1i");
                 //gpuMath.setUniformForProgram("angVelocityCalc", "u_lastQuaternion", 1, "1i");
@@ -293,19 +295,25 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 //gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
                 //gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
                 //
-                //gpuMath.createProgram("quaternionCalc", vertexShader, quaternionCalcShader);
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_lastTranslation", 0, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_lastQuaternion", 1, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_mass", 2, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsXMapping", 3, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_neighborsYMapping", 4, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_compositeKs", 5, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_wires", 6, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMeta", 7, "1i");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_textureDim", [textureDim, textureDim], "2f");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
-                //gpuMath.setUniformForProgram("quaternionCalc", "u_time", 0, "1f");
+
+
+                gpuMath.createProgram("angVelocityCalc", vertexShader, angVelocityCalcShader);
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastAngVelocity", 0, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastVelocity", 1, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastTranslation", 2, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_mass", 3, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsXMapping", 4, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_neighborsYMapping", 5, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_compositeKs", 6, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_compositeDs", 7, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_lastQuaternion", 8, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wires", 9, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMeta", 10, "1i");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_textureDim", [textureDim, textureDim], "2f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_multiplier", 1/(plist.allUnitTypes[lattice.getUnits()].multiplier), "1f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_latticePitch", [latticePitch.x, latticePitch.y, latticePitch.z], "3f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_wiresMetaLength", this.wiresMeta.length/4, "1f");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_time", 0, "1f");
 
                 gpuMath.createProgram("velocityCalc", vertexShader, velocityCalcShader);
                 gpuMath.setUniformForProgram("velocityCalc", "u_lastVelocity", 0, "1i");
@@ -551,6 +559,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 gpuMath.setUniformForProgram("velocityCalc", "u_friction", friction, "1f");
                 gpuMath.setProgram("positionCalc");
                 gpuMath.setUniformForProgram("positionCalc", "u_dt", dt, "1f");
+                gpuMath.setProgram("angVelocityCalc");
+                gpuMath.setUniformForProgram("angVelocityCalc", "u_dt", dt, "1f");
+                //gpuMath.setProgram("quaternionCalc");
+                //gpuMath.setUniformForProgram("quaternionCalc", "u_dt", dt, "1f");
             },
 
             iter: function(time, runConstants, shouldRender){
@@ -639,7 +651,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var mass = this.mass[rgbaIndex];
                     if (mass == 0) continue;
                     var force = [mass*gravity.x, mass*gravity.y, mass*gravity.z];//translational force
-                    var I = 1/6*mass*latticePitch[0]*latticePitch[0];//moment of inertia for a cube
+                    var I = this.mass[rgbaIndex+2];//moment of inerita
                     var rForce = [0,0,0];//rotational force
 
 

@@ -9,10 +9,9 @@ uniform float u_multiplier;
 uniform vec3 u_latticePitch;
 uniform float u_wiresMetaLength;
 uniform float u_time;
-uniform float u_groundHeight;
-uniform float u_friction;
 
 
+uniform sampler2D u_angularVelocity;
 uniform sampler2D u_lastVelocity;
 uniform sampler2D u_lastTranslation;
 uniform sampler2D u_mass;
@@ -20,10 +19,11 @@ uniform sampler2D u_neighborsXMapping;
 uniform sampler2D u_neighborsYMapping;
 uniform sampler2D u_compositeKs;
 uniform sampler2D u_compositeDs;
-uniform sampler2D u_originalPosition;
 uniform sampler2D u_lastQuaternion;
 uniform sampler2D u_wires;
 uniform sampler2D u_wiresMeta;
+
+
 
 vec3 applyQuaternion(vec3 vector, vec4 quaternion) {
 
@@ -44,8 +44,99 @@ vec3 applyQuaternion(vec3 vector, vec4 quaternion) {
     float iw = - qx * x - qy * y - qz * z;
 
     // calculate result * inverse quat
-    return vec3(ix * qw + iw * - qx + iy * - qz - iz * - qy, iy * qw + iw * - qy + iz * - qx - ix * - qz,
-        iz * qw + iw * - qz + ix * - qy - iy * - qx);
+    return vec3(ix * qw + iw * - qx + iy * - qz - iz * - qy, iy * qw + iw * - qy + iz * - qx - ix * - qz, iz * qw + iw * - qz + ix * - qy - iy * - qx);
+}
+
+vec4 quaternionFromUnitVectors(vec3 vFrom, vec3 vTo) {
+    vec3 v1 = vec3(0);
+    float r = dot(vFrom, vTo)+1.0;
+    if (r < 0.000001) {
+        r = 0.0;
+        if (abs(vFrom[0]) > abs(vFrom[2])) v1 = vec3(-vFrom[1], vFrom[0], 0.0);
+        else v1 = vec3(0.0, - vFrom[2], vFrom[1]);
+    } else  v1 = cross(vFrom, vTo);
+    return normalize(vec4(v1, r));
+}
+
+mat4 makeRotationMatrixFromQuaternion(vec4 q) {
+
+    mat4 te;
+
+    float x = q[0];
+    float y = q[1];
+    float z = q[2];
+    float w = q[3];
+    float x2 = x + x;
+    float y2 = y + y;
+    float z2 = z + z;
+    float xx = x * x2;
+    float xy = x * y2;
+    float xz = x * z2;
+    float yy = y * y2;
+    float yz = y * z2;
+    float zz = z * z2;
+    float wx = w * x2;
+    float wy = w * y2;
+    float wz = w * z2;
+
+    te[0] = vec4(1.0 - ( yy + zz ), xy - wz, xz + wy, 0);
+    te[1] = vec4(xy + wz, 1.0 - ( xx + zz ), yz - wx, 0);
+    te[2] = vec4(xz - wy, yz + wx, 1.0 - ( xx + yy ), 0);
+    te[3] = vec4(0, 0, 0, 1);
+
+    return te;
+}
+
+vec3 setFromRotationMatrix(mat4 te) {
+    // assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
+    float m11 = te[0][0];
+    float m12 = te[0][1];
+    float m13 = te[0][2];
+    float m21 = te[1][0];
+    float m22 = te[1][1];
+    float m23 = te[1][2];
+    float m31 = te[2][0];
+    float m32 = te[2][1];
+    float m33 = te[2][2];
+    if (abs(m13) < 0.99999){
+        return vec3(atan(-m23, m33), asin(clamp(m13, -1.0, 1.0)), atan(-m12, m11));
+    }
+    return vec3(atan(m32, m22), asin(clamp(m13, -1.0, 1.0)), 0);
+}
+
+vec3 eulerFromQuaternion(vec4 q){
+    return setFromRotationMatrix(makeRotationMatrixFromQuaternion(q));
+}
+
+vec4 quaternionFromEuler(vec3 euler) {
+
+    float c1 = cos(euler[0]/2.0);
+    float c2 = cos(euler[1]/2.0);
+    float c3 = cos(euler[2]/2.0);
+    float s1 = sin(euler[0]/2.0);
+    float s2 = sin(euler[1]/2.0);
+    float s3 = sin(euler[2]/2.0);
+
+    return vec4(s1 * c2 * c3 + c1 * s2 * s3, c1 * s2 * c3 - s1 * c2 * s3, c1 * c2 * s3 + s1 * s2 * c3, c1 * c2 * c3 - s1 * s2 * s3);
+}
+
+vec4 quaternionFromAxisAngle(vec3 axis, float angle) {
+    float halfAngle = angle/2.0;
+    float s = sin(halfAngle);
+    return vec4(s*axis, cos(halfAngle));
+}
+
+vec4 multiplyQuaternions(vec4 a, vec4 b){
+    float qax = a[0];
+    float qay = a[1];
+    float qaz = a[2];
+    float qaw = a[3];
+    float qbx = b[0];
+    float qby = b[1];
+    float qbz = b[2];
+    float qbw = b[3];
+    return vec4(qax * qbw + qaw * qbx + qay * qbz - qaz * qby, qay * qbw + qaw * qby + qaz * qbx - qax * qbz,
+        qaz * qbw + qaw * qbz + qax * qby - qay * qbx, qaw * qbw - qax * qbx - qay * qby - qaz * qbz);
 }
 
 float neighborSign(float i){
@@ -81,7 +172,7 @@ float getActuatorVoltage(float wireIndex){
     float frequency = wireMeta[1];
     float period = 1.0/frequency;
     float phase = wireMeta[2];
-    float currentPhase = mod(u_time+phase*period, period)/period;
+    float currentPhase = mod(u_time + phase*period, period)/period;
     if (type == 0){
         return 0.5*sin(2.0*M_PI*currentPhase);
     }
@@ -178,36 +269,25 @@ void main(){
     vec2 fragCoord = gl_FragCoord.xy;
     vec2 scaledFragCoord = fragCoord/u_textureDim;
 
-    float isFixed = texture2D(u_mass, scaledFragCoord).y;
+    vec3 massData = texture2D(u_mass, scaledFragCoord).xyz;
+
+    float isFixed = massData.y;
     if (isFixed < 0.0 || isFixed == 1.0){//no cell or is fixed
         gl_FragColor = vec4(0, 0, 0, 0);
         return;
     }
 
-    float mass = texture2D(u_mass, scaledFragCoord).x;
-    vec3 force = u_gravity*mass;
+    float mass = massData.x;
+    float momOfInertia = massData.z;
+    vec3 torque = vec3(0.0, 0.0, 0.0);
 
     vec3 translation = texture2D(u_lastTranslation, scaledFragCoord).xyz;
     vec3 velocity = texture2D(u_lastVelocity, scaledFragCoord).xyz;
     vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
+    vec3 angVelocity = texture2D(u_angularVelocity, scaledFragCoord).xyz;
 
     vec4 wiring = texture2D(u_wires, scaledFragCoord);
     bool isActuator = wiring[0] < -0.5;//-1
-
-    //simple collision
-    float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + translation.z*u_multiplier - u_groundHeight;
-    float collisionK = 1.0;
-    if (zPosition < 0.0) {
-        float normalForce = -zPosition*collisionK-velocity.z*collisionK/10.0;
-        force.z += normalForce;
-        if (u_friction > 0.5){
-            float mu = 10.0;
-            if (velocity.x > 0.0) force.x -= mu * normalForce;
-            else if (velocity.x < 0.0) force.x += mu * normalForce;
-            if (velocity.y > 0.0) force.y -= mu * normalForce;
-            else if (velocity.y < 0.0) force.y += mu * normalForce;
-        }
-    }
 
     for (float i=0.0;i<2.0;i+=1.0){
 
@@ -261,9 +341,13 @@ void main(){
             //else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
             //else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
 
-            vec2 kIndex = vec2(((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5)/(u_textureDim.x*12.0), scaledFragCoord.y);
+            float kPosition = ((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5);
+            vec2 kIndex = vec2(kPosition/(u_textureDim.x*12.0), scaledFragCoord.y);
             vec3 translationalK = texture2D(u_compositeKs, kIndex).xyz;
             vec3 translationalD = texture2D(u_compositeDs, kIndex).xyz;
+            kIndex.x = (kPosition+1.0)/(u_textureDim.x*12.0);
+            vec3 rotationalK = texture2D(u_compositeKs, kIndex).xyz;
+            vec3 rotationalD = texture2D(u_compositeDs, kIndex).xyz;
 
             vec4 averageQuaternion = averageQuaternions(quaternion, neighborQuaternion);
             vec4 averageQuaternionInverse = invertQuaternion(averageQuaternion);
@@ -276,9 +360,18 @@ void main(){
             vec3 _force = translationalK*translationalDeltaXYZ + translationalD*velocityDeltaXYZ;
             //convert _force vector back into world reference frame
             _force = applyQuaternion(_force, averageQuaternion);
-            force += _force;
+
+
+            ////translational forces cause rotation in cell - convert to cell reference frame
+            torque += cross(halfNominalD, applyQuaternion(_force, invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
+
+            //bending and torsion
+            vec4 quaternionDiff = multiplyQuaternions(invertQuaternion(quaternion), neighborQuaternion);
+            vec3 diffEuler = eulerFromQuaternion(quaternionDiff);
+            torque += 0.00001*rotationalK*diffEuler;// + rotationalD*(neighborAngVelocity[_axis]-angVelocity[_axis]);
         }
     }
 
-    gl_FragColor = vec4(force, 0);
+    angVelocity += torque/momOfInertia;
+    gl_FragColor = vec4(angVelocity, 0);
 }
