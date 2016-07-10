@@ -1142,6 +1142,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 this.translation = new Float32Array(textureSize*4);
                 this.lastVelocity = new Float32Array(textureSize*4);
                 this.velocity = new Float32Array(textureSize*4);
+                this.acceleration = new Float32Array(textureSize*4);
                 this.lastQuaternion = new Float32Array(textureSize*4);
                 this.quaternion = new Float32Array(textureSize*4);
                 this.lastAngVelocity = new Float32Array(textureSize*4);
