@@ -745,8 +745,15 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     }
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
-                    var nextVelocity = [velocity[0] + acceleration[0]*dt, velocity[1] + acceleration[1]*dt, velocity[2] + acceleration[2]*dt];
-                    var nextTranslation  = [translation[0] + velocity[0]*dt, translation[1] + velocity[1]*dt, translation[2] + velocity[2]*dt];
+                    var nextTranslation  = [
+                            translation[0]*2 - this.lastLastTranslation[rgbaIndex] + acceleration[0]*dt*dt,
+                            translation[1]*2 - this.lastLastTranslation[rgbaIndex+1] + acceleration[1]*dt*dt,
+                            translation[2]*2 - this.lastLastTranslation[rgbaIndex+2] + acceleration[2]*dt*dt
+                    ];
+                    var nextVelocity = [
+                        (nextTranslation[0] - translation[0])/dt,
+                        (nextTranslation[1] - translation[1])/dt,
+                        (nextTranslation[2] - translation[2])/dt];
 
                     this.translation[rgbaIndex] = nextTranslation[0];
                     this.translation[rgbaIndex+1] = nextTranslation[1];
@@ -801,7 +808,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 }
 
                 this._swapArrays("velocity", "lastVelocity");
-                this._swapArrays("translation", "lastTranslation");
+                this._swap3Arrays("translation", "lastTranslation", "lastLastTranslation");
                 this._swapArrays("quaternion", "lastQuaternion");
                 this._swapArrays("angVelocity", "lastAngVelocity");
             },
@@ -1090,6 +1097,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var temp = this[array1Name];
                 this[array1Name] = this[array2Name];
                 this[array2Name] = temp;
+            },
+
+            _swap3Arrays: function(array1Name, array2Name, array3Name){
+                var temp = this[array3Name];
+                this[array3Name] = this[array2Name];
+                this[array2Name] = this[array1Name];
+                this[array1Name] = temp;
             },
 
             reset: function(){
