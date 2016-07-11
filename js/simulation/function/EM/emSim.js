@@ -17,7 +17,7 @@ define(['three', 'underscore', 'backbone', 'threeModel', 'appState', 'Sim', 'emS
                 visibleActuator: 0,
 
                 groundHeight: 0,
-                friction: true
+                friction: false
             }
         ),
 

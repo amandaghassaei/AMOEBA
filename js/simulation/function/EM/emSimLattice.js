@@ -193,7 +193,14 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         });
 
                         if (wireIndices.length == 2){
-                            self.wires[rgbaIndex] = -1;//-1 indicates actuator mask
+
+                            //actuator type - 0 indicates nothing, -1=longitudal, -2=bending, -3=torsional, 4, 5=shear
+                            if (cell.getMaterialID() == "actuatorLinear1DOF") self.wires[rgbaIndex] = -1;
+                            else if (cell.getMaterialID() == "actuatorBending1DOF") self.wires[rgbaIndex] = -2;
+                            else if (cell.getMaterialID() == "actuatorTorsion1DOF") self.wires[rgbaIndex] = -3;
+                            else if (cell.getMaterialID() == "actuatorShear") self.wires[rgbaIndex] = -4;
+                            else if (cell.getMaterialID() == "actuatorShear") self.wires[rgbaIndex] = -5;//todo fix this
+
                             //use remaining three spots to indicate axial direction and wire group num
                             self.wires[rgbaIndex+1] = wireIndices[0];
                             self.wires[rgbaIndex+2] = wireIndices[1];
@@ -474,18 +481,18 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         return;
                     }
 
-                    wiresMeta[i+3] = wire.getPolarity();
+                    var polarity = wire.getPolarity();
                     var waveformType = signal.waveformType;
                     if (waveformType == "sine"){
-                        wiresMeta[i] = 0;
+                        wiresMeta[i] = 0+polarity*4;
                     } else if (waveformType == "square"){
-                        wiresMeta[i] = 1;
+                        wiresMeta[i] = 1+polarity*4;
                         wiresMeta[i+3] = signal.pwm
                     } else if (waveformType == "saw"){
-                        wiresMeta[i] = 2;
-                        if (signal.invertSignal) wiresMeta[i+3] =  Math.abs(1-wiresMeta[i+3]);
+                        wiresMeta[i] = 2+polarity*4;
+                        if (signal.invertSignal) wiresMeta[i+3] = signal.invertSignal;
                     } else if (waveformType == "triangle"){
-                        wiresMeta[i] = 3;
+                        wiresMeta[i] = 3+polarity*4;
                     }
                     wiresMeta[i+1] = signal.frequency;
                     wiresMeta[i+2] = signal.phase;
@@ -690,7 +697,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     var angVelocity = [this.lastAngVelocity[rgbaIndex], this.lastAngVelocity[rgbaIndex+1], this.lastAngVelocity[rgbaIndex+2]];
 
                     var wiring = [this.wires[rgbaIndex], this.wires[rgbaIndex+1], this.wires[rgbaIndex+2], this.wires[rgbaIndex+3]];
-                    var isActuator = wiring[0] == -1;//properly wired actuator
+                    var actuatorType = wiring[0];//properly wired actuator has type < 0
 
                     for (var j=0;j<6;j++) {
 
@@ -715,18 +722,24 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var nominalD = this._neighborOffset(j, latticePitch);
 
                         var neighborAxis = Math.floor(j / 2);
+                        var neighborSign = Math.floor(j%3);
+
                         var actuation = 0;
-                        if (isActuator && wiring[3] == neighborAxis) {
+                        var _actuatorType = -1;
+                        if (actuatorType<0 && wiring[3] == neighborAxis) {
+                            _actuatorType = actuatorType;
                             actuation += 0.3*(this._getActuatorVoltage(wiring[1], time) - this._getActuatorVoltage(wiring[2], time));
                         } else {
                             var neighborWiring = [this.wires[neighborIndex], this.wires[neighborIndex+1], this.wires[neighborIndex+2], this.wires[neighborIndex+3]];
-                            var neighborIsActuator = neighborWiring[0] == -1;//properly wired actuator
-                            if (neighborIsActuator && neighborWiring[3] == neighborAxis){
+                            var neighborActuatorType = neighborWiring[0];//properly wired actuator has type < 0
+                            _actuatorType = neighborActuatorType;
+                            if (neighborActuatorType<0 && neighborWiring[3] == neighborAxis){
                                 actuation += 0.3*(this._getActuatorVoltage(neighborWiring[1], time) - this._getActuatorVoltage(neighborWiring[2], time));
                             }
                         }
                         var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
-                        actuatedD[neighborAxis] *= 1+actuation;
+                        if (_actuatorType == -1) actuatedD[neighborAxis] *= 1+actuation;//linear actuator
+                        else if (_actuatorType == -4) { actuatedD[1] += actuatedD[neighborAxis]*actuation;//shear
 
                         //convert translational offsets to correct reference frame
                         var halfNominalD = this._multiplyVectorScalar(actuatedD, 0.5);
@@ -762,6 +775,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         //bending and torsion
                         var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
                         var diffEuler = this._eulerFromQuaternion(quaternionDiff);
+                        //if (_actuatorType == -3) {//torsional actuator
+                        //    if (neighborSign) actuation *= -1;
+                        //    diffEuler[neighborAxis] += 0.5*actuation;
+                        //} else if (_actuatorType == -2){
+                        //    diffEuler[wiring[3]] += actuation;
+                        //}
                         for (var _axis = 0; _axis < 3; _axis++) {
                             rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// + rotationalD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                         }
@@ -1108,6 +1127,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     //todo this is a bug - no signal connected
                     return 0;
                 }
+                var polarity = Math.floor(type/4);
+                type = type%4;
+
+
                 var frequency = wireMeta[1];
                 var period = 1/frequency;
                 var phase = wireMeta[2];
@@ -1115,6 +1138,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 var invert = 1;
                 if (wireMeta[3] == 1) invert = -1;
+                if (polarity) invert = -invert;
 
                 if (type == 0){
                     return invert*0.5*Math.sin(2*Math.PI*currentPhase);
