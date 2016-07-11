@@ -18,6 +18,15 @@ define(['underscore'], function(_){
         return this.signals.length > 1;
     };
 
+    EMWire.prototype.setPolarity = function(polarity){
+        this.polarity = polarity;
+    };
+
+    EMWire.prototype.getPolarity = function(){
+        if (this.polarity != 0 && this.polarity != 1) console.warn("invalid polarity");
+        return this.polarity;
+    };
+
     EMWire.prototype.getSignal = function(){
         return this.signals[0];
     };

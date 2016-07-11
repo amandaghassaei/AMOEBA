@@ -159,7 +159,7 @@ define(["underscore", "cell", "lattice", "plist", "three"],
     };
 
     DMACell.prototype.isAcutator = function(){
-        return this.getMaterialID() == "actuator";
+        return this.getMaterial().properties.actuator;
     };
 
     DMACell.prototype.isSignalGenerator = function(){
@@ -252,18 +252,20 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         var axes = this.getMaterial().properties.conductiveAxes;
         if (!neighborAxes || !axes) return false;
 
+        var offset = neighbor.getIndex().sub(this.getIndex());
+
         var canConnect = false;
         var self = this;
         _.each(neighborAxes, function(neighborAxis){
             var neighborVector = new THREE.Vector3(neighborAxis.x, neighborAxis.y, neighborAxis.z);
             neighborVector.applyQuaternion(neighbor.getOrientation());
-            _.each(axes, function(axis, index){
-                var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
-                vector.applyQuaternion(self.getOrientation());
-                if (vector.dot(neighborVector) < -0.9) {
-                    canConnect = true;
-                }
-            });
+            if (offset.clone().dot(neighborVector) < -0.9) {
+                _.each(axes, function (axis) {
+                    var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
+                    vector.applyQuaternion(self.getOrientation());
+                    if (vector.dot(neighborVector) < -0.9) canConnect = true;
+                });
+            }
         });
         return canConnect;
     };
