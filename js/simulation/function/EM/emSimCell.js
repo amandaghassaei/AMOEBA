@@ -214,9 +214,24 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         return this.nominalSize;
     };
 
-    DMACell.prototype.setWireGroup = function(num, force){
-        if (force) this._wireGroup = num;
-        else if (this._wireGroup>num){
+    DMACell.prototype.setWireGroup = function(num, force, fromVector){
+        if (force) {
+            this._wireGroup = num;
+            return;
+        }
+        if (this._wireGroup>num){
+
+            //check if we can connect on this side
+            var axes = this.getMaterial().properties.conductiveAxes;
+            var canConnect = false;
+            var self = this;
+            _.each(axes, function(axis){
+                var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
+                vector.applyQuaternion(self.getOrientation());
+                if (vector.dot(fromVector) < -0.9) canConnect = true;
+            });
+            if (!canConnect) return;
+
             this._wireGroup = num;
             this.propagateWireGroup(this.calcNeighbors(this.getIndex()), num);
         }
@@ -269,8 +284,27 @@ define(["underscore", "cell", "lattice", "plist", "three"],
     DMACell.prototype.propagateWireGroup = function(neighbors, num){
         if (!this.isConductive()) return;
         if (num === undefined) num = this._wireGroup;
-        _.each(neighbors, function(neighbor){
-            if(neighbor) neighbor.setWireGroup(num);
+
+        //calc axes to propagate
+        var axes = this.getMaterial().properties.conductiveAxes;
+        var self = this;
+        _.each(axes, function(axis){
+            var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
+            vector.applyQuaternion(self.getOrientation());
+            var index = 0;
+            if (Math.abs(vector.x) > 0.9){
+                if (vector.x > 0) index++;
+            }
+            else if (Math.abs(vector.y) > 0.9) {
+                index = 2;
+                if (vector.y > 0) index++;
+            }
+            else if (Math.abs(vector.z) > 0.9) {
+                index = 4;
+                if (vector.z > 0) index++;
+            } else console.warn("bad vector " + axis.toString());
+
+            if (neighbors[index]) neighbors[index].setWireGroup(num, false, vector);
         });
     };
 

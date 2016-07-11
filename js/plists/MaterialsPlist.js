@@ -117,6 +117,10 @@ define([], function(){
                     mesh: "wireStraight",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:0, y:0, z:1},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -131,6 +135,10 @@ define([], function(){
                     mesh: "wireBent",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -145,6 +153,11 @@ define([], function(){
                     mesh: "wireJunction1",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:-1, y:0, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -159,6 +172,11 @@ define([], function(){
                     mesh: "wireJunction2",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:0, y:1, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -174,6 +192,10 @@ define([], function(){
                     mesh: "wireStraight",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:0, y:0, z:1},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 3500,//kg/m^3
                         longitudalK:{x:30,y:30,z:30},
                         shearK:{xy:30,xz:30,yx:30,yz:30,zx:30,zy:30},
@@ -189,6 +211,10 @@ define([], function(){
                     mesh: "wireBent",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 3500,//kg/m^3
                         longitudalK:{x:30,y:30,z:30},
                         shearK:{xy:30,xz:30,yx:30,yz:30,zx:30,zy:30},
@@ -204,6 +230,11 @@ define([], function(){
                     mesh: "wireJunction1",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:-1, y:0, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -219,6 +250,11 @@ define([], function(){
                     mesh: "wireJunction2",
                     properties:{
                         conductive: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:0, y:1, z:0},
+                            {x:0, y:0, z:-1}
+                        ],
                         density: 8500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -288,28 +324,28 @@ define([], function(){
                     altColor: "#0EE3B8",
                     mesh: "siliconModule",
                     properties:{
-                        conductive: true,
+                        conductive: false,
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
                         bendingK:{x:80,y:80,z:80},
                         torsionK:{x:80,y:80,z:80}
                     }
-                },
-                script: {
-                    name: "Programmable Logic",
-                    color: "#0EE3B8",
-                    altColor: "#0EE3B8",
-                    mesh: "siliconModule",
-                    properties:{
-                        conductive: true,
-                        density: 6500,//kg/m^3
-                        longitudalK:{x:80,y:80,z:80},
-                        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
-                        bendingK:{x:80,y:80,z:80},
-                        torsionK:{x:80,y:80,z:80}
-                    }
-                }
+                }//,
+                //transistor: {
+                //    name: "Transistor (Coming Soon)",
+                //    color: "#0EE3B8",
+                //    altColor: "#0EE3B8",
+                //    mesh: "wireJunction1",
+                //    properties:{
+                //        conductive: false,
+                //        density: 6500,//kg/m^3
+                //        longitudalK:{x:80,y:80,z:80},
+                //        shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
+                //        bendingK:{x:80,y:80,z:80},
+                //        torsionK:{x:80,y:80,z:80}
+                //    }
+                //}
             },
             elementMech: {
                 brass: {
