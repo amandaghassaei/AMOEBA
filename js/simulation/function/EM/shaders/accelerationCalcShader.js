@@ -70,6 +70,7 @@ int convertToInt(float num){
 }
 
 float getActuatorVoltage(float wireIndex){
+
     vec2 wireCoord = vec2(0.5, (floor(wireIndex+0.001)+0.5)/u_wiresMetaLength);
     vec4 wireMeta = texture2D(u_wiresMeta, wireCoord);
     int type = convertToInt(wireMeta[0]);
@@ -77,25 +78,34 @@ float getActuatorVoltage(float wireIndex){
         //no signal connected
         return 0.0;
     }
+
+    int polarity = type/4;
+    type = convertToInt(mod(float(type), 4.0));
+
     float frequency = wireMeta[1];
     float period = 1.0/frequency;
     float phase = wireMeta[2];
     float currentPhase = mod(u_time+phase*period, period)/period;
+
+    float invert = 1.0;
+    if (wireMeta[3] > 0.5) invert = -1.0;
+    if (polarity > 0) invert = -invert;
+
     if (type == 0){
-        return 0.5*sin(2.0*M_PI*currentPhase);
+        return invert*0.5*sin(2.0*M_PI*currentPhase);
     }
     if (type == 1){
         float pwm = wireMeta[3];
-        if (currentPhase < pwm) return 0.5;
-        return -0.5;
+        if (currentPhase < pwm) return invert*0.5;
+        return -0.5*invert;
     }
     if (type == 2){
-        if (wireMeta[3]>0.5) return 0.5-currentPhase;
-        return currentPhase-0.5;
+        if (wireMeta[3]>0.5) return invert*(0.5-currentPhase);
+        return invert*(currentPhase-0.5);
     }
     if (type == 3){
-        if (currentPhase < 0.5) return currentPhase*2.0-0.5;
-        return 0.5-(currentPhase-0.5)*2.0;
+        if (currentPhase < 0.5) return invert*(currentPhase*2.0-0.5);
+        return invert*(0.5-(currentPhase-0.5)*2.0);
     }
     return 0.0;
 }
@@ -193,7 +203,7 @@ void main(){
     vec4 quaternion = texture2D(u_lastQuaternion, scaledFragCoord);
 
     vec4 wiring = texture2D(u_wires, scaledFragCoord);
-    bool isActuator = wiring[0] < -0.5;//-1
+    int actuatorType = convertToInt(wiring[0]);//>-1 means no actuator
 
     //simple collision
     float zPosition = texture2D(u_originalPosition, scaledFragCoord).z + translation.z*u_multiplier - u_groundHeight;
@@ -234,33 +244,32 @@ void main(){
             vec4 neighborQuaternion = texture2D(u_lastQuaternion, scaledNeighborIndex);
 
             vec3 nominalD = neighborOffset(i*3.0+float(j));
-            vec3 halfNominalD = nominalD/2.0;
+
+            float actuation = 0.0;
+            int _actuatorType = -1;
+            if (actuatorType<0 && convertToInt(wiring[3]) == neighborAxis) {
+                _actuatorType = actuatorType;
+                actuation += 0.3*(getActuatorVoltage(wiring[1]) - getActuatorVoltage(wiring[2]));
+            } else {
+                vec4 neighborWiring = texture2D(u_wires, scaledNeighborIndex);
+                int neighborActuatorType = convertToInt(neighborWiring[0]);//properly wired actuator has type < 0
+                _actuatorType = neighborActuatorType;
+                if (neighborActuatorType<0 && convertToInt(neighborWiring[3]) == neighborAxis){
+                    actuation += 0.3*(getActuatorVoltage(neighborWiring[1]) - getActuatorVoltage(neighborWiring[2]));
+                }
+            }
+            vec3 actuatedD = vec3(nominalD[0], nominalD[1], nominalD[2]);
+            for (int _i=0;_i<3;_i++){
+                if (_i != neighborAxis) continue;
+                if (_actuatorType == -1) actuatedD[_i] *= 1.0+actuation;//linear actuator
+                else if (_actuatorType == -4) actuatedD[0] += actuatedD[_i]*actuation;//shear x
+                else if (_actuatorType == -5) actuatedD[1] += actuatedD[_i]*actuation;//shear y
+                else if (_actuatorType == -6) actuatedD[2] += actuatedD[_i]*actuation;//shear z
+            }
+
+            vec3 halfNominalD = actuatedD/2.0;
             vec3 cellHalfNominalD = applyQuaternion(halfNominalD, quaternion);//halfNominalD in cell's reference frame
             vec3 neighborHalfNominalD = applyQuaternion(halfNominalD, neighborQuaternion);//halfNominalD in neighbor's reference frame
-            //vec3 actuatedD = vec3(nominalD[0], nominalD[1], nominalD[2]);
-            //float actuation = 0.0;
-            //if (isActuator){
-            //    if (neighborAxis == 0 && wiring[1]>0.1){//>0
-            //        actuation += 0.3*getActuatorVoltage(wiring[1]-1.0);
-            //    } else if (neighborAxis == 1 && wiring[2]>0.1){
-            //        actuation += 0.3*getActuatorVoltage(wiring[2]-1.0);
-            //    } else if (neighborAxis == 2 && wiring[3]>0.1){
-            //        actuation += 0.3*getActuatorVoltage(wiring[3]-1.0);
-            //    }
-            //}
-            //vec4 neighborWiring = texture2D(u_wires, scaledNeighborIndex);
-            //if (neighborWiring[0] < -0.5){
-            //    if (neighborAxis == 0 && neighborWiring[1]>0.1){
-            //        actuation += 0.3*getActuatorVoltage(neighborWiring[1]-1.0);
-            //    } else if (neighborAxis == 1 && neighborWiring[2]>0.1){
-            //        actuation += 0.3*getActuatorVoltage(neighborWiring[2]-1.0);
-            //    } else if (neighborAxis == 2 && neighborWiring[3]>0.1){
-            //        actuation += 0.3*getActuatorVoltage(neighborWiring[3]-1.0);
-            //    }
-            //}
-            //if (neighborAxis == 0) actuatedD[0] *= 1.0+actuation;
-            //else if (neighborAxis == 1) actuatedD[1] *= 1.0+actuation;
-            //else if (neighborAxis == 2) actuatedD[2] *= 1.0+actuation;
 
             vec2 kIndex = vec2(((fragCoord.x-0.5)*12.0 + 2.0*(i*3.0+float(j)) + 0.5)/(u_textureDim.x*12.0), scaledFragCoord.y);
             vec3 translationalK = texture2D(u_compositeKs, kIndex).xyz;
