@@ -429,7 +429,17 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                 var wires = this.get("wires");
                 var signalConflict = false;
                 _.each(this.get("signals"), function(signal){
-                    signalConflict |= wires[signal.getWireGroup()].addSignal(signal);
+                    _.each(signal.terminals, function(wireNum){
+                        if (wireNum < 0 ) return;
+                        signalConflict |= wires[wireNum].addSignal(signal);
+                    });
+                });
+                _.each(this.get("signals"), function(signal){
+                    _.each(signal.calcNeighbors(signal.getIndex()), function(neighbor){
+                        if (neighbor && neighbor.isSignalGenerator()){
+                            if (signal.isConnectedTo(neighbor)) signalConflict = true;
+                        }
+                    })
                 });
                 this.set("signalConflict", signalConflict);
             },

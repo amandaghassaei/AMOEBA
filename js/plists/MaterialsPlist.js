@@ -30,6 +30,7 @@ define([], function(){
                     altColor: "#8a2be2",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -45,6 +46,7 @@ define([], function(){
                     mesh: "bending1dof",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -60,6 +62,7 @@ define([], function(){
                     mesh: "bending2dof",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -75,6 +78,7 @@ define([], function(){
                     mesh: "torsion1dof",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -89,6 +93,7 @@ define([], function(){
                     texture: "cubeTextureShearFlex",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:2,zy:80},
@@ -103,6 +108,7 @@ define([], function(){
                     texture: "stripes",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 3500,//kg/m^3
                         longitudalK:{x:10,y:10,z:10},
                         shearK:{xy:10,xz:10,yx:10,yz:10,zx:10,zy:10},
@@ -117,6 +123,7 @@ define([], function(){
                     mesh: "wireStraight",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:0, y:0, z:1},
                             {x:0, y:0, z:-1}
@@ -135,6 +142,7 @@ define([], function(){
                     mesh: "wireBent",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:0, y:0, z:-1}
@@ -153,6 +161,7 @@ define([], function(){
                     mesh: "wireJunction1",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:-1, y:0, z:0},
@@ -172,6 +181,7 @@ define([], function(){
                     mesh: "wireJunction2",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:0, y:1, z:0},
@@ -192,6 +202,7 @@ define([], function(){
                     mesh: "wireStraight",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:0, y:0, z:1},
                             {x:0, y:0, z:-1}
@@ -211,6 +222,7 @@ define([], function(){
                     mesh: "wireBent",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:0, y:0, z:-1}
@@ -230,6 +242,7 @@ define([], function(){
                     mesh: "wireJunction1",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:-1, y:0, z:0},
@@ -250,6 +263,7 @@ define([], function(){
                     mesh: "wireJunction2",
                     properties:{
                         conductive: true,
+                        silicon: false,
                         conductiveAxes: [
                             {x:1, y:0, z:0},
                             {x:0, y:1, z:0},
@@ -269,6 +283,7 @@ define([], function(){
                     texture: "cubeTexture",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -283,6 +298,7 @@ define([], function(){
                     mesh: "bending1dof",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -297,6 +313,7 @@ define([], function(){
                     mesh: "torsion1dof",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -311,6 +328,7 @@ define([], function(){
                     texture: "cubeTextureShear",
                     properties:{
                         conductive: false,
+                        silicon: false,
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},
@@ -325,6 +343,11 @@ define([], function(){
                     mesh: "siliconModule",
                     properties:{
                         conductive: false,
+                        silicon: true,
+                        conductiveAxes: [
+                            {x:1, y:0, z:0},
+                            {x:-1, y:0, z:0}
+                        ],
                         density: 6500,//kg/m^3
                         longitudalK:{x:80,y:80,z:80},
                         shearK:{xy:80,xz:80,yx:80,yz:80,zx:80,zy:80},

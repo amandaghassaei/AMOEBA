@@ -167,6 +167,7 @@ define(["underscore", "cell", "lattice", "plist", "three"],
     };
 
     DMACell.prototype.setAsSignalGenerator = function(json){
+        this.terminals = [-1,-1];//storage for connecting wires
         if (json){
             this.pwm = json.pwm;
             this.frequency = json.frequency;
@@ -202,6 +203,10 @@ define(["underscore", "cell", "lattice", "plist", "three"],
         return this.getMaterial().isConductive();
     };
 
+    DMACell.prototype.isSilicon = function(){
+        return this.getMaterial().isSilicon();
+    };
+
     EMSimCell.prototype.isActuator = function(){
         return this.cell.getMaterialID() == "actuator";
     };
@@ -219,22 +224,48 @@ define(["underscore", "cell", "lattice", "plist", "three"],
             this._wireGroup = num;
             return;
         }
-        if (this._wireGroup>num){
+        if ((this.isConductive() && this._wireGroup>num) || this.isSilicon()){
 
             //check if we can connect on this side
             var axes = this.getMaterial().properties.conductiveAxes;
             var canConnect = false;
             var self = this;
-            _.each(axes, function(axis){
+            _.each(axes, function(axis, index){
                 var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
                 vector.applyQuaternion(self.getOrientation());
-                if (vector.dot(fromVector) < -0.9) canConnect = true;
+                if (vector.dot(fromVector) < -0.9) {
+                    if (self.isSilicon()) self.terminals[index] = num;
+                    canConnect = true;
+                }
             });
             if (!canConnect) return;
+
+            if (!this.isConductive()) return;
 
             this._wireGroup = num;
             this.propagateWireGroup(this.calcNeighbors(this.getIndex()), num);
         }
+    };
+
+    DMACell.prototype.isConnectedTo = function(neighbor){
+        var neighborAxes = neighbor.getMaterial().properties.conductiveAxes;
+        var axes = this.getMaterial().properties.conductiveAxes;
+        if (!neighborAxes || !axes) return false;
+
+        var canConnect = false;
+        var self = this;
+        _.each(neighborAxes, function(neighborAxis){
+            var neighborVector = new THREE.Vector3(neighborAxis.x, neighborAxis.y, neighborAxis.z);
+            neighborVector.applyQuaternion(neighbor.getOrientation());
+            _.each(axes, function(axis, index){
+                var vector = new THREE.Vector3(axis.x, axis.y, axis.z);
+                vector.applyQuaternion(self.getOrientation());
+                if (vector.dot(neighborVector) < -0.9) {
+                    canConnect = true;
+                }
+            });
+        });
+        return canConnect;
     };
 
     DMACell.prototype.calcNeighbors = function(index){
