@@ -198,8 +198,13 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                             if (cell.getMaterialID() == "actuatorLinear1DOF") self.wires[rgbaIndex] = -1;
                             else if (cell.getMaterialID() == "actuatorBending1DOF") self.wires[rgbaIndex] = -2;
                             else if (cell.getMaterialID() == "actuatorTorsion1DOF") self.wires[rgbaIndex] = -3;
-                            else if (cell.getMaterialID() == "actuatorShear") self.wires[rgbaIndex] = -4;
-                            else if (cell.getMaterialID() == "actuatorShear") self.wires[rgbaIndex] = -5;//todo fix this
+                            else if (cell.getMaterialID() == "actuatorShear") {
+                                var vector = new THREE.Vector3(1,0,0);
+                                vector.applyQuaternion(cell.getOrientation());
+                                if (Math.abs(vector.x)>0.9) self.wires[rgbaIndex] = -4;
+                                else if (Math.abs(vector.y)>0.9) self.wires[rgbaIndex] = -5;
+                                else if (Math.abs(vector.z)>0.9) self.wires[rgbaIndex] = -6;
+                            }
 
                             //use remaining three spots to indicate axial direction and wire group num
                             self.wires[rgbaIndex+1] = wireIndices[0];
@@ -739,7 +744,9 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         }
                         var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
                         if (_actuatorType == -1) actuatedD[neighborAxis] *= 1+actuation;//linear actuator
-                        else if (_actuatorType == -4) { actuatedD[1] += actuatedD[neighborAxis]*actuation;//shear
+                        else if (_actuatorType == -4) actuatedD[0] += actuatedD[neighborAxis]*actuation;//shear x
+                        else if (_actuatorType == -5) actuatedD[1] += actuatedD[neighborAxis]*actuation;//shear y
+                        else if (_actuatorType == -6) actuatedD[2] += actuatedD[neighborAxis]*actuation;//shear z
 
                         //convert translational offsets to correct reference frame
                         var halfNominalD = this._multiplyVectorScalar(actuatedD, 0.5);
