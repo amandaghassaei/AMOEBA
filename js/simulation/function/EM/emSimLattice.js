@@ -609,10 +609,10 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     "u_translation");
                 gpuMath.step("velocityCalc", ["u_translation", "u_lastTranslation"], "u_velocity");
 
-                gpuMath.step("angVelocityCalc", ["u_lastAngVelocity", "u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
-                    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_lastQuaternion", "u_wires",
-                    "u_wiresMeta"], "u_angVelocity", time);
-                gpuMath.step("quaternionCalc", ["u_angVelocity", "u_lastQuaternion", "u_mass"], "u_quaternion");
+                //gpuMath.step("angVelocityCalc", ["u_lastAngVelocity", "u_lastVelocity", "u_lastTranslation", "u_mass", "u_neighborsXMapping",
+                //    "u_neighborsYMapping", "u_compositeKs", "u_compositeDs", "u_lastQuaternion", "u_wires",
+                //    "u_wiresMeta"], "u_angVelocity", time);
+                //gpuMath.step("quaternionCalc", ["u_angVelocity", "u_lastQuaternion", "u_mass"], "u_quaternion");
 
                 if (shouldRender) {
                     var textureSize = this.textureSize[0]*this.textureSize[1];
@@ -670,8 +670,8 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                 gpuMath.swapTextures("u_velocity", "u_lastVelocity");
                 gpuMath.swap3Textures("u_translation", "u_lastTranslation", "u_lastLastTranslation");
-                gpuMath.swapTextures("u_angVelocity", "u_lastAngVelocity");
-                gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
+                //gpuMath.swapTextures("u_angVelocity", "u_lastAngVelocity");
+                //gpuMath.swapTextures("u_quaternion", "u_lastQuaternion");
                 return;
 
                 var gravity = runConstants.gravity;
