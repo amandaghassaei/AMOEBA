@@ -14,8 +14,8 @@ define([], function(){
             em:{
                 fiberGlass: {
                     name: "Structural Insulating",
-                    color: "#8a2be2",
-                    altColor: "#8a2be2",
+                    color: "#FCEFB5",
+                    altColor: "#FCEFB5",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
