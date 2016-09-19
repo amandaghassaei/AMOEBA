@@ -26,8 +26,8 @@ define([], function(){
             em:{
                 insulating: {
                     name: "Structural",
-                    color: "#8a2be2",
-                    altColor: "#8a2be2",
+                    color: "#fcefb5",
+                    altColor: "#fcefb5",
                     properties:{
                         conductive: false,
                         density: 3500,//kg/m^3
