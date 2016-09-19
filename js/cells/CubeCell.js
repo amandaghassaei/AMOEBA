@@ -8,7 +8,8 @@ define(['three', 'cell'],
 
     //var unitCellGeo = new THREE.BoxGeometry(1,1,1);
 
-    var unitCellGeo = new THREE.BoxGeometry(1,1,1);//new THREE.Geometry();
+    var unitCellGeo = new THREE.BoxGeometry(1,1,1);//new THREE.Geometry()
+    var wireframeMaterial = new THREE.LineBasicMaterial({color:0x000000, linewidth:1});
     //
     //    //box vertices
     //unitCellGeo.vertices = [
@@ -83,10 +84,9 @@ define(['three', 'cell'],
     };
 
     CubeCell.prototype._buildWireframe = function(mesh){//abstract mesh representation of cell
-        var wireframe = new THREE.EdgesHelper(mesh);
-        wireframe.material.color.set(0x000000);
-        wireframe.matrixWorld = mesh.matrixWorld;
-        wireframe.matrixAutoUpdate = true;
+        var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry), wireframeMaterial);
+        //wireframe.matrixWorld = mesh.matrixWorld;
+        //wireframe.matrixAutoUpdate = true;
         return wireframe;
     };
 

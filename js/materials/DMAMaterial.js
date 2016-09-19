@@ -8,6 +8,7 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
     var materialNum = 1;//outward facing name
 
     var customMeshTypes = [];
+    var textureLoader = new THREE.TextureLoader();
 
     var torsion1dof = new THREE.Geometry();
         //torsion
@@ -519,7 +520,11 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){
         if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent:true, opacity:0.4});
         var json = {color: color};
-        if (this.texture) json.map = THREE.ImageUtils.loadTexture("assets/textures/"+this.texture+".png");
+        if (this.texture) {
+            textureLoader.load("assets/textures/"+this.texture+".png", function(texture){
+                json.map = texture;//todo not sure if this loades on time
+            });
+        }
         return new THREE.MeshLambertMaterial(json);
     };
 

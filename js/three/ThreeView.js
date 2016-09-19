@@ -53,10 +53,10 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         },
 
         _setControlsEnabled: function(){
-            var state = appState.get("shift") || appState.get("extrudeMode");
-            this.controls.noRotate = state;
-            this.controls.noPan = state;
-            this.controls.noZoom = state;
+            var state = !(appState.get("shift") || appState.get("extrudeMode"));
+            this.controls.enableRotate = state;
+            this.controls.enablePan = state;
+            this.controls.enableZoom = state;
         },
 
         reset3DNavigation: function(){
@@ -74,9 +74,9 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
         _mouseOut: function(){
             if (globals.get("highlighter")) globals.get("highlighter").setNothingHighlighted();
             this._setNoPartIntersections();
-            this.controls.noRotate = false;
-            this.controls.noPan = false;
-            this.controls.noZoom = false;
+            this.controls.enableRotate = true;
+            this.controls.enablePan = true;
+            this.controls.enableZoom = true;
         },
 
         _isDragging: function(){
@@ -107,9 +107,9 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
             } else if (this.leftClick && !this.rightClick) {
                 highlighter.addRemoveVoxel(!appState.get("deleteMode"));
                 if (highlighter.highlightingArrow()) {
-                    this.controls.noRotate = false;
-                    this.controls.noPan = false;
-                    this.controls.noZoom = false;
+                    this.controls.enableRotate = true;
+                    this.controls.enablePan = true;
+                    this.controls.enableZoom = true;
                 }
             }
             switch (e.which) {
@@ -144,9 +144,9 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             globals.get("highlighter").mouseDown();
             if (globals.get("highlighter").highlightingArrow()){
-                this.controls.noRotate = true;
-                this.controls.noPan = true;
-                this.controls.noZoom = true;
+                this.controls.enableRotate = false;
+                this.controls.enablePan = false;
+                this.controls.enableZoom = false;
             }
         },
 
@@ -156,7 +156,7 @@ define(['underscore', 'backbone', 'three', 'appState', 'globals', 'lattice', 'or
 
             //if (!(appState.get("manualSelectOrigin"))) return;//todo ?
 
-            if (this._isDragging() && !this.controls.noRotate) {//in the middle of a camera move
+            if (this._isDragging() && this.controls.enableRotate) {//in the middle of a camera move
                 globals.get("highlighter").setNothingHighlighted();
                 this._setNoPartIntersections();
                 return;

@@ -3,7 +3,7 @@
  */
 
 
-define(['underscore', 'three', 'combinedCamera'], function(_, THREE){
+define(['underscore', 'three'], function(_, THREE){
 
     //var camera = new THREE.CombinedCamera( window.innerWidth / 2, window.innerHeight / 2, 60, 0.01, 1000, - 500, 1000 );
     var camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.01, 1000);
