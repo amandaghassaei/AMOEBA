@@ -520,12 +520,13 @@ define(['underscore', 'appState', 'three'], function(_, appState, THREE){
     DMAMaterial.prototype._makeMaterialObject = function(color, transparent){
         if (transparent) return new THREE.MeshLambertMaterial({color:color, transparent:true, opacity:0.4});
         var json = {color: color};
+        var material = new THREE.MeshLambertMaterial(json);
         if (this.texture) {
             textureLoader.load("assets/textures/"+this.texture+".png", function(texture){
-                json.map = texture;//todo not sure if this loades on time
+                material.map = texture;
             });
         }
-        return new THREE.MeshLambertMaterial(json);
+        return material;
     };
 
     DMAMaterial.prototype.getThreeMaterial = function(){
