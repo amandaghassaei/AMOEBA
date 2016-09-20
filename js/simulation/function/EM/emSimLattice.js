@@ -729,27 +729,27 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var neighborAxis = Math.floor(j / 2);
                         var neighborSign = Math.floor(j%3);
 
-                        var actuation = 0;
-                        var _actuatorType = -1;
-                        if (actuatorType<0 && wiring[3] == neighborAxis) {
-                            _actuatorType = actuatorType;
-                            actuation += 0.3*(this._getActuatorVoltage(wiring[1], time) - this._getActuatorVoltage(wiring[2], time));
-                        } else {
-                            var neighborWiring = [this.wires[neighborIndex], this.wires[neighborIndex+1], this.wires[neighborIndex+2], this.wires[neighborIndex+3]];
-                            var neighborActuatorType = neighborWiring[0];//properly wired actuator has type < 0
-                            _actuatorType = neighborActuatorType;
-                            if (neighborActuatorType<0 && neighborWiring[3] == neighborAxis){
-                                actuation += 0.3*(this._getActuatorVoltage(neighborWiring[1], time) - this._getActuatorVoltage(neighborWiring[2], time));
-                            }
-                        }
-                        var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
-                        if (_actuatorType == -1) actuatedD[neighborAxis] *= 1+actuation;//linear actuator
-                        else if (_actuatorType == -4) actuatedD[0] += actuatedD[neighborAxis]*actuation;//shear x
-                        else if (_actuatorType == -5) actuatedD[1] += actuatedD[neighborAxis]*actuation;//shear y
-                        else if (_actuatorType == -6) actuatedD[2] += actuatedD[neighborAxis]*actuation;//shear z
+                        //var actuation = 0;
+                        //var _actuatorType = -1;
+                        //if (actuatorType<0 && wiring[3] == neighborAxis) {
+                        //    _actuatorType = actuatorType;
+                        //    actuation += 0.3*(this._getActuatorVoltage(wiring[1], time) - this._getActuatorVoltage(wiring[2], time));
+                        //} else {
+                        //    var neighborWiring = [this.wires[neighborIndex], this.wires[neighborIndex+1], this.wires[neighborIndex+2], this.wires[neighborIndex+3]];
+                        //    var neighborActuatorType = neighborWiring[0];//properly wired actuator has type < 0
+                        //    _actuatorType = neighborActuatorType;
+                        //    if (neighborActuatorType<0 && neighborWiring[3] == neighborAxis){
+                        //        actuation += 0.3*(this._getActuatorVoltage(neighborWiring[1], time) - this._getActuatorVoltage(neighborWiring[2], time));
+                        //    }
+                        //}
+                        //var actuatedD = [nominalD[0], nominalD[1], nominalD[2]];
+                        //if (_actuatorType == -1) actuatedD[neighborAxis] *= 1+actuation;//linear actuator
+                        //else if (_actuatorType == -4) actuatedD[0] += actuatedD[neighborAxis]*actuation;//shear x
+                        //else if (_actuatorType == -5) actuatedD[1] += actuatedD[neighborAxis]*actuation;//shear y
+                        //else if (_actuatorType == -6) actuatedD[2] += actuatedD[neighborAxis]*actuation;//shear z
 
                         //convert translational offsets to correct reference frame
-                        var halfNominalD = this._multiplyVectorScalar(actuatedD, 0.5);
+                        var halfNominalD = this._multiplyVectorScalar(nominalD, 0.5);//todo actuatedD
                         var cellHalfNominalD = this._applyQuaternion(halfNominalD, quaternion);//halfNominalD in cell's reference frame
                         var neighborHalfNominalD = this._applyQuaternion(halfNominalD, neighborQuaternion);//halfNominalD in neighbor's reference frame
 
@@ -773,40 +773,40 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         force = this._addVectors(force, _force);
 
                         //translational forces cause rotation in cell - convert to cell reference frame
-                        var torque = this._crossVectors(halfNominalD, this._applyQuaternion(_force, this._invertQuaternion(quaternion)));//cellHalfNominalD = lever arm
+                        var torque = this._crossVectors(cellHalfNominalD, _force);//cellHalfNominalD = lever arm
                         rForce[0] += torque[0];
                         rForce[1] += torque[1];
                         rForce[2] += torque[2];
 
-                        //todo this is causing instability
-                        //bending and torsion
-                        var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
-                        var diffEuler = this._eulerFromQuaternion(quaternionDiff);
-                        //if (_actuatorType == -3) {//torsional actuator
-                        //    if (neighborSign) actuation *= -1;
-                        //    diffEuler[neighborAxis] += 0.5*actuation;
-                        //} else if (_actuatorType == -2){
-                        //    diffEuler[wiring[3]] += actuation;
+                        ////todo this is causing instability
+                        ////bending and torsion
+                        //var quaternionDiff = this._multiplyQuaternions(this._invertQuaternion(quaternion), neighborQuaternion);
+                        //var diffEuler = this._eulerFromQuaternion(quaternionDiff);
+                        ////if (_actuatorType == -3) {//torsional actuator
+                        ////    if (neighborSign) actuation *= -1;
+                        ////    diffEuler[neighborAxis] += 0.5*actuation;
+                        ////} else if (_actuatorType == -2){
+                        ////    diffEuler[wiring[3]] += actuation;
+                        ////}
+                        //for (var _axis = 0; _axis < 3; _axis++) {
+                        //    rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// + rotationalD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
                         //}
-                        for (var _axis = 0; _axis < 3; _axis++) {
-                            rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// + rotationalD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        }
                     }
 
-                    //simple collision detection
-                    var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier-groundHeight;
-                    var collisionK = 1;
-                    if (zPosition<0) {
-                        var normalForce = -zPosition*collisionK-velocity[2]*collisionK/10;
-                        force[2] += normalForce;
-                        if (friction) {
-                            var mu = 10;
-                            if (velocity[0] > 0) force[0] -= mu * normalForce;
-                            else if (velocity[0] < 0) force[0] += mu * normalForce;
-                            if (velocity[1] > 0) force[1] -= mu * normalForce;
-                            else if (velocity[1] < 0) force[1] += mu * normalForce;
-                        }
-                    }
+                    ////simple collision detection
+                    //var zPosition = this.originalPosition[rgbaIndex+2]+translation[2]*multiplier-groundHeight;
+                    //var collisionK = 1;
+                    //if (zPosition<0) {
+                    //    var normalForce = -zPosition*collisionK-velocity[2]*collisionK/10;
+                    //    force[2] += normalForce;
+                    //    if (friction) {
+                    //        var mu = 10;
+                    //        if (velocity[0] > 0) force[0] -= mu * normalForce;
+                    //        else if (velocity[0] < 0) force[0] += mu * normalForce;
+                    //        if (velocity[1] > 0) force[1] -= mu * normalForce;
+                    //        else if (velocity[1] < 0) force[1] += mu * normalForce;
+                    //    }
+                    //}
 
                     var acceleration = [force[0]/mass, force[1]/mass, force[2]/mass];
                     var nextTranslation  = [
@@ -827,16 +827,34 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     this.velocity[rgbaIndex+1] = nextVelocity[1];
                     this.velocity[rgbaIndex+2] = nextVelocity[2];
 
+                    //http://physicsforgames.blogspot.com/2010/02/quaternions.html
                     var angAcceleration = [rForce[0]/I, rForce[1]/I, rForce[2]/I];
                     angVelocity = [angVelocity[0] + angAcceleration[0]*dt, angVelocity[1] + angAcceleration[1]*dt, angVelocity[2] + angAcceleration[2]*dt];
-                    var rotationDelta  = [angVelocity[0]*dt, angVelocity[1]*dt, angVelocity[2]*dt];
-                    var quaternionDelta = this._quaternionFromEuler(rotationDelta, "ZYX");
+                    var theta = [angVelocity[0]*dt/2, angVelocity[1]*dt/2, angVelocity[2]*dt/2];
+                    var thetaMagSq = theta[0]*theta[0]+theta[1]*theta[1]+theta[2]*theta[2];
+
+                    var sintheta;
+                    var quaternionDelta = [0,0,0,0];
+                    if(thetaMagSq * thetaMagSq/24 < Number.MIN_VALUE){
+                      quaternionDelta[3] = 1-thetaMagSq/2;
+                      sintheta = 1-thetaMagSq/6;
+                    } else {
+                      var thetaMag = Math.sqrt(thetaMagSq);
+                      quaternionDelta[3] = Math.cos(thetaMag);
+                      sintheta = Math.sin(thetaMag)/thetaMag;
+                    }
+                    quaternionDelta = [theta[0]*sintheta, theta[1]*sintheta, theta[2]*sintheta, quaternionDelta[3]];
+
+                    //var quaternionDot = this._multiplyQuaternions([angVelocity[0]*0.5, angVelocity[1]*0.5, angVelocity[2]*0.5, 0], quaternion);
+                    //
+                    ////var rotationDelta  = [angVelocity[0]*dt, angVelocity[1]*dt, angVelocity[2]*dt];
+                    //var quaternionDelta = this._normalize4D([quaternionDot[0]*dt, quaternionDot[1]*dt, quaternionDot[2]*dt, quaternionDot[3]*dt]);//this._quaternionFromEuler(rotationDelta, "ZYX");
 
                     this.angVelocity[rgbaIndex] = angVelocity[0];
                     this.angVelocity[rgbaIndex+1] = angVelocity[1];
                     this.angVelocity[rgbaIndex+2] = angVelocity[2];
 
-                    var nextQuaternion = this._multiplyQuaternions(quaternion, quaternionDelta);
+                    var nextQuaternion = this._multiplyQuaternions(quaternionDelta, quaternion);
 
                     //nextQuaternion = this._normalize4D(nextQuaternion);
                     this.quaternion[rgbaIndex] = nextQuaternion[0];
