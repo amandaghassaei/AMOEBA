@@ -717,7 +717,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         var neighborVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex + 1], this.lastVelocity[neighborIndex + 2]];
                         var neighborQuaternion = [this.lastQuaternion[neighborIndex], this.lastQuaternion[neighborIndex + 1], this.lastQuaternion[neighborIndex + 2], this.lastQuaternion[neighborIndex + 3]];
                         //var neighborRotation = [this.lastTranslation[neighborIndex + 4 * textureSize], this.lastTranslation[neighborIndex + 1 + 4 * textureSize], this.lastTranslation[neighborIndex + 2 + 4 * textureSize]];
-                        //var neighborAngVelocity = [this.lastVelocity[neighborIndex + 4 * textureSize], this.lastVelocity[neighborIndex + 1 + 4 * textureSize], this.lastVelocity[neighborIndex + 2 + 4 * textureSize]];
+                        var neighborAngVelocity = [this.lastVelocity[neighborIndex], this.lastVelocity[neighborIndex + 1], this.lastVelocity[neighborIndex + 2]];
 
                         var translationalK = [this.compositeKs[i*8*6 + j*8], this.compositeKs[i*8*6 + j*8 + 1], this.compositeKs[i*8*6 + j*8 + 2]];
                         var translationalD = [this.compositeDs[i*8*6 + j*8], this.compositeDs[i*8*6 + j*8 + 1], this.compositeDs[i*8*6 + j*8 + 2]];
@@ -755,10 +755,11 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
 
                         var averageQuaternion = this._averageQuaternions(quaternion, neighborQuaternion);
                         var averageQuaternionInverse = this._invertQuaternion(averageQuaternion);
+                        //var rotatedNominalD = this._applyQuaternion(nominalD, averageQuaternion);
                         var translationalDelta = [
-                            neighborTranslation[0] - translation[0] + nominalD[0] - cellHalfNominalD[0] - neighborHalfNominalD[0],
-                            neighborTranslation[1] - translation[1] + nominalD[1] - cellHalfNominalD[1] - neighborHalfNominalD[1],
-                            neighborTranslation[2] - translation[2] + nominalD[2] - cellHalfNominalD[2] - neighborHalfNominalD[2]
+                            neighborTranslation[0] - translation[0] + nominalD[0] - cellHalfNominalD[0] - neighborHalfNominalD[0],//rotatedNominalD[0],
+                            neighborTranslation[1] - translation[1] + nominalD[1] - cellHalfNominalD[1] - neighborHalfNominalD[1],//rotatedNominalD[1],
+                            neighborTranslation[2] - translation[2] + nominalD[2] - cellHalfNominalD[2] - neighborHalfNominalD[2]//rotatedNominalD[2]
                         ];
                         var translationalDeltaXYZ = this._applyQuaternion(translationalDelta, averageQuaternionInverse);
                         var velocityDelta = [neighborVelocity[0] - velocity[0], neighborVelocity[1] - velocity[1], neighborVelocity[2] - velocity[2]];
@@ -772,7 +773,7 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         _force = this._applyQuaternion(_force, averageQuaternion);
                         force = this._addVectors(force, _force);
 
-                        //translational forces cause rotation in cell - convert to cell reference frame
+                        //translational forces cause rotation in cell
                         var torque = this._crossVectors(cellHalfNominalD, _force);//cellHalfNominalD = lever arm
                         rForce[0] += torque[0];
                         rForce[1] += torque[1];
@@ -788,9 +789,16 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                         ////} else if (_actuatorType == -2){
                         ////    diffEuler[wiring[3]] += actuation;
                         ////}
-                        //for (var _axis = 0; _axis < 3; _axis++) {
-                        //    rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// + rotationalD[_axis]*(neighborAngVelocity[_axis]-angVelocity[_axis]);
-                        //}
+
+                        var angVelocityDelta = [neighborAngVelocity[0] - angVelocity[0], neighborAngVelocity[1] - angVelocity[1], neighborAngVelocity[2] - angVelocity[2]];
+                        var angVelocityDeltaXYZ = this._applyQuaternion(angVelocityDelta, averageQuaternionInverse);
+                        var _rForce = [0,0,0];
+                        for (var _axis = 0; _axis < 3; _axis++) {
+                            _rForce[_axis] += 0.00001 * rotationalD[_axis]*angVelocityDeltaXYZ[_axis];
+                            //rForce[_axis] += 0.00001 * rotationalK[_axis] * (diffEuler[_axis]);// +
+                        }
+                        _rForce = this._applyQuaternion(_rForce, averageQuaternion);
+                        rForce = this._addVectors(rForce, _rForce);
                     }
 
                     ////simple collision detection
@@ -845,18 +853,12 @@ define(['underscore', 'backbone', 'threeModel', 'lattice', 'plist', 'emWire', 'G
                     }
                     quaternionDelta = [theta[0]*sintheta, theta[1]*sintheta, theta[2]*sintheta, quaternionDelta[3]];
 
-                    //var quaternionDot = this._multiplyQuaternions([angVelocity[0]*0.5, angVelocity[1]*0.5, angVelocity[2]*0.5, 0], quaternion);
-                    //
-                    ////var rotationDelta  = [angVelocity[0]*dt, angVelocity[1]*dt, angVelocity[2]*dt];
-                    //var quaternionDelta = this._normalize4D([quaternionDot[0]*dt, quaternionDot[1]*dt, quaternionDot[2]*dt, quaternionDot[3]*dt]);//this._quaternionFromEuler(rotationDelta, "ZYX");
-
                     this.angVelocity[rgbaIndex] = angVelocity[0];
                     this.angVelocity[rgbaIndex+1] = angVelocity[1];
                     this.angVelocity[rgbaIndex+2] = angVelocity[2];
 
                     var nextQuaternion = this._multiplyQuaternions(quaternionDelta, quaternion);
 
-                    //nextQuaternion = this._normalize4D(nextQuaternion);
                     this.quaternion[rgbaIndex] = nextQuaternion[0];
                     this.quaternion[rgbaIndex+1] = nextQuaternion[1];
                     this.quaternion[rgbaIndex+2] = nextQuaternion[2];
