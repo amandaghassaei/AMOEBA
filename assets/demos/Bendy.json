@@ -1,0 +1,1060 @@
+{
+	"assembly": {
+		"cellsMin": {
+			"x": -17,
+			"y": -3,
+			"z": 0
+		},
+		"cellsMax": {
+			"x": -4,
+			"y": 3,
+			"z": 4
+		},
+		"numCells": 138,
+		"units": "mm",
+		"scale": 1,
+		"cellType": "cube",
+		"connectionType": "face",
+		"applicationType": "default",
+		"partType": null,
+		"aspectRatio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"cells": [
+			[
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexure"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "conductive"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "insulating"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "conductive"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "insulating"
+					},
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					{
+						"materialID": "signal"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null,
+					null,
+					null
+				]
+			]
+		]
+	},
+	"materials": {},
+	"emSim": {
+		"gravity": 9.8,
+		"gravityVector": {
+			"x": 0,
+			"y": 0,
+			"z": -1
+		},
+		"dtSolver": 10,
+		"dtRender": 100,
+		"fixedIndices": [],
+		"groundHeight": 0,
+		"friction": true,
+		"lattice": {
+			"signals": [
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -4,
+						"y": -1,
+						"z": 2
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0.5,
+					"frequency": 10,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -4,
+						"y": 1,
+						"z": 2
+					}
+				}
+			]
+		}
+	}
+}

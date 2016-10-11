@@ -1,0 +1,1072 @@
+{
+	"assembly": {
+		"cellsMin": {
+			"x": -14,
+			"y": 0,
+			"z": 0
+		},
+		"cellsMax": {
+			"x": -3,
+			"y": 13,
+			"z": 1
+		},
+		"numCells": 140,
+		"units": "mm",
+		"scale": 1,
+		"cellType": "cube",
+		"connectionType": "face",
+		"applicationType": "default",
+		"partType": null,
+		"aspectRatio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"cells": [
+			[
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				],
+				[
+					{
+						"materialID": "insulating"
+					},
+					{
+						"materialID": "insulating"
+					}
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				],
+				[
+					null,
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				],
+				[
+					{
+						"materialID": "flexure"
+					},
+					{
+						"materialID": "flexure"
+					}
+				]
+			]
+		]
+	},
+	"materials": {},
+	"emSim": {
+		"gravity": 9.8,
+		"gravityVector": {
+			"x": 0,
+			"y": 0,
+			"z": -1
+		},
+		"dtSolver": 10,
+		"dtRender": 100,
+		"fixedIndices": [
+			{
+				"x": -14,
+				"y": 0,
+				"z": 0
+			},
+			{
+				"x": -11,
+				"y": 0,
+				"z": 0
+			},
+			{
+				"x": -8,
+				"y": 0,
+				"z": 1
+			},
+			{
+				"x": -7,
+				"y": 0,
+				"z": 1
+			},
+			{
+				"x": -7,
+				"y": 0,
+				"z": 0
+			},
+			{
+				"x": -8,
+				"y": 0,
+				"z": 0
+			},
+			{
+				"x": -4,
+				"y": 0,
+				"z": 1
+			},
+			{
+				"x": -3,
+				"y": 0,
+				"z": 1
+			},
+			{
+				"x": -3,
+				"y": 0,
+				"z": 0
+			},
+			{
+				"x": -4,
+				"y": 0,
+				"z": 0
+			}
+		],
+		"groundHeight": -19,
+		"friction": true,
+		"lattice": {
+			"signals": []
+		}
+	}
+}

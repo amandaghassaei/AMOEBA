@@ -1,0 +1,1338 @@
+{
+	"assembly": {
+		"cellsMin": {
+			"x": -61,
+			"y": 6,
+			"z": 0
+		},
+		"cellsMax": {
+			"x": -12,
+			"y": 9,
+			"z": 2
+		},
+		"numCells": 72,
+		"units": "mm",
+		"scale": 1,
+		"cellType": "cube",
+		"connectionType": "face",
+		"applicationType": "default",
+		"partType": null,
+		"aspectRatio": {
+			"x": 1,
+			"y": 1,
+			"z": 1
+		},
+		"cells": [
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					},
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "actuator"
+					},
+					null,
+					{
+						"materialID": "flexureCond"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "signal"
+					}
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			],
+			[
+				[
+					null,
+					null,
+					null
+				],
+				[
+					null,
+					null,
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				],
+				[
+					{
+						"materialID": "conductive"
+					},
+					{
+						"materialID": "conductive"
+					},
+					null
+				]
+			]
+		]
+	},
+	"materials": {},
+	"emSim": {
+		"gravity": 9.8,
+		"gravityVector": {
+			"x": 0,
+			"y": 0,
+			"z": -1
+		},
+		"dtSolver": 10,
+		"dtRender": 100,
+		"fixedIndices": [],
+		"groundHeight": 0,
+		"friction": true,
+		"lattice": {
+			"signals": [
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 50,
+					"waveformType": "triangle",
+					"invertSignal": false,
+					"index": {
+						"x": -52,
+						"y": 8,
+						"z": 2
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 50,
+					"waveformType": "square",
+					"invertSignal": false,
+					"index": {
+						"x": -39,
+						"y": 8,
+						"z": 2
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 50,
+					"waveformType": "saw",
+					"invertSignal": false,
+					"index": {
+						"x": -26,
+						"y": 8,
+						"z": 2
+					}
+				},
+				{
+					"pwm": 0.5,
+					"phase": 0,
+					"frequency": 50,
+					"waveformType": "sine",
+					"invertSignal": false,
+					"index": {
+						"x": -13,
+						"y": 8,
+						"z": 2
+					}
+				}
+			]
+		}
+	}
+}
