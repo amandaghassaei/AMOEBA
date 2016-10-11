@@ -13,7 +13,6 @@ require.config({
         underscore: '../dependencies/underscore',
         backbone: '../dependencies/backbone',
         flatUI: '../dependencies/flatUI/js/flat-ui',
-        bootstrapSlider: '../dependencies/bootstrap-slider/bootstrap-slider',
         fileSaverLib: '../dependencies/loaders/FileSaver.min',
         text: '../dependencies/require/text',
         bin: '../dependencies/require/bin',
@@ -22,7 +21,7 @@ require.config({
         three: '../dependencies/three',
         orbitControls: '../dependencies/OrbitControls',
         stlLoader: '../dependencies/loaders/STLLoader',
-        stlExport: '../dependencies/loaders/binary_stl_writer',
+        stlExport: '../dependencies/loaders/binary_stl_writer'
 
     },
 
