@@ -8,7 +8,7 @@ define(["backbone", "three"], function(Backbone, THREE){
     var Lattice = Backbone.Model.extend({
         defaults: {
             scale: new THREE.Vector3(1,1,1),
-            aspectRatio: new  THREE.Vector3(1,1,1)
+            aspectRatio: new  THREE.Vector3(0.75,1,0.5)
         },
 
         initialize: function(){

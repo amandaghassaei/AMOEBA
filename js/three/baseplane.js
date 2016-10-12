@@ -24,7 +24,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
 
             //draw mesh
             this.object3D = this._makeMesh();
-            this._makeMesh();
+            this._scaleBasePlane();
             three.sceneAdd(this.object3D);
             this._setVisibility();
         },
@@ -61,9 +61,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var normalAxis = this.getNormalAxis();
             var position = intersection.add(halfAspectRatio).divide(aspectRatio).floor().multiply(aspectRatio);
             position[normalAxis] = this.get("position")[normalAxis];
-            var normal = new THREE.Vector3(0,0,0);
-            normal[normalAxis] = 1;
-            return {position: position, normal: normal};
+            return {position: position, normal: normalAxis};
 
         },
 
