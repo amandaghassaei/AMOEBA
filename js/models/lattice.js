@@ -17,7 +17,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             this.cells = [[[null]]];
         },
 
-        getScale: function(){
+        getScale: function(){//only used in sim
             return this.get("scale").clone();
         },
 
@@ -30,6 +30,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             var cell = this.cells[cellIndex.x][cellIndex.y][cellIndex.z];
             cell.destroy(true);
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = null;
+            this._checkForMatrixContraction();
             three.render();
         },
 
@@ -122,6 +123,80 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                     }
                 }
             });
+        },
+
+        _checkForMatrixContraction: function(){//this could be more efficient by using info about deleted
+
+            var cellsMax = this.get("cellsMax");
+            var cellsMin = this.get("cellsMin");
+            if (!cellsMin || !cellsMax) {
+                console.warn("missing param for cells contraction");
+                return;
+            }
+
+            var newMax = this._getContractedCellsMax();
+            var newMin = this._getContractedCellsMin();
+
+            var maxDiff = cellsMax.clone().sub(newMax);
+            var minDiff =  newMin.clone().sub(cellsMin);
+
+            var zero = new THREE.Vector3(0,0,0);
+            if (maxDiff.equals(zero) && minDiff.equals(zero)) return;
+
+            this._contractCellsArray(this.cells, false, maxDiff);
+            this._contractCellsArray(this.cells, true, minDiff);
+
+            this.set("cellsMax", newMax, {silent:true});
+            this.set("cellsMin", newMin);
+        },
+
+        _getContractedCellsMin: function(){
+            var newMin = this.get("cellsMax").clone().sub(this.get("cellsMin"));
+            this._loopCells(this.cells, function(cell, x, y, z){
+                    newMin.min(new THREE.Vector3(x, y, z));
+            });
+            return newMin.add(this.get("cellsMin"));
+        },
+
+        _getContractedCellsMax: function(){
+            var newMax = new THREE.Vector3(0,0,0);
+            this._loopCells(this.cells, function(cell, x, y, z){
+                newMax.max(new THREE.Vector3(x, y, z));
+            });
+            return newMax.add(this.get("cellsMin"));
+        },
+
+        _contractCellsArray: function(cells, fromFront, contractionSize) {
+            for (var x = 0; x < contractionSize.x; x++) {
+                if (cells.length == 1) {
+                    console.warn("nothing left to delete");
+                    return;
+                }
+                if (fromFront) cells.shift();
+                else cells.pop();
+            }
+            _.each(cells, function (cellLayer) {
+                for (var y = 0; y < contractionSize.y; y++) {
+                    if (fromFront) cellLayer.shift();
+                    else cellLayer.pop();
+                }
+                for (var z = 0; z < contractionSize.z; z++) {
+                    _.each(cellLayer, function (cellColumn) {
+                        if (fromFront) cellColumn.shift();
+                        else cellColumn.pop();
+                    });
+                }
+            });
+        },
+
+        _loopCells: function(cells, callback){
+            for (var x=0;x<cells.length;x++){
+                for (var y=0;y<cells[0].length;y++){
+                    for (var z=0;z<cells[0][0].length;z++){
+                        if (cells[x][y][z]) callback(cells[x][y][z], x, y, z, this);
+                    }
+                }
+            }
         }
 
     });
