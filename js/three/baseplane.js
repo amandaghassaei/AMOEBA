@@ -71,6 +71,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var normalAxis = this.getNormalAxis();
             var position = intersection.add(halfAspectRatio).divide(aspectRatio).floor().multiply(aspectRatio);
             position[normalAxis] = this.get("position")[normalAxis];
+            //todo check if outside lines
             return {position: position, normal: normalAxis};
         },
 

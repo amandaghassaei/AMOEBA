@@ -32,12 +32,10 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
         },
 
         _mouseUp: function(e){
-            console.log("mouseUp");
             isDragging = false;
         },
 
         _mouseDown: function(e){
-            console.log("mouseDown");
             isDragging = true;
 
             if (highlighter.isVisible() && highlightedObject){
@@ -57,8 +55,15 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
                 //no intersected cells, try baseplane
                 var intersectionPt = new THREE.Vector3();
                 raycaster.ray.intersectPlane(baseplane.getIntersectionPlane(), intersectionPt);
-                highlighter.setPosition(baseplane.getHighlighterPosition(intersectionPt));
-                highlightedObject = baseplane;
+                var highlighterPosition = baseplane.getHighlighterPosition(intersectionPt);
+                if (highlighterPosition.position) {
+                    highlighter.setPosition(highlighterPosition);
+                    highlightedObject = baseplane;
+                }
+                else {
+                    highlighter.unhighlight();
+                }
+
             } else {
                 //intersectedCell
                 if (intersection.object._myCell) {
