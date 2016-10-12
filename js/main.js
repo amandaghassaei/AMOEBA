@@ -21,8 +21,15 @@ require.config({
         three: '../dependencies/three',
         orbitControls: '../dependencies/OrbitControls',
         stlLoader: '../dependencies/loaders/STLLoader',
-        stlExport: '../dependencies/loaders/binary_stl_writer'
+        stlExport: '../dependencies/loaders/binary_stl_writer',
 
+        appState: 'models/appState',
+        lattice: 'models/lattice',
+
+        threeModel: 'three/threeModel',
+        baseplane: 'three/baseplane',
+        highlighter: 'three/highlighter',
+        threeInteraction: 'three/threeInteraction'
     },
 
     shim: {
@@ -57,7 +64,7 @@ require.config({
 //};
 
 //init stuff
-require(["jquery", "underscore", "backbone"], function(){
+require(["jquery", "underscore", "backbone", "appState", "threeModel", "threeInteraction"], function(){
 
    console.log("hello");
 
