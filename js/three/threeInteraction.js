@@ -8,6 +8,8 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
 
+    var leftClick = false;
+    var rightClick = false;
     var isDragging = false;
 
     var highlightedObject;
@@ -32,15 +34,41 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
         },
 
         _mouseUp: function(e){
+            switch (e.which) {
+                case 1:
+                    leftClick = false;
+                    break;
+                case 2:
+                    //middle
+                    break;
+                case 3:
+                    rightClick = false;
+                    break;
+                default:
+                    break;
+            }
+            if (!isDragging){
+                if (highlighter.isVisible() && highlightedObject){
+                    var index = highlightedObject.getNextCellIndex(highlighter.getPosition(), highlighter.getNormal());
+                    lattice.addCellAtIndex(index);
+                }
+            }
             isDragging = false;
         },
 
         _mouseDown: function(e){
-            isDragging = true;
-
-            if (highlighter.isVisible() && highlightedObject){
-                var index = highlightedObject.getNextCellIndex(highlighter.getPosition(), highlighter.getNormal());
-                lattice.addCellAtIndex(index);
+            switch (e.which) {
+            case 1:
+                leftClick = true;
+                break;
+            case 2:
+                //middle
+                break;
+            case 3:
+                rightClick = true;
+                break;
+            default:
+                break;
             }
         },
 
@@ -48,6 +76,12 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
             mouse.x = (e.clientX/window.innerWidth)*2-1;
             mouse.y = - (e.clientY/window.innerHeight)*2+1;
             raycaster.setFromCamera(mouse, three.camera);
+
+            if (leftClick || rightClick) {
+                isDragging = true;
+                highlighter.unhighlight();
+                return;
+            }
 
             var intersection = this._checkForIntersections(e, three.getCells());
 
