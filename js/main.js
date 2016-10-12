@@ -26,6 +26,7 @@ require.config({
         appState: 'models/appState',
         lattice: 'models/lattice',
         plist: 'plists/plist',
+        materialPlist: 'plists/materialPlist',
 
         threeModel: 'three/threeModel',
         baseplane: 'three/baseplane',

@@ -9,14 +9,10 @@ define([], function(){
            navDesign: {
                name: "Design",
                tabs: {
-                   lattice: "Lattice",
-                   sketch: "Visibility",
-                   select: "Select",
                    material: "Materials",
-//                    import:"Import",
-                   part: "Part"
-//                    view: "View"
-                   //script:"Script"
+                   lattice: "Lattice"
+                   //sketch: "Visibility",
+                   //select: "Select",
                }
            },
            navMaterial: {

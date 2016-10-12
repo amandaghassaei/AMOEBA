@@ -522,29 +522,29 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		//console.log( 'handleKeyDown' );
 
-		switch ( event.keyCode ) {
-
-			case scope.keys.UP:
-				pan( 0, scope.keyPanSpeed );
-				scope.update();
-				break;
-
-			case scope.keys.BOTTOM:
-				pan( 0, - scope.keyPanSpeed );
-				scope.update();
-				break;
-
-			case scope.keys.LEFT:
-				pan( scope.keyPanSpeed, 0 );
-				scope.update();
-				break;
-
-			case scope.keys.RIGHT:
-				pan( - scope.keyPanSpeed, 0 );
-				scope.update();
-				break;
-
-		}
+		//switch ( event.keyCode ) {
+        //
+		//	case scope.keys.UP:
+		//		pan( 0, scope.keyPanSpeed );
+		//		scope.update();
+		//		break;
+        //
+		//	case scope.keys.BOTTOM:
+		//		pan( 0, - scope.keyPanSpeed );
+		//		scope.update();
+		//		break;
+        //
+		//	case scope.keys.LEFT:
+		//		pan( scope.keyPanSpeed, 0 );
+		//		scope.update();
+		//		break;
+        //
+		//	case scope.keys.RIGHT:
+		//		pan( - scope.keyPanSpeed, 0 );
+		//		scope.update();
+		//		break;
+        //
+		//}
 
 	}
 

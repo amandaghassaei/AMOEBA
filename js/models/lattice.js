@@ -9,7 +9,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
         defaults: {
             scale: new THREE.Vector3(1,1,1),
             units: "mm",
-            aspectRatio: new  THREE.Vector3(1,1,0.5),
+            aspectRatio: new  THREE.Vector3(1,1,1),
             cellsMin: null,
             cellsMax: null,
             numCells: 0

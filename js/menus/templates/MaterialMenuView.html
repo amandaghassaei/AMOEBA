@@ -1,0 +1,17 @@
+Materials:<br/>
+<% _.each(allMaterials, function(material, key){ %>
+    <label class="radio colorSwatches">
+        <input type="radio" <%if (key == materialType){ %>checked<%}%> name="materialType" value="<%= key %>" data-toggle="radio" class="custom-radio appState"><span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+        <div class="materialColorSwatch">
+
+        <div style="background-color:<% if(realisticColorScheme){ %><%= material.color %><% }else{ %><%= material.altColor %><% } %>">
+            <% if (material.texture) {%><img src="assets/textures/<%= material.texture %>Thumb.png"><% } %>
+        </div>
+        <span><span class="materialListTitle"><%= material.name %></span><a data-id="<%= key %>" class="editMaterial">Edit...</a></span></div>
+    </label>
+<% }); %>
+<a id="newMaterial" href="#" class="btn btn-block btn-lg btn-default">+ Create New Material</a>
+<label class="checkbox" for="realisticColorScheme">
+<input id="realisticColorScheme" data-property="realisticColorScheme" type="checkbox" <% if (realisticColorScheme){ %> checked="checked"<% } %> value="" data-toggle="checkbox" class="appState custom-checkbox">
+<span class="icons"><span class="icon-unchecked"></span><span class="icon-checked"></span></span>
+Use realistic color scheme</label><br/>

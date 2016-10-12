@@ -10,9 +10,12 @@ define(["jquery", "backbone", "plist"], function($, Backbone, plist){
         defaults: {
 
             currentNav: "navDesign",
-            currentTab: "lattice",
+            currentTab: "material",
 
             deleteMode: false,
+
+            materialType:"insulating",
+            realisticColorScheme: false,
 
             baseplaneIsVisible: true
 
