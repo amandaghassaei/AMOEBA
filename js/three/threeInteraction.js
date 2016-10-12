@@ -2,8 +2,8 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
-    function(baseplane, THREE, three, highlighter, lattice){
+define(["baseplane", "three", "threeModel", "highlighter", "lattice", "appState"],
+    function(baseplane, THREE, three, highlighter, lattice, appState){
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
@@ -27,6 +27,7 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
 
         initialize: function(){
 
+            this.listenTo(appState, "change:deleteMode", this._updateHighlighterForMouseMove);
         },
 
         _mouseOut: function(e){
@@ -48,9 +49,15 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
                     break;
             }
             if (!isDragging){
-                if (highlighter.isVisible() && highlightedObject){
-                    var index = highlightedObject.getNextCellIndex(highlighter.getPosition(), highlighter.getNormal());
-                    lattice.addCellAtIndex(index);
+                if (highlightedObject){
+                    if (highlightedObject.isInDeleteMode && highlightedObject.isInDeleteMode()){
+                        var index = highlightedObject.getIndex();
+                        highlightedObject = null;
+                        lattice.deleteCellAtIndex(index);
+                    } else if (highlighter.isVisible()){
+                        var index = highlightedObject.getNextCellIndex(highlighter.getPosition(), highlighter.getNormal());
+                        lattice.addCellAtIndex(index);
+                    }
                 }
             }
             isDragging = false;
@@ -83,32 +90,45 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice"],
                 return;
             }
 
-            var intersection = this._checkForIntersections(e, three.getCells());
+            this._updateHighlighterForMouseMove();
+        },
 
-            if (intersection === null){
-                //no intersected cells, try baseplane
-                var intersectionPt = new THREE.Vector3();
-                raycaster.ray.intersectPlane(baseplane.getIntersectionPlane(), intersectionPt);
-                var highlighterPosition = baseplane.getHighlighterPosition(intersectionPt);
-                if (highlighterPosition.position) {
-                    highlighter.setPosition(highlighterPosition);
-                    highlightedObject = baseplane;
-                }
-                else {
-                    highlighter.unhighlight();
-                }
+        _updateHighlighterForMouseMove: function(){
+            var intersection = this._checkForIntersections(three.getCells());
 
-            } else {
-                //intersectedCell
+            if (appState.get("deleteMode") && intersection){
                 if (intersection.object._myCell) {
+                    if (highlightedObject && highlightedObject != intersection.object._myCell && highlightedObject.setDeleteMode) highlightedObject.setDeleteMode(false);
                     highlightedObject = intersection.object._myCell;
-                    highlighter.setPosition(highlightedObject.getHighlighterPosition(intersection, lattice.getAspectRatio()));
+                    highlightedObject.setDeleteMode(true);
                 }
-                else console.warn("no _myCell found on intersected cell");
+                highlighter.unhighlight();
+            } else {
+                if (highlightedObject && highlightedObject.setDeleteMode) highlightedObject.setDeleteMode(false);
+                if (intersection) {
+                    //intersectedCell
+                    if (intersection.object._myCell) {
+                        highlightedObject = intersection.object._myCell;
+                        highlighter.setPosition(highlightedObject.getHighlighterPosition(intersection, lattice.getAspectRatio()));
+                    }
+                    else console.warn("no _myCell found on intersected cell");
+                } else {
+                    //no intersected cells, try baseplane
+                    var intersectionPt = new THREE.Vector3();
+                    raycaster.ray.intersectPlane(baseplane.getIntersectionPlane(), intersectionPt);
+                    var highlighterPosition = baseplane.getHighlighterPosition(intersectionPt);
+                    if (highlighterPosition.position) {
+                        highlighter.setPosition(highlighterPosition);
+                        highlightedObject = baseplane;
+                    }
+                    else {
+                        highlighter.unhighlight();
+                    }
+                }
             }
         },
 
-        _checkForIntersections: function(e, objects){
+        _checkForIntersections: function(objects){
             var intersections = raycaster.intersectObjects(objects);
             if (intersections.length > 0) return intersections[0];
             return null;

@@ -25,6 +25,14 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             return this.get("aspectRatio").clone();
         },
 
+        deleteCellAtIndex: function(index){
+            var cellIndex = index.clone().sub(this.get("cellsMin"));
+            var cell = this.cells[cellIndex.x][cellIndex.y][cellIndex.z];
+            cell.destroy(true);
+            this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = null;
+            three.render();
+        },
+
         addCellAtIndex: function(index){
             if (this._checkForIndexOutsideBounds(index)) this._expandCellsMatrix(index, index);
             var cell = new Cell({scale:this.getAspectRatio(), index:index});

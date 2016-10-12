@@ -38,7 +38,6 @@ define(["three", "backbone", "threeModel", "lattice"],
             this.object3D.position.set(info.position.x, info.position.y, info.position.z);
             this.object3D.scale.set(aspectRatio.x, aspectRatio.y, aspectRatio.z);
             this.setVisiblity(true);
-            three.render();
         },
 
         getPosition: function(){

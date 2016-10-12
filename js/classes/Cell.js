@@ -35,9 +35,11 @@ define(["three", "threeModel"], function(THREE, three){
     unitCellGeo.uvsNeedUpdate = true;
 
     var material = new THREE.MeshLambertMaterial({color:0xff00ff});
+    var deleteMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
 
     function Cell(json){
         this.object3D = this._makeObject3D();
+        this.mesh = this.object3D;//visible mesh
         this.index = json.index;
 
         this.updateForAspectRatio(json.scale);
@@ -84,6 +86,24 @@ define(["three", "threeModel"], function(THREE, three){
         return {position:position, normal: normalAxis};
     };
 
+    Cell.prototype.setDeleteMode = function(mode){
+        var nextMaterial;
+        if (mode) nextMaterial = deleteMaterial;
+        else nextMaterial = material;
+        if (nextMaterial != this.mesh.material){
+            this.mesh.material = nextMaterial;
+            three.render();
+        }
+    };
+
+    Cell.prototype.isInDeleteMode = function(){
+        return this.mesh.material == deleteMaterial;
+    };
+
+    Cell.prototype.getIndex = function(){
+        return this.index.clone();
+    };
+
     Cell.prototype.getNextCellIndex = function(position, normal){
         var diff = position.sub(this.originalPosition);
         var index = this.index.clone();
@@ -96,6 +116,7 @@ define(["three", "threeModel"], function(THREE, three){
         this.object3D._myCell = null;
         if (shouldRemove) three.sceneRemoveCell(this.object3D);
         this.object3D = null;
+        this.mesh = null;
         this.index = null;
     };
 
