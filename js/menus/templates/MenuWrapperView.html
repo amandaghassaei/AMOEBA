@@ -1,0 +1,5 @@
+<ul class="nav nav-tabs nav-justified">
+<% _.each(allMenus[currentNav].tabs, function(tabName, key){ %>
+    <li role="presentation" class="menuWrapperTab" data-name="<%= key %>"><a href="#"><%= tabName %></a></li>
+<% }); %>
+</ul>

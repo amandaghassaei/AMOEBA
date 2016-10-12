@@ -8,13 +8,17 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
     var Lattice = Backbone.Model.extend({
         defaults: {
             scale: new THREE.Vector3(1,1,1),
+            units: "mm",
             aspectRatio: new  THREE.Vector3(1,1,0.5),
             cellsMin: null,
-            cellsMax: null
+            cellsMax: null,
+            numCells: 0
         },
 
         initialize: function(){
             this.cells = [[[null]]];
+
+            this.listenTo(this, "change:aspectRatio", this._aspectRatioChanged);
         },
 
         getScale: function(){//only used in sim
@@ -25,12 +29,21 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             return this.get("aspectRatio").clone();
         },
 
+        _aspectRatioChanged: function(){
+            var aspectRatio = this.getAspectRatio();
+            this._loopCells(this.cells, function(cell){
+                cell.updateForAspectRatio(aspectRatio);
+            });
+            three.render();
+        },
+
         deleteCellAtIndex: function(index){
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             var cell = this.cells[cellIndex.x][cellIndex.y][cellIndex.z];
             cell.destroy(true);
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = null;
             this._checkForMatrixContraction();
+            this.set("numCells", this.get("numCells")-1);
             three.render();
         },
 
@@ -39,6 +52,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             var cell = new Cell({scale:this.getAspectRatio(), index:index});
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
+            this.set("numCells", this.get("numCells")+1);
             three.render();
         },
 

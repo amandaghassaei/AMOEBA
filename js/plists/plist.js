@@ -42,7 +42,17 @@ define([], function(){
                    signal: "Signal Editor"
                }
            }
+       },
+
+       allUnitTypes:{
+           mm: {
+               name: "mm"
+           },
+           inches: {
+               name: "inches"
+           }
        }
+
    }
 
 });

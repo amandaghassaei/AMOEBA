@@ -56,6 +56,8 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
         _scaleBasePlane: function(){
             var aspectRatio = lattice.getAspectRatio();
             this.object3D.scale.set(aspectRatio.x, aspectRatio.y, aspectRatio.z);
+            this._setPosition();
+            three.render();
         },
 
         getNormalAxis: function(){

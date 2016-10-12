@@ -32,6 +32,9 @@ require.config({
         highlighter: 'three/highlighter',
         threeInteraction: 'three/threeInteraction',
 
+        menuWrapperView: 'menus/MenuWrapperView',
+        menuParent: "menus/MenuParentView",
+
         Cell: 'classes/Cell'
     },
 
@@ -67,8 +70,9 @@ require.onError = function (err) {
 };
 
 //init stuff
-require(["jquery", "threeInteraction"], function($){
+require(["jquery", "threeInteraction", "menuWrapperView", "flatUI"], function($, interaction , menuWrapper){
 
+    menuWrapper.render();
    console.log("hello");
 
 });
