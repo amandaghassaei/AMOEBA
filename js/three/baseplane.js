@@ -25,6 +25,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             //draw mesh
             this.object3D = this._makeMesh();
             this._scaleBasePlane();
+            this._setPosition();
             three.sceneAdd(this.object3D);
             this._setVisibility();
         },
@@ -41,6 +42,15 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
                 geometry.vertices.push(new THREE.Vector3(i - 0.5, 0, dimensions.y + 0.5));
             }
             return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:0.2}));
+        },
+
+        _setPosition: function(){
+            var position = this.get("position");
+            var aspectRatio = lattice.getAspectRatio();
+            var normalAxis = this.getNormalAxis();
+            position[normalAxis] = aspectRatio[normalAxis]/2;
+            plane.set(plane.normal, -aspectRatio[normalAxis]/2);
+            this.object3D.position.set(position.x, position.y, position.z);
         },
 
         _scaleBasePlane: function(){
@@ -62,7 +72,12 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var position = intersection.add(halfAspectRatio).divide(aspectRatio).floor().multiply(aspectRatio);
             position[normalAxis] = this.get("position")[normalAxis];
             return {position: position, normal: normalAxis};
+        },
 
+        getNextCellIndex: function(position, normal){
+            var aspectRatio = lattice.getAspectRatio();
+            position[normal] += aspectRatio[normal]/2;
+            return position.divide(aspectRatio).round();
         },
 
         getIntersectionPlane: function(){

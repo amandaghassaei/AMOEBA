@@ -80,8 +80,7 @@ define(["jquery", "three", "orbitControls"], function($, THREE){
     }
 
     function sceneAddCell(object){
-        cellContainer.add(object.children[0]);
-        cells.push(object);
+        cellContainer.add(object);
     }
 
     function sceneRemove(object){
@@ -89,7 +88,7 @@ define(["jquery", "three", "orbitControls"], function($, THREE){
     }
 
     function sceneRemoveCell(object){
-        cellContainer.remove(object.children[0]);
+        cellContainer.remove(object);
     }
 
     function getCells(){

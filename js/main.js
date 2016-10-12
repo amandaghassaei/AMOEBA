@@ -29,7 +29,9 @@ require.config({
         threeModel: 'three/threeModel',
         baseplane: 'three/baseplane',
         highlighter: 'three/highlighter',
-        threeInteraction: 'three/threeInteraction'
+        threeInteraction: 'three/threeInteraction',
+
+        Cell: 'classes/Cell'
     },
 
     shim: {
@@ -57,14 +59,14 @@ require.config({
 
 });
 
-//require.onError = function (err) {
-//    console.log(err.requireType);
-//    console.log(err.requireModules);
-//    throw err;
-//};
+require.onError = function (err) {
+    console.log(err.requireType);
+    console.log(err.requireModules);
+    throw err;
+};
 
 //init stuff
-require(["jquery", "underscore", "backbone", "appState", "threeModel", "threeInteraction"], function(){
+require(["jquery", "threeInteraction"], function($){
 
    console.log("hello");
 

@@ -6,7 +6,11 @@
 define(["backbone"], function(Backbone){
 
     var AppState = Backbone.Model.extend({
+
         defaults: {
+
+            currentNav: "navDesign",
+            currentTab: "lattice",
 
             baseplaneIsVisible: true
 
