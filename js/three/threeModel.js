@@ -2,9 +2,10 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["jquery", "three", "orbitControls"], function($, THREE){
+define(["jquery", "orbitControls"], function($, THREE){
 
-    var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 1000);
+    // var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 400);
+    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
     var numScenes = 1;
     var scenes = [];
     for (var i=0;i<numScenes;i++){
@@ -24,13 +25,16 @@ define(["jquery", "three", "orbitControls"], function($, THREE){
         container.append(renderer.domElement);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
-        camera.zoom = 20;
+        // camera.zoom = 30;
+        camera.zoom = 10;
         camera.updateProjectionMatrix();
-        camera.position.x = 400;
-        camera.position.y = 400;
-        camera.position.z = 400;
+        camera.position.x = 100;
+        camera.position.y = 100;
+        camera.position.z = 100;
+        scenes[0].add( camera );
 
         scenes[0].background = new THREE.Color(0xcccccc);
+        // scenes[0].fog = new THREE.FogExp2( 0xcccccc, 1 );
 
         // lights
         var color = 0x888888;

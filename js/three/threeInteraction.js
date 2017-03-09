@@ -2,8 +2,8 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["baseplane", "three", "threeModel", "highlighter", "lattice", "appState"],
-    function(baseplane, THREE, three, highlighter, lattice, appState){
+define(["three", "baseplane", "threeModel", "highlighter", "lattice", "appState"],
+    function(THREE, baseplane, three, highlighter, lattice, appState){
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
@@ -80,15 +80,18 @@ define(["baseplane", "three", "threeModel", "highlighter", "lattice", "appState"
         },
 
         _mouseMoved: function(e){
+
+            if (leftClick || rightClick) {
+                if (!isDragging){
+                    highlighter.unhighlight();
+                }
+                isDragging = true;
+                return;
+            }
+
             mouse.x = (e.clientX/window.innerWidth)*2-1;
             mouse.y = - (e.clientY/window.innerHeight)*2+1;
             raycaster.setFromCamera(mouse, three.camera);
-
-            if (leftClick || rightClick) {
-                isDragging = true;
-                highlighter.unhighlight();
-                return;
-            }
 
             this._updateHighlighterForMouseMove();
         },

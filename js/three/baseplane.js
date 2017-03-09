@@ -13,7 +13,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
         defaults: {
             planeType: "xz",
             position: new THREE.Vector3(0,0,0),
-            dimensions: new THREE.Vector2(100,100)
+            dimensions: new THREE.Vector2(50,50)
         },
 
         initialize: function(){

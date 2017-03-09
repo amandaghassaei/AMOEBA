@@ -74,6 +74,5 @@ require.onError = function (err) {
 require(["jquery", "threeInteraction", "menuWrapperView", "flatUI"], function($, interaction , menuWrapper){
 
     menuWrapper.render();
-   console.log("hello");
 
 });
