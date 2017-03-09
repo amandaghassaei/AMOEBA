@@ -35,7 +35,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             this.updateCameraType();
 
             var self = this;
-            this.listenTo(this, "change:cameraType", this.updateCameraType);
+            // this.listenTo(this, "change:cameraType", this.updateCameraType);
             this.listenTo(this, "change:cameraZoom", function(){
                 self.camera.zoom = self.get("cameraZoom");
                 self.camera.updateProjectionMatrix();
@@ -50,6 +50,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             this.listenTo(this, "change:cameraLookAt", function(){
                 var lookAt = this.get("cameraLookAt");
                 controls.target.set(lookAt.x, lookAt.y, lookAt.z);
+                this.camera.lookAt(this.get("cameraLookAt"));
                 self.render();
             });
 
