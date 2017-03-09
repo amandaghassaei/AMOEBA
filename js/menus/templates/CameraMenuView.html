@@ -15,7 +15,9 @@ Look At:&nbsp;&nbsp;
     <input data-property="cameraLookAt" data-key="x" value="<%= cameraLookAt.x.toFixed(1) %>" placeholder="X" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraLookAt" data-key="y" value="<%= cameraLookAt.y.toFixed(1) %>" placeholder="Y" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraLookAt" data-key="z" value="<%= cameraLookAt.z.toFixed(1)%>" placeholder="Z" class="form-control threeModel floatInput" type="text"><br/><br/>
-Zoom&nbsp;&nbsp;:
+Zoom:&nbsp;&nbsp;
     <input data-property="cameraZoom" value="<%= cameraZoom.toFixed(1) %>" placeholder="Zoom" class="form-control threeModel floatInput" type="text">&nbsp;&nbsp;&nbsp;
-FOV&nbsp;&nbsp;:
-    <input data-property="cameraFOV" data-min-exclusive="0" value="<%= cameraFOV.toFixed(1) %>" placeholder="FOV" class="form-control threeModel floatInput" type="text">
+<% if (cameraType == "perspective"){ %>
+    FOV:&nbsp;&nbsp;
+        <input data-property="cameraFOV" data-min-exclusive="0" value="<%= cameraFOV.toFixed(1) %>" placeholder="FOV" class="form-control threeModel floatInput" type="text">
+<% } %>
