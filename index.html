@@ -30,27 +30,20 @@
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">File <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
           <ul class="dropdown-menu">
-                <!--<li><a class="saveJSON" href="#">Save Assembly &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>-->
-                <!--<li><a data-toggle="modal" data-target="#saveAsModel" href="#">Save Assembly As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>-->
+                <li><a class="saveJSON" href="#">Save Assembly &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984; + S)</a></li>
+                <li><a id="saveAsJSON" href="#">Save Assembly As... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + Shift + S)</a></li>
                 <!--<li><a id="openAssembly" href="#">Open Assembly... &nbsp&nbsp&nbsp&nbsp(CTRL/&#8984 + O)</a></li>-->
                 <!--<li class="divider"></li>-->
                 <li class="dropdown-submenu">
                     <a tabindex="-1">Keyboard Shortcuts<span class="pull-right fui-arrow-right"></span></a>
                     <ul class="dropdown-menu">
                         <li class="noHighlight"><a>Hold D &nbsp;&nbsp;- &nbsp;Delete Mode</a></li>
-                        <!--<li><a>Hold V &nbsp;&nbsp;- &nbsp;Voxel Mode</a></li>-->
-                        <!--<li><a>Hold H &nbsp;&nbsp;- &nbsp;Hierarchical Mode</a></li>-->
-                        <!--<li><a>Hold P &nbsp;&nbsp;- &nbsp;Part Mode</a></li>-->
                         <li class="noHighlight"><a>Hold O &nbsp;&nbsp;- &nbsp;Hide Assembly</a></li>
                         <li class="noHighlight"><a>CTRL/&#8984; + Shift + P &nbsp;&nbsp;- &nbsp;Save SVG Screenshot</a></li>
                         <li class="noHighlight"><a>CTRL/&#8984; + S &nbsp;&nbsp;- &nbsp;Save</a></li>
                         <li class="noHighlight"><a>CTRL/&#8984; + Shift + S &nbsp;&nbsp;- &nbsp;Save As</a></li>
                         <li class="noHighlight"><a>CTRL/&#8984; + O &nbsp;&nbsp;- &nbsp;Open</a></li>
-                        <!--<li><a>Q/W &nbsp;&nbsp;- &nbsp;Composite Cell Placement X Offset</a></li>-->
-                        <!--<li><a>A/S &nbsp;&nbsp;- &nbsp;Composite Cell Placement Y Offset</a></li>-->
-                        <!--<li><a>Z/X &nbsp;&nbsp;- &nbsp;Composite Cell Placement Z Offset</a></li>-->
                         <!--<li><a>Spacebar &nbsp;&nbsp;- &nbsp;Play/Pause Simulation</a></li>-->
-                        <!--<li><a>1-9 &nbsp;&nbsp;- &nbsp;Lego Length</a></li>-->
                     </ul>
                 </li>
                 <li class="divider"></li>
@@ -91,14 +84,14 @@
         <div class="modal-content">
             <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <p class="modal-title" >Enter File Name</p>
+            <p class="modal-title" >Save As (.json)</p>
             </div>
             <div class="modal-body">
-                <input id="saveAsFileName" type="text" value="DM Assembly" placeholder="Enter file name" class="form-control filename">
+                <input id="saveAsFileName" type="text" placeholder="Enter file name" class="form-control filename">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="saveAsJSON btn btn-primary">Save</button>
+                <button type="button" class="saveAsJSON btn btn-success">Save</button>
             </div>
         </div>
     </div>

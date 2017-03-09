@@ -260,3 +260,7 @@ label {
 .normalStylingCheckbox{
     font-size: 18px!important;
 }
+
+input:focus{
+    border-color: #000!important;
+}

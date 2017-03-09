@@ -16,7 +16,9 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
                 "click .menuHoverControls":  "navModeChanged",
                 "click #viewMenuDropdown":  "openViewMenu",
                 "mouseenter #logo": "activateLogo",
-                "mouseleave #logo": "inactivateLogo"
+                "mouseleave #logo": "inactivateLogo",
+                "click #saveJSON":  "saveJSON",
+                "click #saveAsJSON":  "saveAsJSON"
             },
 
             initialize: function(){
@@ -36,6 +38,21 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
             openViewMenu: function(e){
                 e.preventDefault();
                 viewMenu.render();
+            },
+
+            saveJSON: function(e){
+                e.preventDefault();
+                console.log("save");
+            },
+
+            saveAsJSON: function(e){
+                e.preventDefault();
+                var $modal = $("#saveAsModel");
+                $modal.modal("show");
+                $modal.on('shown.bs.modal', function() {
+                    $("#saveAsFileName").focus();
+                });
+
             },
 
             navModeChanged: function(e){
