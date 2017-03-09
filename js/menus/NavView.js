@@ -8,6 +8,10 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
 
         var viewMenu = new ViewMenuView();
 
+        var lastSaveName = "My Assembly";
+        var $saveAsModal = $("#saveAsModel");
+        var $saveAsFilename = $("#saveAsFileName");
+
         var Nav =  Backbone.View.extend({
 
             el: "#globalNav",
@@ -23,6 +27,19 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
 
             initialize: function(){
 
+                var self = this;
+                $("#saveAsJSONModal").click(function(e){
+                    e.preventDefault();
+                    self._saveAsJSON($("#saveAsFileName").val());
+                    $saveAsModal.modal("hide");
+                });
+
+                $saveAsFilename.on('keyup', function (e) {
+                    if (e.keyCode == 13) {
+                        self._saveAsJSON($("#saveAsFileName").val());
+                        $saveAsModal.modal("hide");
+                    }
+                });
             },
 
             activateLogo: function(){
@@ -42,17 +59,24 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
 
             saveJSON: function(e){
                 e.preventDefault();
-                console.log("save");
+                this._saveAsJSON();
             },
 
             saveAsJSON: function(e){
                 e.preventDefault();
-                var $modal = $("#saveAsModel");
-                $modal.modal("show");
-                $modal.on('shown.bs.modal', function() {
-                    $("#saveAsFileName").focus();
+                $saveAsModal.modal("show");
+                $saveAsModal.on('shown.bs.modal', function() {
+                    $saveAsFilename.focus();
+                    $saveAsFilename.select();
                 });
+            },
 
+            _saveAsJSON: function(filename){
+                if (filename === undefined || filename == ""){
+                    filename = lastSaveName;
+                }
+                console.log(filename);
+                lastSaveName = filename;
             },
 
             navModeChanged: function(e){
