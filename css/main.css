@@ -148,6 +148,11 @@ label {
     padding-bottom: 20px;
 }
 
+.materialColorSwatch img{
+    width: 29px;
+    height: 29px;
+}
+
 .editComposite, .editMaterial {
     margin-left:20px;
 }
