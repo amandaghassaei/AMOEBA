@@ -3,7 +3,7 @@
  */
 
 
-define(["jquery", "backbone", "plist"], function($, Backbone, plist){
+define(["jquery", "backbone", "plist", "navView"], function($, Backbone, plist, navView){
 
     var AppState = Backbone.Model.extend({
 
@@ -59,7 +59,7 @@ define(["jquery", "backbone", "plist"], function($, Backbone, plist){
             } else this.downKeys[e.keyCode] = false;
 
             //console.log(e);
-            //console.log(e.keyCode);
+            // console.log(e.keyCode);
             switch(e.keyCode){
                 case 68://d delete mode
                     var currentNav = this.get("currentNav");
@@ -76,10 +76,19 @@ define(["jquery", "backbone", "plist"], function($, Backbone, plist){
                         }
                     }
                     break;
+                case 83:
+                    if (state && (e.ctrlKey || e.metaKey)){
+                        if (shift){
+                            navView.saveAsJSON(e);
+                        } else {
+                            navView.saveJSON(e);
+                        }
+                    }
+                    break;
                 case 8://delete key - causes back nav in chrome, super annoying
                     e.preventDefault();
                     e.stopPropagation();
-                    //also continue to case 46
+                    break;
                 default:
                     break;
             }
