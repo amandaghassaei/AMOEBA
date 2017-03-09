@@ -10,7 +10,8 @@ define([], function(){
                name: "Design",
                tabs: {
                    material: "Materials",
-                   lattice: "Lattice"
+                   lattice: "Lattice",
+                   camera: "View"
                    //sketch: "Visibility",
                    //select: "Select",
                }

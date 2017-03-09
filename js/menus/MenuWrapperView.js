@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'text!menus/templates/MenuWrapperView.html'],
-    function($, _, plist, Backbone, lattice, appState, template){
+define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'threeModel', 'text!menus/templates/MenuWrapperView.html'],
+    function($, _, plist, Backbone, lattice, appState, threeModel, template){
 
     var MenuWrapperView = Backbone.View.extend({
 
@@ -233,6 +233,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         _getPropertyOwner: function($target){
             if ($target.hasClass("lattice")) return lattice;
             if ($target.hasClass("appState")) return this.model;
+            if ($target.hasClass("threeModel")) return threeModel;
             if (this.menu) {
                 var owner = this.menu.getPropertyOwner($target);
                 if (owner) return owner;

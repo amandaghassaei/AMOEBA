@@ -15,30 +15,47 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
     //store all things to highlight
     var cellContainer = new THREE.Object3D();
 
+    var threeModel = null;
+
     var ThreeModel = Backbone.Model.extend({
 
         defaults:{
-            cameraType: "perspective"
+            cameraType: "perspective",
+            cameraZoom: 10,
+            cameraPosition: new THREE.Vector3(100, 100, 100),
+            cameraLookAt: new THREE.Vector3(0,0,0)
         },
 
-        // var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 400);
-        camera: new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000),
+        camera: null,
 
         initialize: function() {
 
-            this.listenTo(this, "change:cameraType", this.updateCamera);
+            _.bindAll(this, "updateCameraType", "onWindowResize");
+
+            this.updateCameraType();
+
+            var self = this;
+            this.listenTo(this, "change:cameraType", this.updateCameraType);
+            this.listenTo(this, "change:cameraZoom", function(){
+                self.camera.zoom = self.get("cameraZoom");
+                self.camera.updateProjectionMatrix();
+                self.render();
+            });
+            this.listenTo(this, "change:cameraPosition", function(){
+                var position = this.get("cameraPosition");
+                this.camera.position.set(position.x, position.y, position.z);
+                this.camera.lookAt(this.get("cameraLookAt"));
+                self.render();
+            });
+            this.listenTo(this, "change:cameraLookAt", function(){
+                var lookAt = this.get("cameraLookAt");
+                controls.target.set(lookAt.x, lookAt.y, lookAt.z);
+                self.render();
+            });
 
             var container = $("#threeContainer");
             container.append(renderer.domElement);
             renderer.setSize(window.innerWidth, window.innerHeight);
-
-            // camera.zoom = 30;
-            this.camera.zoom = 10;
-            this.camera.updateProjectionMatrix();
-            this.camera.position.x = 100;
-            this.camera.position.y = 100;
-            this.camera.position.z = 100;
-            scenes[0].add(this.camera);
 
             scenes[0].background = new THREE.Color(0xcccccc);
             // scenes[0].fog = new THREE.FogExp2( 0xcccccc, 1 );
@@ -69,23 +86,46 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             window.addEventListener('resize', this.onWindowResize, false);
 
             controls = new THREE.OrbitControls(this.camera, container.get(0));
-            controls.addEventListener('change', this.render);
+            var self = this;
+            controls.addEventListener('change', function(){
+                self.set("cameraZoom", self.camera.zoom, {silent:true});
+                self.set("cameraPosition", self.camera.position.clone(), {silent:true});
+                self.set("cameraLookAt", controls.target.clone(), {silent:true});
+                self.trigger("change");
+                self.render();
+            });
         },
 
-        updateCamera: function() {
-            console.log(this.get("cameraType"));
+        updateCameraType: function() {
+            if (this.camera) scenes[0].remove(this.camera);
+            if (this.get("cameraType") == "perspective"){
+                this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
+
+            } else {
+                this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 5000);
+            }
+            if (controls) controls.object = this.camera;
+            scenes[0].add(this.camera);
+            this.camera.zoom = this.get("cameraZoom");
+            var position = this.get("cameraPosition");
+            this.camera.position.set(position.x, position.y, position.z);
+            this.camera.updateProjectionMatrix();
+            if (threeModel) this.render();
         },
 
         onWindowResize: function() {
-            this.camera.aspect = window.innerWidth / window.innerHeight;
-            this.camera.left = -window.innerWidth / 2;
-            this.camera.right = window.innerWidth / 2;
-            this.camera.top = window.innerHeight / 2;
-            this.camera.bottom = -window.innerHeight / 2;
+            if (this.get("cameraType") == "perspective"){
+                this.camera.aspect = window.innerWidth / window.innerHeight;
+            } else {
+                this.camera.left = -window.innerWidth / 2;
+                this.camera.right = window.innerWidth / 2;
+                this.camera.top = window.innerHeight / 2;
+                this.camera.bottom = -window.innerHeight / 2;
+            }
             this.camera.updateProjectionMatrix();
 
             renderer.setSize(window.innerWidth, window.innerHeight);
-            render();
+            this.render();
         },
 
         sceneAdd: function(object) {
@@ -117,7 +157,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
         }
     });
 
-    var threeModel = new ThreeModel();
+    threeModel = new ThreeModel();
 
     function _render() {
         renderer.clear();

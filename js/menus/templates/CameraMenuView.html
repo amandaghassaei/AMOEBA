@@ -1,0 +1,19 @@
+Camera Type:&nbsp;&nbsp;
+    <div class="btn-group">
+        <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCameraTypes[cameraType].name %><span class="caret"></span></button>
+        <ul role="menu" class="dropdown-menu">
+            <% _.each(allCameraTypes, function(type, id){ %>
+                <li><a class="threeModel dropdownSelector" data-property="cameraType" data-value="<%= id %>" href="#"><%= type.name %></a></li>
+            <% }); %>
+        </ul>
+    </div><br/><br/>
+Position:&nbsp;&nbsp;
+    <input data-property="cameraPosition" data-key="x" value="<%= cameraPosition.x.toFixed(1) %>" placeholder="X" class="form-control threeModel floatInput" type="text">&nbsp;
+    <input data-property="cameraPosition" data-key="y" value="<%= cameraPosition.y.toFixed(1) %>" placeholder="Y" class="form-control threeModel floatInput" type="text">&nbsp;
+    <input data-property="cameraPosition" data-key="z" value="<%= cameraPosition.z.toFixed(1)%>" placeholder="Z" class="form-control threeModel floatInput" type="text"><br/><br/>
+Look At:&nbsp;&nbsp;
+    <input data-property="cameraLookAt" data-key="x" value="<%= cameraLookAt.x.toFixed(1) %>" placeholder="X" class="form-control threeModel floatInput" type="text">&nbsp;
+    <input data-property="cameraLookAt" data-key="y" value="<%= cameraLookAt.y.toFixed(1) %>" placeholder="Y" class="form-control threeModel floatInput" type="text">&nbsp;
+    <input data-property="cameraLookAt" data-key="z" value="<%= cameraLookAt.z.toFixed(1)%>" placeholder="Z" class="form-control threeModel floatInput" type="text"><br/><br/>
+Zoom&nbsp;&nbsp;
+    <input data-property="cameraZoom" value="<%= cameraZoom.toFixed(1) %>" placeholder="Zoom" class="form-control threeModel floatInput" type="text">
