@@ -27,6 +27,7 @@ require.config({
         lattice: 'models/lattice',
         plist: 'plists/plist',
         materialPlist: 'plists/materialPlist',
+        fileSaver: 'models/fileSaver',
 
         threeModel: 'three/threeModel',
         baseplane: 'three/baseplane',

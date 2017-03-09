@@ -211,6 +211,10 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                     }
                 }
             }
+        },
+
+        getAssemblySaveData: function(){
+            return this.cells;
         }
 
     });

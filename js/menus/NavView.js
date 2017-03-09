@@ -3,12 +3,12 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
-    function($, _, Backbone, ViewMenuView){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'],
+    function($, _, Backbone, fileSaver, ViewMenuView){
 
         var viewMenu = new ViewMenuView();
 
-        var lastSaveName = "My Assembly";
+        var lastSaveName = "";
         var $saveAsModal = $("#saveAsModel");
         var $saveAsFilename = $("#saveAsFileName");
 
@@ -75,7 +75,7 @@ define(['jquery', 'underscore', 'backbone', 'menus/NavViewMenuView'],
                 if (filename === undefined || filename == ""){
                     filename = lastSaveName;
                 }
-                console.log(filename);
+                fileSaver.save(filename);
                 lastSaveName = filename;
             },
 

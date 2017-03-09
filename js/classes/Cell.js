@@ -120,6 +120,13 @@ define(["three", "threeModel"], function(THREE, three){
         this.index = null;
     };
 
+    Cell.prototype.toJSON = function(){
+        return {
+            materialID: null,
+            quaternion: null
+        }
+    };
+
     return Cell;
 });
 
