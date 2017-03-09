@@ -3,7 +3,7 @@
  */
 
 define(["three", "backbone", "threeModel", "lattice"],
-    function(THREE, Backbone, three, lattice){
+    function(THREE, Backbone, threeModel, lattice){
 
     var normal = "y";
 
@@ -15,7 +15,7 @@ define(["three", "backbone", "threeModel", "lattice"],
 
         initialize: function(){
             this.object3D = this._makeMesh();
-            three.sceneAdd(this.object3D);
+            threeModel.sceneAdd(this.object3D);
             this.setVisiblity(false);
 
             this.listenTo(lattice, "change:aspectRatio", this._scaleMesh);
@@ -23,7 +23,7 @@ define(["three", "backbone", "threeModel", "lattice"],
 
         setVisiblity: function(visible){
             this.object3D.visible = visible;
-            three.render();
+            threeModel.render();
         },
 
         _makeMesh: function(){

@@ -21,9 +21,10 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
 
         defaults:{
             cameraType: "perspective",
-            cameraZoom: 10,
-            cameraPosition: new THREE.Vector3(100, 100, 100),
-            cameraLookAt: new THREE.Vector3(0,0,0)
+            cameraZoom: 1,
+            cameraPosition: new THREE.Vector3(40, 40, 40),
+            cameraLookAt: new THREE.Vector3(0,0,0),
+            cameraFOV: 10
         },
 
         camera: null,
@@ -42,16 +43,23 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
                 self.render();
             });
             this.listenTo(this, "change:cameraPosition", function(){
-                var position = this.get("cameraPosition");
-                this.camera.position.set(position.x, position.y, position.z);
-                this.camera.lookAt(this.get("cameraLookAt"));
+                var position = self.get("cameraPosition");
+                self.camera.position.set(position.x, position.y, position.z);
+                self.camera.lookAt(self.get("cameraLookAt"));
                 self.render();
             });
             this.listenTo(this, "change:cameraLookAt", function(){
                 var lookAt = this.get("cameraLookAt");
                 controls.target.set(lookAt.x, lookAt.y, lookAt.z);
-                this.camera.lookAt(this.get("cameraLookAt"));
+                self.camera.lookAt(self.get("cameraLookAt"));
                 self.render();
+            });
+            this.listenTo(this, "change:cameraFOV", function(){
+                if (self.get("cameraType") == "perspective"){
+                    self.camera.fov = self.get("cameraFOV");
+                    self.camera.updateProjectionMatrix();
+                    self.render();
+                }
             });
 
             var container = $("#threeContainer");
@@ -100,7 +108,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
         updateCameraType: function() {
             if (this.camera) scenes[0].remove(this.camera);
             if (this.get("cameraType") == "perspective"){
-                this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
+                this.camera = new THREE.PerspectiveCamera(this.get("cameraFOV"), window.innerWidth / window.innerHeight, 0.1, 5000);
 
             } else {
                 this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 5000);

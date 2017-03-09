@@ -23,23 +23,31 @@ require.config({
         stlLoader: '../dependencies/loaders/STLLoader',
         stlExport: '../dependencies/loaders/binary_stl_writer',
 
+        //models
         appState: 'models/appState',
         lattice: 'models/lattice',
+        fileSaver: 'models/fileSaver',
+        materials: 'models/materials',
+
+        //plists
         plist: 'plists/plist',
         materialPlist: 'plists/materialPlist',
-        fileSaver: 'models/fileSaver',
 
+        //threejs interface
         threeModel: 'three/threeModel',
         baseplane: 'three/baseplane',
         highlighter: 'three/highlighter',
         threeInteraction: 'three/threeInteraction',
 
+        //ui
         menuWrapperView: 'menus/MenuWrapperView',
         menuParent: "menus/MenuParentView",
         navView: "menus/NavView",
         genericModalView: "menus/GenericModalView",
 
-        Cell: 'classes/Cell'
+        //classes
+        Cell: 'classes/Cell',
+        Material: 'classes/Material'
     },
 
     shim: {

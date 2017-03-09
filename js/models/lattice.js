@@ -3,7 +3,7 @@
  */
 
 
-define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, three, Cell){
+define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, threeModel, Cell){
 
     var Lattice = Backbone.Model.extend({
         defaults: {
@@ -36,7 +36,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             this._loopCells(this.cells, function(cell){
                 cell.updateForAspectRatio(aspectRatio);
             });
-            three.render();
+            threeModel.render();
         },
 
         _updateScale: function(){
@@ -50,7 +50,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = null;
             this._checkForMatrixContraction();
             this.set("numCells", this.get("numCells")-1);
-            three.render();
+            threeModel.render();
         },
 
         addCellAtIndex: function(index){
@@ -59,7 +59,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
             this.set("numCells", this.get("numCells")+1);
-            three.render();
+            threeModel.render();
         },
 
         _checkForIndexOutsideBounds: function(index){

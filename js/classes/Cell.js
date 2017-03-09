@@ -2,7 +2,7 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["three", "threeModel"], function(THREE, three){
+define(["three", "threeModel"], function(THREE, threeModel){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);//new THREE.Geometry()
     var wireframeMaterial = new THREE.LineBasicMaterial({color:0x000000, linewidth:1});
@@ -44,7 +44,7 @@ define(["three", "threeModel"], function(THREE, three){
 
         this.updateForAspectRatio(json.scale);
 
-        three.sceneAddCell(this.object3D);
+        threeModel.sceneAddCell(this.object3D);
     }
 
     Cell.prototype.setPosition = function(position){
@@ -92,7 +92,7 @@ define(["three", "threeModel"], function(THREE, three){
         else nextMaterial = material;
         if (nextMaterial != this.mesh.material){
             this.mesh.material = nextMaterial;
-            three.render();
+            threeModel.render();
         }
     };
 
@@ -114,7 +114,7 @@ define(["three", "threeModel"], function(THREE, three){
 
     Cell.prototype.destroy = function(shouldRemove){
         this.object3D._myCell = null;
-        if (shouldRemove) three.sceneRemoveCell(this.object3D);
+        if (shouldRemove) threeModel.sceneRemoveCell(this.object3D);
         this.object3D = null;
         this.mesh = null;
         this.index = null;

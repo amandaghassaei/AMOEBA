@@ -4,7 +4,7 @@
 
 
 define(["three", "backbone", "appState", "lattice", "threeModel"],
-    function(THREE, Backbone, appState, lattice, three){
+    function(THREE, Backbone, appState, lattice, threeModel){
 
     var plane = new THREE.Plane(new THREE.Vector3(0,1,0));
 
@@ -26,7 +26,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             this.object3D = this._makeMesh();
             this._scaleBasePlane();
             this._setPosition();
-            three.sceneAdd(this.object3D);
+            threeModel.sceneAdd(this.object3D);
             this._setVisibility();
         },
 
@@ -57,7 +57,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var aspectRatio = lattice.getAspectRatio();
             this.object3D.scale.set(aspectRatio.x, aspectRatio.y, aspectRatio.z);
             this._setPosition();
-            three.render();
+            threeModel.render();
         },
 
         getNormalAxis: function(){
@@ -91,7 +91,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
         _setVisibility: function(){
             var visible = appState.get("baseplaneIsVisible");
             this.object3D.visible = visible;
-            three.render();
+            threeModel.render();
         }
     });
     return new BasePlane();

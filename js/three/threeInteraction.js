@@ -3,7 +3,7 @@
  */
 
 define(["three", "baseplane", "appState", "threeModel", "highlighter", "lattice"],
-    function(THREE, baseplane, appState, three, highlighter, lattice){
+    function(THREE, baseplane, appState, threeModel, highlighter, lattice){
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();
@@ -91,13 +91,13 @@ define(["three", "baseplane", "appState", "threeModel", "highlighter", "lattice"
 
             mouse.x = (e.clientX/window.innerWidth)*2-1;
             mouse.y = - (e.clientY/window.innerHeight)*2+1;
-            raycaster.setFromCamera(mouse, three.camera);
+            raycaster.setFromCamera(mouse, threeModel.camera);
 
             this._updateHighlighterForMouseMove();
         },
 
         _updateHighlighterForMouseMove: function(){
-            var intersection = this._checkForIntersections(three.getCells());
+            var intersection = this._checkForIntersections(threeModel.getCells());
 
             if (appState.get("deleteMode") && intersection){
                 if (intersection.object._myCell) {
