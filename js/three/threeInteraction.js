@@ -2,8 +2,8 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["three", "baseplane", "threeModel", "highlighter", "lattice", "appState"],
-    function(THREE, baseplane, three, highlighter, lattice, appState){
+define(["three", "baseplane", "appState", "threeModel", "highlighter", "lattice"],
+    function(THREE, baseplane, appState, three, highlighter, lattice){
 
     var raycaster = new THREE.Raycaster();
     var mouse = new THREE.Vector2();

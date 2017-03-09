@@ -2,10 +2,8 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["jquery", "orbitControls"], function($, THREE){
+define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
 
-    // var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 400);
-    var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000);
     var numScenes = 1;
     var scenes = [];
     for (var i=0;i<numScenes;i++){
@@ -17,115 +15,116 @@ define(["jquery", "orbitControls"], function($, THREE){
     //store all things to highlight
     var cellContainer = new THREE.Object3D();
 
-    initialize();
+    var ThreeModel = Backbone.Model.extend({
 
-    function initialize(){
+        defaults:{
+            cameraType: "perspective"
+        },
 
-        var container = $("#threeContainer");
-        container.append(renderer.domElement);
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        // var camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 400);
+        camera: new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 5000),
 
-        // camera.zoom = 30;
-        camera.zoom = 10;
-        camera.updateProjectionMatrix();
-        camera.position.x = 100;
-        camera.position.y = 100;
-        camera.position.z = 100;
-        scenes[0].add( camera );
+        initialize: function() {
 
-        scenes[0].background = new THREE.Color(0xcccccc);
-        // scenes[0].fog = new THREE.FogExp2( 0xcccccc, 1 );
+            this.listenTo(this, "change:cameraType", this.updateCamera);
 
-        // lights
-        var color = 0x888888;
-        var light = new THREE.DirectionalLight(color);
-        light.position.set(0, 10, 0);
-        scenes[0].add(light);
-        var light = new THREE.DirectionalLight(color);
-        light.position.set(0, -10, 0);
-        scenes[0].add(light);
-        var light = new THREE.DirectionalLight(color);
-        light.position.set(0, 0, 300);
-        scenes[0].add(light);
-        var light = new THREE.DirectionalLight(0xaaaaaa);
-        light.position.set(-1, -1, -1);
-        scenes[0].add(light);
-        var light = new THREE.DirectionalLight(0xaaaaaa);
-        light.position.set(1, 1, -1);
-        scenes[0].add(light);
-        var light = new THREE.AmbientLight(0x222222);
-        scenes[0].add(light);
+            var container = $("#threeContainer");
+            container.append(renderer.domElement);
+            renderer.setSize(window.innerWidth, window.innerHeight);
 
-        //cell container
-        scenes[0].add(cellContainer);
+            // camera.zoom = 30;
+            this.camera.zoom = 10;
+            this.camera.updateProjectionMatrix();
+            this.camera.position.x = 100;
+            this.camera.position.y = 100;
+            this.camera.position.z = 100;
+            scenes[0].add(this.camera);
 
-        window.addEventListener('resize', onWindowResize, false);
+            scenes[0].background = new THREE.Color(0xcccccc);
+            // scenes[0].fog = new THREE.FogExp2( 0xcccccc, 1 );
 
-        controls = new THREE.OrbitControls(camera, container.get(0));
-        controls.addEventListener('change', render);
+            // lights
+            var color = 0x888888;
+            var light = new THREE.DirectionalLight(color);
+            light.position.set(0, 10, 0);
+            scenes[0].add(light);
+            var light = new THREE.DirectionalLight(color);
+            light.position.set(0, -10, 0);
+            scenes[0].add(light);
+            var light = new THREE.DirectionalLight(color);
+            light.position.set(0, 0, 300);
+            scenes[0].add(light);
+            var light = new THREE.DirectionalLight(0xaaaaaa);
+            light.position.set(-1, -1, -1);
+            scenes[0].add(light);
+            var light = new THREE.DirectionalLight(0xaaaaaa);
+            light.position.set(1, 1, -1);
+            scenes[0].add(light);
+            var light = new THREE.AmbientLight(0x222222);
+            scenes[0].add(light);
 
-        render();
-    }
+            //cell container
+            scenes[0].add(cellContainer);
 
-    function onWindowResize(){
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.left = -window.innerWidth / 2;
-        camera.right = window.innerWidth / 2;
-        camera.top = window.innerHeight / 2;
-        camera.bottom = -window.innerHeight / 2;
-        camera.updateProjectionMatrix();
+            window.addEventListener('resize', this.onWindowResize, false);
 
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        render();
-    }
+            controls = new THREE.OrbitControls(this.camera, container.get(0));
+            controls.addEventListener('change', this.render);
+        },
 
-    function sceneAdd(object){
-        scenes[0].add(object);
-    }
+        updateCamera: function() {
+            console.log(this.get("cameraType"));
+        },
 
-    function sceneAddCell(object){
-        cellContainer.add(object);
-    }
+        onWindowResize: function() {
+            this.camera.aspect = window.innerWidth / window.innerHeight;
+            this.camera.left = -window.innerWidth / 2;
+            this.camera.right = window.innerWidth / 2;
+            this.camera.top = window.innerHeight / 2;
+            this.camera.bottom = -window.innerHeight / 2;
+            this.camera.updateProjectionMatrix();
 
-    function sceneRemove(object){
-        scenes[0].remove(object);
-    }
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            render();
+        },
 
-    function sceneRemoveCell(object){
-        cellContainer.remove(object);
-    }
+        sceneAdd: function(object) {
+            scenes[0].add(object);
+        },
 
-    function getCells(){
-        return cellContainer.children;
-    }
+        sceneAddCell: function(object) {
+            cellContainer.add(object);
+        },
 
-    function removeAllCells(){
-        cellContainer.children = [];
-    }
+        sceneRemove: function(object) {
+            scenes[0].remove(object);
+        },
 
-    function render(){
-        _render();
-    }
+        sceneRemoveCell: function(object) {
+            cellContainer.remove(object);
+        },
 
-    function _render(){
+        getCells: function() {
+            return cellContainer.children;
+        },
+
+        removeAllCells: function() {
+            cellContainer.children = [];
+        },
+
+        render: function() {
+            _render();
+        }
+    });
+
+    var threeModel = new ThreeModel();
+
+    function _render() {
         renderer.clear();
-        renderer.render(scenes[0], camera);
+        renderer.render(scenes[0], threeModel.camera);
     }
 
-    return {//return public properties/methods
-        render: render,
+    threeModel.render();
 
-        sceneAdd: sceneAdd,
-        sceneAddCell: sceneAddCell,
-
-        sceneRemove: sceneRemove,
-        sceneRemoveCell: sceneRemoveCell,
-        removeAllCells: removeAllCells,
-
-        camera: camera,
-
-        getCells: getCells,
-        removeAllCells: removeAllCells
-    }
-
+    return threeModel;
 });

@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'plist', 'text!menus/templates/NavViewMenuView.html'],
-    function($, _, Backbone, plist, template){
+define(['jquery', 'underscore', 'backbone', 'plist', 'threeModel', 'text!menus/templates/NavViewMenuView.html'],
+    function($, _, Backbone, plist, threeModel, template){
 
     return Backbone.View.extend({
 
@@ -22,14 +22,12 @@ define(['jquery', 'underscore', 'backbone', 'plist', 'text!menus/templates/NavVi
 
         changeCamera: function(e){
             e.preventDefault();
-            var type = $(e.target).data("id");
-            console.log(type);
+            threeModel.set("cameraType", $(e.target).data("id"));
         },
 
         render: function(){
             this.$el.html(this.template(plist));
         },
-
 
         template: _.template(template)
     });

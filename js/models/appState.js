@@ -17,8 +17,9 @@ define(["jquery", "backbone", "plist", "navView"], function($, Backbone, plist, 
             materialType:"insulating",
             realisticColorScheme: false,
 
-            baseplaneIsVisible: true
+            baseplaneIsVisible: true,
 
+            cameraType: "perspective"
         },
 
         initialize: function(){
