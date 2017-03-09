@@ -13,6 +13,7 @@
     <link href="dependencies/flatUI/css/flat-ui.css" rel="stylesheet"><!-- Loading Flat UI -->
 
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/nav.css">
 
     <script data-main="js/main" src="dependencies/require/require.js"></script>
 
@@ -21,7 +22,7 @@
 
 <nav id="globalNav" class="navbar navbar-inverse navbar-embossed" role="navigation">
     <div class="navbar-header">
-      <a id="mainNavLink" class="navbar-brand" target="_blank" href="http://cba.mit.edu"><img id="logo" src="assets/imgs/logo.png"></a>
+      <a id="logo" class="navbar-brand" target="_blank" href="http://cba.mit.edu"><img id="activeLogo" src="assets/imgs/logo-active.png"><img id="inactiveLogo" src="assets/imgs/logo.png"></a>
     </div>
     <div class="collapse navbar-collapse" id="navbar-collapse-01">
       <ul class="nav navbar-nav navbar-left">
@@ -72,7 +73,7 @@
         <li class="dropdown navDropdown">
           <a href="#" class="dropdown-toggle" id="viewMenuDropdown" data-toggle="dropdown">View <b class="caret"></b></a>
           <span class="dropdown-arrow"></span>
-          <ul id="navViewMenu" class="dropdown-menu"></ul>
+          <ul id="navViewMenuView" class="dropdown-menu"></ul>
         </li>
         <li><a data-menu-id="about" class="menuHoverControls" target="_blank" href="http://www.amandaghassaei.com/">About</a></li>
        </ul>
@@ -81,7 +82,7 @@
         <!--</ul>-->
 
     </div><!-- /.navbar-collapse -->
-    <input id="jsonInput" type="file">
+    <input id="fileSelector" type="file">
 
 </nav>
 

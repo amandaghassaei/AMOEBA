@@ -35,6 +35,7 @@ require.config({
 
         menuWrapperView: 'menus/MenuWrapperView',
         menuParent: "menus/MenuParentView",
+        navView: "menus/NavView",
 
         Cell: 'classes/Cell'
     },
@@ -71,7 +72,7 @@ require.onError = function (err) {
 };
 
 //init stuff
-require(["jquery", "threeInteraction", "menuWrapperView", "flatUI"], function($, interaction , menuWrapper){
+require(["jquery", "threeInteraction", "menuWrapperView", "flatUI", "navView"], function($, interaction , menuWrapper){
 
     menuWrapper.render();
 

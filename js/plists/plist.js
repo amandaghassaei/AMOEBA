@@ -47,6 +47,15 @@ define([], function(){
            inches: {
                name: "inches"
            }
+       },
+
+       allCameraTypes:{
+           perspective: {
+               name: "Perspective"
+           },
+           ortho: {
+               name: "Orthographic"
+           }
        }
 
    }
