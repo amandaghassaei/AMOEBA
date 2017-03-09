@@ -3,8 +3,8 @@
  */
 
 
-define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'],
-    function($, _, Backbone, fileSaver, ViewMenuView){
+define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView', "appState"],
+    function($, _, Backbone, fileSaver, ViewMenuView, appState){
 
         var viewMenu = new ViewMenuView();
 
@@ -17,12 +17,13 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'
             el: "#globalNav",
 
             events: {
-                "click .menuHoverControls":  "navModeChanged",
+                "click .navItems":  "_updateNavMode",
                 "click #viewMenuDropdown":  "openViewMenu",
                 "mouseenter #logo": "activateLogo",
                 "mouseleave #logo": "inactivateLogo",
                 "click #saveJSON":  "saveJSON",
-                "click #saveAsJSON":  "saveAsJSON"
+                "click #saveAsJSON":  "saveAsJSON",
+                "click #about": "showAboutModal"
             },
 
             initialize: function(){
@@ -40,6 +41,8 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'
                         $saveAsModal.modal("hide");
                     }
                 });
+
+                this.listenTo(appState, "change:currentNav", this._navModeChanged);
             },
 
             activateLogo: function(){
@@ -79,10 +82,22 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'
                 lastSaveName = filename;
             },
 
-            navModeChanged: function(e){
+            _updateNavMode: function(e){
                 e.preventDefault();
-                var mode = $(e.target).data("menu-id");
-                console.log(mode);
+                appState.set("currentNav", $(e.target).data("menu-id"));
+            },
+
+            _navModeChanged: function(){
+                var $tabs = $(".navbar-nav .navItems");
+                var $lastTab = $tabs.filter("[data-menu-id='" + appState.previous("currentNav") + "']");
+                $lastTab.parent().removeClass("selectedNav");
+                var $selectedTab = $tabs.filter("[data-menu-id='" + appState.get("currentNav") + "']");
+                $selectedTab.parent().addClass("selectedNav");
+            },
+
+            showAboutModal: function(e){
+                e.preventDefault();
+                $("#aboutModal").modal("show");
             }
 
         });

@@ -26,14 +26,14 @@ define([], function(){
            navSim: {
                name: "Simulate",
                tabs: {
-                   emSetup: "Globals",
-                   emElectronics: "Electronics",
-                   emBoundaryCond: "Boundaries",
-                   emRun: "Run"
+                   Setup: "Globals",
+                   Electronics: "Electronics",
+                   BoundaryCond: "Boundaries",
+                   Run: "Run"
                }
            },
-           emNavSignal: {
-               name: "Composite",
+           NavSignal: {
+               name: "Signals",
                parent: "navSim",
                tabs: {
                    signal: "Signal Editor"

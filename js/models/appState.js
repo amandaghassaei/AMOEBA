@@ -3,7 +3,7 @@
  */
 
 
-define(["jquery", "backbone", "plist", "navView"], function($, Backbone, plist, navView){
+define(["jquery", "backbone", "plist"], function($, Backbone, plist){
 
     var AppState = Backbone.Model.extend({
 
@@ -79,11 +79,13 @@ define(["jquery", "backbone", "plist", "navView"], function($, Backbone, plist, 
                     break;
                 case 83:
                     if (state && (e.ctrlKey || e.metaKey)){
-                        if (shift){
-                            navView.saveAsJSON(e);
-                        } else {
-                            navView.saveJSON(e);
-                        }
+                        require(['navView'], function(navView){
+                            if (shift){
+                                navView.saveAsJSON(e);
+                            } else {
+                                navView.saveJSON(e);
+                            }
+                        });
                     }
                     break;
                 case 8://delete key - causes back nav in chrome, super annoying

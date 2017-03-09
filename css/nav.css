@@ -38,6 +38,10 @@
     background-color: #bbb;
 }
 
+.navbar-inverse .navbar-nav>.selectedNav{
+    background-color: #bbb;
+}
+
 .navbar-inverse .navbar-nav>.dropdown>a .caret,
 .navbar-inverse .navbar-nav>.dropdown>a:focus .caret, .navbar-inverse .navbar-nav>.dropdown>a:visited .caret{
     border-top-color:white;
