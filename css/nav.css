@@ -143,6 +143,19 @@
     background-color: #aaa!important;
 }
 
+.dropdown-submenu li.noHighlight:hover{
+    background-color: #5f5f5f!important;
+}
+
+.dropdown-submenu li>a{
+    border-radius: 0!important;;
+    border-top-left-radius: 0!important;;
+    border-bottom-left-radius: 0!important;;
+}
+.dropdown-submenu li.noHighlight>a:hover{
+    background-color: #5f5f5f!important;
+}
+
 .dropdown-submenu>.dropdown-menu {
     top: 0;
     left: 100%;
