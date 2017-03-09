@@ -7,6 +7,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
 
     var Lattice = Backbone.Model.extend({
         defaults: {
+            scaleMultiplier: 1,
             scale: new THREE.Vector3(1,1,1),
             units: "mm",
             aspectRatio: new  THREE.Vector3(1,1,1),
@@ -19,6 +20,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             this.cells = [[[null]]];
 
             this.listenTo(this, "change:aspectRatio", this._aspectRatioChanged);
+            this.listenTo(this, "change:aspectRatio change:scaleMultiplier", this._updateScale);
         },
 
         getScale: function(){//only used in sim
@@ -35,6 +37,10 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                 cell.updateForAspectRatio(aspectRatio);
             });
             three.render();
+        },
+
+        _updateScale: function(){
+            this.set("scale", this.get("aspectRatio").clone().multiplyScalar(this.get("scaleMultiplier")));
         },
 
         deleteCellAtIndex: function(index){
@@ -211,6 +217,10 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                     }
                 }
             }
+        },
+
+        clearCells: function(){
+            console.log("clear");
         },
 
         getAssemblySaveData: function(){

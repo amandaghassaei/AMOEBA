@@ -37,6 +37,7 @@ require.config({
         menuWrapperView: 'menus/MenuWrapperView',
         menuParent: "menus/MenuParentView",
         navView: "menus/NavView",
+        genericModalView: "menus/GenericModalView",
 
         Cell: 'classes/Cell'
     },

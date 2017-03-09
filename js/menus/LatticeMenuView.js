@@ -2,22 +2,38 @@
  * Created by aghassaei on 1/26/15.
  */
 
-define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'text!menus/templates/LatticeMenuView.html'],
-    function($, _, MenuParentView, plist, lattice, template){
+define(['jquery', 'underscore', 'menuParent', 'plist', 'lattice', 'genericModalView', 'text!menus/templates/LatticeMenuView.html'],
+    function($, _, MenuParentView, plist, lattice, GenericModalView, template){
 
-    return MenuParentView.extend({
+        var genericModal = new GenericModalView();
 
-        events: {
-        },
+        return MenuParentView.extend({
 
-        _initialize: function(){
-            this.listenTo(lattice, "change", this.render);
-        },
+            events: {
+                "click .clearCells":                           "_clearCells",
+            },
 
-        _makeTemplateJSON: function(){
-            return _.extend(lattice.toJSON(), plist);
-        },
+            _initialize: function(){
+                this.listenTo(lattice, "change", this.render);
+            },
 
-        template: _.template(template)
-    });
+            _clearCells: function(e){
+                e.preventDefault();
+                genericModal.render({
+                    title: "Clear Current Assembly?",
+                    message: "Are you sure you would like to clear the current assembly?",
+                    affirmation: "Clear",
+                    buttonStyle: "danger",
+                    callback: function(){
+                        lattice.clearCells();
+                    }
+                });
+            },
+
+            _makeTemplateJSON: function(){
+                return _.extend(lattice.toJSON(), plist);
+            },
+
+            template: _.template(template)
+        });
 });

@@ -41,6 +41,9 @@ define([], function(){
        },
 
        allUnitTypes:{
+           cm: {
+               name: "cm"
+           },
            mm: {
                name: "mm"
            },

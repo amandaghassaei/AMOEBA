@@ -13,7 +13,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
         events: {
             "click .menuWrapperTab>a":                     "_tabWasSelected",
             "click .dropdownSelector":                     "_makeDropdownSelection",
-            "click .clearCells":                           "_clearCells",
             "focusout .floatInput":                        "_softRenderTab",//force rounding if needed
             "focusout .intInput":                          "_softRenderTab",
             "change input:checkbox":                       "_clickCheckbox",
@@ -229,11 +228,6 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'tex
             var newVal = $target.val();
             this._setProperty($target, property, newVal);
             $target.blur();
-        },
-
-        _clearCells: function(e){
-            e.preventDefault();
-            lattice.clearCells();
         },
 
         _getPropertyOwner: function($target){

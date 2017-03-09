@@ -232,6 +232,10 @@ label {
     border: 0px;
 }
 
+.modal-title{
+    font-weight: 700;
+}
+
 .modal-content{
     -webkit-border-radius:0px;
     -moz-border-radius:0px;
