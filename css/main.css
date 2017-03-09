@@ -264,3 +264,7 @@ label {
 input:focus{
     border-color: #000!important;
 }
+
+button, button:focus, button:visited, button:hover{
+    outline: none;
+}
