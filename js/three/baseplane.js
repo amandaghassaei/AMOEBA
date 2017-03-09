@@ -13,7 +13,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
         defaults: {
             planeType: "xz",
             position: new THREE.Vector3(0,0,0),
-            dimensions: new THREE.Vector2(50,50)
+            dimensions: new THREE.Vector3(100,100,100)
         },
 
         initialize: function(){
@@ -73,7 +73,8 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var normalAxis = this.getNormalAxis();
             var position = intersection.add(halfAspectRatio).divide(aspectRatio).floor().multiply(aspectRatio);
             position[normalAxis] = this.get("position")[normalAxis];
-            //todo check if outside lines
+            var dimensions = this.get("dimensions");
+            if (Math.abs(position.x)>dimensions.x || Math.abs(position.y)>dimensions.y || Math.abs(position.z)>dimensions.z) return {position:null, normal:normalAxis};
             return {position: position, normal: normalAxis};
         },
 
