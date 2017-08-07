@@ -277,3 +277,7 @@ input:focus{
 button, button:focus, button:visited, button:hover{
     outline: none;
 }
+
+.indent{
+        padding-left: 15px;
+}
