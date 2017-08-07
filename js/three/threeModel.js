@@ -69,7 +69,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             container.append(renderer.domElement);
             renderer.setSize(window.innerWidth, window.innerHeight);
 
-            scenes[0].background = new THREE.Color(0xcccccc);
+            scenes[0].background = new THREE.Color(0xcfcfcf);
             // scenes[0].fog = new THREE.FogExp2( 0xcccccc, 1 );
 
             // lights
