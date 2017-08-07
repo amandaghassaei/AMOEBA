@@ -1,4 +1,4 @@
-Camera Type:&nbsp;&nbsp;
+<b>Camera Type</b>:&nbsp;&nbsp;
     <div class="btn-group">
         <button data-toggle="dropdown" class="btn dropdown-toggle" type="button"><%= allCameraTypes[cameraType].name %><span class="caret"></span></button>
         <ul role="menu" class="dropdown-menu">
@@ -7,17 +7,17 @@ Camera Type:&nbsp;&nbsp;
             <% }); %>
         </ul>
     </div><br/><br/>
-Position (XYZ):&nbsp;&nbsp;
+<b>Position (XYZ)</b>:&nbsp;&nbsp;
     <input data-property="cameraPosition" data-key="x" value="<%= cameraPosition.x.toFixed(1) %>" placeholder="X" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraPosition" data-key="y" value="<%= cameraPosition.y.toFixed(1) %>" placeholder="Y" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraPosition" data-key="z" value="<%= cameraPosition.z.toFixed(1)%>" placeholder="Z" class="form-control threeModel floatInput" type="text"><br/><br/>
-Look At (XYZ):&nbsp;&nbsp;
+<b>Look At (XYZ)</b>:&nbsp;&nbsp;
     <input data-property="cameraLookAt" data-key="x" value="<%= cameraLookAt.x.toFixed(1) %>" placeholder="X" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraLookAt" data-key="y" value="<%= cameraLookAt.y.toFixed(1) %>" placeholder="Y" class="form-control threeModel floatInput" type="text">&nbsp;
     <input data-property="cameraLookAt" data-key="z" value="<%= cameraLookAt.z.toFixed(1)%>" placeholder="Z" class="form-control threeModel floatInput" type="text"><br/><br/>
-Zoom:&nbsp;&nbsp;
+<b>Zoom</b>:&nbsp;&nbsp;
     <input data-property="cameraZoom" value="<%= cameraZoom.toFixed(1) %>" placeholder="Zoom" class="form-control threeModel floatInput" type="text">&nbsp;&nbsp;&nbsp;
 <% if (cameraType == "perspective"){ %>
-    FOV:&nbsp;&nbsp;
+    <b>FOV</b>:&nbsp;&nbsp;
         <input data-property="cameraFOV" data-min-exclusive="0" value="<%= cameraFOV.toFixed(1) %>" placeholder="FOV" class="form-control threeModel floatInput" type="text">
 <% } %>

@@ -56,10 +56,10 @@ define([], function(){
        allCameraTypes:{
            perspective: {
                name: "Perspective"
-           },
-           ortho: {
-               name: "Orthographic"
            }
+           // ortho: {
+           //     name: "Orthographic"
+           // }
        }
 
    }

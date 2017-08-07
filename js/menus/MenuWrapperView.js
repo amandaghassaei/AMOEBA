@@ -202,6 +202,7 @@ define(['jquery', 'underscore', 'plist', 'backbone', 'lattice', 'appState', 'thr
         },
 
         _makeDropdownSelection: function(e){
+            e.preventDefault();
             var $target = $(e.target);
             var property = $target.data("property");
             var value = $target.data("value");

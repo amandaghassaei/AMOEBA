@@ -61,6 +61,9 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
                     self.render();
                 }
             });
+            this.listenTo(this, "change:cameraType", function(){
+                self.updateCameraType();
+            });
 
             var container = $("#threeContainer");
             container.append(renderer.domElement);
@@ -109,7 +112,6 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             if (this.camera) scenes[0].remove(this.camera);
             if (this.get("cameraType") == "perspective"){
                 this.camera = new THREE.PerspectiveCamera(this.get("cameraFOV"), window.innerWidth / window.innerHeight, 0.1, 5000);
-
             } else {
                 this.camera = new THREE.OrthographicCamera(window.innerWidth / -2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / -2, 0.1, 5000);
             }

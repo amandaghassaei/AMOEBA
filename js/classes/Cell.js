@@ -34,8 +34,21 @@ define(["three", "threeModel"], function(THREE, threeModel){
     unitCellGeo.faceVertexUvs[0][11] = [ zone5[1], zone5[2], zone5[3] ];
     unitCellGeo.uvsNeedUpdate = true;
 
-    var material = new THREE.MeshLambertMaterial({color:0xff00ff});
-    var deleteMaterial = new THREE.MeshLambertMaterial({color:0xff0000});
+    var polygonOffset = 0.5;
+    var material = new THREE.MeshLambertMaterial({
+        color:0xff00ff,
+        shading:THREE.FlatShading,
+        polygonOffset: true,
+        polygonOffsetFactor: polygonOffset, // positive value pushes polygon further away
+        polygonOffsetUnits: 1
+    });
+    var deleteMaterial = new THREE.MeshLambertMaterial({
+        color:0xff0000,
+        shading:THREE.FlatShading,
+        polygonOffset: true,
+        polygonOffsetFactor: polygonOffset, // positive value pushes polygon further away
+        polygonOffsetUnits: 1
+    });
 
     function Cell(json){
         this.object3D = this._makeObject3D();
