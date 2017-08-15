@@ -58,6 +58,7 @@ define(["three", "baseplane", "appState", "threeModel", "highlighter", "lattice"
                         var index = highlightedObject.getNextCellIndex(highlighter.getPosition(), highlighter.getNormal());
                         lattice.addCellAtIndex(index);
                     }
+                    this._updateHighlighterForMouseMove();
                 }
             }
             isDragging = false;

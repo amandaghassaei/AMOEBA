@@ -52,7 +52,7 @@ define(["three", "threeModel"], function(THREE, threeModel){
 
     function Cell(json){
         this.object3D = this._makeObject3D();
-        this.mesh = this.object3D;//visible mesh
+        this.mesh = this.object3D;//visible mesh (may be custom mesh), object3D is always cube
         this.index = json.index;
 
         this.updateForAspectRatio(json.scale);
@@ -133,10 +133,18 @@ define(["three", "threeModel"], function(THREE, threeModel){
         this.index = null;
     };
 
+    Cell.prototype._quaternionToOrientation = function(quaternion){
+
+    };
+
+    Cell.prototype._orientationToQuaternion = function(orientation){
+
+    };
+
     Cell.prototype.toJSON = function(){
         return {
             materialID: null,
-            quaternion: null
+            orientation: null//0-23 possible orientations
         }
     };
 

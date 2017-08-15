@@ -98,7 +98,6 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             window.addEventListener('resize', this.onWindowResize, false);
 
             controls = new THREE.OrbitControls(this.camera, container.get(0));
-            var self = this;
             controls.addEventListener('change', function(){
                 self.set("cameraZoom", self.camera.zoom, {silent:true});
                 self.set("cameraPosition", self.camera.position.clone(), {silent:true});
