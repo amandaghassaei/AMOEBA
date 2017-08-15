@@ -10,7 +10,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             scaleMultiplier: 1,
             scale: new THREE.Vector3(1,1,1),
             units: "mm",
-            aspectRatio: new  THREE.Vector3(1,1,1),
+            aspectRatio: new THREE.Vector3(1,1,1),
             cellsMin: null,
             cellsMax: null,
             numCells: 0
@@ -53,9 +53,12 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
             threeModel.render();
         },
 
-        addCellAtIndex: function(index){
+        addCellAtIndex: function(index, json){
             if (this._checkForIndexOutsideBounds(index)) this._expandCellsMatrix(index, index);
-            var cell = new Cell({scale:this.getAspectRatio(), index:index});
+            if (json === undefined) json = {};
+            json.scale = this.getAspectRatio();
+            json.index = index;
+            var cell = new Cell(json);
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
             this.set("numCells", this.get("numCells")+1);
@@ -220,7 +223,19 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
         },
 
         clearCells: function(){
-            console.log("clear");
+            var self = this;
+            require(["highlighter"], function(highlighter){
+                highlighter.unhighlight();
+                self._loopCells(self.cells, function(cell){
+                    cell.destroy(false);
+                });
+                threeModel.removeAllCells();
+                //todo remove all custom meshes too
+                self.set("numCells", 0);
+                self.set("cellsMin", null);
+                self.set("cellsMax", null);
+                threeModel.render();
+            });
         },
 
         getAssemblySaveData: function(){

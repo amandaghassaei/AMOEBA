@@ -57,7 +57,7 @@ define(["three", "threeModel"], function(THREE, threeModel){
 
         this.updateForAspectRatio(json.scale);
 
-        threeModel.sceneAddCell(this.object3D);
+        threeModel.sceneAddCell(this);
     }
 
     Cell.prototype.setPosition = function(position){
@@ -79,7 +79,6 @@ define(["three", "threeModel"], function(THREE, threeModel){
         var object3D = new THREE.Mesh(unitCellGeo, material);
         var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(unitCellGeo), wireframeMaterial);
         object3D.add(wireframe);
-        object3D._myCell = this;
         return object3D;
     };
 
@@ -126,8 +125,9 @@ define(["three", "threeModel"], function(THREE, threeModel){
     };
 
     Cell.prototype.destroy = function(shouldRemove){
-        this.object3D._myCell = null;
-        if (shouldRemove) threeModel.sceneRemoveCell(this.object3D);
+        if (shouldRemove) {
+            threeModel.sceneRemoveCell(this.object3D);
+        }
         this.object3D = null;
         this.mesh = null;
         this.index = null;

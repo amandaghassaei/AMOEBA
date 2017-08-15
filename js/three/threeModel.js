@@ -93,7 +93,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             scenes[0].add(light);
 
             //cell container
-            scenes[0].add(cellContainer);
+            scenes[0].add(cellContainer);//todo this will change for custom meshes
 
             window.addEventListener('resize', this.onWindowResize, false);
 
@@ -142,8 +142,9 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             scenes[0].add(object);
         },
 
-        sceneAddCell: function(object) {
-            cellContainer.add(object);
+        sceneAddCell: function(cell) {
+            cell.object3D._myCell = cell;
+            cellContainer.add(cell.object3D);
         },
 
         sceneRemove: function(object) {
@@ -151,6 +152,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
         },
 
         sceneRemoveCell: function(object) {
+            object._myCell = null;
             cellContainer.remove(object);
         },
 
@@ -159,6 +161,9 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
         },
 
         removeAllCells: function() {
+            for (var i=0;i<cellContainer.children.length;i++){
+                cellContainer.children[i]._myCell = null;
+            }
             cellContainer.children = [];
         },
 
