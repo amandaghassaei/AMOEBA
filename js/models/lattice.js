@@ -3,7 +3,7 @@
  */
 
 
-define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, threeModel, Cell){
+define(["backbone", "underscore", "three", "threeModel", "Cell"], function(Backbone, _, THREE, threeModel, Cell){
 
     var Lattice = Backbone.Model.extend({
         defaults: {
@@ -55,14 +55,17 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
 
         addCellAtIndex: function(index, json){
             if (this._checkForIndexOutsideBounds(index)) this._expandCellsMatrix(index, index);
-            if (json === undefined) json = {};
+            this._addCellAtIndex(index, json || {});
+            this.set("numCells", this.get("numCells")+1);
+            threeModel.render();
+        },
+
+        _addCellAtIndex: function(index, json){
             json.scale = this.getAspectRatio();
             json.index = index;
             var cell = new Cell(json);
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;
-            this.set("numCells", this.get("numCells")+1);
-            threeModel.render();
         },
 
         _checkForIndexOutsideBounds: function(index){
@@ -236,6 +239,37 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                 self.set("cellsMin", null);
                 self.set("cellsMax", null);
                 threeModel.render();
+            });
+        },
+
+        setAssembly: function(assembly, data){
+            if (this.get("numCells")>0) this.clearCells();//todo throw up warning?
+            this._setData(data);
+            if (assembly) this._setCells(assembly);
+            else {
+                console.warn("no cells given");
+            }
+        },
+
+        _setCells: function(cells){
+            var cellsMin = this.get("cellsMin");
+            this._expandArray(this.cells, this.get("cellsMax").clone().sub(cellsMin));
+            var self = this;
+            this._loopCells(cells, function(json, x, y, z, self){
+                var index = (new THREE.Vector3(x, y, z)).add(cellsMin);
+                self._addCellAtIndex(index, json);
+            });
+            threeModel.render();
+        },
+
+        _setData: function(data){
+            var self = this;
+            _.each(_.keys(data), function(key){
+                if (data[key] && data[key].x){//vector object
+                    self.set(key, new THREE.Vector3(data[key].x, data[key].y, data[key].z));
+                    return;
+                }
+                self.set(key, data[key]);
             });
         },
 

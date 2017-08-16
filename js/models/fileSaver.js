@@ -48,41 +48,25 @@ define(['underscore', 'fileSaverLib', 'lattice'],
     // }
 
 
-    // function loadFile(data){//parsed json todo make this better - load composite
-    //     if (!data.materials){
-    //         console.warn("no material definitions in this file");
-    //         return;
-    //     }
-    //     _.each(_.keys(data.materials), function(key){
-    //         materials.setMaterial(key, data.materials[key]);
-    //     });
-    //     if (!data.assembly){
-    //         console.warn("no assembly in this file");
-    //         return;
-    //     }
-    //     lattice.clearCells();
-    //     var cells = data.assembly.cells;
-    //     _setData(lattice, _.omit(data.assembly, "cells"));
-    //     if (cells) lattice.setCells(cells);
-    //     ribbon.render();
-    //     menuWrapper.render();
-    //     if (data.emSim){
-    //         require(["emSim"], function(emSim){
-    //             emSim.loadData(data.emSim);
-    //         });
-    //     }
-    // }
-
-    // function _setData(object, data){
-    //     _.each(_.keys(data), function(key){
-    //         if (data[key] && data[key].x){//vector object
-    //             object.set(key, new THREE.Vector3(data[key].x, data[key].y, data[key].z), {silent:true});
-    //             return;
-    //         }
-    //         object.set(key, data[key], {silent:true});
-    //     });
-    //     object.trigger("change");
-    // }
+    function loadFile(data){
+        //todo handle material definitions
+        // if (!data.materials){
+        //     console.warn("no material definitions in this file");
+        //     return;
+        // }
+        // _.each(_.keys(data.materials), function(key){
+        //     materials.setMaterial(key, data.materials[key]);
+        // });
+        if (!data.lattice){
+            console.warn("no lattice in this file");
+            return;
+        }
+        if (!data.assembly){
+            console.warn("no assembly in this file");
+            return;
+        }
+        lattice.setAssembly(data.assembly, data.lattice);
+    }
 
     // function saveSTL(){
     //     require(['stlExport'], function(geometryToSTLBin){
@@ -101,6 +85,7 @@ define(['underscore', 'fileSaverLib', 'lattice'],
     return {
         save: save,
         saveData: saveData,
-        // saveMaterial: saveMaterial
+        // saveMaterial: saveMaterial,
+        loadFile: loadFile
     };
 });

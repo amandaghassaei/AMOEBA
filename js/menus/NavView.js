@@ -23,6 +23,8 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'
                 "mouseleave #logo": "inactivateLogo",
                 "click #saveJSON":  "saveJSON",
                 "click #saveAsJSON":  "saveAsJSON",
+                "click #openAssembly": "openAssemblyJSON",
+                "change #fileSelector":  "_openAssemblyJSON",
                 "click #about": "showAboutModal"
             },
 
@@ -80,6 +82,35 @@ define(['jquery', 'underscore', 'backbone', 'fileSaver', 'menus/NavViewMenuView'
                 }
                 fileSaver.save(filename);
                 lastSaveName = filename;
+            },
+
+            openAssemblyJSON: function(e){
+                e.preventDefault();
+                appState.set("currentNav", "navDesign");
+                $("#fileSelector").click();
+            },
+
+            _openAssemblyJSON: function(e){
+                e.preventDefault();
+                var input = $(e.target),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                this._readDataURL(numFiles, label, input.get(0).files);
+                input.val("");
+            },
+
+            _readDataURL: function(numFiles, filename, files){
+                if (numFiles>1) console.warn("too many files selected");
+                var reader = new FileReader();
+                reader.readAsText(files[0]);
+                reader.onload = (function() {
+                    return function(e) {
+                        var extension = (filename.substr(filename.length - 5)).toLowerCase();
+                        if (extension == ".json"){
+                            fileSaver.loadFile(JSON.parse(e.target.result));
+                        } else console.warn("file type not recognized");
+                    }
+                })();
             },
 
             _updateNavMode: function(e){
