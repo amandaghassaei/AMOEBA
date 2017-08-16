@@ -48,6 +48,7 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
         var material = materials.getMaterialForId(json.materialID);
         this.material = material.getTHREEMaterial();
         this.altMaterial = material.getTHREEAltMaterial();
+        this.materialID = json.materialID;
 
         this.object3D = this._makeObject3D();
         this.mesh = this.object3D;//visible mesh (may be custom mesh), object3D is always cube
@@ -129,6 +130,9 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
         this.object3D = null;
         this.mesh = null;
         this.index = null;
+        this.material = null;
+        this.altMaterial = null;
+        this.materialID = null;
     };
 
     Cell.prototype._quaternionToOrientation = function(quaternion){
@@ -141,7 +145,7 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
 
     Cell.prototype.toJSON = function(){
         return {
-            materialID: null,
+            materialID: this.materialID,
             orientation: null//0-23 possible orientations
         }
     };
