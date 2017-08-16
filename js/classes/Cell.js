@@ -2,7 +2,8 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["three", "threeModel", "materials"], function(THREE, threeModel, materials){
+define(["three", "threeModel", "materials", "appState"],
+    function(THREE, threeModel, materials, appState){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);//new THREE.Geometry()
     var wireframeMaterial = new THREE.LineBasicMaterial({color:0x000000, linewidth:1});
@@ -47,7 +48,7 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
 
         var material = materials.getMaterialForId(json.materialID);
         this.material = material.getTHREEMaterial();
-        this.altMaterial = material.getTHREEAltMaterial();
+        // this.altMaterial = material.getTHREEAltMaterial();
         this.materialID = json.materialID;
 
         this.object3D = this._makeObject3D();
@@ -75,7 +76,7 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
     };
 
     Cell.prototype._makeObject3D = function(){
-        var object3D = new THREE.Mesh(unitCellGeo, this.material);
+        var object3D = new THREE.Mesh(unitCellGeo, this.getCurrentMaterial());
         var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(unitCellGeo), wireframeMaterial);
         object3D.add(wireframe);
         return object3D;
@@ -100,11 +101,16 @@ define(["three", "threeModel", "materials"], function(THREE, threeModel, materia
     Cell.prototype.setDeleteMode = function(mode){
         var nextMaterial;
         if (mode) nextMaterial = deleteMaterial;
-        else nextMaterial = this.material;
+        else nextMaterial = this.getCurrentMaterial();
         if (nextMaterial != this.mesh.material){
             this.mesh.material = nextMaterial;
             threeModel.render();
         }
+    };
+
+    Cell.prototype.getCurrentMaterial = function(){
+        if (appState.get("realisticColorScheme")) return this.altMaterial;
+        return this.material;
     };
 
     Cell.prototype.isInDeleteMode = function(){
