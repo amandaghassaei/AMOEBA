@@ -3,7 +3,8 @@
  */
 
 
-define(["backbone", "underscore", "three", "threeModel", "Cell"], function(Backbone, _, THREE, threeModel, Cell){
+define(["backbone", "underscore", "three", "threeModel", "Cell", "appState"],
+    function(Backbone, _, THREE, threeModel, Cell, appState){
 
     var Lattice = Backbone.Model.extend({
         defaults: {
@@ -63,6 +64,7 @@ define(["backbone", "underscore", "three", "threeModel", "Cell"], function(Backb
         _addCellAtIndex: function(index, json){
             json.scale = this.getAspectRatio();
             json.index = index;
+            if (json.materialID === undefined) json.materialID = appState.get("materialType");
             var cell = new Cell(json);
             var cellIndex = index.clone().sub(this.get("cellsMin"));
             this.cells[cellIndex.x][cellIndex.y][cellIndex.z] = cell;

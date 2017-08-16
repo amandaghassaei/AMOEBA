@@ -6,7 +6,7 @@ define([], function(){
 
     return {
         allMaterials: {
-            insulating: {
+            structural: {
                 name: "Structural",
                 color: "#fcefb5",
                 altColor: "#fcefb5",

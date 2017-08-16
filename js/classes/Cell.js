@@ -2,7 +2,7 @@
  * Created by ghassaei on 10/11/16.
  */
 
-define(["three", "threeModel"], function(THREE, threeModel){
+define(["three", "threeModel", "materials"], function(THREE, threeModel, materials){
 
     var unitCellGeo = new THREE.BoxGeometry(1,1,1);//new THREE.Geometry()
     var wireframeMaterial = new THREE.LineBasicMaterial({color:0x000000, linewidth:1});
@@ -35,13 +35,6 @@ define(["three", "threeModel"], function(THREE, threeModel){
     unitCellGeo.uvsNeedUpdate = true;
 
     var polygonOffset = 0.5;
-    var material = new THREE.MeshLambertMaterial({
-        color:0xff00ff,
-        shading:THREE.FlatShading,
-        polygonOffset: true,
-        polygonOffsetFactor: polygonOffset, // positive value pushes polygon further away
-        polygonOffsetUnits: 1
-    });
     var deleteMaterial = new THREE.MeshLambertMaterial({
         color:0xff0000,
         shading:THREE.FlatShading,
@@ -51,6 +44,11 @@ define(["three", "threeModel"], function(THREE, threeModel){
     });
 
     function Cell(json){
+
+        var material = materials.getMaterialForId(json.materialID);
+        this.material = material.getTHREEMaterial();
+        this.altMaterial = material.getTHREEAltMaterial();
+
         this.object3D = this._makeObject3D();
         this.mesh = this.object3D;//visible mesh (may be custom mesh), object3D is always cube
         this.index = json.index;
@@ -76,7 +74,7 @@ define(["three", "threeModel"], function(THREE, threeModel){
     };
 
     Cell.prototype._makeObject3D = function(){
-        var object3D = new THREE.Mesh(unitCellGeo, material);
+        var object3D = new THREE.Mesh(unitCellGeo, this.material);
         var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(unitCellGeo), wireframeMaterial);
         object3D.add(wireframe);
         return object3D;
@@ -101,7 +99,7 @@ define(["three", "threeModel"], function(THREE, threeModel){
     Cell.prototype.setDeleteMode = function(mode){
         var nextMaterial;
         if (mode) nextMaterial = deleteMaterial;
-        else nextMaterial = material;
+        else nextMaterial = this.material;
         if (nextMaterial != this.mesh.material){
             this.mesh.material = nextMaterial;
             threeModel.render();

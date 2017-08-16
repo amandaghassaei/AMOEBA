@@ -13,6 +13,7 @@ define(['jquery', 'underscore', 'menuParent', 'materialPlist', 'plist', 'lattice
         },
 
         _initialize: function(){
+            this.listenTo(this.model, "change:materialType", this.render);
         },
 
         _editMaterial: function(e){

@@ -5,7 +5,7 @@
 //all stls
 //all textures
 //all materials
-define(["underscore", "materialsPlist", "Material"], function(_, materialPlist, Material){
+define(["underscore", "materialPlist", "Material"], function(_, materialPlist, Material){
 
     var allSTLs = {};
     var allTextures = {};
@@ -13,7 +13,14 @@ define(["underscore", "materialsPlist", "Material"], function(_, materialPlist, 
 
     //init default materials
     _.each(materialPlist.allMaterials, function(materialJSON, id){
-        allMaterials[id] = new Material(materialJSON);
+        allMaterials[id] = new Material(materialJSON, id);
     });
 
+    function getMaterialForId(id){
+        return allMaterials[id];
+    }
+
+    return {
+        getMaterialForId: getMaterialForId
+    }
 });

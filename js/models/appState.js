@@ -14,7 +14,7 @@ define(["jquery", "backbone", "plist"], function($, Backbone, plist){
 
             deleteMode: false,
 
-            materialType:"insulating",
+            materialType: "structural",
             realisticColorScheme: false,
 
             baseplaneIsVisible: true,
