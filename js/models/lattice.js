@@ -254,7 +254,6 @@ define(["backbone", "underscore", "three", "threeModel", "Cell"], function(Backb
         _setCells: function(cells){
             var cellsMin = this.get("cellsMin");
             this._expandArray(this.cells, this.get("cellsMax").clone().sub(cellsMin));
-            var self = this;
             this._loopCells(cells, function(json, x, y, z, self){
                 var index = (new THREE.Vector3(x, y, z)).add(cellsMin);
                 self._addCellAtIndex(index, json);
