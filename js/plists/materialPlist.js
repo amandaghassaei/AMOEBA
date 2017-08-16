@@ -12,7 +12,7 @@ define([], function(){
                 altColor: "#fcefb5",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -26,7 +26,7 @@ define([], function(){
                 mesh: "bending1dof",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 2},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -40,7 +40,7 @@ define([], function(){
                 mesh: "bending2dof",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 2, z: 2},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -54,7 +54,7 @@ define([], function(){
                 mesh: "torsion1dof",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 1}
@@ -67,7 +67,7 @@ define([], function(){
                 texture: "cubeTextureShearFlex",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 2, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -80,7 +80,7 @@ define([], function(){
                 texture: "stripes",
                 properties: {
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 10, y: 10, z: 10},
+                    longitudinalK: {x: 10, y: 10, z: 10},
                     shearK: {xy: 10, xz: 10, yx: 10, yz: 10, zx: 10, zy: 10},
                     bendingK: {x: 10, y: 10, z: 10},
                     torsionK: {x: 10, y: 10, z: 10}
@@ -94,7 +94,7 @@ define([], function(){
                 properties: {
                     actuator: true,
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -108,7 +108,7 @@ define([], function(){
                 properties: {
                     actuator: true,
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -122,7 +122,7 @@ define([], function(){
                 properties: {
                     actuator: true,
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}
@@ -136,7 +136,7 @@ define([], function(){
                 properties: {
                     actuator: true,
                     density: 3500,//kg/m^3
-                    longitudalK: {x: 80, y: 80, z: 80},
+                    longitudinalK: {x: 80, y: 80, z: 80},
                     shearK: {xy: 80, xz: 80, yx: 80, yz: 80, zx: 80, zy: 80},
                     bendingK: {x: 80, y: 80, z: 80},
                     torsionK: {x: 80, y: 80, z: 80}

@@ -231,6 +231,7 @@ define(["backbone", "three", "threeModel", "Cell"], function(Backbone, THREE, th
                 });
                 threeModel.removeAllCells();
                 //todo remove all custom meshes too
+                self.cells = [[[null]]];
                 self.set("numCells", 0);
                 self.set("cellsMin", null);
                 self.set("cellsMax", null);

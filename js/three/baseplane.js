@@ -75,7 +75,7 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             position[normalAxis] = this.get("position")[normalAxis];
             var dimensions = this.get("dimensions");
             if (Math.abs(position.x)>dimensions.x*aspectRatio.x ||
-                Math.abs(position.y)>dimensions.y*aspectRatio.y || 
+                Math.abs(position.y)>dimensions.y*aspectRatio.y ||
                 Math.abs(position.z)>dimensions.z*aspectRatio.z) return {position:null, normal:normalAxis};
             return {position: position, normal: normalAxis};
         },
