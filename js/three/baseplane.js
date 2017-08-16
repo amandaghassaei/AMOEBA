@@ -6,12 +6,12 @@
 define(["three", "backbone", "appState", "lattice", "threeModel"],
     function(THREE, Backbone, appState, lattice, threeModel){
 
-    var plane = new THREE.Plane(new THREE.Vector3(0,1,0));
+    var plane = new THREE.Plane(new THREE.Vector3(0,0,1));
 
     var BasePlane = Backbone.Model.extend({
 
         defaults: {
-            planeType: "xz",
+            planeType: "xy",
             position: new THREE.Vector3(0,0,0),
             dimensions: new THREE.Vector3(100,100,100)
         },
@@ -34,12 +34,12 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var dimensions = this.get("dimensions");
             var geometry = new THREE.Geometry();
             for (var i=-dimensions.y;i<=dimensions.y+1;i++) {
-                geometry.vertices.push(new THREE.Vector3(-dimensions.x - 0.5, 0, i - 0.5));
-                geometry.vertices.push(new THREE.Vector3(dimensions.x + 0.5, 0, i - 0.5));
+                geometry.vertices.push(new THREE.Vector3(-dimensions.x - 0.5, i - 0.5, 0));
+                geometry.vertices.push(new THREE.Vector3(dimensions.x + 0.5, i - 0.5, 0));
             }
             for (var i=-dimensions.x;i<=dimensions.x+1;i++) {
-                geometry.vertices.push(new THREE.Vector3(i - 0.5, 0, -dimensions.y - 0.5));
-                geometry.vertices.push(new THREE.Vector3(i - 0.5, 0, dimensions.y + 0.5));
+                geometry.vertices.push(new THREE.Vector3(i - 0.5, -dimensions.y - 0.5, 0));
+                geometry.vertices.push(new THREE.Vector3(i - 0.5, dimensions.y + 0.5, 0));
             }
             return new THREE.LineSegments(geometry, new THREE.LineBasicMaterial({color:0x000000, transparent:true, linewidth:2, opacity:0.2}));
         },
@@ -74,7 +74,9 @@ define(["three", "backbone", "appState", "lattice", "threeModel"],
             var position = intersection.add(halfAspectRatio).divide(aspectRatio).floor().multiply(aspectRatio);
             position[normalAxis] = this.get("position")[normalAxis];
             var dimensions = this.get("dimensions");
-            if (Math.abs(position.x)>dimensions.x || Math.abs(position.y)>dimensions.y || Math.abs(position.z)>dimensions.z) return {position:null, normal:normalAxis};
+            if (Math.abs(position.x)>dimensions.x*aspectRatio.x ||
+                Math.abs(position.y)>dimensions.y*aspectRatio.y || 
+                Math.abs(position.z)>dimensions.z*aspectRatio.z) return {position:null, normal:normalAxis};
             return {position: position, normal: normalAxis};
         },
 

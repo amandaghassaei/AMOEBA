@@ -84,7 +84,10 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             light.position.set(0, 0, 300);
             scenes[0].add(light);
             var light = new THREE.DirectionalLight(0xaaaaaa);
-            light.position.set(-1, -1, -1);
+            light.position.set(-1, -1, 0);
+            scenes[0].add(light);
+            var light = new THREE.DirectionalLight(0xaaaaaa, 0.15);
+            light.position.set(0, 0, 1);
             scenes[0].add(light);
             var light = new THREE.DirectionalLight(0xaaaaaa);
             light.position.set(1, 1, -1);
@@ -119,6 +122,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             this.camera.zoom = this.get("cameraZoom");
             var position = this.get("cameraPosition");
             this.camera.position.set(position.x, position.y, position.z);
+            this.camera.up = new THREE.Vector3(0,0,1);
             this.camera.updateProjectionMatrix();
             if (threeModel) this.render();
         },
