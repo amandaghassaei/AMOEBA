@@ -4,7 +4,7 @@
 
 define(["three", "underscore"], function(THREE, _) {
 
-    function Material(json, id) {
+    function Material(json, id, customMeshTypes) {
 
         var self = this;
         _.each(_.keys(json), function (key) {
@@ -12,6 +12,7 @@ define(["three", "underscore"], function(THREE, _) {
         });
 
         this.id = id;
+        if (this.mesh) this.geo = customMeshTypes[this.mesh];
 
         var polygonOffset = 0.5;
         this.THREEMaterial = new THREE.MeshLambertMaterial({

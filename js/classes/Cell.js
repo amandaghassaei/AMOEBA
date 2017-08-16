@@ -43,16 +43,17 @@ define(["three", "threeModel", "materials", "appState"],
         polygonOffsetFactor: polygonOffset, // positive value pushes polygon further away
         polygonOffsetUnits: 1
     });
+    var defaultMaterial = new THREE.MeshBasicMaterial();
 
     function Cell(json){
 
         var material = materials.getMaterialForId(json.materialID);
         this.material = material.getTHREEMaterial();
-        // this.altMaterial = material.getTHREEAltMaterial();
+        this.altMaterial = material.getTHREEAltMaterial();
         this.materialID = json.materialID;
 
-        this.object3D = this._makeObject3D();
-        this.mesh = this.object3D;//visible mesh (may be custom mesh), object3D is always cube
+        this.object3D = this._makeHighlightableObject3D();
+        this.mesh = this._makeMesh(material.geo);
         this.index = json.index;
 
         this.updateForAspectRatio(json.scale);
@@ -62,10 +63,12 @@ define(["three", "threeModel", "materials", "appState"],
 
     Cell.prototype.setPosition = function(position){
         this.object3D.position.set(position.x, position.y, position.z);
+        this.mesh.position.set(position.x, position.y, position.z);
     };
 
     Cell.prototype.setScale = function(scale){
         this.object3D.scale.set(scale.x, scale.y, scale.z);
+        this.mesh.scale.set(scale.x, scale.y, scale.z);
     };
 
     Cell.prototype.updateForAspectRatio = function(aspectRatio){
@@ -75,11 +78,25 @@ define(["three", "threeModel", "materials", "appState"],
         this.setPosition(this.originalPosition);
     };
 
-    Cell.prototype._makeObject3D = function(){
-        var object3D = new THREE.Mesh(unitCellGeo, this.getCurrentMaterial());
-        var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(unitCellGeo), wireframeMaterial);
-        object3D.add(wireframe);
+    Cell.prototype._makeHighlightableObject3D = function(){
+        var object3D = new THREE.Mesh(unitCellGeo, defaultMaterial);
         return object3D;
+    };
+
+    Cell.prototype._makeMesh = function(geo){
+        var mesh;
+        if (geo === undefined) {
+            mesh = this.object3D;
+            mesh.material = this.getCurrentMaterial();
+            geo = unitCellGeo;
+        }
+        else {
+            mesh = new THREE.Mesh(geo, this.getCurrentMaterial());
+            this.object3D.visible = false;
+        }
+        var wireframe = new THREE.LineSegments(new THREE.EdgesGeometry(geo), wireframeMaterial);
+        mesh.add(wireframe);
+        return mesh;
     };
 
     Cell.prototype.getHighlighterPosition = function(intersection, aspectRatio){
@@ -131,7 +148,7 @@ define(["three", "threeModel", "materials", "appState"],
 
     Cell.prototype.destroy = function(shouldRemove){
         if (shouldRemove) {
-            threeModel.sceneRemoveCell(this.object3D);
+            threeModel.sceneRemoveCell(this);
         }
         this.object3D = null;
         this.mesh = null;

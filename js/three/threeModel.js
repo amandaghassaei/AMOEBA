@@ -13,6 +13,7 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
     var controls;
 
     //store all things to highlight
+    var higlightableCells = [];
     var cellContainer = new THREE.Object3D();
 
     var threeModel = null;
@@ -96,7 +97,9 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
             scenes[0].add(light);
 
             //cell container
+            higlightableCells.visible = false;
             scenes[0].add(cellContainer);//todo this will change for custom meshes
+
 
             window.addEventListener('resize', this.onWindowResize, false);
 
@@ -148,27 +151,32 @@ define(["jquery", "orbitControls", "backbone"], function($, THREE, Backbone){
 
         sceneAddCell: function(cell) {
             cell.object3D._myCell = cell;
-            cellContainer.add(cell.object3D);
+            cellContainer.add(cell.mesh);
+            if (cell.mesh !== cell.object3D) cellContainer.add(cell.object3D);
+            higlightableCells.push(cell.object3D);
         },
 
         sceneRemove: function(object) {
             scenes[0].remove(object);
         },
 
-        sceneRemoveCell: function(object) {
-            object._myCell = null;
-            cellContainer.remove(object);
+        sceneRemoveCell: function(cell) {
+            cell.object3D._myCell = null;
+            cellContainer.remove(cell.mesh);
+            if (cell.mesh !== cell.object3D) cellContainer.remove(cell.object3D);
+            higlightableCells.splice(higlightableCells.indexOf(cell.object3D), 1);
         },
 
         getCells: function() {
-            return cellContainer.children;
+            return higlightableCells;
         },
 
         removeAllCells: function() {
-            for (var i=0;i<cellContainer.children.length;i++){
-                cellContainer.children[i]._myCell = null;
+            for (var i=0;i<higlightableCells.length;i++){
+                higlightableCells[i]._myCell = null;
             }
             cellContainer.children = [];
+            higlightableCells = [];
         },
 
         render: function() {

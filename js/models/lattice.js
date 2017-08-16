@@ -56,6 +56,11 @@ define(["backbone", "underscore", "three", "threeModel", "Cell", "appState"],
 
         addCellAtIndex: function(index, json){
             if (this._checkForIndexOutsideBounds(index)) this._expandCellsMatrix(index, index);
+            var cellIndex = index.clone().sub(this.get("cellsMin"));
+            if (this.cells[cellIndex.x][cellIndex.y][cellIndex.z]){
+                console.warn("already a cell here");
+                return;
+            }
             this._addCellAtIndex(index, json || {});
             this.set("numCells", this.get("numCells")+1);
             threeModel.render();
